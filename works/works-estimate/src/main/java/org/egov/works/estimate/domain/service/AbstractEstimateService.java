@@ -80,6 +80,7 @@ public class AbstractEstimateService {
 	public AbstractEstimateResponse create(AbstractEstimateRequest abstractEstimateRequest) {
 		validator.validateEstimates(abstractEstimateRequest, true);
 		ProjectCode projectCode = new ProjectCode();
+		Boolean isSpilloverWFReq = false;
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			estimate.setId(commonUtils.getUUID());
 			estimate.setAuditDetails(
@@ -117,10 +118,18 @@ public class AbstractEstimateService {
 				documentDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
 			}
-			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
-			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
-					estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()));
-			estimate.setStatus(AbstractEstimateStatus.CREATED);
+			if (estimate.getSpillOverFlag())
+				isSpilloverWFReq = isConfigRequired(Constants.SPILLOVER_WORKFLOW_MANDATORY,
+						abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
+	        if (!isSpilloverWFReq && estimate.getSpillOverFlag())
+	        	estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
+	        else {
+	        	populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+				Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
+						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
+				estimate.setStateId(workFlowResponse.get("id"));
+				estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
+	        }
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
@@ -129,20 +138,23 @@ public class AbstractEstimateService {
 		return response;
 	}
 
+	private Boolean isConfigRequired(String keyName, RequestInfo requestInfo,
+			final String tenantId) {
+		Boolean isSpilloverWFReq = false;
+		JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT,
+		        CommonConstants.CODE, keyName,
+		        tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+		    Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+		    if (jsonMap.get("value").equals("Yes"))
+		        isSpilloverWFReq = true;
+		}
+		return isSpilloverWFReq;
+	}
+
 	public AbstractEstimateResponse update(AbstractEstimateRequest abstractEstimateRequest) {
 		validator.validateEstimates(abstractEstimateRequest, false);
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
-			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
-				details.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
-			for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails())
-				assetDetail.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
-			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
-			estimate.setAuditDetails(
-					getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
-			estimate.setStateId(workflowService.enrichWorkflow(estimate.getWorkFlowDetails(), estimate.getTenantId(),
-					abstractEstimateRequest.getRequestInfo()));
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
 				if(documentDetail.getId().isEmpty())
 					documentDetail.setId(commonUtils.getUUID());
@@ -151,20 +163,17 @@ public class AbstractEstimateService {
 				documentDetail.setAuditDetails(
 						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
 			}
+			populateAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), estimate);
+			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
+					estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
+			estimate.setStateId(workFlowResponse.get("id"));
+			estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
 
-			populateNextStatus(estimate);
-			
-			Boolean isFinIntReq = false;
-	        JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT,
-	                CommonConstants.CODE, Constants.FINANCIAL_INTEGRATION_KEY,
-	                estimate.getTenantId(), abstractEstimateRequest.getRequestInfo(), Constants.WORKS_MODULE_CODE);
-	        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
-	            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
-	            if (jsonMap.get("value").equals("Yes"))
-	                isFinIntReq = true;
-	        }
+			Boolean isFinIntReq = isConfigRequired(Constants.FINANCIAL_INTEGRATION_KEY,
+					abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
-			if (isFinIntReq && estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.APPROVED.toString())) {
+			if (isFinIntReq && estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
 					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
 
@@ -176,6 +185,16 @@ public class AbstractEstimateService {
 		response.setAbstractEstimates(abstractEstimateRequest.getAbstractEstimates());
 		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));
 		return response;
+	}
+
+	private void populateAuditDetails(String userName, final AbstractEstimate estimate) {
+		for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
+			details.setAuditDetails(getAuditDetails(userName, true));
+		for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails())
+			assetDetail.setAuditDetails(getAuditDetails(userName, true));
+		for (final DocumentDetail documentDetail : estimate.getDocumentDetails())
+			documentDetail.setAuditDetails(getAuditDetails(userName, true));
+		estimate.setAuditDetails(getAuditDetails(userName, true));
 	}
 
 	private void populateWorkFlowDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo) {
@@ -202,45 +221,6 @@ public class AbstractEstimateService {
 			if (abstractEstimate.getStateId() != null) {
 				workFlowDetails.setStateId(abstractEstimate.getStateId());
 			}
-		}
-	}
-
-	private void populateNextStatus(AbstractEstimate abstractEstimate) {
-		WorkFlowDetails workFlowDetails = null;
-		String currentStatus = null;
-
-		if (null != abstractEstimate && null != abstractEstimate.getStatus()) {
-			workFlowDetails = abstractEstimate.getWorkFlowDetails();
-			currentStatus = abstractEstimate.getStatus().toString();
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& Constants.SUBMIT.equalsIgnoreCase(workFlowDetails.getAction())
-				&& (currentStatus.equalsIgnoreCase(AbstractEstimateStatus.CREATED.toString())
-						|| currentStatus.equalsIgnoreCase(AbstractEstimateStatus.RESUBMITTED.toString()))) {
-			abstractEstimate.setStatus(AbstractEstimateStatus.CHECKED);
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& Constants.APPROVE.equalsIgnoreCase(workFlowDetails.getAction())) {
-			abstractEstimate.setStatus(AbstractEstimateStatus.APPROVED);
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& Constants.REJECT.equalsIgnoreCase(workFlowDetails.getAction())) {
-			abstractEstimate.setStatus(AbstractEstimateStatus.REJECTED);
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& Constants.FORWARD.equalsIgnoreCase(workFlowDetails.getAction())
-				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
-			abstractEstimate.setStatus(AbstractEstimateStatus.RESUBMITTED);
-		}
-
-		if (null != workFlowDetails && null != workFlowDetails.getAction() && null != currentStatus
-				&& Constants.CANCEL.equalsIgnoreCase(workFlowDetails.getAction())
-				&& currentStatus.equalsIgnoreCase(AbstractEstimateStatus.REJECTED.toString())) {
-			abstractEstimate.setStatus(AbstractEstimateStatus.CANCELLED);
 		}
 	}
 
@@ -277,7 +257,7 @@ public class AbstractEstimateService {
 						Constants.MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER);
 		}
 
-		if (messages != null && !messages.isEmpty())
+		if (!messages.isEmpty())
 			throw new CustomException(messages);
 
 		projectCode.setName(abstractEstimateDetails.getNameOfWork());

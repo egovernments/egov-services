@@ -10,26 +10,30 @@ public class Constants {
     public static final String WORK_IDENTIFICATION_NUMBER_GENERATION_ERROR = "Work identification numebr can not be generated";
 
     public static final String TYPEOFWORK_OBJECT = "TypeOfWork";
-    public static final String FUND_OBJECT = "Fund";
+    public static final String FUND_OBJECT = "funds";
     public static final String FUNCTION_OBJECT = "Function";
     public static final String SUBTYPEOFWORK_OBJECT = "SubTypeOfWork";
     public static final String SCHEME_OBJECT = "Scheme";
     public static final String SUBSCHEME_OBJECT = "SubScheme";
     public static final String BUDGETGROUP_OBJECT = "BudgetGroup";
     public static final String DEPARTMENT_OBJECT = "Department";
+    public static final String WARD_OBJECT = "Ward";
+    public static final String LOCALITY_OBJECT = "Locality";
     public static final String WORKS_MODULE_CODE = "Works";
     public static final String EGF_MODULE_CODE = "egf-master";
     public static final String COMMON_MASTERS_MODULE_CODE = "common-masters";
     public static final String OVERHEAD_OBJECT = "Overhead";
     public static final String UOM_OBJECT = "Uom";
-    public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
     public static final String NATUREOFWORK_OBJECT = "NatureOfWork";
+    public static final String REFERENCETYPE_OBJECT = "ReferenceType";
+    public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
     public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
     public static final String FINANCIAL_INTEGRATION_KEY = "Financial_Integration_Required";
+    public static final String SPILLOVER_WORKFLOW_MANDATORY = "Spillover_Workflow_Mandatory";
     
     public static final String APPROVE = "Approve";
     public static final String SUBMIT = "Submit";
@@ -52,6 +56,9 @@ public class Constants {
     
     public static final String KEY_NULL_ABSTRACTESTIMATE_NUMBER = "INVALID_ABSTRACTESTIMATE_NUMBER";
     public static final String MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER = "Abstract Estimate Number should be entered";
+    
+    public static final String KEY_NULL_WIN_NUMBER = "INVALID_WORK_IDENTIFICATION_NUMBER";
+    public static final String MESSAGE_NULL_WIN_NUMBER = "Work Identification Number should be entered";
 
     public static final String KEY_NULL_DETAILEDESTIMATE_NUMBER = "NULL_DETAILEDESTIMATE_NUMBER";
     public static final String MESSAGE_NULL_DETAILEDESTIMATE_NUMBER = "Detailed Estimate Number should be entered";
@@ -67,6 +74,12 @@ public class Constants {
 
     public static final String KEY_FUTUREDATE_DATEOFPROPOSAL = "INVALID_DATEOFPROPOSAL";
     public static final String MESSAGE_FUTUREDATE_DATEOFPROPOSAL = "Date of proposal cannot be future date";
+    
+    public static final String KEY_FUTUREDATE_ADMINSANCTIONDATE = "INVALID_ADMINSANCTIONDATE";
+    public static final String MESSAGE_FUTUREDATE_ADMINSANCTIONDATE = "Admin Sanction Date cannot be future date";
+    
+    public static final String KEY_ADMINSANCTION_PROPOSAL_DATE = "INVALID_ADMINSANCTION_PROPOSAL_DATE";
+    public static final String MESSAGE_ADMINSANCTION_PROPOSAL_DATE = "Admin sanction date should be on or after the Date of Proposal";
 
     public static final String KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "INVALID_ESTIMATE_DATE_SPILLOVER";
     public static final String MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "Estimate Date cannot be future date";
@@ -91,6 +104,12 @@ public class Constants {
 
     public static final String KEY_DEPARTMENT_INVALID = "INVALID_DEPARTMENT";
     public static final String MESSAGE_DEPARTMENT_INVALID = "Plese provide valid data for Department";
+    
+    public static final String KEY_WARD_INVALID = "INVALID_WARD";
+    public static final String MESSAGE_WARD_INVALID = "Plese provide valid data for Ward";
+    
+    public static final String KEY_LOCALITY_INVALID = "INVALID_LOCALITY";
+    public static final String MESSAGE_LOCALITY_INVALID = "Plese provide valid data for Locality";
 
     public static final String KEY_UOM_INVALID = "UOM_INVALID";
     public static final String MESSAGE_UOM_INVALID = "Plese provide valid data for UOM";
@@ -110,7 +129,10 @@ public class Constants {
 
     public static final String KEY_BUDGETGROUP_INVALID = "INVALID_BUDGETGROUP";
     public static final String MESSAGE_BUDGETGROUP_INVALID = "Plese provide valid data for Budget Group";
-
+    
+    public static final String KEY_REFERENCETYPE_INVALID = "INVALID_REFERENCETYPE";
+    public static final String MESSAGE_REFERENCETYPE_INVALID = "Plese provide valid data for Reference Type";
+    
     public static final String KEY_UNIQUE_ABSTRACTESTIMATENUMBER = "UNIQUE_ABSTRACTESTIMATENUMBER";
     public static final String MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER = "Abstract Estimate Number should be Unique";
     
@@ -125,6 +147,12 @@ public class Constants {
     
     public static final String KEY_NULL_ADMINSANCTIONNUMBER = "UNIQUE_ADMINSANCTIONNUMBER";
     public static final String MESSAGE_NULL_ADMINSANCTIONNUMBER = "Admin Sanction Number should be entered";
+    
+    public static final String KEY_NULL_ADMINSANCTIONDATE = "UNIQUE_ADMINSANCTIONDATE";
+    public static final String MESSAGE_NULL_ADMINSANCTIONDATE = "Admin Sanction Date should be entered";
+    
+    public static final String KEY_NULL_ADMINSANCTIONBY = "UNIQUE_ADMINSANCTIONBY";
+    public static final String MESSAGE_NULL_ADMINSANCTIONBY = "Admin Sanction By should be entered";
 
     public static final String KEY_UNIQUE_ESTIMATENUMBER = "UNIQUE_ESTIMATENUMBER";
     public static final String MESSAGE_UNIQUE_ESTIMATENUMBER = "Estimate Number should be Unique";
@@ -176,6 +204,9 @@ public class Constants {
 
     public static final String KEY_TECHNICAL_SANCTION_DATE_FUTUREDATE = "TECHNICAL_SANCTION_DATE_FUTUREDATE";
     public static final String MESSAGE_TECHNICAL_SANCTION_DATE_FUTUREDATE= "Estimate technical sanction date cannot be a future date";
+    
+    public static final String KEY_ABSTRACTESTIMATE_DETAILS_REQUIRED = "ABSTRACTESTIMATE_DETAILS_REQUIRED";
+    public static final String MESSAGE_ABSTRACTESTIMATE_DETAILS_REQUIRED = "Abstract Estimate Details data is required";
 
     public static final String KEY_FUND_REQUIRED = "FUND_REQUIRED";
     public static final String MESSAGE_FUND_REQUIRED = "Fund data is required";
@@ -203,7 +234,12 @@ public class Constants {
 
     public static final String KEY_DEPARTMENT_CODE_REQUIRED= "DEPARTMENT_CODE_REQUIRED";
     public static final String MESSAGE_DEPARTMENT_CODE_REQUIRED= "Department data is required";
-
+    
+    public static final String KEY_WARD_CODE_REQUIRED= "WARD_CODE_REQUIRED";
+    public static final String MESSAGE_WARD_CODE_REQUIRED= "Ward data is required";
+    
+    public static final String KEY_LOCALITY_CODE_REQUIRED= "LOCALITY_CODE_REQUIRED";
+    public static final String MESSAGE_LOCALITY_CODE_REQUIRED= "Locality data is required";
 
     public static final String KEY_ESTIMATE_OVERHEAD_CODE_INVALID= "ESTIMATE_OVERHEAD_INVALID";
     public static final String MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID= "Invalid data for esimate overhead code";
@@ -240,6 +276,15 @@ public class Constants {
 
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID= "Estimate activity schedule of rate is invalid";
+    
+    public static final String KEY_NATUREOFWORK_REQUIRED = "NATUREOFWORK_REQUIRED";
+    public static final String MESSAGE_NATUREOFWORK_REQUIRED = "Nature Of Work is required";
+    
+    public static final String KEY_REFERENCETYPE_REQUIRED = "REFERENCETYPE_REQUIRED";
+    public static final String MESSAGE_REFERENCETYPE_REQUIRED = "Reference Type is required";
+    
+    public static final String KEY_MODEOFALLOTMENT_REQUIRED = "MODEOFALLOTMENT_REQUIRED";
+    public static final String MESSAGE_MODEOFALLOTMENT_REQUIRED = "Mode Of Allotment is required";
 
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "Duplicate value for Estimate activity schedule of rate";

@@ -243,7 +243,7 @@ public class RequestInfo   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+//  @Valid
 
   public UserInfo getUserInfo() {
     return userInfo;

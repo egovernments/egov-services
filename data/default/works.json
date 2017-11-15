@@ -695,7 +695,20 @@
       "lastmodifiedby": null,
       "lastmodifieddate": null,
       "tenantId": "default"
-    }
+    },
+    {
+      "id": 4,
+      "code": "Spillover_Workflow_Mandatory",
+      "keyName": "Spillover_Workflow_Mandatory",
+      "tenantId": "default",
+      "description": "Workflow for Spillover required or not for Estimate screen",
+      "value": "Yes",
+      "effectivefrom": "2017-08-22",
+      "createdby": null,
+      "createddate": null,
+      "lastmodifiedby": null,
+      "lastmodifieddate": null
+    },
   ],
   "Fund": [
     {

@@ -1,5 +1,7 @@
 package org.egov.works.estimate.web.controller;
 
+import javax.validation.Valid;
+
 import org.egov.works.estimate.domain.service.AbstractEstimateService;
 import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
 import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
@@ -24,20 +26,20 @@ public class AbstractEstimateController {
 	
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.OK)
-	public AbstractEstimateResponse create(@RequestBody AbstractEstimateRequest abstractEstimateRequest) {
+	public AbstractEstimateResponse create(@RequestBody @Valid AbstractEstimateRequest abstractEstimateRequest) {
 		return abstractEstimateService.create(abstractEstimateRequest);
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
-	public AbstractEstimateResponse update(@RequestBody AbstractEstimateRequest abstractEstimateRequest) {
+	public AbstractEstimateResponse update(@RequestBody @Valid AbstractEstimateRequest abstractEstimateRequest) {
 		return abstractEstimateService.update(abstractEstimateRequest);
 	}
 
 	@PostMapping("/_search")
 	@ResponseStatus(HttpStatus.OK)
 	public AbstractEstimateResponse search(
-			@ModelAttribute AbstractEstimateSearchContract abstractEstimateSearchContract,
+			@ModelAttribute @Valid AbstractEstimateSearchContract abstractEstimateSearchContract,
 			@RequestBody RequestInfo requestInfo,
 			@RequestParam(required = true) String tenantId) {
 		return abstractEstimateService.search(abstractEstimateSearchContract, requestInfo);

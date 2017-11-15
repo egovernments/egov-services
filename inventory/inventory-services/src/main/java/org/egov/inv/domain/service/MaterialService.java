@@ -108,7 +108,7 @@ public class MaterialService extends DomainService {
         }
     }
 
-    public MaterialResponse search(MaterialSearchRequest materialSearchRequest, RequestInfo requestInfo) {
+    public MaterialResponse search(MaterialSearchRequest materialSearchRequest, org.egov.common.contract.request.RequestInfo requestInfo) {
 
         Pagination<Material> searchMaterial = materialRepository.search(materialSearchRequest);
 
@@ -138,7 +138,6 @@ public class MaterialService extends DomainService {
 
         MaterialResponse response = new MaterialResponse();
         response.setMaterials(searchMaterial.getPagedData().size() > 0 ? searchMaterial.getPagedData() : Collections.emptyList());
-        response.setResponseInfo(getResponseInfo(requestInfo));
         return response;
     }
 

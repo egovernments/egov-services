@@ -55,7 +55,7 @@ public class MaterialStoreMappingApiController implements MaterialStoreMappingAp
     }
 
     public ResponseEntity<MaterialStoreMappingResponse> materialstoremappingSearchPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-                                                                                       @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+                                                                                       @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
                                                                                        @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
                                                                                        @ApiParam(value = "material code of material store mapping ") @RequestParam(value = "material", required = false) String material,
                                                                                        @ApiParam(value = "store code of material store mapping ") @RequestParam(value = "store", required = false) String store,

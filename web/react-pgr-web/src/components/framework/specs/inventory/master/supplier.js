@@ -79,7 +79,7 @@ var dat = {
         }
       ],
       "values": [
-        "code", "name", {valuePath:"active", type:"checkbox"}
+        "name", "type", {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "suppliers",
       "resultIdKey":"code",

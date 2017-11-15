@@ -579,7 +579,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name"
+            "url":"inventory-services/suppliers/_search?|$..code|$..name"
           },
           {
             "name": "rateType",

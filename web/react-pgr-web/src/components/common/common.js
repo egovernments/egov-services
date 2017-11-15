@@ -2203,30 +2203,30 @@ var localization_EN_Data = {
  "reports.asset.grossValue": "Opening WDV",
  "reports.asset.depreciationvalue": "Depericiation Value",
  "reports.asset.currentvalue": "Current Value",
-
 "reports.asset.ordernumber":"Order Number",
 "reports.asset.wipreferenceno":"Wip Reference No",
 "reports.asset.buyername":"Buyer Name",
 "reports.asset.titledocumentsavailable":"Title Document Available",
-"reports.asset.accumulateddepreciation":"Aaccumulated Depreciation",
+"reports.asset.accumulateddepreciation":"Accumulated Depreciation",
+
 
 // TODO might be renamed
 "reports.asset.assetsubcategoryname":"Asset SubCategory Name",
 "reports.asset.assetparentcategoryname":"Asset Category Name",
-"reports.asset.depericiationrate":"Depericiation Rate",
+"reports.asset.depreciationrate":"Depreciation Rate",
 "reports.asset.schedulename":"Details Head Description",
 "reports.asset.assetcategory":"Asset Sub Category",
 "reports.asset.revaluationreserveaccount":"GROSS BLOCK-Account code",
-"reports.asset.startcurrentvalue":"GROSS BLOCK-BALANCE as at <1st April of Current FY>",
+"reports.asset.currentstartnetblock":"GROSS BLOCK-Balance as at 01/04/2017",
 "reports.asset.plusrevalsum":"GROSS BLOCK-Additional during the year",
 "reports.asset.minusrevalsum":"GROSS BLOCK-Deduction During the year",
 "reports.asset.revaltotal":"GROSS BLOCK-Total",
 "reports.asset.accumulateddepreciationaccount":"ACCUMULATED DEPRECIATION-Account Code",
-"reports.asset.startdepval":"ACCUMULATED DEPRECIATION-BALANCE as at <1st April of Current FY>",
-"reports.asset.currdepsum":"Depreciation on during the year",
-"reports.asset.totaldepsum":"DePRECIATION Total",
-"reports.asset.endcurrentamount":"Net Block as at <31st March of Current FY>",
-"reports.asset.previousfynetblock":"Net Block as at <31st March of Current FY>",
+"reports.asset.startdepval":"ACCUMULATED DEPRECIATION-Balance as at 01/04/2017",
+"reports.asset.currdepsum":"ACCUMULATED DEPRECIATION-Depreciation during the year",
+"reports.asset.totaldepsum":"ACCUMULATED DEPRECIATION-Depreciation Total",
+"reports.asset.endcurrentamount":"Net Block as at 31/03/2018",
+"reports.asset.previousfynetblock":"Net Block as at 31/03/2018",
 
 
 

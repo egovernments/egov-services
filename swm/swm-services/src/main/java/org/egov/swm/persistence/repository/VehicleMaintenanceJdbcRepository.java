@@ -124,7 +124,7 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 			vehicleMaintenance = vehicleMaintenanceEntity.toDomain();
 
 			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-					&& vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+					&& !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
 
 				vehicleSearch = new VehicleSearch();
 				vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());

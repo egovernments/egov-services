@@ -1,182 +1,192 @@
 package org.egov.swm.domain.service;
 
-import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.domain.model.*;
-import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
-import org.egov.swm.web.contract.EmployeeResponse;
-import org.egov.swm.web.repository.EmployeeRepository;
-import org.egov.swm.web.repository.IdgenRepository;
-import org.egov.swm.web.requests.VehicleMaintenanceDetailsRequest;
-import org.egov.swm.web.requests.VendorPaymentDetailsRequest;
-import org.egov.tracer.model.CustomException;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Document;
+import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.VendorContract;
+import org.egov.swm.domain.model.VendorContractSearch;
+import org.egov.swm.domain.model.VendorPaymentDetails;
+import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
+import org.egov.swm.domain.repository.VendorPaymentDetailsRepository;
+import org.egov.swm.web.contract.EmployeeResponse;
+import org.egov.swm.web.repository.EmployeeRepository;
+import org.egov.swm.web.repository.IdgenRepository;
+import org.egov.swm.web.requests.VendorPaymentDetailsRequest;
+import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
 @Service
 public class VendorPaymentDetailsService {
 
-    private VendorPaymentDetailsRepository vendorPaymentDetailsRepository;
+	private VendorPaymentDetailsRepository vendorPaymentDetailsRepository;
 
-    private VendorContractService vendorContractService;
+	private VendorContractService vendorContractService;
 
-    private EmployeeRepository employeeRepository;
+	private EmployeeRepository employeeRepository;
 
-    private IdgenRepository idgenRepository;
+	private IdgenRepository idgenRepository;
 
-    private String idGenNameForPaymentNumberPath;
+	private String idGenNameForPaymentNumberPath;
 
-    public VendorPaymentDetailsService(VendorPaymentDetailsRepository vendorPaymentDetailsRepository,
-                                       VendorContractService vendorContractService,
-                                       EmployeeRepository employeeRepository,
-                                       IdgenRepository idgenRepository,
-                                       @Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath) {
-        this.vendorPaymentDetailsRepository = vendorPaymentDetailsRepository;
-        this.vendorContractService = vendorContractService;
-        this.employeeRepository = employeeRepository;
-        this.idgenRepository = idgenRepository;
-        this.idGenNameForPaymentNumberPath = idGenNameForPaymentNumberPath;
-    }
+	public VendorPaymentDetailsService(VendorPaymentDetailsRepository vendorPaymentDetailsRepository,
+			VendorContractService vendorContractService, EmployeeRepository employeeRepository,
+			IdgenRepository idgenRepository,
+			@Value("${egov.swm.vendor.paymentdetails.paymentno.idgen.name}") final String idGenNameForPaymentNumberPath) {
+		this.vendorPaymentDetailsRepository = vendorPaymentDetailsRepository;
+		this.vendorContractService = vendorContractService;
+		this.employeeRepository = employeeRepository;
+		this.idgenRepository = idgenRepository;
+		this.idGenNameForPaymentNumberPath = idGenNameForPaymentNumberPath;
+	}
 
-    public VendorPaymentDetailsRequest create(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
-        validate(vendorPaymentDetailsRequest);
+	public VendorPaymentDetailsRequest create(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
+		validate(vendorPaymentDetailsRequest);
 
-        Long userId = null;
-        if (vendorPaymentDetailsRequest.getRequestInfo() != null
-                && vendorPaymentDetailsRequest.getRequestInfo().getUserInfo() != null
-                && null != vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId()) {
-            userId = vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId();
-        }
+		Long userId = null;
+		if (vendorPaymentDetailsRequest.getRequestInfo() != null
+				&& vendorPaymentDetailsRequest.getRequestInfo().getUserInfo() != null
+				&& null != vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-        for(VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsRequest.getVendorPaymentDetails()){
-            setAuditDetails(vendorPaymentDetails, userId);
-            vendorPaymentDetails.setPaymentNo(generatePaymentNumber(vendorPaymentDetails.getTenantId(),
-                    vendorPaymentDetailsRequest.getRequestInfo()));
-            prepareDocuments(vendorPaymentDetails);
-        }
-        return vendorPaymentDetailsRepository.create(vendorPaymentDetailsRequest);
-    }
+		for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
+			setAuditDetails(vendorPaymentDetails, userId);
+			vendorPaymentDetails.setPaymentNo(generatePaymentNumber(vendorPaymentDetails.getTenantId(),
+					vendorPaymentDetailsRequest.getRequestInfo()));
+			prepareDocuments(vendorPaymentDetails);
+		}
+		return vendorPaymentDetailsRepository.create(vendorPaymentDetailsRequest);
+	}
 
-    public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+	public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
 
-        Long userId = null;
-        if (vendorPaymentDetailsRequest.getRequestInfo() != null
-                && vendorPaymentDetailsRequest.getRequestInfo().getUserInfo() != null
-                && null != vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId()) {
-            userId = vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId();
-        }
+		Long userId = null;
+		if (vendorPaymentDetailsRequest.getRequestInfo() != null
+				&& vendorPaymentDetailsRequest.getRequestInfo().getUserInfo() != null
+				&& null != vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+			userId = vendorPaymentDetailsRequest.getRequestInfo().getUserInfo().getId();
+		}
 
-        for(VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsRequest.getVendorPaymentDetails()){
-            setAuditDetails(vendorPaymentDetails, userId);
-        }
+		for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
+			setAuditDetails(vendorPaymentDetails, userId);
+			prepareDocuments(vendorPaymentDetails);
+		}
 
-        validateForUniquePaymentInfoInRequest(vendorPaymentDetailsRequest);
-        validate(vendorPaymentDetailsRequest);
+		validateForUniquePaymentInfoInRequest(vendorPaymentDetailsRequest);
+		validate(vendorPaymentDetailsRequest);
 
-        return vendorPaymentDetailsRepository.update(vendorPaymentDetailsRequest);
-    }
+		return vendorPaymentDetailsRepository.update(vendorPaymentDetailsRequest);
+	}
 
-    private void validateForUniquePaymentInfoInRequest(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+	public Pagination<VendorPaymentDetails> search(VendorPaymentDetailsSearch vendorPaymentDetailsSearch) {
 
-        List<String> paymentNumbersList = vendorPaymentDetailsRequest.getVendorPaymentDetails()
-                .stream().map(VendorPaymentDetails::getPaymentNo)
-                .collect(Collectors.toList());
+		return vendorPaymentDetailsRepository.search(vendorPaymentDetailsSearch);
+	}
 
-        if(paymentNumbersList.size() != paymentNumbersList.stream().distinct().count())
-            throw new CustomException("Payment No",
-                    "Duplicate paymentNo in given Vendor Payment Details:");
-    }
+	private void validateForUniquePaymentInfoInRequest(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
 
-    private void prepareDocuments(VendorPaymentDetails vendorPaymentDetail) {
-        if(vendorPaymentDetail.getDocuments() != null){
-            List<Document> documentList =   vendorPaymentDetail.getDocuments().stream()
-                    .filter(record -> record.getFileStoreId() != null)
-                    .collect(Collectors.toList());
+		List<String> paymentNumbersList = vendorPaymentDetailsRequest.getVendorPaymentDetails().stream()
+				.map(VendorPaymentDetails::getPaymentNo).collect(Collectors.toList());
 
-            vendorPaymentDetail.setDocuments(documentList);
-        }
-        vendorPaymentDetail.getDocuments().forEach(document -> setDocumentDetails(document, vendorPaymentDetail));
-    }
+		if (paymentNumbersList.size() != paymentNumbersList.stream().distinct().count())
+			throw new CustomException("Payment No", "Duplicate paymentNo in given Vendor Payment Details:");
+	}
 
-    private void setDocumentDetails(Document document, VendorPaymentDetails vendorPaymentDetails){
-        document.setId(UUID.randomUUID().toString().replace("-", ""));
-        document.setTenantId(vendorPaymentDetails.getTenantId());
-        document.setRefCode(vendorPaymentDetails.getPaymentNo());
-        document.setAuditDetails(vendorPaymentDetails.getAuditDetails());
-    }
+	private void prepareDocuments(VendorPaymentDetails vendorPaymentDetail) {
+		if (vendorPaymentDetail.getDocuments() != null) {
+			List<Document> documentList = vendorPaymentDetail.getDocuments().stream()
+					.filter(record -> record.getFileStoreId() != null).collect(Collectors.toList());
 
-    private void validate(VendorPaymentDetailsRequest vendorPaymentDetailsRequest){
+			vendorPaymentDetail.setDocuments(documentList);
+		}
+		vendorPaymentDetail.getDocuments().forEach(document -> setDocumentDetails(document, vendorPaymentDetail));
+	}
 
-        for(VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsRequest.getVendorPaymentDetails()){
+	private void setDocumentDetails(Document document, VendorPaymentDetails vendorPaymentDetails) {
+		document.setId(UUID.randomUUID().toString().replace("-", ""));
+		document.setTenantId(vendorPaymentDetails.getTenantId());
+		document.setRefCode(vendorPaymentDetails.getPaymentNo());
+		document.setAuditDetails(vendorPaymentDetails.getAuditDetails());
+	}
 
-            //Validate for vendor contract
-            if(vendorPaymentDetail.getVendorContract() != null &&
-                    (vendorPaymentDetail.getVendorContract().getContractNo() == null ||
-                     vendorPaymentDetail.getVendorContract().getContractNo().isEmpty()))
-                throw new CustomException("Vehicle Contract", "Vehicle Contract Number required ");
+	private void validate(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
 
-            if(vendorPaymentDetail.getVendorContract() != null &&
-                    vendorPaymentDetail.getVendorContract().getContractNo() != null){
+		EmployeeResponse employeeResponse;
+		Pagination<VendorContract> vendorContractPage;
+		for (VendorPaymentDetails vendorPaymentDetail : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
 
-                Pagination<VendorContract> vendorContractPage = getVendorContracts(vendorPaymentDetail);
+			// Validate for vendor contract
+			if (vendorPaymentDetail.getVendorContract() != null
+					&& (vendorPaymentDetail.getVendorContract().getContractNo() == null
+							|| vendorPaymentDetail.getVendorContract().getContractNo().isEmpty()))
+				throw new CustomException("Vehicle Contract", "Vehicle Contract Number required ");
 
-                if(vendorContractPage == null || vendorContractPage.getPagedData() == null || vendorContractPage.getPagedData().isEmpty())
-                    throw new CustomException("Vehicle Contract",
-                            "Vehicle Contract Number required " + vendorPaymentDetail.getVendorContract().getContractNo());
-                else
-                    vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
-            }
+			if (vendorPaymentDetail.getVendorContract() != null
+					&& vendorPaymentDetail.getVendorContract().getContractNo() != null) {
 
-            //Validate for employee
-            if(vendorPaymentDetail.getEmployee() != null && (vendorPaymentDetail.getEmployee().getCode() == null ||
-            vendorPaymentDetail.getEmployee().getCode().isEmpty()))
-                throw new CustomException("Employee", "Employee code required" + vendorPaymentDetail.getPaymentNo());
+				vendorContractPage = getVendorContracts(vendorPaymentDetail);
 
-            if(vendorPaymentDetail.getEmployee() != null && vendorPaymentDetail.getEmployee().getCode() != null){
+				if (vendorContractPage == null || vendorContractPage.getPagedData() == null
+						|| vendorContractPage.getPagedData().isEmpty())
+					throw new CustomException("Vehicle Contract", "Vehicle Contract Number required "
+							+ vendorPaymentDetail.getVendorContract().getContractNo());
+				else
+					vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
+			}
 
-                EmployeeResponse employeeResponse = employeeRepository.getEmployeeByCode(vendorPaymentDetail.getEmployee().getCode(),
-                         vendorPaymentDetail.getTenantId(), vendorPaymentDetailsRequest.getRequestInfo());
+			// Validate for employee
+			if (vendorPaymentDetail.getEmployee() != null && (vendorPaymentDetail.getEmployee().getCode() == null
+					|| vendorPaymentDetail.getEmployee().getCode().isEmpty()))
+				throw new CustomException("Employee", "Employee code required" + vendorPaymentDetail.getPaymentNo());
 
-                if (employeeResponse == null || employeeResponse.getEmployees() == null
-                        || employeeResponse.getEmployees().isEmpty()) {
-                    throw new CustomException("Employee",
-                            "Given Employee is invalid: " + vendorPaymentDetail.getEmployee().getCode());
-                } else {
-                    vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
-                }
-            }
-        }
+			if (vendorPaymentDetail.getEmployee() != null && vendorPaymentDetail.getEmployee().getCode() != null) {
 
-    }
+				employeeResponse = employeeRepository.getEmployeeByCode(vendorPaymentDetail.getEmployee().getCode(),
+						vendorPaymentDetail.getTenantId(), vendorPaymentDetailsRequest.getRequestInfo());
 
-    private Pagination<VendorContract> getVendorContracts(VendorPaymentDetails vendorPaymentDetail){
-        VendorContractSearch vendorContractSearch = new VendorContractSearch();
-        vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
-        vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
+				if (employeeResponse == null || employeeResponse.getEmployees() == null
+						|| employeeResponse.getEmployees().isEmpty()) {
+					throw new CustomException("Employee",
+							"Given Employee is invalid: " + vendorPaymentDetail.getEmployee().getCode());
+				} else {
+					vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
+				}
+			}
+		}
 
-        return vendorContractService.search(vendorContractSearch);
-    }
+	}
 
-    private String generatePaymentNumber(String tenantId, RequestInfo requestInfo) {
+	private Pagination<VendorContract> getVendorContracts(VendorPaymentDetails vendorPaymentDetail) {
+		VendorContractSearch vendorContractSearch = new VendorContractSearch();
+		vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
+		vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
 
-        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForPaymentNumberPath);
-    }
+		return vendorContractService.search(vendorContractSearch);
+	}
 
-    private void setAuditDetails(VendorPaymentDetails contract, Long userId) {
+	private String generatePaymentNumber(String tenantId, RequestInfo requestInfo) {
 
-        if (contract.getAuditDetails() == null)
-            contract.setAuditDetails(new AuditDetails());
+		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForPaymentNumberPath);
+	}
 
-        if (null == contract.getPaymentNo() || contract.getPaymentNo().isEmpty()) {
-            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-            contract.getAuditDetails().setCreatedTime(new Date().getTime());
-        }
+	private void setAuditDetails(VendorPaymentDetails contract, Long userId) {
 
-        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-    }
+		if (contract.getAuditDetails() == null)
+			contract.setAuditDetails(new AuditDetails());
+
+		if (null == contract.getPaymentNo() || contract.getPaymentNo().isEmpty()) {
+			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+			contract.getAuditDetails().setCreatedTime(new Date().getTime());
+		}
+
+		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+	}
 }

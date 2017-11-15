@@ -394,7 +394,7 @@ public class Supplier {
 	 * @return faxNo
 	 **/
 	@ApiModelProperty(value = "fax number of Supplier  ")
-
+	@Size(max = 15)
 	@Pattern(regexp = "^[0-9]*$")
 	public String getFaxNo() {
 		return faxNo;
@@ -415,8 +415,8 @@ public class Supplier {
 	 * @return website
 	 **/
 	@ApiModelProperty(value = "website of the Supplier ")
-
-	@Pattern(regexp = "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$")
+	@Size(max = 500)
+	@Pattern(regexp = "^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/)?[a-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$")
 	public String getWebsite() {
 		return website;
 	}
@@ -564,7 +564,7 @@ public class Supplier {
 	 * @return gstNo
 	 **/
 	@ApiModelProperty(value = "gst number of supplier  ")
-
+	@Size(max = 10)
 	public String getGstNo() {
 		return gstNo;
 	}
@@ -629,7 +629,7 @@ public class Supplier {
 	 **/
 	@ApiModelProperty(required = true, value = "code of the bank  ")
 	@NotNull
-
+	@Size(max = 50)
 	public String getBankCode() {
 		return bankCode;
 	}
@@ -649,7 +649,7 @@ public class Supplier {
 	 * @return bankName
 	 **/
 	@ApiModelProperty(value = "name of the bank ")
-
+	@Size(max = 100)
 	@Pattern(regexp = "^[a-zA-Z ]*$")
 	public String getBankName() {
 		return bankName;
@@ -670,7 +670,7 @@ public class Supplier {
 	 * @return bankBranch
 	 **/
 	@ApiModelProperty(value = "name of the bank branch ")
-
+	@Size(max = 100)
 	public String getBankBranch() {
 		return bankBranch;
 	}
@@ -691,7 +691,7 @@ public class Supplier {
 	 **/
 	@ApiModelProperty(required = true, value = "account number in the bank  ")
 	@NotNull
-
+	@Size(max = 16)
 	@Pattern(regexp = "^[0-9]*$")
 	public String getAcctNo() {
 		return acctNo;
@@ -713,7 +713,7 @@ public class Supplier {
 	 **/
 	@ApiModelProperty(required = true, value = "ifsc of the bank ")
 	@NotNull
-
+	@Size(max = 10)
 	@Pattern(regexp = "^[a-zA-Z0-9]*$")
 	public String getIfsc() {
 		return ifsc;
@@ -734,7 +734,7 @@ public class Supplier {
 	 * @return micr
 	 **/
 	@ApiModelProperty(value = "micr of the bank                ")
-
+	@Size(max = 10)
 	@Pattern(regexp = "^[a-zA-Z0-9]*$")
 	public String getMicr() {
 		return micr;

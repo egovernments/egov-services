@@ -876,7 +876,7 @@ ReportDefinitions:
     type: string
     source: asset
   - name: name
-    label: reports.asset.assetanme
+    label: reports.asset.assetname
     type: string
     source: asset
   - name: depreciationrate

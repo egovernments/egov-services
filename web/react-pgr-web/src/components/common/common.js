@@ -1986,6 +1986,7 @@ var localization_EN_Data = {
     "reports.collection.transaction.date":"Transaction Date",
     "ac.create.asset.asset.category": "Asset Category",
     "ac.create.depreciationRate": "Depreciation Rate (%)",
+    "reports.asset.assetcategorytype": "Asset Category Type",
 
 //auto gen swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",

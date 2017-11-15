@@ -129,6 +129,7 @@ public class AdvocateRepository {
 			List<Advocate> advocates = jdbcTemplate.query(advocateSearchQuery, advocateValues.toArray(),
 					advocateRowMapper);
 			Agency agency = new Agency();
+			agency.setIsIndividual(Boolean.TRUE);
 			agencies.add(agency);
 			agencies.get(0).setAdvocates(advocates);
 

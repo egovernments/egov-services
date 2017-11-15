@@ -9,25 +9,27 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
-import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
-import org.egov.inv.persistence.entity.PriceListEntity;
+import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.persistence.entity.PriceListDetailsEntity;
 import org.egov.tracer.model.CustomException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
-public class PriceListDetailsJdbcRepository {
+public class PriceListDetailJdbcRepository extends JdbcRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-    public PriceListDetailsJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
+    public PriceListDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
-    public Pagination<PriceList> search(PriceListDetailsSearchRequest priceListDetailsSearchRequest) {
+    public Pagination<PriceListDetails> search(PriceListDetailsSearchRequest priceListDetailsSearchRequest) {
         String searchQuery = "select * from pricelistdetails :condition  :orderby ";
 
         Map<String, Object> paramValues = new HashMap<>();
@@ -35,7 +37,7 @@ public class PriceListDetailsJdbcRepository {
 
         if (!isEmpty(priceListDetailsSearchRequest.getSortBy())) {
             validateSortByOrder(priceListDetailsSearchRequest.getSortBy());
-            validateEntityFieldName(priceListDetailsSearchRequest.getSortBy(), PriceListDetailsSearchRequest.class);
+            validateEntityFieldName(priceListDetailsSearchRequest.getSortBy(), PriceListSearchRequest.class);
         }
 
         String orderBy = "order by id";
@@ -68,23 +70,23 @@ public class PriceListDetailsJdbcRepository {
 					new ArrayList<String>(Arrays.asList(priceListDetailsSearchRequest.getIds().split(","))));
 		}
 		
-        if (priceListDetailsSearchRequest.getFromDate() != null) {
+        if (priceListDetailsSearchRequest.getPriceList() != null) {
             if (params.length() > 0) {
                 params.append(" and ");
             }
-            params.append("fromDate =:fromDate");
-            paramValues.put("fromDate", priceListDetailsSearchRequest.getFromDate());
+            params.append("priceList =:priceList");
+            paramValues.put("priceList", priceListDetailsSearchRequest.getPriceList());
         }
         
-        if (priceListDetailsSearchRequest.getId() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
-            params.append("id =:id");
-            paramValues.put("id", priceListDetailsSearchRequest.getId());
+        if (!isEmpty(priceListDetailsSearchRequest.getActive())) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("active =:active");
+        	paramValues.put("active", priceListDetailsSearchRequest.getActive());
         }
-
-        Pagination<PriceList> page = new Pagination<>();
+        
+        Pagination<PriceListDetails> page = new Pagination<>();
         if (priceListDetailsSearchRequest.getOffSet() != null) {
             page.setOffset(priceListDetailsSearchRequest.getOffSet());
         }
@@ -102,24 +104,24 @@ public class PriceListDetailsJdbcRepository {
 
         searchQuery = searchQuery.replace(":orderby", orderBy);
 
-        page = (Pagination<PriceList>) getPagination(searchQuery, page, paramValues);
+        page = (Pagination<PriceListDetails>) getPagination(searchQuery, page, paramValues);
         searchQuery = searchQuery + " :pagination";
 
         searchQuery = searchQuery.replace(":pagination",
                 "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(PriceListEntity.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(PriceListDetailsEntity.class);
 
-        List<PriceListEntity> priceListEntities = namedParameterJdbcTemplate
+        List<PriceListDetailsEntity> priceListDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
 
-        List<PriceList> priceListList = priceListEntities.stream().map(PriceListEntity::toDomain)
+        List<PriceListDetails> priceListDetailsList = priceListDetailsEntities.stream().map(PriceListDetailsEntity::toDomain)
                 .collect(Collectors.toList());
 
-        page.setTotalResults(priceListList.size());
+        page.setTotalResults(priceListDetailsList.size());
 
-        page.setPagedData(priceListList);
+        page.setPagedData(priceListDetailsList);
 
         return page;
     }

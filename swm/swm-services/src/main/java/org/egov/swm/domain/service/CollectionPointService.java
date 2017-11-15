@@ -232,8 +232,7 @@ public class CollectionPointService {
 				if (bd.getRfid() == null || bd.getRfid().isEmpty()) {
 
 					throw new CustomException("RFID",
-							"The field RFID must be not be null or empty , the field RFID is Mandatory. "
-									+ "It cannot be not be null or empty.Please provide correct value");
+							"The field RFID Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 				}
 

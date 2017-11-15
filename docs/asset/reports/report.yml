@@ -120,7 +120,7 @@ ReportDefinitions:
        dep1.tenantid=depmax.tenantid AND dep1.createdtime=depmax.createdtime inner join (select assetid,tenantid,sum(depreciationvalue) as 
        totaldepreciationval from egasset_depreciation where   tenantid = $tenantid group by assetid,tenantid) depsum ON dep1.assetid=depsum.assetid 
        AND dep1.tenantid=depsum.tenantid ) depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid  left outer join
-       (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 left outer join (select assetid,tenantid,max(createddate) 
+       (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join (select assetid,tenantid,max(createddate) 
        as createddate from egasset_revaluation where tenantid = $tenantid group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND 
        rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate left outer join (select assetid,tenantid,sum(revaluationamount) as 
        incrementalrevalsum from egasset_revaluation where tenantid = $tenantid AND typeofchange='INCREASED' group by assetid,tenantid) revinc 
@@ -401,7 +401,7 @@ ReportDefinitions:
        dep1.tenantid=depmax.tenantid AND dep1.createdtime=depmax.createdtime inner join (select assetid,tenantid,sum(depreciationvalue) as 
        totaldepreciationval from egasset_depreciation where   tenantid = $tenantid group by assetid,tenantid) depsum ON dep1.assetid=depsum.assetid 
        AND dep1.tenantid=depsum.tenantid ) depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid  left outer join
-       (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 left outer join (select assetid,tenantid,max(createddate) 
+       (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join (select assetid,tenantid,max(createddate) 
        as createddate from egasset_revaluation where tenantid = $tenantid group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND 
        rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate left outer join (select assetid,tenantid,sum(revaluationamount) as 
        incrementalrevalsum from egasset_revaluation where tenantid = $tenantid AND typeofchange='INCREASED' group by assetid,tenantid) revinc 
@@ -542,7 +542,7 @@ ReportDefinitions:
          where   tenantid = $tenantid group by assetid,tenantid) depsum ON dep1.assetid=depsum.assetid 
          AND dep1.tenantid=depsum.tenantid ) depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid  
          left outer join
-         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 left outer join 
+         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
          left outer join
@@ -832,7 +832,7 @@ ReportDefinitions:
          where   tenantid = $tenantid group by assetid,tenantid) depsum ON dep1.assetid=depsum.assetid 
          AND dep1.tenantid=depsum.tenantid ) depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid  
          left outer join
-         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 left outer join 
+         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
          left outer join
@@ -1157,7 +1157,7 @@ ReportDefinitions:
          ON asset.id=currentvalue.assetid AND asset.tenantid=currentvalue.tenantid  
          left outer join egasset_disposal disposal ON asset.id=disposal.assetid AND asset.tenantId = disposal.tenantid
          left outer join
-         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 left outer join 
+         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
          left outer join
@@ -1437,7 +1437,7 @@ ReportDefinitions:
          ON asset.id=currentvalue.assetid AND asset.tenantid=currentvalue.tenantid  
          left outer join egasset_disposal disposal ON asset.id=disposal.assetid AND asset.tenantId = disposal.tenantid
          left outer join
-         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 left outer join 
+         (select rev1.*,revinc.incrementalrevalsum,revdec.decrementalrevalsum from egasset_revaluation rev1 inner join 
          (select assetid,tenantid,max(createddate) as createddate from egasset_revaluation where tenantid = $tenantid
          group by assetid,tenantid ) revalmax ON rev1.assetid=revalmax.assetid AND rev1.tenantid=revalmax.tenantid AND rev1.createddate=revalmax.createddate
          left outer join

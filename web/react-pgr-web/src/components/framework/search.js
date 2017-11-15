@@ -95,6 +95,7 @@ class Search extends Component {
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
+    window.localStorage.setItem("specifications",JSON.stringify(specifications));
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split("/")[2]);
     setActionName(hashLocation.split("/")[1]);
@@ -106,40 +107,63 @@ class Search extends Component {
       pathname:this.props.history.location.pathname,
       showResult: false
     })
+
+
   }
 
   componentDidMount() {
       this.props.resetDropdownData();
       this.initData();
+      this.hasReturnUrl();
+
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.props.resetDropdownData();
       this.initData();
+
     }
   }
 
-  search = (e) => {
-    e.preventDefault();
+  hasReturnUrl()
+  {
+    let {search}=this;
+    if (localStorage.getItem("returnUrl")) {
+      search(null,true)
+    }
+  }
+
+  search = (e=null,hasDefaultSearch=false) => {
+    if (e) {
+        e.preventDefault();
+    }
+
     let self = this;
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
+    if (hasDefaultSearch) {
+      formData=JSON.parse(window.localStorage.getItem("formData"));
+      this.props.setFormData(formData)
+    }
     for(var key in formData) {
       if(formData[key] == "" || typeof formData[key] == "undefined")
         delete formData[key];
     }
 
-    Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
+    var specifications=JSON.parse(window.localStorage.getItem("specifications"));
+    var currentSpecification=specifications[`${self.props.match.params.moduleName}.${self.props.match.path.split("/")[1]}`];
+
+    Api.commonApiPost(currentSpecification.url, formData, {}, null, currentSpecification.useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
-      var result = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result;
-     
+      var result = currentSpecification.result;
+
           var resultList = {
         resultHeader: [{label: "#"}, ...result.header],
         resultValues: [],
         disableRowClick:result.disableRowClick || false
       };
-      var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
-      var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
+      var specsValuesList = currentSpecification.result.values;
+      var values = _.get(res, currentSpecification.result.resultPath);
       if(values && values.length) {
         for(var i=0; i<values.length; i++) {
           var tmp = [i+1];
@@ -154,7 +178,7 @@ class Search extends Component {
         }
       }
       if(result.isAction){
-        resultList.actionItems = result.actionItems; 
+        resultList.actionItems = result.actionItems;
       }
       self.setState({
         resultList,
@@ -163,6 +187,10 @@ class Search extends Component {
       });
 
       self.props.setFlag(1);
+
+      window.localStorage.setItem("formData","");
+      window.localStorage.setItem("returnUrl","");
+
     }, function(err) {
       self.props.toggleSnackbarAndSetText(true, err.message, false, true);
       self.props.setLoadingStatus('hide');
@@ -464,16 +492,17 @@ class Search extends Component {
       if(selectedRecordId){
        this.props.setRoute(buttonUrl+selectedRecordId);
       }
-     
- } 
+
+ }
   rowCheckboxClickHandler=(code)=>{
     this.setState({
       selectedRecordId:code
     })
 
-  } 
+  }
 
   rowClickHandler = (index) => {
+   let {formData}=this.props;
    var value = this.state.values[index];
    var _url = window.location.hash.split("/").indexOf("update") > -1 ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
 
@@ -491,6 +520,12 @@ class Search extends Component {
     }
     if(!isMatchFound) _url = _url.default;
    }
+
+   console.log(formData);
+   localStorage.setItem("formData",JSON.stringify(formData));
+   localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
+
+
    //======================================================================>>
    if(_url.indexOf("?") > -1) {
      var url = _url.split("?")[0];
@@ -547,7 +582,7 @@ class Search extends Component {
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
             {	showResult && resultList.actionItems &&  resultList.actionItems.map((actionitem,index) =>{
 							return 	(<span style={{"margin-right":"20px"}}><UiButton item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url)}}/></span>)
-					}) } 
+					}) }
           <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
             <br/>
             {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} rowButtonClickHandler={rowButtonClickHandler} rowCheckboxClickHandler={rowCheckboxClickHandler} selectedValue={selectedRecordId}/>}

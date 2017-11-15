@@ -11,6 +11,9 @@ import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
+import UiBackButton from './components/UiBackButton';
+
+
 
 var specifications={};
 
@@ -318,6 +321,7 @@ console.log(val);
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
           </Col>
         </Row>
+        <UiBackButton />
         <form id="printable">
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>

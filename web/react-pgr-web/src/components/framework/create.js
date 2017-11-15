@@ -12,6 +12,8 @@ import UiButton from './components/UiButton';
 import {fileUpload, getInitiatorPosition} from './utility/utility';
 import $ from "jquery";
 
+import UiBackButton from './components/UiBackButton';
+
 var specifications={};
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
@@ -1327,6 +1329,8 @@ class Report extends Component {
             <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
           </Col>
         </Row>
+
+        {actionName == "update" && <UiBackButton/>}
         <form onSubmit={(e) => {
           create(e)
         }}>

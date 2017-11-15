@@ -2,7 +2,6 @@ package org.egov.works.services.web.controller;
 
 import java.util.List;
 
-import org.egov.works.services.domain.exception.CustomBindException;
 import org.egov.works.services.domain.service.EstimateAppropriationService;
 import org.egov.works.services.web.contract.EstimateAppropriation;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
@@ -31,9 +30,6 @@ public class EstimateAppropriationController {
 	public EstimateAppropriationResponse create(@RequestBody EstimateAppropriationRequest estimateAppropriationRequest,
 			BindingResult errors) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
 		/*
 		 * for (EstimateAppropriation estimateAppropriation :
@@ -50,12 +46,9 @@ public class EstimateAppropriationController {
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
-	public EstimateAppropriationResponse update(@RequestBody EstimateAppropriationRequest estimateAppropriationRequest,
-			BindingResult errors) {
+	public EstimateAppropriationResponse update(
+			@RequestBody EstimateAppropriationRequest estimateAppropriationRequest) {
 
-		if (errors.hasErrors()) {
-			throw new CustomBindException(errors);
-		}
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
 		// for (EstimateAppropriation estimateAppropriation :
 		// estimateAppropriationRequest.getEstimateAppropriations()) {
@@ -66,13 +59,15 @@ public class EstimateAppropriationController {
 		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);
 		return estimateAppropriationResponse;
 	}
-	
+
 	@PostMapping("/_search")
 	@ResponseStatus(HttpStatus.OK)
-	public EstimateAppropriationResponse search(@ModelAttribute EstimateAppropriationSearchContract estimateAppropriationSearchContract,
+	public EstimateAppropriationResponse search(
+			@ModelAttribute EstimateAppropriationSearchContract estimateAppropriationSearchContract,
 			@RequestBody org.egov.works.services.web.contract.RequestInfo requestInfo, BindingResult errors,
 			@RequestParam(required = true) String tenantId) {
-		List<EstimateAppropriation> appropriations = estimateAppropriationService.search(estimateAppropriationSearchContract);
+		List<EstimateAppropriation> appropriations = estimateAppropriationService
+				.search(estimateAppropriationSearchContract);
 		EstimateAppropriationResponse appropriationResponse = new EstimateAppropriationResponse();
 		appropriationResponse.setEstimateAppropriations(appropriations);
 		return appropriationResponse;

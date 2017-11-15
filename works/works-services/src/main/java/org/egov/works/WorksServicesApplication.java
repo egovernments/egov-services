@@ -1,4 +1,4 @@
-package org.egov.works.services;
+package org.egov.works;
 
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;

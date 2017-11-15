@@ -147,10 +147,9 @@ public class AssetService {
 
 		assets.forEach(asset -> {
 			Long assetCatkey = asset.getAssetCategory().getId();
-			String fundKey = asset.getFundSource().getId();
-			String deptKey = asset.getDepartment().getId();
+			String fundKey = asset.getFundSource().getCode();
+			String deptKey = asset.getDepartment().getCode();
 			String mOAKey=asset.getModeOfAcquisition().getCode();
-			System.err.println("mOAKey"+mOAKey);
 
             asset.setAssetCategory(assetCatMap.get(assetCatkey));
 			asset.setFundSource(fundMap.get(fundKey));

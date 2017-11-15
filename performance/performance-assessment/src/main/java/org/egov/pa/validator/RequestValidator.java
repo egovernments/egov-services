@@ -177,7 +177,10 @@ public class RequestValidator {
 	                    PerformanceAssessmentConstants.TENANTID_MANADATORY_FIELD_NAME));
 			}
 			
-			if(null == kpiValue.getResultValue()) { 
+			if(null == kpiValue.getResultValue() && null != kpiValue.getTargetValue()) { 
+				kpiValue.setResultValue(kpiValue.getTargetValue());
+			}
+			if(null == kpiValue.getResultValue() && null == kpiValue.getTargetValue()) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_FIELD_NAME));

@@ -4,7 +4,7 @@ var dat = {
     title:"advocates.search.document.title",
     useTimestamp: true,
     objectName: "",
-    url: "/lcms-services/legalcase/advocate/_search",
+    url: "/lcms-services/legalcase/advocate/agency/_search",
     groups: [
       {
         name: "advocateCategory",
@@ -85,15 +85,18 @@ var dat = {
         },
         {
           "label": "legal.search.result.mobileNumber"
+        }, {
+          "label": "legal.search.result.agencyName"
         }
       ],
       "values": [
         "code",
         "name",
         "emailId",
-        "contactNo"
+        "contactNo",
+        "agencyName"
       ],
-      "resultPath": "advocates",
+      "resultPath": "agencies[0].advocates",
       //"rowClickUrlUpdate": "/update/legalcase/{id}",
       //"rowClickUrlView": "/view/legalcase/{id}"
     }
@@ -367,7 +370,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].mobileNumber",
             label: "advocates.create.mobileNumber",
             pattern: "",
-            type: "text",
+            type: "mobileNumber",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
@@ -378,7 +381,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].contactNo",
             label: "advocates.create.contactNumber",
             pattern: "",
-            type: "text",
+            type: "mobileNumber",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
@@ -1129,7 +1132,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].mobileNumber",
             label: "advocates.create.mobileNumber",
             pattern: "",
-            type: "text",
+            type: "mobileNumber",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
@@ -1140,7 +1143,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].contactNo",
             label: "advocates.create.contactNumber",
             pattern: "",
-            type: "text",
+            type: "mobileNumber",
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: "",
@@ -1621,7 +1624,20 @@ var dat = {
             jsonPath: "agencies[0].advocates",
             label: "legal.advocates.create.additionalAdvocateWindow",
             pattern: "",
+            displayField:"firstName",
             type: "window",
+            tableConfig:{
+              header: [
+                {
+                  label: "legal.create.advocateName",
+                  style:{
+                     width:"700px"
+                  }
+                  }],
+               rows:[{
+                  displayField:"firstName"
+               }]
+            },
             subPath:"legal/master/addadvocate",
             isRequired: false,
             isDisabled: true,

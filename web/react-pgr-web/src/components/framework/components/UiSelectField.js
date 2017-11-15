@@ -61,8 +61,9 @@ class UiSelectField extends Component {
                   obj["key"]= item.convertToString ? keys[k].toString() : (item.convertToNumber ? Number(keys[k]) : keys[k]);
                   obj["value"]= values[k];
                     if (item.hasOwnProperty("isKeyOtherPair") && item.isKeyOtherPair) {
-                        otherPair[k]=(otherPair[k])?otherPair[k]:"";
-                     obj["value"]=keys[k]+"-"+otherPair[k]
+                        otherPair[k]=(otherPair[k])?"-"+otherPair[k]:"";
+
+                     obj["value"]=values[k]+""+otherPair[k]
                      }
                   if(others && others.length>0)
                   {

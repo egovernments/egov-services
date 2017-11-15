@@ -84,8 +84,7 @@ class UiWindowForm extends Component {
     deleteRow =(index)=>{
 	   
    }
-  renderTable = (item, _internal_val = []) => {
-	 
+  renderTable = (item, _internal_val = []) => {	 
     if (item.tableConfig) {
       return (
         <Col xs={12} md={6}>
@@ -319,11 +318,13 @@ class UiWindowForm extends Component {
   };
 
   render() {
+
     return <div>{this.renderArrayField(this.props.item)}</div>;
   }
 }
 const mapStateToProps = state => ({
-  fieldErrors: state.frameworkForm.fieldErrors
+  fieldErrors: state.frameworkForm.fieldErrors,
+  formData: state.frameworkForm.form
 });
 
 export default connect(mapStateToProps)(UiWindowForm);

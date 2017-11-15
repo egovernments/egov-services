@@ -2742,6 +2742,8 @@ var localization_EN_Data = {
     "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate",
   "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details",
   "advocates.create.agencyAddress":"Agency Address",
+    "legal.search.result.agencyName":"Agency Name"
+
 
 
 
@@ -4771,6 +4773,7 @@ var localization_MR_Data = {
    "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate-marathi",
   "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details-marathi",
   "advocates.create.agencyAddress":"Agency Address-marathi",
+  "legal.search.result.agencyName":"Agency Name-marathi"
 }
 
 export function translate(locale_text) {

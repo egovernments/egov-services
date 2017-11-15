@@ -956,11 +956,17 @@ ReportDefinitions:
     source: asset
     searchClause : AND asset.originalvalue<=$originalvalueto
     isMandatory: false
+  - name: assetcategorytype
+    label: reports.asset.assetcategorytype
+    isMandatory: false
+    type: singlevaluelist
+    pattern: 'list://IMMOVABLE:IMMOVABLE,MOVABLE:MOVABLE,LAND:LAND'
+    source: asset
   - name: assetcategory
     label: reports.asset.assetCategory
     isMandatory: false
     type: singlevaluelist
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27{assetcategorytype}%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
     searchClause : 
@@ -998,22 +1004,21 @@ ReportDefinitions:
     plusrevalsum,minusrevalsum,coalesce(prevdepsum,0)+coalesce(asset.accumulateddepreciation,0) as startdepval,
     coalesce(previousfynetblock,0.0)+coalesce(plusrevalsum,0.0)-coalesce(minusRevalsum,0.0) as revaltotal,prevdepsum, currdepsum,
     coalesce(prevdepsum,0.0)+coalesce(currdepsum,0.0)+coalesce(asset.accumulateddepreciation,0.0) as totaldepsum,assetsubcategoryname,assetSubCategory.depreciationrate,assetsubcategoryparent,
-    assetparentcategoryname from egasset_asset 
-    asset inner join (select distinct(current.assetid),current.tenantid,current.transactiondate,previousfynetblock,
+    assetparentcategoryname from egasset_asset asset inner join (select distinct(current.assetid),current.tenantid,current.transactiondate,previousfynetblock,
     endcurrentamount,plusrevalsum,minusrevalsum ,previousfynetblock+plusrevalsum-minusRevalsum as revaltotal,prevdepsum,currdepsum,
     prevdepsum+currdepsum as totaldepsum from egasset_current_value current inner join (select value.assetid,currentamount as 
-    endcurrentamount,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(transactiondate) as transactiondate,
+    endcurrentamount,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(createdtime) as createdtime,
     assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract ('epoch' from 
     (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) 
     GROUP BY assetid,tenantid) as maxvalue ON value.assetid=maxvalue.assetid and value.tenantid=maxvalue.tenantid AND 
-    value.transactiondate=maxvalue.transactiondate) endcurrent ON current.assetid=endcurrent.assetid AND current.tenantid=
-    endcurrent.tenantid AND current.transactiondate=endcurrent.transactiondate left outer join (select value.assetid,currentamount as 
-    previousfynetblock,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(transactiondate) as 
-    transactiondate,assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract 
+    value.createdtime=maxvalue.createdtime) endcurrent ON current.assetid=endcurrent.assetid AND current.tenantid=
+    endcurrent.tenantid AND current.createdtime=endcurrent.createdtime left outer join (select value.assetid,currentamount as 
+    previousfynetblock,value.tenantid,value.transactiondate from egasset_current_value value inner join (select max(createdtime) as 
+    createdtime,assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select extract 
     ('epoch' from (select startingdate from  egf_financialyear where (current_date between startingdate and endingdate) AND 
     tenantid=$tenantid))*1000) GROUP BY assetid,tenantid ) as maxvalue ON value.assetid=maxvalue.assetid and 
-    value.tenantid=maxvalue.tenantid AND value.transactiondate=maxvalue.transactiondate) prevyearcurrent ON current.assetid=
-    prevyearcurrent.assetid AND current.tenantid=prevyearcurrent.tenantid AND current.transactiondate=prevyearcurrent.transactiondate 
+    value.tenantid=maxvalue.tenantid AND value.createdtime=maxvalue.createdtime) prevyearcurrent ON current.assetid=
+    prevyearcurrent.assetid AND current.tenantid=prevyearcurrent.tenantid AND current.createdtime=prevyearcurrent.createdtime 
     left outer join (select COALESCE(sum(revaluationamount),0.0) plusRevalsum,assetid,tenantid from egasset_revaluation where 
     tenantid=$tenantid AND  typeofchange='INCREASED' AND  (revaluationdate BETWEEN  (select extract ('epoch' from (select startingdate 
     from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) AND (select extract 
@@ -1024,7 +1029,7 @@ ReportDefinitions:
     from egf_financialyear where (current_date between startingdate and endingdate) AND tenantid=$tenantid))*1000) and (select extract 
     ('epoch' from (select endingdate from egf_financialyear where (current_date between startingdate and endingdate) AND 
     tenantid=$tenantid))*1000)) GROUP BY assetid,tenantid ) minusreval ON current.assetid=minusreval.assetid AND current.tenantid=
-    minusreval.tenantid left outer join (select sum(depreciationvalue) prevdepsum,assetid,tenantid from egasset_depreciation where 
+    minusreval.tenantid  left outer join (select sum(depreciationvalue) prevdepsum,assetid,tenantid from egasset_depreciation where 
     tenantid=$tenantid AND todate<(select extract ('epoch' from (select startingdate from egf_financialyear where (current_date 
     between startingdate and endingdate) AND tenantid=$tenantid))*1000) GROUP BY assetid,tenantid ) prevdep ON current.assetid=prevdep.
     assetid AND current.tenantid=prevdep.tenantid left outer join (select sum(depreciationvalue) currdepsum,assetid,tenantid from 

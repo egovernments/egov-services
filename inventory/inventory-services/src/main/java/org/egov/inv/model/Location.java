@@ -103,7 +103,7 @@ public class Location   {
   **/
   @ApiModelProperty(value = "name of the Location ")
 
- @Pattern(regexp="^[a-zA-Z ]+$")
+ @Pattern(regexp="^[a-zA-Z ]*$")
   public String getName() {
     return name;
   }

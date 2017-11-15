@@ -310,7 +310,7 @@ public class Supplier {
 	@ApiModelProperty(required = true, value = "address of the Supplier   ")
 	@NotNull
 
-	@Pattern(regexp = "^[a-zA-Z0-9 ]*$")
+	@Pattern(regexp = "^[#.-,a-zA-Z0-9 ]*$")
 	@Size(max = 1000)
 	public String getAddress() {
 		return address;
@@ -459,7 +459,7 @@ public class Supplier {
 	 **/
 	@ApiModelProperty(value = "description of the Supplier ")
 
-	@Pattern(regexp = "^[0-9a-zA-Z ]*$")
+	@Pattern(regexp = "^[,.0-9a-zA-Z ]*$")
 	@Size(max = 1000)
 	public String getDescription() {
 		return description;

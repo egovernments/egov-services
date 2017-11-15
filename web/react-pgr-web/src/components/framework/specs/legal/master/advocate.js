@@ -194,7 +194,7 @@ var dat = {
             jsonPath: "agencies[0].name",
             label: "advocates.create.agencOrganizationName",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },{
@@ -272,7 +272,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].title",
             label: "advocates.create.advocateTitle",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
@@ -432,7 +432,7 @@ var dat = {
             jsonPath: "agencies[0].advocates[0].title",
             label: "advocates.create.advocateTitle",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]

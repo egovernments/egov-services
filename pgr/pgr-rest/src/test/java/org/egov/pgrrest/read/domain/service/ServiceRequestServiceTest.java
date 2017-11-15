@@ -176,11 +176,11 @@ public class ServiceRequestServiceTest {
     public void testShouldSetGeneratedCrnToDomainComplaintOnSave() {
         final ServiceRequest complaint = getComplaint();
         final SevaRequest sevaRequest = getSevaRequest();
-        when(sevaNumberGeneratorService.generate("default")).thenReturn(CRN);
+        when(sevaNumberGeneratorService.generate("tenantId")).thenReturn(CRN);
         when(userRepository.getUserByUserName("anonymous", "tenantId")).thenReturn(populateUser());
         serviceRequestService.save(complaint, sevaRequest);
 
-//        assertEquals(CRN, complaint.getCrn());
+        assertEquals(CRN, complaint.getCrn());
     }
 
     @Test

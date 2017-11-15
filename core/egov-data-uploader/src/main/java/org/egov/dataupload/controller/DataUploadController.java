@@ -38,17 +38,17 @@ public class DataUploadController {
 	
 	@PostMapping("/{moduleName}/_upload")
 	@ResponseBody
-	public ResponseEntity<?> getReportData(//@RequestParam("file") MultipartFile inputFile,
-			@RequestPart("file") MultipartFile inputFile,
-			@RequestPart(value="RequestInfo", required=false) RequestInfo requestInfo,
+	public ResponseEntity<?> getReportData(@RequestParam("file") MultipartFile inputFile,
+			/*@RequestPart("file") MultipartFile inputFile,
+			@RequestPart(value="RequestInfo", required=false) RequestInfo requestInfo,*/
 			@PathVariable("moduleName") String moduleName) throws Exception {
 		try {
-			logger.info("Inside controller");
-			Object result = dataUploadService.buildRequest(inputFile, moduleName, new RequestInfo());
-		    Type type = new TypeToken<Map<String, Object>>() {}.getType();
-			Gson gson = new Gson();
-			Map<String, Object> data = gson.fromJson(result.toString(), type);
-			return new ResponseEntity<>(data, HttpStatus.OK);
+				logger.info("Inside controller");
+				Object result = dataUploadService.buildRequest(inputFile, moduleName, new RequestInfo());
+			    Type type = new TypeToken<Map<String, Object>>() {}.getType();
+				Gson gson = new Gson();
+				Map<String, Object> data = gson.fromJson(result.toString(), type);
+				return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch(Exception e){
 			throw e;
 		}

@@ -127,8 +127,13 @@ public class DataUploadService {
 		            				list.get(i));	            	
 		            	} 	
 		            	logger.info("RequestInfo: "+requestInfo);
-		            	documentContext.put("$", "RequestInfo", requestInfo);
-		            	request = documentContext.jsonString().toString();	            	
+		            	try{
+			            	documentContext.put("$", "RequestInfo", requestInfo);
+			            	request = documentContext.jsonString().toString();
+		            	}catch(Exception e){
+			            	documentContext.put("$", "requestInfo", requestInfo);
+			            	request = documentContext.jsonString().toString();
+		            	}
 	            }else{
 	            	logger.info("The excel sheet is empty");
 	            }
@@ -179,8 +184,12 @@ public class DataUploadService {
 			Gson gson = new Gson();
 			List<Map<String, Object>> array = gson.fromJson(dataList.toString(), type);
 			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], array);	 
-	    	documentContext.put("$", "RequestInfo", requestInfo);
-    	}catch(Exception e){
+        	try{
+            	documentContext.put("$", "RequestInfo", requestInfo);
+        	}catch(Exception e){
+            	documentContext.put("$", "requestInfo", requestInfo);
+        	}    	
+        	}catch(Exception e){
 			logger.error("Exception caused while processing the excel data", e);
 			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
 					"Exception caused while processing the excel data");

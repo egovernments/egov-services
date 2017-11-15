@@ -51,7 +51,7 @@ public class RouteService {
 				&& null != routeRequest.getRequestInfo().getUserInfo().getId()) {
 			userId = routeRequest.getRequestInfo().getUserInfo().getId();
 		}
-		
+
 		for (Route r : routeRequest.getRoutes()) {
 
 			setAuditDetails(r, userId);
@@ -71,7 +71,7 @@ public class RouteService {
 				&& null != routeRequest.getRequestInfo().getUserInfo().getId()) {
 			userId = routeRequest.getRequestInfo().getUserInfo().getId();
 		}
-		
+
 		for (Route r : routeRequest.getRoutes()) {
 
 			setAuditDetails(r, userId);
@@ -94,6 +94,10 @@ public class RouteService {
 		ObjectMapper mapper = new ObjectMapper();
 
 		findDuplicatesInUniqueFields(routeRequest);
+
+		CollectionPointSearch search;
+
+		Pagination<CollectionPoint> collectionPoints;
 
 		for (Route route : routeRequest.getRoutes()) {
 
@@ -128,11 +132,11 @@ public class RouteService {
 
 			if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null) {
 
-				CollectionPointSearch search = new CollectionPointSearch();
+				search = new CollectionPointSearch();
 				search.setTenantId(route.getTenantId());
 				search.setCode(route.getStartingCollectionPoint().getCode());
 
-				Pagination<CollectionPoint> collectionPoints = collectionPointRepository.search(search);
+				collectionPoints = collectionPointRepository.search(search);
 
 				if (collectionPoints == null || collectionPoints.getPagedData() == null
 						|| collectionPoints.getPagedData().isEmpty())
@@ -151,11 +155,11 @@ public class RouteService {
 
 			if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null) {
 
-				CollectionPointSearch search = new CollectionPointSearch();
+				search = new CollectionPointSearch();
 				search.setTenantId(route.getTenantId());
 				search.setCode(route.getEndingCollectionPoint().getCode());
 
-				Pagination<CollectionPoint> collectionPoints = collectionPointRepository.search(search);
+				collectionPoints = collectionPointRepository.search(search);
 
 				if (collectionPoints == null || collectionPoints.getPagedData() == null
 						|| collectionPoints.getPagedData().isEmpty())
@@ -195,11 +199,11 @@ public class RouteService {
 								"The field CollectionPoint Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
 					if (cp != null && cp.getCode() != null) {
-						CollectionPointSearch search = new CollectionPointSearch();
+						search = new CollectionPointSearch();
 						search.setTenantId(route.getTenantId());
 						search.setCode(cp.getCode());
 
-						Pagination<CollectionPoint> collectionPoints = collectionPointRepository.search(search);
+						collectionPoints = collectionPointRepository.search(search);
 
 						if (collectionPoints == null || collectionPoints.getPagedData() == null
 								|| collectionPoints.getPagedData().isEmpty())

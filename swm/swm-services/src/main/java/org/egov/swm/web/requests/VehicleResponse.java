@@ -10,9 +10,15 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @JsonInclude(value = Include.NON_NULL)
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public @Data class VehicleResponse {
 
 	@JsonProperty("ResponseInfo")

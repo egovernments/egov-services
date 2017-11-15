@@ -33,28 +33,20 @@ public class VehicleScheduleController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public VehicleScheduleResponse create(@RequestBody @Valid VehicleScheduleRequest vehicleScheduleRequest) {
 
-		VehicleScheduleResponse vehicleScheduleResponse = new VehicleScheduleResponse();
-		vehicleScheduleResponse.setResponseInfo(getResponseInfo(vehicleScheduleRequest.getRequestInfo()));
-
 		vehicleScheduleRequest = vehicleScheduleService.create(vehicleScheduleRequest);
 
-		vehicleScheduleResponse.setVehicleSchedules(vehicleScheduleRequest.getVehicleSchedules());
-
-		return vehicleScheduleResponse;
+		return VehicleScheduleResponse.builder().responseInfo(getResponseInfo(vehicleScheduleRequest.getRequestInfo()))
+				.vehicleSchedules(vehicleScheduleRequest.getVehicleSchedules()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public VehicleScheduleResponse update(@RequestBody @Valid VehicleScheduleRequest vehicleScheduleRequest) {
 
-		VehicleScheduleResponse vehicleScheduleResponse = new VehicleScheduleResponse();
-		vehicleScheduleResponse.setResponseInfo(getResponseInfo(vehicleScheduleRequest.getRequestInfo()));
-
 		vehicleScheduleRequest = vehicleScheduleService.update(vehicleScheduleRequest);
 
-		vehicleScheduleResponse.setVehicleSchedules(vehicleScheduleRequest.getVehicleSchedules());
-
-		return vehicleScheduleResponse;
+		return VehicleScheduleResponse.builder().responseInfo(getResponseInfo(vehicleScheduleRequest.getRequestInfo()))
+				.vehicleSchedules(vehicleScheduleRequest.getVehicleSchedules()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,12 +57,9 @@ public class VehicleScheduleController {
 
 		Pagination<VehicleSchedule> vehicleScheduleList = vehicleScheduleService.search(vehicleScheduleSearch);
 
-		VehicleScheduleResponse response = new VehicleScheduleResponse();
-		response.setVehicleSchedules(vehicleScheduleList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(vehicleScheduleList));
-
-		return response;
+		return VehicleScheduleResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.vehicleSchedules(vehicleScheduleList.getPagedData()).page(new PaginationContract(vehicleScheduleList))
+				.build();
 
 	}
 

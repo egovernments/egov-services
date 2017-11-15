@@ -33,28 +33,20 @@ public class CollectionPointController {
 	@ResponseStatus(HttpStatus.CREATED)
 	public CollectionPointResponse create(@RequestBody @Valid CollectionPointRequest collectionPointRequest) {
 
-		CollectionPointResponse collectionPointResponse = new CollectionPointResponse();
-		collectionPointResponse.setResponseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()));
-
 		collectionPointRequest = collectionPointService.create(collectionPointRequest);
 
-		collectionPointResponse.setCollectionPoints(collectionPointRequest.getCollectionPoints());
-
-		return collectionPointResponse;
+		return CollectionPointResponse.builder().responseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()))
+				.collectionPoints(collectionPointRequest.getCollectionPoints()).build();
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.CREATED)
 	public CollectionPointResponse update(@RequestBody @Valid CollectionPointRequest collectionPointRequest) {
 
-		CollectionPointResponse collectionPointResponse = new CollectionPointResponse();
-		collectionPointResponse.setResponseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()));
-
 		collectionPointRequest = collectionPointService.update(collectionPointRequest);
 
-		collectionPointResponse.setCollectionPoints(collectionPointRequest.getCollectionPoints());
-
-		return collectionPointResponse;
+		return CollectionPointResponse.builder().responseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()))
+				.collectionPoints(collectionPointRequest.getCollectionPoints()).build();
 	}
 
 	@PostMapping("/_search")
@@ -65,11 +57,9 @@ public class CollectionPointController {
 
 		Pagination<CollectionPoint> collectionPointList = collectionPointService.search(collectionPointSearch);
 
-		CollectionPointResponse response = new CollectionPointResponse();
-		response.setCollectionPoints(collectionPointList.getPagedData());
-		response.setResponseInfo(getResponseInfo(requestInfo));
-		response.setPage(new PaginationContract(collectionPointList));
-		return response;
+		return CollectionPointResponse.builder().responseInfo(getResponseInfo(requestInfo))
+				.collectionPoints(collectionPointList.getPagedData()).page(new PaginationContract(collectionPointList))
+				.build();
 
 	}
 

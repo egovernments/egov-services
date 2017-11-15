@@ -13,14 +13,15 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.NoArgsConstructor;
 
 /**
  * Hold the material receipt note material level information. This will show which material is received based on which purchase order.
  */
 @ApiModel(description = "Hold the material receipt note material level information. This will show which material is received based on which purchase order.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
-@Builder
 public class MaterialReceiptDetail   {
   @JsonProperty("id")
   private Integer id = null;
@@ -29,7 +30,7 @@ public class MaterialReceiptDetail   {
   private String tenantId = null;
 
   @JsonProperty("mrnNumber")
-  private MaterialReceipt mrnNumber = null;
+  private String mrnNumber = null;
 
   @JsonProperty("material")
   private Material material = null;
@@ -105,7 +106,7 @@ public class MaterialReceiptDetail   {
     this.tenantId = tenantId;
   }
 
-  public MaterialReceiptDetail mrnNumber(MaterialReceipt mrnNumber) {
+  public MaterialReceiptDetail mrnNumber(String mrnNumber) {
     this.mrnNumber = mrnNumber;
     return this;
   }
@@ -118,11 +119,11 @@ public class MaterialReceiptDetail   {
   @NotNull
 
 
-  public MaterialReceipt getMrnNumber() {
+  public String getMrnNumber() {
     return mrnNumber;
   }
 
-  public void setMrnNumber(MaterialReceipt mrnNumber) {
+  public void setMrnNumber(String mrnNumber) {
     this.mrnNumber = mrnNumber;
   }
 

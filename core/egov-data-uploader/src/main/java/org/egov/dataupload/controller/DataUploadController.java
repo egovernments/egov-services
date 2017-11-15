@@ -40,7 +40,7 @@ public class DataUploadController {
 	@ResponseBody
 	public ResponseEntity<?> getReportData(//@RequestParam("file") MultipartFile inputFile,
 			@RequestPart("file") MultipartFile inputFile,
-			@RequestPart("RequestInfo") RequestInfo requestInfo,
+			@RequestPart(value="RequestInfo", required=false) RequestInfo requestInfo,
 			@PathVariable("moduleName") String moduleName) throws Exception {
 		try {
 			logger.info("Inside controller");
@@ -50,7 +50,6 @@ public class DataUploadController {
 			Map<String, Object> data = gson.fromJson(result.toString(), type);
 			return new ResponseEntity<>(data, HttpStatus.OK);
 		} catch(Exception e){
-			logger.error("Exception while searching for result: ",e);
 			throw e;
 		}
 	}

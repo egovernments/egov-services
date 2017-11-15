@@ -1,0 +1,53 @@
+{
+	"id": "7f767cfa-4e62-88e7-e6fd-b3506507be20",
+	"name": "Detailed_Estimate_Search",
+	"description": "",
+	"order": [
+		"9cf4dc99-95aa-2bd1-1004-b9371cdd96d7"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1510738710078,
+	"owner": "1594421",
+	"public": false,
+	"requests": [
+		{
+			"id": "9cf4dc99-95aa-2bd1-1004-b9371cdd96d7",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-estimate/detailedestimates/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510738753568,
+			"name": "SearchDetailedEstimate",
+			"description": "",
+			"collectionId": "7f767cfa-4e62-88e7-e6fd-b3506507be20",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"create\",\n    \"authToken\":\"6e11e0d7-1b34-4e57-8647-1e4d01f20abd\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"default\",\n   \t\"userName\" : \"ritesh\",\n   \t\"id\":1,\n       \"roles\" : []\n   }\n    }\n}"
+		}
+	]
+}

@@ -2,9 +2,11 @@ package org.egov.dataupload.repository;
 
 import java.util.Map;
 
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
 
@@ -24,6 +26,8 @@ public class DataUploadRepository {
 			response = restTemplate.postForObject(url, request, Map.class);
 		}catch(Exception e){
 			LOGGER.error("Exception while hitting url: "+url, e);
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
+					"Exception while hitting url: "+url);
 		}
 		return response;
 	}

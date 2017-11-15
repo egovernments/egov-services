@@ -1,5 +1,7 @@
 package org.egov.inv.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 import java.util.Calendar;
 import java.util.List;
 
@@ -7,6 +9,8 @@ import org.egov.common.DomainService;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
+import org.egov.inv.model.MaterialReceiptDetail;
+import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.OpeningBalanceSearchCriteria;
@@ -40,17 +44,25 @@ public class OpeningBalanceService extends DomainService{
 	public  List<MaterialReceipt> create(OpeningBalanceRequest headerRequest, String tenantId) {
 
 		headerRequest.getMaterialReceipt().stream().forEach(materialReceipt -> {
-			materialReceipt.setId(openingBalanceRepository.getSequence(materialReceipt));
+			materialReceipt.setId(openingBalanceRepository.getSequence("seq_materialreceipt"));
 			materialReceipt.setMrnStatus("CREATED");
-			//materialReceipt.setReceiptType();
+			if (isEmpty(materialReceipt.getTenantId())) {
+				materialReceipt.setTenantId(tenantId);
+            }
 			materialReceipt.setReceiptType(ReceiptTypeEnum.valueOf("OPENING_BALANCE"));
-			materialReceipt.setMrnNumber(appendString(materialReceipt));
+			String mrnNumber=appendString(materialReceipt);
+			materialReceipt.setMrnNumber(mrnNumber);
 			materialReceipt.getReceiptDetails().stream().forEach(detail ->{
-				detail.setId(Integer.valueOf(openingBalanceRepository.getSequence(detail)));
-				detail.setTenantId(tenantId);
+				detail.setMrnNumber(mrnNumber);
+				detail.setId(Integer.valueOf(openingBalanceRepository.getSequence("seq_materialreceiptdetail")));
+				if (isEmpty(detail.getTenantId())) {
+					detail.setTenantId(tenantId);
+                }
 				detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
-					addinfo.setId(Integer.valueOf(openingBalanceRepository.getSequence(addinfo)));
-					addinfo.setTenantId(tenantId);
+					addinfo.setId(Integer.valueOf(openingBalanceRepository.getSequence("seq_materialreceiptdetailaddnlinfo")));
+					if (isEmpty(addinfo.getTenantId())) {
+						addinfo.setTenantId(tenantId);
+	                }
 				});
 			});
 		});
@@ -65,17 +77,23 @@ public class OpeningBalanceService extends DomainService{
 	
 	public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
 		openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
+			if (isEmpty(materialReceipt.getTenantId())) {
+				materialReceipt.setTenantId(tenantId);
+            }
 			materialReceipt.getReceiptDetails().stream().forEach(detail ->{
-				detail.setTenantId(tenantId);
+				if (isEmpty(detail.getTenantId())) {
+					detail.setTenantId(tenantId);
+                }
 				detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
-					addinfo.setTenantId(tenantId);
-				});
+					if (isEmpty(addinfo.getTenantId())) {
+						addinfo.setTenantId(tenantId);
+	                }				});
 			});
 		});
 		
 		for (MaterialReceipt material : openBalReq.getMaterialReceipt()) {
 			material.setAuditDetails(
-					mapAuditDetails(openBalReq.getRequestInfo()));
+					getAuditDetails(openBalReq.getRequestInfo(),"UPDATE"));
 		}
 		kafkaTemplate.send(updateTopic, openBalReq);
 		return openBalReq.getMaterialReceipt();	

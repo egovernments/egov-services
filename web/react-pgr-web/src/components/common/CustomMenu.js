@@ -47,6 +47,7 @@ const menuConvention={
   "Grievance Redressal.Reports.Router Escalation Report":"/report/pgr/RouterEscalation",
   "Grievance Redressal.Reports.Ageing By Department Report":"/report/pgr/AgeingByDepartment",
   "Grievance Redressal.Reports.Drill Down By Department Report":"/report/pgr/DrillDownByDepartment",
+  "Grievance Redressal.Reports.Complaint Summary Register Report":"/report/pgr/complaintSummaryRegisterReport",
 
   "Collection.Collection Reports.CashCollection":"/report/collection/CashCollection",
   "Collection.Collection Reports.ReceiptRegister":"/report/collection/ReceiptRegister",

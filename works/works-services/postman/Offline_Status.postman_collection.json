@@ -1,0 +1,113 @@
+{
+	"id": "000bf8ed-4afd-d76c-7c22-c1ae4c7c416c",
+	"name": "Offline Status",
+	"description": "",
+	"order": [
+		"e20bcf1e-052c-47bc-bee5-ee57255dee57",
+		"9d461721-a5a7-4b3d-d08a-e37b3623edb2",
+		"b431fbf7-7ec4-3a1f-b617-9c1f73323dc5"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1510301108352,
+	"owner": "1594421",
+	"public": false,
+	"requests": [
+		{
+			"id": "9d461721-a5a7-4b3d-d08a-e37b3623edb2",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8380/works-services/v1/offlinestatuses/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510738474571,
+			"name": "Create Offline Status",
+			"description": "",
+			"collectionId": "000bf8ed-4afd-d76c-7c22-c1ae4c7c416c",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"status\": \"200\",\n    \"apiId\": \"ada\",\n    \"msgId\":\"dsas\",\n    \"ver\": \"1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"create\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"default\",\n   \t\"userName\" : \"narasappa\",\n   \t\"authToken\":\"7852f77e-dc71-4d88-99a5-e471d2cbb688\",\n   \t\"id\":1,\n       \"roles\" : []\n   },\n    \"correlationId\": \"e817d10f-0931-4dc2-be1a-88dab20f54af\"\n    },\n   \"offlineStatuses\": [\n     {\n     \t\"id\":\"\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"default\",\n       \"objectType\":\"WorkOrder\",\n       \"status\":\"SITE_HANDED_OVER\",\n       \"statusDate\":\"1510165799\"\n     },\n     {\n     \t\"id\":\"\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"default\",\n       \"objectType\":\"WorkOrder\",\n       \"status\":\"WORK_ORDER_ACKNOWLEDGED\",\n       \"statusDate\":\"1510165799\"\n     },\n     {\n     \t\"id\":\"\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"default\",\n       \"objectType\":\"WorkOrder\",\n       \"status\":\"WORK_COMMENCED\",\n       \"statusDate\":\"1510165799\"\n     }\n     \n     ]\n}"
+		},
+		{
+			"id": "b431fbf7-7ec4-3a1f-b617-9c1f73323dc5",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8380/works-services/v1/offlinestatuses/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510738461588,
+			"name": "Update Offline Status",
+			"description": "",
+			"collectionId": "000bf8ed-4afd-d76c-7c22-c1ae4c7c416c",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"status\": \"200\",\n    \"apiId\": \"ada\",\n    \"msgId\":\"dsas\",\n    \"ver\": \"1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"create\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"default\",\n   \t\"userName\" : \"narasappa\",\n   \t\"authToken\":\"7852f77e-dc71-4d88-99a5-e471d2cbb688\",\n   \t\"id\":1,\n       \"roles\" : []\n   },\n    \"correlationId\": \"e817d10f-0931-4dc2-be1a-88dab20f54af\"\n    },\n   \"offlineStatuses\": [\n     {\n     \t\"id\":\"7852f77edc714d8899a5e471d2cbb688\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"default\",\n       \"objectType\":\"WorkOrder\",\n       \"status\":\"WORK_ORDER_ACKNOWLEDGED\",\n       \"statusDate\":\"1510165794\"\n     },\n     {\n     \t\"id\":\"7852f77edc714d8899a5e471d2cbb688\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"default\",\n       \"objectType\":\"WorkOrder\",\n       \"status\":\"SITE_HANDED_OVER\",\n       \"statusDate\":\"151016575\"\n     },\n     {\n     \t\"id\":\"7852f77edc714d8899a5e471d2cbb688\",\n       \"objectNumber\":\"OBN1/c\",\n       \"tenantId\":\"default\",\n       \"objectType\":\"WorkOrder\",\n       \"status\":\"WORK_COMMENCED\",\n       \"statusDate\":\"1510165796\"\n     }\n     \n     ]\n}"
+		},
+		{
+			"id": "e20bcf1e-052c-47bc-bee5-ee57255dee57",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8380/works-services/v1/offlinestatuses/_search?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1510738567610,
+			"name": "Search Offline Status",
+			"description": "",
+			"collectionId": "000bf8ed-4afd-d76c-7c22-c1ae4c7c416c",
+			"responses": [],
+			"rawModeData": "{\n  \"RequestInfo\": {\n    \"resMsgId\": \"placeholder\",\n    \"msgId\": \"123\",\n    \"status\": \"200\",\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.1\",\n    \"ts\": \"123456789456\",\n    \"key\": null,\n    \"action\":\"create\",\n    \"authToken\":\"6e11e0d7-1b34-4e57-8647-1e4d01f20abd\",\n    \"userInfo\":{\n   \t\"tenantId\" : \"default\",\n   \t\"userName\" : \"ritesh\",\n   \t\"id\":1,\n       \"roles\" : []\n   }\n    }\n}"
+		}
+	]
+}

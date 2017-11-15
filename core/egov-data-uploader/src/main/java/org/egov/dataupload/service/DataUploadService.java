@@ -43,7 +43,7 @@ public class DataUploadService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 
-	public Object buildRequest(MultipartFile file, String moduleName, RequestInfo requestInfo) throws IOException {
+	public Object buildRequest(MultipartFile file, String moduleName, RequestInfo requestInfo) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 	    Definition uploadDefinition = getUploadDefinition(uploadDefinitionMap, moduleName, file.getName());
 	    Object response = null;
@@ -92,7 +92,7 @@ public class DataUploadService {
 											.filter(def -> (def.getFileName().equals(fileName)))
 		                                 .collect(Collectors.toList());
 		}catch(Exception e){
-			logger.error("There's no Upload Definition provided for this excel file");
+			logger.error("There's no Upload Definition provided for this excel file", e);
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
 					"There's no Upload Definition provided for this excel file");
 		}
@@ -113,24 +113,30 @@ public class DataUploadService {
 		List<Object> list = excelData.get(0);
 		String request = null;
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
-	    if(!list.isEmpty()){
-	           for(int i = 0; i < jsonPathList.size(); i++){
-	                String[] expressionArray = (jsonPathList.get(i)).split("[.]");
-	            	StringBuilder expression = new StringBuilder();
-	            	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
-	            		expression.append(expressionArray[j]);
-	            		if(j != expressionArray.length - 2)
-	            			expression.append(".");
-	            	}	            		
-	            	documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], 
-	            				list.get(i));	            	
-	            	} 	
-	            	logger.info("RequestInfo: "+requestInfo);
-	            	documentContext.put("$", "RequestInfo", requestInfo);
-	            	request = documentContext.jsonString().toString();	            	
-            }else{
-            	logger.info("The excel sheet is empty");
-            }
+    	try{
+		    if(!list.isEmpty()){
+		           for(int i = 0; i < jsonPathList.size(); i++){
+		                String[] expressionArray = (jsonPathList.get(i)).split("[.]");
+		            	StringBuilder expression = new StringBuilder();
+		            	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
+		            		expression.append(expressionArray[j]);
+		            		if(j != expressionArray.length - 2)
+		            			expression.append(".");
+		            	}	            		
+		            	documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], 
+		            				list.get(i));	            	
+		            	} 	
+		            	logger.info("RequestInfo: "+requestInfo);
+		            	documentContext.put("$", "RequestInfo", requestInfo);
+		            	request = documentContext.jsonString().toString();	            	
+	            }else{
+	            	logger.info("The excel sheet is empty");
+	            }
+    	}catch(Exception e){
+    		logger.error("Exception caused while processing the excel data", e);
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
+					"Exception caused while processing the excel data");
+    	}
 	    
 	    return request;
 	}
@@ -140,39 +146,45 @@ public class DataUploadService {
 		ObjectMapper mapper = new ObjectMapper();
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
     	List<String> dataList = new ArrayList<>();
-    	for(List<Object> list: excelData){
-	    	StringBuilder object = new StringBuilder(); 
-	    	object.append(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()).toString());
-	    	object.deleteCharAt(0).deleteCharAt(object.toString().length() - 1);
-	    	String json = mapper.writeValueAsString(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()));
-	    	json = json.substring(1, json.length() - 1);
-	    	logger.info("json: "+json);
-	    	DocumentContext docContext = JsonPath.parse(json);
-	    	for(int i = 0; i < jsonPathList.size(); i++){
-	    		String[] expressionArray = (jsonPathList.get(i)).split("[.]");
-	    		StringBuilder expression = new StringBuilder();
-	    		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
-	    			expression.append(expressionArray[j]);
-	    			if(j != expressionArray.length - 2)
-	    				expression.append(".");
-	    		}            	
-	    		docContext.put("$", expressionArray[expressionArray.length - 1], 
-	    				list.get(i));	            	
-	    		}	    	
-	    	dataList.add(docContext.jsonString().toString());
-    	}	    
-		String[] expressionArray = (uploadDefinition.getArrayPath()).split("[.]");
-		StringBuilder expression = new StringBuilder();
-		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
-			expression.append(expressionArray[j]);
-			if(j != expressionArray.length - 2)
-				expression.append(".");
-		}
-	    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
-		Gson gson = new Gson();
-		List<Map<String, Object>> array = gson.fromJson(dataList.toString(), type);
-		documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], array);	 
-    	documentContext.put("$", "RequestInfo", requestInfo);
+    	try{
+	    	for(List<Object> list: excelData){
+		    	StringBuilder object = new StringBuilder(); 
+		    	object.append(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()).toString());
+		    	object.deleteCharAt(0).deleteCharAt(object.toString().length() - 1);
+		    	String json = mapper.writeValueAsString(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()));
+		    	json = json.substring(1, json.length() - 1);
+		    	logger.info("json: "+json);
+		    	DocumentContext docContext = JsonPath.parse(json);
+		    	for(int i = 0; i < jsonPathList.size(); i++){
+		    		String[] expressionArray = (jsonPathList.get(i)).split("[.]");
+		    		StringBuilder expression = new StringBuilder();
+		    		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
+		    			expression.append(expressionArray[j]);
+		    			if(j != expressionArray.length - 2)
+		    				expression.append(".");
+		    		}            	
+		    		docContext.put("$", expressionArray[expressionArray.length - 1], 
+		    				list.get(i));	            	
+		    		}	    	
+		    	dataList.add(docContext.jsonString().toString());
+	    	}	    
+			String[] expressionArray = (uploadDefinition.getArrayPath()).split("[.]");
+			StringBuilder expression = new StringBuilder();
+			for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
+				expression.append(expressionArray[j]);
+				if(j != expressionArray.length - 2)
+					expression.append(".");
+			}
+		    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+			Gson gson = new Gson();
+			List<Map<String, Object>> array = gson.fromJson(dataList.toString(), type);
+			documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], array);	 
+	    	documentContext.put("$", "RequestInfo", requestInfo);
+    	}catch(Exception e){
+			logger.error("Exception caused while processing the excel data", e);
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
+					"Exception caused while processing the excel data");
+    	}
 
     	return documentContext.jsonString().toString();
     	

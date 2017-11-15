@@ -109,6 +109,15 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 		}
 		return kpiList;
 	}
+	
+	@Override
+	public Boolean getKpiType(String kpiCode, String tenantId) {
+		String query = queryBuilder.getKpiTypeQuery(); 
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		preparedStatementValues.add(kpiCode);
+		Boolean targetType = jdbcTemplate.queryForObject(query, preparedStatementValues.toArray(), Boolean.class);
+		return targetType;
+	}
 
 	@Override
 	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {

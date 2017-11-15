@@ -96,6 +96,11 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	}*/
     }
 	
+	@Override
+	public Boolean getKpiType(String kpiCode, String tenantId) {
+		return kpiMasterRepository.getKpiType(kpiCode, tenantId);
+	}
+	
 	private void prepareDocumentObjects(KPIRequest kpiRequest) { 
     	List<KPI> kpiList = kpiRequest.getKpIs(); 
     	for(KPI kpi : kpiList) {
@@ -133,4 +138,6 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	else 
     		return false;
     }
+
+	
 }

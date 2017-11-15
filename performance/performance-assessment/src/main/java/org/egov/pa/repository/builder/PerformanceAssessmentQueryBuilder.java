@@ -122,6 +122,10 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
+    public String getKpiTypeQuery() { 
+    	return "SELECT targettype FROM egpa_kpi_master WHERE code = ? " ; 
+    }
+    
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiValueWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final KPIValueSearchRequest kpiValueSearchReq) {

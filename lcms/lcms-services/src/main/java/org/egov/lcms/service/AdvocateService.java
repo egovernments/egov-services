@@ -66,15 +66,15 @@ public class AdvocateService {
 					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
 							propertiesManager.getAgencyNameErrorMsg());
 
-				if (agency.getDateOfEmpanelment() == null && agency.getStandingCommitteeDecisionDate() == null
-						&& agency.getEmpanelmentFromDate() == null && agency.getNewsPaperAdvertismentDate() == null
-						&& agency.getEmpanelmentToDate() == null) {
-					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
-							propertiesManager.getAgencyNameErrorMsg());
+				if (agency.getDateOfEmpanelment() == null || agency.getStandingCommitteeDecisionDate() == null
+						|| agency.getEmpanelmentFromDate() == null || agency.getNewsPaperAdvertismentDate() == null
+						|| agency.getEmpanelmentToDate() == null) {
+					throw new CustomException(propertiesManager.getEmpanelmentErrorCode(),
+							propertiesManager.getEmpanelmentErrorMsg());
 				}
 
-				if (agency.getBankName() == null && agency.getBankBranch() == null && agency.getBankAccountNo() == null
-						&& agency.getIfscCode() == null && agency.getMicr() == null) {
+				if (agency.getBankName() == null || agency.getBankBranch() == null || agency.getBankAccountNo() == null
+						|| agency.getIfscCode() == null || agency.getMicr() == null) {
 					throw new CustomException(propertiesManager.getBankDetailsErrorCode(),
 							propertiesManager.getBankDetailsErrorMsg());
 				}
@@ -85,7 +85,7 @@ public class AdvocateService {
 				agency.setCode(agencyCode);
 
 				// Adding personal details to DB
-				if (agency.getPersonDetails() != null) {
+				if (agency.getPersonDetails() != null && agency.getPersonDetails().size() > 0) {
 					for (PersonDetails personDetails : agency.getPersonDetails()) {
 
 						String name = personDetails.getFirstName() + " " + personDetails.getLastName();
@@ -105,7 +105,7 @@ public class AdvocateService {
 			}
 
 			// Add advocate to DB
-			if (agency.getAdvocates() != null) {
+			if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0) {
 				for (Advocate advocate : agency.getAdvocates()) {
 
 					String name = advocate.getFirstName() + " " + advocate.getLastName();
@@ -175,15 +175,15 @@ public class AdvocateService {
 					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
 							propertiesManager.getAgencyNameErrorMsg());
 
-				if (agency.getDateOfEmpanelment() == null && agency.getStandingCommitteeDecisionDate() == null
-						&& agency.getEmpanelmentFromDate() == null && agency.getNewsPaperAdvertismentDate() == null
-						&& agency.getEmpanelmentToDate() == null) {
-					throw new CustomException(propertiesManager.getAgencyNameErrorCode(),
-							propertiesManager.getAgencyNameErrorMsg());
+				if (agency.getDateOfEmpanelment() == null || agency.getStandingCommitteeDecisionDate() == null
+						|| agency.getEmpanelmentFromDate() == null || agency.getNewsPaperAdvertismentDate() == null
+						|| agency.getEmpanelmentToDate() == null) {
+					throw new CustomException(propertiesManager.getEmpanelmentErrorCode(),
+							propertiesManager.getEmpanelmentErrorMsg());
 				}
 
-				if (agency.getBankName() == null && agency.getBankBranch() == null && agency.getBankAccountNo() == null
-						&& agency.getIfscCode() == null && agency.getMicr() == null) {
+				if (agency.getBankName() == null || agency.getBankBranch() == null || agency.getBankAccountNo() == null
+						|| agency.getIfscCode() == null || agency.getMicr() == null) {
 					throw new CustomException(propertiesManager.getBankDetailsErrorCode(),
 							propertiesManager.getBankDetailsErrorMsg());
 				}
@@ -197,7 +197,7 @@ public class AdvocateService {
 				kafkaTemplate.send(propertiesManager.getAgencyUpdated(), agencyRequest);
 			}
 
-			if (agency.getAdvocates() != null) {
+			if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0) {
 
 				validateAdvocates(agency, createAgencyRequest);
 
@@ -218,7 +218,7 @@ public class AdvocateService {
 
 	private void validatePersonDetails(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
-		if (agency.getPersonDetails() != null) {
+		if (agency.getPersonDetails() != null && agency.getPersonDetails().size() > 0) {
 			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getTenantId(), agency.getCode());
 			List<String> personDetailsCodes = personDetailsOnDb.stream().map(details -> details.getCode())
 					.collect(Collectors.toList());
@@ -264,7 +264,7 @@ public class AdvocateService {
 
 	private void validateAdvocates(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
-		if (agency.getAdvocates() != null) {
+		if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0 ) {
 			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(), agency.getCode());
 			List<String> advocateCodes = advocatesOnDb.stream().map(Advocate -> Advocate.getCode())
 					.collect(Collectors.toList());

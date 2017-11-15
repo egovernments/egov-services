@@ -210,10 +210,10 @@ public class CaseSearchRepository {
 		return null;
 	}
 
-	public List<CaseDetails> getCaseDetails(String tenantId) {
+	public List<CaseDetails> getCaseDetails(String tenantId, String advocateName) {
 		List<CaseDetails> caseDetails = new ArrayList<>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		final String queryStr = caseBuilder.searchCaseDetailsByTenantId(tenantId, ConstantUtility.CASE_TABLE_NAME,
+		final String queryStr = caseBuilder.searchCaseDetailsByTenantId(tenantId, advocateName, ConstantUtility.CASE_TABLE_NAME,
 				preparedStatementValues);
 
 		try {

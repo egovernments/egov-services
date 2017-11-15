@@ -132,11 +132,13 @@ public class CaseController {
 	/**
 	 * used to get the caseNo and summonRefernceNo using tenantId
 	 * @param tenantId
-	 * @return
+	 * @param advocateName
+	 * @return CaseDetailsResponse
 	 */
 	@RequestMapping(path = "/caseno/_search", method = RequestMethod.POST)
 	public CaseDetailsResponse getCaseNo(@RequestParam(value = "tenantId", required = true) String tenantId,
+			@RequestParam(value = "advocateName", required = false) String advocateName,
 			@RequestBody RequestInfoWrapper requestInfoWrapper) {
-		return caseService.getCaseNo(tenantId, requestInfoWrapper.getRequestInfo());
+		return caseService.getCaseNo(tenantId, advocateName, requestInfoWrapper.getRequestInfo());
 	}
 }

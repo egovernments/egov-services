@@ -815,7 +815,9 @@ class actualKpiCreate extends Component {
       let {getVal, getValFromDropdownData} = this;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
-      let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+
+    
+      let obj = specifications[`perfManagement.create`];
 
       if (property == "kpiValues[0].KPI.code") {
 

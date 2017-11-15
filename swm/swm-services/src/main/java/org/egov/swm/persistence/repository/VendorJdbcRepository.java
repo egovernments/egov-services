@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.ServicedLocations;
@@ -15,9 +17,15 @@ import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.persistence.entity.VendorEntity;
+import org.egov.swm.web.repository.BoundaryRepository;
+import org.egov.swm.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
 
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
@@ -32,6 +40,12 @@ public class VendorJdbcRepository extends JdbcRepository {
 
 	@Autowired
 	public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
+
+	@Autowired
+	private MdmsRepository mdmsRepository;
+
+	@Autowired
+	private BoundaryRepository boundaryRepository;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -127,6 +141,11 @@ public class VendorJdbcRepository extends JdbcRepository {
 		List<Supplier> contractors;
 		List<ServicedLocations> sls;
 		List<ServicesOffered> sos;
+		JSONArray responseJSONArray = null;
+		ObjectMapper mapper = new ObjectMapper();
+		SwmProcess p;
+		Boundary boundary;
+
 		for (VendorEntity vendorEntity : vendorEntities) {
 
 			v = vendorEntity.toDomain();
@@ -147,7 +166,16 @@ public class VendorJdbcRepository extends JdbcRepository {
 				v.setServicedLocations(new ArrayList<>());
 
 				for (ServicedLocations sl : sls) {
-					v.getServicedLocations().add(Boundary.builder().code(sl.getLocation()).build());
+
+					if (sl.getLocation() != null && !sl.getLocation().isEmpty()) {
+
+						boundary = boundaryRepository.fetchBoundaryByCode(sl.getLocation(), sl.getTenantId());
+
+						if (boundary != null)
+							v.getServicedLocations().add(boundary);
+
+					}
+
 				}
 			}
 
@@ -160,7 +188,17 @@ public class VendorJdbcRepository extends JdbcRepository {
 				v.setServicesOffered(new ArrayList<>());
 
 				for (ServicesOffered so : sos) {
-					v.getServicesOffered().add(SwmProcess.builder().name(so.getService()).build());
+					if (so.getService() != null && !so.getService().isEmpty()) {
+
+						responseJSONArray = mdmsRepository.getByCriteria(so.getTenantId(), Constants.MODULE_CODE,
+								Constants.SWMPROCESS_MASTER_NAME, "code", so.getService(), new RequestInfo());
+
+						if (responseJSONArray != null && responseJSONArray.size() > 0) {
+							p = mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
+							v.getServicesOffered().add(p);
+						}
+
+					}
 				}
 			}
 

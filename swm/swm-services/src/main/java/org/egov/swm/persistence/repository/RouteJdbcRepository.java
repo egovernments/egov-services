@@ -178,8 +178,8 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 				collectionPointList = collectionPointJdbcRepository.search(cps);
 
-				if (collectionPointList != null || collectionPointList.getPagedData() != null
-						|| !collectionPointList.getPagedData().isEmpty())
+				if (collectionPointList != null && collectionPointList.getPagedData() != null
+						&& !collectionPointList.getPagedData().isEmpty())
 					route.setStartingCollectionPoint(collectionPointList.getPagedData().get(0));
 
 			}
@@ -192,8 +192,8 @@ public class RouteJdbcRepository extends JdbcRepository {
 
 				collectionPointList = collectionPointJdbcRepository.search(cps);
 
-				if (collectionPointList != null || collectionPointList.getPagedData() != null
-						|| !collectionPointList.getPagedData().isEmpty())
+				if (collectionPointList != null && collectionPointList.getPagedData() != null
+						&& !collectionPointList.getPagedData().isEmpty())
 					route.setEndingCollectionPoint(collectionPointList.getPagedData().get(0));
 
 			}

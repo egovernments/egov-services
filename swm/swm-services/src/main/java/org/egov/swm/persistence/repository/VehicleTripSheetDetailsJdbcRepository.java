@@ -7,9 +7,19 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Route;
+import org.egov.swm.domain.model.RouteSearch;
+import org.egov.swm.domain.model.Vehicle;
+import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.model.VehicleTripSheetDetails;
 import org.egov.swm.domain.model.VehicleTripSheetDetailsSearch;
+import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.domain.model.VendorSearch;
+import org.egov.swm.domain.service.RouteService;
+import org.egov.swm.domain.service.VehicleService;
+import org.egov.swm.domain.service.VendorService;
 import org.egov.swm.persistence.entity.VehicleTripSheetDetailsEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +27,15 @@ import org.springframework.stereotype.Service;
 public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehicletripsheetdetails";
+
+	@Autowired
+	private RouteService routeService;
+
+	@Autowired
+	private VehicleService vehicleService;
+
+	@Autowired
+	private VendorService vendorService;
 
 	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
 			String uniqueFieldValue) {
@@ -118,9 +137,60 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 		List<VehicleTripSheetDetailsEntity> vehicleTripSheetDetailsEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
+		VehicleTripSheetDetails vehicleTripSheetDetails;
+		RouteSearch routeSearch = new RouteSearch();
+		Pagination<Route> routes;
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+		VendorSearch vendorSearch;
+		Pagination<Vendor> vendors;
+
 		for (VehicleTripSheetDetailsEntity vehicleTripSheetDetailsEntity : vehicleTripSheetDetailsEntities) {
 
-			vehicleTripSheetDetailsList.add(vehicleTripSheetDetailsEntity.toDomain());
+			vehicleTripSheetDetails = vehicleTripSheetDetailsEntity.toDomain();
+
+			if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null
+					&& !vehicleTripSheetDetails.getRoute().getCode().isEmpty()) {
+
+				routeSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
+				routeSearch.setCode(vehicleTripSheetDetails.getRoute().getCode());
+				routes = routeService.search(routeSearch);
+
+				if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty()) {
+					vehicleTripSheetDetails.setRoute(routes.getPagedData().get(0));
+				}
+
+			}
+
+			if (vehicleTripSheetDetails.getVehicle() != null
+					&& vehicleTripSheetDetails.getVehicle().getRegNumber() != null
+					&& !vehicleTripSheetDetails.getVehicle().getRegNumber().isEmpty()) {
+
+				vehicleSearch = new VehicleSearch();
+				vehicleSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
+				vehicleSearch.setRegNumber(vehicleTripSheetDetails.getVehicle().getRegNumber());
+				vehicleList = vehicleService.search(vehicleSearch);
+
+				if (vehicleList != null && vehicleList.getPagedData() != null
+						&& !vehicleList.getPagedData().isEmpty()) {
+					vehicleTripSheetDetails.setVehicle(vehicleList.getPagedData().get(0));
+				}
+
+			}
+
+			if (vehicleTripSheetDetails.getVendor() != null && vehicleTripSheetDetails.getVendor().getVendorNo() != null
+					&& !vehicleTripSheetDetails.getVendor().getVendorNo().isEmpty()) {
+
+				vendorSearch = new VendorSearch();
+				vendorSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
+				vendorSearch.setVendorNo(vehicleTripSheetDetails.getVendor().getVendorNo());
+				vendors = vendorService.search(vendorSearch);
+				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
+					vehicleTripSheetDetails.setVendor(vendors.getPagedData().get(0));
+				}
+			}
+
+			vehicleTripSheetDetailsList.add(vehicleTripSheetDetails);
 		}
 
 		page.setTotalResults(vehicleTripSheetDetailsList.size());

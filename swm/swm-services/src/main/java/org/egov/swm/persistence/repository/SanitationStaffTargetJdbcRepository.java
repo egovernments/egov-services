@@ -25,7 +25,6 @@ import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.repository.MdmsRepository;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -182,9 +181,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 				routeSearch.setCode(sst.getRoute().getCode());
 				routes = routeService.search(routeSearch);
 
-				if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty()) {
-					throw new CustomException("Route", "Given Route is invalid: " + sst.getRoute().getCode());
-				} else {
+				if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty()) {
 					sst.setRoute(routes.getPagedData().get(0));
 				}
 
@@ -195,8 +192,8 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 				employeeResponse = employeeRepository.getEmployeeByCode(sst.getEmployee().getCode(), sst.getTenantId(),
 						new RequestInfo());
 
-				if (employeeResponse != null || employeeResponse.getEmployees() != null
-						|| !employeeResponse.getEmployees().isEmpty()) {
+				if (employeeResponse != null && employeeResponse.getEmployees() != null
+						&& !employeeResponse.getEmployees().isEmpty()) {
 					sst.setEmployee(employeeResponse.getEmployees().get(0));
 				}
 
@@ -211,9 +208,6 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 				if (responseJSONArray != null && responseJSONArray.size() > 0)
 					sst.setDumpingGround(
 							mapper.convertValue(responseJSONArray.get(0), DumpingGroundEntity.class).toDomain());
-				else
-					throw new CustomException("DumpingGround",
-							"Given DumpingGround is invalid: " + sst.getDumpingGround().getCode());
 
 			}
 			if (sanitationStaffTargetEntity.getTargetNo() != null

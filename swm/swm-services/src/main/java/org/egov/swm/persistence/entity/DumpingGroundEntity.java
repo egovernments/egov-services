@@ -3,7 +3,6 @@ package org.egov.swm.persistence.entity;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.DumpingGround;
 
 import lombok.AllArgsConstructor;
@@ -25,13 +24,7 @@ public class DumpingGroundEntity {
 
 	private String name = null;
 
-	private String ward = null;
-
-	private String zone = null;
-
-	private String street = null;
-
-	private String colony = null;
+	private String location = null;
 
 	private Double area = null;
 
@@ -90,12 +83,6 @@ public class DumpingGroundEntity {
 		 * dumpingGround.getWasteTypes().add(WasteType.builder().code(wt).build(
 		 * )); }
 		 */
-		dumpingGround.setAuditDetails(new AuditDetails());
-		dumpingGround.getAuditDetails().setCreatedBy(createdBy);
-		dumpingGround.getAuditDetails().setCreatedTime(createdTime);
-		dumpingGround.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		dumpingGround.getAuditDetails().setLastModifiedTime(lastModifiedTime);
-
 		return dumpingGround;
 
 	}

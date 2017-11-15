@@ -128,6 +128,9 @@ public class VehicleFuellingDetailsService {
 		ObjectMapper mapper = new ObjectMapper();
 		Pagination<RefillingPumpStation> refillingPumpStationList;
 		findDuplicatesInUniqueFields(vehicleFuellingDetailsRequest);
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+		RefillingPumpStationSearch refillingPumpStationSearch;
 
 		for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
@@ -159,10 +162,10 @@ public class VehicleFuellingDetailsService {
 			// Validate Vehicle
 			if (details.getVehicle() != null && details.getVehicle().getRegNumber() != null) {
 
-				VehicleSearch vehicleSearch = new VehicleSearch();
+				vehicleSearch = new VehicleSearch();
 				vehicleSearch.setTenantId(details.getTenantId());
 				vehicleSearch.setRegNumber(details.getVehicle().getRegNumber());
-				Pagination<Vehicle> vehicleList = vehicleRepository.search(vehicleSearch);
+				vehicleList = vehicleRepository.search(vehicleSearch);
 
 				if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
 					throw new CustomException("Vehicle",
@@ -180,7 +183,7 @@ public class VehicleFuellingDetailsService {
 						"RefuellingPumpStation code required: " + details.getRefuellingStation().getName());
 
 			if (details.getRefuellingStation() != null) {
-				RefillingPumpStationSearch refillingPumpStationSearch = new RefillingPumpStationSearch();
+				refillingPumpStationSearch = new RefillingPumpStationSearch();
 				refillingPumpStationSearch.setTenantId(details.getTenantId());
 				refillingPumpStationSearch.setCode(details.getRefuellingStation().getCode());
 

@@ -7,9 +7,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleMaintenance;
 import org.egov.swm.domain.model.VehicleMaintenanceSearch;
+import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.service.VehicleService;
 import org.egov.swm.persistence.entity.VehicleMaintenanceEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +21,9 @@ import org.springframework.stereotype.Service;
 public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egswm_vehiclemaintenance";
+
+	@Autowired
+	private VehicleService vehicleService;
 
 	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch searchRequest) {
 
@@ -102,8 +109,28 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 		List<VehicleMaintenanceEntity> vehicleMaintenanceEntities = namedParameterJdbcTemplate
 				.query(searchQuery.toString(), paramValues, row);
 
+		VehicleMaintenance vehicleMaintenance;
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+
 		for (VehicleMaintenanceEntity vehicleMaintenanceEntity : vehicleMaintenanceEntities) {
-			vehicleMaintenanceList.add(vehicleMaintenanceEntity.toDomain());
+
+			vehicleMaintenance = vehicleMaintenanceEntity.toDomain();
+
+			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+					&& vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+
+				vehicleSearch = new VehicleSearch();
+				vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
+				vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
+				vehicleList = vehicleService.search(vehicleSearch);
+
+				if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
+					vehicleMaintenance.setVehicle(vehicleList.getPagedData().get(0));
+
+			}
+
+			vehicleMaintenanceList.add(vehicleMaintenance);
 		}
 
 		page.setTotalResults(vehicleMaintenanceList.size());

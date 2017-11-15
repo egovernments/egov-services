@@ -73,8 +73,8 @@ class UiSelectField extends Component {
                     }
                     obj['others'] = otherItemDatas;
                   }
-                  
-                  
+
+
                   if (item.hasOwnProperty("isKeyValuePair") && item.isKeyValuePair) {
                      obj["value"]=keys[k]+"-"+values[k]
                   }
@@ -128,7 +128,7 @@ class UiSelectField extends Component {
                      hintText="Please Select"
                      floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
                      value={value}
-                     onChange={(event, key, value) =>{debugger;
+                     onChange={(event, key, value) =>{
                         this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
                      }}
                      disabled={item.isDisabled}

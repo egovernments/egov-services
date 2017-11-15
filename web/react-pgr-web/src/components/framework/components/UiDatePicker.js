@@ -97,7 +97,7 @@ export default class UiEmailField extends Component {
 														}
 													}
 												}
-					
+
 												//check hasOwnProperty of epresssion
 												//check isEnabled true
 												//if() put and expression
@@ -116,7 +116,8 @@ export default class UiEmailField extends Component {
 							timeFormat={false}
 							inputProps={{
 								"placeholder": "DD/MM/YYYY",
-								"id": item.jsonPath.split(".").join("-")
+								"id": item.jsonPath.split(".").join("-"),
+								"disabled":item.isDisabled
 							}}
 							isValidDate={(currentDate) => {
 								if(item.minDate && item.maxDate) {
@@ -125,7 +126,7 @@ export default class UiEmailField extends Component {
 									return this.calcMinMaxDate(item.minDate).isBefore(currentDate);
 								} else if(item.maxDate) {
 									return this.calcMinMaxDate(item.maxDate).isAfter(currentDate);
-								} else 
+								} else
 									return true;
 							}}
 							closeOnSelect={true}

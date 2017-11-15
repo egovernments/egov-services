@@ -15,6 +15,7 @@ import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.Department;
 import org.egov.model.FundSource;
+import org.egov.model.ModeOfAcquisition;
 import org.egov.repository.MasterDataRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,7 +57,7 @@ public class MasterDataService {
 		String assetCategoryParam = assetCommonService.getIdQuery(assets.stream().map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet()));
 		String departmentParam = assetCommonService.getIdQueryFromString(assets.stream().map(asset -> asset.getDepartment().getCode()).collect(Collectors.toSet()));
 		String fundSourceParam = assetCommonService.getIdQueryFromString(assets.stream().map(asset -> asset.getFundSource().getCode()).collect(Collectors.toSet()));
-		
+		String modeofAcquisitionParam = assetCommonService.getIdQueryFromString(assets.stream().map(asset -> asset.getModeOfAcquisition().getCode()).collect(Collectors.toSet()));
 		Map<String, Map<String, Map<String, String>>> moduleMapInput = new HashMap<>();
 		
 		// AssetMaster and assetcategory
@@ -79,6 +80,13 @@ public class MasterDataService {
 		fundSourceFieldMap.put("code", fundSourceParam);
 		egfMastersMap.put("funds", fundSourceFieldMap);
 		moduleMapInput.put("egf-master", egfMastersMap);
+		
+		// AssetMaster and Modeofacquistion
+		Map<String, Map<String, String>> modeofAcquisitionMasterMap = new HashMap<>();
+		Map<String, String> modeofAcquisitionFeildMap = new HashMap<>();
+		modeofAcquisitionFeildMap.put("code", modeofAcquisitionParam);
+		modeofAcquisitionMasterMap.put("ModeOfAcquisition", modeofAcquisitionFeildMap);
+		moduleMapInput.put("ASSET", modeofAcquisitionMasterMap);
 		
 		return moduleMapInput;
 	}
@@ -147,5 +155,26 @@ public class MasterDataService {
 	public FinancialYear getFinancialYear(Long toDate, RequestInfo requestInfo, String tenantId) {
 
 		return mDRepo.getFinancialYears(toDate, requestInfo, tenantId);
+	}
+
+	public Map<String, ModeOfAcquisition> getModeOfAcquisitionMapFromJSONArray(Map<String, JSONArray> moduleMap) {
+		JSONArray jsonArray = moduleMap.get("ModeOfAcquisition");
+		List<ModeOfAcquisition> ModeOfAcquisitions = new ArrayList<>();
+		try {
+			ModeOfAcquisitions = Arrays
+					.asList(mapper.readValue(jsonArray.toJSONString(), ModeOfAcquisition[].class));
+		} catch (JsonParseException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (JsonMappingException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		} catch (IOException e) {
+			e.printStackTrace();
+			throw new RuntimeException(e);
+		}
+	
+		
+		return ModeOfAcquisitions.stream().collect(Collectors.toMap(ModeOfAcquisition::getCode, Function.identity()));
 	}
 }

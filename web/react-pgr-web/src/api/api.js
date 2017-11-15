@@ -51,10 +51,16 @@ module.exports = {
         var url = context;
         if(url && url[url.length-1] === "/")
             url = url.substring(0, url.length-1);
-        if (!doNotOverride)
+        if (!doNotOverride){
+            if(url.split("?").length>1){
+               url += "&tenantId=" + (localStorage.getItem("tenantId") ? (isStateLevel ? localStorage.getItem("tenantId").split(".")[0] : localStorage.getItem("tenantId")) : 'default');
+            }else{
             url += "?tenantId=" + (localStorage.getItem("tenantId") ? (isStateLevel ? localStorage.getItem("tenantId").split(".")[0] : localStorage.getItem("tenantId")) : 'default');
-        else
+            }
+        }
+        else{
             url += "?"
+        }
         for (var variable in queryObject) {
             if (typeof(queryObject[variable]) !== "undefined") {
                 url += "&" + variable + "=" + queryObject[variable];

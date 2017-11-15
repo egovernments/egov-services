@@ -225,14 +225,14 @@ var dat = {
                 {
                   label: "legal.create.advocateName",
                  style:{
-                     width:"700px"
+                     width:"500px"
                   }
 
                 },
                 {
                   label: "legal.create.advocateAssignDate",
                   style:{
-                     width:"300px"
+                     width:"500px"
                   }
                 },
                 {

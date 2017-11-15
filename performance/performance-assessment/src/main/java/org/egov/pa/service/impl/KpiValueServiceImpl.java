@@ -33,7 +33,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 
 	@Override
 	public KPIValueRequest createKpiValue(KPIValueRequest kpiValueRequest) {
-		int numberOfIds = kpiValueRequest.getKpiValues().size(); 
+		int numberOfIds = kpiValueRequest.getKpiValues().size();  
 		log.info("KPI Value Create Request Received at Service Level : " + kpiValueRequest);
 		List<Long> kpiValueIds = kpiValueRepository.getNewKpiIds(numberOfIds);
 		setCreatedDateAndUpdatedDate(kpiValueRequest);

@@ -1,6 +1,7 @@
 package org.egov.lcms.notification.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -369,14 +370,16 @@ public class NotificationService {
 		List<String> roleCodes = new ArrayList<String>();
 		roleCodes.add(propertiesManager.getRolesCode());
 		List<UserDetail> userDetails = null;
+		Date date = new Date();
+		Long currentDate = date.getTime();
 
 		for (AdvocatePayment advocatePayment : advocatePaymentRequest.getAdvocatePayments()) {
 
 			advocatePaymentMessage.put("Advocate Name", advocatePayment.getAdvocate().getName());
-			//advocatePaymentMessage.put("Case No", advocatePayment.getC.getCaseNo());//chke it
-			advocatePaymentMessage.put("Case Date", "");// case registraion form
-			advocatePaymentMessage.put("Demand No", "");// Advocate form
-			advocatePaymentMessage.put("Letter No", "");// Approval letter Form
+			advocatePaymentMessage.put("Case No", advocatePayment.getAdvocateCharges().get(0).getCaseDetails().getCaseNo());
+			advocatePaymentMessage.put("Case Date", TimeStampUtil.getDateWithoutTimezone(currentDate));// case registraion form
+			advocatePaymentMessage.put("Demand No", advocatePayment.getVoucherNo());// Advocate form
+			advocatePaymentMessage.put("Letter No", advocatePayment.getInstrumentNumber());// Approval letter Form
 			advocatePaymentMessage.put("ULB Name", advocatePayment.getTenantId());
 			userDetails = userReository.getUser(advocatePayment.getTenantId(), roleCodes, advocatePaymentRequest.getRequestInfo());
 			

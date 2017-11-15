@@ -47,7 +47,7 @@ const menuConvention={
   "Grievance Redressal.Reports.Router Escalation Report":"/report/pgr/RouterEscalation",
   "Grievance Redressal.Reports.Ageing By Department Report":"/report/pgr/AgeingByDepartment",
   "Grievance Redressal.Reports.Drill Down By Department Report":"/report/pgr/DrillDownByDepartment",
-  "Grievance Redressal.Reports.Complaint Summary Register Report":"/report/pgr/complaintSummaryRegisterReport",
+  "Grievance Redressal.Reports.Complaint Summary Register Report":"/report/pgr/ComplaintSummaryRegister",
 
   "Collection.Collection Reports.CashCollection":"/report/collection/CashCollection",
   "Collection.Collection Reports.ReceiptRegister":"/report/collection/ReceiptRegister",
@@ -301,6 +301,7 @@ const menuConvention={
 "Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Search":"/search/legal/advocatepayment/view",
 "Legal Case Management.Legal Case Masters.Advocate.Advocate Create":"/create/legal/advocate",
 "Legal Case Management.Legal Case Masters.Advocate.Advocate Search":"/search/legal/advocate/view",
+"Legal Case Management.Legal Case Masters.Advocate.Agency Search":"/search/legal/agency/view",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create":"/create/legal/register",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Search":"/search/legal/register/view",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Update":"/update/legal/register",

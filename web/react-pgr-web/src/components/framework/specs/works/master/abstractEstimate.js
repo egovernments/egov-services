@@ -2,6 +2,7 @@ var dat = {
 	"works.create": {
 		"numCols": 4,
     "useTimestamp": true,
+		"title":"Create Abstract Estimate",
     "objectName": "abstractEstimates",
 		"url":"works-estimate/abstractestimates/_create",
 		"tenantIdRequired":true,
@@ -18,7 +19,7 @@ var dat = {
               "type": "datePicker",
               "url": "",
               "isRequired": true,
-              "isDisabled": false,
+              "isDisabled": true,
               "requiredErrMsg": "Please enter valid date",
               "patternErrMsg": ""
             },
@@ -56,7 +57,9 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"maxLength": 100,
+	            "minLength": 1
             },
 						{
 							"name": "subject",
@@ -67,7 +70,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"maxLength": 256,
+	            "minLength": 1
 						},
 						{
 							"name": "description",
@@ -78,7 +83,9 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"maxLength": 1024,
+	            "minLength": 1
 						},
 						{
               "name": "natureOfWork",
@@ -90,7 +97,24 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"showHideFields": [
+								{
+									"ifValue": "New",
+									"hide": [
+										{
+												"name": "Asset Details",
+												"isGroup": true,
+												"isField": false
+										}
+									],
+									"show": [{
+											"name": "Assets - Land",
+											"isGroup": true,
+											"isField": false
+									}
+								]},
+							]
             },
 						{
               "name": "modeOfAllotment",
@@ -140,17 +164,18 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": "NON_SLUM",
-                    "value": "NON_SLUM"
+                    "value": "NON SLUM"
                 },
 								{
                     "key": "NOTIFIED_SLUM",
-                    "value": "NOTIFIED_SLUM"
+                    "value": "NOTIFIED SLUM"
                 },
 								{
                     "key": "NON_NOTIFIED_SLUM",
-                    "value": "NON_NOTIFIED_SLUM"
+                    "value": "NON NOTIFIED SLUM"
                 },
 							],
               "isRequired": true,
@@ -166,6 +191,7 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": "SC",
                     "value": "SC"
@@ -184,25 +210,13 @@ var dat = {
                 },
 								{
                     "key": "WOMEN_CHILDREN_WELFARE",
-                    "value": "WOMEN_CHILDREN_WELFARE"
+                    "value": "WOMEN CHILDREN WELFARE"
                 },
 								{
                     "key": "GENERAL",
                     "value": "GENERAL"
                 },
 							],
-              "isRequired": true,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-						{
-              "name": "locality",
-              "jsonPath": "abstractEstimates[0].locality.code",
-              "label": "works.create.groups.fields.locality",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -221,6 +235,18 @@ var dat = {
               "patternErrMsg": ""
             },
 						{
+              "name": "locality",
+              "jsonPath": "abstractEstimates[0].locality.code",
+              "label": "works.create.groups.fields.locality",
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=LOCALITY&hierarchyTypeName=LOCATION|$..id|$..name",
+              "isRequired": true,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            },
+						{
               "name": "workProposedAsPerDP",
               "jsonPath": "abstractEstimates[0].workProposedAsPerDP",
               "label": "works.create.groups.fields.workProposedAsPerDP",
@@ -228,6 +254,7 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": true,
                     "value": "Yes"
@@ -251,7 +278,20 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"maxLength":512
+						},
+						{
+							"name": "implementationPeriod",
+							"jsonPath": "abstractEstimates[0].implementationPeriod",
+							"label": "works.create.groups.fields.implementationPeriod",
+							"pattern": "^[0-9]+$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "works.create.pattern.fields.implementationPeriod",
+							"maxLength":5
 						},
 						{
               "name": "pmcRequired",
@@ -260,7 +300,12 @@ var dat = {
               "pattern": "",
               "type": "singleValueList",
               "url": "",
+							"isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": true,
                     "value": "Yes"
@@ -270,46 +315,57 @@ var dat = {
                     "value": "No"
                 }
 							],
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
+							"showHideFields": [
+								{
+									"ifValue": "true",
+									"hide": [],
+									"show": [
+										{
+												"name": "pmcType",
+												"isGroup": false,
+												"isField": true
+										}
+									]
+								}]
             },
 						{
               "name": "pmcType",
+							"hide":true,
               "jsonPath": "abstractEstimates[0].pmcType",
               "label": "works.create.groups.fields.pmcType",
               "pattern": "",
               "type": "singleValueList",
-              "url": "",
-              "isRequired": false,
+              "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name",
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"showHideFields": [
+								{
+									"ifValue": "1",
+									"hide": [],
+									"show": [
+										{
+												"name": "pmcName",
+												"isGroup": false,
+												"isField": true
+										}
+									]
+								}]
             },
 						{
               "name": "pmcName",
+							"hide":true,
               "jsonPath": "abstractEstimates[0].pmcName",
               "label": "works.create.groups.fields.pmcName",
               "pattern": "",
               "type": "singleValueList",
-              "url": "",
-              "isRequired": false,
+              "url": "/works-masters/v1/contractors/_search?&pmc=true|$..code|$..name",
+              "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
-						{
-							"name": "implementationPeriod",
-							"jsonPath": "abstractEstimates[0].implementationPeriod",
-							"label": "works.create.groups.fields.implementationPeriod",
-							"pattern": "",
-							"type": "text",
-							"isRequired": false,
-							"isDisabled": false,
-							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+              "patternErrMsg": "",
+            }
 				]
 			},
 			{
@@ -334,7 +390,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name",
-						"isRequired": true,
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -345,7 +401,139 @@ var dat = {
 						"label": "works.create.groups.fields.assetRemarks",
 						"pattern": "",
 						"type": "textarea",
-						"isRequired": true,
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"maxLength":1024
+					},
+				]
+			},
+			{
+				"label": "works.create.groups.label.asssetsland",
+				"name": "Assets - Land",
+				"fields":[
+					{
+						"name": "landAssetRequired",
+						"jsonPath": "abstractEstimates[0].landAssetRequired",
+						"label": "works.create.groups.fields.landAssetRequired",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":[
+							{key: null, value: "-- Please Select --"},
+							{
+									"key": true,
+									"value": "Yes"
+							},
+							{
+									"key": false,
+									"value": "No"
+							}
+						]
+					},
+					{
+						"name": "noOfLands",
+						"jsonPath": "abstractEstimates[0].noOfLands",
+						"label": "works.create.groups.fields.noOfLands",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+			      "type": "tableList",
+			      "jsonPath": "abstractEstimates[0].assetDetails",
+			      "tableList": {
+			        "header": [
+								{
+				          "label": "works.create.groups.label.landassetId"
+				        },
+								{
+				          "label": "works.create.groups.label.natureofownership"
+				        },
+								{
+				          "label": "works.create.groups.label.arealand"
+				        },
+								{
+				          "label": "works.create.groups.label.plotno"
+				        },
+								{
+				          "label": "works.create.groups.label.surveyno"
+				        },
+								{
+				          "label": "works.create.groups.label.landAssetCondition"
+				        }, {
+				          "label": "works.create.groups.label.constructionArea"
+			        }],
+			        "values": [
+								{
+				          "name": "landassetId",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].landassetId",
+				          "isRequired": false,
+				          "isDisabled": false
+				        },
+								{
+				          "name": "natureofownership",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].natureofownership",
+				          "isDisabled": true
+				        },
+								{
+				          "name": "arealand",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].arealand",
+				          "isDisabled": true
+				        },
+								{
+				          "name": "plotno",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].plotno",
+				          "isDisabled": true
+				        },
+								{
+				          "name": "surveyno",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].surveyno",
+				          "isDisabled": true
+				        },
+								{
+			          "name": "landAssetCondition",
+			          "pattern": "",
+			          "type": "singleValueList",
+								"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name",
+			          "jsonPath": "abstractEstimates[0].assetDetails[0].landAssetCondition.name",
+			          "isRequired": false,
+			          "isDisabled": false,
+								"maxLength":1024
+			        }, {
+			          "name": "constructionArea",
+			          "pattern": "",
+			          "type": "text",
+			          "jsonPath": "abstractEstimates[0].assetDetails[0].constructionArea",
+			          "isRequired": false,
+			          "isDisabled": false
+			        }]
+			      }
+			    },
+					{
+						"name": "remarks",
+						"jsonPath": "abstractEstimates[0].assetDetails[0].assetRemarks",
+						"label": "works.create.groups.fields.remarks",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -366,15 +554,17 @@ var dat = {
 			          "label": "works.create.groups.label.estimateAmount"
 			        }],
 			        "values": [{
-			          "name": "name",
+			          "name": "nameOfWork",
 			          "pattern": "",
 			          "type": "textarea",
 			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].nameOfWork",
 			          "isRequired": true,
 			          "isDisabled": false,
+								"maxLength":1024
 			        }, {
-			          "name": "type",
-			          "pattern": "",
+			          "name": "estimateAmount",
+			          "pattern": "^\\d{0,6}(\\.\\d{0,2})?$",
+								"patternErrMsg": "works.create.pattern.fields.label.estimateAmount",
 			          "type": "text",
 			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].estimateAmount",
 			          "isRequired": true,
@@ -532,17 +722,18 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": "NON_SLUM",
-                    "value": "NON_SLUM"
+                    "value": "NON SLUM"
                 },
 								{
                     "key": "NOTIFIED_SLUM",
-                    "value": "NOTIFIED_SLUM"
+                    "value": "NOTIFIED SLUM"
                 },
 								{
                     "key": "NON_NOTIFIED_SLUM",
-                    "value": "NON_NOTIFIED_SLUM"
+                    "value": "NON NOTIFIED SLUM"
                 },
 							],
               "isRequired": true,
@@ -558,6 +749,7 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": "SC",
                     "value": "SC"
@@ -576,7 +768,7 @@ var dat = {
                 },
 								{
                     "key": "WOMEN_CHILDREN_WELFARE",
-                    "value": "WOMEN_CHILDREN_WELFARE"
+                    "value": "WOMEN CHILDREN WELFARE"
                 },
 								{
                     "key": "GENERAL",
@@ -620,6 +812,7 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": true,
                     "value": "Yes"
@@ -653,6 +846,7 @@ var dat = {
               "type": "singleValueList",
               "url": "",
 							"defaultValue":[
+								{key: null, value: "-- Please Select --"},
 								{
                     "key": true,
                     "value": "Yes"
@@ -803,6 +997,7 @@ var dat = {
 			          "isRequired": true,
 			          "isDisabled": true,
 								"defaultValue":[
+									{key: null, value: "-- Please Select --"},
 						      {"key":'FINANCIAL_SANCTION',"value":"FINANCIAL SANCTION"},
 						      {"key":'ADMINISTRATIVE_SANCTION',"value":'ADMINISTRATIVE SANCTION'},
 						      {"key":'TECHNICAL_SANCTION',"value":'TECHNICAL SANCTION'}]

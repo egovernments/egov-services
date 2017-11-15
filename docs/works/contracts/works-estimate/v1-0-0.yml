@@ -851,7 +851,7 @@ definitions:
         description: Epoch time of the Date of Proposal. Default the current date for new estimates and do not allow to modify. This field is user entered for spillover works. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter.
       abstractEstimateNumber:
         type: string
--        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-\\]+'
         description: Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.
         maxLength: 50
       subject:

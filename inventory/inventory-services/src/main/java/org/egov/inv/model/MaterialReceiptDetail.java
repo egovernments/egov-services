@@ -24,7 +24,7 @@ import lombok.NoArgsConstructor;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
 public class MaterialReceiptDetail   {
   @JsonProperty("id")
-  private Integer id = null;
+  private String id = null;
 
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -65,7 +65,7 @@ public class MaterialReceiptDetail   {
   @JsonProperty("receiptDetailsAddnInfo")
   private List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo = null;
 
-  public MaterialReceiptDetail id(Integer id) {
+  public MaterialReceiptDetail id(String id) {
     this.id = id;
     return this;
   }
@@ -78,11 +78,11 @@ public class MaterialReceiptDetail   {
   @NotNull
 
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

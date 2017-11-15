@@ -1,133 +1,184 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
 import org.egov.swm.domain.model.VehicleMaintenanceDetailsSearch;
+import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.persistence.entity.VehicleMaintenanceDetailsEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
 
-    public Pagination<VehicleMaintenanceDetails> search(VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch ) {
+	public static final String TABLE_NAME = "egswm_vehiclemaintenancedetails";
 
-        if (vehicleMaintenanceDetailsSearch.getSortBy() != null && !vehicleMaintenanceDetailsSearch.getSortBy().isEmpty()) {
-            validateSortByOrder(vehicleMaintenanceDetailsSearch.getSortBy());
-            validateEntityFieldName(vehicleMaintenanceDetailsSearch.getSortBy(), VehicleMaintenanceDetailsSearch.class);
-        }
+	@Autowired
+	private VehicleRepository vehicleRepository;
 
-        return buildSearchQuery(vehicleMaintenanceDetailsSearch);
-    }
+	public Pagination<VehicleMaintenanceDetails> search(VehicleMaintenanceDetailsSearch searchRequest) {
 
+		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-    private Pagination<VehicleMaintenanceDetails> buildSearchQuery(VehicleMaintenanceDetailsSearch searchRequest){
+		Map<String, Object> paramValues = new HashMap<>();
+		StringBuffer params = new StringBuffer();
 
-        Map<String, Object> paramsMap = new HashMap<>();
-        StringBuilder query = new StringBuilder();
+		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+			validateSortByOrder(searchRequest.getSortBy());
+			validateEntityFieldName(searchRequest.getSortBy(), VehicleMaintenanceDetailsSearch.class);
+		}
 
-        query.append("SELECT * FROM egswm_vehiclemaintenancedetails");
+		String orderBy = "order by name";
+		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+			orderBy = "order by " + searchRequest.getSortBy();
+		}
 
-        if(searchRequest.getTenantId() != null && !searchRequest.getTenantId().isEmpty()){
-            addWhereClause(query, "tenantid", "tenantid");
-            paramsMap.put("tenantid", searchRequest.getTenantId());
-        }
+		if (searchRequest.getCodes() != null) {
+			addAnd(params);
+			params.append("code in (:codes)");
+			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
+		}
 
-        if(searchRequest.getCode() != null && !searchRequest.getCode().isEmpty()){
-            addWhereClauseWithAnd(query, "code", "code");
-            paramsMap.put("code", searchRequest.getCode());
-        }
+		if (searchRequest.getTenantId() != null) {
+			addAnd(params);
+			params.append("tenantId =:tenantId");
+			paramValues.put("tenantId", searchRequest.getTenantId());
+		}
 
-        if(searchRequest.getIsScheduled() != null){
-            addWhereClauseWithAnd(query,"isscheduled","isscheduled");
-            paramsMap.put("isscheduled", searchRequest.getIsScheduled());
-        }
+		if (searchRequest.getCode() != null) {
+			addAnd(params);
+			params.append("code =:code");
+			paramValues.put("code", searchRequest.getCode());
+		}
 
-        if(searchRequest.getVehicleCode() != null){
-            addWhereClauseWithAnd(query,"vehicle", "vehicle");
-            paramsMap.put("vehicle", searchRequest.getVehicleCode());
-        }
+		if (searchRequest.getIsScheduled() != null) {
+			addAnd(params);
+			params.append("isscheduled =:isscheduled");
+			paramValues.put("isscheduled", searchRequest.getIsScheduled());
+		}
 
-        if(searchRequest.getActualMaintenanceDate() != null){
-            addWhereClauseWithAnd(query,"actualmaintenancedate", "actualmaintenancedate");
-            paramsMap.put("actualmaintenancedate", searchRequest.getActualMaintenanceDate());
-        }
+		if (searchRequest.getVehicleCode() != null) {
+			addAnd(params);
+			params.append("vehicle =:vehicle");
+			paramValues.put("vehicle", searchRequest.getVehicleCode());
+		}
 
-        if(searchRequest.getMaintenanceType() != null && !searchRequest.getMaintenanceType().toString().isEmpty()){
-            addWhereClauseWithAnd(query,"maintenancetype", "maintenancetype");
-            paramsMap.put("maintenancetype", searchRequest.getMaintenanceType());
-        }
+		if (searchRequest.getActualMaintenanceDate() != null) {
+			addAnd(params);
+			params.append("actualmaintenancedate =:actualmaintenancedate");
+			paramValues.put("actualmaintenancedate", searchRequest.getActualMaintenanceDate());
+		}
 
-        if(searchRequest.getVehicleScheduledMaintenanceDate() != null){
-            addWhereClauseWithAnd(query,"vehiclescheduledmaintenancedate", "vehiclescheduledmaintenancedate");
-            paramsMap.put("vehiclescheduledmaintenancedate", searchRequest.getVehicleScheduledMaintenanceDate());
-        }
+		if (searchRequest.getMaintenanceType() != null) {
+			addAnd(params);
+			params.append("maintenancetype =:maintenancetype");
+			paramValues.put("maintenancetype", searchRequest.getMaintenanceType());
+		}
 
-        if(searchRequest.getVehicleDowntimeActual() != null){
-            addWhereClauseWithAnd(query,"vehicledowntimeactual", "vehicledowntimeactual");
-            paramsMap.put("vehicledowntimeactual", searchRequest.getVehicleDowntimeActual());
-        }
+		if (searchRequest.getVehicleScheduledMaintenanceDate() != null) {
+			addAnd(params);
+			params.append("vehiclescheduledmaintenancedate =:vehiclescheduledmaintenancedate");
+			paramValues.put("vehiclescheduledmaintenancedate", searchRequest.getVehicleScheduledMaintenanceDate());
+		}
 
-        if(searchRequest.getVehicleDownTimeActualUom() != null && !searchRequest.getVehicleDownTimeActualUom().isEmpty()){
-            addWhereClauseWithAnd(query, "vehicledowntimeactualuom", "vehicledowntimeactualuom");
-            paramsMap.put("vehicledowntimeactualuom", searchRequest.getVehicleDownTimeActualUom());
-        }
+		if (searchRequest.getVehicleDowntimeActual() != null) {
+			addAnd(params);
+			params.append("vehicledowntimeactual =:vehicledowntimeactual");
+			paramValues.put("vehicledowntimeactual", searchRequest.getVehicleDowntimeActual());
+		}
 
-        if(searchRequest.getVehicleReadingDuringMaintenance() != null){
-            addWhereClauseWithAnd(query,"vehiclereadingduringmaintenance", "vehiclereadingduringmaintenance");
-            paramsMap.put("vehiclereadingduringmaintenance", searchRequest.getVehicleReadingDuringMaintenance());
-        }
+		if (searchRequest.getVehicleDownTimeActualUom() != null) {
+			addAnd(params);
+			params.append("vehicledowntimeactualuom =:vehicledowntimeactualuom");
+			paramValues.put("vehicledowntimeactualuom", searchRequest.getVehicleDownTimeActualUom());
+		}
 
-        if(searchRequest.getRemarks() != null && !searchRequest.getRemarks().isEmpty()){
-            addWhereClauseWithAnd(query, "remarks", "remarks");
-            paramsMap.put("remarks", searchRequest.getRemarks());
-        }
+		if (searchRequest.getVehicleReadingDuringMaintenance() != null) {
+			addAnd(params);
+			params.append("vehiclereadingduringmaintenance =:vehiclereadingduringmaintenance");
+			paramValues.put("vehiclereadingduringmaintenance", searchRequest.getVehicleReadingDuringMaintenance());
+		}
 
-        if(searchRequest.getCostIncurred() != null){
-            addWhereClauseWithAnd(query,"costincurred", "costincurred");
-            paramsMap.put("costincurred", searchRequest.getCostIncurred());
-        }
+		if (searchRequest.getRemarks() != null) {
+			addAnd(params);
+			params.append("remarks =:remarks");
+			paramValues.put("remarks", searchRequest.getRemarks());
+		}
 
-        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-            query.append("order by ").append(searchRequest.getSortBy());
-        }
+		if (searchRequest.getCostIncurred() != null) {
+			addAnd(params);
+			params.append("costincurred =:costincurred");
+			paramValues.put("costincurred", searchRequest.getCostIncurred());
+		}
 
-        Pagination<VehicleMaintenanceDetails> page = new Pagination<>();
-        if (searchRequest.getOffset() != null) {
-            page.setOffset(searchRequest.getOffset());
-        }
-        if (searchRequest.getPageSize() != null) {
-            page.setPageSize(searchRequest.getPageSize());
-        }
+		Pagination<VehicleMaintenanceDetails> page = new Pagination<>();
+		if (searchRequest.getOffset() != null) {
+			page.setOffset(searchRequest.getOffset());
+		}
+		if (searchRequest.getPageSize() != null) {
+			page.setPageSize(searchRequest.getPageSize());
+		}
 
-        page = (Pagination<VehicleMaintenanceDetails>) getPagination(query.toString(), page, paramsMap);
+		if (params.length() > 0) {
 
-        query.append(" limit ").append(page.getPageSize()).append(" offset ").append(page.getOffset() * page.getPageSize());
+			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
-        List<VehicleMaintenanceDetailsEntity> vehicleMaintenanceDetailsEntityList = namedParameterJdbcTemplate
-                .query(query.toString(), paramsMap, new BeanPropertyRowMapper(VehicleMaintenanceDetailsEntity.class));
+		} else
 
-        List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsListList = vehicleMaintenanceDetailsEntityList.stream()
-                .map(VehicleMaintenanceDetailsEntity::toDomain)
-                .collect(Collectors.toList());
+			searchQuery = searchQuery.replace(":condition", "");
 
-        page.setTotalResults(vehicleMaintenanceDetailsListList.size());
+		searchQuery = searchQuery.replace(":orderby", orderBy);
 
-        page.setPagedData(vehicleMaintenanceDetailsListList);
+		page = (Pagination<VehicleMaintenanceDetails>) getPagination(searchQuery, page, paramValues);
+		searchQuery = searchQuery + " :pagination";
 
-        return page;
-    }
+		searchQuery = searchQuery.replace(":pagination",
+				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-    private StringBuilder addWhereClause(StringBuilder query, String fieldName, String paramName){
-        return query.append(" WHERE ").append(fieldName).append("= :").append(paramName);
-    }
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleMaintenanceDetailsEntity.class);
 
-    private StringBuilder addWhereClauseWithAnd(StringBuilder query, String fieldName, String paramName){
-        return query.append(" AND ").append(fieldName).append("= :").append(paramName);
-    }
+		List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList = new ArrayList<>();
+
+		List<VehicleMaintenanceDetailsEntity> vehicleMaintenanceDetailsEntities = namedParameterJdbcTemplate
+				.query(searchQuery.toString(), paramValues, row);
+
+		VehicleMaintenanceDetails vehicleMaintenanceDetails;
+		VehicleSearch vehicleSearch;
+		Pagination<Vehicle> vehicleList;
+
+		for (VehicleMaintenanceDetailsEntity vehicleMaintenanceDetailsEntity : vehicleMaintenanceDetailsEntities) {
+
+			vehicleMaintenanceDetails = vehicleMaintenanceDetailsEntity.toDomain();
+
+			if (vehicleMaintenanceDetails.getVehicle() != null
+					&& vehicleMaintenanceDetails.getVehicle().getRegNumber() != null) {
+
+				vehicleSearch = new VehicleSearch();
+				vehicleSearch.setTenantId(vehicleMaintenanceDetails.getTenantId());
+				vehicleSearch.setRegNumber(vehicleMaintenanceDetails.getVehicle().getRegNumber());
+				vehicleList = vehicleRepository.search(vehicleSearch);
+
+				if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
+					vehicleMaintenanceDetails.setVehicle(vehicleList.getPagedData().get(0));
+
+			}
+
+			vehicleMaintenanceDetailsList.add(vehicleMaintenanceDetails);
+		}
+
+		page.setTotalResults(vehicleMaintenanceDetailsList.size());
+
+		page.setPagedData(vehicleMaintenanceDetailsList);
+
+		return page;
+	}
 }

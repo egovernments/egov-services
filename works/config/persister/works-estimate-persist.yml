@@ -144,10 +144,6 @@ serviceMaps:
  
        - jsonPath: $.abstractEstimates.*.auditDetails.createdTime
        
-       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedBy
-  
-       - jsonPath: $.abstractEstimates.*.auditDetails.lastModifiedTime 
-       
     - query: INSERT INTO egw_abstractestimate_details(
             id, tenantid, abstractestimate, nameofwork, estimateamount, 
             createdby, createdtime, grossamountbilled, 

@@ -163,7 +163,7 @@ var dat = {
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
               "autoFillFields": {
-                "vehicleMaintenances[0].vehicle.vehicleType.name": "vehicles[0].vehicleType.name"
+                "vehicleMaintenances[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name"
               }
             }
           },
@@ -174,7 +174,7 @@ var dat = {
              "pattern":"",
              "type":"text",
              "isRequired":true,
-             "isDisabled":false,
+             "isDisabled":true,
              "defaultValue":"",
              "maxLength":128,
              "minLength":1,
@@ -276,7 +276,7 @@ var dat = {
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
               "autoFillFields": {
-                "vehicleMaintenances[0].vehicle.vehicleType.name": "vehicles[0].vehicleType.name"
+                "vehicleMaintenances[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name"
               }
             }
           },
@@ -390,7 +390,7 @@ var dat = {
               "autoCompleteDependancy": {
                 "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
                 "autoFillFields": {
-                  "vehicleMaintenances[0].vehicle.vehicleType.name": "vehicles[0].vehicleType.name"
+                  "vehicleMaintenances[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name"
                 }
               }
             },

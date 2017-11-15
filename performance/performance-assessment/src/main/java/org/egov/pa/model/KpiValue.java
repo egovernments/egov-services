@@ -22,6 +22,9 @@ public class KpiValue   {
   
   @JsonProperty("kpi")
   private KPI kpi = null;
+  
+  @JsonProperty("targetValue")
+  private Long targetValue=null;
 
   @JsonProperty("resultValue")
   private Long resultValue = null;
@@ -40,7 +43,16 @@ public class KpiValue   {
   
   
 
-  public String getResultDescription() {
+  
+  public Long getTargetValue() {
+	return targetValue;
+}
+
+public void setTargetValue(Long targetValue) {
+	this.targetValue = targetValue;
+}
+
+public String getResultDescription() {
 	return resultDescription;
 }
 
@@ -86,8 +98,6 @@ public KpiValue kpi(KPI kpi) {
    * Actual Value at ULB Level for the KPI Target
    * @return resultValue
   **/
-  @NotNull
-
 
   public Long getResultValue() {
     return resultValue;

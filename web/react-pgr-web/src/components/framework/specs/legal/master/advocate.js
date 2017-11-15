@@ -4,34 +4,34 @@ var dat = {
     title:"advocates.search.document.title",
     useTimestamp: true,
     objectName: "",
-    url: "/lcms-services/legalcase/advocate/agency/_search",
+    url: "/lcms-services/legalcase/advocate/agency/_search?isIndividual=true",
     groups: [
-      {
-        name: "advocateCategory",
-        label: "advocates.create.group.title.advocateCategory",
-        fields: [
-          {
-            name: "primaryOwner",
-            jsonPath: "isIndividual",
-            label: "advocates.create.primaryOwner",
-            type: "radio",
-            styleObj:{"display": "-webkit-box"},
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: "",
-            values: [
-              {
-                label: "advocates.create.individual",
-                value: true
-              },
-              {
-                label: "advocates.create.Agency_Organization",
-                value: false
-              }
-            ]
-          }
-        ]
-      },
+      // {
+      //   name: "advocateCategory",
+      //   label: "advocates.create.group.title.advocateCategory",
+      //   fields: [
+      //     {
+      //       name: "primaryOwner",
+      //       jsonPath: "isIndividual",
+      //       label: "advocates.create.primaryOwner",
+      //       type: "radio",
+      //       styleObj:{"display": "-webkit-box"},
+      //       isRequired: false,
+      //       isDisabled: false,
+      //       patternErrorMsg: "",
+      //       values: [
+      //         {
+      //           label: "advocates.create.individual",
+      //           value: true
+      //         },
+      //         {
+      //           label: "advocates.create.Agency_Organization",
+      //           value: false
+      //         }
+      //       ]
+      //     }
+      //   ]
+      // },
       {
         name: "applicantType",
         label: "advocates.create.group.title.advocateSearch",
@@ -46,17 +46,18 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
-          },{
-            name: "agencOrganizationName",
-            jsonPath: "organizationName",
-            label: "advocates.create.agencOrganizationName",
-            pattern: "",
-            type: "text",
-            isRequired: false,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
           }
+          // },{
+          //   name: "agencOrganizationName",
+          //   jsonPath: "organizationName",
+          //   label: "advocates.create.agencOrganizationName",
+          //   pattern: "",
+          //   type: "text",
+          //   isRequired: false,
+          //   isDisabled: false,
+          //   requiredErrMsg: "",
+          //   patternErrMsg: ""
+          // }
         ]
       }
     ],
@@ -193,7 +194,7 @@ var dat = {
             jsonPath: "agencies[0].name",
             label: "advocates.create.agencOrganizationName",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },{
@@ -271,7 +272,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].title",
             label: "advocates.create.advocateTitle",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
@@ -431,7 +432,7 @@ var dat = {
             jsonPath: "agencies[0].advocates[0].title",
             label: "advocates.create.advocateTitle",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
@@ -769,20 +770,20 @@ var dat = {
         fields: [
           {
             name: "actionType",
-            jsonPath: "agencies[0].isActive",
+            jsonPath: "agencies[0].status",
             label: "advocates.create.actionType",
             type: "radio",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             values: [
               {
                 label: "advocates.create.active",
-                value: true
+                value: "active"
               },
               {
                 label: "advocates.create.inactive",
-                value: false
+                value: "inactive"
               },{
                 label: "advocates.create.terminate",
                 value: "terminate"
@@ -790,7 +791,7 @@ var dat = {
             ],
             defaultValue:"active",
             "enableDisableFields": [{
-								"ifValue": "true",
+								"ifValue": "active",
 								"disable": ["inActivationDate"],
 								"enable": ["terminationDate"]
 							},{
@@ -955,7 +956,7 @@ var dat = {
             jsonPath: "agencies[0].name",
             label: "advocates.create.agencOrganizationName",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },{
@@ -1033,7 +1034,7 @@ var dat = {
             jsonPath: "agencies[0].personDetails[0].title",
             label: "advocates.create.advocateTitle",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
@@ -1193,7 +1194,7 @@ var dat = {
             jsonPath: "agencies[0].advocates[0].title",
             label: "advocates.create.advocateTitle",
             type: "singleValueList",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
@@ -1531,20 +1532,20 @@ var dat = {
         fields: [
           {
             name: "actionType",
-            jsonPath: "agencies[0].isActive",
+            jsonPath: "agencies[0].status",
             label: "advocates.create.actionType",
             type: "radio",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             values: [
               {
                 label: "advocates.create.active",
-                value: true
+                value: "active"
               },
               {
                 label: "advocates.create.inactive",
-                value: false
+                value: "inactive"
               },{
                 label: "advocates.create.terminate",
                 value: "terminate"
@@ -1552,7 +1553,7 @@ var dat = {
             ],
             defaultValue:"active",
             "enableDisableFields": [{
-								"ifValue": "true",
+								"ifValue": "active",
 								"disable": ["inActivationDate"],
 								"enable": ["terminationDate"]
 							},{

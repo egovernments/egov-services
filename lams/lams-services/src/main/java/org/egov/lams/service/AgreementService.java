@@ -2,6 +2,7 @@ package org.egov.lams.service;
 
 import org.egov.lams.model.*;
 import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.PaymentCycle;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
 import org.egov.lams.repository.*;
@@ -494,11 +495,19 @@ public class AgreementService {
 
 	private Date getAdjustmentDate(Agreement agreement) {
 
+		Long monthsToReduce = (long) (agreement.getSecurityDeposit() / agreement.getRent());
+		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER)) {
+			monthsToReduce = monthsToReduce * 3;
+		} else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR)) {
+			monthsToReduce = monthsToReduce * 6;
+		} else if (agreement.getPaymentCycle().equals(PaymentCycle.ANNUAL)) {
+			monthsToReduce = monthsToReduce * 12;
+		}
 		Date expiryDate = agreement.getExpiryDate();
 		Instant instant = Instant.ofEpochMilli(expiryDate.getTime());
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());
 		LocalDate adjustmentDate = localDateTime.toLocalDate();
-		adjustmentDate = adjustmentDate.minusMonths(3);
+		adjustmentDate = adjustmentDate.minusMonths(monthsToReduce);
 		adjustmentDate = adjustmentDate.plusDays(1);
 		return Date.from(adjustmentDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
 

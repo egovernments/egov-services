@@ -17,6 +17,7 @@ import org.egov.model.AssetCategory;
 import org.egov.model.CurrentValue;
 import org.egov.model.Department;
 import org.egov.model.FundSource;
+import org.egov.model.ModeOfAcquisition;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.KafkaTopicName;
 import org.egov.model.enums.Sequence;
@@ -107,6 +108,8 @@ public class AssetService {
 		log.info("AssetService getAssets");
 
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+		System.err.println();assets.get(0).getModeOfAcquisition().getCode();
+		
 		if (!assets.isEmpty())
 			mapMasters(assets, requestInfo, searchAsset.getTenantId());
 		return getAssetResponse(assets, requestInfo);
@@ -140,15 +143,19 @@ public class AssetService {
 		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(RsMasterMap.get("egf-master"));
 		Map<String, Department> departmentMap = mDService
 				.getDepartmentMapFromJSONArray(RsMasterMap.get("common-masters"));
+		Map<String, ModeOfAcquisition> modeOfAquisitionMap = mDService.getModeOfAcquisitionMapFromJSONArray(RsMasterMap.get("ASSET"));
 
 		assets.forEach(asset -> {
 			Long assetCatkey = asset.getAssetCategory().getId();
-			String fundKey = asset.getFundSource().getCode();
-			String deptKey = asset.getDepartment().getCode();
+			String fundKey = asset.getFundSource().getId();
+			String deptKey = asset.getDepartment().getId();
+			String mOAKey=asset.getModeOfAcquisition().getCode();
+			System.err.println("mOAKey"+mOAKey);
 
-			asset.setAssetCategory(assetCatMap.get(assetCatkey));
+            asset.setAssetCategory(assetCatMap.get(assetCatkey));
 			asset.setFundSource(fundMap.get(fundKey));
 			asset.setDepartment(departmentMap.get(deptKey));
+			asset.setModeOfAcquisition(modeOfAquisitionMap.get(mOAKey));
 		});
 	}
 }

@@ -197,6 +197,7 @@ class AbstractEstimate extends Component {
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
 
+    handleChange (new Date().valueOf(), "abstractEstimates[0].dateOfProposal", true);
     handleChange (false, "abstractEstimates[0].spillOverFlag", false);
 
     var sanctionType=[
@@ -206,16 +207,8 @@ class AbstractEstimate extends Component {
 
     sanctionType.map((sanction, index)=>{
       for(var key in sanction){
-        let e={
-          target: {
-            value : sanction['key']
-        }}
-        let f={
-          target: {
-            value : ''
-        }}
-        handleChange (e, "abstractEstimates[0].sanctionDetails["+index+"].sanctionType", false);
-        handleChange (f, "abstractEstimates[0].sanctionDetails["+index+"].sanctionAuthority.name", false);
+        handleChange (sanction['key'], "abstractEstimates[0].sanctionDetails["+index+"].sanctionType", false);
+        handleChange ('', "abstractEstimates[0].sanctionDetails["+index+"].sanctionAuthority.name", false);
       }
     })
 
@@ -391,15 +384,12 @@ class AbstractEstimate extends Component {
       console.log('Modified URL:',_url);
     }
 
-    // console.log(formData);
-
-    //Check if documents, upload and get fileStoreId
-    // let formdocumentData = formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName];
-    // formdocumentData = formdocumentData && formdocumentData.length &&  formdocumentData[0] || formdocumentData ;
-
     // console.log(JSON.stringify(formData));
     let objectName=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName;
     let data = {...formData};
+    _.set(data,'abstractEstimates[0].workFlowDetails.assignee',1);
+
+    // console.log(JSON.stringify(data));
 
     if(data[objectName][0].documents && data[objectName][0].documents.length) {
       let documents = [...data[objectName][0].documents];
@@ -543,6 +533,7 @@ class AbstractEstimate extends Component {
   }
 
   showField = (_mockData, showObject, reset) => {
+    // console.log(_mockData, showObject, reset);
     let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = {...this.props.formData};
     if(showObject.isField) {
@@ -551,9 +542,11 @@ class AbstractEstimate extends Component {
           if(showObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
             _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? true : false;
             if(!reset) {
+              // console.log(_mockData[moduleName + "." + actionName].groups[i].fields[j]);
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                // console.log('mark as required');
                 addRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
               }
             } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
@@ -703,11 +696,14 @@ class AbstractEstimate extends Component {
   }
 
   checkIfHasShowHideFields = (jsonPath, val) => {
+    // console.log(jsonPath, val);
     let _mockData = {...this.props.mockData};
     let {moduleName, actionName, setMockData} = this.props;
     for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
       for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
         if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields && _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length) {
+          // console.log('showHidefields matches for jsonPath');
+          // console.log(_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields);
           for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
               for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
@@ -1117,6 +1113,7 @@ class AbstractEstimate extends Component {
                               onChange={(event, key, value) =>{
                                 handleChange({target: {value: value}},"abstractEstimates[0].sanctionDetails["+index+"].sanctionAuthority.name", false)
                               }}>
+                              <MenuItem value={null} primaryText="-- Please Select --" />
                               {this.state.sanctionAuthority && this.state.sanctionAuthority.map((authority, index)=>(
                                   <MenuItem value={authority.id} key={index} primaryText={authority.name} />
                               ))}
@@ -1161,7 +1158,9 @@ class AbstractEstimate extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.frameworkForm.isFormValid);
+  // console.log(state.framework.mockData);
+  console.log(state.frameworkForm.requiredFields);
+  // console.log(state.frameworkForm.isFormValid);
   return ({
     metaData:state.framework.metaData,
     mockData: state.framework.mockData,
@@ -1197,7 +1196,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
-    // console.log(e.target.value, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+    // console.log(e.target ? e.target.value : e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
     dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target ? e.target.value : e, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
@@ -1214,6 +1213,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
   },
   addRequiredFields: (requiredFields) => {
+    console.log(requiredFields);
     dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
   },
   removeFieldErrors: (key) => {

@@ -870,7 +870,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+//  @Valid
 
   public WorkFlowDetails getWorkFlowDetails() {
     return workFlowDetails;

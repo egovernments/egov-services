@@ -19,8 +19,8 @@ import org.egov.model.Department;
 import org.egov.model.FundSource;
 import org.egov.model.LandDetail;
 import org.egov.model.Location;
+import org.egov.model.ModeOfAcquisition;
 import org.egov.model.enums.AssetCategoryType;
-import org.egov.model.enums.ModeOfAcquisitionEnum;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -56,7 +56,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setCode(rs.getString("code"));
                 asset.setOldCode(rs.getString("oldcode"));
                 asset.setTenantId(rs.getString("tenantId"));
-                asset.setModeOfAcquisition(ModeOfAcquisitionEnum.fromValue(rs.getString("modeofacquisition")));
+               
                 asset.setStatus(rs.getString("status"));
                 asset.setGrossValue((rs.getBigDecimal("grossvalue")));
                 asset.setAccumulatedDepreciation(rs.getBigDecimal("accumulateddepreciation"));
@@ -121,7 +121,8 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 } catch (final IOException e) {
                     e.printStackTrace();
                 }
-
+                
+                asset.setModeOfAcquisition(ModeOfAcquisition.builder().code(rs.getString("modeofacquisition")).build());
                 asset.setAssetAttributes(asset2);
                 asset.setFundSource(FundSource.builder().code(rs.getString("fundSource")).build());
                 asset.setDepartment(Department.builder().code(rs.getString("departmentCode")).build());

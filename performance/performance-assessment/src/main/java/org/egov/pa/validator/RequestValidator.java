@@ -204,11 +204,11 @@ public class RequestValidator {
 			                    PerformanceAssessmentConstants.TARGET_UNAVAILABLE_FIELD_NAME));
 					}
 					
-					if(createOrUpdate && kpiValueService.checkKpiValueExistsForTenant(eachValue.getKpi().getCode(), eachValue.getTenantId())) { 
+					/*if(createOrUpdate && kpiValueService.checkKpiValueExistsForTenant(eachValue.getKpi().getCode(), eachValue.getTenantId())) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_CODE, 
 			                    PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_FIELD_NAME));
-					}
+					}*/
 				}
 				
 			} else { 

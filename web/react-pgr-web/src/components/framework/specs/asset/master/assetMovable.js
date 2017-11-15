@@ -85,7 +85,7 @@ var dat = {
   					},
             {
 							"name": "Department",
-							"jsonPath": "Asset.departmentCode",
+							"jsonPath": "Asset.department.code",
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
@@ -292,11 +292,11 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.fundSource",
+            "jsonPath": "Asset.fundSource.code",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -875,7 +875,7 @@ var dat = {
   					},
             {
 							"name": "Department",
-							"jsonPath": "Assets[0].departmentCode",
+							"jsonPath": "Assets[0].department.code",
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
@@ -1068,7 +1068,7 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Assets[0].fundSource",
+            "jsonPath": "Assets[0].fundSource.code",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "text",
@@ -1460,7 +1460,7 @@ var dat = {
   					},
             {
 							"name": "Department",
-							"jsonPath": "Asset.departmentCode",
+							"jsonPath": "Asset.department.code",
 							"label": "ac.create.Department",
 							"pattern": "",
 							"type": "singleValueList",
@@ -1681,11 +1681,11 @@ var dat = {
           },
           {
             "name": "SourceOfFunds",
-            "jsonPath": "Asset.fundSource",
+            "jsonPath": "Asset.fundSource.code",
             "label": "ac.create.Source.of.funds",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..name|$..name",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",

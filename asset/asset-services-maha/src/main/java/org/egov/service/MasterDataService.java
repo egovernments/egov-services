@@ -121,7 +121,7 @@ public class MasterDataService {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		return Departments.stream().collect(Collectors.toMap(Department::getId, Function.identity()));
+		return Departments.stream().collect(Collectors.toMap(Department::getCode, Function.identity()));
 	}
 	
 	public Map<String, FundSource> getFundSourceMapFromJSONArray(Map<String, JSONArray> moduleMap) {
@@ -141,7 +141,7 @@ public class MasterDataService {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		return Fundsources.stream().collect(Collectors.toMap(FundSource::getId, Function.identity()));
+		return Fundsources.stream().collect(Collectors.toMap(FundSource::getCode, Function.identity()));
 	}
 
 	public FinancialYear getFinancialYear(Long toDate, RequestInfo requestInfo, String tenantId) {

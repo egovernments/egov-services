@@ -92,13 +92,13 @@ public class AssetValidator implements Validator {
 
 		Department department = departmentMap.get(asset.getDepartment().getCode());
 		if (department == null)
-			errorMap.put("EGASSET_INVALID_DEPARTMENT", "the  given Department is Invalid");
+			errorMap.put("EGASSET_INVALID_DEPARTMENT", "the  given Department code is Invalid");
 		else
 			asset.setDepartment(department);
 
-		FundSource fundSource = fundMap.get(asset.getFundSource().getId());
+		FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
 		if (fundSource == null)
-			errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource id is Invalid");
+			errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource code is Invalid");
 		else
 			asset.setFundSource(fundSource);
 	}

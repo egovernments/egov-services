@@ -89,7 +89,7 @@ var dat = {
     ]
     },
     {
-      "label": "perfManagement.create.KPIs.groups.kpiTargetBlock",
+      "label": "Actual Value",
         "name": "kpiTargetBlock",
         "hide": false,
         "multiple": false,
@@ -100,13 +100,13 @@ var dat = {
             "label": "",
             "pattern": "[0-9]",
             "type": "text",
-            "isDisabled": true,
+            "isDisabled": false,
             "patternErrMsg": "Please enter a valid number",
             "requiredErrMsg": ""
         }]
     },
     {
-        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
+        "label": "Actual Value",
         "name": "kpiTargetRadioBlock",
         "hide": true,
         "multiple": false,
@@ -118,7 +118,7 @@ var dat = {
             "pattern": "",
             "type": "radio",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
             "values": [{

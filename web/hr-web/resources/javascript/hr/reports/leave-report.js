@@ -1,19 +1,20 @@
+var flag = 0;
 class LeaveReport extends React.Component {
 
-  constructor(props) {
-    super(props);
-    this.state = {
+    constructor(props) {
+      super(props);
+      this.state = {
         "result": [],
         "searchSet": {
-            "employeeCode": "",
-            "department": "",
-            "designation": "",
-            "employeeType": "",
-            "employeeStatus": "",
-            "leaveType": "",
-            "dateFrom": "",
-            "dateTo": "",
-            "leaveStatus": ""
+          "employeeCode": "",
+          "department": "",
+          "designation": "",
+          "employeeType": "",
+          "employeeStatus": "",
+          "leaveType": "",
+          "dateFrom": "",
+          "dateTo": "",
+          "leaveStatus": ""
         },
         "employeeTypes": [],
         "departments": [],
@@ -21,142 +22,185 @@ class LeaveReport extends React.Component {
         "leaveStatuses": [],
         "leaveTypes": [],
         "employeeStatuses": [],
-        "employeeList":[],
+        "employeeList": [],
         "isSearchClicked": false
-    };
-    this.handleChange = this.handleChange.bind(this);
-    this.searchEmployee = this.searchEmployee.bind(this);
-    this.closeWindow = this.closeWindow.bind(this);
-  }
-
-  componentWillMount() {
-
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
+      };
+      this.handleChange = this.handleChange.bind(this);
+      this.searchEmployee = this.searchEmployee.bind(this);
+      this.closeWindow = this.closeWindow.bind(this);
     }
 
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
+    componentWillMount() {
 
-    try {
-      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+      try {
+        var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
+      } catch (e) {
+        console.log(e);
+        var assignments_designation = [];
       }
-      catch (e) {
+
+      try {
+        var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
+      } catch (e) {
         console.log(e);
-      var employeeType = [];
-    }
+        var assignments_department = [];
+      }
 
-    var employeeStatusList;
-    var leaveTypes;
-    var leaveStatuses;
+      try {
+        var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
+      } catch (e) {
+        console.log(e);
+        var employeeType = [];
+      }
 
-    getDropdown("employeeStatus", function(res) {
-      employeeStatusList = res;
-    });
-    getDropdown("leaveTypes", function(res) {
-      leaveTypes = res;
-    });
-    getDropdown("leaveStatus", function(res) {
-      leaveStatuses = res;
-    });
+      var employeeStatusList;
+      var leaveTypes;
+      var leaveStatuses;
+
+      getDropdown("employeeStatus", function(res) {
+        employeeStatusList = res;
+      });
+      getDropdown("leaveTypes", function(res) {
+        leaveTypes = res;
+      });
+      getDropdown("leaveStatus", function(res) {
+        leaveStatuses = res;
+      });
 
 
-     this.setState({
-         ...this.state,
-         departments: Object.assign([], assignments_department),
-         designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType),
-         employeeStatuses: Object.assign([], employeeStatusList),
-         leaveTypes: Object.assign([], leaveTypes),
-         leaveStatuses: Object.assign([], leaveStatuses)
-     });
+      this.setState({
+        ...this.state,
+        departments: Object.assign([], assignments_department),
+        designations: Object.assign([], assignments_designation),
+        employeeTypes: Object.assign([], employeeType),
+        employeeStatuses: Object.assign([], employeeStatusList),
+        leaveTypes: Object.assign([], leaveTypes),
+        leaveStatuses: Object.assign([], leaveStatuses)
+      });
 
-     var _this = this;
+      var _this = this;
 
-     commonApiPost("hr-employee", "employees", "_search", {tenantId,pageSize:500}, function(err, res) {
-       if(res && res.Employee) {
-         res.Employee.forEach(function(item, index, theArray) {
-           console.log(item);
-           theArray[index] = {"id": item.id, "name": item.code + " - " + item.name};
-         });
-
-         _this.setState({
-             ..._this.state,
-             employeeList : res.Employee
-         });
-
-         console.log(res.Employee);
-       }
-     });
-
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-      if (this.state.result) {
-          $('#employeeTable').DataTable({
-            dom: 'Bfrtip',
-            buttons: [
-                     'copy', 'csv', 'excel', 'pdf', 'print'
-             ],
-             ordering: false
+      commonApiPost("hr-employee", "employees", "_search", {
+        tenantId,
+        pageSize: 500
+      }, function(err, res) {
+        if (res && res.Employee) {
+          res.Employee.forEach(function(item, index, theArray) {
+            theArray[index] = {
+              "id": item.id,
+              "name": item.code + " - " + item.name
+            };
           });
+
+          _this.setState({
+            ..._this.state,
+            employeeList: res.Employee
+          });
+
+        }
+      });
+
+    }
+
+    componentDidMount() {
+
+      var _this = this;
+
+      $('#dateFrom').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        defaultDate: ""
+      });
+
+      $('#dateFrom').on('changeDate', function(e) {
+        _this.setState({
+          searchSet: {
+            ..._this.state.searchSet,
+            "dateFrom": $("#dateFrom").val(),
+          }
+        });
+      });
+
+
+      $('#dateTo').datepicker({
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        defaultDate: ""
+      });
+
+      $('#dateTo').on('changeDate', function(e) {
+        _this.setState({
+          searchSet: {
+            ..._this.state.searchSet,
+            "dateTo": $("#dateTo").val(),
+          }
+        });
+      });
+
+
+
+    }
+
+    componentDidUpdate(prevProps, prevState) {
+      if (flag === 1) {
+        flag = 0;
+        $('#employeeTable').DataTable({
+          dom: 'Bfrtip',
+          buttons: [
+            'copy', 'csv', 'excel', 'pdf', 'print'
+          ],
+          ordering: false
+        });
       }
-  }
+    }
 
-  closeWindow(){
+    closeWindow() {
       open(location, '_self').close();
-  }
+    }
 
-  // getEmployee(id) {
-  //   var name;
-  //
-  //   console.log(name);
-  //   return name;
-  // }
+    searchEmployee(e) {
+      e.preventDefault();
+      $('#employeeTable').dataTable().fnDestroy();
+      var _this = this;
+      if (this.state.searchSet.dateFrom && !this.state.searchSet.dateTo)
+        return showError("Please enter To Date");
+      if (!this.state.searchSet.dateFrom && this.state.searchSet.dateTo)
+        return showError("Please enter From Date");
 
-  searchEmployee (e) {
-    e.preventDefault();
-    var _this= this;
-    var result;
-    try {
-        commonApiPost("hr-leave", "leaveapplications", "_leavereport", {...this.state.searchSet, tenantId},function(err, res) {
+      var result;
+      try {
+        commonApiPost("hr-leave", "leaveapplications", "_leavereport", { ...this.state.searchSet,
+          tenantId
+        }, function(err, res) {
 
-          if(res && res.LeaveApplication) {
+          if (res && res.LeaveApplication) {
+            flag = 1;
             _this.setState({
               ..._this.state,
-                result : res.LeaveApplication,
-                isSearchClicked: true
+              result: res.LeaveApplication,
+              isSearchClicked: true
             })
           }
         });
       } catch (e) {
         result = [];
         console.log(e);
+      }
     }
-  }
 
-  handleChange(e, name)
-  {
+    handleChange(e, name) {
       this.setState({
-          ...this.state,
-          searchSet:{
-              ...this.state.searchSet,
-              [name]:e.target.value
-          }
+        ...this.state,
+        searchSet: {
+          ...this.state.searchSet,
+          [name]: e.target.value
+        }
       })
-  }
-
+    }
   render() {
 
     let {handleChange ,searchEmployee, closeWindow} = this;
-    let {result, employeeTypes, departments, designations, leaveStatuses, leaveTypes, employeeStatuses, employeeList} = this.state;
+    let {result, employeeTypes, departments, designations, leaveStatuses, leaveTypes, employeeStatuses, employeeList, isSearchClicked} = this.state;
     let {employeeCode, department, designation, employeeType, employeeStatus, leaveStatus, leaveType, dateFrom, dateTo} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -173,6 +217,7 @@ class LeaveReport extends React.Component {
     }
 
     const renderTr = () => {
+      if(isSearchClicked){
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
@@ -181,11 +226,12 @@ class LeaveReport extends React.Component {
                 <td>{item.leaveType.name}</td>
                 <td>{item.fromDate +"-"+ item.toDate}</td>
                 <td>{item.leaveDays}</td>
-                <td>{getNameById(leaveStatuses,item.status)}</td>
+                <td>{getNameById(leaveStatuses,item.status,"code")}</td>
                 <td>{item.reason}</td>
                 </tr>
             )
         })
+      }
     }
 
     const showTable = () => {
@@ -322,7 +368,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                             <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="date" id="dateFrom" value={dateFrom} onChange={(e) => {handleChange(e, "dateFrom")}}/>
+                                                <input type="text" id="dateFrom" value={dateFrom} onChange={(e) => {handleChange(e, "dateFrom")}}/>
                                             </div>
                                         </div>
                                     </div>
@@ -335,7 +381,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                             <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="date" id="dateTo" value={dateTo} onChange={(e) => {handleChange(e, "dateTo")}}/>
+                                                <input type="text" id="dateTo" value={dateTo} onChange={(e) => {handleChange(e, "dateTo")}}/>
                                             </div>
                                         </div>
                                     </div>

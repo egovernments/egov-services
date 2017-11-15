@@ -1,3 +1,4 @@
+var flag = 0;
 
 class EmployeeAttendence extends React.Component {
 
@@ -33,6 +34,7 @@ class EmployeeAttendence extends React.Component {
             {name: "Necember", id: "12"}
         ],
         "calenderYears": [],
+        "employeeList" : [],
         "isSearchClicked": false,
         "error": ""
     };
@@ -70,11 +72,37 @@ class EmployeeAttendence extends React.Component {
      checkCountAndCall("calenderYears", res);
    });
 
+
+   var _this = this;
+
+   commonApiPost("hr-employee", "employees", "_search", {
+     tenantId,
+     pageSize: 500
+   }, function(err, res) {
+     if (res && res.Employee) {
+       res.Employee.forEach(function(item, index, theArray) {
+         theArray[index] = {
+           "id": item.id,
+           "name": item.code + " - " + item.name
+         };
+       });
+
+       _this.setState({
+         ..._this.state,
+         employeeList: res.Employee
+       });
+
+     }
+   });
+
+
+
   }
 
   componentDidUpdate(prevProps, prevState)
   {
-      if (prevState.result.length!=this.state.result.length) {
+      if (flag === 1) {
+        flag = 0;
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -101,12 +129,14 @@ class EmployeeAttendence extends React.Component {
 
  searchEmployeeAttendance (e) {
    e.preventDefault();
+   $('#employeeTable').dataTable().fnDestroy();
    var result, _this = this;
    try {
         result = commonApiPost("hr-attendance", "attendances", "_attendancereport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
           console.log(res);
           if(res) {
             console.log(res && res.Attendance);
+            flag = 1;
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
@@ -123,19 +153,11 @@ class EmployeeAttendence extends React.Component {
 
  }
 
- getEmployee(id) {
 
-   commonApiPost("hr-employee", "employees", "_search", {id, tenantId,pageSize:500}, function(err, res) {
-     if(res && res.Employee[0]) {
-       return res.Employee[0].code + " - " + res.Employee[0].name;
-     }
-   });
-
- }
 
  render () {
     let {handleChange, searchEmployeeAttendance, closeWindow} = this;
-    let {result, employeeTypes, departments, designations, months, calenderYears, error} = this.state;
+    let {result, employeeTypes, departments, designations, months, calenderYears, employeeList, error} = this.state;
     let {code, departmentId, designationId, employeeType, month, year} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -156,7 +178,7 @@ class EmployeeAttendence extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                <td>{getEmployee(item.employee)}</td>
+                <td>{getNameById(employeeList, item.employee)}</td>
                 <td>{item.presentDays}</td>
                 <td>{item.absentDays}</td>
                 <td>{item.leaveDays}</td>

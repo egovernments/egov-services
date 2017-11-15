@@ -1,4 +1,4 @@
-
+var flag= 0;
 
 class LeaveSummary extends React.Component {
 
@@ -50,7 +50,7 @@ class LeaveSummary extends React.Component {
         console.log(e);
       var employeeType = [];
     }
-    
+
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
@@ -60,7 +60,8 @@ class LeaveSummary extends React.Component {
   }
 
   componentDidUpdate(prevProps, prevState) {
-      if (prevState.result.length!=this.state.result.length) {
+      if (flag === 1) {
+        flag = 0;
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
@@ -89,8 +90,20 @@ class LeaveSummary extends React.Component {
     e.preventDefault();
     var result;
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
-    } catch (e) {
+        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId},function(err, res) {
+          console.log(res);
+          if(res) {
+            console.log(res && res.Attendance);
+            flag = 1;
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                noOfDaysInMonth:res.noOfDaysInMonth,
+                noOfWorkingDays:res.noOfWorkingDays,
+                result : res.Attendance
+            })
+          }
+      } catch (e) {
         result = [];
         console.log(e);
     }

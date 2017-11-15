@@ -166,8 +166,13 @@ public class AdvocateBuilders {
 		}
 
 		if (agencyCode != null) {
-			selectQuery.append(" AND agencyCode=?");
-			preparedStatementValues.add(agencyCode);
+			if (isIndividual) {
+				selectQuery.append(" AND code=?");
+				preparedStatementValues.add(agencyCode);
+			} else {
+				selectQuery.append(" AND agencyCode=?");
+				preparedStatementValues.add(agencyCode);
+			}
 		}
 
 		if (advocateName != null) {
@@ -185,6 +190,8 @@ public class AdvocateBuilders {
 			selectQuery.append(" AND LOWER(agencyname) LIKE ?");
 			preparedStatementValues.add(name.toString().toLowerCase());
 		}
+
+		selectQuery.append(" ORDER BY lastmodifiedtime DESC");
 
 		return selectQuery.toString();
 	}
@@ -212,6 +219,8 @@ public class AdvocateBuilders {
 			searchQuery.append(" AND name=?");
 			preparedStatementValues.add(agencyName);
 		}
+
+		searchQuery.append(" ORDER BY lastmodifiedtime DESC");
 
 		return searchQuery.toString();
 	}

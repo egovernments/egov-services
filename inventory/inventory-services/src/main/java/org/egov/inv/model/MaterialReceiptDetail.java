@@ -1,27 +1,26 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.Asset;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
-import org.egov.inv.model.PurchaseOrderDetail;
-import org.egov.inv.model.Uom;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Builder;
 
 /**
  * Hold the material receipt note material level information. This will show which material is received based on which purchase order.
  */
 @ApiModel(description = "Hold the material receipt note material level information. This will show which material is received based on which purchase order.")
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
-
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
+@Builder
 public class MaterialReceiptDetail   {
   @JsonProperty("id")
   private Integer id = null;
@@ -29,14 +28,17 @@ public class MaterialReceiptDetail   {
   @JsonProperty("tenantId")
   private String tenantId = null;
 
+  @JsonProperty("mrnNumber")
+  private MaterialReceipt mrnNumber = null;
+
   @JsonProperty("material")
   private Material material = null;
 
   @JsonProperty("uom")
   private Uom uom = null;
 
-  @JsonProperty("purchaseOrderDetail")
-  private PurchaseOrderDetail purchaseOrderDetail = null;
+  @JsonProperty("poline")
+  private PurchaseOrder poline = null;
 
   @JsonProperty("receivedQty")
   private BigDecimal receivedQty = null;
@@ -103,6 +105,27 @@ public class MaterialReceiptDetail   {
     this.tenantId = tenantId;
   }
 
+  public MaterialReceiptDetail mrnNumber(MaterialReceipt mrnNumber) {
+    this.mrnNumber = mrnNumber;
+    return this;
+  }
+
+   /**
+   * Unique number to identify the maretial receipt note.
+   * @return mrnNumber
+  **/
+  @ApiModelProperty(required = true, value = "Unique number to identify the maretial receipt note.")
+  @NotNull
+
+
+  public MaterialReceipt getMrnNumber() {
+    return mrnNumber;
+  }
+
+  public void setMrnNumber(MaterialReceipt mrnNumber) {
+    this.mrnNumber = mrnNumber;
+  }
+
   public MaterialReceiptDetail material(Material material) {
     this.material = material;
     return this;
@@ -114,7 +137,7 @@ public class MaterialReceiptDetail   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+  
 
   public Material getMaterial() {
     return material;
@@ -145,25 +168,25 @@ public class MaterialReceiptDetail   {
     this.uom = uom;
   }
 
-  public MaterialReceiptDetail purchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
-    this.purchaseOrderDetail = purchaseOrderDetail;
+  public MaterialReceiptDetail poline(PurchaseOrder poline) {
+    this.poline = poline;
     return this;
   }
 
    /**
    * po line mandatory if receipt type is purchase receipt.
-   * @return purchaseOrderDetail
+   * @return poline
   **/
   @ApiModelProperty(value = "po line mandatory if receipt type is purchase receipt.")
 
   @Valid
 
-  public PurchaseOrderDetail getPurchaseOrderDetail() {
-    return purchaseOrderDetail;
+  public PurchaseOrder getPoline() {
+    return poline;
   }
 
-  public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
-    this.purchaseOrderDetail = purchaseOrderDetail;
+  public void setPoline(PurchaseOrder poline) {
+    this.poline = poline;
   }
 
   public MaterialReceiptDetail receivedQty(BigDecimal receivedQty) {
@@ -352,9 +375,10 @@ public class MaterialReceiptDetail   {
     MaterialReceiptDetail materialReceiptDetail = (MaterialReceiptDetail) o;
     return Objects.equals(this.id, materialReceiptDetail.id) &&
         Objects.equals(this.tenantId, materialReceiptDetail.tenantId) &&
+        Objects.equals(this.mrnNumber, materialReceiptDetail.mrnNumber) &&
         Objects.equals(this.material, materialReceiptDetail.material) &&
         Objects.equals(this.uom, materialReceiptDetail.uom) &&
-        Objects.equals(this.purchaseOrderDetail, materialReceiptDetail.purchaseOrderDetail) &&
+        Objects.equals(this.poline, materialReceiptDetail.poline) &&
         Objects.equals(this.receivedQty, materialReceiptDetail.receivedQty) &&
         Objects.equals(this.acceptedQty, materialReceiptDetail.acceptedQty) &&
         Objects.equals(this.unitRate, materialReceiptDetail.unitRate) &&
@@ -367,7 +391,7 @@ public class MaterialReceiptDetail   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, material, uom, purchaseOrderDetail, receivedQty, acceptedQty, unitRate, asset, voucherHeader, rejectionRemark, remarks, receiptDetailsAddnInfo);
+    return Objects.hash(id, tenantId, mrnNumber, material, uom, poline, receivedQty, acceptedQty, unitRate, asset, voucherHeader, rejectionRemark, remarks, receiptDetailsAddnInfo);
   }
 
   @Override
@@ -377,9 +401,10 @@ public class MaterialReceiptDetail   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
     sb.append("    material: ").append(toIndentedString(material)).append("\n");
     sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
-    sb.append("    purchaseOrderDetail: ").append(toIndentedString(purchaseOrderDetail)).append("\n");
+    sb.append("    poline: ").append(toIndentedString(poline)).append("\n");
     sb.append("    receivedQty: ").append(toIndentedString(receivedQty)).append("\n");
     sb.append("    acceptedQty: ").append(toIndentedString(acceptedQty)).append("\n");
     sb.append("    unitRate: ").append(toIndentedString(unitRate)).append("\n");

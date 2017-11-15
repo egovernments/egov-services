@@ -33,7 +33,7 @@ public class IdgenRepository {
     @Autowired
     private LogAwareRestTemplate restTemplate;
 
-    public String getIdGeneration(String tenantId, RequestInfo requestInfo, String name) {
+    public String getIdGeneration(String tenantId, org.egov.common.contract.request.RequestInfo requestInfo, String name) {
 
         StringBuffer idGenerationUrl = new StringBuffer();
         idGenerationUrl.append(host);

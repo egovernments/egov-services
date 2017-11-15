@@ -6,7 +6,6 @@ import java.util.TimeZone;
 
 import javax.annotation.PostConstruct;
 
-
 import org.egov.tracer.config.TracerConfiguration;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.Settings;

@@ -1,18 +1,22 @@
 package org.egov.inv.model;
 
 import java.util.Objects;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Size;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import lombok.Builder;
 
 /**
  * Hold the material receipt note material level  additional information. This will helpful to maintain/issue material in lot number,expiry date wise, serial number wise and manufacture number wise. This object will be useful in legacy data collection also.
  */
 @ApiModel(description = "Hold the material receipt note material level  additional information. This will helpful to maintain/issue material in lot number,expiry date wise, serial number wise and manufacture number wise. This object will be useful in legacy data collection also.")
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
+@Builder 
 
 public class MaterialReceiptDetailAddnlinfo   {
   @JsonProperty("id")
@@ -20,6 +24,9 @@ public class MaterialReceiptDetailAddnlinfo   {
 
   @JsonProperty("tenantId")
   private String tenantId = null;
+
+  @JsonProperty("materialReceiptDetail")
+  private MaterialReceiptDetail materialReceiptDetail = null;
 
   @JsonProperty("lotNo")
   private String lotNo = null;
@@ -77,6 +84,27 @@ public class MaterialReceiptDetailAddnlinfo   {
 
   public void setTenantId(String tenantId) {
     this.tenantId = tenantId;
+  }
+
+  public MaterialReceiptDetailAddnlinfo materialReceiptDetail(MaterialReceiptDetail materialReceiptDetail) {
+    this.materialReceiptDetail = materialReceiptDetail;
+    return this;
+  }
+
+   /**
+   * Get materialReceiptDetail
+   * @return materialReceiptDetail
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public MaterialReceiptDetail getMaterialReceiptDetail() {
+    return materialReceiptDetail;
+  }
+
+  public void setMaterialReceiptDetail(MaterialReceiptDetail materialReceiptDetail) {
+    this.materialReceiptDetail = materialReceiptDetail;
   }
 
   public MaterialReceiptDetailAddnlinfo lotNo(String lotNo) {
@@ -211,6 +239,7 @@ public class MaterialReceiptDetailAddnlinfo   {
     MaterialReceiptDetailAddnlinfo materialReceiptDetailAddnlinfo = (MaterialReceiptDetailAddnlinfo) o;
     return Objects.equals(this.id, materialReceiptDetailAddnlinfo.id) &&
         Objects.equals(this.tenantId, materialReceiptDetailAddnlinfo.tenantId) &&
+        Objects.equals(this.materialReceiptDetail, materialReceiptDetailAddnlinfo.materialReceiptDetail) &&
         Objects.equals(this.lotNo, materialReceiptDetailAddnlinfo.lotNo) &&
         Objects.equals(this.serialNo, materialReceiptDetailAddnlinfo.serialNo) &&
         Objects.equals(this.manufactureDate, materialReceiptDetailAddnlinfo.manufactureDate) &&
@@ -221,7 +250,7 @@ public class MaterialReceiptDetailAddnlinfo   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, lotNo, serialNo, manufactureDate, oldReceiptNumber, receivedDate, expiryDate);
+    return Objects.hash(id, tenantId, materialReceiptDetail, lotNo, serialNo, manufactureDate, oldReceiptNumber, receivedDate, expiryDate);
   }
 
   @Override
@@ -231,6 +260,7 @@ public class MaterialReceiptDetailAddnlinfo   {
     
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    materialReceiptDetail: ").append(toIndentedString(materialReceiptDetail)).append("\n");
     sb.append("    lotNo: ").append(toIndentedString(lotNo)).append("\n");
     sb.append("    serialNo: ").append(toIndentedString(serialNo)).append("\n");
     sb.append("    manufactureDate: ").append(toIndentedString(manufactureDate)).append("\n");

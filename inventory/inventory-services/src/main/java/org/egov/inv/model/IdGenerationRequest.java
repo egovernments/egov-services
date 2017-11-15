@@ -5,6 +5,8 @@ import lombok.*;
 
 import java.util.List;
 
+import org.egov.common.contract.request.RequestInfo;
+
 @Getter
 @Setter
 @ToString

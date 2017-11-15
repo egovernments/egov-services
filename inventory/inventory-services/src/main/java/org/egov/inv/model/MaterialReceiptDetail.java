@@ -22,9 +22,10 @@ import lombok.NoArgsConstructor;
  */
 @ApiModel(description = "Hold the material receipt note material level information. This will show which material is received based on which purchase order.")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
+@Builder
 public class MaterialReceiptDetail   {
   @JsonProperty("id")
-  private String id = null;
+  private Integer id = null;
 
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -65,7 +66,7 @@ public class MaterialReceiptDetail   {
   @JsonProperty("receiptDetailsAddnInfo")
   private List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo = null;
 
-  public MaterialReceiptDetail id(String id) {
+  public MaterialReceiptDetail id(Integer id) {
     this.id = id;
     return this;
   }
@@ -78,11 +79,11 @@ public class MaterialReceiptDetail   {
   @NotNull
 
 
-  public String getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

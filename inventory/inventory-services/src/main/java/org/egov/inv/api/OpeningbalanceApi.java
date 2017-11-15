@@ -29,48 +29,54 @@ import io.swagger.annotations.ApiResponses;
 
 @Api(value = "openingbalance", description = "the openingbalance API")
 public interface OpeningbalanceApi {
-
-    @ApiOperation(value = "Create New Opening Balanace.", notes = "Create a new  Opening Balanace. This will handle  Opening Balanace detail.", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "Opening Balance Created", response = OpeningBalanceResponse.class),
-        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
+		
+		    	@ApiOperation(value = "Create New Opening Balanace.", notes = "Create a new  Opening Balanace. This will handle  Opening Balanace detail.", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
+		    	@ApiResponses(value = { 
+		        @ApiResponse(code = 200, message = "Opening Balance Created", response = OpeningBalanceResponse.class),
+		        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
     
-    @RequestMapping(value = "/openingbalance/_create",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
+		    	@RequestMapping(value = "/openingbalance/_create",
+		    	produces = { "application/json" }, 
+		    	consumes = { "application/json" },
+		    	method = RequestMethod.POST)
     ResponseEntity<OpeningBalanceResponse> openingbalanceCreatePost(
-    		@ApiParam(value = "Details for the new Oening Balance request." ,required=true ) 
-    		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-    		@Valid @RequestBody OpeningBalanceRequest openingBalance);
-            @ApiOperation(value = "Update existing  Opening Balanace. This will handle  Opening Balanace detail.", notes = "Existing Opening Balanace can be updated.", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
-            @ApiResponses(value = { 
-            @ApiResponse(code = 200, message = "Opening Balance  Updated Successfully.", response = OpeningBalanceResponse.class),
-            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+	    		@ApiParam(value = "Details for the new Oening Balance request." ,required=true ) 
+	    		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+	    		@Valid @RequestBody OpeningBalanceRequest openingBalance);
+	            @ApiOperation(value = "Update existing  Opening Balanace. This will handle  Opening Balanace detail.", notes = "Existing Opening Balanace can be updated.", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
+	            @ApiResponses(value = { 
+	            @ApiResponse(code = 200, message = "Opening Balance  Updated Successfully.", response = OpeningBalanceResponse.class),
+	            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
     
-            @RequestMapping(value = "/openingbalance/_update",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
+            	@RequestMapping(value = "/openingbalance/_update",
+            	produces = { "application/json" }, 
+            	consumes = { "application/json" },
+            	method = RequestMethod.POST)
     ResponseEntity<OpeningBalanceResponse> openingbalanceUpdatePost(
-    		@ApiParam(value = "Details for the new opening balance." ,required=true ) 
-    		@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-    		 @RequestBody OpeningBalanceRequest openingBalanace);
-            
-            @ApiOperation(value = "Get the opening balance", notes = "Get opening balance", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
-            @ApiResponses(value = { 
+    			@ApiParam(value = "Details for the new opening balance." ,required=true ) 
+    			@Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+    			@RequestBody OpeningBalanceRequest openingBalanace);
+                @ApiOperation(value = "Get the opening balance", notes = "Get opening balance", response = OpeningBalanceResponse.class, tags={ "Opening Balance", })
+                @ApiResponses(value = { 
                 @ApiResponse(code = 200, message = "opening balance retrieved Successfully", response = OpeningBalanceResponse.class),
                 @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
             
-            @RequestMapping(value = "/openingbalance/_search",
+                @RequestMapping(value = "/openingbalance/_search",
                 produces = { "application/json" }, 
                 consumes = { "application/json" },
                 method = RequestMethod.POST)
-            ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
+   ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
             @RequestParam(value = "tenantId", required = true) String tenantId,
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  ) 
             @Valid @RequestBody RequestInfo requestInfo,
-            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String finanncilaYear,@ApiParam(value = "search on basis of receiptNumber ") @RequestParam(value = "receiptNumber", required = false) String materialcode,@ApiParam(value = "search on basis of materialName ") @RequestParam(value = "materialName", required = false) String materialName, @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy);
+            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String finanncilaYear,
+            @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
+            @ApiParam(value = "search on basis of materialTypeName ") @RequestParam(value = "materialTypeName", required = false) String materialTypeName,
+            @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") 
+            @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,@ApiParam(value = "Page number", defaultValue = "1")
+            @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
+            @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") 
+            @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy);
 
 
 

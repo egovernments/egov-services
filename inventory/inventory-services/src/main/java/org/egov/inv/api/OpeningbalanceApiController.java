@@ -69,8 +69,8 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     		@RequestParam(value = "tenantId", required = true) String tenantId,
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
             @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String financialYear,
-            @ApiParam(value = "search on basis of receiptNumber ") @RequestParam(value = "receiptNumber", required = false) String materialcode,
-            @ApiParam(value = "search on basis of materialName ") @RequestParam(value = "materialName", required = false) String materialName,
+            @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
+            @ApiParam(value = "search on basis of materialTypeName ") @RequestParam(value = "materialTypeName", required = false) String materialTypeName,
              @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") 
     		@RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
             @ApiParam(value = "Page number", defaultValue = "1")
@@ -80,12 +80,13 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     			.builder()
     			.tenantId(tenantId)
 				.financialYear(financialYear)
-				.materialcode(materialcode)
-				.materialName(materialName)
+				.materialTypeName(materialTypeName)
+				.storeName(storeName)
 				.pageSize(pageSize)
 				.pageNumber(pageNumber)
 				.sortBy(sortBy)
 				.build();
+    	
             return  new ResponseEntity<>(openingBalanceService.search(receiptSearch) ,HttpStatus.OK);
         }
 

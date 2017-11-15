@@ -8,22 +8,21 @@ import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.egov.inv.persistence.queryBuilder.OpeningbalanceQueryBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-@Service
+@Repository
 public class OpeningBalanceRepository extends JdbcRepository{
-	
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     private OpeningbalanceQueryBuilder openingbalanceQueryBuilder;
 
-	//private static final Logger LOG = LoggerFactory.getLogger(RecieptNoteApiJdbcRepository.class);
-	/*static {
-		LOG.debug("init openingBalance");
-		init(ReceiptNoteApiEntity.class);
-		LOG.debug("end init openingBalance");
-	}*/
+    public OpeningBalanceRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate ,
+			OpeningbalanceQueryBuilder openingbalanceQueryBuilder
+            ) {
+	this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
+	this.openingbalanceQueryBuilder = openingbalanceQueryBuilder;
+}
 	
 public OpeningBalanceResponse search(OpeningBalanceSearchCriteria openBalSearchCriteria) {
 		
@@ -47,10 +46,9 @@ private HashMap<String, Object> getDetailNamedQuery(OpeningBalanceSearchCriteria
 	HashMap<String, Object> parametersMap = new HashMap<String, Object>();
 	parametersMap.put("tenantId", searchCriteria.getTenantId());
 	parametersMap.put("financialYear", searchCriteria.getFinancialYear());
-	parametersMap.put("mrnNumber", searchCriteria.getMrnNumber());
 	parametersMap.put("storeName", searchCriteria.getStoreName());
 	parametersMap.put("materialName", searchCriteria.getMaterialName());
-	parametersMap.put("materialcode", searchCriteria.getMaterialcode());
+	parametersMap.put("materialTypeName", searchCriteria.getMaterialTypeName());
 	parametersMap.put("id", searchCriteria.getId());
 	parametersMap.put("pageSize", searchCriteria.getPageSize());
 	parametersMap.put("pageNumber", searchCriteria.getPageNumber());

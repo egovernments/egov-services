@@ -108,7 +108,6 @@ public class AssetService {
 		log.info("AssetService getAssets");
 
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
-		System.err.println();assets.get(0).getModeOfAcquisition().getCode();
 		
 		if (!assets.isEmpty())
 			mapMasters(assets, requestInfo, searchAsset.getTenantId());

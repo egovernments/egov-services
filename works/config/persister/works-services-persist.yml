@@ -45,14 +45,10 @@ serviceMaps:
    fromTopic: works.documentdetails.update
    isTransaction: true
    queryMaps:   
-    - query: UPDATE egw_documentdetail SET objectid= ?,objectType = ?, documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+    - query: UPDATE egw_documentdetail SET documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
       basePath: $.documentDetails.*
       jsonMaps:
          
-       - jsonPath: $.documentDetails.*.objectId
-         
-       - jsonPath: $.documentDetails.*.objectType
-       
        - jsonPath: $.documentDetails.*.documentType
        
        - jsonPath: $.documentDetails.*.fileStore

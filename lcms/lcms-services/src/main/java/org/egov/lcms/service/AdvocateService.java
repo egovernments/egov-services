@@ -82,6 +82,8 @@ public class AdvocateService {
 				String agencyCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(), requestInfo,
 						propertiesManager.getAgencyUlbFormat(), propertiesManager.getAgencyUlbName(), Boolean.FALSE,
 						null, Boolean.FALSE);
+
+				agencyCode = agencyCode.substring(0, 7) + propertiesManager.getAgencySubStringCode() + agencyCode.substring(7, agencyCode.length());
 				agency.setCode(agencyCode);
 
 				// Adding personal details to DB
@@ -133,6 +135,8 @@ public class AdvocateService {
 					String advocateCode = uniqueCodeGeneration.getUniqueCode(advocate.getTenantId(), requestInfo,
 							propertiesManager.getAdvocateUlbFormat(), propertiesManager.getAdvocateUlbName(),
 							Boolean.FALSE, null, Boolean.FALSE);
+					
+					advocateCode = advocateCode.substring(0, 7) + propertiesManager.getAdvocateSubStringCode() + advocateCode.substring(7, advocateCode.length());
 					advocate.setCode(advocateCode);
 					advocate.setName(name);
 
@@ -219,7 +223,8 @@ public class AdvocateService {
 	private void validatePersonDetails(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
 		if (agency.getPersonDetails() != null && agency.getPersonDetails().size() > 0) {
-			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getTenantId(), agency.getCode());
+			List<PersonDetails> personDetailsOnDb = advocateRepository.getPersonalDetailsUsingCode(agency.getTenantId(),
+					agency.getCode());
 			List<String> personDetailsCodes = personDetailsOnDb.stream().map(details -> details.getCode())
 					.collect(Collectors.toList());
 
@@ -264,8 +269,9 @@ public class AdvocateService {
 
 	private void validateAdvocates(Agency agency, AgencyRequest createAgencyRequest) throws Exception {
 
-		if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0 ) {
-			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(), agency.getCode());
+		if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0) {
+			List<Advocate> advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(),
+					agency.getCode());
 			List<String> advocateCodes = advocatesOnDb.stream().map(Advocate -> Advocate.getCode())
 					.collect(Collectors.toList());
 
@@ -281,9 +287,9 @@ public class AdvocateService {
 
 				if (reqAdvocate.getIsTerminate() == null)
 					reqAdvocate.setIsTerminate(false);
-				
+
 				reqAdvocate.setIsIndividual(agency.getIsIndividual());
-				
+
 				if (!reqAdvocate.getIsIndividual()) {
 
 					reqAdvocate.setAgencyName(agency.getName());
@@ -303,6 +309,8 @@ public class AdvocateService {
 					String advocateCode = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(),
 							createAgencyRequest.getRequestInfo(), propertiesManager.getAdvocateUlbFormat(),
 							propertiesManager.getAdvocateUlbName(), Boolean.FALSE, null, Boolean.FALSE);
+					
+					advocateCode = advocateCode.substring(0, 7) + propertiesManager.getAdvocateSubStringCode() + advocateCode.substring(7, advocateCode.length());
 					reqAdvocate.setCode(advocateCode);
 					createAdvocates.add(reqAdvocate);
 					break;
@@ -327,10 +335,10 @@ public class AdvocateService {
 		}
 	}
 
-	public AgencyResponse searchAgency(String tenantId, String code, Boolean isIndividual, String advocateName, String agencyName,
-			RequestInfoWrapper requestInfoWrapper) {
-		List<Agency> agencies = advocateRepository.searchAgencies(tenantId, code, isIndividual, advocateName, agencyName,
-				requestInfoWrapper);
+	public AgencyResponse searchAgency(String tenantId, String code, Boolean isIndividual, String advocateName,
+			String agencyName, RequestInfoWrapper requestInfoWrapper) {
+		List<Agency> agencies = advocateRepository.searchAgencies(tenantId, code, isIndividual, advocateName,
+				agencyName, requestInfoWrapper);
 		return new AgencyResponse(
 				responseInfoFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(), HttpStatus.CREATED), agencies);
 	}

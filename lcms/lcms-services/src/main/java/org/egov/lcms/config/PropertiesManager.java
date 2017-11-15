@@ -573,5 +573,11 @@ public class PropertiesManager {
 
 	@Value("${egov.lcms.bankdetails.error.msg}")
 	private String bankDetailsErrorMsg;
+	
+	@Value("${egov.lcms.agency.substring.code}")
+	private String agencySubStringCode;
+	
+	@Value("${egov.lcms.advocate.substring.code}")
+	private String advocateSubStringCode;
 
 }

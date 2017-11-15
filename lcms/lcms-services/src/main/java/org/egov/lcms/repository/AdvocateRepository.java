@@ -106,6 +106,14 @@ public class AdvocateRepository {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		List<Agency> agencies = new ArrayList<Agency>();
 
+		if (code != null && !code.isEmpty()) {
+			if (code.contains(propertiesManager.getAgencySubStringCode()))
+				isIndividual = false;
+
+			else if (code.contains(propertiesManager.getAdvocateSubStringCode()))
+				isIndividual = true;
+		}
+
 		if (isIndividual == null || !isIndividual) {
 			String agencySearchQuery = AdvocateBuilders.getAgencySearchQuery(tenantId, code, isIndividual, agencyName,
 					preparedStatementValues);
@@ -113,6 +121,7 @@ public class AdvocateRepository {
 			agencies = jdbcTemplate.query(agencySearchQuery, preparedStatementValues.toArray(), agencyRowMapper);
 			getPersonDetails(agencies);
 			getAdvocates(agencies, advocateName);
+			
 		} else {
 			final List<Object> advocateValues = new ArrayList<Object>();
 			String advocateSearchQuery = AdvocateBuilders.getAdvocateSearchQuery(tenantId, isIndividual, advocateName,

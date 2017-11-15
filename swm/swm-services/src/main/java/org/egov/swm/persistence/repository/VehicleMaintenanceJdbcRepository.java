@@ -25,6 +25,12 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 	@Autowired
 	private VehicleService vehicleService;
 
+	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
+			String uniqueFieldValue) {
+
+		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+	}
+
 	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch searchRequest) {
 
 		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";

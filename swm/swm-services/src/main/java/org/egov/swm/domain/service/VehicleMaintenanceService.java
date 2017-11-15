@@ -1,6 +1,8 @@
 package org.egov.swm.domain.service;
 
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 import org.egov.swm.domain.model.AuditDetails;
@@ -79,6 +81,8 @@ public class VehicleMaintenanceService {
 		VehicleSearch vehicleSearch;
 		Pagination<Vehicle> vehicleList;
 
+		findDuplicatesInUniqueFields(vehicleMaintenanceRequest);
+
 		for (VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
 
 			if (vehicleMaintenance.getVehicle() != null && (vehicleMaintenance.getVehicle().getRegNumber() == null
@@ -104,7 +108,46 @@ public class VehicleMaintenanceService {
 
 			}
 
+			validateUniqueFields(vehicleMaintenance);
+
 		}
+	}
+
+	private void findDuplicatesInUniqueFields(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+
+		Map<String, String> regNumberMap = new HashMap<>();
+
+		for (VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
+
+			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+					&& !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+
+				if (regNumberMap.get(vehicleMaintenance.getVehicle().getRegNumber()) != null)
+					throw new CustomException("Name",
+							"Duplicate vehicle registration numbers in given VehicleMaintenances: "
+									+ vehicleMaintenance.getVehicle().getRegNumber());
+
+				regNumberMap.put(vehicleMaintenance.getVehicle().getRegNumber(),
+						vehicleMaintenance.getVehicle().getRegNumber());
+			}
+
+		}
+
+	}
+
+	private void validateUniqueFields(VehicleMaintenance vehicleMaintenance) {
+
+		if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+				&& !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+			if (!vehicleMaintenanceRepository.uniqueCheck(vehicleMaintenance.getTenantId(), "vehicle",
+					vehicleMaintenance.getVehicle().getRegNumber(), "code", vehicleMaintenance.getCode())) {
+
+				throw new CustomException("vehicle",
+						"The field vehicle registration number must be unique in the system for maintenance");
+
+			}
+		}
+
 	}
 
 	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch vehicleMaintenanceSearch) {

@@ -92,7 +92,7 @@ public class StoresApiController implements StoresApi {
 	@Override
 	public ResponseEntity<StoreResponse> storesSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo RequestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
 			@ApiParam(value = "list of code of the Store ") @Valid @RequestParam(value = "codes", required = false) List<String> codes,
 			@ApiParam(value = "name of the Store ") @Valid @RequestParam(value = "name", required = false) String name,

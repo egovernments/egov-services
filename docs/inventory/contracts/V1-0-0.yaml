@@ -2569,7 +2569,7 @@ definitions:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           description: The unique identifier for the receipt details.
         tenantId:
           type: string

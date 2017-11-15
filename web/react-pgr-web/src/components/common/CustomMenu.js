@@ -328,6 +328,7 @@ const menuConvention={
 //Inventoy Service
 "Inventory.Inventory Masters.Supplier Master.Supplier Search":"/non-framework/inventory/master/supplier",
 "Inventory.Inventory Masters.Store Master.Store Search":"/non-framework/inventory/master/store",
+"Inventory.Inventory Masters.Material Master.Material Search":"/non-framework/inventory/master/material",
 
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/abstractEstimate",

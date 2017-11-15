@@ -11,7 +11,7 @@ var dat = {
             "fields":[
                {
                   "name":"name",
-                  "jsonPath":"code",
+                  "jsonPath":"codes",
                   "label":"inventory.store.name",
                   "type":"singleValueList",
                   "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name",
@@ -60,7 +60,7 @@ var dat = {
             {valuePath:"active", type:"checkbox"}
          ],
          "resultPath":"stores",
-         "resultIdKey":"code",
+           "resultIdKey":"code",
          "rowClickUrlAdd" : "/create/inventory/stores",
          "rowClickUrlDelete" : {
            url:"inventory-services/stores/_update",
@@ -111,7 +111,7 @@ var dat = {
                   "label":"inventory.department.name",
                   "pattern":"",
                   "type":"singleValueList",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":"",
@@ -181,7 +181,8 @@ var dat = {
                   "jsonPath":"stores[0].storeInCharge.code",
                   "label":"inventory.store.incharge",
                   "pattern":"",
-                  "type":"text",
+                  "type":"singleValueList",
+                  "url":"/hr-employee/employees/_search?|$..code|$..name",
                   "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
@@ -280,7 +281,7 @@ var dat = {
                   "label":"inventory.department.name",
                   "pattern":"",
                   "type":"singleValueList",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":"",
@@ -350,7 +351,8 @@ var dat = {
                   "jsonPath":"stores[0].storeInCharge.code",
                   "label":"inventory.store.incharge",
                   "pattern":"",
-                  "type":"text",
+                  "type":"singleValueList",
+                  "url":"/hr-employee/employees/_search?|$..code|$..name",
                   "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
@@ -407,7 +409,7 @@ var dat = {
          }
       ],
       "tenantIdRequired":true,
-      "url":"/inventory-services/stores/_search?code={code}"
+      "url":"/inventory-services/stores/_search?codes={codes}"
    },
    "inventory.update":{
       "numCols":4,
@@ -450,7 +452,7 @@ var dat = {
                   "label":"inventory.department.name",
                   "pattern":"",
                   "type":"singleValueList",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":"",
@@ -520,7 +522,8 @@ var dat = {
                   "jsonPath":"stores[0].storeInCharge.code",
                   "label":"inventory.store.incharge",
                   "pattern":"",
-                  "type":"text",
+                  "type":"singleValueList",
+                  "url":"/hr-employee/employees/_search?|$..code|$..name",
                   "isRequired":true,
                   "isDisabled":false,
                   "defaultValue":"",
@@ -578,7 +581,7 @@ var dat = {
       ],
       "url":"/inventory-services/stores/_update",
       "tenantIdRequired":true,
-      "searchUrl":"/inventory-services/stores/_search?code={code}"
+      "searchUrl":"/inventory-services/stores/_search?codes={codes}"
    }
 }
 export default dat;

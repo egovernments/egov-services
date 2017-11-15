@@ -1100,9 +1100,6 @@ definitions:
       - locality
       - workProposedAsPerDP
       - dpRemarks
-      - fund
-      - function
-      - budgetGroup
       - abstractEstimateDetails
   
   AbstractEstimateDetails:

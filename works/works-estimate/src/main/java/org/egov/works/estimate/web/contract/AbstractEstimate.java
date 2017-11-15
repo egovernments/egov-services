@@ -930,7 +930,6 @@ public class AbstractEstimate   {
    * @return fund
   **/
   @ApiModelProperty(required = true, value = "Fund of the Abstract Estimate. This data comes from financials.")
-  @NotNull
 
 //  @Valid
 
@@ -952,7 +951,6 @@ public class AbstractEstimate   {
    * @return function
   **/
   @ApiModelProperty(required = true, value = "Function of the Abstract Estimate. This data comes from financials.")
-  @NotNull
 
 //  @Valid
 
@@ -974,7 +972,6 @@ public class AbstractEstimate   {
    * @return budgetGroup
   **/
   @ApiModelProperty(required = true, value = "Budget head of the Abstract Estimate. This data comes from financials.")
-  @NotNull
 
 //  @Valid
 

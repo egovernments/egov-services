@@ -770,20 +770,20 @@ var dat = {
         fields: [
           {
             name: "actionType",
-            jsonPath: "agencies[0].isActive",
+            jsonPath: "agencies[0].status",
             label: "advocates.create.actionType",
             type: "radio",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             values: [
               {
                 label: "advocates.create.active",
-                value: true
+                value: "active"
               },
               {
                 label: "advocates.create.inactive",
-                value: false
+                value: "inactive"
               },{
                 label: "advocates.create.terminate",
                 value: "terminate"
@@ -791,7 +791,7 @@ var dat = {
             ],
             defaultValue:"active",
             "enableDisableFields": [{
-								"ifValue": "true",
+								"ifValue": "active",
 								"disable": ["inActivationDate"],
 								"enable": ["terminationDate"]
 							},{
@@ -1532,20 +1532,20 @@ var dat = {
         fields: [
           {
             name: "actionType",
-            jsonPath: "agencies[0].isActive",
+            jsonPath: "agencies[0].status",
             label: "advocates.create.actionType",
             type: "radio",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
             values: [
               {
                 label: "advocates.create.active",
-                value: true
+                value: "active"
               },
               {
                 label: "advocates.create.inactive",
-                value: false
+                value: "inactive"
               },{
                 label: "advocates.create.terminate",
                 value: "terminate"
@@ -1553,7 +1553,7 @@ var dat = {
             ],
             defaultValue:"active",
             "enableDisableFields": [{
-								"ifValue": "true",
+								"ifValue": "active",
 								"disable": ["inActivationDate"],
 								"enable": ["terminationDate"]
 							},{

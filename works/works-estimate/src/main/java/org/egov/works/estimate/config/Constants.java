@@ -91,47 +91,47 @@ public class Constants {
     public static final String MESSAGE_NULL_TENANTID = "Tenantid of should be entered";
 
     public static final String KEY_FUND_INVALID = "INVALID_FUND";
-    public static final String MESSAGE_FUND_INVALID = "Plese provide valid data for fund";
+    public static final String MESSAGE_FUND_INVALID = "Please provide valid data for fund";
     
     public static final String KEY_FUNCTION_INVALID = "INVALID_FUNCTION";
-    public static final String MESSAGE_FUNCTION_INVALID = "Plese provide valid data for function";
+    public static final String MESSAGE_FUNCTION_INVALID = "Please provide valid data for function";
     
     public static final String KEY_TYPEOFWORK_INVALID = "INVALID_TYPEOFWORK";
-    public static final String MESSAGE_TYPEOFWORK_INVALID = "Plese provide valid data for Type Of Work";
+    public static final String MESSAGE_TYPEOFWORK_INVALID = "Please provide valid data for Type Of Work";
     
     public static final String KEY_SUBTYPEOFWORK_INVALID = "INVALID_SUBTYPEOFWORK";
-    public static final String MESSAGE_SUBTYPEOFWORK_INVALID = "Plese provide valid data for Sub Type Of Work";
+    public static final String MESSAGE_SUBTYPEOFWORK_INVALID = "Please provide valid data for Sub Type Of Work";
 
     public static final String KEY_DEPARTMENT_INVALID = "INVALID_DEPARTMENT";
-    public static final String MESSAGE_DEPARTMENT_INVALID = "Plese provide valid data for Department";
+    public static final String MESSAGE_DEPARTMENT_INVALID = "Please provide valid data for Department";
     
     public static final String KEY_WARD_INVALID = "INVALID_WARD";
-    public static final String MESSAGE_WARD_INVALID = "Plese provide valid data for Ward";
+    public static final String MESSAGE_WARD_INVALID = "Please provide valid data for Ward";
     
     public static final String KEY_LOCALITY_INVALID = "INVALID_LOCALITY";
-    public static final String MESSAGE_LOCALITY_INVALID = "Plese provide valid data for Locality";
+    public static final String MESSAGE_LOCALITY_INVALID = "Please provide valid data for Locality";
 
     public static final String KEY_UOM_INVALID = "UOM_INVALID";
-    public static final String MESSAGE_UOM_INVALID = "Plese provide valid data for UOM";
+    public static final String MESSAGE_UOM_INVALID = "Please provide valid data for UOM";
 
     public static final String KEY_MODEOFALLOTMENT_INVALID = "MODEOFALLOTMENT_INVALID";
-    public static final String MESSAGE_MODEOFALLOTMENT_INVALID = "Plese provide valid data for Mode of Allotment";
+    public static final String MESSAGE_MODEOFALLOTMENT_INVALID = "Please provide valid data for Mode of Allotment";
 
-    public static final String KEY_NATUREOFWORK_INVALID = "UOM_INVALID";
-    public static final String MESSAGE_NATUREOFWORK_INVALID = "Plese provide valid data for Nature of work";
+    public static final String KEY_NATUREOFWORK_INVALID = "NATUREOFWORK_INVALID";
+    public static final String MESSAGE_NATUREOFWORK_INVALID = "Please provide valid data for Nature of work";
 
     
     public static final String KEY_SCHEME_INVALID = "INVALID_SCHEME";
-    public static final String MESSAGE_SCHEME_INVALID = "Plese provide valid data for Scheme";
+    public static final String MESSAGE_SCHEME_INVALID = "Please provide valid data for Scheme";
 
     public static final String KEY_SUBSCHEME_INVALID = "INVALID_SUBSCHEME";
-    public static final String MESSAGE_SUBSCHEME_INVALID = "Plese provide valid data for Sub Scheme";
+    public static final String MESSAGE_SUBSCHEME_INVALID = "Please provide valid data for Sub Scheme";
 
     public static final String KEY_BUDGETGROUP_INVALID = "INVALID_BUDGETGROUP";
-    public static final String MESSAGE_BUDGETGROUP_INVALID = "Plese provide valid data for Budget Group";
+    public static final String MESSAGE_BUDGETGROUP_INVALID = "Please provide valid data for Budget Group";
     
     public static final String KEY_REFERENCETYPE_INVALID = "INVALID_REFERENCETYPE";
-    public static final String MESSAGE_REFERENCETYPE_INVALID = "Plese provide valid data for Reference Type";
+    public static final String MESSAGE_REFERENCETYPE_INVALID = "Please provide valid data for Reference Type";
     
     public static final String KEY_UNIQUE_ABSTRACTESTIMATENUMBER = "UNIQUE_ABSTRACTESTIMATENUMBER";
     public static final String MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER = "Abstract Estimate Number should be Unique";

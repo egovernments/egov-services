@@ -442,16 +442,23 @@ serviceMaps:
       description: update pricelist in inventory
       fromTopic: inv-pricelist-update-topic
       queryMaps:
-        - query: update pricelist SET active=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
+        - query: update pricelist SET active=?, agreementNumber=?, agreementDate=?, agreementStartDate=?, agreementEndDate=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
           basePath: $.priceLists.*
           jsonMaps:
             - jsonPath: $.priceLists.*.active
               dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.agreementNumber
+            - jsonPath: $.priceLists.*.agreementDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.agreementStartDate
+              dbType: LONG
+            - jsonPath: $.priceLists.*.agreementEndDate
+              dbType: LONG
             - jsonPath: $.priceLists.*.auditDetails.lastModifiedBy
             - jsonPath: $.priceLists.*.auditDetails.lastModifiedTime
               dbType: LONG
             - jsonPath: $.priceLists.*.id
-            - jsonPath: $.priceLists.*.auditDetails.tenantId
+            - jsonPath: $.priceLists.*.tenantId
 
         - query: update pricelistdetails SET active=?, quantity=?, ratePerUnit=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
           basePath: $.priceLists.*.priceListDetails.*

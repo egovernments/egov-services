@@ -19,7 +19,7 @@ var collectionPointDetails ={
         "maxLength":128,
         "minLength":1,
         "patternErrorMsg":"",
-        "url":"/swm-services/collectionpoints/_search?&|$.collectionPoints.*.collectionPointDetails.*..code|$.collectionPoints.*.collectionPointDetails.*..code"
+        "url":"/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=CollectionType|$..code|$..name"
      },
      {  
         "name":"garbageEstimate",

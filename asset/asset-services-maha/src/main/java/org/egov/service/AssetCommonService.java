@@ -1,11 +1,14 @@
 package org.egov.service;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.config.ApplicationProperties;
 import org.egov.model.AuditDetails;
 import org.egov.model.enums.Sequence;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +29,9 @@ public class AssetCommonService {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+    
+    @Autowired
+    private ApplicationProperties appProps;
 
     public ErrorResponse populateErrors(final BindingResult errors) {
         final ErrorResponse errRes = new ErrorResponse();
@@ -92,7 +98,9 @@ public class AssetCommonService {
 		StringBuilder query = null;
 		Long[] arr = new Long[idSet.size()];
 		arr = idSet.toArray(arr);
-		query = new StringBuilder(arr[0].toString());
+		String value1 = arr[0].toString();
+		if(value1!=null)
+		query = new StringBuilder(value1);
 		for (int i = 1; i < arr.length; i++)
 			query.append("," + arr[i]);
 		return query.toString();
@@ -102,9 +110,13 @@ public class AssetCommonService {
 		StringBuilder query = null;
 		String[] arr = new String[idSet.size()];
 		arr = idSet.toArray(arr);
-		query = new StringBuilder(arr[0]);
+		String value1 = arr[0];
+		if(value1!=null)
+		query = new StringBuilder(value1);
 		for (int i = 1; i < arr.length; i++)
 			query.append("," + arr[i]);
 		return query.toString();
 	}
+	
+	
 }

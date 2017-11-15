@@ -77,6 +77,8 @@ public class AssetValidator implements Validator {
 
 		Map<String, Map<String, JSONArray>> ResultDataMap = mDService.getStateWideMastersByListParams(assets,
 				assetRequest.getRequestInfo(), asset.getTenantId());
+		
+		System.err.println("the result : "+ResultDataMap);
 
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET"));
 		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master"));
@@ -88,7 +90,7 @@ public class AssetValidator implements Validator {
 		else
 			asset.setAssetCategory(masterAssetCat);
 
-		Department department = departmentMap.get(asset.getDepartment().getId());
+		Department department = departmentMap.get(asset.getDepartment().getCode());
 		if (department == null)
 			errorMap.put("EGASSET_INVALID_DEPARTMENT", "the  given Department is Invalid");
 		else

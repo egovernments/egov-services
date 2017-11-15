@@ -136,11 +136,6 @@ public class RequestValidator {
 			                    PerformanceAssessmentConstants.DOCNAME_MANDATORY_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.DOCNAME_MANDATORY_FIELD_NAME));
 					}
-					if(StringUtils.isBlank(doc.getCode())) { 
-						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCCODE_MANDATORY_CODE, 
-			                    PerformanceAssessmentConstants.DOCCODE_MANDATORY_ERROR_MESSAGE,
-			                    PerformanceAssessmentConstants.DOCCODE_MANDATORY_FIELD_NAME));
-					}
 					if(null == doc.getActive()) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCACTIVE_MANDATORY_CODE, 
 			                    PerformanceAssessmentConstants.DOCACTIVE_MANDATORY_ERROR_MESSAGE,

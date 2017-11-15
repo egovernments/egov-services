@@ -91,7 +91,7 @@ public class SuppliersApiController implements SuppliersApi {
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody SupplierRequest supplierRequest,
 			@RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-		SupplierResponse supplierResponse = supplierService.create(supplierRequest);
+		SupplierResponse supplierResponse = supplierService.create(supplierRequest,tenantId);
 		return new ResponseEntity(supplierResponse, HttpStatus.OK);
 	}
 
@@ -134,7 +134,7 @@ public class SuppliersApiController implements SuppliersApi {
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody SupplierRequest supplierRequest,
 			@RequestHeader(value = "Accept", required = false) String accept) throws Exception {
-		SupplierResponse supplierResponse = supplierService.update(supplierRequest);
+		SupplierResponse supplierResponse = supplierService.update(supplierRequest,tenantId);
 		return new ResponseEntity(supplierResponse, HttpStatus.OK);
 	}
 

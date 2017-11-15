@@ -40,14 +40,9 @@
 package org.egov.inv.api;
 
 
-
-import io.swagger.annotations.*;
-
-import org.egov.common.Pagination;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.swagger.annotations.ApiParam;
 import org.egov.inv.domain.service.StoreService;
-import org.egov.inv.model.RequestInfo;
-import org.egov.inv.model.ResponseInfo;
-import org.egov.inv.model.Store;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.StoreRequest;
 import org.egov.inv.model.StoreResponse;
@@ -55,81 +50,79 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.util.List;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import javax.validation.constraints.*;
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.List;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-10-28T13:21:55.964+05:30")
 
 @Controller
 public class StoresApiController implements StoresApi {
 
-	@Autowired
-	private StoreService storesService;
+    @Autowired
+    private StoreService storesService;
 
-	private final ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
-	public StoresApiController(ObjectMapper objectMapper) {
-		this.objectMapper = objectMapper;
-	}
+    public StoresApiController(ObjectMapper objectMapper) {
+        this.objectMapper = objectMapper;
+    }
 
-	@Override
-	public ResponseEntity<StoreResponse> storesCreatePost(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Create  new") @Valid @RequestBody StoreRequest storeRequest,
-			@RequestHeader(value = "Accept", required = false) String accept
-			) throws Exception {
-		StoreResponse storeResponse = storesService.create(storeRequest);
-		return new ResponseEntity(storeResponse, HttpStatus.OK);
-	}
+    @Override
+    public ResponseEntity<StoreResponse> storesCreatePost(
+            @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+            @ApiParam(value = "Create  new") @Valid @RequestBody StoreRequest storeRequest,
+            @RequestHeader(value = "Accept", required = false) String accept
+    ) throws Exception {
+        StoreResponse storeResponse = storesService.create(storeRequest, tenantId);
+        return new ResponseEntity(storeResponse, HttpStatus.OK);
+    }
 
-	@Override
-	public ResponseEntity<StoreResponse> storesSearchPost(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo RequestInfo,
-			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
-			@ApiParam(value = "list of code of the Store ") @Valid @RequestParam(value = "codes", required = false) List<String> codes,
-			@ApiParam(value = "name of the Store ") @Valid @RequestParam(value = "name", required = false) String name,
-			@ApiParam(value = "description of the Store ") @Valid @RequestParam(value = "description", required = false) String description,
-			@ApiParam(value = "department of the Store ") @Valid @RequestParam(value = "department", required = false) String department,
-			@ApiParam(value = "billing address of the Store ") @Valid @RequestParam(value = "billingAddress", required = false) String billingAddress,
-			@ApiParam(value = "delivery address of the Store ") @Valid @RequestParam(value = "deliveryAddress", required = false) String deliveryAddress,
-			@ApiParam(value = "contact no1 of the Store ") @Valid @RequestParam(value = "contactNo1", required = false) String contactNo1,
-			@ApiParam(value = "contact no2 of the Store ") @Valid @RequestParam(value = "contactNo2", required = false) String contactNo2,
-			@ApiParam(value = "email of the Store ") @Valid @RequestParam(value = "email", required = false) String email,
-			@ApiParam(value = "store in charge of the Store ") @Valid @RequestParam(value = "storeInCharge", required = false) String storeInCharge,
-			@ApiParam(value = "is central store of the Store ") @Valid @RequestParam(value = "isCentralStore", required = false) Boolean isCentralStore,
-			@ApiParam(value = "Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE ") @Valid @RequestParam(value = "active", required = false) Boolean active,
-			@ApiParam(value = "pageSize") @Valid @RequestParam(value = "pageSize", required = false) Integer pageSize,
-			@ApiParam(value = "offset") @Valid @RequestParam(value = "offset", required = false) Integer offset,
-			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords.   example name asc,code desc or name,code or name,code desc  ") @Valid @RequestParam(value = "sortBy", required = false) String sortBy,
-			@RequestHeader(value = "Accept", required = false) String accept)
-			throws Exception {
+    @Override
+    public ResponseEntity<StoreResponse> storesSearchPost(
+            @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+            @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo RequestInfo,
+            @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @Valid @RequestParam(value = "ids", required = false) List<String> ids,
+            @ApiParam(value = "list of code of the Store ") @Valid @RequestParam(value = "codes", required = false) List<String> codes,
+            @ApiParam(value = "name of the Store ") @Valid @RequestParam(value = "name", required = false) String name,
+            @ApiParam(value = "description of the Store ") @Valid @RequestParam(value = "description", required = false) String description,
+            @ApiParam(value = "department of the Store ") @Valid @RequestParam(value = "department", required = false) String department,
+            @ApiParam(value = "billing address of the Store ") @Valid @RequestParam(value = "billingAddress", required = false) String billingAddress,
+            @ApiParam(value = "delivery address of the Store ") @Valid @RequestParam(value = "deliveryAddress", required = false) String deliveryAddress,
+            @ApiParam(value = "contact no1 of the Store ") @Valid @RequestParam(value = "contactNo1", required = false) String contactNo1,
+            @ApiParam(value = "contact no2 of the Store ") @Valid @RequestParam(value = "contactNo2", required = false) String contactNo2,
+            @ApiParam(value = "email of the Store ") @Valid @RequestParam(value = "email", required = false) String email,
+            @ApiParam(value = "store in charge of the Store ") @Valid @RequestParam(value = "storeInCharge", required = false) String storeInCharge,
+            @ApiParam(value = "is central store of the Store ") @Valid @RequestParam(value = "isCentralStore", required = false) Boolean isCentralStore,
+            @ApiParam(value = "Whether Store is Active or not. If the value is TRUE, then Store is active,If the value is FALSE then Store is inactive,Default value is TRUE ") @Valid @RequestParam(value = "active", required = false) Boolean active,
+            @ApiParam(value = "pageSize") @Valid @RequestParam(value = "pageSize", required = false) Integer pageSize,
+            @ApiParam(value = "offset") @Valid @RequestParam(value = "offset", required = false) Integer offset,
+            @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords.   example name asc,code desc or name,code or name,code desc  ") @Valid @RequestParam(value = "sortBy", required = false) String sortBy,
+            @RequestHeader(value = "Accept", required = false) String accept)
+            throws Exception {
 
-		StoreGetRequest storeGetRequest = new StoreGetRequest(ids,
-				codes,name,description,department,contactNo1,billingAddress,deliveryAddress,contactNo2,email,isCentralStore,
-				storeInCharge,active,sortBy,pageSize,offset,tenantId);
-		StoreResponse response = storesService.search(storeGetRequest);
+        StoreGetRequest storeGetRequest = new StoreGetRequest(ids,
+                codes, name, description, department, contactNo1, billingAddress, deliveryAddress, contactNo2, email, isCentralStore,
+                storeInCharge, active, sortBy, pageSize, offset, tenantId);
+        StoreResponse response = storesService.search(storeGetRequest);
 
-		return new ResponseEntity(response, HttpStatus.OK);
-	}
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
 
-	@Override
-	public ResponseEntity<StoreResponse> storesUpdatePost(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "common Request info") @Valid @RequestBody StoreRequest storeRequest,
-			@RequestHeader(value = "Accept", required = false) String accept
-		) throws Exception {
-		StoreResponse storeResponse = storesService.update(storeRequest);
-		return new ResponseEntity(storeResponse, HttpStatus.OK);
-	}
-
+    @Override
+    public ResponseEntity<StoreResponse> storesUpdatePost(
+            @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+            @ApiParam(value = "common Request info") @Valid @RequestBody StoreRequest storeRequest,
+            @RequestHeader(value = "Accept", required = false) String accept
+    ) throws Exception {
+        StoreResponse storeResponse = storesService.update(storeRequest, tenantId);
+        return new ResponseEntity(storeResponse, HttpStatus.OK);
+    }
 
 
 }

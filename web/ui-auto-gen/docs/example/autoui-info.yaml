@@ -124,3 +124,12 @@ UIInfo:
       - Group3
       hideGroups:
       - Group4
+  tables:
+    autoUi[0].table:
+      group: Group2
+      columns:
+      - pinCode
+      - email
+      values:
+      - autoUi[0].table[0].pinCode
+      - autoUi[0].table[0].email

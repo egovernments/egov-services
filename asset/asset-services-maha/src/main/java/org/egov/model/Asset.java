@@ -26,7 +26,6 @@ import lombok.ToString;
 @ToString
 public class Asset   {
 
-	  @NotNull
 	  @JsonProperty("anticipatedLife")
 	  private Long anticipatedLife;
 
@@ -36,7 +35,6 @@ public class Asset   {
 	  @JsonProperty("orderDate")
 	  private Long orderDate;
 
-	  @NotNull
 	  @JsonProperty("wipReferenceNo")
 	  private String wipReferenceNo;
 

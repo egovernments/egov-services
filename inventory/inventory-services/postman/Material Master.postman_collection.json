@@ -1,0 +1,131 @@
+{
+	"variables": [],
+	"info": {
+		"name": "Material Master",
+		"_postman_id": "95061001-a642-793d-388b-31b81e24298a",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Create Material",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/materials/_create?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"materials",
+						"_create"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"materials\": [\n    {\n      \"lotControl\": true,\n      \"serialNumber\": true,\n      \"shelfLifeControl\": true,\n      \"scrapable\": true,\n      \"materialType\": {\n        \"code\": \"MT3\"\n      },\n      \"name\": \"Test Material\",\n      \"description\": \"test desc\",\n      \"baseUom\": {\n        \"code\": \"GMS\"\n      },\n      \"inventoryType\": \"Asset\",\n      \"assetCategory\":{\n      \t\"code\":\"null\" \n      },\n      \"storeMapping\": [\n        {\n          \"store\": {\n            \"code\": \"STR18\"\n          },\n          \"department\": {\n            \"code\": \"FM\",\n            \"name\": \"Accounts\"\n          },\n          \"chartofAccount\": {\n            \"glCode\": \"46130\"\n          },\n          \"active\": true\n        },\n        {\n          \"store\": {\n            \"code\": \"str12\"\n          },\n          \"department\": {\n            \"code\": \"CD\",\n            \"name\": \"Computer Department\"\n          },\n          \"chartofAccount\": {\n            \"glCode\": \"42190\"\n          },\n          \"active\": true\n        }\n      ],\n      \"purchaseUom\": {\n        \"code\": \"KGS\"\n      },\n      \"expenseAccount\": {\n        \"glCode\": \"44020\"\n      },\n      \"materialClass\": \"HighUsage\",\n      \"stockingUom\": {\n        \"code\": \"44020\"\n      },\n      \"minQuantity\": \"2\",\n      \"maxQuantity\": \"20\",\n      \"reorderLevel\": \"10\",\n      \"reorderQuantity\": \"8\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510568486856,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"1d837b4c-573a-49e4-be42-3d8879d7cfcc\",\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Search Material",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/materials/_search?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"materials",
+						"_search"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n\t \"RequestInfo\":{  \n      \"apiId\":\"emp\",\n      \"ver\":\"1.0\",\n      \"ts\":1234567890,\n      \"action\":\"create\",\n      \"did\":\"1\",\n      \"key\":\"abcdkey\",\n      \"msgId\":\"20170310130900\",\n      \"requesterId\":\"rajesh\",\n      \"authToken\":\"72c17146-9d2e-4b0f-89f6-570ed770a2bf\",\n      \"userInfo\":{\n      \t\"id\":2\n      }\n }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Update Material",
+			"request": {
+				"url": {
+					"raw": "{{host}}:8080/inventory-services/materials/_update?tenantId=default",
+					"host": [
+						"{{host}}"
+					],
+					"port": "8080",
+					"path": [
+						"inventory-services",
+						"materials",
+						"_update"
+					],
+					"query": [
+						{
+							"key": "tenantId",
+							"value": "default",
+							"equals": true,
+							"description": ""
+						}
+					],
+					"variable": []
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"description": ""
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"materials\": [\n    {\n      \"id\": \"8\",\n      \"tenantId\": \"default\",\n      \"code\": \"MT3/9\",\n      \"name\": \"Test Material\",\n      \"description\": \"test dedkdkdsc\",\n      \"oldCode\": null,\n      \"materialType\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"MT1\",\n        \"parent\": null,\n        \"auditDetails\": null\n      },\n      \"baseUom\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"GS\",\n        \"auditDetails\": null\n      },\n      \"inventoryType\": \"Consumable\",\n      \"status\": \"Active\",\n      \"inActiveDate\": null,\n      \"purchaseUom\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"KGS\",\n        \"auditDetails\": null\n      },\n      \"expenseAccount\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"glCode\": \"42090\",\n        \"auditDetails\": null\n      },\n      \"minQuantity\": 14,\n      \"maxQuantity\": 16,\n      \"stockingUom\": {\n        \"id\": null,\n        \"tenantId\": null,\n        \"name\": null,\n        \"code\": \"4209001\",\n        \"auditDetails\": null\n      },\n      \"materialClass\": \"MediumUsage\",\n      \"reorderLevel\": 18,\n      \"reorderQuantity\": 20,\n      \"lotControl\": true,\n      \"shelfLifeControl\": true,\n      \"serialNumber\": true,\n      \"model\": null,\n      \"manufacturePartNo\": null,\n      \"techincalSpecs\": null,\n      \"termsOfDelivery\": null,\n      \"scrapable\": true,\n      \"assetCategory\": {\n        \"tenantId\": null,\n        \"id\": null,\n        \"name\": null,\n        \"code\": \"\",\n        \"assetCategoryType\": null,\n        \"parent\": null,\n        \"isDepreciationApplicable\": null,\n        \"depreciationMethod\": null,\n        \"isAssetAllow\": null,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": null,\n        \"version\": null,\n        \"depreciationRate\": null,\n        \"assetFieldsDefination\": null\n      },\n      \"storeMapping\": [\n        {\n          \"id\": null,\n          \"store\": {\n            \"id\": \"13\",\n            \"tenantId\": null,\n            \"code\": \"STR18\",\n            \"name\": \"StroreB\",\n            \"description\": \"store \",\n            \"department\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"code\": \"FM\",\n              \"name\": null,\n              \"active\": null,\n              \"auditDetails\": null\n            },\n            \"officeLocation\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"code\": \"LOC1\",\n              \"name\": null\n            },\n            \"billingAddress\": \"address\",\n            \"deliveryAddress\": \"address\",\n            \"contactNo1\": \"1234567890\",\n            \"contactNo2\": \"1234567890\",\n            \"email\": \"s@yuopo.com\",\n            \"storeInCharge\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"code\": \"ramesh\",\n              \"name\": null,\n              \"auditDetails\": null\n            },\n            \"isCentralStore\": false,\n            \"active\": true,\n            \"auditDetails\": {\n              \"createdBy\": \"22534\",\n              \"lastModifiedBy\": \"73\",\n              \"createdTime\": 1510289612095,\n              \"lastModifiedTime\": 1510584139133,\n              \"tenantId\": null\n            }\n          },\n          \"chartofAccount\": {\n            \"id\": null,\n            \"tenantId\": null,\n            \"name\": null,\n            \"glCode\": \"4209001\",\n            \"auditDetails\": null\n          },\n          \"active\": true,\n          \"delete\": false,\n          \"auditDetails\": {\n            \"createdBy\": \"22534\",\n            \"lastModifiedBy\": \"22534\",\n            \"createdTime\": 1510571875645,\n            \"lastModifiedTime\": 1510571875645,\n            \"tenantId\": \"default\"\n          }\n        },\n        {\n          \"id\": null,\n          \"store\": {\n            \"id\": \"14\",\n            \"tenantId\": null,\n            \"code\": \"str12\",\n            \"name\": \"TeST Store\",\n            \"description\": \"description\",\n            \"department\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"code\": \"FM\",\n              \"name\": null,\n              \"active\": null,\n              \"auditDetails\": null\n            },\n            \"officeLocation\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"code\": \"LOC1\",\n              \"name\": null\n            },\n            \"billingAddress\": \"billing address\",\n            \"deliveryAddress\": \"delivery addres\",\n            \"contactNo1\": \"\",\n            \"contactNo2\": null,\n            \"email\": \"\",\n            \"storeInCharge\": {\n              \"id\": null,\n              \"tenantId\": null,\n              \"code\": \"ramesh\",\n              \"name\": null,\n              \"auditDetails\": null\n            },\n            \"isCentralStore\": true,\n            \"active\": false,\n            \"auditDetails\": {\n              \"createdBy\": \"22534\",\n              \"lastModifiedBy\": \"73\",\n              \"createdTime\": 1510303702840,\n              \"lastModifiedTime\": 1510584139133,\n              \"tenantId\": null\n            }\n          },\n          \"chartofAccount\": {\n            \"id\": null,\n            \"tenantId\": null,\n            \"name\": null,\n            \"glCode\": \"42190\",\n            \"auditDetails\": null\n          },\n          \"active\": true,\n          \"delete\": false,\n          \"auditDetails\": {\n            \"createdBy\": \"22534\",\n            \"lastModifiedBy\": \"22534\",\n            \"createdTime\": 1510571875645,\n            \"lastModifiedTime\": 1510571875645,\n            \"tenantId\": \"default\"\n          }\n        }\n      ],\n      \"auditDetails\": {\n        \"createdBy\": \"22534\",\n        \"lastModifiedBy\": \"22534\",\n        \"createdTime\": 1510571875645,\n        \"lastModifiedTime\": 1510571875645,\n        \"tenantId\": \"default\"\n      }\n    }\n  ],\n  \"page\": null,\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510584749740,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"4bc096a1-5315-4c1c-b584-0abd82011c36\",\n    \"userInfo\":{\n    \t\"id\":1\n    }\n  }\n}"
+				},
+				"description": ""
+			},
+			"response": []
+		}
+	]
+}

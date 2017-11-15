@@ -12,4 +12,5 @@ public class ConstantUtility {
 	public static final String PERSONAL_DETAILS_TABLE_NAME = "egov_lcms_persondetails";
 	public static final String AGENCY_TABLE_NAME = "egov_lcms_agency";
 	public static final String ADVOCATE_TABLE_NAME = "egov_lcms_advocate";
+	public static final String EVENT_TABLE_NAME = "egov_lcms_event";
 }

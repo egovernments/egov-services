@@ -1786,3 +1786,49 @@ serviceMaps:
        - jsonPath: lastModifiedTime
          type: CURRENTDATE
          dbType: LONG
+
+  - version: 1
+    name: Event create
+    description: Creates Event
+    fromTopic: lcms-event-create
+    isTransaction: true
+    queryMaps:
+    - query: INSERT INTO egov_lcms_event (code, entity, moduleName, entityCode, caseNo, departmentConcernPerson, 
+        nextHearingTime, nextHearingDate, hearingDetailsCode, tenantId, createdBy, lastModifiedBy, createdTime, lastModifiedTime ) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+      basePath: $
+      jsonMaps:
+      
+      - jsonPath: $.code
+      
+      - jsonPath: $.entity
+      
+      - jsonPath: $.moduleName
+      
+      - jsonPath: $.entityCode
+      
+      - jsonPath: $.caseNo
+      
+      - jsonPath: $.departmentConcernPerson
+      
+      - jsonPath: $.nextHearingTime
+      
+      - jsonPath: $.nextHearingDate
+        type: LONG
+      
+      - jsonPath: $.hearingDetailsCode
+      
+      - jsonPath: $.tenantId
+      
+      - jsonPath: $.auditDetails.createdBy
+      
+      - jsonPath: $.auditDetails.lastModifiedBy
+      
+      - jsonPath: createdTime
+        type: CURRENTDATE
+        dbType: LONG
+        
+      - jsonPath: lastModifiedTime
+        type: CURRENTDATE
+        dbType: LONG
+        
+        

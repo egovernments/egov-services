@@ -387,7 +387,7 @@ ReportDefinitions:
        asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,
        asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as 
        totalsurveyno,asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as 
-       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday, coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum.0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
+       defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,asset.defectliabilityday as defectliabilityday, coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum,0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
        asset.securitydepositretained,asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,
        currentvalue.currentamount,disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,
        disposal.buyername,disposal.buyeraddress,revaluation.revaluationdate,revaluation.incrementalrevalsum,revaluation.decrementalrevalsum,
@@ -1424,7 +1424,7 @@ ReportDefinitions:
     searchClause : and asset.code in ($assetdetail)
   
   query: select asset.name,asset.code,asset.ordernumber,asset.warrantyavailable,asset.wipreferenceno,asset.titledocumentsavalable as titledocumentsavailable,asset.accumulateddepreciation,asset.grossvalue,asset.id,asset.quantity,asset.totalarea,asset.openingdate,asset.fundsource,asset.location,(select string_agg(land.surveynumber,',') from egasset_asset_landdetails land  where asset.id=land.assetid group by asset.id) as totalsurveyno,
-         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum.0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
+         asset.acquiredfrom,asset.anticipatedLife,asset.modeofacquisition,asset.warrantyexpirydate,asset.defectliabilityyear as defectliability,asset.defectliabilitymonth as defectliabilitymonth,asset.assetCategoryType,coalesce(grossvalue,0.0)-coalesce(accumulateddepreciation,0.0)+coalesce(incrementalrevalsum,0.0)-coalesce(decrementalrevalsum,0.0) as totalrevalsum,
          asset.defectliabilityday as defectliabilityday,asset.securitydepositretained,
          asset.securitydepositrealized,asset.dateofcreation,asset.acquisitiondate,asset.grossvalue,asset.originalvalue,currentvalue.currentamount,
          disposal.salevalue as disposalsalevalue,disposal.profitlossvoucherreference as disposalvoucherno,disposal.disposaldate,disposal.buyername,disposal.buyeraddress,

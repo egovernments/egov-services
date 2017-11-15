@@ -52,12 +52,12 @@ public class OpeningBalanceService extends DomainService{
 			materialReceipt.setMrnNumber(mrnNumber);
 			materialReceipt.getReceiptDetails().stream().forEach(detail ->{
 				detail.setMrnNumber(mrnNumber);
-				detail.setId(Integer.valueOf(openingBalanceRepository.getSequence("seq_materialreceiptdetail")));
+				detail.setId(openingBalanceRepository.getSequence("seq_materialreceiptdetail"));
 				if (isEmpty(detail.getTenantId())) {
 					detail.setTenantId(tenantId);
                 }
 				detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
-					addinfo.setId(Integer.valueOf(openingBalanceRepository.getSequence("seq_materialreceiptdetailaddnlinfo")));
+					addinfo.setId(openingBalanceRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
 					if (isEmpty(addinfo.getTenantId())) {
 						addinfo.setTenantId(tenantId);
 	                }

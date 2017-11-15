@@ -1,6 +1,6 @@
 
 Create table materialreceiptdetail( 
-	id bigint,
+	id varchar(128),
 	tenantId varchar(128),
 	material varchar(50),
 	uomNo varchar(50),
@@ -21,5 +21,5 @@ Create table materialreceiptdetail(
 	mrnNumber varchar(50) ,	version bigint
 );
 alter table materialreceiptdetail add constraint pk_materialreceiptdetail primary key (id,tenantId);
-
 create sequence seq_materialreceiptdetail;
+

@@ -51,7 +51,6 @@ public String buildSearchQuery(StringBuilder selectQuery,OpeningBalanceSearchCri
     
     addWhereClauseWithAnd(selectQuery, "matrcptdtl.tenantId", "tenantId");
        
-    /*addWhereClauseWithAnd(selectQuery, "matrcpt.tenantId", "tenantId");*/
 		System.out.println(selectQuery);
     return selectQuery.toString();
 }

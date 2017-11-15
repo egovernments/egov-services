@@ -2739,10 +2739,12 @@ var localization_EN_Data = {
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",
     "legal.advocates.create.additionalOwnerWindow":"Additional Owner",
   "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate",
-    "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate",
   "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details",
   "advocates.create.agencyAddress":"Agency Address",
-    "legal.search.result.agencyName":"Agency Name"
+    "legal.search.result.agencyName":"Agency Name",
+    "advocates.create.group.title.orgBankDetails":"Bank Details",
+   "advocates.create.ownerTitle":"Title",
+  "legal.search.result.agencyAddress":"Agency Address"
 
 
 
@@ -4773,7 +4775,10 @@ var localization_MR_Data = {
    "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate-marathi",
   "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details-marathi",
   "advocates.create.agencyAddress":"Agency Address-marathi",
-  "legal.search.result.agencyName":"Agency Name-marathi"
+  "legal.search.result.agencyName":"Agency Name-marathi",
+  "advocates.create.group.title.orgBankDetails":"Bank Details-marathi",
+   "advocates.create.ownerTitle":"Title-marathi",
+  "legal.search.result.agencyAddress":"Agency Address-marathi"
 }
 
 export function translate(locale_text) {

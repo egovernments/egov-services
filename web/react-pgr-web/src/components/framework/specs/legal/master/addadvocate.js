@@ -13,7 +13,7 @@ var dat = {
           {
             name: "advocateTitle",
             jsonPath: "title",
-            label: "advocates.create.advocateTitle",
+            label: "advocates.create.ownerTitle",
             type: "singleValueList",
             isRequired: false,
             isDisabled: false,

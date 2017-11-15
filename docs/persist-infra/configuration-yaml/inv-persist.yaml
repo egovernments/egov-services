@@ -307,7 +307,7 @@ serviceMaps:
           basePath: $.materialReceipt.*
           jsonMaps:
             - jsonPath: $.materialReceipt.*.id
-            - jsonPath: $.materialReceipt.*.auditDetails.tenantId
+            - jsonPath: $.materialReceipt.*.tenantId
             - jsonPath: $.materialReceipt.*.financialYear
             - jsonPath: $.materialReceipt.*.mrnStatus
             - jsonPath: $.materialReceipt.*.mrnNumber
@@ -323,16 +323,18 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG  
-        - query: INSERT INTO materialreceiptdetail(id, tenantId, mrnNumber,uomNo,receivedQty,acceptedQty, unitRate,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?,? );
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material,mrnNumber,uomNo,receivedQty,acceptedQty,unitRate,remarks,createdby,createdTime,lastmodifiedby,lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,? );
           basePath: $.materialReceipt.*.receiptDetails.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
             - jsonPath: $.materialReceipt.*.mrnNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.openingRate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.remarks
             - jsonPath: $.materialReceipt.*.auditDetails.createdBy
               type: LONG
             - type: CURRENTDATE
@@ -360,16 +362,12 @@ serviceMaps:
       description: update opening Balance
       fromTopic: inv-openbalance-update-topic
       queryMaps: 
-        - query: UPDATE  materialreceiptdetail SET receivedQty =?,acceptedQty =?, unitRate =?,createdby=?,createdTime=?,lastmodifiedby=?,lastModifiedTime=? WHERE id=? AND tenantId=? ;
+        - query: UPDATE  materialreceiptdetail SET receivedQty =?,acceptedQty =?, unitRate =?,lastmodifiedby=?,lastModifiedTime=? WHERE id=? AND tenantId=? ;
           basePath: $.materialReceipt.*.receiptDetails.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.openingRate
-            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
-              type: LONG
-            - type: CURRENTDATE
-              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
             - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
               type: LONG
             - type: CURRENTDATE

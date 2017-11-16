@@ -13,6 +13,8 @@ var localization_EN_Data = {
     "deshboard.title": "Dashboard",
     "ui.framework.required": "Required",
     "ui.framework.patternMessage": "Invalid pattern",
+    "reports.pgr.status.pending":"Status Pending",
+    "reports.pgr.status.onhold":"Status Onhold",
     "reports.pgr.complaintcategorytype": "Complaint Category Type",
     "reports.pgr.positiontype": "Position Type",
     "reports.pgr.wardtype": "Ward Type",
@@ -2556,6 +2558,8 @@ var localization_EN_Data = {
 "legal.create.caseregistration.toDate": "Case Registration To Date",
 
 //works
+"works.create.abstractEstimate":"Create Abstract Estimate",
+"works.create.searchEstimate":"Search Abstract Estimate",
 "works.create.groups.label.estandadminsanction": "Estimate and Administrative Sanction",
 "works.create.groups.fields.dateOfProposal":"Date of Proposal",
 "works.create.groups.fields.department":"Department",

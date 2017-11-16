@@ -13,7 +13,7 @@ var dat = {
             "name": "supplierName",
             "jsonPath": "codes",
             "label": "inventory.supplier.name",
-            "type": "singleValueList",
+            "type": "autoCompelete",
             "url":"inventory-services/suppliers/_search?|$..code|$..name",
             "isRequired": false,
             "isDisabled": false,
@@ -71,6 +71,9 @@ var dat = {
     "result": {
       "header": [
         {
+          "label": "inventory.supplier.code"
+        },
+        {
           "label": "inventory.supplier.name"
         }, {
           "label": "inventory.supplier.type"
@@ -79,7 +82,7 @@ var dat = {
         }
       ],
       "values": [
-        "name", "type", {valuePath:"active", type:"checkbox"}
+        "code","name", "type", {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "suppliers",
       "resultIdKey":"code",

@@ -13,7 +13,7 @@ var dat = {
                   "name":"name",
                   "jsonPath":"codes",
                   "label":"inventory.store.name",
-                  "type":"singleValueList",
+                  "type":"autoCompelete",
                   "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name",
                   "isDisabled":false,
                   "patternErrorMsg":"inventory.create.field.message.name"
@@ -41,6 +41,9 @@ var dat = {
       ],
       "result":{
          "header":[
+           {
+             "label":"inventory.store.code"
+           },
             {
                "label":"inventory.store.name"
             },
@@ -55,6 +58,7 @@ var dat = {
             }
          ],
          "values":[
+            "code",
             "name",
             "department.code",
             {valuePath:"isCentralStore", type:"checkbox"},
@@ -181,7 +185,7 @@ var dat = {
                   "jsonPath":"stores[0].storeInCharge.code",
                   "label":"inventory.store.incharge",
                   "pattern":"",
-                  "type":"singleValueList",
+                  "type":"autoCompelete",
                   "url":"/hr-employee/employees/_search?|$..code|$..name",
                   "isRequired":true,
                   "isDisabled":false,
@@ -468,17 +472,7 @@ var dat = {
                   "maxLength":1000,
                   "patternErrorMsg":"inventory.create.field.message.description"
                },
-               {
-                  "name":"isCentralStore",
-                  "jsonPath":"stores[0].isCentralStore",
-                  "label":"inventory.store.centralStore",
-                  "pattern":"",
-                  "type":"checkbox",
-                  "isRequired":false,
-                  "isDisabled":false,
-                  "defaultValue":"",
-                  "patternErrorMsg":""
-               },
+
                {
                   "name":"officeLocation",
                   "jsonPath":"stores[0].officeLocation.code",
@@ -488,6 +482,17 @@ var dat = {
                   "isRequired":false,
                   "isDisabled":false,
                   "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name",
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               },
+               {
+                  "name":"isCentralStore",
+                  "jsonPath":"stores[0].isCentralStore",
+                  "label":"inventory.store.centralStore",
+                  "pattern":"",
+                  "type":"checkbox",
+                  "isRequired":false,
+                  "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
                },

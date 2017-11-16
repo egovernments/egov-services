@@ -159,6 +159,10 @@ public class PerformanceAssessmentConstants {
     public static final String TENANTID_SEARCH_MANDATORY_CODE = "pa.0025";
     public static final String TENANTID_SEARCH_MANDATORY_FIELD_NAME = "tenantId";
     public static final String TENANTID_SEARCH_MANDATORY_ERROR_MESSAGE = "Tenant ID List is Mandatory!";
+    
+    public static final String ACTUAL_VALUE_ALREADY_EXISTS_CODE = "pa.0026";
+    public static final String ACTUAL_VALUE_ALREADY_EXISTS_FIELD_NAME = "resultValue";
+    public static final String ACTUAL_VALUE_ALREADY_EXISTS_ERROR_MESSAGE = "Actual Value for this KPI already exisits. Use update screen to update the same!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

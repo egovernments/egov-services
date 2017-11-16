@@ -22,7 +22,7 @@ public interface KpiValueRepository {
     
     public List<KPI> fetchTargetForKpi(String kpiCode, String finYear); 
     
-    public KpiValue checkKpiValueExistsForTenant(String kpiCode, String tenantId); 
+    public Long checkKpiValueExistsForTenant(String kpiCode, String tenantId); 
     
     public String searchPossibilityCheck(String tenantCount, String kpiCount, String finYearCount);
     

@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
@@ -115,11 +114,11 @@ public class KpiValueServiceImpl implements KpiValueService {
     }
 	
 	public boolean checkKpiValueExistsForTenant(String kpiCode, String tenantId) {
-    	KpiValue value = kpiValueRepository.checkKpiValueExistsForTenant(kpiCode, tenantId); 
-    	if(null != value && StringUtils.isNotBlank(value.getKpi().getCode()) && StringUtils.isNotBlank(value.getTenantId()))  
-    		return true;
+    	Long resultValue = kpiValueRepository.checkKpiValueExistsForTenant(kpiCode, tenantId); 
+    	if(null != resultValue && resultValue > 0) 
+    		return true; 
     	else
-    		return false; 
+    		return false;
     }
 	
 	public String searchPossibilityCheck(String tenantCount, String kpiCount, String finYearCount) {

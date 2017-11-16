@@ -668,6 +668,7 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
+						"isStateLevel":true,
 						"depedants": [{
 							"jsonPath": "assetSubCategory",
 							"type": "dropDown",
@@ -1840,61 +1841,6 @@ var dat = {
           //   "patternErrMsg": ""
           // },
 
-				]
-			},
-			{
-
-				"name": "TableField",
-        "jsonPath":"Assets",
-				"fields": [
-					{
-            "name": "AssetAcountCode",
-            "jsonPath": "Assets[0].assetAccount",
-            "label": "ac.create.Asset.account.code",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "AccumulatedDepreciationAccount",
-            "jsonPath": "Assets[0].accumulatedDepreciationAccount",
-            "label": "ac.create.Accumulated.Depreciation.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "RevaluationReserveAccount",
-            "jsonPath": "Assets[0].revaluationReserveAccount",
-            "label": "ac.create.Revaluation.Reserve.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "DepreciationExpensesAccount ",
-            "jsonPath": "Assets[0].depreciationExpenseAccount",
-            "label": "ac.create.Depreciation.Expenses.Account",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
 				]
 			},
       {

@@ -202,18 +202,21 @@ class assetImmovableCreate extends Component {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    console.log("hit");
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
 
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
-        var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
-        ind = i;
-        var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
-        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
-        for(var j=1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = j;
+
+        if ( specs[moduleName + "." + actionName].groups[i].jsonPath ) {
+
+          var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
+          ind = i;
+          var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
+          var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
+          for(var j=1; j < arr.length; j++) {
+            i++;
+            specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
+            specs[moduleName + "." + actionName].groups[ind+1].index = j;
+          }
         }
       }
 
@@ -995,12 +998,9 @@ delete formData.Asset.assetAttributesCheck;
     let valueWarranty = _value;
     let self = this;
     let spec = self.props.mockData;
-     console.log(spec);
-     console.log(self.state.action);
+
       for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
-        console.log("fire1");
         if (spec[`asset.${self.state.action}`].groups[q].name == "AssetField") {
-          console.log("fire2");
           for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
             if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == "WarrantyExpiryDate") {
               if (valueWarranty==false) {

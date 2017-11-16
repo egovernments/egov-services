@@ -821,6 +821,7 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
+						"isStateLevel":true,
 						"depedants": [{
 							"jsonPath": "assetSubCategory",
 							"type": "dropDown",
@@ -1613,12 +1614,12 @@ var dat = {
   						"label": "ac.create.Asset.SubCategory.Name",
   						"pattern": "",
   						"type": "singleValueList",
-  						//"url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$..id|$..name",
-							"url": "",
+  						"url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
 							"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
+							"isStateLevel":true
   					},
 
             {

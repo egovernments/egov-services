@@ -30,26 +30,30 @@ var dat = {
 							],
 
 						},
-            {
-              "name": "AssetCategoryType",
-              "jsonPath": "",
-              "label": "ac.create.asset.asset.category",
-              "pattern": "",
-              "type": "singleValueList",
-              "url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
+						{
+							"name": "AssetCategory",
+							"jsonPath": "assetCategory",
+							"label": "ac.create.Asset.Category",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true,
+							"depedants": [{
+								"jsonPath": "assetSubCategory",
+								"type": "dropDown",
+								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F%28%40.parent%3D%3D'{assetCategory}'%29%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+							}]
+						},
 						{
 							"name": "AssetSearchAssetSubCategory",
-							"jsonPath": "assetCategory",
+							"jsonPath": "assetSubCategory",
 							"label": "ac.create.Asset.SubCategory.Name",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-							// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

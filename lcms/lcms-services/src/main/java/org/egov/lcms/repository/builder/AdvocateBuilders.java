@@ -221,8 +221,11 @@ public class AdvocateBuilders {
 		}
 
 		if (agencyName != null) {
-			searchQuery.append(" AND name=?");
-			preparedStatementValues.add(agencyName);
+			
+			StringJoiner nameParam = new StringJoiner("", "%", "%");
+			nameParam.add(agencyName);
+			searchQuery.append(" AND LOWER(name) LIKE ?");
+			preparedStatementValues.add(nameParam.toString().toLowerCase());
 		}
 
 		searchQuery.append(" ORDER BY lastmodifiedtime DESC");

@@ -59,14 +59,20 @@ export default class UiCalendar extends Component {
     getValue(item) {
         var eventsObj = [];
         var edata = this.props.getVal(item);
-        console.log(edata);
         if (edata && edata.length > 0) {
-            edata.map((v, i) => {
-                debugger;
+            edata.map((v, i) => {debugger;
+                var hearingTimeDate=new Date();
+                if(v.nextHearingDate && v.nextHearingTime){
+                  var timeDate =new Date(parseInt(v.nextHearingTime));
+                  var dataDate =new Date(v.nextHearingDate);
+                   hearingTimeDate=timeDate.setDate(dataDate.getDate())
+                }else{
+                    hearingTimeDate=(v.nextHearingDate)?v.nextHearingDate:new Date() 
+                }
                 eventsObj.push({
                     'title': 'Case'+v.caseNo,
-                    'start': new Date(v.nextHearingDate),
-                    'end': new Date(v.nextHearingDate),
+                    'start': new Date(hearingTimeDate),
+                    'end': new Date(hearingTimeDate),
                     'desc': v.departmentConcernPerson
                 }
                 );

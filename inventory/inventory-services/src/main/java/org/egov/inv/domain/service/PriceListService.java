@@ -21,6 +21,7 @@ import org.egov.inv.persistence.repository.PriceListRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
 
 
@@ -48,6 +49,9 @@ public class PriceListService extends DomainService {
 
     @Autowired
     private PriceListJdbcRepository priceListJdbcRepository;
+    
+    @Autowired
+    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     
     public static final String SEQ_PRICELIST = "seq_priceList";
     public static final String SEQ_PRICELISTDETAILS = "seq_pricelistdetails";
@@ -148,20 +152,24 @@ public class PriceListService extends DomainService {
 			
 			for(PriceList pl : priceLists){
 				if(Long.valueOf(pl.getAgreementDate()) > currentMilllis){
-					throw new InvalidDataException("agreementDate", "Agreement Date must be less than or equal to Today's date", Long.valueOf(pl.getAgreementDate()).toString());
+					throw new CustomException("agreementDate", "Agreement Date must be less than or equal to Today's date");
 				}
 				
 				if(Long.valueOf(pl.getRateContractDate()) > currentMilllis){
-					throw new InvalidDataException("rateContractDate", "Rate Contract Date must be less than or equal to Today's date", Long.valueOf(pl.getRateContractDate()).toString());
+					throw new CustomException("rateContractDate", "Rate Contract Date must be less than or equal to Today's date");
 				}
 				
 				if(Long.valueOf(pl.getAgreementStartDate()) > currentMilllis){
-					throw new InvalidDataException("agreementStartDate", "Agreement Start Date must be less than or equal to Today's date", Long.valueOf(pl.getAgreementStartDate()).toString());
+					throw new CustomException("agreementStartDate", "Agreement Start Date must be less than or equal to Today's date");
 				}
 				
 				if(Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())){
-					throw new InvalidDataException("agreementEndDate", "Agreement End Date must be greater than or equal to Agreement start date", Long.valueOf(pl.getAgreementEndDate()).toString());
+					throw new CustomException("agreementEndDate", "Agreement End Date must be greater than or equal to Agreement start date");
 				}
+			}
+			
+			if(priceListJdbcRepository.isDuplicateContract(priceLists)){
+				throw new CustomException("inv.0011", "A ratecontract already exists in the system for the given material in the specified time duration. Please select alternate duration for the contract.");
 			}
 			
 		} catch (IllegalArgumentException e) {

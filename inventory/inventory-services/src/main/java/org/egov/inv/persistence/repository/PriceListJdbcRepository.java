@@ -11,6 +11,7 @@ import java.util.Map;
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
@@ -237,7 +238,27 @@ public class PriceListJdbcRepository extends JdbcRepository {
         return page;
     }
 
-
+    public boolean isDuplicateContract(List<PriceList> priceLists){
+		for(PriceList pl: priceLists){
+			
+			for(PriceListDetails plds: pl.getPriceListDetails()){
+				
+				String searchQuery = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( fromdate::bigint >= " + plds.getFromDate() + " and fromdate::bigint <= " + plds.getToDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'";
+				Long count = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
+				if(count!=0l){
+					return true;
+				}
+				String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( todate::bigint >= " + plds.getFromDate() + " and todate::bigint <= " + plds.getToDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'";
+				Long count1 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
+				if(count!=0l){
+					return true;
+				}
+			}
+			
+		}
+    	return false;
+    }
+    
     public Pagination<?> getPagination(String searchQuery, Pagination<?> page, Map<String, Object> paramValues) {
         String countQuery = "select count(*) from (" + searchQuery + ") as x";
         Long count = namedParameterJdbcTemplate.queryForObject(countQuery.toString(), paramValues, Long.class);

@@ -2671,6 +2671,7 @@ var localization_EN_Data = {
 "perfManagement.create.KPIs.groups.kpiCode":"KPI Code",
 "perfManagement.create.KPIs.groups.kpitype":"KPI Type",
 "perfManagement.create.KPIs.groups.kpitype.value":"KPI Value Number",
+"perfManagement.create.KPIs.groups.kpitype.text":"KPI Text",
 "perfManagement.create.KPIs.groups.kpitype.objective":"KPI Value Objective Type",
 "perfManagement.create.KPIs.groups.kpiTargetBlock":"Target Value",
 "perfManagement.create.KPIs.groups.kpiTargetRadioBlock":"Target Value",

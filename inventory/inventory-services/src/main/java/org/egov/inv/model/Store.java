@@ -188,7 +188,7 @@ public class Store {
     @NotNull
 
     @Pattern(regexp = "^[a-zA-Z ]*$")
-    @Size(min = 5, max = 50)
+    @Size(max = 50)
     public String getName() {
         return name;
     }

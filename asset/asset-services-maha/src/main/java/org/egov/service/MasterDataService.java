@@ -108,10 +108,11 @@ public class MasterDataService {
 		return moduleMapInput;
 	}
 
-	public Map<Long, AssetCategory> getAssetCategoryMapFromJSONArray(Map<String, JSONArray> moduleMap) {
-
-		JSONArray jsonArray = moduleMap.get("AssetCategory");
-		List<AssetCategory> assetCategorys = new ArrayList<>();
+	public Map<Long, AssetCategory> getAssetCategoryMapFromJSONArray(JSONArray jsonArray ) {
+		
+		if(jsonArray.isEmpty())
+			return new HashMap<Long,AssetCategory>();
+			List<AssetCategory> assetCategorys = new ArrayList<>();
 		try {
 			assetCategorys = Arrays
 					.asList(mapper.readValue(jsonArray.toJSONString(), AssetCategory[].class));
@@ -128,9 +129,11 @@ public class MasterDataService {
 		return assetCategorys.stream().collect(Collectors.toMap(AssetCategory::getId, Function.identity()));
 	}
 	
-	public Map<String, Department> getDepartmentMapFromJSONArray(Map<String, JSONArray> moduleMap) {
+	public Map<String, Department> getDepartmentMapFromJSONArray(JSONArray jsonArray ) {
 
-		JSONArray jsonArray = moduleMap.get("Department");
+		if(jsonArray.isEmpty())
+			return new HashMap<String,Department>();
+		
 		List<Department> Departments = new ArrayList<>();
 		
 		try {
@@ -149,9 +152,10 @@ public class MasterDataService {
 		return Departments.stream().collect(Collectors.toMap(Department::getCode, Function.identity()));
 	}
 	
-	public Map<String, FundSource> getFundSourceMapFromJSONArray(Map<String, JSONArray> moduleMap) {
+	public Map<String, FundSource> getFundSourceMapFromJSONArray(JSONArray jsonArray ) {
 
-		JSONArray jsonArray = moduleMap.get("funds");
+		if(jsonArray.isEmpty())
+			return new HashMap<String,FundSource>();
 		List<FundSource> Fundsources = new ArrayList<>();
 		try {
 			Fundsources = Arrays
@@ -174,8 +178,10 @@ public class MasterDataService {
 		return mDRepo.getFinancialYears(toDate, requestInfo, tenantId);
 	}
 
-	public Map<String, ModeOfAcquisition> getModeOfAcquisitionMapFromJSONArray(Map<String, JSONArray> moduleMap) {
-		JSONArray jsonArray = moduleMap.get("ModeOfAcquisition");
+	public Map<String, ModeOfAcquisition> getModeOfAcquisitionMapFromJSONArray(JSONArray jsonArray ) {
+
+		if(jsonArray.isEmpty())
+			return new HashMap<String, ModeOfAcquisition>();
 		List<ModeOfAcquisition> ModeOfAcquisitions = new ArrayList<>();
 		try {
 			ModeOfAcquisitions = Arrays
@@ -190,7 +196,6 @@ public class MasterDataService {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-		
 		return ModeOfAcquisitions.stream().collect(Collectors.toMap(ModeOfAcquisition::getCode, Function.identity()));
 	}
 }

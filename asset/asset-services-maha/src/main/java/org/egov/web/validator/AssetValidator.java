@@ -83,11 +83,11 @@ public class AssetValidator implements Validator {
 				assetRequest.getRequestInfo(), asset.getTenantId());
 		
 		System.err.println("the result : "+ResultDataMap);
+		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("funds"));
+		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Depratment"));
 
-		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET"));
-		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master"));
-		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters"));
-
+		
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
 		if (masterAssetCat == null)
 			errorMap.put("EGASSET_INVALID_ASSETCATEGORY", "the given AssetCategory Id is Invalid");

@@ -35,6 +35,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 @Service
 @Slf4j
@@ -257,7 +258,8 @@ public class DepreciationService {
 	 */
 	private void enrichDepreciationInputs(List<DepreciationInputs> depreciationInputsList, RequestInfo requestInfo,
 			String tenantId) {
-
+		
+		Map<String, String> errorMap = new HashMap<>();
 		Set<Long> assetCategoryIds = depreciationInputsList.stream().map(dil -> dil.getAssetCategory())
 				.collect(Collectors.toSet());
 
@@ -271,11 +273,16 @@ public class DepreciationService {
 
 		if(!tenantId.equals("default"))
 			tenantId=tenantId.split(".")[0];
-		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(
-				mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET"));
+		Map<String,JSONArray>  assetMap= mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET");
+		
+		if(!assetMap.get("AssetCategory").isEmpty()) {
+		  Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(assetMap.get("AssetCategory"));
 
-		depreciationInputsList
-				.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
+		depreciationInputsList.forEach(a -> a.setDepreciationRate(assetCatMap.get(a.getAssetCategory()).getDepreciationRate()));
+		}else {
+			errorMap.put("EGASSET_DEPRECIATION_ASSETCATEGORIES", "No Asset Categories found for the chosen Assets");
+			throw new CustomException(errorMap);
+		}
 	}
 
 }

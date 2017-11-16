@@ -135,14 +135,14 @@ public class AssetService {
 
 	private void mapMasters(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
 
-		Map<String, Map<String, JSONArray>> RsMasterMap = mDService.getStateWideMastersByListParams(assets,
+		Map<String, Map<String, JSONArray>> rsMasterMap = mDService.getStateWideMastersByListParams(assets,
 				requestInfo, tenantId);
-
-		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(RsMasterMap.get("ASSET"));
-		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(RsMasterMap.get("egf-master"));
+		Map<String,JSONArray> rsAssetMap = rsMasterMap.get("ASSET");
+		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(rsAssetMap.get("AssetCategory"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(rsMasterMap.get("egf-master").get("funs"));
 		Map<String, Department> departmentMap = mDService
-				.getDepartmentMapFromJSONArray(RsMasterMap.get("common-masters"));
-		Map<String, ModeOfAcquisition> modeOfAquisitionMap = mDService.getModeOfAcquisitionMapFromJSONArray(RsMasterMap.get("ASSET"));
+				.getDepartmentMapFromJSONArray(rsMasterMap.get("common-masters").get("Department"));
+		Map<String, ModeOfAcquisition> modeOfAquisitionMap = mDService.getModeOfAcquisitionMapFromJSONArray(rsAssetMap.get("ModeOfAcquisition"));
 
 		assets.forEach(asset -> {
 			Long assetCatkey = asset.getAssetCategory().getId();

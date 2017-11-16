@@ -242,7 +242,7 @@ public class DetailedEstimate   {
   //@NotNull
   //TODO from UI its not mandatory
 
-    @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+   // @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
     public String getEstimateNumber() {
         return estimateNumber;
     }

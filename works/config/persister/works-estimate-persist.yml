@@ -790,7 +790,7 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.quantity
        
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.estimateActivity.id
+       - jsonPath: $.detailedEstimates.*.estimateActivities[?({id} in @.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets[*].id)].id
         
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.parent.id
        
@@ -818,6 +818,37 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdBy
  
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.createdTime
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: $.detailedEstimates.*.documentdetails.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.id
+         
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.objectId
+       
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.objectType
+       
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.documentType
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.fileStore
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.latitude
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.longitude
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.description
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.dateOfCapture
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.workProgress
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.createdBy
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.createdTime
        
  - version: 1.0
    name: Detailed AbstractEstimate Update
@@ -1093,4 +1124,35 @@ serviceMaps:
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.id
          
        - jsonPath: $.detailedEstimates.*.estimateTechnicalSanctions.*.tenantId
+  
+    - query: UPDATE egw_documentdetail SET objectid=?, objecttype=?, documenttype=?, filestore=?, latitude=?, longitude=?, description=?, dateofcapture=?, workprogress=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+
+      basePath: $.abstractEstimates.*.documentdetails.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.objectId
+       
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.objectType
+       
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.documentType
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.fileStore
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.latitude
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.longitude
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.description
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.dateOfCapture
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.workProgress
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.lastModifiedBy
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.lastModifiedTime
+
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.id
+         
+       - jsonPath: $.detailedEstimates.*.documentdetails.*.tenantId
 

@@ -144,16 +144,16 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
   - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=default
-    keyOrder: id,tenantid,name,code
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=default
+    keyOrder: id,tenantId,name,code
     tableName: tbl_funds 
   sourceColumns:
   - name: id
@@ -418,7 +418,7 @@ ReportDefinitions:
        ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
        inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
        assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-       left outer join select funds.name from (VALUES tbl_funds) as funds (id,tenantid,name,code) ON asset.fundsource=funds.code
+       left outer join select funds.name from (VALUES tbl_funds) as funds (id,tenantId,name,code) ON asset.fundsource=funds.code
        where asset.tenantid = $tenantid AND asset.assetCategoryType='IMMOVABLE'
          
          

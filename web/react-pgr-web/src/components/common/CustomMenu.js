@@ -232,64 +232,64 @@ const menuConvention={
 //SWM
 
 "Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/swm/vehiclefuellingdetails",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/view/swm/vehiclefuellingdetails/",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/update/swm/vehiclefuellingdetails/",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/swm/vehiclefuellingdetails/view",
+"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/swm/vehiclefuellingdetails/update",
 
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Create": "/create/swm/vehicles",
-"Solid Waste Management.SWM Masters.Vehicle.Vehicle Search": "/view/swm/vehicles/",
-"Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/update/swm/vehicles/",
+"Solid Waste Management.SWM Masters.Vehicle.Vehicle Search": "/search/swm/vehicles/view",
+"Solid Waste Management.SWM Masters.Vehicle.Vehicle Update": "/search/swm/vehicles/update",
 
 "Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Create": "/create/swm/collectionpoints",
-"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/view/swm/collectionpoints/",
-"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/update/swm/collectionpoints/",
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Search": "/search/swm/collectionpoints/view",
+"Solid Waste Management.SWM Masters.Collection Point.CollectionPoint Update": "/search/swm/collectionpoints/update",
 
 "Solid Waste Management.SWM Masters.Vendor.Vendor Create": "/create/swm/vendors",
-"Solid Waste Management.SWM Masters.Vendor.Vendor Search": "/view/swm/vendors/",
-"Solid Waste Management.SWM Masters.Vendor.Vendor Update": "/update/swm/vendors/",
+"Solid Waste Management.SWM Masters.Vendor.Vendor Search": "/search/swm/vendors/view",
+"Solid Waste Management.SWM Masters.Vendor.Vendor Update": "/search/swm/vendors/update",
 
 "Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Create": "/create/swm/sourcesegregations",
-"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Search": "/view/swm/sourcesegregations/",
-"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Update": "/update/swm/sourcesegregations/",
+"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Search": "/search/swm/sourcesegregations/view",
+"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Update": "/search/swm/sourcesegregations/update",
 
 "Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Create": "/create/swm/collectionpointdetails",
-"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Search": "/view/swm/collectionpointdetails/",
-"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Update": "/update/swm/collectionpointdetails/",
+"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Search": "/search/swm/collectionpointdetails/view",
+"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Update": "/search/swm/collectionpointdetails/update",
 
 "Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Create": "/create/swm/vehiclemaintenances",
-"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Search": "/view/swm/vehiclemaintenances/",
-"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Update": "/update/swm/vehiclemaintenances/",
+"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Search": "/search/swm/vehiclemaintenances/view",
+"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Update": "/search/swm/vehiclemaintenances/update",
 
 "Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Create": "/create/swm/vendorcontracts",
-"Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Search": "/view/swm/vendorcontracts/",
-"Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Update": "/update/swm/vendorcontracts/",
+"Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Search": "/search/swm/vendorcontracts/view",
+"Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Update": "/search/swm/vendorcontracts/update",
 
 "Solid Waste Management.SWM Masters.Route.Route Create": "/create/swm/routes",
-"Solid Waste Management.SWM Masters.Route.Route Search": "/view/swm/routes/",
-"Solid Waste Management.SWM Masters.Route.Route Update": "/update/swm/routes/",
+"Solid Waste Management.SWM Masters.Route.Route Search": "/search/swm/routes/view",
+"Solid Waste Management.SWM Masters.Route.Route Update": "/search/swm/routes/update",
 
 "Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Create": "/create/swm/vehiclemaintenancedetails",
-"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Search": "/view/swm/vehiclemaintenancedetails/",
-"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Update": "/update/swm/vehiclemaintenancedetails/",
+"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Search": "/search/swm/vehiclemaintenancedetails/view",
+"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Update": "/search/swm/vehiclemaintenancedetails/update",
 
 "Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Create": "/create/swm/vehicleschedules",
-"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Search": "/view/swm/vehicleschedules/",
-"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Update": "/update/swm/vehicleschedules/",
+"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Search": "/search/swm/vehicleschedules/view",
+"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Update": "/search/swm/vehicleschedules/update",
 
 "Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Create": "/create/swm/sanitationstafftargets",
-"Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Search": "/view/swm/sanitationstafftargets/",
-"Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Update": "/update/swm/sanitationstafftargets/",
+"Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Search": "/search/swm/sanitationstafftargets/view",
+"Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Update": "/search/swm/sanitationstafftargets/update",
 
 "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Create": "/create/swm/refillingpumpstations",
-"Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Search": "/view/swm/refillingpumpstations/",
-"Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Update": "/update/swm/refillingpumpstations/",
+"Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Search": "/search/swm/refillingpumpstations/view",
+"Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Update": "/search/swm/refillingpumpstations/update",
 
 "Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Create": "/create/swm/vehicletripsheetdetails",
-"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Search": "/view/swm/vehicletripsheetdetails/",
-"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Update": "/update/swm/vehicletripsheetdetails/",
+"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Search": "/search/swm/vehicletripsheetdetails/view",
+"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Update": "/search/swm/vehicletripsheetdetails/update",
 
 "Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Create": "/create/swm/sanitationstaffschedules",
-"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Search": "/view/swm/sanitationstaffschedules/",
-"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Update": "/update/swm/sanitationstaffschedules/",
+"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Search": "/search/swm/sanitationstaffschedules/view",
+"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Update": "/search/swm/sanitationstaffschedules/update",
 
 //legal case
 "Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacycase",

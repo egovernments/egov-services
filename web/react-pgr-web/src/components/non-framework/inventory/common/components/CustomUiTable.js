@@ -47,8 +47,26 @@ class CustomUiTable extends Component {
 		  }
   }
 
+	// componentWillReceiveProps(){
+	// 	// console.log('componentWillReceiveProps');
+	// 	// this.clearDataTable();
+	// 	// this.initializeDataTable();
+	// }
+
+ clearDataTable(){
+	 if($.fn.DataTable.isDataTable('#searchTable')) {
+	 	$('#searchTable').DataTable().clear();
+		$('#searchTable').DataTable().draw();
+	 }
+	 return null;
+ }
 
 	initializeDataTable(){
+
+		if($.fn.DataTable.isDataTable('#searchTable')) {
+			$('#searchTable').DataTable().draw();
+			return;
+		}
 
 		$('#searchTable').DataTable({
 				 dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
@@ -90,6 +108,8 @@ class CustomUiTable extends Component {
 						 "emptyTable": "No Records"
 					}
 		});
+
+		return null;
 	}
 
 
@@ -226,7 +246,9 @@ class CustomUiTable extends Component {
 
   		return (
   			<div>
+					{/* {this.clearDataTable()} */}
   				{this.props.resultList && renderTable()}
+					{this.initializeDataTable()}
   			</div>
   		)
   	}

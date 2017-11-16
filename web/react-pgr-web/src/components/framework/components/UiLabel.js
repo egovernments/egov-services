@@ -155,7 +155,7 @@ export default class UiLabel extends Component {
                 <FlatButton label={this.state.value || this.props.getVal(item.jsonPath,item.isDate)} primary={true}/>
               </Col>)
               :
-              <Col id={item.jsonPath.split(".").join("-")}	style={item.hasOwnProperty("textAlign")?{textAlign:item.textAlign}:{textAlign:"left"}} xs={12}>{this.state.value || this.props.getVal(item.jsonPath,item.isDate) || "NA"}</Col>}
+              <Col id={item.jsonPath.split(".").join("-")}	style={item.hasOwnProperty("textAlign")?{textAlign:item.textAlign}:{textAlign:"left"}} xs={12}>{this.props.getVal(item.jsonPath,item.isDate)  || this.state.value || "NA"}</Col>}
         </Row>
         <br/>
       </div>

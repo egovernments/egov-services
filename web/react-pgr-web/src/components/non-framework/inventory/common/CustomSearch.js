@@ -114,6 +114,7 @@ export default class CustomSearch extends Component {
   componentDidMount() {
       this.props.resetDropdownData();
       this.initData();
+      this.hasReturnUrl();
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
@@ -122,9 +123,19 @@ export default class CustomSearch extends Component {
     }
   }
 
+  hasReturnUrl()
+  {
+    let {search}=this;
+    if (localStorage.getItem("returnUrl")) {
+      search(null,true)
+    }
+  }
+
   view=()=> {
-    let {moduleName, actionName, metaData, setRoute, tableSelectionData} = this.props;
+    let {moduleName, actionName, metaData, formData, setRoute, tableSelectionData} = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
+    localStorage.setItem("formData",JSON.stringify(formData));
+    localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
     if(tableSelectionData && tableSelectionData.length === 1){
       let url = obj.result['rowClickUrlView'].replace(REGEXP_MATCH_PARAM, encodeURIComponent(tableSelectionData[0]))
       setRoute(url);
@@ -184,6 +195,10 @@ export default class CustomSearch extends Component {
         delete formData[key];
     }
 
+    self.setState({
+      showResult: false
+    });
+
     Api.commonApiPost(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, formData, {}, null, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
       var resultList = {
@@ -221,6 +236,9 @@ export default class CustomSearch extends Component {
         values,
         showResult: true
       });
+
+      window.localStorage.setItem("formData","");
+      window.localStorage.setItem("returnUrl","");
 
       self.props.setFlag(1);
     }, function(err) {

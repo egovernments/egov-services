@@ -234,7 +234,6 @@ class Report extends Component {
      }
    }
 
-   console.log(query);
     Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
       self.props.setFormData(res);
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
@@ -256,7 +255,6 @@ class Report extends Component {
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
                + _date.getFullYear();
     }
-console.log(val);
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val === true) ? "Yes" : (val === false) ? "No" : (val + "") : "";
   }
 

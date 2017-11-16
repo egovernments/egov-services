@@ -136,8 +136,10 @@ public class AssetValidator implements Validator {
 
 	public void assetIdValidation(Long assetId, String tenantId, RequestInfo requestInfo) {
 		Asset asset = assetService.getAsset(tenantId, assetId, requestInfo);
+		
 		if (asset == null)
 			errorMap.put("egasset_AssetId", "The given Assetid is Invalid");
+		
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}

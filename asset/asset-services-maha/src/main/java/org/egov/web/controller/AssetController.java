@@ -74,6 +74,7 @@ public class AssetController {
 	@ResponseBody
 	public ResponseEntity<?> create(@RequestBody @Valid final AssetRequest assetRequest) {
 		assetValidator.validateAsset(assetRequest);
+		System.err.println(assetRequest);
 		final AssetResponse assetResponse = assetService.createAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.CREATED);
 	}

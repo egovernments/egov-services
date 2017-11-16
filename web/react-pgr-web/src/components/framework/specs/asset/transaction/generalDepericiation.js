@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "/asset-services-maha/assets/_search",
     "tenantIdRequired": true,
+		"idJsonPath": "CategoryTypes[0].code",
     "objectName": "Depreciation",
     "useTimestamp": true,
     "groups": [{

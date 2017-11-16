@@ -163,11 +163,47 @@ class Transaction extends Component {
 
 
   }
+  makeAjaxCall = (formData, url) => {
+    let self = this;
+    console.log(formData);
+    if(formData && formData.Depreciation && formData.Depreciation.DepreciationDetail && formData.Depreciation.DepreciationDetail[0] && formData.Depreciation.DepreciationDetail[0].status == "SUCCESS"){
+      console.log("SUCCESS");
+    }else{
+      console.log("FAIL");
+    }
+    //return console.log(formData);
+    Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+      console.log(response);
+      self.props.setLoadingStatus('hide');
+      self.initData();
+      self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "wc.create.message.success"), true);
+      setTimeout(function() {
+        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+              var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+          } else {
+            console.log(self.props.actionName);
+            if(self.props.actionName == "transaction") {
+              var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              console.log("if");
+            } else {
+              console.log("else");
+              var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+            }
+          }
 
+          self.props.setRoute(hash);
+        }
+      }, 1500);
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
+  }
 
   search = () => {
 
-    let self = this; 
+    let self = this;
     var formData = {...this.props.formData};
     if(!(formData.toDate) || formData.toDate == null || formData.toDate == ""){
       self.props.toggleSnackbarAndSetText(true, "Please enter Date of Depreciation", false, true);
@@ -675,7 +711,7 @@ class Transaction extends Component {
 
 
   create=(e) => {
-    let self=this;
+    let self = this, _url;
     e.preventDefault();
     var formData = {...this.props.formData};
     self.props.setLoadingStatus('loading');
@@ -689,33 +725,49 @@ class Transaction extends Component {
         if (formData.Depreciation.Assets[i].isChecked && formData.Depreciation.Assets[i].isChecked==true) {
           var collectAssetId = {};
             collectAssetId = formData.Depreciation.Assets[i].id;
-            console.log(collectAssetId);
             mainAssetIds += collectAssetId+",";
         }
 
 
       }
       var mainAssetIdssplice = mainAssetIds.slice(0, -1);
-      console.log(mainAssetIdssplice);
-      formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
-      //   formData.Depreciation.assetIds  = mainAssetIdssplice ;
-       console.log(formData.Depreciation.assetIds);
+      if(formData.Depreciation.assetIds){
+        formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
+      }
     delete formData.Depreciation.Assets;
-
-    console.log(formData);
 
               Api.commonApiPost("/asset-services-maha/assets/depreciations/_create", "", formData, "", true).then(function(response){
                 self.props.setLoadingStatus('hide');
                 self.initData();
                 self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
 
+                self.props.setFormData(response);
               }, function(err) {
                 self.props.setLoadingStatus('hide');
                 self.props.toggleSnackbarAndSetText(true, err.message);
               })
+              Api.commonApiPost((_url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+                self.props.setLoadingStatus('hide');
+                self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "wc.create.message.success"), true);
+                setTimeout(function() {
+                  if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+                    if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+                        var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+                    } else {
+                      if(self.props.actionName == "transaction") {
+                        var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+                      } else {
+                        var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+                      }
+                    }
 
-
-
+                    self.props.setRoute(hash);
+                  }
+                }, 1500);
+              }, function(err) {
+                self.props.setLoadingStatus('hide');
+                self.props.toggleSnackbarAndSetText(true, err.message);
+              })
      }
 
   render() {

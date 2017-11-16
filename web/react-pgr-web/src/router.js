@@ -156,6 +156,7 @@ import acknowledgementWc from './components/non-framework/wc/acknowledgement';
 import transactionRevaluation from './components/non-framework/asset/transactionRevaluation';
 import transactionTransfer from './components/non-framework/asset/transactionTransfer';
 import transactionGeneral from './components/non-framework/asset/transactionGeneral';
+import acknowledgeDepreciation from './components/non-framework/asset/acknowledgeDepreciation';
 
 //Template parser
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
@@ -364,6 +365,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate/:id?'} component={assetMovableCreate}/>
       <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>
       <Route exact path= {base + '/non-framework/asset/master/assetMovableView/:id'} component={assetMovableView}/>
+      <Route exact path= {base + '/non-framework/asset/acknowledgeDepreciation/:id'} component={acknowledgeDepreciation}/>
 
       {/* inventory */}
       <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>

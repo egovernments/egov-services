@@ -2704,7 +2704,7 @@ var localization_EN_Data = {
  "inventory.material.oldcode":"Material Old Code",
  "inventory.material.description":"Material Description",
  "inventory.material.baseuom":"Base UOm Name",
- "inventory.material.purchasinginfo":"Purchasingg Information",
+ "inventory.material.purchasinginfo":"Purchasing Information",
  "inventory.material.purchaseuom":"Purchase UOM Name",
  "inventory.material.expenseacctcode":"Expense Account Code",
  "inventory.material.stockinginfo":"Stocking Information",

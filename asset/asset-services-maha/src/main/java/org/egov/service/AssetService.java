@@ -148,12 +148,16 @@ public class AssetService {
 			Long assetCatkey = asset.getAssetCategory().getId();
 			String fundKey = asset.getFundSource().getCode();
 			String deptKey = asset.getDepartment().getCode();
-			String mOAKey=asset.getModeOfAcquisition().getCode();
+			String mOAKey = asset.getModeOfAcquisition().getCode();
 
-            asset.setAssetCategory(assetCatMap.get(assetCatkey));
-			asset.setFundSource(fundMap.get(fundKey));
-			asset.setDepartment(departmentMap.get(deptKey));
-			asset.setModeOfAcquisition(modeOfAquisitionMap.get(mOAKey));
+			if (assetCatMap.get(assetCatkey) != null)
+				asset.setAssetCategory(assetCatMap.get(assetCatkey));
+			if (fundMap.get(fundKey) != null)
+				asset.setFundSource(fundMap.get(fundKey));
+			if (departmentMap.get(deptKey) != null)
+				asset.setDepartment(departmentMap.get(deptKey));
+			if (modeOfAquisitionMap.get(mOAKey) != null)
+				asset.setModeOfAcquisition(modeOfAquisitionMap.get(mOAKey));
 		});
 	}
 }

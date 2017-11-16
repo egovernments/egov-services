@@ -81,6 +81,7 @@ public class AssetController {
 	@PostMapping("_update")
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody final AssetRequest assetRequest) {
+		assetValidator.validateAsset(assetRequest);
 		final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}

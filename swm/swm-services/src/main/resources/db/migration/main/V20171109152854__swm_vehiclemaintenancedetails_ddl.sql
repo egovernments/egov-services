@@ -1,4 +1,4 @@
-Create table egswm_vehiclemaintenancedetail(
+Create table egswm_vehiclemaintenancedetails (
   code varchar(256) NOT NULL,
   tenantid varchar(128) NOT NULL,
   isscheduled BOOLEAN,
@@ -16,5 +16,5 @@ Create table egswm_vehiclemaintenancedetail(
   lastmodifiedby varchar(50),
   lastmodifiedtime bigint,
   version bigint,
-  constraint uk_vehiclemaintenancedetail_code_tenant unique (code,tenantid)
+  constraint uk_vehiclemaintenancedetails_code_tenant unique (code,tenantid)
 );

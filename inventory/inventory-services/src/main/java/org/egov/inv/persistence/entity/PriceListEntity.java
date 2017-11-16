@@ -91,6 +91,11 @@ public class PriceListEntity {
     			.agreementEndDate(priceList.getAgreementEndDate())
     			.active(priceList.getActive())
     			.fileStoreId(priceList.getFileStoreId())
+    			.tenantId(priceList.getTenantId())
+    			.createdBy(priceList.getAuditDetails().getCreatedBy())
+    			.lastModifiedBy(priceList.getAuditDetails().getLastModifiedBy())
+    			.createdTime(priceList.getAuditDetails().getCreatedTime())
+    			.lastModifiedTime(priceList.getAuditDetails().getLastModifiedTime())
     			.build();
     }
 

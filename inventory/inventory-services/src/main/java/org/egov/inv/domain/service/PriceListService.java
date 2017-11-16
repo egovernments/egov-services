@@ -12,8 +12,10 @@ import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListRepository;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -61,6 +63,10 @@ public class PriceListService extends DomainService {
             });
             
             for (int i = 0; i <= priceListIdList.size() - 1; i++) {
+            	PriceList priceList1 = priceListRequest.getPriceLists().get(i);
+				if (!priceListJdbcRepository.uniqueCheck("rateContractNumber", new PriceListEntity().toEntity(priceList1))) {
+				    throw new CustomException("inv.0011", "RateContract Number already exists " + priceList1.getRateContractNumber());
+				}
                 priceListRequest.getPriceLists().get(i)
                         .setId(priceListIdList.get(i).toString());
                 
@@ -115,5 +121,13 @@ public class PriceListService extends DomainService {
         response.setPriceLists(searchPriceLists.getPagedData().size() > 0 ? searchPriceLists.getPagedData() : Collections.emptyList());
 		return response;
 	}
+	
+    private void uniqueCheck(PriceList priceList) {
+
+        if (!priceListJdbcRepository.uniqueCheck("rateContractNumber", new PriceListEntity().toEntity(priceList))) {
+            throw new CustomException("inv.0011", "Supplier and RateContract Number combination already exists " + priceList.getSupplier()
+                    + ", " + priceList.getRateContractNumber());
+        }
+    }
 
 }

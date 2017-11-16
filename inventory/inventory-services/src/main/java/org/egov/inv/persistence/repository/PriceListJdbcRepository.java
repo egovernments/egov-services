@@ -15,6 +15,8 @@ import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.tracer.model.CustomException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -23,8 +25,50 @@ import org.springframework.stereotype.Service;
 @Service
 public class PriceListJdbcRepository extends JdbcRepository {
 
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
+	private static final Logger LOG = LoggerFactory.getLogger(PriceListJdbcRepository.class);
+ 
+
+	static {
+		LOG.debug("init priceList");
+		init(PriceListEntity.class);
+		LOG.debug("end init priceList");
+	}
+	
+	public static synchronized void init(Class T) {
+        String TABLE_NAME = "";
+
+        List<String> insertFields = new ArrayList<>();
+        List<String> updateFields = new ArrayList<>();
+        List<String> uniqueFields = new ArrayList<>();
+
+        String insertQuery = "";
+        String updateQuery = "";
+        String searchQuery = "";
+
+        try {
+
+            TABLE_NAME = (String) T.getDeclaredField("TABLE_NAME").get(null);
+        } catch (Exception e) {
+
+        }
+        insertFields.addAll(fetchFields(T));
+//        uniqueFields.add("rateContractNumber");
+        uniqueFields.add("tenantId");
+        insertFields.removeAll(uniqueFields);
+        allInsertQuery.put(T.getSimpleName(), insertQuery(insertFields, TABLE_NAME, uniqueFields));
+        updateFields.addAll(insertFields);
+        updateFields.remove("createdBy");
+        updateQuery = updateQuery(updateFields, TABLE_NAME, uniqueFields);
+        System.out.println(T.getSimpleName() + "--------" + insertFields);
+        allInsertFields.put(T.getSimpleName(), insertFields);
+        allUpdateFields.put(T.getSimpleName(), updateFields);
+        allIdentitiferFields.put(T.getSimpleName(), uniqueFields);
+        // allInsertQuery.put(T.getSimpleName(), insertQuery);
+        allUpdateQuery.put(T.getSimpleName(), updateQuery);
+        getByIdQuery.put(T.getSimpleName(), getByIdQuery(TABLE_NAME, uniqueFields));
+        System.out.println(allInsertQuery);
+    }
+
     @Autowired
     PriceListDetailJdbcRepository priceListDetailJdbcRepository;
 

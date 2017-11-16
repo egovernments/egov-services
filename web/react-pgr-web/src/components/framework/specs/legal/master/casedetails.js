@@ -247,6 +247,7 @@ var dat = {
                                     name: "advocateName",
                                     pattern: "",
                                     type: "singleValueList",
+                                    isKeyOtherPair:"agencyName",
                                     jsonPath: "cases[0].advocateDetails[0].advocate.code",
                                     isRequired: true,
                                     isDisabled: false,

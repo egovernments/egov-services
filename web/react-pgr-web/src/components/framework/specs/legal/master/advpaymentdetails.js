@@ -16,6 +16,7 @@ var dat = {
             jsonPath: "advocatePayments[0].advocate.code",
             label: "advocatepayment.create.advocateName",
             type: "singleValueList",
+             isKeyOtherPair:"agencyName",
             isRequired: false,
             isDisabled: false,
             url: "/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name",

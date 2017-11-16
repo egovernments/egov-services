@@ -89,6 +89,7 @@ var dat = {
             name: "advocateName",
             type: "singleValueList",
             label: "legal.create.advocateName",
+             isKeyOtherPair:"agencyName",
             jsonPath: "advocateName",
             isRequired: false,
             isDisabled: false,

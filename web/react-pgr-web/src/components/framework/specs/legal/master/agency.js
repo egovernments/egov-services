@@ -12,7 +12,7 @@ var dat = {
         fields: [
             {
             name: "agencOrganizationName",
-            jsonPath: "organizationName",
+            jsonPath: "agencyName",
             label: "advocates.create.agencOrganizationName",
             pattern: "",
             type: "text",

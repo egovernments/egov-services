@@ -65,7 +65,7 @@ public class PriceListEntity {
         return PriceList.builder()
                 .id(id)
                 .supplier(getSupplier(supplier))
-                .rateType(PriceList.RateTypeEnum.valueOf(rateType.toUpperCase()))
+                .rateType(PriceList.RateTypeEnum.fromValue(rateType))
                 .rateContractNumber(rateContractNumber)
                 .rateContractDate(rateContractDate)
                 .agreementNumber(agreementNumber)
@@ -77,6 +77,21 @@ public class PriceListEntity {
                 .priceListDetails(getPriceListDetails(priceListDetails))
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
                 .build();
+    }
+    
+    public PriceListEntity toEntity(PriceList priceList) {
+    	return PriceListEntity.builder()
+    			.id(priceList.getId())
+    			.supplier(priceList.getSupplier().getCode())
+    			.rateType(priceList.getRateType().name())
+    			.rateContractNumber(priceList.getRateContractNumber())
+    			.rateContractDate(priceList.getRateContractDate())
+    			.agreementNumber(priceList.getAgreementNumber())
+    			.agreementStartDate(priceList.getAgreementStartDate())
+    			.agreementEndDate(priceList.getAgreementEndDate())
+    			.active(priceList.getActive())
+    			.fileStoreId(priceList.getFileStoreId())
+    			.build();
     }
 
     private Supplier getSupplier(String id) {

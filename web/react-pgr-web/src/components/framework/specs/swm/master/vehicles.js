@@ -364,7 +364,7 @@ var dat = {
     }
   },
   "swm.create": {
-    "numCols": 4,
+    "numCols": 3,
     "useTimestamp": true,
     "objectName": "vehicles",
     "idJsonPath": "vehicles[0].regNumber",
@@ -616,7 +616,7 @@ var dat = {
             "jsonPath": "vehicles[0].purchaseInfo.sourceOfPurchase",
             "label": "swm.vehicles.create.sourceOfPurchase",
             "type": "text",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "maxLength": 256,
             "minLength": 0,
@@ -640,7 +640,7 @@ var dat = {
     "tenantIdRequired": true
   },
   "swm.view": {
-    "numCols": 4,
+    "numCols": 3,
     "useTimestamp": true,
     "objectName": "vehicles",
     "groups": [
@@ -914,7 +914,7 @@ var dat = {
     "url": "/swm-services/vehicles/_search?regNumber={regNumber}"
   },
   "swm.update": {
-    "numCols": 4,
+    "numCols": 3,
     "useTimestamp": true,
     "objectName": "vehicles",
     "groups": [
@@ -1164,7 +1164,7 @@ var dat = {
             "jsonPath": "vehicles[0].purchaseInfo.sourceOfPurchase",
             "label": "swm.vehicles.create.sourceOfPurchase",
             "type": "text",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "maxLength": 256,
             "minLength": 0,

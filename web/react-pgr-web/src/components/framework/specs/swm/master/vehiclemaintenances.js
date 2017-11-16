@@ -53,7 +53,7 @@ var dat = {
      }
   },
   "swm.create":{
-     "numCols":6,
+     "numCols":3,
      "useTimestamp":true,
      "objectName":"vehicleMaintenances",
      "idJsonPath": "vehicleMaintenances[0].code",
@@ -61,7 +61,6 @@ var dat = {
      "groups":[
       {
          "name":"VehicleMaintenanceDetails",
-         "label":"swm.create.group.title.VehicleMaintenanceDetails",
          "fields":[
           {
             "name":"regNumber",
@@ -89,7 +88,7 @@ var dat = {
              "label":"swm.vehicles.create.vehicleType",
              "pattern":"",
              "type":"text",
-             "isRequired":true,
+             "isRequired":false,
              "isDisabled":true,
              "defaultValue":"",
              "maxLength":128,
@@ -168,7 +167,7 @@ var dat = {
      "tenantIdRequired":true
   },
   "swm.view":{
-     "numCols":4,
+     "numCols":3,
      "useTimestamp":true,
      "objectName":"vehicleMaintenances",
      "searchUrl": "swm-services/vehicleMaintenances/_search?code={code}",     
@@ -203,7 +202,7 @@ var dat = {
              "label":"swm.vehicles.create.vehicleType",
              "pattern":"",
              "type":"text",
-             "isRequired":true,
+             "isRequired":false,
              "isDisabled":false,
              "defaultValue":"",
              "maxLength":128,
@@ -282,7 +281,7 @@ var dat = {
      "url":"/swm-services/vehiclemaintenances/_search?code={code}"
   },
   "swm.update":{
-     "numCols": 6,
+     "numCols": 3,
      "useTimestamp":true,
      "objectName":"vehicleMaintenances",
      "searchUrl": "swm-services/vehicleMaintenances/_search?code={code}",
@@ -318,7 +317,7 @@ var dat = {
                "label":"swm.vehicles.create.vehicleType",
                "pattern":"",
                "type":"text",
-               "isRequired":true,
+               "isRequired":false,
                "isDisabled":true,
                "defaultValue":"",
                "maxLength":128,

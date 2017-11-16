@@ -200,7 +200,7 @@ var dat ={
      }
   },
   "swm.create":{  
-     "numCols":4,
+     "numCols":3,
      "useTimestamp":true,
      "objectName":"collectionPoints",
      "idJsonPath": "collectionPoints[0].code",
@@ -295,7 +295,7 @@ var dat ={
      "tenantIdRequired":true
   },
   "swm.view":{  
-     "numCols":4,
+     "numCols":3,
      "useTimestamp":true,
      "objectName":"collectionPoints",
      "groups":[  
@@ -339,7 +339,7 @@ var dat ={
      "url":"/swm-services/collectionpoints/_search?code={code}"
   },
   "swm.update":{  
-     "numCols":4,
+     "numCols":3,
      "useTimestamp":true,
      "objectName":"collectionPoints",
      "groups":[  

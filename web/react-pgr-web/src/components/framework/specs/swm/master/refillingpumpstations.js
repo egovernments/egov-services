@@ -1,63 +1,38 @@
 var dat ={  
   "swm.search":{  
-     "numCols":4,
+     "numCols":3,
      "useTimestamp":true,
-     "objectName":"",
+     "objectName":"refillingPumpStations",
      "url":"/swm-services/refillingpumpstations/_search",
      "groups":[  
         {  
            "name":"search",
-           "label":"swm.search.title",
+           "label":"swm.search.refillingPumpStations.title",
            "fields":[  
-              {  
-                 "label":"swm.create.undefined",
-                 "type":"",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.undefined"
-              },
-              {  
-                 "name":"codes",
-                 "jsonPath":"codes",
-                 "label":"swm.create.codes",
-                 "type":"",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.codes"
-              },
-              {  
-                 "name":"name",
-                 "jsonPath":"name",
-                 "label":"swm.create.name",
-                 "type":"singleValueList",
-                 "isDisabled":false,
-                 "maxLength":256,
-                 "patternErrorMsg":"swm.create.field.message.name"
-              },
-              {  
-                 "name":"locationCode",
-                 "jsonPath":"locationCode",
-                 "label":"swm.create.locationCode",
-                 "type":"singleValueList",
-                 "isDisabled":false,
-                 "maxLength":256,
-                 "patternErrorMsg":"swm.create.field.message.locationCode"
-              },
-              {  
-                 "name":"offSet",
-                 "jsonPath":"offSet",
-                 "label":"swm.create.offSet",
-                 "type":"number",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.offSet"
-              },
-              {  
-                 "name":"sortBy",
-                 "jsonPath":"sortBy",
-                 "label":"swm.create.sortBy",
-                 "type":"text",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.sortBy"
-              }
-           ]
+            {  
+              "name":"name",
+              "jsonPath":"refillingPumpStations[0].name",
+              "label":"swm.refillingpumpstations.create.name",
+              "type":"text",
+              "isRequired":false,
+              "isDisabled":false,
+              "maxLength":128,
+              "minLength":1,
+              "patternErrorMsg":""
+            },
+            {  
+              "name":"name",
+              "jsonPath":"refillingPumpStations[0].typeOfPump.code",
+              "label":"swm.refillingpumpstations.typeOfPump.name",
+              "type":"singleValueList",
+              "isRequired":false,
+              "isDisabled":false,
+              "maxLength":128,
+              "minLength":1,
+              "patternErrorMsg":"",
+              "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=OilCompany|$..code|$..name"
+            }
+          ]
         }
      ],
      "result":{  
@@ -73,7 +48,7 @@ var dat ={
            "code",
            "name"
         ],
-        "resultPath":"refillingpumpstations",
+        "resultPath":"refillingPumpStations",
         "rowClickUrlUpdate":"/update/refillingpumpstations/{code}",
         "rowClickUrlView":"/view/refillingpumpstations/{code}"
      }

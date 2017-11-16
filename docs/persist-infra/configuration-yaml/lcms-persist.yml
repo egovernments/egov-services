@@ -1673,7 +1673,7 @@ serviceMaps:
        - jsonPath: $.agencies.*.tenantId
 
          
-    - query: UPDATE egov_lcms_persondetails SET name=?,agencyName=?, agencyCode=?, title=?, firstName=?, secondName=?, lastName=?, address=?, contactNo=?, vatTinNo=?, aadhar=?, gender=?, age=?, dob=?, mobileNumber=?, emailId=?, pan=?,lastModifiedBy, lastModifiedTime WHERE code=? AND tenantId=?;
+    - query: UPDATE egov_lcms_persondetails SET name=?,agencyName=?, agencyCode=?, title=?, firstName=?, secondName=?, lastName=?, address=?, contactNo=?, vatTinNo=?, aadhar=?, gender=?, age=?, dob=?, mobileNumber=?, emailId=?, pan=?,lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId=?;
       basePath: $.agencies.*.personDetails.*
       jsonMaps:
 

@@ -152,7 +152,7 @@ var dat ={
           },
           {
             "name": "nextHearingTime",
-            "jsonPath": "cases[0].hearingDetails.nextHearingTime",
+            "jsonPath": "cases[0].hearingDetails[0].nextHearingTime",
             "label": "legal.create.nextHearingTime",
             "type": "timePicker",
             "isRequired": false,

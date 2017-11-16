@@ -1,11 +1,15 @@
 package org.egov.lcms.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
 import org.egov.lcms.models.CaseDetailsResponse;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.CaseResponse;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.Event;
+import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.service.CaseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +135,7 @@ public class CaseController {
 
 	/**
 	 * used to get the caseNo and summonRefernceNo using tenantId
+	 * 
 	 * @param tenantId
 	 * @param advocateName
 	 * @return CaseDetailsResponse
@@ -140,5 +145,17 @@ public class CaseController {
 			@RequestParam(value = "advocateName", required = false) String advocateName,
 			@RequestBody RequestInfoWrapper requestInfoWrapper) {
 		return caseService.getCaseNo(tenantId, advocateName, requestInfoWrapper.getRequestInfo());
+	}
+
+	/**
+	 * used to get the event details 
+	 * @param requestInfoWrapper
+	 * @param eventSearchCriteria
+	 * @return events
+	 */
+	@RequestMapping(path = "/event/_get", method = RequestMethod.POST)
+	public List<Event> getEvent(@RequestBody @Valid RequestInfoWrapper requestInfoWrapper,
+			@Valid @ModelAttribute EventSearchCriteria eventSearchCriteria) {
+		return caseService.getEvent(eventSearchCriteria);
 	}
 }

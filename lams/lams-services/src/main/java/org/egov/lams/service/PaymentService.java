@@ -18,6 +18,8 @@ import org.egov.lams.model.Allottee;
 import org.egov.lams.model.Demand;
 import org.egov.lams.model.DemandDetails;
 import org.egov.lams.model.PaymentInfo;
+import org.egov.lams.model.enums.Action;
+import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.BillRepository;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.repository.FinancialsRepository;
@@ -44,8 +46,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-import org.egov.lams.model.enums.Action;
-import org.egov.lams.model.enums.Source;
 
 @Service
 public class PaymentService {
@@ -209,6 +209,7 @@ public class PaymentService {
 							.addAll(getBilldetails(demandDetail, functionCode, orderNo, requestInfo, purposeMap));
 				}
 			}
+			billDetailInfos.sort((b1, b2) -> b1.getPeriod().compareTo(b2.getPeriod()));
 			billInfo.setTotalAmount(totalAmount.doubleValue());
 			billInfo.setBillAmount(totalAmount.doubleValue());
 			if (billDetailInfos.isEmpty()) {

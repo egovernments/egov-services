@@ -11,6 +11,8 @@ import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseDetails;
 import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.CaseVoucher;
+import org.egov.lcms.models.Event;
+import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.models.ReferenceEvidence;
@@ -19,6 +21,7 @@ import org.egov.lcms.repository.rowmapper.AdvocateDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseVoucherRowMapper;
+import org.egov.lcms.repository.rowmapper.EventRowMapper;
 import org.egov.lcms.repository.rowmapper.EvidenceRowMapper;
 import org.egov.lcms.repository.rowmapper.HearingDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.ParaWiseRowMapper;
@@ -71,6 +74,9 @@ public class CaseSearchRepository {
 
 	@Autowired
 	CaseDetailsRowMapper caseDetailsRowMapper;
+
+	@Autowired
+	EventRowMapper eventRowMapper;
 
 	/**
 	 * This will search the cases based on the given casesearchCriteria
@@ -213,8 +219,8 @@ public class CaseSearchRepository {
 	public List<CaseDetails> getCaseDetails(String tenantId, String advocateName) {
 		List<CaseDetails> caseDetails = new ArrayList<>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
-		final String queryStr = caseBuilder.searchCaseDetailsByTenantId(tenantId, advocateName, ConstantUtility.CASE_TABLE_NAME,
-				preparedStatementValues);
+		final String queryStr = caseBuilder.searchCaseDetailsByTenantId(tenantId, advocateName,
+				ConstantUtility.CASE_TABLE_NAME, preparedStatementValues);
 
 		try {
 			caseDetails = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(), caseDetailsRowMapper);
@@ -226,6 +232,25 @@ public class CaseSearchRepository {
 
 		if (caseDetails != null && caseDetails.size() > 0)
 			return caseDetails;
+
+		return null;
+	}
+
+	public List<Event> getEvent(EventSearchCriteria eventSearchCriteria) {
+		List<Event> events = new ArrayList<Event>();
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		final String eventSearchQuery = caseBuilder.searchEvent(eventSearchCriteria, preparedStatementValues);
+
+		try {
+			events = jdbcTemplate.query(eventSearchQuery, preparedStatementValues.toArray(), eventRowMapper);
+		} catch (Exception ex) {
+			log.info("the exception is :" + ex.getMessage());
+			throw new CustomException(propertiesManager.getEventResponseErrorCode(),
+					propertiesManager.getEventResponseErrorMsg());
+		}
+
+		if (events != null && events.size() > 0)
+			return events;
 
 		return null;
 	}

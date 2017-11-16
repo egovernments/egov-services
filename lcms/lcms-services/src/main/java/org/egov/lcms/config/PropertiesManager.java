@@ -580,4 +580,24 @@ public class PropertiesManager {
 	@Value("${egov.lcms.advocate.substring.code}")
 	private String advocateSubStringCode;
 
+	@Value("${egov.lcms.event.ulb.format}")
+	private String eventUlbFormat;
+	
+	@Value("${egov.lcms.event.ulb.name}")
+	private String eventUlbName;
+	
+	@Value("${egov.lcms.module.name}")
+	private String lcmsModuleName;
+	
+	@Value("${egov.lcms.case.entity.name}")
+	private String caseEntityName;
+	
+	@Value("${egov.lcms.event.created}")
+	private String eventCreateValidated;
+	
+	@Value("${egov.lcms.event.error.code}")
+	private String eventResponseErrorCode;
+	
+	@Value("${egov.lcms.event.error.msg}")
+	private String eventResponseErrorMsg;
 }

@@ -12,6 +12,7 @@ import org.springframework.web.client.RestTemplate;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;
+import static org.mockito.Matchers.anyString;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -28,13 +29,13 @@ public class CrnRepositoryTest {
         final String EXPECTED_URL = "http://localhost:8088/crn-generation/crn/v1/_create?tenantId={tenantId}";
         final String CRN = "crn_number";
         final ServiceRequestRegistrationNumber expected = new ServiceRequestRegistrationNumber(CRN);
-        when(restTemplate.postForObject(eq(EXPECTED_URL), any(), eq(ServiceRequestRegistrationNumber.class)))
+        when(restTemplate.postForObject(eq(EXPECTED_URL), any(), eq(ServiceRequestRegistrationNumber.class),anyString()))
             .thenReturn(expected);
         CrnRepository crnRepository = new CrnRepository(restTemplate, CRN_HOST);
 
-        ServiceRequestRegistrationNumber actual = crnRepository.getCrn("default");
+        ServiceRequestRegistrationNumber actual = crnRepository.getCrn("tenantId");
 
-//        assertEquals(expected, actual);
+        assertEquals(expected, actual);
 
     }
 

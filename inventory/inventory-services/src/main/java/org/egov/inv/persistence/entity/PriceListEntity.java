@@ -29,6 +29,8 @@ public class PriceListEntity {
     
     private String id;
     
+    private String priceList;
+    
     private String supplier;
     
     private String rateType;

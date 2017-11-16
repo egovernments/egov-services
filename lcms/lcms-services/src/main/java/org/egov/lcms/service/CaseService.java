@@ -1,6 +1,8 @@
 package org.egov.lcms.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocateDetails;
+import org.egov.lcms.models.AuditDetails;
 import org.egov.lcms.models.Bench;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseCategory;
@@ -23,6 +26,8 @@ import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.DepartmentResponse;
+import org.egov.lcms.models.Event;
+import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.models.ReferenceEvidence;
@@ -517,12 +522,48 @@ public class CaseService {
 							propertiesManager.getHearingDetailsUlbFormat(),
 							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 					hearingDetails.setCode(code);
+
+					if (hearingDetails.getNextHearingDate() != null) {
+						createEvents(casee, hearingDetails, requestInfo);
+					}
 				}
 			}
 		}
 
 		kafkaTemplate.send(propertiesManager.getHearingCreateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
+	}
+
+	private void createEvents(Case casee, HearingDetails hearingDetails, RequestInfo requestInfo) throws Exception {
+		
+		Event event = new Event();
+		event.setTenantId(casee.getTenantId());
+		event.setCaseNo(casee.getSummon().getCaseNo());
+		event.setEntity(propertiesManager.getCaseEntityName());
+		event.setModuleName(propertiesManager.getLcmsModuleName());
+		event.setEntityCode(casee.getCode());
+		event.setDepartmentConcernPerson(casee.getDepartmentPerson());
+		event.setNextHearingTime(hearingDetails.getNextHearingTime());
+		event.setNextHearingDate(hearingDetails.getNextHearingDate());
+		event.setHearingDetailsCode(hearingDetails.getCode());
+
+		if (event.getAuditDetails() == null) {
+			AuditDetails auditDetails = new AuditDetails();
+			auditDetails.setCreatedBy(requestInfo.getUserInfo().getId().toString());
+			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getId().toString());
+			auditDetails.setCreatedTime(BigDecimal.valueOf((new Date().getTime())));
+			auditDetails.setLastModifiedTime(BigDecimal.valueOf((new Date().getTime())));
+			event.setAuditDetails(auditDetails);
+		}
+
+		String eventCode = uniqueCodeGeneration.getUniqueCode(event.getTenantId(), requestInfo,
+				propertiesManager.getEventUlbFormat(), propertiesManager.getEventUlbName(), Boolean.FALSE, null,
+				Boolean.FALSE);
+
+		event.setCode(eventCode);
+
+		kafkaTemplate.send(propertiesManager.getEventCreateValidated(), event);
+
 	}
 
 	public CaseResponse updateHearingDetails(CaseRequest caseRequest) {
@@ -616,5 +657,9 @@ public class CaseService {
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED);
 
 		return new CaseDetailsResponse(responseInfo, caseDetails);
+	}
+
+	public List<Event> getEvent(EventSearchCriteria eventSearchCriteria) {
+		return caseSearchRepository.getEvent(eventSearchCriteria);
 	}
 }

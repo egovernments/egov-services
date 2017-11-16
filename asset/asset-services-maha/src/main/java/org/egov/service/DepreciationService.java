@@ -207,7 +207,7 @@ public class DepreciationService {
 			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
 		} else if (depInputs.getDateOfCreation() > fromDate) {
 			fromDate = depInputs.getDateOfCreation();
-			fromDate += 86400000l;
+			//fromDate += 86400000l;
 		}
 
 		// getting the no of days betweeen the from and todate (including both from and
@@ -221,7 +221,8 @@ public class DepreciationService {
 
 		// returning the calculated amt to be depreciated using the currentvalue from
 		// dep inputs and depreciation rate for given period
-		return BigDecimal.valueOf(depInputs.getCurrentValue().doubleValue() * (depRateForGivenPeriod / 100));
+
+		return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
 	}
 
 	private void getFinancialYearData(DepreciationRequest depreciationRequest) {

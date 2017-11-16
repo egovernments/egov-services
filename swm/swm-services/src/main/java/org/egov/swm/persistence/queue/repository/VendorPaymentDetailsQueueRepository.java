@@ -8,39 +8,39 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorPaymentDetailsQueueRepository {
 
-    private LogAwareKafkaTemplate kafkaTemplate;
+	private LogAwareKafkaTemplate kafkaTemplate;
 
-    private String createTopic;
+	private String createTopic;
 
-    private String updateTopic;
+	private String updateTopic;
 
-    private String indexTopic;
+	private String indexTopic;
 
-    public VendorPaymentDetailsQueueRepository(LogAwareKafkaTemplate kafkaTemplate,
-                                               @Value("${egov.swm.vendorpaymentdetails.save.topic}") final String createTopic,
-                                               @Value("${egov.swm.vendorpaymentdetails.update.topic}") final String updateTopic,
-                                               @Value("${egov.swm.vendorpaymentdetails.indexer.topic}") final String indexTopic) {
-        this.kafkaTemplate = kafkaTemplate;
-        this.createTopic = createTopic;
-        this.updateTopic = updateTopic;
-        this.indexTopic = indexTopic;
-    }
+	public VendorPaymentDetailsQueueRepository(LogAwareKafkaTemplate kafkaTemplate,
+			@Value("${egov.swm.vendorpaymentdetails.save.topic}") final String createTopic,
+			@Value("${egov.swm.vendorpaymentdetails.update.topic}") final String updateTopic,
+			@Value("${egov.swm.vendorpaymentdetails.indexer.topic}") final String indexTopic) {
+		this.kafkaTemplate = kafkaTemplate;
+		this.createTopic = createTopic;
+		this.updateTopic = updateTopic;
+		this.indexTopic = indexTopic;
+	}
 
-    public VendorPaymentDetailsRequest save(VendorPaymentDetailsRequest vendorPaymentDetailsRequest ){
+	public VendorPaymentDetailsRequest save(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
 
-        kafkaTemplate.send(createTopic, vendorPaymentDetailsRequest);
+		kafkaTemplate.send(createTopic, vendorPaymentDetailsRequest);
 
-        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
+		kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
 
-        return vendorPaymentDetailsRequest;
-    }
+		return vendorPaymentDetailsRequest;
+	}
 
-    public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest ){
+	public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
 
-        kafkaTemplate.send(updateTopic, vendorPaymentDetailsRequest);
+		kafkaTemplate.send(updateTopic, vendorPaymentDetailsRequest);
 
-        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
+		kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
 
-        return vendorPaymentDetailsRequest;
-    }
+		return vendorPaymentDetailsRequest;
+	}
 }

@@ -16,6 +16,7 @@ import org.egov.model.DefectLiability;
 import org.egov.model.Department;
 import org.egov.model.FundSource;
 import org.egov.model.Location;
+import org.egov.model.enums.AssetCategoryType;
 import org.egov.service.AssetService;
 import org.egov.service.MasterDataService;
 import org.egov.tracer.model.CustomException;
@@ -56,8 +57,10 @@ public class AssetValidator implements Validator {
 
 		validateAndEnrichStateWideMasters(assetRequest);
 		addMissingPathForPersister(asset);
-		if(asset.getAnticipatedLife() != null)
+		if(!asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.LAND))
 		validateAnticipatedLife(asset.getAnticipatedLife(),assetCategory.getDepreciationRate());
+		else
+			asset.setAnticipatedLife(null);
 		/* assetAccountValidate(asset, errorMap); */
 
 		if (asset.getWarrantyAvailable()) {

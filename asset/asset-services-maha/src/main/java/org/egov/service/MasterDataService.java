@@ -65,6 +65,12 @@ public class MasterDataService {
 		Map<String, String> assetCategoryFieldMap = new HashMap<>();
 		assetCategoryFieldMap.put("id", assetCategoryParam);
 		assetmasterMap.put("AssetCategory", assetCategoryFieldMap);
+		
+		// AssetMaster and Modeofacquistion
+		Map<String, String> modeofAcquisitionFeildMap = new HashMap<>();
+		modeofAcquisitionFeildMap.put("code", modeofAcquisitionParam);
+		assetmasterMap.put("ModeOfAcquisition", modeofAcquisitionFeildMap);
+		
 		moduleMapInput.put("ASSET", assetmasterMap);
 
 		// department and common masters
@@ -80,13 +86,6 @@ public class MasterDataService {
 		fundSourceFieldMap.put("code", fundSourceParam);
 		egfMastersMap.put("funds", fundSourceFieldMap);
 		moduleMapInput.put("egf-master", egfMastersMap);
-		
-		// AssetMaster and Modeofacquistion
-		Map<String, Map<String, String>> modeofAcquisitionMasterMap = new HashMap<>();
-		Map<String, String> modeofAcquisitionFeildMap = new HashMap<>();
-		modeofAcquisitionFeildMap.put("code", modeofAcquisitionParam);
-		modeofAcquisitionMasterMap.put("ModeOfAcquisition", modeofAcquisitionFeildMap);
-		moduleMapInput.put("ASSET", modeofAcquisitionMasterMap);
 		
 		return moduleMapInput;
 	}
@@ -173,7 +172,6 @@ public class MasterDataService {
 			e.printStackTrace();
 			throw new RuntimeException(e);
 		}
-	
 		
 		return ModeOfAcquisitions.stream().collect(Collectors.toMap(ModeOfAcquisition::getCode, Function.identity()));
 	}

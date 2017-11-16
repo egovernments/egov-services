@@ -28,7 +28,7 @@ public class BinDetails {
 	private String tenantId = null;
 
 	@NotNull
-	@Size(min = 5, max = 256)
+	@Length(min = 1, max = 256)
 	@JsonProperty("assetOrBinId")
 	private String assetOrBinId = null;
 

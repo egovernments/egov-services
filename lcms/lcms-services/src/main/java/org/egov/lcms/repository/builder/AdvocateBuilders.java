@@ -124,15 +124,20 @@ public class AdvocateBuilders {
 	public static final String SEARCH_CASE_CODE_BY_ADVOCATE = "select casecode from egov_lcms_case_advocate where advocate->>'code'=?";
 
 	public static String getAgencyFieldsSearchQuery(String tenantId, String code, String tableName,
-			List<Object> preparedStatementValues) {
+			Boolean isIndividual, List<Object> preparedStatementValues) {
 		StringBuilder searchQuery = new StringBuilder();
 
 		searchQuery.append("SELECT * FROM " + tableName);
 		searchQuery.append(" WHERE tenantId =?");
 		preparedStatementValues.add(tenantId);
 
-		searchQuery.append(" AND agencycode =?");
-		preparedStatementValues.add(code);
+		if (isIndividual) {
+			searchQuery.append(" AND code =?");
+			preparedStatementValues.add(code);
+		}else{
+			searchQuery.append(" AND agencycode =?");
+			preparedStatementValues.add(code);
+		}
 
 		return searchQuery.toString();
 	}
@@ -166,8 +171,13 @@ public class AdvocateBuilders {
 		}
 
 		if (agencyCode != null) {
-			selectQuery.append(" AND agencyCode=?");
-			preparedStatementValues.add(agencyCode);
+			if (isIndividual) {
+				selectQuery.append(" AND code=?");
+				preparedStatementValues.add(agencyCode);
+			} else {
+				selectQuery.append(" AND agencyCode=?");
+				preparedStatementValues.add(agencyCode);
+			}
 		}
 
 		if (advocateName != null) {
@@ -185,6 +195,8 @@ public class AdvocateBuilders {
 			selectQuery.append(" AND LOWER(agencyname) LIKE ?");
 			preparedStatementValues.add(name.toString().toLowerCase());
 		}
+
+		selectQuery.append(" ORDER BY lastmodifiedtime DESC");
 
 		return selectQuery.toString();
 	}
@@ -212,6 +224,8 @@ public class AdvocateBuilders {
 			searchQuery.append(" AND name=?");
 			preparedStatementValues.add(agencyName);
 		}
+
+		searchQuery.append(" ORDER BY lastmodifiedtime DESC");
 
 		return searchQuery.toString();
 	}

@@ -165,65 +165,6 @@ var dat = {
             patternErrMsg: ""
           }
         ]
-      },{
-        name: "advocateEmpanelmentDetails",
-        label: "advocates.create.group.title.empanelmentDetails",
-        fields: [
-          {
-            name: "dateOfEmpanelment",
-            jsonPath: "dateOfEmpanelment",
-            label: "advocates.create.dateOfEmpanelment",
-            pattern: "",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "standingCommiteDecisionDate",
-            jsonPath: "standingCommitteeDecisionDate",
-            label: "advocates.create.standingCommiteDecisionDate",
-            pattern: "",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          }, {
-            name: "newsPaperAdvertismentDate",
-            jsonPath: "newsPaperAdvertismentDate",
-            label: "advocates.create.newsPaperAdvertismentDate",
-            pattern: "",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "empanelmentFromDate",
-            jsonPath: "empanelmentFromDate",
-            label: "advocates.create.empanelmentFromDate",
-            pattern: "",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "empanelementToDate",
-            jsonPath: "empanelmentToDate",
-            label: "advocates.create.empanelementToDate",
-            pattern: "",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          }
-        ]
       }, {
         name: "bankDetails",
         label: "advocates.create.group.title.bankDetails",
@@ -282,6 +223,92 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
+          }
+        ]
+      }, {
+        "name": "action",
+        "label": "advocates.create.group.title.action",
+        "fields": [
+          {
+            "name": "actionType",
+            "jsonPath": "status",
+            "label": "advocates.create.actionType",
+            "type": "radio",
+            "isRequired": true,
+            "isDisabled": false,
+            "patternErrorMsg": "",
+            "values": [
+              {
+                "label": "advocates.create.active",
+                "value": "active"
+              },
+              {
+                "label": "advocates.create.inactive",
+                "value": "inactive"
+              },
+              {
+                "label": "advocates.create.terminate",
+                "value": "terminate"
+              }
+            ],
+            "defaultValue": "active",
+            "enableDisableFields": [
+              {
+                "ifValue": "active",
+                "enable": [],
+                "disable": [
+                  "terminationDate", "inActivationDate"
+                ]
+              },{
+                "ifValue": "inactive",
+                "enable": [
+                  "inActivationDate"
+                ],
+                "disable": [
+                  "terminationDate",
+                ]
+              },
+              {
+                "ifValue": "terminate",
+                "enable": [
+                  "terminationDate"
+                ],
+                "disable": [
+                  "inActivationDate"
+                ]
+              }
+            ]
+          },
+          {
+            "name": "inActivationDate",
+            "jsonPath": "inActiveDate",
+            "label": "advocates.create.inActivationDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "terminationDate",
+            "jsonPath": "terminationDate",
+            "label": "advocates.create.terminationDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "reasonOfTerminationOrDeactivation",
+            "jsonPath": "reasonOfTerminationOrDeactivation",
+            "label": "advocates.create.reasonOfTerminationOrDeactivation",
+            "type": "textArea",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
           }
         ]
       }

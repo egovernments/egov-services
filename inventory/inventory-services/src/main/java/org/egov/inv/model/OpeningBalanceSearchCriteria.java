@@ -7,6 +7,9 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 
 import org.apache.commons.lang3.StringUtils;
+import org.egov.common.contract.request.RequestInfo;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -16,12 +19,13 @@ import lombok.Setter;
 @Getter
 @Setter
 public class OpeningBalanceSearchCriteria {
+	@JsonProperty("RequestInfo")
+	private RequestInfo requestInfo = null;
 	private List<String> id;
 
-	private List<String> mrnNumber;
-
-	private String materialcode;
 	
+	private String materialTypeName;
+
 	private String materialName;
 	
 	private String 	storeName;
@@ -41,8 +45,8 @@ public class OpeningBalanceSearchCriteria {
 	
 	private Set<String> sort;
 	
-	public boolean isMaterialcodeAbsent(){
-        return   StringUtils.isBlank(materialcode);
+	public boolean isMaterialTypeNameAbsent(){
+        return   StringUtils.isBlank(materialTypeName);
     }
 	
 	public boolean ismaterialNameAbsent(){
@@ -57,11 +61,5 @@ public class OpeningBalanceSearchCriteria {
         return   StringUtils.isBlank(financialYear) ;
     }
 	
-	public boolean isMrnNumberAbsent(){
-		if(mrnNumber.size() == 0)
-		{
-			return true;
-		}
-        return  false;
-    }
+	
 }

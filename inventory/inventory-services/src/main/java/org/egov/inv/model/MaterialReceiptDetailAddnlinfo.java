@@ -20,7 +20,7 @@ import lombok.Builder;
 
 public class MaterialReceiptDetailAddnlinfo   {
   @JsonProperty("id")
-  private Integer id = null;
+  private String id = null;
 
   @JsonProperty("tenantId")
   private String tenantId = null;
@@ -46,7 +46,7 @@ public class MaterialReceiptDetailAddnlinfo   {
   @JsonProperty("expiryDate")
   private Long expiryDate = null;
 
-  public MaterialReceiptDetailAddnlinfo id(Integer id) {
+  public MaterialReceiptDetailAddnlinfo id(String id) {
     this.id = id;
     return this;
   }
@@ -58,11 +58,11 @@ public class MaterialReceiptDetailAddnlinfo   {
   @ApiModelProperty(value = "The unique identifier for the receipt details additional information.")
 
 
-  public Integer getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Integer id) {
+  public void setId(String id) {
     this.id = id;
   }
 

@@ -132,26 +132,26 @@ var dat = {
             },
 						{
 							"name": "ModeofAcquisition",
-							"jsonPath": "Asset.modeOfAcquisition",
+							"jsonPath": "Asset.modeOfAcquisition.code",
 							"label": "ac.create.Mode.of.Acquisition",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "",
+							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-							"defaultValue": [  {
-							"key": "ACQUIRED",
-							"value": "ACQUIRED"
-						},  {
-							"key": "CONSTRUCTION",
-							"value": "CONSTRUCTION"
-						},  {
-							"key": "PURCHASE",
-							"value": "PURCHASE"
-						}
-					]
+					// 		"defaultValue": [  {
+					// 		"key": "ACQUIRED",
+					// 		"value": "ACQUIRED"
+					// 	},  {
+					// 		"key": "CONSTRUCTION",
+					// 		"value": "CONSTRUCTION"
+					// 	},  {
+					// 		"key": "PURCHASE",
+					// 		"value": "PURCHASE"
+					// 	}
+					// ]
 				}
 				]},
       {
@@ -657,23 +657,18 @@ var dat = {
 						"defaultValue":"MOVABLE",
 						"isHidden": "true"
 					},
-					// {
-					// 	"name": "AssetCategory",
-					// 	"jsonPath": "assetParentCategory",
-					// 	"label": "Asset Category",
-					// 	"pattern": "",
-					// 	"type": "singleValueList",
-					// 	"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$..id|$..name",
-					// 	"isRequired": false,
-					// 	"isDisabled": false,
-					// 	"requiredErrMsg": "",
-					// 	"patternErrMsg": "",
-					// 	"depedants": [{
-					// 		"jsonPath": "assetCategory.id",
-					// 		"type": "dropDown",
-					// 		"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$..id|$..name"
-					// 	}]
-					// },
+					{
+						"name": "AssetCategory",
+						"jsonPath": "assetParentCategory",
+						"label": "Asset Category",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
 					{
 						"name": "AssetSearchAssetSubCategory",
 						"jsonPath": "assetCategory",
@@ -1021,7 +1016,7 @@ var dat = {
           },
 					{
 						"name": "ModeofAcquisition",
-						"jsonPath": "Assets[0].modeOfAcquisition",
+						"jsonPath": "Assets[0].modeOfAcquisition.name",
 						"label": "ac.create.Mode.of.Acquisition",
 						"pattern": "",
 						"type": "singleValueList",
@@ -1030,17 +1025,17 @@ var dat = {
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"defaultValue": [  {
-						"key": "ACQUIRED",
-						"value": "ACQUIRED"
-					},  {
-						"key": "CONSTRUCTION",
-						"value": "CONSTRUCTION"
-					},  {
-						"key": "PURCHASE",
-						"value": "PURCHASE"
-					}
-				]
+				// 		"defaultValue": [  {
+				// 		"key": "ACQUIRED",
+				// 		"value": "ACQUIRED"
+				// 	},  {
+				// 		"key": "CONSTRUCTION",
+				// 		"value": "CONSTRUCTION"
+				// 	},  {
+				// 		"key": "PURCHASE",
+				// 		"value": "PURCHASE"
+				// 	}
+				// ]
 			},
           {
             "name": "FromWhomAcquired",
@@ -1634,26 +1629,26 @@ var dat = {
           },
 					{
 						"name": "ModeofAcquisition",
-						"jsonPath": "Asset.modeOfAcquisition",
+						"jsonPath": "Asset.modeOfAcquisition.code",
 						"label": "ac.create.Mode.of.Acquisition",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
-						"defaultValue": [  {
-						"key": "ACQUIRED",
-						"value": "ACQUIRED"
-					},  {
-						"key": "CONSTRUCTION",
-						"value": "CONSTRUCTION"
-					},  {
-						"key": "PURCHASE",
-						"value": "PURCHASE"
-					}
-				]
+				// 		"defaultValue": [  {
+				// 		"key": "ACQUIRED",
+				// 		"value": "ACQUIRED"
+				// 	},  {
+				// 		"key": "CONSTRUCTION",
+				// 		"value": "CONSTRUCTION"
+				// 	},  {
+				// 		"key": "PURCHASE",
+				// 		"value": "PURCHASE"
+				// 	}
+				// ]
 			},
           {
             "name": "FromWhomAcquired",

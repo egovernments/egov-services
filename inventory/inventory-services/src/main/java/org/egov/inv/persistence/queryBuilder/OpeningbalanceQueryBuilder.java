@@ -4,22 +4,31 @@ import java.util.Set;
 
 import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.springframework.stereotype.Component;
+
 @Component
 public class OpeningbalanceQueryBuilder {
 	
 	StringBuilder BASE_QUERY = new StringBuilder("SELECT matrcpt.financialyear as financialyear,"
-                  +"matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,matrcpt.receiptType as materialtypename,"
-                  +"matrcptdtl.uomno as uom,matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,"
-                  +"(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks"
-                +"FROM materialreceipt matrcpt,materialreceiptdetail matrcptdtl"
-                +"WHERE matrcpt.financialyear = $financialyear"
-                      +" matrcpt.receipttype ='OPENING BALANCE'"
-                      +"AND matrcpt.tenantid= tenantId AND matrcpt.tenantid=matrcptdtl.tenantid AND matrcpt.mrnnumber = matrcptdtl.mrnnumber");
-
+													+"matrcpt.receivingstore as storeName,"
+													+"matrcptdtl.material as materialcode,"
+													+"matrcpt.receiptType as materialTypeName,"
+													+"matrcpt.receiptDate as receiptDate,"
+													+"matrcptdtl.uomno as uom,"
+													+"matrcptdtl.receivedqty as receivedQty,"
+													+"matrcpt.mrnNumber as mrnNumber,"
+													+"matrcptdtl.receivedqty as qty,"
+													+"matrcptdtl.uomno as uom,"
+													+"matrcptdtl.unitrate as unitRate,"
+													+"(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,"
+													+"matrcptdtl.remarks as remarks FROM "
+													+"materialreceipt matrcpt,materialreceiptdetail matrcptdtl WHERE "
+													+"matrcpt.tenantId= matrcptdtl.tenantId AND "
+													+"matrcpt.mrnnumber = matrcptdtl.mrnnumber ");
 	
 public String getQuery(OpeningBalanceSearchCriteria searchCriteria) {
-		
 		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+		
+		System.out.println(selectQuery);
 		buildSearchQuery(selectQuery, searchCriteria);
 		addPagingClause(selectQuery, searchCriteria);
 		return selectQuery.toString();
@@ -28,22 +37,21 @@ public String getQuery(OpeningBalanceSearchCriteria searchCriteria) {
 
 public String buildSearchQuery(StringBuilder selectQuery,OpeningBalanceSearchCriteria searchCriteria) {
 
-	
-	if(!searchCriteria.isMrnNumberAbsent())
-        addWhereClauseWithAnd(selectQuery,"financialYear","matrcpt.financialYear");
-
     if(!searchCriteria.isFinancialYearAbsent())
-    	addWhereClauseWithAnd(selectQuery, "receiptNumber", "receiptNumber");
+    	addWhereClauseWithAnd(selectQuery, "matrcpt.financialYear", "financialYear");
 
-    if(!searchCriteria.ismaterialNameAbsent())
-    	addWhereClauseWithAnd(selectQuery, "mrnNumber", "matrcpt.mrnNumber");
+    if(!searchCriteria.isMaterialTypeNameAbsent())
+    	addWhereClauseWithAnd(selectQuery, "matrcpt.receiptType", "materialTypeName");
     
     if(!searchCriteria.isStoreNameAbsent())
-    	addWhereClauseWithAnd(selectQuery, "supplierCode", "supplierCode");
+    	addWhereClauseWithAnd(selectQuery, "matrcpt.receivingstore", "storeName");
     
-    if(!searchCriteria.isMaterialcodeAbsent())
-    	addWhereClauseWithAnd(selectQuery, "materialcode", "matrcptdtl.material");
+    if(!searchCriteria.ismaterialNameAbsent())
+    	addWhereClauseWithAnd(selectQuery, "mat.materialName", "materialName");
     
+    addWhereClauseWithAnd(selectQuery, "matrcptdtl.tenantId", "tenantId");
+       
+		System.out.println(selectQuery);
     return selectQuery.toString();
 }
 

@@ -15,7 +15,7 @@ var dat = {
             "label": "inventory.supplierName",
             "type": "singleValueList",
             "isDisabled": false,
-      "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name",
+      "url":"inventory-services/suppliers/_search?|$..code|$..name",
             "patternErrorMsg": "inventory.create.field.message.supplierName"
           },
           {
@@ -127,16 +127,17 @@ var dat = {
         }
       ],
       "values": [
-        "supplier.name",
-  "rateType",
+        "supplier.code",
+        "rateType",
         "rateContractNumber",
-  "agreementNumber",
-  "agreementDate",
-  "agreementStartDate",
-  "agreementEndDate",
-  {valuePath:"active", type:"checkbox"}
+        "rateContractDate",
+        "agreementNumber",
+        "agreementDate",
+        "agreementStartDate",
+        "agreementEndDate",
+        {valuePath:"active", type:"checkbox"}
       ],
-      "resultPath": "pricelists",
+      "resultPath": "priceLists",
       "resultIdKey":"rateContractNumber",
       "rowClickUrlUpdate": "/update/inventory/pricelists/{code}",
       "rowClickUrlView": "/view/inventory/pricelists/{code}",
@@ -573,12 +574,12 @@ var dat = {
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "defaultValue": "",
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name"
+            "url":"inventory-services/suppliers/_search?|$..code|$..name"
           },
           {
             "name": "rateType",

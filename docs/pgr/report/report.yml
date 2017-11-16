@@ -1544,7 +1544,7 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
-  query: SELECT cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
+  query: SELECT cs.crn as crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
          FROM submission cs,submission_attribute sa,
           eg_boundary boundary, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass, eg_user us WHERE
           cs.crn = sa.crn and boundary.id = sa.code::integer and cs.positionid = pos.id and
@@ -1756,7 +1756,7 @@ ReportDefinitions:
         (select sub.createddate as createddate,sub.name as senderName,'Grievance' as natureoftask ,sub_a.code as status,
          'Complaint No.'|| sub.crn||' regarding '||
          (select name from egpgr_complainttype where code =sub.servicecode AND tenantid=sub.tenantid) ||' in '|| sub_a.code as details,
-         replace('_url?/pgr/viewGrievance/:srn',':srn',ENCODE(CONVERT_TO(sub.crn, 'UTF-8'), 'base64')::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
+         replace('_url?/pgr/viewGrievance/:srn',':srn',replace(sub.crn, '/', '%2F')::character varying) as url from submission sub inner join submission_attribute sub_a on  sub.crn = sub_a.crn where
          sub_a.key in('systemStatus','status') and sub_a.code in ('REGISTERED','FORWARDED','PROCESSING','REOPENED','ONHOLD') and sub.positionid IN ($positionId) and sub.tenantid = $tenantid order by createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status,
@@ -1866,9 +1866,6 @@ ReportDefinitions:
     label: reports.pgr.boundary.name
     type: string
     source: eg_boundary
-    linkedReport:
-      reportName: DrillDownComplaintSummaryRegister
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}    
   - name: complainttype
     label: reports.pgr.complainttype.name
     type: string
@@ -1880,37 +1877,22 @@ ReportDefinitions:
     label: reports.pgr.totalcount
     type: number
     source: totalcount
-    linkedReport:
-      reportName: DrillDownComplaintSummaryRegister
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}
   - name: completed
     label: reports.pgr.status.completed
     type: number
-    source: completed
-    linkedReport:
-      reportName: DrillDownComplaintSummaryRegisterStatus
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}&status=COMPLETED','WITHDRAWN','REJECTED    
+    source: completed   
   - name: inprocess
     label: reports.pgr.status.inprocess
     type: number
     source: inprocess
-    linkedReport:
-      reportName: DrillDownComplaintSummaryRegisterStatus
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}&status=PROCESSING
   - name: pending
     label: reports.pgr.status.pending
     type: number
     source: pending
-    linkedReport:
-      reportName: DrillDownComplaintSummaryRegisterStatus
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}&status=FORWARDED','REOPENED','REGISTERED
   - name: onhold
     label: reports.pgr.status.onhold
     type: number
     source: onhold
-    linkedReport:
-      reportName: DrillDownComplaintSummaryRegisterStatus
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}&status=ONHOLD
   searchParams:
   - name: fromDate
     label: reports.pgr.datefrom
@@ -1994,7 +1976,7 @@ ReportDefinitions:
     source: seva
     isMandatory: true
   query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
-    and ctype.code = $complaintcode and sa.code = (select id from eg_boundary where name = $wardname and tenantid = $tenantid);
+    and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and tenantid = $tenantid) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid);
     
 - reportName: DrillDownComplaintSummaryRegisterStatus
   summary: Report To List Complaints for Grievance Type and ward - based on a date period
@@ -2063,4 +2045,4 @@ ReportDefinitions:
     source: seva
     isMandatory: true
   query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
-    and ctype.code = $complaintcode and sa.code = (select id from eg_boundary where name = $wardname and tenantid = $tenantid) and cs.status IN ($status);
+    and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and tenantid = $tenantid) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid) and cs.status IN ($status);

@@ -66,7 +66,7 @@ public class PricelistsApiController implements PricelistsApi {
                     .agreementDate(agreementDate)
                     .agreementStartDate(agreementStartDate)
                     .agreementEndDate(agreementEndDate)
-                    .rateType(rateType!=null?rateType.toUpperCase():rateType)
+                    .rateType(rateType)
                     .pageSize(pageSize)
                     .offSet(offset)
                     .sortBy(sortBy)

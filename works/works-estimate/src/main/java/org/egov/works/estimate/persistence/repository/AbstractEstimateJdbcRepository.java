@@ -115,8 +115,8 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("estimate.id = details.abstractestimate and details.nameofwork = :nameOfWork");
-			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork());
+			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) = :nameOfWork");
+			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork().toUpperCase());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			if (params.length() > 0) {
@@ -143,8 +143,8 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("estimate.createdBy =:createdBy");
-			paramValues.put("createdBy", abstractEstimateSearchContract.getCreatedBy());
+			params.append("upper(estimate.createdBy) =:createdBy");
+			paramValues.put("createdBy", abstractEstimateSearchContract.getCreatedBy().toUpperCase());
 		}
 		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null) {
 			if (params.length() > 0) {

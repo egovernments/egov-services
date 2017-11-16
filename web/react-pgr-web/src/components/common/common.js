@@ -1986,6 +1986,7 @@ var localization_EN_Data = {
     "reports.collection.transaction.date":"Transaction Date",
     "ac.create.asset.asset.category": "Asset Category",
     "ac.create.depreciationRate": "Depreciation Rate (%)",
+    "reports.asset.assetcategorytype": "Asset Category Type",
 
 //auto gen swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",
@@ -2226,7 +2227,7 @@ var localization_EN_Data = {
 "reports.asset.currdepsum":"ACCUMULATED DEPRECIATION-Depreciation during the year",
 "reports.asset.totaldepsum":"ACCUMULATED DEPRECIATION-Depreciation Total",
 "reports.asset.endcurrentamount":"Net Block as at 31/03/2018",
-"reports.asset.previousfynetblock":"Net Block as at 31/03/2018",
+"reports.asset.previousfynetblock":"Net Block as at 31/03/2017",
 
 
 

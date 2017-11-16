@@ -1,9 +1,14 @@
 package org.egov.swm.persistence.entity;
 
-import lombok.*;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter
@@ -12,55 +17,47 @@ import org.egov.swm.domain.model.VehicleMaintenanceDetails;
 @NoArgsConstructor
 public class VehicleMaintenanceDetailsEntity {
 
-    private String code;
+	private String code;
 
-    private String tenantid;
+	private String tenantid;
 
-    private Boolean isscheduled;
+	private Boolean isscheduled;
 
-    private String maintenancetype;
+	private String maintenancetype;
 
-    private String vehicle;
+	private String vehicle;
 
-    private Long actualmaintenancedate;
+	private Long actualmaintenancedate;
 
-    private Long vehiclescheduledmaintenancedate;
+	private Long vehiclescheduledmaintenancedate;
 
-    private Double vehicledowntimeactual;
+	private Double vehicledowntimeactual;
 
-    private String vehicledowntimeactualuom;
+	private String vehicledowntimeactualuom;
 
-    private Double vehiclereadingduringmaintenance;
+	private Double vehiclereadingduringmaintenance;
 
-    private String remarks;
+	private String remarks;
 
-    private Double costincurred;
+	private Double costincurred;
 
-    private String createdBy;
+	private String createdBy;
 
-    private String lastModifiedBy;
+	private String lastModifiedBy;
 
-    private Long createdTime;
+	private Long createdTime;
 
-    private Long lastModifiedTime;
+	private Long lastModifiedTime;
 
-    public VehicleMaintenanceDetails toDomain(){
-        return VehicleMaintenanceDetails.builder()
-                   .code(code)
-                   .tenantId(tenantid)
-                   .isScheduled(isscheduled)
-                   .vehicle(Vehicle.builder().regNumber(vehicle).build())
-                   .actualMaintenanceDate(actualmaintenancedate)
-                   .vehicleScheduledMaintenanceDate(vehiclescheduledmaintenancedate)
-                   .vehicleDowntimeActual(vehicledowntimeactual)
-                   .vehicleDownTimeActualUom(vehicledowntimeactualuom)
-                   .vehicleReadingDuringMaintenance(vehiclereadingduringmaintenance)
-                   .remarks(remarks)
-                   .costIncurred(costincurred)
-                   .auditDetails(AuditDetails.builder().createdBy(createdBy)
-                           .createdTime(createdTime).lastModifiedBy(lastModifiedBy)
-                           .lastModifiedTime(lastModifiedTime)
-                           .build())
-                   .build();
-    }
+	public VehicleMaintenanceDetails toDomain() {
+		return VehicleMaintenanceDetails.builder().code(code).tenantId(tenantid).isScheduled(isscheduled)
+				.vehicle(Vehicle.builder().regNumber(vehicle).build()).actualMaintenanceDate(actualmaintenancedate)
+				.vehicleScheduledMaintenanceDate(vehiclescheduledmaintenancedate)
+				.vehicleDowntimeActual(vehicledowntimeactual).vehicleDownTimeActualUom(vehicledowntimeactualuom)
+				.vehicleReadingDuringMaintenance(vehiclereadingduringmaintenance).remarks(remarks)
+				.costIncurred(costincurred)
+				.auditDetails(AuditDetails.builder().createdBy(createdBy).createdTime(createdTime)
+						.lastModifiedBy(lastModifiedBy).lastModifiedTime(lastModifiedTime).build())
+				.build();
+	}
 }

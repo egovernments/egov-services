@@ -1,6 +1,10 @@
 package org.egov.swm.persistence.entity;
 
-import org.egov.swm.domain.model.*;
+import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.FuelType;
+import org.egov.swm.domain.model.OilCompanyName;
+import org.egov.swm.domain.model.RefillingPumpStation;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -50,10 +54,8 @@ public class RefillingPumpStationEntity {
 		refillingPumpStation.setTypeOfPump(OilCompanyName.builder().code(typeOfPump).build());
 		refillingPumpStation.setTypeOfFuel(FuelType.builder().code(typeOfFuel).build());
 		refillingPumpStation.setQuantity(quantity);
-		refillingPumpStation.setAuditDetails(AuditDetails.builder().createdBy(createdBy)
-				.createdTime(createdTime).lastModifiedBy(lastModifiedBy)
-				.lastModifiedTime(lastModifiedTime)
-				.build());
+		refillingPumpStation.setAuditDetails(AuditDetails.builder().createdBy(createdBy).createdTime(createdTime)
+				.lastModifiedBy(lastModifiedBy).lastModifiedTime(lastModifiedTime).build());
 
 		return refillingPumpStation;
 

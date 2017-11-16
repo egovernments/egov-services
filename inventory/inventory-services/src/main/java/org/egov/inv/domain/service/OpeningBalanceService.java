@@ -9,8 +9,6 @@ import org.egov.common.DomainService;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
-import org.egov.inv.model.MaterialReceiptDetail;
-import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.OpeningBalanceSearchCriteria;
@@ -59,7 +57,7 @@ public class OpeningBalanceService extends DomainService{
 					detail.setTenantId(tenantId);
                 }
 				detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
-					addinfo.setId(Integer.valueOf(openingBalanceRepository.getSequence("seq_materialreceiptdetailaddnlinfo")));
+					addinfo.setId(openingBalanceRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
 					if (isEmpty(addinfo.getTenantId())) {
 						addinfo.setTenantId(tenantId);
 	                }
@@ -107,7 +105,6 @@ public class OpeningBalanceService extends DomainService{
 	
 	
 	private String generateTargetNumber(String tenantId, RequestInfo requestInfo) {
-
 		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
 	}
 	

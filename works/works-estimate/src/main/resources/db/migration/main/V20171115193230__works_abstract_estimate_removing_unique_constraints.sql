@@ -1,0 +1,4 @@
+ALTER TABLE egw_abstractestimate DROP CONSTRAINT tenantid_abstractestimatenumber_unique;
+ALTER TABLE egw_projectcode DROP CONSTRAINT tenantid_code_unique;
+ALTER TABLE egw_detailedestimate DROP CONSTRAINT detailed_estimate_unique_key;
+ALTER TABLE egw_estimate_technicalsanction DROP CONSTRAINT estimate_technicalsanction_unique_key;

@@ -2,20 +2,20 @@ package org.egov.inv.persistence.repository;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
-import org.egov.common.JdbcRepository;
-import org.egov.common.Pagination;
-import org.egov.inv.model.PriceList;
-import org.egov.inv.model.PriceListSearchRequest;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
+import org.egov.common.JdbcRepository;
+import org.egov.common.Pagination;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PriceListDetailsSearchRequest;
+import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -24,6 +24,9 @@ import org.springframework.stereotype.Service;
 public class PriceListJdbcRepository extends JdbcRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    @Autowired
+    PriceListDetailJdbcRepository priceListDetailJdbcRepository;
 
     public PriceListJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -165,8 +168,23 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 .query(searchQuery.toString(), paramValues, row);
 
 
-        List<PriceList> priceListList = priceListEntities.stream().map(PriceListEntity::toDomain)
-                .collect(Collectors.toList());
+//        List<PriceList> priceListList = priceListEntities.stream().map(PriceListEntity::toDomain)
+//                .collect(Collectors.toList());
+        
+        List<PriceList> priceListList = new ArrayList<>();
+        
+        PriceList pl;
+        PriceListDetailsSearchRequest pdlsr;
+        
+        for(PriceListEntity priceListEntity : priceListEntities){
+        	pl = priceListEntity.toDomain();
+        	String id = priceListEntity.getId();
+        	pdlsr = new PriceListDetailsSearchRequest();
+        	pdlsr.setPriceList(id);
+        	pdlsr.setTenantId(priceListEntity.getTenantId());
+        	pl.setPriceListDetails(priceListDetailJdbcRepository.search(pdlsr).getPagedData());
+        	priceListList.add(pl);
+        }
 
         page.setTotalResults(priceListList.size());
 

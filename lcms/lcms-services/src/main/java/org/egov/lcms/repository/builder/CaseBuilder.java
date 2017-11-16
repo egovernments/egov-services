@@ -6,8 +6,10 @@ import java.util.stream.Stream;
 
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.HearingRepository;
 import org.egov.lcms.repository.AdvocateRepository;
+import org.egov.lcms.utility.ConstantUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -222,4 +224,35 @@ public class CaseBuilder {
 
 		return searchQuery.toString();
 	}
+
+	public String searchEvent(EventSearchCriteria eventSearchCriteria, List<Object> preparedStatementValues) {
+		StringBuilder eventSearchQuery = new StringBuilder();
+		eventSearchQuery.append("SELECT * FROM " + ConstantUtility.EVENT_TABLE_NAME);
+		eventSearchQuery.append(" WHERE tenantId=?");
+		preparedStatementValues.add(eventSearchCriteria.getTenantId());
+
+		if (eventSearchCriteria.getDepartmentConcernPerson() != null) {
+			eventSearchQuery.append(" AND departmentconcernperson=?");
+			preparedStatementValues.add(eventSearchCriteria.getDepartmentConcernPerson());
+		}
+
+		if (eventSearchCriteria.getModuleName() != null) {
+			eventSearchQuery.append(" AND modulename=?");
+			preparedStatementValues.add(eventSearchCriteria.getModuleName());
+		}
+
+		if (eventSearchCriteria.getEntity() != null) {
+			eventSearchQuery.append(" AND entity=?");
+			preparedStatementValues.add(eventSearchCriteria.getEntity());
+		}
+
+		eventSearchQuery.append(" ORDER BY ? DESC");
+		if (eventSearchCriteria.getSort() != null)
+			preparedStatementValues.add(eventSearchCriteria.getSort());
+		else
+			preparedStatementValues.add("lastmodifiedtime");
+
+		return eventSearchQuery.toString();
+	}
+
 }

@@ -1,6 +1,6 @@
 
 Create table materialreceiptdetailaddnlinfo( 
-	id bigint,
+	id varchar(128),
 	tenantId varchar(128),
 	lotNo varchar(50),
 	serialNo varchar(50),
@@ -12,5 +12,6 @@ Create table materialreceiptdetailaddnlinfo(
 );
 alter table materialreceiptdetailaddnlinfo add constraint pk_materialreceiptdetailaddnlinfo primary key (id,tenantId);
 create sequence seq_materialreceiptdetailaddnlinfo;
+
 
 

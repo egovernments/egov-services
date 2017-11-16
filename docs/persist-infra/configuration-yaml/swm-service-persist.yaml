@@ -1438,27 +1438,83 @@ serviceMaps:
          dbType: LONG
 
     - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.vendorPaymentDetails.*.documents
+      basePath: $.vendorPaymentDetails.*.documents.*
       jsonMaps:
        
-       - jsonPath: $.vendorPaymentDetails.*.documents.id
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.id
 
-       - jsonPath: $.vendorPaymentDetails.*.documents.tenantId
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.tenantId
          
-       - jsonPath: $.vendorPaymentDetails.*.documents.refCode
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.refCode
 
-       - jsonPath: $.vendorPaymentDetails.*.documents.fileStoreId
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.fileStoreId
 
-       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.createdBy
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.createdBy
 
-       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.lastModifiedBy
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.createdTime
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.createdTime
          dbType: LONG
 
-       - jsonPath: $.vendorPaymentDetails.*.documents.auditDetails.lastModifiedTime
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+
+ - version: 1.0
+   name: vendorpaymentdetails update
+   description: update vehiclemaintenancedetails in egswm_vendorpaymentdetails
+   fromTopic: swm-vendorpaymentdetails-update-topic
+   queryMaps: 
+    - query: update egswm_vendorpaymentdetails set vendorcontract=?, invoiceno=?, fromdate=?, todate=?, vendorinvoiceamount=?, employee=?, lastmodifiedby=?, lastmodifiedtime=? where paymentNo=? and tenantId=?;
+      basePath: $.vendorPaymentDetails.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorPaymentDetails.*.vendorContract.contractNo
+
+       - jsonPath: $.vendorPaymentDetails.*.invoiceNo
+
+       - jsonPath: $.vendorPaymentDetails.*.fromDate
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.toDate
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.vendorInvoiceAmount
+         dbType: DOUBLE
+
+       - jsonPath: $.vendorPaymentDetails.*.employee.code
+         
+       - jsonPath: $.vendorPaymentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendorPaymentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.paymentNo
+
+       - jsonPath: $.vendorPaymentDetails.*.tenantId
+
+
+    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.vendorPaymentDetails.*.documents.*
+      jsonMaps:
+       
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.id
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.tenantId
+         
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.refCode
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.fileStoreId
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.createdBy
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.vendorPaymentDetails.*.documents.*.auditDetails.lastModifiedTime
+         dbType: LONG
 
 
  - version: 1.0

@@ -102,7 +102,15 @@ class UiSelectField extends Component {
    }
 
 	 componentWillReceiveProps(nextProps) {
-    let {dropDownData} = this.props;
+    let {dropDownData, value} = this.props;
+
+    //load dependant field values on update/view screen
+    if(dropDownData==undefined && value && nextProps.dropDownData){
+      let {item, handler}=this.props;
+      if(handler)
+        handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg);
+    }
+
  		if(this.props.location.pathname != nextProps.history.location.pathname || dropDownData === undefined) {
  			this.initData(nextProps);
  		}

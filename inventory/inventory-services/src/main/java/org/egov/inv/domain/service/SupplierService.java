@@ -147,7 +147,7 @@ public class SupplierService extends DomainService {
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
                             throw new CustomException("inv.004",
-                                    "supplier code and tenantId combination should be unique");
+                                    "Supplier Code Already Exists");
                         }
                     }
                     break;
@@ -162,7 +162,7 @@ public class SupplierService extends DomainService {
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
                             throw new CustomException("inv.004",
-                                    "supplier code and tenantId combination should be unique");
+                                    "Supplier Code Already Exists");
                         }
 
                     }

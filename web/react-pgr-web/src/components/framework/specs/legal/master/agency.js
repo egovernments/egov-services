@@ -46,9 +46,6 @@ var dat = {
         },
         {
             "label": "legal.search.result.agencyAddress"
-        },
-        {
-          "label": "legal.search.result.mobileNumber"
         }
       ],
       "values": [

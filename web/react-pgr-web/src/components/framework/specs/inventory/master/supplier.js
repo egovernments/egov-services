@@ -79,7 +79,7 @@ var dat = {
         }
       ],
       "values": [
-        "code", "name", {valuePath:"active", type:"checkbox"}
+        "name", "type", {valuePath:"active", type:"checkbox"}
       ],
       "resultPath": "suppliers",
       "resultIdKey":"code",
@@ -144,7 +144,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "name",
@@ -192,16 +191,19 @@ var dat = {
             "label": "inventory.common.faxno",
             "type": "text",
             "isRequired": false,
+            "maxLength": 15,
+            "pattern": "^[0-9]+$",
             "isDisabled": false,
             "patternErrorMsg": ""
           }, {
             "name": "website",
             "jsonPath": "suppliers[0].website",
             "label": "inventory.supplier.website",
-            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "pattern": "^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 500,
             "patternErrorMsg": "inventory.create.field.message.website"
           }, {
             "name": "email",
@@ -313,6 +315,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.name",
             "url": "/egf-master/banks/_search?|$..code|$..name"
           }, {
@@ -323,6 +326,7 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.bankBranch"
           },{
             "name": "acctNo",
@@ -332,6 +336,7 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 16,
             "patternErrorMsg": "inventory.create.field.message.acctNo"
           }, {
             "name": "ifsc",
@@ -341,6 +346,7 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 10,
             "patternErrorMsg": "inventory.create.field.message.ifsc"
           }, {
             "name": "micr",
@@ -349,6 +355,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 10,
             "patternErrorMsg": ""
           }
         ]
@@ -409,7 +416,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "name",
@@ -458,15 +464,18 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 15,
+            "pattern": "^[0-9]+$",
             "patternErrorMsg": ""
           }, {
             "name": "website",
             "jsonPath": "suppliers[0].website",
             "label": "inventory.supplier.website",
-            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "pattern": "^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 500,
             "patternErrorMsg": "inventory.create.field.message.website"
           }, {
             "name": "email",
@@ -566,6 +575,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.name",
             "url": "/egf-master/banks/_search?|$..code|$..name"
           }, {
@@ -573,6 +583,7 @@ var dat = {
             "jsonPath": "suppliers[0].bankBranch",
             "label": "inventory.common.bankbranchname",
             "pattern": "",
+            "maxLength": 100,
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -585,6 +596,7 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 16,
             "patternErrorMsg": "inventory.create.field.message.acctNo"
           }, {
             "name": "ifsc",
@@ -594,6 +606,7 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 10,
             "patternErrorMsg": "inventory.create.field.message.ifsc"
           }, {
             "name": "micr",
@@ -602,6 +615,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 10,
             "patternErrorMsg": ""
           }
         ]
@@ -660,9 +674,8 @@ var dat = {
             "label": "inventory.supplier.code",
             "type": "text",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "name",
@@ -711,15 +724,18 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 15,
+            "pattern": "^[0-9]+$",
             "patternErrorMsg": ""
           }, {
             "name": "website",
             "jsonPath": "suppliers[0].website",
             "label": "inventory.supplier.website",
-            "pattern": "^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$",
+            "pattern": "^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$",
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
+            "maxLength": 500,
             "patternErrorMsg": "inventory.create.field.message.website"
           }, {
             "name": "email",
@@ -831,6 +847,7 @@ var dat = {
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.name",
             "url": "/egf-master/banks/_search?|$..code|$..name"
           }, {
@@ -838,6 +855,7 @@ var dat = {
             "jsonPath": "suppliers[0].bankBranch",
             "label": "inventory.common.bankbranchname",
             "pattern": "",
+            "maxLength": 100,
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -845,11 +863,12 @@ var dat = {
           },{
             "name": "acctNo",
             "jsonPath": "suppliers[0].acctNo",
-            "label": "inventory.common.acctno",
+            "label": "inventory.common.bankacctno",
             "pattern": "^[0-9]+$",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 16,
             "patternErrorMsg": "inventory.create.field.message.acctNo"
           }, {
             "name": "ifsc",
@@ -859,12 +878,14 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
+            "maxLength": 10,
             "patternErrorMsg": "inventory.create.field.message.ifsc"
           }, {
             "name": "micr",
             "jsonPath": "suppliers[0].micr",
             "label": "inventory.common.micr",
             "type": "text",
+            "maxLength": 10,
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""

@@ -155,7 +155,7 @@ public class StoreService extends DomainService {
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
                             throw new CustomException("inv.005",
-                                    "store code and tenantId combination should be unique");
+                                    "Store Code Already Exists");
                         }
                     }
                     break;
@@ -170,7 +170,7 @@ public class StoreService extends DomainService {
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
                             throw new CustomException("inv.004",
-                                    "store code and tenantId combination should be unique");
+                                    "Store Code Already Exists");
                         }
 
                     }

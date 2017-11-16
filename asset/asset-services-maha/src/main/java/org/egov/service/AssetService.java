@@ -108,7 +108,6 @@ public class AssetService {
 		log.info("AssetService getAssets");
 
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
-		System.err.println();assets.get(0).getModeOfAcquisition().getCode();
 		
 		if (!assets.isEmpty())
 			mapMasters(assets, requestInfo, searchAsset.getTenantId());
@@ -147,10 +146,9 @@ public class AssetService {
 
 		assets.forEach(asset -> {
 			Long assetCatkey = asset.getAssetCategory().getId();
-			String fundKey = asset.getFundSource().getId();
-			String deptKey = asset.getDepartment().getId();
+			String fundKey = asset.getFundSource().getCode();
+			String deptKey = asset.getDepartment().getCode();
 			String mOAKey=asset.getModeOfAcquisition().getCode();
-			System.err.println("mOAKey"+mOAKey);
 
             asset.setAssetCategory(assetCatMap.get(assetCatkey));
 			asset.setFundSource(fundMap.get(fundKey));

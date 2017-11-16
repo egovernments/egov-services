@@ -168,11 +168,17 @@ public class PropertiesManager {
 	@Value("${hearing.processdetails.sms}")
 	private String hearingProcessSms;
 	
+	@Value("${hearing.nexthearing.processdetails.sms}")
+	private String nextHearingProcessSMS;
+	
 	@Value("${hearing.processdetails.email.subject}")
 	private String hearingProcessEmailSubject;
 	
 	@Value("${hearing.processdetails.email.body}")
 	private String hearingProcessEmailBody;
+	
+	@Value("{hearing.nexthearing.processdetails.email.body}")
+	private String nextHearingProcessEmailBody;
 	
 	/**
 	 * Advocate Payment Email and SMS

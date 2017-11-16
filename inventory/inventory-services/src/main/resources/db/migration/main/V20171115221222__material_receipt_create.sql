@@ -3,7 +3,7 @@ Create table materialreceipt(
 	mrnNumber varchar(50),
 	receiptDate bigint,
 	receiptType varchar(21),
-	financialYear character varying(128) ,
+	financialYear varchar(128) ,
 	receiptPurpose varchar(19),
 	receivingStore varchar(50),
 	issueingStore varchar(50),
@@ -18,17 +18,18 @@ Create table materialreceipt(
 	bill varchar(50),
 	inspectedBy varchar(50),
 	inspectionDate bigint,
-	mrnStatus character varying(64) NOT NULL,
+	mrnStatus character varying(64),
 	inspectionRemarks varchar(50),
 	receiptDetailsId character varying(256),
 	totalReceiptValue numeric (13,2),
 	fileStoreId varchar(50),
-	createdby bigint,
-		createdTime timestamp without time zone,
-		lastmodifiedby bigint,
-		lastModifiedTime timestamp without time zone,
-		tenantId varchar(250),
-			version bigint
+	createdby varchar(50),
+	createdTime bigint,
+	lastmodifiedby varchar(50),
+	lastModifiedTime bigint,
+	tenantId varchar(250),
+	version bigint
 );
 alter table materialreceipt add constraint pk_materialreceipt primary key (mrnNumber,tenantId);
 create sequence seq_materialreceipt;
+

@@ -136,6 +136,7 @@ var dat = {
         }]
     },
 
+
       {
           "name": "UploadDocument",
           "label": "legal.create.group.title.UploadDocument",
@@ -145,10 +146,10 @@ var dat = {
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
-             // "url": "/tl-masters/documenttype/v2/_search",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",
+                  "url": "/tl-masters/documenttype/v2/_search",
                   "jsonPath": "id"
                 }
               ]

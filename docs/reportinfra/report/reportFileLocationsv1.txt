@@ -7,3 +7,4 @@ property=https://raw.githubusercontent.com/egovernments/egov-services/master/doc
 citizen=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/citizen/reports/report.yml
 asset=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/reports/report.yml
 lcms=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/report/report.yml
+inventory=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/inventory/reports/inventoryReport.yml

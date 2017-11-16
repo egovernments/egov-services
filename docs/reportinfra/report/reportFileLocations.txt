@@ -7,3 +7,5 @@ https://raw.githubusercontent.com/egovernments/egov-services/master/docs/propert
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/citizen/reports/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/reports/report.yml
 https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/report/report.yml
+https://raw.githubusercontent.com/egovernments/egov-services/master/docs/inventory/reports/inventoryReport.yml
+

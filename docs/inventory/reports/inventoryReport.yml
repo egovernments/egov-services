@@ -7,7 +7,7 @@ ReportDefinitions:
   moduleName: inventory
   sourceColumns:
 
-  - name: financialyear
+  - name: financialYear
     label: inventory.financialYear
     type: string
     source: materialReceipt
@@ -89,7 +89,7 @@ ReportDefinitions:
 
   query:  SELECT matrcpt.financialyear as financialyear,matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,matrcpt.receiptType as materialtypename,matrcptdtl.uomno as uom,
           matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks FROM materialreceipt matrcpt,
-          materialreceiptdetail matrcptdtl WHERE matrcpt.financialyear = $financialyear AND matrcpt.receivingstore = $storeName AND matrcpt.receipttype ='OPENING BALANCE' AND matrcpt.tenantid= $tenantid AND matrcpt.tenantid=matrcptdtl.tenantid
+          materialreceiptdetail matrcptdtl WHERE matrcpt.financialyear = $financialYear AND matrcpt.receivingstore = $storeName AND matrcpt.receipttype ='OPENING BALANCE' AND matrcpt.tenantid= $tenantid AND matrcpt.tenantid=matrcptdtl.tenantid
           AND matrcpt.mrnnumber = matrcptdtl.mrnnumber
 
 #  Supplier Report

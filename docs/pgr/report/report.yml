@@ -1878,7 +1878,7 @@ ReportDefinitions:
   moduleName: pgr
   sourceColumns:
   - name: name
-    label: reports.pgr.boundary.name
+    label: reports.pgr.ward
     type: string
     source: eg_boundary
   - name: complainttype

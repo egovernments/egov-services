@@ -1025,6 +1025,7 @@ var dat ={
             "label": "legal.advocates.create.additionalAdvocateWindow",
             "pattern": "",
             "type": "window",
+            "displayField": "firstName",
             "subPath": "legal/master/addadvocate",
             "isRequired": false,
             "isDisabled": true,

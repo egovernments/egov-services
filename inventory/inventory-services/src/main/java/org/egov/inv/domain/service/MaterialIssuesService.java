@@ -16,6 +16,7 @@ import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueRequest;
 import org.egov.inv.model.MaterialIssueResponse;
+import org.egov.inv.model.MaterialIssuedFromReceipt;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
@@ -70,6 +71,16 @@ public class MaterialIssuesService extends DomainService {
 				materialIssueDetail.setId(detailSequenceNos.get(j));
 				materialIssueDetail.setTenantId(materialIssue.getTenantId());
 				j++;
+			
+			int k=0;
+			List<String> materialIssuedFromReceiptsSeqNos = materialIssueJdbcRepository.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(),
+					materialIssueDetail.getMaterialIssuedFromReceipts().size());
+			for(MaterialIssuedFromReceipt materialIssuedFromReceipts: materialIssueDetail.getMaterialIssuedFromReceipts())
+			{
+				materialIssuedFromReceipts.setId(materialIssuedFromReceiptsSeqNos.get(k));
+				materialIssuedFromReceipts.setTenantId(materialIssueDetail.getTenantId());
+				k++;
+			}
 			}
 		}
 		kafkaTemplate.send(createTopic,createKey, materialIssueRequest);

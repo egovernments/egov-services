@@ -516,8 +516,8 @@ serviceMaps:
               dbType: LONG
               
         - query: >-
-            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, quantitytobeissued, materialissuedfromreceiptsid, materialid, quantityissued,description)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, quantitytobeissued, materialid, quantityissued,description)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.id
@@ -530,10 +530,23 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityToBeIssued
-            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
+           
+        - query: >-
+            INSERT INTO materialissuedfromreceipt(id, tenantId, materialreceiptid, materialreceiptdetailId, materialreceiptdetailaddnlinfoid, quantity, status, materialissuedetailid)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*
+          jsonMaps:
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.tenantId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.materialReceiptId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.materialReceiptDetail.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.materialReceiptDetailAddnlinfoId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.quantity
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.status
+            - jsonPath: $.materialIssues.*.materialIssueDetails[?({id} in @.materialIssuedFromReceipts[*].id)].id
            
             
 

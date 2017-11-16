@@ -36,7 +36,7 @@ var dat = {
        ],
        "result": {
       "header": [{label: "KPI Name"},{label: "Financial Year"},{label:"Target Value"},{label: "Actual Value"}],
-      "values": ["kpi.name","kpi.financialYear","kpi.targetValue", "resultValue"],
+      "values": ["kpi.name","kpi.financialYear","kpi.targetDescription", "resultDescription"],
       "resultPath": "kpiValues",
       "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}",
       "rowClickUrlView": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
@@ -129,7 +129,7 @@ var dat = {
               // "pathToArray": "kpiValues[0].documents",
               // "displayNameJsonPath": "documents",
               //"url": "/tl-masters/documenttype/v2/_search",
-              //"url": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
+              "url": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",

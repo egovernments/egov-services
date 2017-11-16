@@ -37,6 +37,10 @@ public class NoticeRowMapper implements RowMapper<Notice>{
 		notice.setDay(rs.getString("day"));
 		notice.setNoticeType(NoticeType.fromValue(rs.getString("noticeType")));
 		notice.setFileStoreId(rs.getString("fileStoreId"));
+		notice.setCaseNo(rs.getString("caseNo"));
+		notice.setCaseCode(rs.getString("caseCode"));
+		notice.setCaseRefernceNo(rs.getString("caseRefernceNo"));
+		notice.setSummonReferenceNo(rs.getString("summonReferenceNo"));
 		
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdBy"));

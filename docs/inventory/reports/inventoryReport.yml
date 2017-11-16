@@ -8,50 +8,50 @@ ReportDefinitions:
   sourceColumns:
 
   - name: financialyear
-    label: reports.inventory.openbal.financialyear         
+    label: reports.inventory.openbal.financialyear
     type: string
     source: materialReceipt
 
   - name: storeName
-    label: reports.inventory.openbal.storeName         
+    label: reports.inventory.openbal.storeName
     type: string
     source: materialReceipt
 
   - name: materialCode
-    label: reports.inventory.openbal.MaterialCode         
+    label: reports.inventory.openbal.MaterialCode
     type: string
     source: materialReceipt
-    
+
   - name: materialName
     label: reports.inventory.openbal.MaterialName
     type: string
     source: material
-    
+
   - name: materialTypeName
     label: reports.inventory.openbal.MaterialTypeName
     type: string
     source: materialReceiptDetails
-    
+
   - name: uom
     label: reports.inventory.openbal.Uom
     type: string
     source: materialReceiptDetails
-  
+
   - name: qty
     label: reports.inventory.openbal.Qty.
     type: string
     source: materialReceiptDetails
-    
+
   - name: rate
     label: reports.inventory.openbal.Rate
     type: string
     source: materialReceiptDetails
-  
+
   - name: totalAmount
     label: reports.inventory.openbal.TotalAmount
     type: string
     source: materialReceiptDetails
-    
+
   - name: remarks
     label: reports.inventory.openbal.Remarks
     type: string
@@ -64,25 +64,25 @@ ReportDefinitions:
     pattern: 'list://2011:2011,2012:2012,2013:2013,2014:2014,2015:2015,2016:2016,2017:2017,2018:2018,2019:2019'
     source: materialReceipt
     isMandatory: true
-    
+
   - name: storeName
     label: reports.inventory.openbal.storeName
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name 
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name
     source: store
     isMandatory: true
-    
+
   - name: materialTypeName
     label: reports.inventory.openbal.materialTypeName
     type: string
-    source: materialReceipt 
+    source: materialReceipt
     isMandatory: false
     searchClause: AND matrcpt.receiptType = $materialTypeName
-    
+
   - name: materialName
     label: reports.inventory.openbal.materialName
     type: string
-    source: materialReceipt  
+    source: materialReceipt
     isMandatory: false
     searchClause: AND mat.name = $materialName
   query:  SELECT matrcpt.financialyear as financialyear,
@@ -102,4 +102,90 @@ ReportDefinitions:
                       AND matrcpt.tenantid= $tenantId
                       AND matrcpt.tenantid=matrcptdtl.tenantid
                       AND matrcpt.mrnnumber = matrcptdtl.mrnnumber
+#  Supplier Report
+- reportName: supplierreport
+  summary: Supplier Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+  - name: supplierCode
+    label: inventory.supplier.code
+    type: string
+    source: supplier
 
+  - name: supplierType
+    label: inventory.supplier.type
+    type: string
+    source: supplier
+
+  - name: supplierName
+    label: inventory.supplier.name
+    type: string
+    source: supplier
+
+  - name: address
+    label: inventory.supplier.address
+    type: string
+    source: supplier
+
+  - name: contactno
+    label: inventory.common.contactNo
+    type: string
+    source: supplier
+
+  - name: email
+    label: inventory.report.email
+    type: string
+    source: supplier
+
+  - name: cstNo
+    label: inventory.common.cstno
+    type: string
+    source: supplier
+
+  - name: bankName
+    label: inventory.common.bankname
+    type: string
+    source: supplier
+
+  - name: bankAcctNo
+    label: inventory.common.bankacctno
+    type: string
+    source: supplier
+
+  - name: ifsc
+    label: inventory.common.ifsc
+    type: string
+    source: supplier
+
+  - name: contactPerson
+    label: inventory.common.contactperson
+    type: string
+    source: supplier
+
+  - name: contactPersonNo
+    label: inventory.common.contactpersonno
+    type: string
+    source: supplier
+
+  searchParams:
+  - name: supplierName
+    label: inventory.store.name
+    type: singlevaluelist
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId = $tenantId|$..code|$..name
+    source: supplier
+    isMandatory: false
+    searchClause: AND supplier.name = $supplierName
+
+  - name: supplierType
+    label: inventory.supplier.type
+    source: supplier
+    type: singlevaluelist
+    pattern: 'list://INDIVIDUAL:INDIVIDUAL,FIRM:FIRM,COMPANY:COMPANY,REGISTEREDSOCIETY:REGISTERED SOCIETY,GOVERNMENTDEPARTMENT:GOVERNMENT DEPARTMENT,OTHERS:OTHERS'
+    isMandatory: false
+    searchClause: AND supplier.type = $supplierType
+
+  query:  select code, name, address, contactno, email, cstno, bankcode, bankacctno,
+          bankifsc, contactperson, contactpersonno
+          from supplier as supplier
+          where tenantid = $tenantId

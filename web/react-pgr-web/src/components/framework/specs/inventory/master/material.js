@@ -8,23 +8,23 @@ var dat =
       "groups":[
          {
             "name":"search",
-            "label":"inventory.search.title",
+            "label":"inventory.create.group.title.searchmaterial",
             "fields":[
                 {
-                   "name":"material",
+                   "name":"code",
                    "pattern":"",
-                   "label":"inventory.label.material",
+                   "label":"inventory.material.name",
                    "type":"autoCompelete",
-                   "jsonPath":"material",
+                   "jsonPath":"code",
                    "displayJsonPath":"materialName",
                    "isRequired":false,
                    "isDisabled":false,
-                   "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name"
+                   "url":"/inventory-services/materials/_search?|$.materials[*].code|$.materials[*].name"
                 },
                 {
                    "name":"code",
                    "jsonPath":"materialType",
-                   "label":"inventory.materialtype",
+                   "label":"inventory.material.materialtype",
                    "type":"singleValueList",
                    "isRequired":false,
                    "isDisabled":false,
@@ -35,7 +35,7 @@ var dat =
                 {
                    "name":"store",
                    "pattern":"",
-                   "label":"inventory.label.store",
+                   "label":"inventory.store.name",
                    "type":"singleValueList",
                    "jsonPath":"store",
                    "isRequired":false,
@@ -45,7 +45,7 @@ var dat =
                 {
                   "name": "status",
                   "jsonPath": "status",
-                  "label": "inventory.label.status",
+                  "label": "inventory.common.status",
                   "type": "singleValueList",
                   "defaultValue":[
                     {key: null, value: "-- Please Select --"},
@@ -62,7 +62,7 @@ var dat =
                 {
                   "name": "listStoreInfo",
                   "jsonPath": "listStoreInfo",
-                  "label": "inventory.label.listStoreInfo",
+                  "label": "inventory.material.listStoreInfo",
                   "type": "checkbox",
                   "defaultValue":true,
                   "isRequired": false,
@@ -111,7 +111,7 @@ var dat =
       "groups":[
          {
             "name":"Add Material",
-            "label":"inventory.create.group.title.Add Material",
+            "label":"inventory.create.group.title.addmaterial",
             "fields":[
                {
                  name:"status",
@@ -122,7 +122,7 @@ var dat =
                {
                   "name":"oldCode",
                   "jsonPath":"materials[0].oldCode",
-                  "label":"inventory.create.oldCode",
+                  "label":"inventory.material.oldcode",
                   "type":"text",
                   "isRequired":false,
                   "isDisabled":false,
@@ -132,7 +132,7 @@ var dat =
                {
                   "name":"code",
                   "jsonPath":"materials[0].materialType.code",
-                  "label":"inventory.create.code",
+                  "label":"inventory.material.materialtype",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
@@ -142,7 +142,7 @@ var dat =
                {
                   "name":"name",
                   "jsonPath":"materials[0].name",
-                  "label":"inventory.create.name",
+                  "label":"inventory.material.name",
                   "type":"text",
                   "isRequired":true,
                   "isDisabled":false,
@@ -153,7 +153,7 @@ var dat =
                {
                   "name":"description",
                   "jsonPath":"materials[0].description",
-                  "label":"inventory.create.description",
+                  "label":"inventory.material.description",
                   "type":"textarea",
                   "isRequired":true,
                   "isDisabled":false,
@@ -163,7 +163,7 @@ var dat =
                {
                   "name":"name",
                   "jsonPath":"materials[0].baseUom.code",
-                  "label":"inventory.create.name",
+                  "label":"inventory.material.baseuom",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
@@ -184,7 +184,7 @@ var dat =
                        "value":"Consumable"
                     }
                   ],
-                  "label":"inventory.create.inventoryType",
+                  "label": "inventory.material.inventorytype",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
@@ -202,7 +202,7 @@ var dat =
                {
                   "name":"assetCategory",
                   "jsonPath":"materials[0].assetCategory.code",
-                  "label":"inventory.create.assetCategory",
+                  "label":"inventory.material.assetcategory",
                   "type":"singleValueList",
                   "isRequired":false,
                   "isDisabled":false,
@@ -215,7 +215,7 @@ var dat =
          },
          {
             "name":"Material Map To Store",
-            "label":"inventory.create.group.title.Material Map To Store",
+            "label":"inventory.material.maptostore",
             "fields":[
                 {
                   "name":"department",
@@ -303,12 +303,12 @@ var dat =
          },
          {
             "name":"Puchasing Information",
-            "label":"inventory.create.group.title.Puchasing Information",
+            "label":"inventory.material.purchasinginfo",
             "fields":[
                {
                   "name":"code",
                   "jsonPath":"materials[0].purchaseUom.code",
-                  "label":"inventory.create.code",
+                  "label":"inventory.material.purchaseuom",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
@@ -320,7 +320,7 @@ var dat =
                   "pattern":"",
                   "type":"singleValueList",
                   "jsonPath":"materials[0].expenseAccount.glCode",
-                  "label":"inventory.expenseAccount.glCode",
+                  "label":"inventory.material.expenseacctcode",
                   "isRequired":false,
                   "isDisabled":false,
                   "url": "/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name"
@@ -329,12 +329,12 @@ var dat =
          },
          {
             "name":"Stocking Information",
-            "label":"inventory.create.group.title.Stocking Information",
+            "label":"inventory.material.stockinginfo",
             "fields":[
                {
                   "name":"materialClass",
                   "jsonPath":"materials[0].materialClass",
-                  "label":"inventory.create.materialClass",
+                  "label":"inventory.material.usageclass",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
@@ -358,7 +358,7 @@ var dat =
                {
                   "name":"name",
                   "jsonPath":"materials[0].stockingUom.code",
-                  "label":"inventory.stockingUom.name",
+                  "label":"inventory.material.stockinguom",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
@@ -368,7 +368,7 @@ var dat =
                {
                   "name":"minQuantity",
                   "jsonPath":"materials[0].minQuantity",
-                  "label":"inventory.create.minQuantity",
+                  "label":"inventory.material.minqty",
                   "type":"number",
                   "isRequired":true,
                   "isDisabled":false,
@@ -377,7 +377,7 @@ var dat =
                {
                   "name":"maxQuantity",
                   "jsonPath":"materials[0].maxQuantity",
-                  "label":"inventory.create.maxQuantity",
+                  "label":"inventory.material.maxqty",
                   "type":"number",
                   "isRequired":true,
                   "isDisabled":false,
@@ -386,7 +386,7 @@ var dat =
                {
                   "name":"reorderLevel",
                   "jsonPath":"materials[0].reorderLevel",
-                  "label":"inventory.create.reorderLevel",
+                  "label":"inventory.material.reorderlevel",
                   "type":"number",
                   "isRequired":true,
                   "isDisabled":false,
@@ -395,7 +395,7 @@ var dat =
                {
                   "name":"reorderQuantity",
                   "jsonPath":"materials[0].reorderQuantity",
-                  "label":"inventory.create.reorderQuantity",
+                  "label":"inventory.material.reorderqty",
                   "type":"number",
                   "isRequired":true,
                   "isDisabled":false,
@@ -404,7 +404,7 @@ var dat =
                {
                   "name":"materialControlType",
                   "jsonPath":"materials[0].lotControl",
-                  "label":"inventory.create.lotControl",
+                  "label":"inventory.material.lot",
                   "type":"checkbox",
                   "defaultValue":true,
                   "isRequired":false,
@@ -414,7 +414,7 @@ var dat =
                {
                   "name":"serialNumberMandatory",
                   "jsonPath":"materials[0].serialNumber",
-                  "label":"inventory.create.serialNumber",
+                  "label":"inventory.material.serialno",
                   "defaultValue":true,
                   "type":"checkbox",
                   "isRequired":false,
@@ -424,7 +424,7 @@ var dat =
                {
                   "name":"shelfLifeControlType",
                   "jsonPath":"materials[0].shelfLifeControl",
-                  "label":"inventory.create.shelfLifeControl",
+                  "label":"inventory.material.shelflife",
                   "defaultValue":true,
                   "type":"checkbox",
                   "isRequired":false,
@@ -434,7 +434,7 @@ var dat =
                {
                   "name":"scrapable",
                   "jsonPath":"materials[0].scrapable",
-                  "label":"inventory.create.scrapable",
+                  "label":"inventory.material.scrapable",
                   "defaultValue":true,
                   "type":"checkbox",
                   "isRequired":false,
@@ -445,12 +445,12 @@ var dat =
          },
          {
             "name":"Specification",
-            "label":"inventory.create.group.title.Specification",
+            "label":"inventory.material.specification",
             "fields":[
                {
                   "name":"model",
                   "jsonPath":"materials[0].model",
-                  "label":"inventory.create.model",
+                  "label":"inventory.material.model",
                   "type":"text",
                   "isRequired":false,
                   "isDisabled":false,
@@ -459,7 +459,7 @@ var dat =
                {
                   "name":"manufacturePartNo",
                   "jsonPath":"materials[0].manufacturePartNo",
-                  "label":"inventory.create.manufacturePartNo",
+                  "label":"inventory.material.manufactureno",
                   "type":"text",
                   "isRequired":false,
                   "isDisabled":false,
@@ -468,7 +468,7 @@ var dat =
                {
                   "name":"techincalSpecs",
                   "jsonPath":"materials[0].techincalSpecs",
-                  "label":"inventory.create.techincalSpecs",
+                  "label":"inventory.material.technicalspecification",
                   "type":"textarea",
                   "isRequired":false,
                   "isDisabled":false,
@@ -477,7 +477,7 @@ var dat =
                {
                   "name":"termsOfDelivery",
                   "jsonPath":"materials[0].termsOfDelivery",
-                  "label":"inventory.create.termsOfDelivery",
+                  "label":"inventory.material.termsofdelivery",
                   "type":"textarea",
                   "isRequired":false,
                   "isDisabled":false,
@@ -495,8 +495,8 @@ var dat =
       "objectName":"materials",
       "groups":[
            {
-              "name":"Add Material",
-              "label":"inventory.create.group.title.Add Material",
+              "name":"View Material",
+              "label":"inventory.create.group.title.viewmaterial",
               "fields":[
                 {
                    "name":"code",
@@ -511,7 +511,7 @@ var dat =
                  {
                     "name":"oldCode",
                     "jsonPath":"materials[0].oldCode",
-                    "label":"inventory.create.oldCode",
+                    "label":"inventory.material.oldcode",
                     "type":"text",
                     "isRequired":false,
                     "isDisabled":false,
@@ -521,7 +521,7 @@ var dat =
                  {
                     "name":"code",
                     "jsonPath":"materials[0].materialType.code",
-                    "label":"inventory.create.code",
+                    "label":"inventory.material.materialtype",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -531,7 +531,7 @@ var dat =
                  {
                     "name":"name",
                     "jsonPath":"materials[0].name",
-                    "label":"inventory.create.name",
+                    "label":"inventory.material.name",
                     "type":"text",
                     "isRequired":true,
                     "isDisabled":false,
@@ -542,7 +542,7 @@ var dat =
                  {
                     "name":"description",
                     "jsonPath":"materials[0].description",
-                    "label":"inventory.create.description",
+                    "label":"inventory.material.description",
                     "type":"textarea",
                     "isRequired":true,
                     "isDisabled":false,
@@ -552,7 +552,7 @@ var dat =
                  {
                     "name":"name",
                     "jsonPath":"materials[0].baseUom.code",
-                    "label":"inventory.create.name",
+                    "label":"inventory.material.baseuom",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -573,7 +573,7 @@ var dat =
                          "value":"Consumable"
                       }
                     ],
-                    "label":"inventory.create.inventoryType",
+                    "label": "inventory.material.inventorytype",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -591,7 +591,7 @@ var dat =
                  {
                     "name":"assetCategory",
                     "jsonPath":"materials[0].assetCategory.code",
-                    "label":"inventory.create.assetCategory",
+                    "label":"inventory.material.assetcategory",
                     "type":"singleValueList",
                     "isRequired":false,
                     "isDisabled":false,
@@ -613,7 +613,7 @@ var dat =
            },
            {
               "name":"Material Map To Store",
-              "label":"inventory.create.group.title.Material Map To Store",
+              "label":"inventory.material.maptostore",
               "fields":[
                   {
                     "name":"department",
@@ -701,12 +701,12 @@ var dat =
            },
            {
               "name":"Puchasing Information",
-              "label":"inventory.create.group.title.Puchasing Information",
+              "label":"inventory.material.purchasinginfo",
               "fields":[
                  {
                     "name":"code",
                     "jsonPath":"materials[0].purchaseUom.code",
-                    "label":"inventory.create.code",
+                    "label":"inventory.material.purchaseuom",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -718,7 +718,7 @@ var dat =
                     "pattern":"",
                     "type":"singleValueList",
                     "jsonPath":"materials[0].expenseAccount.glCode",
-                    "label":"inventory.expenseAccount.glCode",
+                    "label":"inventory.material.expenseacctcode",
                     "isRequired":false,
                     "isDisabled":false,
                     "url": "/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name"
@@ -727,12 +727,12 @@ var dat =
            },
            {
               "name":"Stocking Information",
-              "label":"inventory.create.group.title.Stocking Information",
+              "label":"inventory.material.stockinginfo",
               "fields":[
                  {
                     "name":"materialClass",
                     "jsonPath":"materials[0].materialClass",
-                    "label":"inventory.create.materialClass",
+                    "label":"inventory.material.usageclass",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -756,7 +756,7 @@ var dat =
                  {
                     "name":"name",
                     "jsonPath":"materials[0].stockingUom.code",
-                    "label":"inventory.stockingUom.name",
+                    "label":"inventory.material.stockinguom",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -766,7 +766,7 @@ var dat =
                  {
                     "name":"minQuantity",
                     "jsonPath":"materials[0].minQuantity",
-                    "label":"inventory.create.minQuantity",
+                    "label":"inventory.material.minqty",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -775,7 +775,7 @@ var dat =
                  {
                     "name":"maxQuantity",
                     "jsonPath":"materials[0].maxQuantity",
-                    "label":"inventory.create.maxQuantity",
+                    "label":"inventory.material.maxqty",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -784,7 +784,7 @@ var dat =
                  {
                     "name":"reorderLevel",
                     "jsonPath":"materials[0].reorderLevel",
-                    "label":"inventory.create.reorderLevel",
+                    "label":"inventory.material.reorderlevel",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -793,7 +793,7 @@ var dat =
                  {
                     "name":"reorderQuantity",
                     "jsonPath":"materials[0].reorderQuantity",
-                    "label":"inventory.create.reorderQuantity",
+                    "label":"inventory.material.reorderqty",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -802,7 +802,7 @@ var dat =
                  {
                     "name":"materialControlType",
                     "jsonPath":"materials[0].lotControl",
-                    "label":"inventory.create.lotControl",
+                    "label":"inventory.material.lot",
                     "type":"checkbox",
                     "defaultValue":true,
                     "isRequired":false,
@@ -812,7 +812,7 @@ var dat =
                  {
                     "name":"serialNumberMandatory",
                     "jsonPath":"materials[0].serialNumber",
-                    "label":"inventory.create.serialNumber",
+                    "label":"inventory.material.serialno",
                     "defaultValue":true,
                     "type":"checkbox",
                     "isRequired":false,
@@ -822,7 +822,7 @@ var dat =
                  {
                     "name":"shelfLifeControlType",
                     "jsonPath":"materials[0].shelfLifeControl",
-                    "label":"inventory.create.shelfLifeControl",
+                    "label":"inventory.material.shelflife",
                     "defaultValue":true,
                     "type":"checkbox",
                     "isRequired":false,
@@ -832,7 +832,7 @@ var dat =
                  {
                     "name":"scrapable",
                     "jsonPath":"materials[0].scrapable",
-                    "label":"inventory.create.scrapable",
+                    "label":"inventory.material.scrapable",
                     "defaultValue":true,
                     "type":"checkbox",
                     "isRequired":false,
@@ -843,12 +843,12 @@ var dat =
            },
            {
               "name":"Specification",
-              "label":"inventory.create.group.title.Specification",
+              "label":"inventory.material.specification",
               "fields":[
                  {
                     "name":"model",
                     "jsonPath":"materials[0].model",
-                    "label":"inventory.create.model",
+                    "label":"inventory.material.model",
                     "type":"text",
                     "isRequired":false,
                     "isDisabled":false,
@@ -857,7 +857,7 @@ var dat =
                  {
                     "name":"manufacturePartNo",
                     "jsonPath":"materials[0].manufacturePartNo",
-                    "label":"inventory.create.manufacturePartNo",
+                    "label":"inventory.material.manufactureno",
                     "type":"text",
                     "isRequired":false,
                     "isDisabled":false,
@@ -866,7 +866,7 @@ var dat =
                  {
                     "name":"techincalSpecs",
                     "jsonPath":"materials[0].techincalSpecs",
-                    "label":"inventory.create.techincalSpecs",
+                    "label":"inventory.material.technicalspecification",
                     "type":"textarea",
                     "isRequired":false,
                     "isDisabled":false,
@@ -875,7 +875,7 @@ var dat =
                  {
                     "name":"termsOfDelivery",
                     "jsonPath":"materials[0].termsOfDelivery",
-                    "label":"inventory.create.termsOfDelivery",
+                    "label":"inventory.material.termsofdelivery",
                     "type":"textarea",
                     "isRequired":false,
                     "isDisabled":false,
@@ -893,8 +893,8 @@ var dat =
       "objectName":"materials",
       "groups":[
            {
-              "name":"Add Material",
-              "label":"inventory.create.group.title.Add Material",
+              "name":"Update Material",
+              "label":"inventory.create.group.title.updatematerial",
               "fields":[
                 {
                    "name":"code",
@@ -909,7 +909,7 @@ var dat =
                  {
                     "name":"oldCode",
                     "jsonPath":"materials[0].oldCode",
-                    "label":"inventory.create.oldCode",
+                    "label":"inventory.material.oldcode",
                     "type":"text",
                     "isRequired":false,
                     "isDisabled":false,
@@ -919,7 +919,7 @@ var dat =
                  {
                     "name":"code",
                     "jsonPath":"materials[0].materialType.code",
-                    "label":"inventory.create.code",
+                    "label":"inventory.material.materialtype",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -929,7 +929,7 @@ var dat =
                  {
                     "name":"name",
                     "jsonPath":"materials[0].name",
-                    "label":"inventory.create.name",
+                    "label":"inventory.material.name",
                     "type":"text",
                     "isRequired":true,
                     "isDisabled":false,
@@ -940,7 +940,7 @@ var dat =
                  {
                     "name":"description",
                     "jsonPath":"materials[0].description",
-                    "label":"inventory.create.description",
+                    "label":"inventory.material.description",
                     "type":"textarea",
                     "isRequired":true,
                     "isDisabled":false,
@@ -950,7 +950,7 @@ var dat =
                  {
                     "name":"name",
                     "jsonPath":"materials[0].baseUom.code",
-                    "label":"inventory.create.name",
+                    "label":"inventory.material.baseuom",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -971,7 +971,7 @@ var dat =
                          "value":"Consumable"
                       }
                     ],
-                    "label":"inventory.create.inventoryType",
+                    "label": "inventory.material.inventorytype",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -989,7 +989,7 @@ var dat =
                  {
                     "name":"assetCategory",
                     "jsonPath":"materials[0].assetCategory.code",
-                    "label":"inventory.create.assetCategory",
+                    "label":"inventory.material.assetcategory",
                     "type":"singleValueList",
                     "isRequired":false,
                     "isDisabled":false,
@@ -1018,7 +1018,7 @@ var dat =
            },
            {
               "name":"Material Map To Store",
-              "label":"inventory.create.group.title.Material Map To Store",
+              "label":"inventory.material.maptostore",
               "fields":[
                   {
                     "name":"department",
@@ -1107,12 +1107,12 @@ var dat =
            },
            {
               "name":"Puchasing Information",
-              "label":"inventory.create.group.title.Puchasing Information",
+              "label":"inventory.material.purchasinginfo",
               "fields":[
                  {
                     "name":"code",
                     "jsonPath":"materials[0].purchaseUom.code",
-                    "label":"inventory.create.code",
+                    "label":"inventory.material.purchaseuom",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1124,7 +1124,7 @@ var dat =
                     "pattern":"",
                     "type":"singleValueList",
                     "jsonPath":"materials[0].expenseAccount.glCode",
-                    "label":"inventory.expenseAccount.glCode",
+                    "label":"inventory.material.expenseacctcode",
                     "isRequired":false,
                     "isDisabled":false,
                     "url": "/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name"
@@ -1133,12 +1133,12 @@ var dat =
            },
            {
               "name":"Stocking Information",
-              "label":"inventory.create.group.title.Stocking Information",
+              "label":"inventory.material.stockinginfo",
               "fields":[
                  {
                     "name":"materialClass",
                     "jsonPath":"materials[0].materialClass",
-                    "label":"inventory.create.materialClass",
+                    "label":"inventory.material.usageclass",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1162,7 +1162,7 @@ var dat =
                  {
                     "name":"name",
                     "jsonPath":"materials[0].stockingUom.code",
-                    "label":"inventory.stockingUom.name",
+                    "label":"inventory.material.stockinguom",
                     "type":"singleValueList",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1172,7 +1172,7 @@ var dat =
                  {
                     "name":"minQuantity",
                     "jsonPath":"materials[0].minQuantity",
-                    "label":"inventory.create.minQuantity",
+                    "label":"inventory.material.minqty",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1181,7 +1181,7 @@ var dat =
                  {
                     "name":"maxQuantity",
                     "jsonPath":"materials[0].maxQuantity",
-                    "label":"inventory.create.maxQuantity",
+                    "label":"inventory.material.maxqty",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1190,7 +1190,7 @@ var dat =
                  {
                     "name":"reorderLevel",
                     "jsonPath":"materials[0].reorderLevel",
-                    "label":"inventory.create.reorderLevel",
+                    "label":"inventory.material.reorderlevel",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1199,7 +1199,7 @@ var dat =
                  {
                     "name":"reorderQuantity",
                     "jsonPath":"materials[0].reorderQuantity",
-                    "label":"inventory.create.reorderQuantity",
+                    "label":"inventory.material.reorderqty",
                     "type":"number",
                     "isRequired":true,
                     "isDisabled":false,
@@ -1208,7 +1208,7 @@ var dat =
                  {
                     "name":"materialControlType",
                     "jsonPath":"materials[0].lotControl",
-                    "label":"inventory.create.lotControl",
+                    "label":"inventory.material.lot",
                     "type":"checkbox",
                     "defaultValue":true,
                     "isRequired":false,
@@ -1218,7 +1218,7 @@ var dat =
                  {
                     "name":"serialNumberMandatory",
                     "jsonPath":"materials[0].serialNumber",
-                    "label":"inventory.create.serialNumber",
+                    "label":"inventory.material.serialno",
                     "defaultValue":true,
                     "type":"checkbox",
                     "isRequired":false,
@@ -1228,7 +1228,7 @@ var dat =
                  {
                     "name":"shelfLifeControlType",
                     "jsonPath":"materials[0].shelfLifeControl",
-                    "label":"inventory.create.shelfLifeControl",
+                    "label":"inventory.material.shelflife",
                     "defaultValue":true,
                     "type":"checkbox",
                     "isRequired":false,
@@ -1238,7 +1238,7 @@ var dat =
                  {
                     "name":"scrapable",
                     "jsonPath":"materials[0].scrapable",
-                    "label":"inventory.create.scrapable",
+                    "label":"inventory.material.scrapable",
                     "defaultValue":true,
                     "type":"checkbox",
                     "isRequired":false,
@@ -1249,12 +1249,12 @@ var dat =
            },
            {
               "name":"Specification",
-              "label":"inventory.create.group.title.Specification",
+              "label":"inventory.material.specification",
               "fields":[
                  {
                     "name":"model",
                     "jsonPath":"materials[0].model",
-                    "label":"inventory.create.model",
+                    "label":"inventory.material.model",
                     "type":"text",
                     "isRequired":false,
                     "isDisabled":false,
@@ -1263,7 +1263,7 @@ var dat =
                  {
                     "name":"manufacturePartNo",
                     "jsonPath":"materials[0].manufacturePartNo",
-                    "label":"inventory.create.manufacturePartNo",
+                    "label":"inventory.material.manufactureno",
                     "type":"text",
                     "isRequired":false,
                     "isDisabled":false,
@@ -1272,7 +1272,7 @@ var dat =
                  {
                     "name":"techincalSpecs",
                     "jsonPath":"materials[0].techincalSpecs",
-                    "label":"inventory.create.techincalSpecs",
+                    "label":"inventory.material.technicalspecification",
                     "type":"textarea",
                     "isRequired":false,
                     "isDisabled":false,
@@ -1281,7 +1281,7 @@ var dat =
                  {
                     "name":"termsOfDelivery",
                     "jsonPath":"materials[0].termsOfDelivery",
-                    "label":"inventory.create.termsOfDelivery",
+                    "label":"inventory.material.termsofdelivery",
                     "type":"textarea",
                     "isRequired":false,
                     "isDisabled":false,

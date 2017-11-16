@@ -535,7 +535,7 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
            
         - query: >-
-            INSERT INTO materialissuedfromreceipt(id, tenantId, materialreceiptid, materialreceiptdetailId, materialreceiptdetailaddnlinfoid, quantity, status, materialissuedetailid)
+            INSERT INTO materialissuedfromreceipt(id, tenantId, receiptid, receiptdetailId, receiptdetailaddnlinfoid, quantity, status, issuedetailid)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*
           jsonMaps:

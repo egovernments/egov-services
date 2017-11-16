@@ -240,7 +240,7 @@ class ShowField extends Component {
       let URLparams = afterURL.split(':');
       // console.log(URLparams, URLparams.length);
       if(URLparams.length > 1) {
-        setRoute(`${URLparams[0]+item1}`);
+        setRoute(`${URLparams[0]+encodeURIComponent(item1)}`);
       } else {
         setRoute(URLparams[0]);
       }

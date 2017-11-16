@@ -8,7 +8,8 @@ const defaultState = {
   flag:0,
   moduleName:"",
   actionName:"",
-  dropDownData:{}
+  dropDownData:{},
+  dropDownOringalData:{}
 };
 
 export default (state = defaultState, action) => {
@@ -31,6 +32,21 @@ export default (state = defaultState, action) => {
                     [action.fieldName]: action.dropDownData
                 }
             }
+      case "SET_ORIGINAL_DROPDWON_DATA":
+                return {
+                    ...state,
+                    dropDownOringalData: {
+                        ...state.dropDownData,
+                        [action.fieldName]: action.dropDownData
+                    }
+                }
+
+    case "RESET_ORIGNINAL_DROPDOWN_DATA":
+                  return {
+                    ...state,
+                    dropDownOringalData: {}
+                  }
+
         case "RESET_DROPDOWN_DATA":
           return {
             ...state,

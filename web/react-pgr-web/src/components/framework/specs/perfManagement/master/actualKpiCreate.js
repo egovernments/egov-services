@@ -23,7 +23,8 @@ var dat = {
           {
            "jsonPath": "kpiValues[0].financialYear",
            "type": "textField",
-           "valExp": "getVal('kpiValues[*].financialYear')"
+           "pattern": "kpiValues[0].KPI.code|KPIs|code|financialYear",
+           "hasFromDropDownOriginalData":true
           /*"pattern": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange"*/
           },
           {
@@ -34,7 +35,8 @@ var dat = {
           {
           "jsonPath": "kpiValues[0].targetType",
           "type": "radio",
-          "pattern": "/tl-masters/documenttype/v2/_search"
+          "pattern": "kpiValues[0].KPI.code|KPIs|code|targetType",
+          "hasFromDropDownOriginalData":true
           }
           // {
           // "jsonPath": "kpiValues[0].tenantId",

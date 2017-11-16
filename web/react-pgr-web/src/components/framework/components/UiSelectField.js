@@ -16,7 +16,7 @@ class UiSelectField extends Component {
   }
 
   initData(props) {
-          let {item, setDropDownData, useTimestamp} = props;
+          let {item, setDropDownData,setDropDownOriginalData, useTimestamp} = props;
       if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1) {
          let splitArray=item.url.split("?");
          let context="";
@@ -87,6 +87,7 @@ class UiSelectField extends Component {
 
                dropDownData.unshift({key: null, value: "-- Please Select --"});
                setDropDownData(item.jsonPath, dropDownData);
+               setDropDownOriginalData(item.jsonPath, response);
             }
          },function(err) {
             console.log(err);
@@ -170,6 +171,9 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = dispatch => ({
   setDropDownData:(fieldName,dropDownData)=>{
     dispatch({type:"SET_DROPDWON_DATA", fieldName, dropDownData})
+  },
+  setDropDownOriginalData:(fieldName,dropDownData)=>{
+    dispatch({type:"SET_ORIGINAL_DROPDWON_DATA", fieldName, dropDownData})
   }
 });
 export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UiSelectField));

@@ -133,6 +133,8 @@ class Report extends Component {
                     });
                     dropDownData.unshift({key: null, value: "-- Please Select --"});
                     self.props.setDropDownData(groups[i].fields[j].depedants[k].jsonPath, dropDownData);
+                    self.props.setDropDownOriginalData(response, dropDownData);
+
                   }
                 },function(err) {
                     console.log(err);
@@ -841,11 +843,16 @@ class Report extends Component {
     setMockData(_mockData);
   }
 
+  returnPathValueFunction()
+  {
+
+  }
+
 
   affectDependants = (obj, e, property)=>{
 
-    let {handleChange, setDropDownData} = this.props;
-    let {getVal, getValFromDropdownData} = this;
+    let {handleChange, setDropDownData,setDropDownOriginalData,dropDownOringalData} = this.props;
+    let {getVal, getValFromDropdownData, returnPathValueFunction} = this;
 
 
     const findLastIdxOnJsonPath = (jsonPath) => {
@@ -962,23 +969,49 @@ class Report extends Component {
                     });
                     dropDownData.unshift({key: null, value: "-- Please Select --"});
                     setDropDownData(value.jsonPath, dropDownData);
+                    setDropDownOriginalData(value.jsonPath, response);
+
                   }
                 },function(err) {
                     console.log(err);
                 });
             } else if (value.type == "textField") {
               try{
-                let exp = value.valExp;
-                if(dependantIdx){
-                  value.jsonPath = replaceLastIdxOnJsonPath(value.jsonPath, dependantIdx);
-                  exp = exp && exp.replace(/\*/g, dependantIdx);
-                }
-                let object={
-                  target: {
-                    value: exp && eval(exp) || eval(eval(value.pattern))
+                let object={};
+                if (!value.hasFromDropDownOriginalData) {
+                  let exp = value.valExp;
+                  if(dependantIdx){
+                    value.jsonPath = replaceLastIdxOnJsonPath(value.jsonPath, dependantIdx);
+                    exp = exp && exp.replace(/\*/g, dependantIdx);
                   }
+                  object={
+                    target: {
+                      value: exp && eval(exp) || eval(eval(value.pattern))
+                    }
+                  }
+                } else {
+                    // console.log(dropDownOringalData);
+                    // console.log(value.pattern);
+                    // console.log(dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]]);
+                    var arr=dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]];
+                    var searchPropery=value.pattern.split("|")[2];
+                    var property=value.pattern.split("|")[3];
+                    object={
+                      target: {
+                        value:""
+                      }
+                    }
+                    for (var i = 0; i < arr.length; i++) {
+                      if(arr[i][searchPropery]==e.target.value)
+                      {
+                        object.target.value=arr[i][property]
+                      }
+                    }
+
+
                 }
-                handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
+
+                handleChange(object, value.jsonPath,"","","","");
               }
               catch(ex){
                 console.log('ex', ex);
@@ -1015,6 +1048,29 @@ class Report extends Component {
                 },function(err) {
                     console.log(err);
                 });
+            }
+            else if (value.type == "radio") {
+
+              var arr=dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]];
+              var searchPropery=value.pattern.split("|")[2];
+              var property=value.pattern.split("|")[3];
+              var object={
+                target: {
+                  value:""
+                }
+              }
+              for (var i = 0; i < arr.length; i++) {
+                if(arr[i][searchPropery]==e.target.value)
+                {
+                  object.target.value=arr[i][property];
+                }
+              }
+
+              console.log(object);
+
+              handleChange(object, value.jsonPath,"","","","");
+
+
             }
       });
   }
@@ -1377,7 +1433,8 @@ const mapStateToProps = state => ({
   fieldErrors: state.frameworkForm.fieldErrors,
   isFormValid: state.frameworkForm.isFormValid,
   requiredFields: state.frameworkForm.requiredFields,
-  dropDownData: state.framework.dropDownData
+  dropDownData: state.framework.dropDownData,
+  dropDownOringalData:state.framework.dropDownOringalData
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -1413,6 +1470,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setDropDownData:(fieldName, dropDownData) => {
     dispatch({type: "SET_DROPDWON_DATA", fieldName, dropDownData})
+  },
+  setDropDownOriginalData:(fieldName, dropDownData) => {
+    dispatch({type: "SET_ORIGINAL_DROPDWON_DATA", fieldName, dropDownData})
   },
   setRoute: (route) => dispatch({type: "SET_ROUTE", route}),
   delRequiredFields: (requiredFields) => {

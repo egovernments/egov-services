@@ -8,50 +8,50 @@ ReportDefinitions:
   sourceColumns:
 
   - name: financialyear
-    label: inventory.financialYear         
+    label: inventory.financialYear
     type: string
     source: materialReceipt
 
   - name: storeName
-    label: inventory.store.name        
+    label: inventory.store.name
     type: string
     source: materialReceipt
 
   - name: materialCode
-    label: inventory.material.code        
+    label: inventory.material.code
     type: string
     source: materialReceipt
-    
+
   - name: materialName
     label: inventory.materialName
     type: string
     source: material
-    
+
   - name: materialTypeName
     label: inventory.material.materialtype
     type: string
     source: materialReceiptDetails
-    
+
   - name: uom
     label: reports.inventory.openbal.Uom
     type: string
     source: materialReceiptDetails
-  
+
   - name: qty
     label: reports.inventory.openbal.Qty.
     type: string
     source: materialReceiptDetails
-    
+
   - name: rate
     label: inventory.Rate
     type: string
     source: materialReceiptDetails
-  
+
   - name: totalAmount
     label: reports.inventory.openbal.TotalAmount
     type: string
     source: materialReceiptDetails
-    
+
   - name: remarks
     label: reports.inventory.openbal.Remarks
     type: string
@@ -64,25 +64,25 @@ ReportDefinitions:
     pattern: 'list://2011:2011,2012:2012,2013:2013,2014:2014,2015:2015,2016:2016,2017:2017,2018:2018,2019:2019'
     source: materialReceipt
     isMandatory: true
-    
+
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name 
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantId|$..code|$..name
     source: store
     isMandatory: false
-    
+
   - name: materialTypeName
     label: inventory.material.materialtype
     type: string
-    source: materialReceipt 
+    source: materialReceipt
     isMandatory: false
     searchClause: AND matrcpt.receiptType = $materialTypeName
-    
+
   - name: materialName
     label: inventory.materialName
     type: string
-    source: materialReceipt  
+    source: materialReceipt
     isMandatory: false
     searchClause: AND mat.name = $materialName
   query:  SELECT matrcpt.financialyear as financialyear,
@@ -172,7 +172,7 @@ ReportDefinitions:
   - name: supplierName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId = $tenantId|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId = $tenantid|$..code|$..name
     source: supplier
     isMandatory: false
     searchClause: AND supplier.name = $supplierName
@@ -188,4 +188,4 @@ ReportDefinitions:
   query:  select code, name, address, contactno, email, cstno, bankcode, bankacctno,
           bankifsc, contactperson, contactpersonno
           from supplier as supplier
-          where tenantid = $tenantId
+          where tenantid = $tenantid

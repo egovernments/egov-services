@@ -1904,13 +1904,11 @@ ReportDefinitions:
     type: epoch
     source: seva
     isMandatory: true
-  - name: complainttype
-    label: reports.pgr.complainttype
+  - name: ward
+    label: reports.pgr.ward
     type: singlevaluelist
-    pattern: http://pgr-master:8080/pgr-master/service/v1/_search?tenantId=$tenantid&keywords=complaint|$..serviceCode|$..serviceName
-    source: seva
-    isMandatory: false
-    searchClause: and ctype.code=$complainttype
+    pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=$tenantid|$..id|$..name
+    searchClause: sa.code::bigint = $ward
   query: SELECT boundary.name, (select name from egpgr_complainttype where code = ctype.code and tenantid = $tenantid) as complainttype, count(*) as totalcount, count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text,'REJECTED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text ='PROCESSING'::text THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'REOPENED'::character varying::text, 'REGISTERED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS pending,count(CASE WHEN cs.status::text ='ONHOLD'::text THEN 1 ELSE NULL::integer END) AS onhold FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
   groupBy: GROUP BY boundary.name, ctype.code ORDER By boundary.name;
   
@@ -1976,7 +1974,7 @@ ReportDefinitions:
     source: seva
     isMandatory: true
   query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
-    and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and tenantid = $tenantid) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid);
+    and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and  tenantid = $tenantid) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid and boundarytype = (select id from eg_boundary_type where name = 'Ward' and hierarchytype = (select id from eg_hierarchy_type where name = 'ADMINISTRATION' and tenantid = $tenantid) and tenantid = $tenantid));
     
 - reportName: DrillDownComplaintSummaryRegisterStatus
   summary: Report To List Complaints for Grievance Type and ward - based on a date period

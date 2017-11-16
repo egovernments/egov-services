@@ -34,7 +34,7 @@ public class KPI   {
   private String remoteSystemId = null;
   
   @JsonProperty("targetType")
-  private Boolean targetType;
+  private String targetType;
 
   @JsonProperty("targetValue")
   private Long targetValue = null;
@@ -67,11 +67,11 @@ public void setTargetDescription(String targetDescription) {
 	this.targetDescription = targetDescription;
 }
 
-public Boolean getTargetType() {
+public String getTargetType() {
 	return targetType;
 }
 
-public void setTargetType(Boolean targetType) {
+public void setTargetType(String targetType) {
 	this.targetType = targetType;
 }
 

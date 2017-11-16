@@ -70,9 +70,10 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 	
 	@Override
-	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {final List<Object> preparedStatementValues = new ArrayList<>();
-		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq,preparedStatementValues);
-		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper(); 
+	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq, preparedStatementValues);
+		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper();
 		List<KpiValue> listOfValues = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
 		return listOfValues;
 	}

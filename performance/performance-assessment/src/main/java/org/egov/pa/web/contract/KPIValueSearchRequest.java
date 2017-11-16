@@ -22,13 +22,26 @@ public class KPIValueSearchRequest   {
   @JsonProperty("kpiCodes")
   private List<String> kpiCodes = null;
 
+  @JsonProperty("departmentId") 
+  private Long departmentId = null; 
+  
   @JsonProperty("tenantId")
   private List<String> tenantId = null;
 
   @JsonProperty("finYear")
   private List<String> finYear = null;
+  
+  
 
-  public KPIValueSearchRequest requestInfo(RequestInfo requestInfo) {
+  public Long getDepartmentId() {
+	return departmentId;
+}
+
+public void setDepartmentId(Long departmentId) {
+	this.departmentId = departmentId;
+}
+
+public KPIValueSearchRequest requestInfo(RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
     return this;
   }

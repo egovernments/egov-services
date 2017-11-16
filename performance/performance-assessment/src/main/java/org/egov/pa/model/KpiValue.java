@@ -25,6 +25,9 @@ public class KpiValue   {
   
   @JsonProperty("targetValue")
   private Long targetValue=null;
+  
+  @JsonProperty("targetDescription")
+  private String targetDescription = null;
 
   @JsonProperty("resultValue")
   private Long resultValue = null;
@@ -44,7 +47,15 @@ public class KpiValue   {
   
 
   
-  public Long getTargetValue() {
+  public String getTargetDescription() {
+	return targetDescription;
+}
+
+public void setTargetDescription(String targetDescription) {
+	this.targetDescription = targetDescription;
+}
+
+public Long getTargetValue() {
 	return targetValue;
 }
 

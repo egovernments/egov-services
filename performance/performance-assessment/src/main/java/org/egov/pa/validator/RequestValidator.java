@@ -180,6 +180,12 @@ public class RequestValidator {
 			if(null == kpiValue.getResultValue() && null != kpiValue.getTargetValue()) { 
 				kpiValue.setResultValue(kpiValue.getTargetValue());
 			}
+			if(null == kpiValue.getResultDescription() && null != kpiValue.getTargetDescription()) { 
+				kpiValue.setResultDescription(kpiValue.getTargetDescription());
+			}
+			if(StringUtils.isNotBlank(kpiValue.getResultDescription())) { 
+				kpiValue.setResultValue(0L);
+			}
 			if(null == kpiValue.getResultValue() && null == kpiValue.getTargetValue()) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_ERROR_MESSAGE,

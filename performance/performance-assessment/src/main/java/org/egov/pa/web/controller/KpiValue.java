@@ -37,7 +37,7 @@ public interface KpiValue {
 	@PostMapping(value = "/_search")
     @ResponseBody
     public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
-			 @RequestParam("kpiCodes") List<String> kpiCodes,
+			 @RequestParam("departmentId") Long departmentId,
 			 @RequestParam("finYear") List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo);
 

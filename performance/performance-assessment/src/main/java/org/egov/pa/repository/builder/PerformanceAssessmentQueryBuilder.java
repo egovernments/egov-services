@@ -54,12 +54,12 @@ public class PerformanceAssessmentQueryBuilder {
 	public static final Logger LOGGER = LoggerFactory.getLogger(PerformanceAssessmentQueryBuilder.class);
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT docs.id as docid, docs.kpicode as dockpicode, docs.documentcode, docs.documentname, docs.mandatoryflag, master.id as id, master.name as name, master.code as code, master.finyear as finYear, master.createdby as createdBy, master.createddate as createdDate, "  
-    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targettype as targetType, master.targetvalue as targetValue, master.instructions as instructions, master.department as departmentId " 
+    		+ " master.tenantid as tenantId, master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.targettype as targetType, master.targetvalue as targetValue, master.targetdescription as targetDescription, master.instructions as instructions, master.department as departmentId " 
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_document docs ON master.code = docs.kpicode WHERE master.active IS TRUE " ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.tenantid as tenantId, master.code as kpiCode, master.finyear as finYear, master.name as kpiName, master.id as kpiId, master.targettype as targetType, "  
-    		+  " master.targetvalue as targetValue, master.instructions, "
-    		+  " value.id as valueId, value.kpicode as valueKpiCode, value.actualvalue as actualValue "  
+    		+  " master.targetvalue as targetValue, master.targetdescription as targetDescription, master.instructions, "
+    		+  " value.id as valueId, value.kpicode as valueKpiCode, value.actualvalue as actualValue, value.actualdescription as actualDescription "   
     		+  " FROM egpa_kpi_value value LEFT JOIN egpa_kpi_master master ON value.kpicode = master.code " 
     		+  " WHERE value.tenantid IS NOT NULL "; 
     
@@ -86,7 +86,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String fetchTargetForKpi() { 
-    	return "SELECT id, name, code, finyear as financialYear, targetvalue as targetValue FROM egpa_kpi_master master where master.code = :kpiCode and master.finyear = :finYear and targetvalue IS NOT NULL " ;
+    	return "SELECT id, name, code, finyear as financialYear, targetvalue as targetValue, targetdescription as targetDescription FROM egpa_kpi_master master where master.code = :kpiCode and master.finyear = :finYear and (targetvalue IS NOT NULL OR targetdescription IS NOT NULL) " ;
     }
     
     public static String fetchKpiValueForCodeAndTenant() { 
@@ -132,8 +132,7 @@ public class PerformanceAssessmentQueryBuilder {
 		List<String> finYearList = kpiValueSearchReq.getFinYear();
 		List<String> tenantIdList = kpiValueSearchReq.getTenantId();
 		List<String> kpiCodeList = kpiValueSearchReq.getKpiCodes();
-		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear()
-				|| null == kpiValueSearchReq.getKpiCodes())
+		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear())
 			return;
 
 		selectQuery.append(" AND ");
@@ -155,6 +154,12 @@ public class PerformanceAssessmentQueryBuilder {
 				kpiCodeList.size() == 1 && !kpiCodeList.get(0).equals("ALL")) {
 				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
 				selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
+		}
+		
+		if (null != kpiValueSearchReq.getDepartmentId()) { 
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department = ? ");
+            preparedStatementValues.add(kpiValueSearchReq.getDepartmentId());
 		}
 	}
     

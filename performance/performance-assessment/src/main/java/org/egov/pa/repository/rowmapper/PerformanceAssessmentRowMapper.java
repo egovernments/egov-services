@@ -52,6 +52,7 @@ import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.TargetType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.RowMapper;
@@ -83,19 +84,19 @@ public class PerformanceAssessmentRowMapper {
 				audit.setLastModifiedBy(rs.getLong("lastModifiedBy"));
 				audit.setLastModifiedTime(rs.getLong("lastModifiedDate"));
 				kpi.setTargetValue(rs.getLong("targetValue"));
-				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TRUE_FLAG)) { 
-					kpi.setTargetType(Boolean.TRUE);
-					kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
-				} else if (null != rs.getString("targetType") && rs.getString("targetType").equals(FALSE_FLAG)) {
-					kpi.setTargetType(Boolean.FALSE);
+				kpi.setTargetType(rs.getString("targetType"));
+				kpi.setTargetDescription(rs.getString("targetDescription"));
+				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
 					if(rs.getLong("targetValue") == 1) 
-						kpi.setTargetDescription("YES");
+						kpi.setTargetDescription("Yes");
 					else if(rs.getLong("targetValue") == 2)
-						kpi.setTargetDescription("NO");
+						kpi.setTargetDescription("No");
 					else if(rs.getLong("targetValue") == 3)
 						kpi.setTargetDescription("In Progress");
 				}
-				
+				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.VALUE.toString())) { 
+					kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
+				}
 				kpi.setInstructions(rs.getString("instructions"));
 				kpi.setDepartmentId(rs.getLong("departmentId"));
 				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
@@ -160,22 +161,20 @@ public class PerformanceAssessmentRowMapper {
 		public KpiValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			KpiValue value = new KpiValue(); 
 			value.setId(String.valueOf(rs.getString("valueId"))); 
-			value.setResultValue(rs.getLong("actualValue")); 
+			value.setResultValue(rs.getLong("actualValue"));
+			value.setResultDescription(rs.getString("actualDescription"));
 			value.setTenantId(rs.getString("tenantId"));
 			
 			KPI kpi = new KPI();
 			kpi.setId(rs.getString("kpiId"));
 			kpi.setCode(rs.getString("kpiCode"));
-			kpi.setTargetValue(rs.getLong("targetValue"));
 			kpi.setInstructions(rs.getString("instructions"));
 			kpi.setFinancialYear(rs.getString("finYear"));
 			kpi.setName(rs.getString("kpiName"));
-			if(null != rs.getString("targetType") && rs.getString("targetType").equals(TRUE_FLAG)) { 
-				kpi.setTargetType(Boolean.TRUE);
-				kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
-				value.setResultDescription(String.valueOf(rs.getLong("actualValue")));
-			} else if (null != rs.getString("targetType") && rs.getString("targetType").equals(FALSE_FLAG)) {
-				kpi.setTargetType(Boolean.FALSE);
+			kpi.setTargetValue(rs.getLong("targetValue"));
+			kpi.setTargetType(rs.getString("targetType"));
+			kpi.setTargetDescription(rs.getString("targetDescription"));
+			if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
 				if(rs.getLong("targetValue") == 1) kpi.setTargetDescription("Yes");
 				else if(rs.getLong("targetValue") == 2) kpi.setTargetDescription("No");
 				else if(rs.getLong("targetValue") == 3) kpi.setTargetDescription("In Progress");
@@ -184,8 +183,11 @@ public class PerformanceAssessmentRowMapper {
 				else if (rs.getLong("actualValue") == 2) value.setResultDescription("No");
 				else if (rs.getLong("actualValue") == 3) value.setResultDescription("In Progress");
 			}
+			if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.VALUE.toString())) { 
+				kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
+				value.setResultDescription(String.valueOf(rs.getLong("actualValue")));
+			}
 			value.setKpi(kpi);
-			
 			return value; 
 		}
 	}

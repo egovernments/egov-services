@@ -139,18 +139,15 @@ public class KpiValueController implements KpiValue {
     @PostMapping(value = "/_search")
     @ResponseBody
 	public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
-			 @RequestParam("kpiCodes") List<String> kpiCodes,
+			 @RequestParam("departmentId") Long departmentId,
 			 @RequestParam("finYear") List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo) {
-    	log.info("Request Received for Search : " + tenantIdList + "\n" + kpiCodes + "\n" + finYearList);
+    	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
     	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
     	kpiValueSearchReq.setFinYear(finYearList);
-    	kpiValueSearchReq.setKpiCodes(kpiCodes);
+    	kpiValueSearchReq.setDepartmentId(departmentId);
     	kpiValueSearchReq.setTenantId(tenantIdList);
-        final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
-        if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         List<org.egov.pa.model.KpiValue> kpiValueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
         return getSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
     }

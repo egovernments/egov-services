@@ -2783,6 +2783,7 @@ var localization_EN_Data = {
  "inventory.common.gstno":"GST Number",
  "inventory.common.contactperson":"Contact Person",
  "inventory.common.contactno":"Contact No",
+ "inventory.common.contactpersonno":"Contact Person No",
  "inventory.common.bankinfo":"Bank Information",
  "inventory.common.bankname":"Bank Name",
  "inventory.common.bankacctno":"Bank Account No",
@@ -2791,6 +2792,7 @@ var localization_EN_Data = {
  "inventory.common.micr":"MICR Code",
  "inventory.common.active":"Active",
  "inventory.common.status":"Status",
+ "inventory.report.email":"Email",
 // Opening Balance Report Labels
  "reports.inventory.openbal.Uom":"UOM",
  "reports.inventory.openbal.Qty.":"Qty.",

@@ -134,13 +134,13 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 			bds.setCollectionPoint(cp.getCode());
 			bds.setTenantId(cp.getTenantId());
 			cp.setBinDetails(binIdDetailsJdbcRepository.search(bds));
-			collectionPointList.add(cp);
 
 			cpds = new CollectionPointDetailsSearch();
 			cpds.setTenantId(cp.getTenantId());
 			cpds.setCollectionPoint(cp.getCode());
-
 			cp.setCollectionPointDetails(collectionPointDetailsJdbcRepository.search(cpds));
+			
+			collectionPointList.add(cp);
 		}
 
 		page.setTotalResults(collectionPointList.size());

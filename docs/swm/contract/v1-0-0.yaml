@@ -2375,16 +2375,10 @@ definitions:
           type: number 
           format: double
           description: payment amount (in Rs.) for contract.
-        servicesOffered:
-          type: array
-          items:
-            $ref: '#/definitions/Vendor'
-            format: multiSelectCheckbox
-            description: List of services vendor is providing. show serviced location list from vendor master. At least one service has to be selected
         paymentTerms:
           $ref: '#/definitions/PaymentTerms'
           description: payment terms  of the Vendor Contract. At least one of the option has to be selected. Only one can be selected
-          format: singleValuelist
+          format: radios
         remarks:
           type: string
           description: ULB Admin can put remarks, if any

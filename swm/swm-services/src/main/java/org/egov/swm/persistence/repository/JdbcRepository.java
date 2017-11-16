@@ -97,6 +97,9 @@ public abstract class JdbcRepository {
 
 		LOG.info("Unique Checking for combination of fields tenantId & " + fieldValue);
 
+		LOG.info("Unique Checking for " + fieldName + "=" + fieldValue + ", " + uniqueFieldName + "="
+				+ uniqueFieldValue);
+
 		Map<String, Object> paramValues = new HashMap<>();
 
 		StringBuffer uniqueQuery = new StringBuffer("select count(*) as count from " + tableName
@@ -111,6 +114,8 @@ public abstract class JdbcRepository {
 		paramValues.put("fieldValue", fieldValue);
 
 		Long count = namedParameterJdbcTemplate.queryForObject(uniqueQuery.toString(), paramValues, Long.class);
+
+		LOG.info("Unique Checking Query " + uniqueQuery);
 
 		LOG.info("Record Count for combination of fields " + count);
 

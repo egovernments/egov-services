@@ -2822,7 +2822,7 @@ var localization_EN_Data = {
  "inventory.pricelist.search.title":"Search Price List",
 	"inventory.supplierName":"Supplier Name",
 	"inventory.agreementNumber":"Agreement Number",
-	"inventory.rateContractNumber":"Rate contract Number",
+	"inventory.rateContractNumber":"Rate contract / Tender / Quotation No.",
 	"inventory.rateContractDate":"Rate contract Date",
 	"inventory.agreementDate":"Agreement Date",
 	"inventory.agreementStartDate":"Agreement start date",

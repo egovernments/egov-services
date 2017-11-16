@@ -1893,19 +1893,19 @@ ReportDefinitions:
     type: number
     source: totalcount
   - name: completed
-    label: reports.pgr.status.completed
+    label: reports.pgr.completed
     type: number
     source: completed   
   - name: inprocess
-    label: reports.pgr.status.inprocess
+    label: reports.pgr.inprocess
     type: number
     source: inprocess
   - name: pending
-    label: reports.pgr.status.pending
+    label: reports.pgr.pending
     type: number
     source: pending
   - name: onhold
-    label: reports.pgr.status.onhold
+    label: reports.pgr.onhold
     type: number
     source: onhold
   searchParams:
@@ -1919,13 +1919,13 @@ ReportDefinitions:
     type: epoch
     source: seva
     isMandatory: true
-  - name: ward
+  - name: electionward
     label: reports.pgr.ward
-    type: singlevaluelist
+    type: multivaluelist
     source: seva
     isMandatory: false
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=$tenantid|$..id|$..name
-    searchClause: and sa.code::bigint = $ward
+    searchClause: and sa.code::bigint in ($electionward)
   query: SELECT boundary.name, (select name from egpgr_complainttype where code = ctype.code and tenantid = $tenantid) as complainttype, count(*) as totalcount, count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text,'REJECTED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text ='PROCESSING'::text THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'REOPENED'::character varying::text, 'REGISTERED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS pending,count(CASE WHEN cs.status::text ='ONHOLD'::text THEN 1 ELSE NULL::integer END) AS onhold FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
   groupBy: GROUP BY boundary.name, ctype.code ORDER By boundary.name;
   

@@ -60,7 +60,7 @@ var binDetails ={
         "jsonPath":"collectionPoints[0].binDetails[0].assetOrBinId",
         "label":"swm.collectionpoints.create.assetOrBinId",
         "type":"text",
-        "isRequired":false,
+        "isRequired":true,
         "isDisabled":false,
         "maxLength":256,
         "minLength":5,

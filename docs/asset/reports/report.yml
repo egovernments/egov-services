@@ -93,7 +93,7 @@ ReportDefinitions:
     type: string
     isMandatory: false
     source: asset
-    searchClause : AND asset.name=$name
+    searchClause : AND asset.name ilike '% $name %'
   - name: code
     label: reports.asset.code
     type: string

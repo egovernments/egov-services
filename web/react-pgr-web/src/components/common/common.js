@@ -2149,7 +2149,7 @@ var localization_EN_Data = {
 "swm.create.maintenanceUom": "Days/Kms (Maintenance)",
 "swm.create.downtimeforMaintenanceUom": "Hrs/Days (Downtime for maintenance)",
 "swm.create.group.title.VehicleMaintenanceDetails": "Vehicle Maintenance Details",
-"swm.create.page.title.VehicleMaintenanceDetails": "Vehicle Maintenance",
+"swm.create.page.title.VehicleMaintenanceDetails": "Vehicle Service Plan",
 "swm.create.maintenanceAfter": "Maintenance After (Days/Kms)",
 "swm.create.downtimeforMaintenance": "Downtime for Maintenance (Hrs/Days)",
 "swm.refillingpumpstations.create.group.title.RefillingPumpName": "Pump Station Details",
@@ -2159,6 +2159,7 @@ var localization_EN_Data = {
 "swm.refillingpumpstations.quantity": "Quantity (Litres)",
 "swm.refillingpumpstations.create.group.title.FuelDetails": "Fuel Details",
 "swm.refillingpumpstations.create.title": "Refilling Pump Station Master",
+"swm.search.refillingPumpStations.title": "Refilling Pump Station Search",
 "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year",
 
 

@@ -11,7 +11,7 @@ var dat ={
            "fields":[  
             {  
               "name":"name",
-              "jsonPath":"refillingPumpStations[0].name",
+              "jsonPath":"name",
               "label":"swm.refillingpumpstations.create.name",
               "type":"text",
               "isRequired":false,
@@ -21,8 +21,8 @@ var dat ={
               "patternErrorMsg":""
             },
             {  
-              "name":"name",
-              "jsonPath":"refillingPumpStations[0].typeOfPump.code",
+              "name":"code",
+              "jsonPath":"typeOfPumpCode",
               "label":"swm.refillingpumpstations.typeOfPump.name",
               "type":"singleValueList",
               "isRequired":false,
@@ -49,8 +49,8 @@ var dat ={
            "name"
         ],
         "resultPath":"refillingPumpStations",
-        "rowClickUrlUpdate":"/update/refillingpumpstations/{code}",
-        "rowClickUrlView":"/view/refillingpumpstations/{code}"
+        "rowClickUrlUpdate":"/update/swm/refillingpumpstations/{code}",
+        "rowClickUrlView":"/view/swm/refillingpumpstations/{code}"
      }
   },
   "swm.create":{  

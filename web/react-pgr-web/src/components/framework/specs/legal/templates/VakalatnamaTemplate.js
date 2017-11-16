@@ -101,7 +101,7 @@ export default class VakalatnamaTemplate extends Component{
 		      		{text: " AT ", alignment:'left'},
 		      		{text: (data.summon.courtName.address ? data.summon.courtName.address : "           ."), alignment:'left', decoration: 'underline'},
 		      		{text: " No. ", alignment:'left'},
-		      		{text: "           .", alignment:'left', decoration: 'underline'},
+		      		{text: data.summon.caseNo+".", alignment:'left', decoration: 'underline'},
 		      		{text: " OF ", alignment:'left'},
 		      		{text: (data.summon.plantiffName ? data.summon.plantiffName :  "           ."), alignment:'left', decoration: 'underline'},
 	      			{text: " Versus ", alignment:'left'},

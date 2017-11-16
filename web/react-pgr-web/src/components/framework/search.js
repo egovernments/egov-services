@@ -152,7 +152,8 @@ class Search extends Component {
 
     var specifications=JSON.parse(window.localStorage.getItem("specifications"));
     var currentSpecification=specifications[`${self.props.match.params.moduleName}.${self.props.match.path.split("/")[1]}`];
-
+    let {getVal, getValFromDropdownData} = self;
+    
     Api.commonApiPost(currentSpecification.url, formData, {}, null, currentSpecification.useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
       var result = currentSpecification.result;
@@ -168,10 +169,15 @@ class Search extends Component {
         for(var i=0; i<values.length; i++) {
           var tmp = [i+1];
           for(var j=0; j<specsValuesList.length; j++) {
+            let valuePath = specsValuesList[j];
+            if(typeof valuePath === 'object' && valuePath.valExp){
+              tmp.push(eval(valuePath.valExp));
+              continue;
+            }
             // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
             //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
             // } else {
-              tmp.push(_.get(values[i], specsValuesList[j]));
+              tmp.push(_.get(values[i], valuePath));
             // }
           }
           resultList.resultValues.push(tmp);
@@ -199,6 +205,12 @@ class Search extends Component {
 
   getVal = (path) => {
     return _.get(this.props.formData, path) || "";
+  }
+
+  getValFromDropdownData = (fieldJsonPath, key, path) => {
+    let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
+    let _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
+    return typeof _val != "undefined" ? _val : "";
   }
 
   hideField = (_mockData, hideObject, reset) => {

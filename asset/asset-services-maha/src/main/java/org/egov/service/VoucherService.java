@@ -15,17 +15,21 @@ public class VoucherService {
 	@Autowired
 	private AssetService assetService;
 	
-	@Autowired
-	private AssetValidator assetValidator;
-	
+/*	
 	public String revaluationVoucherGenerator(RevaluationRequest revaluationRequest) {
 		System.out.println(" VoucherService revaluationVoucherGenerator");
 		
 		Revaluation  revaluation=revaluationRequest.getRevaluation();
 		Long assetId = revaluation.getAssetId();
-	    assetValidator.validateForRevaluation(revaluationRequest);
-		String voucher= "VOURE"+Math.random();
-		return voucher;
+
+		Asset asset = assetService.getAsset(revaluationRequest.getRevaluation().getTenantId(),
+				revaluationRequest.getRevaluation().getAssetId(), revaluationRequest.getRequestInfo());
+		if (asset.getAssetAccount() == null || asset.getRevaluationReserveAccount() == null 
+				|| asset.getAccumulatedDepreciationAccount() == null
+				|| asset.getDepreciationExpenseAccount() == null)
+		
+		
+		return  "VOURE"+Math.random();
 		
 	}
 	
@@ -33,10 +37,10 @@ public class VoucherService {
 		
 		Disposal disposal=disposalRequest.getDisposal();
 		Long assetId = disposal.getAssetId();
-	    assetValidator.validateForDisposal(disposalRequest);
+
 		String voucher= "VOUDS"+Math.random();
 		return voucher;
 		
-	}
+	}*/
 
 }

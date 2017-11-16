@@ -70,7 +70,7 @@ public class DisposalService {
 
     public DisposalResponse createAsync(final DisposalRequest disposalRequest) {
         final Disposal disposal = disposalRequest.getDisposal();
-
+        disposal.setTransactionType(TransactionType.DISPOSAL);
         disposal.setId(assetCommonService.getNextId(Sequence.DISPOSALSEQUENCE));
 
         if (disposal.getAuditDetails() == null)

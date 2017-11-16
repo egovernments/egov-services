@@ -81,7 +81,7 @@ public class AssetController {
 
 	@PostMapping("_update")
 	@ResponseBody
-	public ResponseEntity<?> update(@RequestBody final AssetRequest assetRequest) {
+	public ResponseEntity<?> update(@RequestBody @Valid final AssetRequest assetRequest) {
 		assetValidator.validateAsset(assetRequest);
 		final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
@@ -91,7 +91,7 @@ public class AssetController {
 	@ResponseBody
 	public ResponseEntity<?> revaluate(@RequestBody @Valid final RevaluationRequest revaluationRequest) {
 
-		// assetValidator.validateRevaluation(revaluationRequest);
+		assetValidator.validateForRevaluation(revaluationRequest);
 		final RevaluationResponse revaluationResponse = revaluationService.createAsync(revaluationRequest);
 		return new ResponseEntity<>(revaluationResponse, HttpStatus.CREATED);
 	}
@@ -100,8 +100,6 @@ public class AssetController {
 	@ResponseBody
 	public ResponseEntity<?> reevaluateSearch(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid final RevaluationCriteria revaluationCriteria) {
-
-		log.debug("reevaluateSearch revaluationCriteria:" + revaluationCriteria);
 
 		final RevaluationResponse revaluationResponse = revaluationService.search(revaluationCriteria,
 				requestInfoWrapper.getRequestInfo());
@@ -113,8 +111,8 @@ public class AssetController {
 	@ResponseBody
 	public ResponseEntity<?> dispose(@RequestBody @Valid final DisposalRequest disposalRequest) {
 
+		assetValidator.validateForDisposal(disposalRequest);
 		final DisposalResponse disposalResponse = disposalService.createAsync(disposalRequest);
-		log.debug("dispose disposalResponse:" + disposalResponse);
 		return new ResponseEntity<DisposalResponse>(disposalResponse, HttpStatus.CREATED);
 	}
 

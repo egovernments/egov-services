@@ -129,8 +129,7 @@ public class AssetService {
 		if (assets != null && !assets.isEmpty())
 			return assets.get(0);
 		else
-			throw new RuntimeException(
-					"There is no asset exists for id ::" + assetId + " for tenant id :: " + tenantId);
+			return null;
 	}
 
 	private void mapMasters(List<Asset> assets, RequestInfo requestInfo, String tenantId) {

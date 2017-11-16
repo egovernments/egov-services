@@ -1,6 +1,7 @@
 package org.egov.contract;
 
 import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.model.Revaluation;
@@ -20,10 +21,12 @@ import lombok.NoArgsConstructor;
 public class RevaluationRequest   {
 	
   @JsonProperty("RequestInfo")
+  @NotNull
   private RequestInfo requestInfo;
 
   @JsonProperty("Revaluation")
   @Valid
+  @NotNull
   private Revaluation revaluation;
 
 }

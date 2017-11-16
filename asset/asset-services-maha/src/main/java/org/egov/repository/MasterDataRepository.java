@@ -39,23 +39,26 @@ public class MasterDataRepository {
 			for (String masterKey : masterMap.keySet()) {
 
 				Map<String, String> fieldMap = masterMap.get(masterKey);
-				StringBuilder filterString = new StringBuilder("[?( ");
+				if (!fieldMap.isEmpty()) {
+					StringBuilder filterString = new StringBuilder("[?( ");
 
-				Set<String> fieldSet = fieldMap.keySet();
-				String[] fieldSetArray = new String[fieldSet.size()];
-				fieldSetArray = fieldSet.toArray(fieldSetArray);
-				for (int index = 0; index < fieldSetArray.length; index++) {
-					String fieldName = fieldSetArray[index];
-					if (index != 0)
-						filterString.append(" && ");
-					filterString.append("@." + fieldName + " in [" + fieldMap.get(fieldName) + "]");
-				}
-				filterString.append(")]");
-				masterDetails.add(MasterDetail.builder().name(masterKey).filter(filterString.toString()).build());
+					Set<String> fieldSet = fieldMap.keySet();
+					String[] fieldSetArray = new String[fieldSet.size()];
+					fieldSetArray = fieldSet.toArray(fieldSetArray);
+					for (int index = 0; index < fieldSetArray.length; index++) {
+						String fieldName = fieldSetArray[index];
+						if (index != 0)
+							filterString.append(" && ");
+						filterString.append("@." + fieldName + " in [" + fieldMap.get(fieldName) + "]");
+					}
+					filterString.append(")]");
+					masterDetails.add(MasterDetail.builder().name(masterKey).filter(filterString.toString()).build());
+				} else
+					masterDetails.add(MasterDetail.builder().name(masterKey).build());
 			}
 			map.put(moduleKey, masterDetails);
 		}
-		log.info(" the MDMS Request map : "+ map);
+		log.info(" the MDMS Request map : " + map);
 		MdmsResponse mdmsResponse = mdmsClientService.getMaster(requestInfo, tenantId, map);
 
 		return mdmsResponse.getMdmsRes();

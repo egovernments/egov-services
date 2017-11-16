@@ -48,9 +48,6 @@ public class RevaluationService {
     @Autowired
     private ResponseInfoFactory responseInfoFactory;
     
-    @Autowired
-    private VoucherService voucherService;
-
     public RevaluationResponse createAsync(final RevaluationRequest revaluationRequest) {
     	
          Revaluation revaluation = revaluationRequest.getRevaluation();

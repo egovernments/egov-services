@@ -1,6 +1,7 @@
 package org.egov.web.validator;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +40,6 @@ public class AssetValidator implements Validator {
 	@Autowired
 	private AssetService assetService;
 
-	Map<String, String> errorMap = new HashMap<>();
-
 	@Override
 	public boolean supports(Class<?> clazz) {
 		return AssetRequest.class.equals(clazz);
@@ -52,14 +51,16 @@ public class AssetValidator implements Validator {
 	}
 
 	public void validateAsset(AssetRequest assetRequest) {
+		
+		Map<String, String> errorMap = new HashMap<>();
 
 		Asset asset = assetRequest.getAsset();
 		AssetCategory assetCategory = asset.getAssetCategory();
 
 		addMissingPathForPersister(asset);
-		validateAndEnrichStateWideMasters(assetRequest);
+		validateAndEnrichStateWideMasters(assetRequest,errorMap);
 		if(!asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.LAND))
-		validateAnticipatedLife(asset.getAnticipatedLife(),assetCategory.getDepreciationRate());
+		validateAnticipatedLife(asset.getAnticipatedLife(),assetCategory.getDepreciationRate(),errorMap);
 		else
 			asset.setAnticipatedLife(null);
 		/* assetAccountValidate(asset, errorMap); */
@@ -75,7 +76,7 @@ public class AssetValidator implements Validator {
 			throw new CustomException(errorMap);
 	}
 
-	private void validateAndEnrichStateWideMasters(AssetRequest assetRequest) {
+	private void validateAndEnrichStateWideMasters(AssetRequest assetRequest, Map<String, String> errorMap) {
 
 		Asset asset = assetRequest.getAsset();
 		List<Asset> assets = new ArrayList<>();
@@ -117,7 +118,7 @@ public class AssetValidator implements Validator {
 
 	}
 
-	private void validateAnticipatedLife(Long anticipatedLife, Double depreciationRate) {
+	private void validateAnticipatedLife(Long anticipatedLife, Double depreciationRate, Map<String, String> errorMap) {
 
 		long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
 		log.info("newVal : " + newVal);
@@ -136,57 +137,63 @@ public class AssetValidator implements Validator {
 			asset.setLocationDetails(new Location());
 		if(asset.getFundSource() == null)
 			asset.setFundSource(new FundSource());
+		
+		//FIXME TODO remove it after ghansyam handles it in persister
+		if(asset.getTitleDocumentsAvalable()==null) {
+			asset.setTitleDocumentsAvalable(new ArrayList<>());
+		}
 	}
 
-	public void assetIdValidation(Long assetId, String tenantId, RequestInfo requestInfo) {
-		Asset asset = assetService.getAsset(tenantId, assetId, requestInfo);
-		
-		if (asset == null)
-			errorMap.put("egasset_AssetId", "The given Assetid is Invalid");
-		
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);
-	}
 
 	public void validateForRevaluation(RevaluationRequest revaluationRequest) {
+		
+		Map<String, String> errorMap = new HashMap<>();
+		
 		Revaluation revaluation= revaluationRequest.getRevaluation();
-		assetIdValidation(revaluation.getAssetId(),
-				revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
 		Asset asset = assetService.getAsset(revaluationRequest.getRevaluation().getTenantId(),
 				revaluationRequest.getRevaluation().getAssetId(), revaluationRequest.getRequestInfo());
-		if (asset.getAssetAccount() == null || asset.getAssetAccount().isEmpty()
-				|| asset.getRevaluationReserveAccount() == null || asset.getRevaluationReserveAccount().isEmpty()
-				|| asset.getAccumulatedDepreciationAccount() == null
-				|| asset.getAccumulatedDepreciationAccount().isEmpty()
-				|| asset.getDepreciationExpenseAccount().isEmpty() || asset.getDepreciationExpenseAccount() == null)
-			errorMap.put("Revaluation", "Invalid Account details");
+		
+		if(asset == null)
+			errorMap.put("EGASSET_REVALUATION_ASSET", "Given Asset For Revaluation Cannot Be Found");
+		
+		if(revaluation.getRevaluationAmount()!=null && revaluation.getRevaluationAmount().longValue()<=0)
+			errorMap.put("EGASSET_REVALUATION_AMOUNT", "Negative Revaluation Amount Cannot Be Accepted");
+		
+		if(revaluation.getRevaluationDate().compareTo(new Date().getTime()) > 0)
+			errorMap.put("EGASSET_REVALUATION_DATE", "Assets Cannot be Revaluated For Future Dates");
+		
+		if(revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
+			errorMap.put("EGASSET_REVALUATION_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
+		if(!(asset.getCurrentValue().subtract(revaluation.getRevaluationAmount()).doubleValue()
+				-(revaluation.getValueAfterRevaluation().doubleValue())  == 0))
+			errorMap.put("EGASSET_REVALUATION_VALUATION_AMOUNT", "THE Valuation Amount Calculation Is Wrong");
+		
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-		/*if(revaluation.getRevaluationAmount().longValue()<=0||revaluation.getRevaluationAmount()==null)
-			errorMap.put("Revaluation", "Invalid Revaluation amount");
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);*/
 	}
 
-	public void validateForDisposal(DisposalRequest disposalequest) {
-		Disposal disposal = disposalequest.getDisposal();
-		assetIdValidation(disposal.getAssetId(), disposal.getTenantId(),
-				disposalequest.getRequestInfo());
+	public void validateForDisposal(DisposalRequest disposalRequest) {
+		
+		Map<String, String> errorMap = new HashMap<>();
+		
+		Disposal disposal = disposalRequest.getDisposal();
+		
 		Asset asset = assetService.getAsset(disposal.getTenantId(),
-				disposal.getAssetId(), disposalequest.getRequestInfo());
-		if (asset.getAssetAccount() == null || asset.getAssetAccount().isEmpty()
-				|| asset.getRevaluationReserveAccount() == null || asset.getRevaluationReserveAccount().isEmpty()
-				|| asset.getAccumulatedDepreciationAccount() == null
-				|| asset.getAccumulatedDepreciationAccount().isEmpty()
-				|| asset.getDepreciationExpenseAccount().isEmpty() || asset.getDepreciationExpenseAccount() == null)
-			errorMap.put("Disposal", "Invalid Account details");
+				disposal.getAssetId(), disposalRequest.getRequestInfo());
+		
+		if(asset == null)
+			errorMap.put("EGASSET_DISPOSAL_ASSET", "Given Asset For Disposal Cannot Be Found");
+		
+		if(disposal.getSaleValue()!=null && disposal.getSaleValue().longValue()<=0)
+			errorMap.put("EGASSET_DISPOSAL_AMOUNT", "Negative Sale Amount Cannot Be Accepted");
+		
+		if(disposal.getDisposalDate().compareTo(new Date().getTime()) > 0)
+			errorMap.put("EGASSET_DISPOSAL_DATE", "Assets Cannot be Disposed/Sold For Future Dates");
+		
+		if(disposal.getOrderDate().compareTo(new Date().getTime()) > 0)
+			errorMap.put("EGASSET_DISPOSAL_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
+		
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-		/*if(disposal.getSaleValue().longValue()<=0||disposal.getSaleValue()==null)
-			errorMap.put("Disposal", "Invalid sale amount");
-		if (!errorMap.isEmpty())
-			throw new CustomException(errorMap);*/
-			
-
 	}
 }

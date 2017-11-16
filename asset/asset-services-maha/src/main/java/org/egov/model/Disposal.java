@@ -68,7 +68,6 @@ public class Disposal   {
 
   @JsonProperty("saleValue")
   @NotNull
-  @Min(0)
   private BigDecimal saleValue;
 
   @JsonProperty("transactionType")

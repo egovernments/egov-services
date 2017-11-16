@@ -55,10 +55,14 @@ public class MasterDataService {
 
 	public Map<String,Map<String,Map<String,String>>> getStateWideParams(List<Asset> assets){
 		
-		Set<Long> asCatSet = assets.stream().map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet());
-		Set<String> deptSet = assets.stream().map(asset -> asset.getDepartment().getCode()).collect(Collectors.toSet());
-		Set<String> modeOfAcSet = assets.stream().map(asset -> asset.getModeOfAcquisition().getCode()).collect(Collectors.toSet());
-		Set<String> fundSet = assets.stream().map(asset -> asset.getFundSource().getCode()).collect(Collectors.toSet());
+		Set<Long> asCatSet = assets.stream().filter(a -> a.getAssetCategory().getId() != null)
+				.map(asset -> asset.getAssetCategory().getId()).collect(Collectors.toSet());
+		Set<String> deptSet = assets.stream().filter(a -> a.getDepartment().getCode() != null)
+				.map(asset -> asset.getDepartment().getCode()).collect(Collectors.toSet());
+		Set<String> modeOfAcSet = assets.stream().filter(a -> a.getModeOfAcquisition().getCode() != null)
+				.map(asset -> asset.getModeOfAcquisition().getCode()).collect(Collectors.toSet());
+		Set<String> fundSet = assets.stream().filter(a -> a.getFundSource().getCode() != null)
+				.map(a -> a.getFundSource().getCode()).collect(Collectors.toSet());
 		
 		// module Map
 		Map<String, Map<String, Map<String, String>>> moduleMapInput = new HashMap<>();
@@ -77,34 +81,26 @@ public class MasterDataService {
 		// AssetCategory
 		if (!asCatSet.isEmpty())
 			assetCategoryFieldMap.put("id", assetCommonService.getIdQuery(asCatSet));
-		if (!assetCategoryFieldMap.isEmpty())
 			assetmasterMap.put("AssetCategory", assetCategoryFieldMap);
 
 		// modeOfAcquisition
 		if (!modeOfAcSet.isEmpty())
 			modeofAcquisitionFeildMap.put("code", assetCommonService.getIdQueryFromString(modeOfAcSet));
-		if (!modeofAcquisitionFeildMap.isEmpty())
 			assetmasterMap.put("ModeOfAcquisition", modeofAcquisitionFeildMap);
-
-		if (!assetmasterMap.isEmpty())
 			moduleMapInput.put("ASSET", assetmasterMap);
 
 		// department and common masters
 		if (!deptSet.isEmpty())
 			departmentFieldMap.put("code", assetCommonService.getIdQueryFromString(deptSet));
-		if (!departmentFieldMap.isEmpty())
 			commonMastersMap.put("Department", departmentFieldMap);
-		if (!commonMastersMap.isEmpty())
 			moduleMapInput.put("common-masters", commonMastersMap);
 
 		// egf-master and fundsource
 		if (!fundSet.isEmpty())
 			fundSourceFieldMap.put("code", assetCommonService.getIdQueryFromString(fundSet));
-		if (!fundSourceFieldMap.isEmpty())
 			egfMastersMap.put("funds", fundSourceFieldMap);
-		if (!egfMastersMap.isEmpty())
 			moduleMapInput.put("egf-master", egfMastersMap);
-
+		
 		return moduleMapInput;
 	}
 

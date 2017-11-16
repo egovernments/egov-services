@@ -50,7 +50,6 @@ public class Revaluation   {
   private TypeOfChange typeOfChange;
 
   @NotNull
-  @Min(0)
   @JsonProperty("revaluationAmount")
   private BigDecimal revaluationAmount;
 

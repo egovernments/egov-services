@@ -20,10 +20,11 @@ import lombok.NoArgsConstructor;
 public class DisposalRequest  {
 	
   @JsonProperty("RequestInfo")
+  @NotNull
   private RequestInfo requestInfo;
 
-  @NotNull
   @Valid
+  @NotNull
   @JsonProperty("Disposal")
   private Disposal disposal;
 

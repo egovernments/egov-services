@@ -1,6 +1,5 @@
 package org.egov.web.validator;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -55,8 +54,8 @@ public class AssetValidator implements Validator {
 		Asset asset = assetRequest.getAsset();
 		AssetCategory assetCategory = asset.getAssetCategory();
 
-		validateAndEnrichStateWideMasters(assetRequest);
 		addMissingPathForPersister(asset);
+		validateAndEnrichStateWideMasters(assetRequest);
 		if(!asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.LAND))
 		validateAnticipatedLife(asset.getAnticipatedLife(),assetCategory.getDepreciationRate());
 		else
@@ -101,11 +100,13 @@ public class AssetValidator implements Validator {
 		else
 			asset.setDepartment(department);
 
-		FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
-		if (fundSource == null)
-			errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource code is Invalid");
-		else
-			asset.setFundSource(fundSource);
+		if (asset.getFundSource().getCode() != null) {
+			FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
+			if (fundSource == null)
+				errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource code is Invalid");
+			else
+				asset.setFundSource(fundSource);
+		}
 	}
 
 	private void validateAndEnrichUlbWideMasters(AssetRequest assetRequest) {
@@ -129,7 +130,8 @@ public class AssetValidator implements Validator {
 			asset.setDefectLiabilityPeriod(new DefectLiability());
 		if (asset.getLocationDetails() == null)
 			asset.setLocationDetails(new Location());
-
+		if(asset.getFundSource() == null)
+			asset.setFundSource(new FundSource());
 	}
 
 	public void assetIdValidation(Long assetId, String tenantId, RequestInfo requestInfo) {

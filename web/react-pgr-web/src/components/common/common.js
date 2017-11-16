@@ -395,6 +395,7 @@ var localization_EN_Data = {
 "reports.lcms.status": "Status",
 "reports.lcms.plaintiffName": "Plaintiff Name",
 "reports.lcms.hearingDetails" : "Hearing Details",
+"reports.lcms.hearingDate": "Hearing Date",
 "reports.lcms.departmentPerson" : "Department Concerned Person",
 "reports.lcms.courtType" : "Court Type",
 "reports.lcms.concernedPersonName": "Concerned Person Name",

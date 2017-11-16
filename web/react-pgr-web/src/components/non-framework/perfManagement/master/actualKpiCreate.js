@@ -816,14 +816,14 @@ class actualKpiCreate extends Component {
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
 
-    
+
       let obj = specifications[`perfManagement.create`];
 
       if (property == "kpiValues[0].KPI.code") {
 
         let postData = {"RequestInfo":{"apiId":"org.egov.pt","ver":"1.0","ts":1510680585832,"action":"asd","did":"4354648646","key":"xyz","msgId":"654654","requesterId":"61","authToken":"00ea3217-634a-41ed-8b7a-69f91cf35a29"}};
 
-        Api.commonApiPost('/perfmanagement/v1/kpimaster/_search',postData,{},false,true).then((res)=>{
+        Api.commonApiPost('/perfmanagement/v1/kpimaster/_search',{},{},false,true).then((res)=>{
          let data = res.KPIs;
          //console.log(res.KPIs);
           for (var i = 0; i < data.length; i++) {

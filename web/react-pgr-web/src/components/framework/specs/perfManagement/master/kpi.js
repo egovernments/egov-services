@@ -302,7 +302,7 @@ var dat = {
                         "type": "text",
                         "isDisabled": false,
                         "requiredErrMsg": ""
-                    }, {
+                    }/* {
                         "name": "viewkpitype",
                         "jsonPath": "KPIs[0].targetType",
                         "label": "perfManagement.view.KPIs.groups.viewkpitype",
@@ -333,7 +333,7 @@ var dat = {
                                 "isField": false
                             }]
                         }]
-                    }
+                    }*/
                 ]
             }, {
                 "label": "perfManagement.view.KPIs.groups.viewkpiTargetBlock",
@@ -490,7 +490,7 @@ var dat = {
                         "isDisabled": false,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
-                        "defaultValue": false,
+                        "defaultValue": true,
                         "values": [{
                             "label": "perfManagement.update.KPIs.groups.updatekpitype.value",
                             "value": true

@@ -39,7 +39,7 @@ var dat = {
       "values": ["kpi.name","kpi.financialYear","kpi.targetDescription", "resultDescription"],
       "resultPath": "kpiValues",
       "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}",
-      "rowClickUrlView": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
+      "rowClickUrlView": "/view/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
       }
   },
   "perfManagement.update": {
@@ -94,6 +94,9 @@ var dat = {
               "isDisabled": true,
               "requiredErrMsg": ""
             },
+
+
+
             {
               "name": "updateActualKpiInstruction",
               "jsonPath": "kpiValues[0].kpi.instructions",
@@ -104,16 +107,95 @@ var dat = {
               "isDisabled": true,
               "requiredErrMsg": ""
             },
-            {
+            /*{
               "name": "updateActualKpiActual",
-              "jsonPath": "kpiValues[0].resultValue",
+              "jsonPath": "kpiValues[0].resultDescription",
               "label": "Actual Value",
               "pattern": "",
               "type": "number",
-              "isDisabled": false,
+              "isDisabled": true,
               "requiredErrMsg": ""
-            }
+            },*/
+            {
+          		"name": "kpitype",
+          		"jsonPath": "kpiValues[0].kpi.targetType",
+          		"label": "perfManagement.create.KPIs.groups.kpitype",
+          		"pattern": "",
+          		"type": "radio",
+          		"isRequired": false,
+          		"isDisabled": true,
+          		"requiredErrMsg": "",
+          		"patternErrMsg": "",
+          		"values": [{
+          			"label": "perfManagement.create.KPIs.groups.kpitype.value",
+          			"value": true
+          		}, {
+          			"label": "perfManagement.create.KPIs.groups.kpitype.objective",
+          			"value": false
+          		}],
+          		"defaultValue": true,
+          		"showHideFields": [{
+          			"ifValue": false,
+          			"hide": [{
+          				"name": "kpiTargetBlock",
+          				"isGroup": true,
+          				"isField": false
+          			}],
+          			"show": [{
+          				"name": "kpiTargetRadioBlock",
+          				"isGroup": true,
+          				"isField": false
+          			}]
+          		}]
+          	}
+
             ]
+        },
+
+        {
+        "label": "perfManagement.create.KPIs.groups.kpiTargetBlock",
+        "name": "kpiTargetBlock",
+        "hide": false,
+        "multiple": false,
+        "fields": [{
+          "name": "kpiTarget",
+          //"hide":false,
+          "jsonPath": "kpiValues[0].resultValue",
+          "label": "",
+          "pattern": "[0-9]",
+          "type": "text",
+          "isDisabled": false,
+          "patternErrMsg": "Please enter a valid number",
+          "requiredErrMsg": ""
+        }]
+        },
+        {
+        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
+        "name": "kpiTargetRadioBlock",
+        "hide": true,
+        "multiple": false,
+        "fields": [{
+          "name": "kpiTargetRadio",
+          //"hide":true,
+          "jsonPath": "kpiValues[0].resultValue",
+          "label": "",
+          "pattern": "",
+          "type": "radio",
+          "isRequired": false,
+          "isDisabled": false,
+          "requiredErrMsg": "",
+          "patternErrMsg": "",
+          "values": [{
+            "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes",
+            "value": 1
+          }, {
+            "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no",
+            "value": 2
+          }, {
+            "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress",
+            "value": 3
+          }]
+        }]
         },
         {
 	        "name": "UploadDocument",
@@ -139,6 +221,78 @@ var dat = {
             }]
 		}
         ]
-  }
+  },
+
+  "perfManagement.view": {
+        "numCols": 12 / 2,
+        "url": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
+        "useTimestamp": true,
+        "objectName": "KPIs",
+        "groups": [{
+                "label": "Actual Key Performance Indicator",
+                "name": "viewKPI",
+                "fields": [{
+                        "name": "viewkpiDepartment",
+                        "jsonPath": "kpiValues[0].kpi.code",
+                        // "url": "egov-mdms-service/v1/_get?tenantId=default&tenantIdCustom={KPIs[0].tenantId}&moduleName=common-masters&masterName=Department|$..id|$..name",
+                        "label": "KPI Code",
+                        "pattern": "",
+                        "type": "text",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    },
+                    {
+                        "name": "viewkpiDate",
+                        "jsonPath": "kpiValues[0].kpi.financialYear",
+                        "label": "Financial Year",
+                        "isRequired": true,
+                        "pattern": "",
+                        "type": "singleValueList",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    },
+
+                    {
+              "name": "updateActualKpiName",
+              "jsonPath": "kpiValues[0].kpi.name",
+              "label": "KPI Name",
+              "isRequired": true,
+              "pattern": "",
+              "type": "text",
+              "isDisabled": true,
+              "requiredErrMsg": ""
+            },
+            {
+              "name": "updateActualKpiTarget",
+              "jsonPath": "kpiValues[0].kpi.targetDescription",
+              "label": "Target Value",
+              "pattern": "",
+              "type": "text",
+              "isDisabled": true,
+              "requiredErrMsg": ""
+            },
+            {
+                  "name": "updateActualKpiInstruction",
+                  "jsonPath": "kpiValues[0].kpi.instructions",
+                  "label": "Instruction to Achieve Target",
+                  "pattern": "",
+                  "type": "textarea",
+                  "fullWidth":true,
+                  "isDisabled": true,
+                  "requiredErrMsg": ""
+                },
+                {
+                  "name": "updateActualKpiActual",
+                  "jsonPath": "kpiValues[0].resultDescription",
+                  "label": "Actual Value",
+                  "pattern": "",
+                  "type": "number",
+                  "isDisabled": false,
+                  "requiredErrMsg": ""
+                }
+                ]
+            }
+        ]
+    },
 }
 export default dat;

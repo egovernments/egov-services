@@ -18,12 +18,16 @@ import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.VendorEntity;
 import org.egov.swm.web.repository.BoundaryRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
+
+	private static final Logger LOG = LoggerFactory.getLogger(JdbcRepository.class);
 
 	public static final String TABLE_NAME = "egswm_vendor";
 
@@ -127,7 +131,7 @@ public class VendorJdbcRepository extends JdbcRepository {
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorEntity.class);
 
 		List<Vendor> vendorList = new ArrayList<>();
-
+		LOG.info("Vendor search query  " + searchQuery + " and param values" + paramValues.toString());
 		List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 		Vendor v;
 		Supplier cs;

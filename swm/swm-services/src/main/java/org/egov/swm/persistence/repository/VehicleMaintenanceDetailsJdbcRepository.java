@@ -37,7 +37,7 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(searchRequest.getSortBy(), VehicleMaintenanceDetailsSearch.class);
 		}
 
-		String orderBy = "order by name";
+		String orderBy = "order by vehicle";
 		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
 			orderBy = "order by " + searchRequest.getSortBy();
 		}

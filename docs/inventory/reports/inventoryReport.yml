@@ -1,7 +1,7 @@
 ---
 ReportDefinitions:
   #  Stock Opening Balance Report
-- reportName: openingbalance
+- reportName: openingBalanceReport
   summary: Stock Opening Balance Report
   version: 1.0.0
   moduleName: inventory
@@ -101,5 +101,4 @@ ReportDefinitions:
                       AND matrcpt.tenantid= $tenantId
                       AND matrcpt.tenantid=matrcptdtl.tenantid
                       AND matrcpt.mrnnumber = matrcptdtl.mrnnumber
-                    
-    
+

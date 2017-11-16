@@ -39,11 +39,11 @@ var dat = {
                  "value":"Company"
               },
               {
-                 "key":"REGISTERED SOCIETY",
+                 "key":"REGISTEREDSOCIETY",
                  "value":"Registered society"
               },
               {
-                 "key":"GOVERNMENT DEPARTMENT",
+                 "key":"GOVERNMENTDEPARTMENT",
                  "value":"Government Department"
               },
               {

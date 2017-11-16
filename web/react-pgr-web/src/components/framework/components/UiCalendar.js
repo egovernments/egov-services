@@ -60,7 +60,7 @@ export default class UiCalendar extends Component {
         var eventsObj = [];
         var edata = this.props.getVal(item);
         if (edata && edata.length > 0) {
-            edata.map((v, i) => {debugger;
+            edata.map((v, i) => {
                 var hearingTimeDate=new Date();
                 if(v.nextHearingDate && v.nextHearingTime){
                   var timeDate =new Date(parseInt(v.nextHearingTime));

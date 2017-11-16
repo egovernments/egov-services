@@ -39,32 +39,24 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (estimateAppropriationSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", estimateAppropriationSearchContract.getTenantId());
 		}
 		if (estimateAppropriationSearchContract.getBudgetReferanceNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("budgetrefnumber in (:budgetrefnumbers)");
 			paramValues.put("budgetrefnumbers", estimateAppropriationSearchContract.getBudgetReferanceNumbers());
 		}
 
 		if (estimateAppropriationSearchContract.getObjectNumber() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("objectNumber =:objectnumber");
 			paramValues.put("objectnumber", estimateAppropriationSearchContract.getObjectNumber());
 		}
 
 		if (estimateAppropriationSearchContract.getObjectType() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("objectType =:objecttype");
 			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
 		}

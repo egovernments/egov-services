@@ -41,31 +41,23 @@ public class AbstractEstimateDetailsJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (abstractEstimateDetailsSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", abstractEstimateDetailsSearchContract.getTenantId());
 		}
 		if (abstractEstimateDetailsSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", abstractEstimateDetailsSearchContract.getIds());
 		}
 
 		if (abstractEstimateDetailsSearchContract.getAbstractEstimateIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("abstractEstimate in(:estimateIds) ");
 			paramValues.put("estimateIds", abstractEstimateDetailsSearchContract.getAbstractEstimateIds());
 		}
 		if (abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers))");
 			paramValues.put("workIdentificationNumbers",
 					abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers());

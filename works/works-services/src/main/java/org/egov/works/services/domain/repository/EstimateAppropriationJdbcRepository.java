@@ -60,6 +60,34 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 			paramValues.put("objectnumber", estimateAppropriationSearchContract.getObjectNumber());
 		}
 
+		if (estimateAppropriationSearchContract.getAbstractEstimateNumbers() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("objectNumber =:objectnumber and objectType =:objecttype");
+			paramValues.put("objectnumber", estimateAppropriationSearchContract.getAbstractEstimateNumbers());
+			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
+
+		}
+
+		if (estimateAppropriationSearchContract.getWorkOrderNumbers() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("objectNumber =:objectnumber and objectType =:objecttype");
+			paramValues.put("objectnumber", estimateAppropriationSearchContract.getWorkOrderNumbers());
+			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
+		}
+		
+		if (estimateAppropriationSearchContract.getDetailedEstimateNumber() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("objectNumber =:objectnumber and objectType =:objecttype");
+			paramValues.put("objectnumber", estimateAppropriationSearchContract.getDetailedEstimateNumber());
+			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
+		}
+		
 		if (estimateAppropriationSearchContract.getObjectType() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -67,6 +95,15 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 			params.append("objectType =:objecttype");
 			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
 		}
+		
+		if (estimateAppropriationSearchContract.getIds() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id in(:ids) ");
+			paramValues.put("ids", estimateAppropriationSearchContract.getIds());
+		}
+
 
 		if (params.length() > 0) {
 

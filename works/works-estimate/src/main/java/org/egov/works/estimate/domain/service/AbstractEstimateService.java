@@ -72,7 +72,7 @@ public class AbstractEstimateService {
 
 	@Autowired
 	private ProjectCodeService projectCodeService;
-	
+
 	@Autowired
 	private EstimateValidator validator;
 
@@ -83,24 +83,22 @@ public class AbstractEstimateService {
 		Boolean isSpilloverWFReq = false;
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			estimate.setId(commonUtils.getUUID());
-			estimate.setAuditDetails(
-					getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
+			estimate.setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
 			for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails()) {
 				details.setId(commonUtils.getUUID());
-				details.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
+				details.setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
 			}
 			for (final AbstractEstimateSanctionDetail sanctionDetail : estimate.getSanctionDetails())
 				sanctionDetail.setId(commonUtils.getUUID());
 			for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails()) {
 				assetDetail.setId(commonUtils.getUUID());
 				assetDetail.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
+						estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
 			}
-			
+
 			if (!estimate.getSpillOverFlag()) {
-				String abstractEstimateNumber = idGenerationRepository
-						.generateAbstractEstimateNumber(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
+				String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(
+						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
 				// TODO: check idgen to accept values to generate
 				estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() + "/"
 						+ estimate.getDepartment().getCode() + abstractEstimateNumber);
@@ -116,20 +114,20 @@ public class AbstractEstimateService {
 				documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
 				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 				documentDetail.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false));
+						estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
 			}
 			if (estimate.getSpillOverFlag())
 				isSpilloverWFReq = isConfigRequired(Constants.SPILLOVER_WORKFLOW_MANDATORY,
 						abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
-	        if (!isSpilloverWFReq && estimate.getSpillOverFlag())
-	        	estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
-	        else {
-	        	populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
+			if (!isSpilloverWFReq && estimate.getSpillOverFlag())
+				estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
+			else {
+				populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
 				Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
 						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
 				estimate.setStateId(workFlowResponse.get("id"));
 				estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
-	        }
+			}
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
@@ -138,16 +136,14 @@ public class AbstractEstimateService {
 		return response;
 	}
 
-	private Boolean isConfigRequired(String keyName, RequestInfo requestInfo,
-			final String tenantId) {
+	private Boolean isConfigRequired(String keyName, RequestInfo requestInfo, final String tenantId) {
 		Boolean isSpilloverWFReq = false;
-		JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT,
-		        CommonConstants.CODE, keyName,
-		        tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+		JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+				keyName, tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
 		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
-		    Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
-		    if (jsonMap.get("value").equals("Yes"))
-		        isSpilloverWFReq = true;
+			Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+			if (jsonMap.get("value").equals("Yes"))
+				isSpilloverWFReq = true;
 		}
 		return isSpilloverWFReq;
 	}
@@ -156,14 +152,14 @@ public class AbstractEstimateService {
 		validator.validateEstimates(abstractEstimateRequest, false);
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-				if(documentDetail.getId().isEmpty())
+				if (documentDetail.getId().isEmpty())
 					documentDetail.setId(commonUtils.getUUID());
 				documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
 				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-				documentDetail.setAuditDetails(
-						getAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true));
+				documentDetail
+						.setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), true));
 			}
-			populateAuditDetails(abstractEstimateRequest.getRequestInfo().getUserInfo().getUserName(), estimate);
+			populateAuditDetails(abstractEstimateRequest.getRequestInfo(), estimate);
 			populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
 			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
 					estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
@@ -173,7 +169,8 @@ public class AbstractEstimateService {
 			Boolean isFinIntReq = isConfigRequired(Constants.FINANCIAL_INTEGRATION_KEY,
 					abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
-			if (isFinIntReq && estimate.getStatus().toString().equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
+			if (isFinIntReq && estimate.getStatus().toString()
+					.equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
 					setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
 
@@ -187,14 +184,14 @@ public class AbstractEstimateService {
 		return response;
 	}
 
-	private void populateAuditDetails(String userName, final AbstractEstimate estimate) {
+	private void populateAuditDetails(final RequestInfo requestInfo, final AbstractEstimate estimate) {
 		for (final AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
-			details.setAuditDetails(getAuditDetails(userName, true));
+			details.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
 		for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails())
-			assetDetail.setAuditDetails(getAuditDetails(userName, true));
+			assetDetail.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
 		for (final DocumentDetail documentDetail : estimate.getDocumentDetails())
-			documentDetail.setAuditDetails(getAuditDetails(userName, true));
-		estimate.setAuditDetails(getAuditDetails(userName, true));
+			documentDetail.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
+		estimate.setAuditDetails(estimateUtils.setAuditDetails(requestInfo, true));
 	}
 
 	private void populateWorkFlowDetails(AbstractEstimate abstractEstimate, RequestInfo requestInfo) {
@@ -224,24 +221,13 @@ public class AbstractEstimateService {
 		}
 	}
 
-	public AbstractEstimateResponse search(AbstractEstimateSearchContract abstractEstimateSearchContract, RequestInfo requestInfo) {
+	public AbstractEstimateResponse search(AbstractEstimateSearchContract abstractEstimateSearchContract,
+			RequestInfo requestInfo) {
 		List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimates);
 		response.setResponseInfo(estimateUtils.getResponseInfo(requestInfo));
 		return response;
-	}
-
-	public AuditDetails getAuditDetails(final String userName, final Boolean isUpdate) {
-		AuditDetails auditDetails = new AuditDetails();
-		if (!isUpdate) {
-			auditDetails.setCreatedBy(userName);
-			auditDetails.setCreatedTime(new Date().getTime());
-		}
-		auditDetails.setLastModifiedBy(userName);
-		auditDetails.setLastModifiedTime(new Date().getTime());
-
-		return auditDetails;
 	}
 
 	public String setProjectCode(final AbstractEstimateDetails abstractEstimateDetails, boolean spillOverFlag,
@@ -280,9 +266,9 @@ public class AbstractEstimateService {
 		EstimateAppropriationRequest estimateAppropriationRequest = new EstimateAppropriationRequest();
 		EstimateAppropriation estimateAppropriation = new EstimateAppropriation();
 		List<EstimateAppropriation> appropriations = new ArrayList<>();
-		if(abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode().getCode() != null)
-			estimateAppropriation
-					.setObjectNumber(abstractEstimateDetails.getProjectCode().getCode());
+		if (abstractEstimateDetails.getProjectCode() != null
+				&& abstractEstimateDetails.getProjectCode().getCode() != null)
+			estimateAppropriation.setObjectNumber(abstractEstimateDetails.getProjectCode().getCode());
 		estimateAppropriation.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 		estimateAppropriation.setTenantId(abstractEstimateDetails.getTenantId());
 		estimateAppropriationRequest.setEstimateAppropriations(appropriations);

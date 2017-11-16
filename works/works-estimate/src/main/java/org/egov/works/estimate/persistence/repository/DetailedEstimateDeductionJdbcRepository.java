@@ -41,24 +41,18 @@ public class DetailedEstimateDeductionJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (detailedEstimateDeductionSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", detailedEstimateDeductionSearchContract.getTenantId());
 		}
 		if (detailedEstimateDeductionSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", detailedEstimateDeductionSearchContract.getIds());
 		}
 
 		if (detailedEstimateDeductionSearchContract.getDetailedEstimateIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("detailedEstimate in(:detailedEstimateIds) ");
 			paramValues.put("detailedEstimateIds", detailedEstimateDeductionSearchContract.getDetailedEstimateIds());
 		}

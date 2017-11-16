@@ -43,24 +43,18 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
 
 
         if (abstractEstimateAssetDetailSearchContract.getTenantId() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
+        	addAnd(params);
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", abstractEstimateAssetDetailSearchContract.getTenantId());
         }
         if (abstractEstimateAssetDetailSearchContract.getIds() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
+        	addAnd(params);
             params.append("id in(:ids) ");
             paramValues.put("ids", abstractEstimateAssetDetailSearchContract.getIds());
         }
 
         if (abstractEstimateAssetDetailSearchContract.getAbstractEstimateIds() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
+        	addAnd(params);
             params.append("abstractEstimate in(:abstractEstimateIds) ");
             paramValues.put("abstractEstimateIds", abstractEstimateAssetDetailSearchContract.getAbstractEstimateIds());
         }

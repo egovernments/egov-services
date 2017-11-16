@@ -21,9 +21,19 @@ public class ProjectCodeSearchContract {
 	@NotNull
 	private String tenantId;
 	
-	private List<String> estimateNumbers;
+	private List<String> detailedEstimateNumbers;
 
 	private List<String> workIdentificationNumbers;
 	
 	private String sortBy;
+	
+	private List<String> ids;
+	
+	private List<String> abstractEstimateNumbers;
+	
+	private List<String> statuses;
+	
+	private Boolean active;
+	
+	private List<String> codes;
 }

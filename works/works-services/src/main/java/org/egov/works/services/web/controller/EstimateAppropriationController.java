@@ -27,36 +27,16 @@ public class EstimateAppropriationController {
 
 	@PostMapping("/_create")
 	@ResponseStatus(HttpStatus.OK)
-	public EstimateAppropriationResponse create(@RequestBody EstimateAppropriationRequest estimateAppropriationRequest) {
-
-		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-		/*
-		 * for (EstimateAppropriation estimateAppropriation :
-		 * estimateAppropriationRequest.getEstimateAppropriations()) {
-		 * estimateAppropriation.setAuditDetails(auditDetails);
-		 * estimateAppropriationService.validateEstimateAppropriation(
-		 * estimateAppropriation); }
-		 */
-		List<EstimateAppropriation> estimateAppropriations = estimateAppropriationService
-				.save(estimateAppropriationRequest);
-		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);
-		return estimateAppropriationResponse;
+	public EstimateAppropriationResponse create(
+			@RequestBody EstimateAppropriationRequest estimateAppropriationRequest) {
+		return estimateAppropriationService.create(estimateAppropriationRequest);
 	}
 
 	@PostMapping("/_update")
 	@ResponseStatus(HttpStatus.OK)
 	public EstimateAppropriationResponse update(
 			@RequestBody EstimateAppropriationRequest estimateAppropriationRequest) {
-
-		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-		// for (EstimateAppropriation estimateAppropriation :
-		// estimateAppropriationRequest.getEstimateAppropriations()) {
-		// estimateAppropriationService.validateEstimateAppropriation(estimateAppropriation);
-		// }
-		List<EstimateAppropriation> estimateAppropriations = estimateAppropriationService
-				.update(estimateAppropriationRequest);
-		estimateAppropriationResponse.setEstimateAppropriations(estimateAppropriations);
-		return estimateAppropriationResponse;
+		return estimateAppropriationService.update(estimateAppropriationRequest);
 	}
 
 	@PostMapping("/_search")

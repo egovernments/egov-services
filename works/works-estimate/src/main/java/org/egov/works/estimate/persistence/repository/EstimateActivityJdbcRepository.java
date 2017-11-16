@@ -41,24 +41,18 @@ public class EstimateActivityJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (estimateActivitySearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", estimateActivitySearchContract.getTenantId());
 		}
 		if (estimateActivitySearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", estimateActivitySearchContract.getIds());
 		}
 
 		if (estimateActivitySearchContract.getDetailedEstimateIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("detailedEstimate in(:detailedEstimateIds) ");
 			paramValues.put("detailedEstimateIds", estimateActivitySearchContract.getDetailedEstimateIds());
 		}

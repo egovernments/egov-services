@@ -1,0 +1,1 @@
+ALTER TABLE egw_projectcode  ALTER COLUMN name TYPE character varying(1024);

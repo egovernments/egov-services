@@ -17,9 +17,9 @@ public class OfflineStatusSearchContract {
 
 	private List<String> objectIds;
 
-	private List<String> workOrderNumbers;
-	
 	private List<String> loaNumbers;
+
+	private List<String> workOrderNumbers;
 	
 	private List<String> detailedEstimateNumber;
 

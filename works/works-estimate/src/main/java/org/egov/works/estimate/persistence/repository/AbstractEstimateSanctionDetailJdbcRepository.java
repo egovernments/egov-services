@@ -43,24 +43,18 @@ public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepositor
 
 
         if (abstractEstimateSanctionSearchContract.getTenantId() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
+        	addAnd(params);
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", abstractEstimateSanctionSearchContract.getTenantId());
         }
         if (abstractEstimateSanctionSearchContract.getIds() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
+        	addAnd(params);
             params.append("id in(:ids) ");
             paramValues.put("ids", abstractEstimateSanctionSearchContract.getIds());
         }
 
         if (abstractEstimateSanctionSearchContract.getAbstractEstimateIds() != null) {
-            if (params.length() > 0) {
-                params.append(" and ");
-            }
+        	addAnd(params);
             params.append("abstractEstimate in(:abstractEstimateIds) ");
             paramValues.put("abstractEstimateIds", abstractEstimateSanctionSearchContract.getAbstractEstimateIds());
         }

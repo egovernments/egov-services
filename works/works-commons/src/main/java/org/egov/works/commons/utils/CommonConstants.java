@@ -31,7 +31,7 @@ public class CommonConstants {
     public static final String GLCODE = "glcode";
     
     public static final String WORKORDER="WorkOrder";
-    public static final String LOA="LOA";
+    public static final String LETTEROFACCEPTANCE="LetterOfAcceptance";
     public static final String DETAILEDESTIMATE="DetailedEstimate";
     
     public static final String CODE = "code";

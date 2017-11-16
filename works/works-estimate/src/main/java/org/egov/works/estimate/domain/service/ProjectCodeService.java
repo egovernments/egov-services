@@ -1,23 +1,22 @@
 package org.egov.works.estimate.domain.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
+import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.estimate.config.Constants;
 import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.ProjectCodeRepository;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
-import org.egov.works.estimate.web.contract.AuditDetails;
+import org.egov.works.estimate.utils.EstimateUtils;
 import org.egov.works.estimate.web.contract.ProjectCode;
 import org.egov.works.estimate.web.contract.ProjectCodeRequest;
 import org.egov.works.estimate.web.contract.ProjectCodeSearchContract;
-import org.egov.works.estimate.web.contract.RequestInfo;
+import org.egov.works.estimate.web.contract.ProjectCodeStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,27 +37,29 @@ public class ProjectCodeService {
 	@Autowired
 	private IdGenerationRepository idGenerationRepository;
 
+	@Autowired
+	private CommonUtils commonUtils;
+
+	@Autowired
+	private EstimateUtils estimateUtils;
+
 	public List<ProjectCode> create(ProjectCodeRequest projectCodeRequest) {
 
-		if (projectCodeRequest.getProjectCodes().get(0).getCode() != null
-				&& projectCodeRequest.getProjectCodes().get(0).getCode() != "")
-			validateProjectCode(projectCodeRequest);
-
-		RequestInfo requestInfo = projectCodeRequest.getRequestInfo();
-		AuditDetails auditDetails = new AuditDetails();
 		String workIdentificationNumber;
 		for (ProjectCode projectCode : projectCodeRequest.getProjectCodes()) {
-			projectCode.setId(UUID.randomUUID().toString().replace("-", ""));
-			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
-			auditDetails.setCreatedTime(new Date().getTime());
+			if (projectCode.getCode() != null || !projectCode.getCode().isEmpty())
+				validateProjectCode(projectCode);
+			projectCode.setId(commonUtils.getUUID());
+
+			projectCode.setAuditDetails(estimateUtils.setAuditDetails(projectCodeRequest.getRequestInfo(), false));
+			projectCode.setActive(true);
+			projectCode.setStatus(ProjectCodeStatus.CREATED);
 
 			if (projectCode.getCode() == null || projectCode.getCode().isEmpty()) {
 				workIdentificationNumber = idGenerationRepository.generateWorkIdentificationNumber(
 						projectCode.getTenantId(), projectCodeRequest.getRequestInfo());
 				projectCode.setCode(workIdentificationNumber);
 			}
-
-			projectCode.setAuditDetails(auditDetails);
 
 		}
 
@@ -69,9 +70,8 @@ public class ProjectCodeService {
 		return projectCodeRequest.getProjectCodes();
 	}
 
-	private void validateProjectCode(ProjectCodeRequest projectCodeRequest) {
+	private void validateProjectCode(ProjectCode projectCode) {
 		Map<String, String> messages = new HashMap<>();
-		ProjectCode projectCode = projectCodeRequest.getProjectCodes().get(0);
 		ProjectCodeSearchContract projectCodeSearchContract = new ProjectCodeSearchContract();
 		List<String> workIdentificationNumbers = new ArrayList<>();
 		workIdentificationNumbers.add(projectCode.getCode());
@@ -91,13 +91,8 @@ public class ProjectCodeService {
 
 	public List<ProjectCode> update(ProjectCodeRequest projectCodeRequest) {
 
-		RequestInfo requestInfo = projectCodeRequest.getRequestInfo();
-		AuditDetails auditDetails = new AuditDetails();
-
 		for (ProjectCode projectCode : projectCodeRequest.getProjectCodes()) {
-			auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-			auditDetails.setLastModifiedTime(new Date().getTime());
-			projectCode.setAuditDetails(auditDetails);
+			projectCode.setAuditDetails(estimateUtils.setAuditDetails(projectCodeRequest.getRequestInfo(), true));
 		}
 		kafkaTemplate.send(propertiesManager.getWorksProjectCodeUpdateTopic(), projectCodeRequest);
 		return projectCodeRequest.getProjectCodes();

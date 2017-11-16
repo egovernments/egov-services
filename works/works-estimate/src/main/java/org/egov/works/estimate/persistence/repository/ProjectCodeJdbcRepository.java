@@ -14,7 +14,7 @@ import org.springframework.stereotype.Service;
 public class ProjectCodeJdbcRepository extends JdbcRepository {
 
 	public static final String TABLE_NAME = "egw_projectcode";
-	
+
 	public List<ProjectCode> search(ProjectCodeSearchContract projectCodeSearchContract) {
 		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -35,19 +35,73 @@ public class ProjectCodeJdbcRepository extends JdbcRepository {
 
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
+		if (projectCodeSearchContract.getIds() != null) {
+			addAnd(params);
+			params.append("id in(:ids) ");
+			paramValues.put("ids", projectCodeSearchContract.getIds());
+		}
+
 		if (projectCodeSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", projectCodeSearchContract.getTenantId());
 		}
-		if (projectCodeSearchContract.getWorkIdentificationNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("code in (:code)");
-			paramValues.put("code", projectCodeSearchContract.getWorkIdentificationNumbers());
+		if (projectCodeSearchContract.getWorkIdentificationNumbers() != null
+				&& projectCodeSearchContract.getWorkIdentificationNumbers().size() == 1) {
+			addAnd(params);
+			params.append("upper(code) in (:codes)");
+			paramValues.put("codes", projectCodeSearchContract.getWorkIdentificationNumbers().get(0).toUpperCase());
+		} else if (projectCodeSearchContract.getWorkIdentificationNumbers() != null
+				&& projectCodeSearchContract.getWorkIdentificationNumbers().size() != 1) {
+			params.append("code in (:codes)");
+			paramValues.put("codes", projectCodeSearchContract.getWorkIdentificationNumbers());
+		}
+
+		if (projectCodeSearchContract.getCodes() != null && projectCodeSearchContract.getCodes().size() != 1) {
+			addAnd(params);
+			params.append("upper(code) in (:codes)");
+			paramValues.put("codes", projectCodeSearchContract.getCodes().get(0).toUpperCase());
+		} else if (projectCodeSearchContract.getCodes() != null && projectCodeSearchContract.getCodes().size() != 1) {
+			params.append("code in (:codes)");
+			paramValues.put("codes", projectCodeSearchContract.getCodes());
+		}
+
+		if (projectCodeSearchContract.getDetailedEstimateNumbers() != null && projectCodeSearchContract.getDetailedEstimateNumbers().size() == 1) {
+			addAnd(params);
+			params.append("code in (:detailedEstimateNumbers)");
+			paramValues.put("detailedEstimateNumbers", projectCodeSearchContract.getDetailedEstimateNumbers().get(0).toUpperCase());
+		} else if (projectCodeSearchContract.getDetailedEstimateNumbers() != null ) {
+			addAnd(params);
+			params.append("code in (:detailedEstimateNumbers)");
+			paramValues.put("detailedEstimateNumbers", projectCodeSearchContract.getDetailedEstimateNumbers());
+
+		}
+
+		if (projectCodeSearchContract.getAbstractEstimateNumbers() != null && projectCodeSearchContract.getAbstractEstimateNumbers().size() == 1) {
+			addAnd(params);
+			params.append("code in (:abstractEstimateNumbers)");
+			paramValues.put("abstractEstimateNumbers", projectCodeSearchContract.getAbstractEstimateNumbers().get(0).toUpperCase());
+		} else if (projectCodeSearchContract.getAbstractEstimateNumbers() != null) {
+			addAnd(params);
+			params.append("code in (:abstractEstimateNumbers)");
+			paramValues.put("abstractEstimateNumbers", projectCodeSearchContract.getAbstractEstimateNumbers());
+		}
+
+
+		if (projectCodeSearchContract.getStatuses() != null) {
+			addAnd(params);
+			params.append("status in (:statuses)");
+			paramValues.put("statuses", projectCodeSearchContract.getStatuses());
+		}
+
+		if (projectCodeSearchContract.getActive() != null) {
+			addAnd(params);
+			params.append("active in (:active)");
+			paramValues.put("active", projectCodeSearchContract.getActive());
+		} else {
+			addAnd(params);
+			params.append("active in (:active)");
+			paramValues.put("active", Boolean.TRUE);
 		}
 
 		if (params.length() > 0) {

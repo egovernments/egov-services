@@ -50,6 +50,15 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
 			paramValues.put("detailedEstimateNumbers", offlineStatusSearchContract.getDetailedEstimateNumber());
 		}
 		
+		if (offlineStatusSearchContract.getIds() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("id in(:ids) ");
+			paramValues.put("ids", offlineStatusSearchContract.getIds());
+		}
+
+		
 		if (offlineStatusSearchContract.getWorkOrderNumbers() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
@@ -62,8 +71,8 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("objectnumber in (:LoaNumbers)");
-			paramValues.put("LoaNumbers", offlineStatusSearchContract.getLoaNumbers());
+			params.append("objectnumber in (:loaNumbers)");
+			paramValues.put("loaNumbers", offlineStatusSearchContract.getLoaNumbers());
 		}
 
 		if (offlineStatusSearchContract.getStatuses() != null) {
@@ -78,7 +87,7 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
-			params.append("objectType =:objecttype");
+			params.append("objectType = :objecttype");
 			paramValues.put("objecttype", offlineStatusSearchContract.getObjectType());
 		}
 

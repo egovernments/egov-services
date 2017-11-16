@@ -40,6 +40,10 @@
 package org.egov.works.workorder.web.repository;
 
 import net.minidev.json.JSONArray;
+
+import org.egov.works.commons.web.contract.MasterDetails;
+import org.egov.works.commons.web.contract.MdmsCriteria;
+import org.egov.works.commons.web.contract.ModuleDetails;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.egov.tracer.model.CustomException;
 import org.egov.works.services.config.PropertiesManager;
-import org.egov.works.services.config.WorksServiceConstants;
+import org.egov.works.services.config.Constants;
 import org.egov.works.services.web.contract.IdGenerationRequest;
 import org.egov.works.services.web.contract.IdRequest;
 import org.egov.works.services.web.contract.RequestInfo;
@@ -51,8 +51,8 @@ public class IdGenerationRepository {
 		try {
 			response = restTemplate.postForObject(url, idGenerationRequest, Object.class);
 		} catch (Exception e) {
-			messages.put(WorksServiceConstants.APPROPRIATION_NUMBER_GENERATION_ERROR,
-					WorksServiceConstants.APPROPRIATION_NUMBER_GENERATION_ERROR);
+			messages.put(Constants.APPROPRIATION_NUMBER_GENERATION_ERROR,
+					Constants.APPROPRIATION_NUMBER_GENERATION_ERROR);
 			throw new CustomException(messages);
 
 		}

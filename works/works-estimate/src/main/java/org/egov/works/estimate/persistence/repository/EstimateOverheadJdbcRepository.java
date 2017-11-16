@@ -48,17 +48,13 @@ public class EstimateOverheadJdbcRepository extends JdbcRepository {
 			paramValues.put("tenantId", estimateOverheadSearchContract.getTenantId());
 		}
 		if (estimateOverheadSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", estimateOverheadSearchContract.getIds());
 		}
 
 		if (estimateOverheadSearchContract.getDetailedEstimateIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("detailedEstimate in(:detailedEstimateIds) ");
 			paramValues.put("detailedEstimateIds", estimateOverheadSearchContract.getDetailedEstimateIds());
 		}

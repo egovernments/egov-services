@@ -1,9 +1,12 @@
 package org.egov.works.estimate.utils;
 
+import java.util.Date;
+
 import org.apache.commons.lang3.StringUtils;
 import org.egov.works.commons.web.contract.MasterDetails;
 import org.egov.works.commons.web.contract.MdmsCriteria;
 import org.egov.works.commons.web.contract.ModuleDetails;
+import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.MdmsRequest;
 import org.egov.works.estimate.web.contract.MdmsResponse;
 import org.egov.works.estimate.web.contract.RequestInfo;
@@ -83,5 +86,17 @@ public class EstimateUtils {
 		responseInfo.setVer(requestInfo.getVer());
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		return responseInfo;
+	}
+	
+	public AuditDetails setAuditDetails(final RequestInfo requestInfo, final Boolean isUpdate) {
+		AuditDetails auditDetails = new AuditDetails();
+		if (!isUpdate) {
+			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
+			auditDetails.setCreatedTime(new Date().getTime());
+		}
+		auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+		auditDetails.setLastModifiedTime(new Date().getTime());
+
+		return auditDetails;
 	}
 }

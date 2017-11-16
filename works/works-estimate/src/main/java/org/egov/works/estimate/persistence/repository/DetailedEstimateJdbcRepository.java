@@ -39,100 +39,72 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (detailedEstimateSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", detailedEstimateSearchContract.getTenantId());
 		}
 		if (detailedEstimateSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", detailedEstimateSearchContract.getIds());
 		}
 		if (detailedEstimateSearchContract.getDetailedEstimateNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimateNumber in(:estimateNumbers)");
 			paramValues.put("estimateNumbers", detailedEstimateSearchContract.getDetailedEstimateNumbers());
 		}
 		if (detailedEstimateSearchContract.getDepartment() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("department =:department");
 			paramValues.put("department", detailedEstimateSearchContract.getDepartment());
 		}
 		if (detailedEstimateSearchContract.getTypeOfWork() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("typeofwork in(:typeofwork)");
 			paramValues.put("typeofwork", detailedEstimateSearchContract.getTypeOfWork());
 		}
 		if (detailedEstimateSearchContract.getSubTypeOfWork() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("subtypeofwork in(:subtypeofwork)");
 			paramValues.put("subtypeofwork", detailedEstimateSearchContract.getSubTypeOfWork());
 		}
 		if (detailedEstimateSearchContract.getStatuses() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("status in(:status)");
 			paramValues.put("status", detailedEstimateSearchContract.getStatuses());
 		}
 		if (detailedEstimateSearchContract.getFromDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimatedate >=:estimatedate");
 			paramValues.put("estimatedate", detailedEstimateSearchContract.getFromDate());
 		}
 		if (detailedEstimateSearchContract.getToDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimatedate <=:estimatedate");
 			paramValues.put("estimatedate", detailedEstimateSearchContract.getToDate());
 		}
 		if (detailedEstimateSearchContract.getFromAmount() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimateValue >=:estimateValue");
 			paramValues.put("estimateValue", detailedEstimateSearchContract.getFromAmount());
 		}
 		if (detailedEstimateSearchContract.getToAmount() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimateValue <=:estimateValue");
 			paramValues.put("estimateValue", detailedEstimateSearchContract.getToAmount());
 		}
 		if (detailedEstimateSearchContract.getSpillOverFlag() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("spillOverFlag =:spillOverFlag");
 			paramValues.put("spillOverFlag", detailedEstimateSearchContract.getSpillOverFlag());
 		}
 		if (detailedEstimateSearchContract.getCreatedBy() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("createdBy =:createdBy");
 			paramValues.put("createdBy", detailedEstimateSearchContract.getCreatedBy());
 		}
 		if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append(
 					"id in (select id from egw_detailedestimate where projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers)))");
 			paramValues.put("workIdentificationNumbers", detailedEstimateSearchContract.getWorkIdentificationNumbers());
@@ -140,17 +112,13 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 		}
 
 		if (detailedEstimateSearchContract.getNameOfWork() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("nameOfWork =:nameOfWork");
 			paramValues.put("nameOfWork", detailedEstimateSearchContract.getNameOfWork());
 		}
 
 		if (detailedEstimateSearchContract.getWards() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("ward =:ward");
 			paramValues.put("ward", detailedEstimateSearchContract.getWards());
 		}

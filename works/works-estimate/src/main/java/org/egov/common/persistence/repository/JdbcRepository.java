@@ -533,5 +533,11 @@ public abstract class JdbcRepository {
 		// paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
 
 	}
+	
+	protected void addAnd(StringBuffer params) {
+		if (params.length() > 0) {
+			params.append(" and ");
+		}
+	}
 
 }

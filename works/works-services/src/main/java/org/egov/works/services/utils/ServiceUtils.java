@@ -21,13 +21,13 @@ public class ServiceUtils {
         return responseInfo;
     }
 
-	public AuditDetails setAuditDetails(final String userName, final Boolean isUpdate) {
+	public AuditDetails setAuditDetails(final RequestInfo requestInfo, final Boolean isUpdate) {
 		AuditDetails auditDetails = new AuditDetails();
 		if (!isUpdate) {
-			auditDetails.setCreatedBy(userName);
+			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
 			auditDetails.setCreatedTime(new Date().getTime());
 		}
-		auditDetails.setLastModifiedBy(userName);
+		auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 		auditDetails.setLastModifiedTime(new Date().getTime());
 
 		return auditDetails;

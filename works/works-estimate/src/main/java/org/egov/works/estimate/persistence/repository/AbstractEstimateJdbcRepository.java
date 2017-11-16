@@ -56,51 +56,37 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		}
 
 		if (abstractEstimateSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.tenantId =:tenantId");
 			paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
 		}
 		if (abstractEstimateSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.id in(:ids) ");
 			paramValues.put("ids", abstractEstimateSearchContract.getIds());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.adminSanctionNumber in (:adminSanctionNumbers)");
 			paramValues.put("adminSanctionNumbers", abstractEstimateSearchContract.getAdminSanctionNumbers());
 		}
 		if (abstractEstimateSearchContract.getDepartmentCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.department in (:departments)");
 			paramValues.put("departments", abstractEstimateSearchContract.getDepartmentCodes());
 		}
 		if (abstractEstimateSearchContract.getFundCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.fund in (:funds)");
 			paramValues.put("funds", abstractEstimateSearchContract.getFundCodes());
 		}
 		if (abstractEstimateSearchContract.getFunctionCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.function in (:functions)");
 			paramValues.put("functions", abstractEstimateSearchContract.getFunctionCodes());
 		}
 		if (abstractEstimateSearchContract.getBudgetHeadCodes() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.budgetHead in (:budgetHeads)");
 			paramValues.put("budgetHeads", abstractEstimateSearchContract.getBudgetHeadCodes());
 		}
@@ -112,51 +98,42 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			paramValues.put("statuses", abstractEstimateSearchContract.getStatuses());
 		}
 		if (abstractEstimateSearchContract.getNameOfWork() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) = :nameOfWork");
 			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork().toUpperCase());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.adminSanctionDate >=:adminSanctionFromDate");
 			paramValues.put("adminSanctionFromDate", abstractEstimateSearchContract.getAdminSanctionFromDate());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionToDate() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.adminSanctionDate <=:adminSanctionToDate");
 			paramValues.put("adminSanctionToDate", abstractEstimateSearchContract.getAdminSanctionToDate());
 		}
 		if (abstractEstimateSearchContract.getSpillOverFlag() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.spillOverFlag =:spillOverFlag");
 			paramValues.put("spillOverFlag", abstractEstimateSearchContract.getSpillOverFlag());
 		}
 		if (abstractEstimateSearchContract.getCreatedBy() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("upper(estimate.createdBy) =:createdBy");
 			paramValues.put("createdBy", abstractEstimateSearchContract.getCreatedBy().toUpperCase());
 		}
-		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null && abstractEstimateSearchContract.getAbstractEstimateNumbers().size() == 1) {
+			addAnd(params);
+			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");
+			paramValues.put("abstractEstimateNumbers", abstractEstimateSearchContract.getAbstractEstimateNumbers().get(0).toUpperCase());
+		} else if(abstractEstimateSearchContract.getAbstractEstimateNumbers() != null) {
+			addAnd(params);
 			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");
 			paramValues.put("abstractEstimateNumbers", abstractEstimateSearchContract.getAbstractEstimateNumbers());
 		}
+		
 		if (abstractEstimateSearchContract.getWorkIdentificationNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimate.id = details.abstractEstimate and details.projectCode in (:workIdentificationNumbers)");
 			paramValues.put("workIdentificationNumbers", abstractEstimateSearchContract.getWorkIdentificationNumbers());
 		}

@@ -3,10 +3,10 @@ package org.egov.works.services.domain.service;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.UUID;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.domain.repository.OfflineStatusRepository;
 import org.egov.works.services.domain.validator.OfflineStatusValidator;
@@ -37,6 +37,9 @@ public class OfflineStatusService {
     
     @Autowired
     private PropertiesManager propertiesManager;
+    
+    @Autowired
+    private CommonUtils commonUtils;
 
 	@SuppressWarnings("unchecked")
 	public Collection<String> getStatusNameDetails(final String[] statusNames) {
@@ -48,9 +51,9 @@ public class OfflineStatusService {
 
 		OfflineStatusResponse response = new OfflineStatusResponse();
 		for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
-			offlineStatus.setId(UUID.randomUUID().toString().replace("-", ""));
+			offlineStatus.setId(commonUtils.getUUID());
 			offlineStatus.setAuditDetails(serviceUtils
-					.setAuditDetails(offlineStatusRequest.getRequestInfo().getUserInfo().getUserName(), false));
+					.setAuditDetails(offlineStatusRequest.getRequestInfo(), false));
 		}
 		kafkaTemplate.send(propertiesManager.getWorksServiceOfflineStatusCreateValidatedTopic(), offlineStatusRequest);
 		response.setOfflineStatuses(offlineStatusRequest.getOfflineStatuses());
@@ -65,9 +68,10 @@ public class OfflineStatusService {
 
 		OfflineStatusResponse response = new OfflineStatusResponse();
 		for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
-			offlineStatus.setId(UUID.randomUUID().toString().replace("-", ""));
+			if(offlineStatus.getId() == null)
+				offlineStatus.setId(commonUtils.getUUID());
 			offlineStatus.setAuditDetails(serviceUtils
-					.setAuditDetails(offlineStatusRequest.getRequestInfo().getUserInfo().getUserName(), true));
+					.setAuditDetails(offlineStatusRequest.getRequestInfo(), true));
 		}
 		kafkaTemplate.send(propertiesManager.getWorksServiceOfflineStatusUpdateValidatedTopic(), offlineStatusRequest);
 		response.setOfflineStatuses(offlineStatusRequest.getOfflineStatuses());

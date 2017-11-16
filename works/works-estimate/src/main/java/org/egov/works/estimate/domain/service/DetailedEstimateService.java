@@ -1,6 +1,5 @@
 package org.egov.works.estimate.domain.service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -36,219 +35,209 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Transactional(readOnly= true)
+@Transactional(readOnly = true)
 public class DetailedEstimateService {
-	
+
 	public static final String DETAILED_ESTIMATE_WF_TYPE = "DetailedEstimate";
 
 	public static final String DETAILED_ESTIMATE_BUSINESSKEY = "DetailedEstimate";
-	
+
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Autowired
 	private PropertiesManager propertiesManager;
-	
+
 	@Autowired
 	private DetailedEstimateRepository detailedEstimateRepository;
 
-    @Autowired
-    private EstimateUtils estimateUtils;
+	@Autowired
+	private EstimateUtils estimateUtils;
 
-    @Autowired
-    private CommonUtils commonUtils;
+	@Autowired
+	private CommonUtils commonUtils;
 
-    @Autowired
-    private IdGenerationRepository idGenerationRepository;
-    
-    @Autowired
+	@Autowired
+	private IdGenerationRepository idGenerationRepository;
+
+	@Autowired
 	private WorkflowService workflowService;
 
-    @Autowired
-    private EstimateValidator validator;
+	@Autowired
+	private EstimateValidator validator;
 
-    public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
-        return detailedEstimateRepository.search(detailedEstimateSearchContract);
-    }
+	public List<DetailedEstimate> search(DetailedEstimateSearchContract detailedEstimateSearchContract) {
+		return detailedEstimateRepository.search(detailedEstimateSearchContract);
+	}
 
-    public DetailedEstimateResponse create(DetailedEstimateRequest detailedEstimateRequest) {
-        validator.validateDetailedEstimates(detailedEstimateRequest);
-        AuditDetails auditDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false);
-        for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            detailedEstimate.setId(commonUtils.getUUID());
-            detailedEstimate.setAuditDetails(auditDetails);
-            detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
-            AbstractEstimate abstactEstimate = null;
-            if(detailedEstimate.getAbstractEstimateDetail() != null) {
-                abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
-                        if(abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated()) {
-                            String estimateNumber = idGenerationRepository
-                                    .generateDetailedEstimateNumber(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-                            detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + '/' + detailedEstimate.getDepartment().getCode() + estimateNumber);
-                        }
-                }
+	public DetailedEstimateResponse create(DetailedEstimateRequest detailedEstimateRequest) {
+		validator.validateDetailedEstimates(detailedEstimateRequest);
+		AuditDetails auditDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
+		for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
+			detailedEstimate.setId(commonUtils.getUUID());
+			detailedEstimate.setAuditDetails(auditDetails);
+			detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
+			AbstractEstimate abstactEstimate = null;
+			if (detailedEstimate.getAbstractEstimateDetail() != null) {
+				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+				if (abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated()) {
+					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(
+							detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+					detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + '/'
+							+ detailedEstimate.getDepartment().getCode() + estimateNumber);
+				}
+			}
 
-            for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-                assetsForEstimate.setId(commonUtils.getUUID());
-                assetsForEstimate.setAuditDetails(auditDetails);
-            }
+			for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
+				assetsForEstimate.setId(commonUtils.getUUID());
+				assetsForEstimate.setAuditDetails(auditDetails);
+			}
 
-            if(detailedEstimate.getMultiYearEstimates() != null) {
-                for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-                    multiYearEstimate.setId(commonUtils.getUUID());
-                    //Set from financials
-                    multiYearEstimate.setFinancialYear(new FinancialYear());
-                    multiYearEstimate.setPercentage(100d);
-                    multiYearEstimate.setAuditDetails(auditDetails);
-                }
-            }
+			if (detailedEstimate.getMultiYearEstimates() != null) {
+				for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
+					multiYearEstimate.setId(commonUtils.getUUID());
+					// Set from financials
+					multiYearEstimate.setFinancialYear(new FinancialYear());
+					multiYearEstimate.setPercentage(100d);
+					multiYearEstimate.setAuditDetails(auditDetails);
+				}
+			}
 
-            for(final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
-                estimateOverhead.setId(commonUtils.getUUID());
-                estimateOverhead.setAuditDetails(auditDetails);
-            }
+			for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
+				estimateOverhead.setId(commonUtils.getUUID());
+				estimateOverhead.setAuditDetails(auditDetails);
+			}
 
-            for(final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate.getDetailedEstimateDeductions()) {
-                detailedEstimateDeduction.setId(commonUtils.getUUID());
-                detailedEstimateDeduction.setAuditDetails(auditDetails);
-            }
+			for (final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate
+					.getDetailedEstimateDeductions()) {
+				detailedEstimateDeduction.setId(commonUtils.getUUID());
+				detailedEstimateDeduction.setAuditDetails(auditDetails);
+			}
 
-            if(detailedEstimate.getEstimateTechnicalSanctions() != null) {
-                for(final EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate.getEstimateTechnicalSanctions()) {
-                    estimateTechnicalSanction.setId(commonUtils.getUUID());
-                    estimateTechnicalSanction.setAuditDetails(auditDetails);
-                }
-            }
+			if (detailedEstimate.getEstimateTechnicalSanctions() != null) {
+				for (final EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate
+						.getEstimateTechnicalSanctions()) {
+					estimateTechnicalSanction.setId(commonUtils.getUUID());
+					estimateTechnicalSanction.setAuditDetails(auditDetails);
+				}
+			}
 
-            for(final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-                estimateActivity.setId(commonUtils.getUUID());
-                estimateActivity.setAuditDetails(auditDetails);
-                if(estimateActivity.getEstimateMeasurementSheets() != null) {
-                    for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {
-                        estimateMeasurementSheet.setId(commonUtils.getUUID());
-                        estimateMeasurementSheet.setAuditDetails(auditDetails);
-                    }
-                }
-            }
+			for (final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
+				estimateActivity.setId(commonUtils.getUUID());
+				estimateActivity.setAuditDetails(auditDetails);
+				if (estimateActivity.getEstimateMeasurementSheets() != null) {
+					for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity
+							.getEstimateMeasurementSheets()) {
+						estimateMeasurementSheet.setId(commonUtils.getUUID());
+						estimateMeasurementSheet.setAuditDetails(auditDetails);
+					}
+				}
+			}
 
-            if(detailedEstimate.getDocumentDetails() != null) {
-                for(DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
-                    documentDetail.setObjectId(detailedEstimate.getEstimateNumber());
-                    documentDetail.setObjectType(CommonConstants.DETAILEDESTIMATE);
-                    documentDetail.setAuditDetails(auditDetails);
-                }
-            }
+			if (detailedEstimate.getDocumentDetails() != null) {
+				for (DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
+					documentDetail.setObjectId(detailedEstimate.getEstimateNumber());
+					documentDetail.setObjectType(CommonConstants.DETAILEDESTIMATE);
+					documentDetail.setAuditDetails(auditDetails);
+				}
+			}
 			populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
 			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
 					detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
 			detailedEstimate.setStateId(workFlowResponse.get("id"));
 			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
-        }
-        kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
-        final DetailedEstimateResponse response = new DetailedEstimateResponse();
-        response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
-        response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
-        return response;
-    }
-    
-    public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest) {
-        AuditDetails updateDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), true);
-        AuditDetails createDetails = setAuditDetails(detailedEstimateRequest.getRequestInfo().getUserInfo().getUserName(), false);
-        AbstractEstimate abstactEstimate = null;
-        for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-            abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
-        	populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
-            detailedEstimate.setAuditDetails(updateDetails);
+		}
+		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
+		final DetailedEstimateResponse response = new DetailedEstimateResponse();
+		response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
+		response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
+		return response;
+	}
 
-            for(final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-            	if (assetsForEstimate.getId() == null){
-            		assetsForEstimate.setId(commonUtils.getUUID());
-            		assetsForEstimate.setAuditDetails(createDetails);
-            	}
-                assetsForEstimate.setAuditDetails(updateDetails);
-            }
+	public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest) {
+		AuditDetails updateDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), true);
+		AuditDetails createDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
+		AbstractEstimate abstactEstimate = null;
+		for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
+			abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+			populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
+			detailedEstimate.setAuditDetails(updateDetails);
 
-            for(final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-            	if (multiYearEstimate.getId() == null) {
-            		multiYearEstimate.setId(commonUtils.getUUID());
-            		multiYearEstimate.setAuditDetails(createDetails);
-            	}
-                multiYearEstimate.setAuditDetails(updateDetails);
-            }
+			for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
+				if (assetsForEstimate.getId() == null) {
+					assetsForEstimate.setId(commonUtils.getUUID());
+					assetsForEstimate.setAuditDetails(createDetails);
+				}
+				assetsForEstimate.setAuditDetails(updateDetails);
+			}
 
-            for(final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
-            	if (estimateOverhead.getId() == null) {
-            		estimateOverhead.setId(commonUtils.getUUID());
-            		estimateOverhead.setAuditDetails(createDetails);
-            	}
-                estimateOverhead.setAuditDetails(updateDetails);
-            }
+			for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
+				if (multiYearEstimate.getId() == null) {
+					multiYearEstimate.setId(commonUtils.getUUID());
+					multiYearEstimate.setAuditDetails(createDetails);
+				}
+				multiYearEstimate.setAuditDetails(updateDetails);
+			}
 
-            for(final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate.getDetailedEstimateDeductions()) {
-            	if (detailedEstimateDeduction.getId() == null) {
-            		detailedEstimateDeduction.setId(commonUtils.getUUID());
-                    detailedEstimateDeduction.setAuditDetails(createDetails);
-            	}
-                detailedEstimateDeduction.setAuditDetails(updateDetails);
-            }
+			for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
+				if (estimateOverhead.getId() == null) {
+					estimateOverhead.setId(commonUtils.getUUID());
+					estimateOverhead.setAuditDetails(createDetails);
+				}
+				estimateOverhead.setAuditDetails(updateDetails);
+			}
 
-            for(final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-            	if (estimateActivity.getId() == null) {
-            		estimateActivity.setId(commonUtils.getUUID());
-                    estimateActivity.setAuditDetails(createDetails);
-            	}
-                estimateActivity.setAuditDetails(updateDetails);
-                if(estimateActivity.getEstimateMeasurementSheets() != null) {
-                    for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity.getEstimateMeasurementSheets()) {
-                    	if (estimateMeasurementSheet.getId() == null) {
-                    		estimateMeasurementSheet.setId(commonUtils.getUUID());
-                            estimateMeasurementSheet.setAuditDetails(createDetails);
-                    	}
-                        estimateMeasurementSheet.setAuditDetails(updateDetails);
-                    }
-                }
-            }
+			for (final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate
+					.getDetailedEstimateDeductions()) {
+				if (detailedEstimateDeduction.getId() == null) {
+					detailedEstimateDeduction.setId(commonUtils.getUUID());
+					detailedEstimateDeduction.setAuditDetails(createDetails);
+				}
+				detailedEstimateDeduction.setAuditDetails(updateDetails);
+			}
+
+			for (final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
+				if (estimateActivity.getId() == null) {
+					estimateActivity.setId(commonUtils.getUUID());
+					estimateActivity.setAuditDetails(createDetails);
+				}
+				estimateActivity.setAuditDetails(updateDetails);
+				if (estimateActivity.getEstimateMeasurementSheets() != null) {
+					for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity
+							.getEstimateMeasurementSheets()) {
+						if (estimateMeasurementSheet.getId() == null) {
+							estimateMeasurementSheet.setId(commonUtils.getUUID());
+							estimateMeasurementSheet.setAuditDetails(createDetails);
+						}
+						estimateMeasurementSheet.setAuditDetails(updateDetails);
+					}
+				}
+			}
 			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
 					detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
 			detailedEstimate.setStateId(workFlowResponse.get("id"));
 			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
-        }
-        kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateUpdateTopic(), detailedEstimateRequest);
-        final DetailedEstimateResponse response = new DetailedEstimateResponse();
-        response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
-        response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
-        return response;
-    }
+		}
+		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateUpdateTopic(), detailedEstimateRequest);
+		final DetailedEstimateResponse response = new DetailedEstimateResponse();
+		response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
+		response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
+		return response;
+	}
 
-    public AuditDetails setAuditDetails(final String userName, final Boolean isUpdate) {
-        AuditDetails auditDetails = new AuditDetails();
-        if (isUpdate) {
-            auditDetails.setLastModifiedBy(userName);
-            auditDetails.setLastModifiedTime(new Date().getTime());
-        } else {
-            auditDetails.setCreatedBy(userName);
-            auditDetails.setCreatedTime(new Date().getTime());
-            auditDetails.setLastModifiedBy(userName);
-            auditDetails.setLastModifiedTime(new Date().getTime());
-        }
-
-        return auditDetails;
-    }
-
-
-    
-    private void populateWorkFlowDetails(DetailedEstimate detailedEstimate, RequestInfo requestInfo, AbstractEstimate abstactEstimate) {
+	private void populateWorkFlowDetails(DetailedEstimate detailedEstimate, RequestInfo requestInfo,
+			AbstractEstimate abstactEstimate) {
 
 		if (null != detailedEstimate && null != detailedEstimate.getWorkFlowDetails()) {
 
 			WorkFlowDetails workFlowDetails = detailedEstimate.getWorkFlowDetails();
-            if (abstactEstimate != null && abstactEstimate.getDetailedEstimateCreated()) {
-                workFlowDetails.setType(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
-                workFlowDetails.setBusinessKey(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
-            } else {
-                workFlowDetails.setType(DETAILED_ESTIMATE_WF_TYPE);
-                workFlowDetails.setBusinessKey(DETAILED_ESTIMATE_BUSINESSKEY);
-            }
+			if (abstactEstimate != null && abstactEstimate.getDetailedEstimateCreated()) {
+				workFlowDetails.setType(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
+				workFlowDetails.setBusinessKey(CommonConstants.SPILLOVER_DETAILED_ESTIMATE_WF_TYPE);
+			} else {
+				workFlowDetails.setType(DETAILED_ESTIMATE_WF_TYPE);
+				workFlowDetails.setBusinessKey(DETAILED_ESTIMATE_BUSINESSKEY);
+			}
 			workFlowDetails.setStateId(detailedEstimate.getStateId());
 			if (detailedEstimate.getStatus() != null)
 				workFlowDetails.setStatus(detailedEstimate.getStatus().toString());
@@ -263,5 +252,3 @@ public class DetailedEstimateService {
 		}
 	}
 }
-	
-

@@ -48,17 +48,13 @@ public class EstimateMeasurementSheetJdbcRepository extends JdbcRepository {
 			paramValues.put("tenantId", estimateMeasurementSheetSearchContract.getTenantId());
 		}
 		if (estimateMeasurementSheetSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", estimateMeasurementSheetSearchContract.getIds());
 		}
 
 		if (estimateMeasurementSheetSearchContract.getEstimateActivityIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("estimateactivity in(:estimateActivityIds) ");
 			paramValues.put("estimateActivityIds", estimateMeasurementSheetSearchContract.getEstimateActivityIds());
 		}

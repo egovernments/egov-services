@@ -41,24 +41,18 @@ public class EstimateAssetJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (assetSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", assetSearchContract.getTenantId());
 		}
 		if (assetSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", assetSearchContract.getIds());
 		}
 
 		if (assetSearchContract.getDetailedEstimateIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("detailedEstimate in(:detailedEstimateIds) ");
 			paramValues.put("detailedEstimateIds", assetSearchContract.getDetailedEstimateIds());
 		}

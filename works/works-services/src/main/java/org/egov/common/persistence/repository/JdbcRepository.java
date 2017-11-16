@@ -534,4 +534,10 @@ public abstract class JdbcRepository {
 
 	}
 
+	protected void addAnd(StringBuffer params) {
+		if (params.length() > 0) {
+			params.append(" and ");
+		}
+	}
+
 }

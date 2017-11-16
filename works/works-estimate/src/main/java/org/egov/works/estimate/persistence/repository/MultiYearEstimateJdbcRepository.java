@@ -41,24 +41,18 @@ public class MultiYearEstimateJdbcRepository extends JdbcRepository {
 		searchQuery = searchQuery.replace(":selectfields", " * ");
 
 		if (multiYearEstimateSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("tenantId =:tenantId");
 			paramValues.put("tenantId", multiYearEstimateSearchContract.getTenantId());
 		}
 		if (multiYearEstimateSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("id in(:ids) ");
 			paramValues.put("ids", multiYearEstimateSearchContract.getIds());
 		}
 
 		if (multiYearEstimateSearchContract.getDetailedEstimateIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
+			addAnd(params);
 			params.append("detailedEstimate in(:detailedEstimateIds) ");
 			paramValues.put("detailedEstimateIds", multiYearEstimateSearchContract.getDetailedEstimateIds());
 		}

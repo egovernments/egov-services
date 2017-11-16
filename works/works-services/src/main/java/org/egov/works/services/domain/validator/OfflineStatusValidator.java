@@ -66,20 +66,20 @@ public class OfflineStatusValidator {
 	private List<String> getListOfStatusForObjectType(final String ObjectType) {
 		
 		String[] statusName;
-		List<String> OffStatuses;
+		List<String> OffStatuses = null;
 		if(ObjectType.equalsIgnoreCase(CommonConstants.WORKORDER)) {
 		final WorkOrderOfflineStatus[] workOrderOfflineStatus = WorkOrderOfflineStatus.values();
 		statusName = new String[workOrderOfflineStatus.length];
 		for (int j = 0; j < workOrderOfflineStatus.length; j++)
 			statusName[j] = workOrderOfflineStatus[j].name();
 		OffStatuses = Arrays.asList(statusName);
-		} else if(ObjectType.equalsIgnoreCase(CommonConstants.LOA)){
+		} else if(ObjectType.equalsIgnoreCase(CommonConstants.LETTEROFACCEPTANCE)){
 			final LOAOfflineStatuses[] loaOfflineStatuses = LOAOfflineStatuses.values();
 			statusName = new String[loaOfflineStatuses.length];
 			for (int j = 0; j < loaOfflineStatuses.length; j++)
 				statusName[j] = loaOfflineStatuses[j].name();
 			OffStatuses = Arrays.asList(statusName);
-		} else {
+		} else if(ObjectType.equalsIgnoreCase(CommonConstants.DETAILEDESTIMATE)){
 			final DetailedEstimateOfflineStatus[] detailedEstimateOfflineStatus = DetailedEstimateOfflineStatus.values();
 			statusName = new String[detailedEstimateOfflineStatus.length];
 			for (int j = 0; j < detailedEstimateOfflineStatus.length; j++)

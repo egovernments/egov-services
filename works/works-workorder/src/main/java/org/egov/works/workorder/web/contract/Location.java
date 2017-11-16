@@ -1,255 +1,249 @@
 package org.egov.works.workorder.web.contract;
 
 import java.util.Objects;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
+
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
 
 /**
  * Hold the asset location specific information.
  */
 @ApiModel(description = "Hold the asset location specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T13:18:24.260Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
 
-public class Location   {
-  @JsonProperty("locality")
-  private Long locality = null;
+public class Location {
+	@JsonProperty("locality")
+	private Long locality = null;
 
-  @JsonProperty("zone")
-  private Long zone = null;
+	@JsonProperty("zone")
+	private Long zone = null;
 
-  @JsonProperty("revenueWard")
-  private Long revenueWard = null;
+	@JsonProperty("revenueWard")
+	private Long revenueWard = null;
 
-  @JsonProperty("block")
-  private Long block = null;
+	@JsonProperty("block")
+	private Long block = null;
 
-  @JsonProperty("street")
-  private Long street = null;
+	@JsonProperty("street")
+	private Long street = null;
 
-  @JsonProperty("electionWard")
-  private Long electionWard = null;
+	@JsonProperty("electionWard")
+	private Long electionWard = null;
 
-  @JsonProperty("doorNo")
-  private String doorNo = null;
+	@JsonProperty("doorNo")
+	private String doorNo = null;
 
-  @JsonProperty("pinCode")
-  private Long pinCode = null;
+	@JsonProperty("pinCode")
+	private Long pinCode = null;
 
-  public Location locality(Long locality) {
-    this.locality = locality;
-    return this;
-  }
+	public Location locality(Long locality) {
+		this.locality = locality;
+		return this;
+	}
 
-   /**
-   * Boundary location id.
-   * @return locality
-  **/
-  @ApiModelProperty(value = "Boundary location id.")
+	/**
+	 * Boundary location id.
+	 * 
+	 * @return locality
+	 **/
+	@ApiModelProperty(value = "Boundary location id.")
 
+	public Long getLocality() {
+		return locality;
+	}
 
-  public Long getLocality() {
-    return locality;
-  }
+	public void setLocality(Long locality) {
+		this.locality = locality;
+	}
 
-  public void setLocality(Long locality) {
-    this.locality = locality;
-  }
+	public Location zone(Long zone) {
+		this.zone = zone;
+		return this;
+	}
 
-  public Location zone(Long zone) {
-    this.zone = zone;
-    return this;
-  }
+	/**
+	 * Boundary zone id.
+	 * 
+	 * @return zone
+	 **/
+	@ApiModelProperty(value = "Boundary zone id.")
 
-   /**
-   * Boundary zone id.
-   * @return zone
-  **/
-  @ApiModelProperty(value = "Boundary zone id.")
+	public Long getZone() {
+		return zone;
+	}
 
+	public void setZone(Long zone) {
+		this.zone = zone;
+	}
 
-  public Long getZone() {
-    return zone;
-  }
+	public Location revenueWard(Long revenueWard) {
+		this.revenueWard = revenueWard;
+		return this;
+	}
 
-  public void setZone(Long zone) {
-    this.zone = zone;
-  }
+	/**
+	 * Boundary revenueward id.
+	 * 
+	 * @return revenueWard
+	 **/
+	@ApiModelProperty(value = "Boundary revenueward id.")
 
-  public Location revenueWard(Long revenueWard) {
-    this.revenueWard = revenueWard;
-    return this;
-  }
+	public Long getRevenueWard() {
+		return revenueWard;
+	}
 
-   /**
-   * Boundary revenueward id.
-   * @return revenueWard
-  **/
-  @ApiModelProperty(value = "Boundary revenueward id.")
+	public void setRevenueWard(Long revenueWard) {
+		this.revenueWard = revenueWard;
+	}
 
+	public Location block(Long block) {
+		this.block = block;
+		return this;
+	}
 
-  public Long getRevenueWard() {
-    return revenueWard;
-  }
+	/**
+	 * Boundary blick id.
+	 * 
+	 * @return block
+	 **/
+	@ApiModelProperty(value = "Boundary blick id.")
 
-  public void setRevenueWard(Long revenueWard) {
-    this.revenueWard = revenueWard;
-  }
+	public Long getBlock() {
+		return block;
+	}
 
-  public Location block(Long block) {
-    this.block = block;
-    return this;
-  }
+	public void setBlock(Long block) {
+		this.block = block;
+	}
 
-   /**
-   * Boundary blick id.
-   * @return block
-  **/
-  @ApiModelProperty(value = "Boundary blick id.")
+	public Location street(Long street) {
+		this.street = street;
+		return this;
+	}
 
+	/**
+	 * Boundary street id.
+	 * 
+	 * @return street
+	 **/
+	@ApiModelProperty(value = "Boundary street id.")
 
-  public Long getBlock() {
-    return block;
-  }
+	public Long getStreet() {
+		return street;
+	}
 
-  public void setBlock(Long block) {
-    this.block = block;
-  }
+	public void setStreet(Long street) {
+		this.street = street;
+	}
 
-  public Location street(Long street) {
-    this.street = street;
-    return this;
-  }
+	public Location electionWard(Long electionWard) {
+		this.electionWard = electionWard;
+		return this;
+	}
 
-   /**
-   * Boundary street id.
-   * @return street
-  **/
-  @ApiModelProperty(value = "Boundary street id.")
+	/**
+	 * Boundary election ward id.
+	 * 
+	 * @return electionWard
+	 **/
+	@ApiModelProperty(value = "Boundary election ward id.")
 
+	public Long getElectionWard() {
+		return electionWard;
+	}
 
-  public Long getStreet() {
-    return street;
-  }
+	public void setElectionWard(Long electionWard) {
+		this.electionWard = electionWard;
+	}
 
-  public void setStreet(Long street) {
-    this.street = street;
-  }
+	public Location doorNo(String doorNo) {
+		this.doorNo = doorNo;
+		return this;
+	}
 
-  public Location electionWard(Long electionWard) {
-    this.electionWard = electionWard;
-    return this;
-  }
+	/**
+	 * Boundary door number.
+	 * 
+	 * @return doorNo
+	 **/
+	@ApiModelProperty(value = "Boundary door number.")
 
-   /**
-   * Boundary election ward id.
-   * @return electionWard
-  **/
-  @ApiModelProperty(value = "Boundary election ward id.")
+	public String getDoorNo() {
+		return doorNo;
+	}
 
+	public void setDoorNo(String doorNo) {
+		this.doorNo = doorNo;
+	}
 
-  public Long getElectionWard() {
-    return electionWard;
-  }
+	public Location pinCode(Long pinCode) {
+		this.pinCode = pinCode;
+		return this;
+	}
 
-  public void setElectionWard(Long electionWard) {
-    this.electionWard = electionWard;
-  }
+	/**
+	 * pin code of the location.
+	 * 
+	 * @return pinCode
+	 **/
+	@ApiModelProperty(value = "pin code of the location.")
 
-  public Location doorNo(String doorNo) {
-    this.doorNo = doorNo;
-    return this;
-  }
+	public Long getPinCode() {
+		return pinCode;
+	}
 
-   /**
-   * Boundary door number.
-   * @return doorNo
-  **/
-  @ApiModelProperty(value = "Boundary door number.")
+	public void setPinCode(Long pinCode) {
+		this.pinCode = pinCode;
+	}
 
+	@Override
+	public boolean equals(java.lang.Object o) {
+		if (this == o) {
+			return true;
+		}
+		if (o == null || getClass() != o.getClass()) {
+			return false;
+		}
+		Location location = (Location) o;
+		return Objects.equals(this.locality, location.locality) && Objects.equals(this.zone, location.zone)
+				&& Objects.equals(this.revenueWard, location.revenueWard) && Objects.equals(this.block, location.block)
+				&& Objects.equals(this.street, location.street)
+				&& Objects.equals(this.electionWard, location.electionWard)
+				&& Objects.equals(this.doorNo, location.doorNo) && Objects.equals(this.pinCode, location.pinCode);
+	}
 
-  public String getDoorNo() {
-    return doorNo;
-  }
+	@Override
+	public int hashCode() {
+		return Objects.hash(locality, zone, revenueWard, block, street, electionWard, doorNo, pinCode);
+	}
 
-  public void setDoorNo(String doorNo) {
-    this.doorNo = doorNo;
-  }
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		sb.append("class Location {\n");
 
-  public Location pinCode(Long pinCode) {
-    this.pinCode = pinCode;
-    return this;
-  }
+		sb.append("    locality: ").append(toIndentedString(locality)).append("\n");
+		sb.append("    zone: ").append(toIndentedString(zone)).append("\n");
+		sb.append("    revenueWard: ").append(toIndentedString(revenueWard)).append("\n");
+		sb.append("    block: ").append(toIndentedString(block)).append("\n");
+		sb.append("    street: ").append(toIndentedString(street)).append("\n");
+		sb.append("    electionWard: ").append(toIndentedString(electionWard)).append("\n");
+		sb.append("    doorNo: ").append(toIndentedString(doorNo)).append("\n");
+		sb.append("    pinCode: ").append(toIndentedString(pinCode)).append("\n");
+		sb.append("}");
+		return sb.toString();
+	}
 
-   /**
-   * pin code of the location.
-   * @return pinCode
-  **/
-  @ApiModelProperty(value = "pin code of the location.")
-
-
-  public Long getPinCode() {
-    return pinCode;
-  }
-
-  public void setPinCode(Long pinCode) {
-    this.pinCode = pinCode;
-  }
-
-
-  @Override
-  public boolean equals(Object o) {
-    if (this == o) {
-      return true;
-    }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
-    }
-    Location location = (Location) o;
-    return Objects.equals(this.locality, location.locality) &&
-        Objects.equals(this.zone, location.zone) &&
-        Objects.equals(this.revenueWard, location.revenueWard) &&
-        Objects.equals(this.block, location.block) &&
-        Objects.equals(this.street, location.street) &&
-        Objects.equals(this.electionWard, location.electionWard) &&
-        Objects.equals(this.doorNo, location.doorNo) &&
-        Objects.equals(this.pinCode, location.pinCode);
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(locality, zone, revenueWard, block, street, electionWard, doorNo, pinCode);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class Location {\n");
-    
-    sb.append("    locality: ").append(toIndentedString(locality)).append("\n");
-    sb.append("    zone: ").append(toIndentedString(zone)).append("\n");
-    sb.append("    revenueWard: ").append(toIndentedString(revenueWard)).append("\n");
-    sb.append("    block: ").append(toIndentedString(block)).append("\n");
-    sb.append("    street: ").append(toIndentedString(street)).append("\n");
-    sb.append("    electionWard: ").append(toIndentedString(electionWard)).append("\n");
-    sb.append("    doorNo: ").append(toIndentedString(doorNo)).append("\n");
-    sb.append("    pinCode: ").append(toIndentedString(pinCode)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(Object o) {
-    if (o == null) {
-      return "null";
-    }
-    return o.toString().replace("\n", "\n    ");
-  }
+	/**
+	 * Convert the given object to string with each line indented by 4 spaces
+	 * (except the first line).
+	 */
+	private String toIndentedString(java.lang.Object o) {
+		if (o == null) {
+			return "null";
+		}
+		return o.toString().replace("\n", "\n    ");
+	}
 }
-

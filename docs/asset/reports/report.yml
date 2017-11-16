@@ -418,7 +418,7 @@ ReportDefinitions:
        ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
        inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
        assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
-       left outer join select funds.name from (VALUES tbl_funds) as funds (id,tenantId,name,code) ON asset.fundsource=funds.code
+       left outer join (select funds.name from (VALUES tbl_funds) as funds (id,tenantId,name,code)) as funds ON asset.fundsource=funds.code
        where asset.tenantid = $tenantid AND asset.assetCategoryType='IMMOVABLE'
          
          

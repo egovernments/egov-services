@@ -131,7 +131,7 @@ public class RequestValidator {
 			// Check whether the document details are available and validate them
 			if(createOrUpdate && null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
 				for(Document doc : kpi.getDocuments()) { 
-					if(StringUtils.isBlank(doc.getName())) { 
+					if(doc.getActive() && StringUtils.isBlank(doc.getName())) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCNAME_MANDATORY_CODE, 
 			                    PerformanceAssessmentConstants.DOCNAME_MANDATORY_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.DOCNAME_MANDATORY_FIELD_NAME));

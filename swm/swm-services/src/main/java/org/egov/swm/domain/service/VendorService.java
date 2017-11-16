@@ -85,8 +85,6 @@ public class VendorService {
 	@Transactional
 	public VendorRequest update(VendorRequest vendorRequest) {
 
-		validate(vendorRequest);
-
 		Long userId = null;
 
 		if (vendorRequest.getRequestInfo() != null && vendorRequest.getRequestInfo().getUserInfo() != null

@@ -56,7 +56,6 @@ public class VehicleMaintenanceService {
 	@Transactional
 	public VehicleMaintenanceRequest update(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		validate(vehicleMaintenanceRequest);
 
 		Long userId = null;
 
@@ -71,6 +70,8 @@ public class VehicleMaintenanceService {
 			setAuditDetails(vm, userId);
 
 		}
+		
+		validate(vehicleMaintenanceRequest);
 
 		return vehicleMaintenanceRepository.update(vehicleMaintenanceRequest);
 

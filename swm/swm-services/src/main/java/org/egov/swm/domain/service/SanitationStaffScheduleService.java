@@ -66,8 +66,6 @@ public class SanitationStaffScheduleService {
 	@Transactional
 	public SanitationStaffScheduleRequest update(SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		validate(sanitationStaffScheduleRequest);
-
 		Long userId = null;
 
 		if (sanitationStaffScheduleRequest.getRequestInfo() != null
@@ -81,6 +79,8 @@ public class SanitationStaffScheduleService {
 			setAuditDetails(v, userId);
 
 		}
+
+		validate(sanitationStaffScheduleRequest);
 
 		return sanitationStaffScheduleRepository.update(sanitationStaffScheduleRequest);
 

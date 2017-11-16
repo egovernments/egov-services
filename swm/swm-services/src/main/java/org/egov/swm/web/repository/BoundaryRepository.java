@@ -20,7 +20,11 @@ public class BoundaryRepository {
 	}
 
 	public Boundary fetchBoundaryByCode(String code, String tenantId) {
-		return getBoundaryServiceResponse(this.boundaryServiceHost, code, tenantId).getBoundaries().get(0);
+		try {
+			return getBoundaryServiceResponse(this.boundaryServiceHost, code, tenantId).getBoundaries().get(0);
+		} catch (Exception e) {
+			throw new CustomException("Location", "Given Location is invalid: " + code);
+		}
 	}
 
 	private BoundaryResponse getBoundaryServiceResponse(final String url, String code, String tenantId) {

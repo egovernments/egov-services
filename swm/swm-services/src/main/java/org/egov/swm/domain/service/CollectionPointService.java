@@ -218,7 +218,7 @@ public class CollectionPointService {
 
 			if (bd.getAssetOrBinId() != null) {
 				if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
-						bd.getAssetOrBinId(), "id", bd.getId())) {
+						bd.getAssetOrBinId(), "collectionPoint", collectionPoint.getCode())) {
 
 					throw new CustomException("BinId", "The field BinId must be unique in the system The  value "
 							+ bd.getAssetOrBinId()
@@ -241,8 +241,8 @@ public class CollectionPointService {
 			if (bd.getRfid() != null) {
 
 				if (bd.getRfidAssigned() && bd.getRfidAssigned() != null) {
-					if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid(), "id",
-							bd.getId())) {
+					if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid(),
+							"collectionPoint", collectionPoint.getCode())) {
 
 						throw new CustomException("RFID", "The field RFID must be unique in the system The  value "
 								+ bd.getRfid()

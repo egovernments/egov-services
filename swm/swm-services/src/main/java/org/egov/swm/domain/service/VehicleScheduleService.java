@@ -66,8 +66,6 @@ public class VehicleScheduleService {
 	@Transactional
 	public VehicleScheduleRequest update(VehicleScheduleRequest vehicleScheduleRequest) {
 
-		validate(vehicleScheduleRequest);
-
 		Long userId = null;
 
 		for (VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules()) {

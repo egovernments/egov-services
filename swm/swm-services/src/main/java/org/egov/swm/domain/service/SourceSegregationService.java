@@ -58,8 +58,6 @@ public class SourceSegregationService {
 	@Transactional
 	public SourceSegregationRequest update(SourceSegregationRequest sourceSegregationRequest) {
 
-		validate(sourceSegregationRequest);
-
 		Long userId = null;
 
 		if (sourceSegregationRequest.getRequestInfo() != null

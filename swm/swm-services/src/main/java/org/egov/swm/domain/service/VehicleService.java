@@ -75,8 +75,6 @@ public class VehicleService {
 	@Transactional
 	public VehicleRequest update(VehicleRequest vehicleRequest) {
 
-		validate(Constants.ACTION_UPDATE, vehicleRequest);
-
 		Long userId = null;
 		for (Vehicle v : vehicleRequest.getVehicles()) {
 
@@ -90,6 +88,8 @@ public class VehicleService {
 			prepareInsuranceDocument(v);
 
 		}
+
+		validate(Constants.ACTION_UPDATE, vehicleRequest);
 
 		return vehicleRepository.update(vehicleRequest);
 

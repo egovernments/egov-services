@@ -64,8 +64,6 @@ public class VendorContractService {
 	@Transactional
 	public VendorContractRequest update(VendorContractRequest vendorContractRequest) {
 
-		validate(vendorContractRequest);
-
 		Long userId = null;
 
 		if (vendorContractRequest.getRequestInfo() != null
@@ -80,6 +78,8 @@ public class VendorContractService {
 				setAuditDetails(vc, userId);
 
 			}
+
+		validate(vendorContractRequest);
 
 		return vendorContractRepository.update(vendorContractRequest);
 

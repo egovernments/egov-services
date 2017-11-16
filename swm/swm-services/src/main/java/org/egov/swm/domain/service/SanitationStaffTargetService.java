@@ -82,8 +82,6 @@ public class SanitationStaffTargetService {
 	@Transactional
 	public SanitationStaffTargetRequest update(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		validate(sanitationStaffTargetRequest);
-
 		Long userId = null;
 
 		if (sanitationStaffTargetRequest.getRequestInfo() != null
@@ -101,6 +99,8 @@ public class SanitationStaffTargetService {
 			}
 
 		}
+
+		validate(sanitationStaffTargetRequest);
 
 		return sanitationStaffTargetRepository.update(sanitationStaffTargetRequest);
 

@@ -241,6 +241,9 @@ public class Constants {
     public static final String KEY_LOCALITY_CODE_REQUIRED= "LOCALITY_CODE_REQUIRED";
     public static final String MESSAGE_LOCALITY_CODE_REQUIRED= "Locality data is required";
 
+    public static final String KEY_LOCALITY_CODE_INVALID= "LOCALITY_CODE_INVALID";
+    public static final String MESSAGE_LOCALITY_CODE_INVALID= "Locality data is invali";
+
     public static final String KEY_ESTIMATE_OVERHEAD_CODE_INVALID= "ESTIMATE_OVERHEAD_INVALID";
     public static final String MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID= "Invalid data for esimate overhead code";
 

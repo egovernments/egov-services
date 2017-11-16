@@ -242,7 +242,7 @@ public class DetailedEstimate   {
   //@NotNull
   //TODO from UI its not mandatory
 
-   // @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+    @Pattern(regexp="[a-zA-Z0-9-//]+") @Size(max=50)
     public String getEstimateNumber() {
         return estimateNumber;
     }
@@ -808,7 +808,7 @@ public class DetailedEstimate   {
      **/
     @ApiModelProperty(value = "The Locality in which the Detailed Estimate belongs to")
 
-    @Valid
+    //@Valid
 
     public Boundary getLocality() {
         return locality;

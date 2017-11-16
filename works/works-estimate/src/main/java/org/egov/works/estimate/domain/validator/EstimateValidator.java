@@ -1,12 +1,6 @@
 package org.egov.works.estimate.domain.validator;
 
-import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import net.minidev.json.JSONArray;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
@@ -21,7 +15,8 @@ import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import net.minidev.json.JSONArray;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Service
 public class EstimateValidator {
@@ -55,6 +50,9 @@ public class EstimateValidator {
 
     @Autowired
     private FileStoreRepository fileStoreRepository;
+
+    @Autowired
+    private BoundaryRepository boundaryRepository;
 
     public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
         Map<String, String> messages = new HashMap<>();
@@ -592,7 +590,7 @@ public class EstimateValidator {
 
                 }
 
-                //TODO FIX aset code validation
+                //TODO FIX aset code validation getting deserialization error for AttributeDefinition["columns"]
                /* if( assetsForEstimate.getAsset() != null && StringUtils.isNotBlank(assetsForEstimate.getAsset().getCode())) {
                     List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),assetsForEstimate.getAsset().getCode(),requestInfo);
                     if(assets != null && assets.isEmpty())
@@ -691,19 +689,39 @@ public class EstimateValidator {
 
         validateModeOfAllotment(detailedEstimate.getModeOfAllotment(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateNatureOfWork(detailedEstimate.getNatureOfWork(), detailedEstimate.getTenantId(), requestInfo, messages);
-        //MDMS data not found
-        //validateWardBoundary(detailedEstimate.getWard(), detailedEstimate.getTenantId(), requestInfo, messages);
-       // validateLocalityBoundary(detailedEstimate.getLocality(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateWardBoundary(detailedEstimate.getWard(), detailedEstimate.getTenantId(), requestInfo, messages);
+        validateLocalityBoundary(detailedEstimate.getLocality(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateTypeOfWork(detailedEstimate.getWorksType(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateSubTypeOfWork(detailedEstimate.getWorksSubtype(), detailedEstimate.getTenantId(), requestInfo,
                 messages);
         validateDepartment(detailedEstimate.getDepartment(), detailedEstimate.getTenantId(), requestInfo, messages);
     }
 
+    private void validateLocalityBoundary(Boundary locality, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+
+        if (locality != null && StringUtils.isNotBlank(locality.getCode())) {
+            List<Boundary> boundaries = boundaryRepository.searchBoundaries(tenantId,locality.getCode());
+            if(boundaries != null && boundaries.isEmpty())
+                messages.put(Constants.KEY_LOCALITY_CODE_INVALID,
+                        Constants.MESSAGE_LOCALITY_CODE_INVALID);
+        }
+
+    }
+
+    private void validateWardBoundary(Boundary ward, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
+        if (ward != null && StringUtils.isNotBlank(ward.getCode())) {
+            List<Boundary> boundaries = boundaryRepository.searchBoundaries(tenantId,ward.getCode());
+            if(boundaries != null && boundaries.isEmpty())
+                messages.put(Constants.KEY_WARD_INVALID,
+                        Constants.MESSAGE_WARD_INVALID);
+        } else
+            messages.put(Constants.KEY_WARD_CODE_REQUIRED, Constants.MESSAGE_WARD_CODE_REQUIRED);
+    }
+
 
     private void validateNatureOfWork(NatureOfWork natureOfWork, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray;
-        if (natureOfWork != null && natureOfWork.getCode() != null) {
+        if (natureOfWork != null && StringUtils.isNotBlank(natureOfWork.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT,
                     CommonConstants.CODE, natureOfWork.getCode(), tenantId, requestInfo,
                     Constants.WORKS_MODULE_CODE);
@@ -732,23 +750,5 @@ public class EstimateValidator {
         validateBudgetGroup(detailedEstimate.getBudgetGroup(), detailedEstimate.getTenantId(), requestInfo, messages);
     }
 
-    public boolean checkDetailedEstimateCreatedFlag(final DetailedEstimate detailedEstimate) {
-        boolean isDetailedEstimateCreated = false;
-        AbstractEstimateDetailsSearchContract searchContract = AbstractEstimateDetailsSearchContract.builder().tenantId(detailedEstimate.getTenantId())
-                .ids(Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getId())).build();
-        List<AbstractEstimateDetails> abstractEstimateDetails = abstractEstimateDetailsJdbcRepository.search(searchContract);
-        if (!abstractEstimateDetails.isEmpty()) {
-            String abstractEstimateId = abstractEstimateDetails.get(0).getAbstractEstimate();
-            AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder().tenantId(detailedEstimate.getTenantId())
-                    .ids(Arrays.asList(abstractEstimateId)).build();
-            List<AbstractEstimate> abstractEstimates = abstractEstimateRepository.search(abstractEstimateSearchContract);
-            if (!abstractEstimates.isEmpty()) {
-                AbstractEstimate abstractEstimate = abstractEstimates.get(0);
-                isDetailedEstimateCreated = abstractEstimate.getDetailedEstimateCreated();
-            }
-
-        }
-        return isDetailedEstimateCreated;
-    }
 }
 

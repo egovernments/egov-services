@@ -1,7 +1,10 @@
 package org.egov.pa.web.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.egov.pa.model.Document;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
 import org.egov.pa.web.contract.RequestInfoWrapper;
@@ -40,6 +43,11 @@ public interface KpiMaster {
 	
 	@PostMapping(value = "/_getkpitype")
     @ResponseBody
-	public Boolean getKpiType(@RequestParam(value = "kpiCode") String kpiCode); 
+	public Boolean getKpiType(@RequestParam(value = "kpiCode") String kpiCode);
+	
+	@PostMapping(value = "/_getDocumentForKpi")
+	@ResponseBody
+	public List<Document> getDocumentForKpi(@RequestParam("kpiCode") String kpiCode,
+			 @RequestBody RequestInfoWrapper requestInfo); 
 
 }

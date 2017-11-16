@@ -126,6 +126,11 @@ public class PerformanceAssessmentQueryBuilder {
     	return "SELECT targettype FROM egpa_kpi_master WHERE code = ? " ; 
     }
     
+    public String getDocumentForKpi() { 
+    	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active "
+    			+ " FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
+    }
+    
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void addKpiValueWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
 			final KPIValueSearchRequest kpiValueSearchReq) {

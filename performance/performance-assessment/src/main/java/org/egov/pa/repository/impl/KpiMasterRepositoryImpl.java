@@ -211,4 +211,13 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	kafkaTemplate.send(updateKpiTargetTopic, kpiTargetList);
 	}
 
+	@Override
+	public List<Document> getDocumentForKpi(String kpiCode) {
+		String query = queryBuilder.getDocumentForKpi();
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("kpiCode", kpiCode);
+		List<Document> documentList = namedParameterJdbcTemplate.query(query,parametersMap, new BeanPropertyRowMapper<>(Document.class));
+		return documentList;
+	}
+
 }

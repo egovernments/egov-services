@@ -139,5 +139,10 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     		return false;
     }
 
+	@Override
+	public List<Document> getDocumentForKpi(String kpiCode) {
+		return kpiMasterRepository.getDocumentForKpi(kpiCode);
+	}
+
 	
 }

@@ -45,6 +45,7 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
+import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.service.KpiMasterService;
 import org.egov.pa.validator.RequestValidator;
@@ -160,6 +161,12 @@ public class KpiMasterController implements KpiMaster {
     	String tenantId= "" ; 
         return kpiMasterService.getKpiType(kpiCode, tenantId); 
     }
+    
+    @Override
+	public List<Document> getDocumentForKpi(@RequestParam("kpiCode") String kpiCode,
+			 @RequestBody RequestInfoWrapper requestInfo) {
+		return kpiMasterService.getDocumentForKpi(kpiCode); 
+	}
     
     public ResponseEntity<?> getSuccessResponse(final List<KPI> kpiList,
             final RequestInfo requestInfo) {

@@ -130,12 +130,10 @@ class EmployeeAttendence extends React.Component {
  searchEmployeeAttendance (e) {
    e.preventDefault();
    $('#employeeTable').dataTable().fnDestroy();
-   var result, _this = this;
+   var _this = this;
    try {
-        result = commonApiPost("hr-attendance", "attendances", "_attendancereport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
-          console.log(res);
-          if(res) {
-            console.log(res && res.Attendance);
+        commonApiPost("hr-attendance", "attendances", "_attendancereport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
+          if(res && res.Attendance) {
             flag = 1;
             _this.setState({
               ..._this.state,
@@ -147,7 +145,6 @@ class EmployeeAttendence extends React.Component {
           }
         });
    } catch(e) {
-        result = [];
         console.log(e);
    }
 

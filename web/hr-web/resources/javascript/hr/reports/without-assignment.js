@@ -1,4 +1,4 @@
-
+var flag = 0;
 
 class WithoutAssignment extends React.Component {
 
@@ -26,20 +26,58 @@ class WithoutAssignment extends React.Component {
       })
   }
 
+  componentDidUpdate(prevProps, prevState) {
+    if (flag === 1) {
+      flag = 0;
+      $('#employeeTable').DataTable({
+        dom: 'Bfrtip',
+        buttons: [
+          'copy', 'csv', 'excel', 'pdf', 'print'
+        ],
+        ordering: false
+      });
+    }
+  }
+
+  componentDidMount() {
+
+    var _this = this;
+
+    $('#date').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+      defaultDate: ""
+    });
+
+    $('#date').on('changeDate', function(e) {
+      _this.setState({
+        searchSet: {
+          ..._this.state.searchSet,
+          "date": $("#date").val(),
+        }
+      });
+    });
+
+  }
+
   searchEmployee (e) {
     e.preventDefault();
-    var result;
+    var _this = this
+    $('#employeeTable').dataTable().fnDestroy();
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId}).responseJSON["Employee"] || [];
+        commonApiPost("hr-employee", "employees", "_employeewithoutassignmentreport", {...this.state.searchSet, tenantId},function(err,res){
+          if(res && res.EmployeeInfo){
+            flag = 1;
+          _this.setState({
+            ..._this.state,
+            isSearchClicked: true,
+            result : res.EmployeeInfo
+          });
+         }
+        });
     } catch (e) {
-        result = [];
         console.log(e);
     }
-    this.setState({
-        ...this.state,
-        isSearchClicked: true,
-        result: result
-    })
   }
 
   closeWindow() {
@@ -55,9 +93,8 @@ class WithoutAssignment extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                    <td>89 </td>
-                    <td>Kumaresh</td>
-                    <td><a href="#" assign>Assign </a></td>
+                    <td>item.code </td>
+                    <td>item.name</td>
                 </tr>
             )
         })
@@ -72,7 +109,6 @@ class WithoutAssignment extends React.Component {
                             <tr>
                                 <th>Employee Code</th>
                                 <th>Employee Name</th>
-                                <th>Action </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,21 +128,22 @@ class WithoutAssignment extends React.Component {
                         <div className="col-sm-6">
                             <div className="row">
                                 <div className="col-sm-6 label-text">
-                                    <label for="">Date* </label>
+                                    <label htmlFor="">Date<span>*</span> </label>
                                 </div>
                                 <div className="col-sm-6">
                                     <div className="text-no-ui">
                                         <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                        <input type="date" id="date" value={date} onChange={(e) => {handleChange(e, "date")}} required/>
+                                        <input type="text" id="date" value={date} onChange={(e) => {handleChange(e, "date")}} required/>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div className="text-center">
+                        <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                         <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-                        &nbsp;&nbsp;
-                        <button type="submit" className="btn btn-submit">Search</button>
+
+
                     </div>
                 </fieldset>
             </form>

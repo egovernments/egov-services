@@ -51,12 +51,74 @@ class LeaveSummary extends React.Component {
       var employeeType = [];
     }
 
+
+
+    var employeeStatusList;
+    var leaveTypes;
+
+    getDropdown("employeeStatus", function(res) {
+      employeeStatusList = res;
+    });
+    getDropdown("leaveTypes", function(res) {
+      leaveTypes = res;
+    });
+
      this.setState({
          ...this.state,
          departments: Object.assign([], assignments_department),
          designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType)
+         employeeTypes: Object.assign([], employeeType),
+         employeeStatuses: Object.assign([], employeeStatusList),
+         leaveTypes: Object.assign([], leaveTypes),
      });
+
+
+     var _this = this;
+
+     commonApiPost("hr-employee", "employees", "_search", {
+       tenantId,
+       pageSize: 500
+     }, function(err, res) {
+       if (res && res.Employee) {
+         res.Employee.forEach(function(item, index, theArray) {
+           theArray[index] = {
+             "id": item.id,
+             "name": item.code + " - " + item.name
+           };
+         });
+
+         _this.setState({
+           ..._this.state,
+           employeeList: res.Employee
+         });
+
+       }
+     });
+
+
+
+
+  }
+
+
+  componentDidMount() {
+
+    var _this = this;
+
+    $('#asOnDate').datepicker({
+      format: 'dd/mm/yyyy',
+      autoclose: true,
+      defaultDate: ""
+    });
+
+    $('#asOnDate').on('changeDate', function(e) {
+      _this.setState({
+        searchSet: {
+          ..._this.state.searchSet,
+          "asOnDate": $("#asOnDate").val(),
+        }
+      });
+    });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -88,35 +150,27 @@ class LeaveSummary extends React.Component {
 
   searchEmployee (e) {
     e.preventDefault();
-    var result;
+    $('#employeeTable').dataTable().fnDestroy();
+    var _this = this;
     try {
-        result = commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId},function(err, res) {
-          console.log(res);
+        commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId},function(err, res) {
           if(res) {
-            console.log(res && res.Attendance);
             flag = 1;
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
-                noOfDaysInMonth:res.noOfDaysInMonth,
-                noOfWorkingDays:res.noOfWorkingDays,
-                result : res.Attendance
+                result : res
             })
           }
+        })
       } catch (e) {
-        result = [];
         console.log(e);
     }
-    this.setState({
-        ...this.state,
-        isSearchClicked: true,
-        result: result
-    })
   }
 
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
-    let {result, employeeTypes, departments, designations, employeeStatuses, leaveTypes, error} = this.state;
+    let {result, employeeTypes, departments, designations, employeeStatuses, leaveTypes, employeeList, error} = this.state;
     let {employeeCode, department, designation, employeeType, employeeStatus, asOnDate, leaveType} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -126,7 +180,7 @@ class LeaveSummary extends React.Component {
             return list.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
-                        {item.name}
+                        {item.name?item.name:item.code}
                     </option>)
             })
         }
@@ -136,7 +190,7 @@ class LeaveSummary extends React.Component {
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                <td>{item.code}</td>
+                <td>{getNameById(employeeList, item.employee)}</td>
                 <td>{item.name}</td>
                 <td>{item.employeeStatus}</td>
                 <td>{item.employeeType}</td>
@@ -160,7 +214,7 @@ class LeaveSummary extends React.Component {
                                 <th>Opening Balance</th>
                                 <th>Leave Elligible</th>
                                 <th>Total Leave Elligible</th>
-                                <th>Approved </th>
+                                <th>Approved Leaves</th>
                                 <th>Balance </th>
                             </tr>
                         </thead>
@@ -182,26 +236,30 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Department </label>
+                                        <label htmlFor="">Department </label>
                                     </div>
                                     <div className="col-sm-6">
+                                    <div className="styled-select">
                                         <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
-                                            <option value="" selected></option>
+                                            <option value="" ></option>
                                             {renderOptions(departments)}
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Designation </label>
+                                        <label htmlFor="">Designation </label>
                                     </div>
                                     <div className="col-sm-6">
+                                    <div className="styled-select">
                                         <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
-                                            <option value="" selected></option>
+                                            <option value="" ></option>
                                             {renderOptions(designations)}
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -210,7 +268,7 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Employee Code/Name </label>
+                                        <label htmlFor="">Employee Code/Name </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <input id="employeeCode" type="text" value={employeeCode} onChange={(e) => {handleChange(e, "employeeCode")}}/>
@@ -220,14 +278,16 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Employee Type </label>
+                                        <label htmlFor="">Employee Type </label>
                                     </div>
                                     <div className="col-sm-6">
+                                    <div className="styled-select">
                                         <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                            <option value="" selected></option>
+                                            <option value="" ></option>
                                             {renderOptions(employeeTypes)}
                                         </select>
                                     </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -235,26 +295,30 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Employee Status </label>
+                                        <label htmlFor="">Employee Status </label>
                                     </div>
                                     <div className="col-sm-6">
+                                    <div className="styled-select">
                                         <select id="employeeStatus" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}>
-                                            <option value="" selected></option>
+                                            <option value="" ></option>
                                             {renderOptions(employeeStatuses)}
                                         </select>
                                     </div>
+                                    </div>
                                 </div>
                             </div>
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">Leave Type </label>
+                                        <label htmlFor="">Leave Type </label>
                                     </div>
                                     <div className="col-sm-6">
+                                    <div className="styled-select">
                                         <select id="leaveType" value={leaveType} onChange={(e) => {handleChange(e, "leaveType")}}>
-                                            <option value="" selected></option>
+                                            <option value="" ></option>
                                             {renderOptions(leaveTypes)}
                                         </select>
+                                    </div>
                                     </div>
                                 </div>
                             </div>
@@ -263,12 +327,12 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label for="">As On Date* </label>
+                                        <label htmlFor="">As On Date </label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="date" id="asOnDate" value={asOnDate} onChange={(e) => {handleChange(e, "asOnDate")}} required/>
+                                                <input type="text" id="asOnDate" value={asOnDate} onChange={(e) => {handleChange(e, "asOnDate")}}/>
                                             </div>
                                     </div>
                                 </div>

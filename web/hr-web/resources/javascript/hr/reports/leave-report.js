@@ -166,8 +166,6 @@ class LeaveReport extends React.Component {
         return showError("Please enter To Date");
       if (!this.state.searchSet.dateFrom && this.state.searchSet.dateTo)
         return showError("Please enter From Date");
-
-      var result;
       try {
         commonApiPost("hr-leave", "leaveapplications", "_leavereport", { ...this.state.searchSet,
           tenantId
@@ -183,7 +181,6 @@ class LeaveReport extends React.Component {
           }
         });
       } catch (e) {
-        result = [];
         console.log(e);
       }
     }

@@ -1,0 +1,1 @@
+update eg_action set servicecode='CASE',parentmodule=(select id from service where code='CASE' and tenantid='default')  where name = 'Search Event';

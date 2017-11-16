@@ -565,7 +565,7 @@ public class EstimateValidator {
         if (mdmsArray != null && !mdmsArray.isEmpty()) {
             Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
             if (jsonMap.get("value").equals("Yes")) {
-                if (detailedEstimate.getAssets() != null && detailedEstimate.getAssets().isEmpty())
+                if (detailedEstimate.getAssets() != null && !detailedEstimate.getAssets().isEmpty())
                     assetsAdded = true;
 
                 for (AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets())
@@ -592,9 +592,8 @@ public class EstimateValidator {
 
                 }
 
-
                 //TODO FIX aset code validation
-               /* else {
+               /* if( assetsForEstimate.getAsset() != null && StringUtils.isNotBlank(assetsForEstimate.getAsset().getCode())) {
                     List<Asset> assets = assetRepository.searchAssets(assetsForEstimate.getTenantId(),assetsForEstimate.getAsset().getCode(),requestInfo);
                     if(assets != null && assets.isEmpty())
                         messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID, Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID);

@@ -252,7 +252,7 @@ var dat = {
               }
             ],
             "defaultValue": "active",
-            "enableDisableFields": [
+            "enableDiasableFields": [
               {
                 "ifValue": "active",
                 "enable": [],

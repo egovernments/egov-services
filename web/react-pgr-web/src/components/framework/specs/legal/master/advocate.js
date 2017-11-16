@@ -847,7 +847,7 @@ var dat ={
               }
             ],
             "defaultValue": "active",
-            "enableDisableFields": [
+            "enableDisableaFields": [
               {
                 "ifValue": "active",
                  "enable": [],
@@ -937,7 +937,7 @@ var dat ={
               }
             ],
             "defaultValue": "active",
-            "enableDisableFields": [
+            "enableDiasableFields": [
               {
                 "ifValue": "active",
                  "enable": [],
@@ -1826,7 +1826,7 @@ var dat ={
               }
             ],
             "defaultValue": "active",
-            "enableDisableFields": [
+            "enableDiasableFields": [
               {
                 "ifValue": "active",
                  "enable": [],
@@ -1915,7 +1915,7 @@ var dat ={
               }
             ],
             "defaultValue": "active",
-            "enableDisableFields": [
+            "enableDiasableFields": [
               {
                 "ifValue": "active",
                  "enable": [],

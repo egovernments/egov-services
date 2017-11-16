@@ -27,6 +27,7 @@ import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.DepartmentResponse;
 import org.egov.lcms.models.Event;
+import org.egov.lcms.models.EventResponse;
 import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
@@ -659,7 +660,10 @@ public class CaseService {
 		return new CaseDetailsResponse(responseInfo, caseDetails);
 	}
 
-	public List<Event> getEvent(EventSearchCriteria eventSearchCriteria) {
-		return caseSearchRepository.getEvent(eventSearchCriteria);
+	public EventResponse getEvent(EventSearchCriteria eventSearchCriteria, RequestInfo requestInfo) {
+		List<Event> events = caseSearchRepository.getEvent(eventSearchCriteria);
+		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED);
+		
+		return new EventResponse(responseInfo, events);
 	}
 }

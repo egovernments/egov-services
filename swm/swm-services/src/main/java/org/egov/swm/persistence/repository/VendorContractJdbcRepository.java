@@ -90,6 +90,12 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 			params.append("securityDeposit =:securityDeposit");
 			paramValues.put("securityDeposit", searchRequest.getSecurityDeposit());
 		}
+		
+		if (searchRequest.getPaymentAmount() != null) {
+			addAnd(params);
+			params.append("paymentAmount =:paymentAmount");
+			paramValues.put("paymentAmount", searchRequest.getPaymentAmount());
+		}
 
 		Pagination<VendorContract> page = new Pagination<>();
 		if (searchRequest.getOffset() != null) {

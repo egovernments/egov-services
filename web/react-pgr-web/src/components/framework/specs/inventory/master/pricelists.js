@@ -139,8 +139,8 @@ var dat = {
       ],
       "resultPath": "priceLists",
       "resultIdKey":"rateContractNumber",
-      "rowClickUrlUpdate": "/update/inventory/pricelists/{code}",
-      "rowClickUrlView": "/view/inventory/pricelists/{code}",
+      "rowClickUrlUpdate": "/update/inventory/pricelists/{rateContractNumber}",
+      "rowClickUrlView": "/view/inventory/pricelists/{rateContractNumber}",
       "rowClickUrlAdd" : "/create/inventory/pricelists",
       "rowClickUrlDelete" : {
         url:"inventory-services/pricelists/_update",
@@ -319,7 +319,7 @@ var dat = {
                   "label": "inventory.TO.date"
                 },
                 {
-                  "label": "inventory.quantity" 
+                  "label": "inventory.quantity"
                 },
                 {
                   "label":"inventory.active"
@@ -556,7 +556,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "/inventory-services/pricelists/_search?id={id}"
+    "url": "/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -693,7 +693,7 @@ var dat = {
     ],
     "url": "/inventory-services/pricelists/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-services/pricelists/_search?id={id}"
+    "searchUrl": "/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}"
   }
 }
  export default dat;

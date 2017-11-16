@@ -97,20 +97,20 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 
 	@Override
-	public KpiValue checkKpiValueExistsForTenant(String kpiCode, String tenantId) {
+	public Long checkKpiValueExistsForTenant(String kpiCode, String tenantId) {
 		String query = PerformanceAssessmentQueryBuilder.fetchKpiValueForCodeAndTenant(); 
 		final HashMap<String, Object> parametersMap = new HashMap<>(); 
 		parametersMap.put("kpiCode", kpiCode); 
 		parametersMap.put("tenantId", tenantId);
-		KpiValue value = null ; 
+		Long resultValue = 0l;  
 		try { 
-			value = namedParameterJdbcTemplate.queryForObject(query, parametersMap, new BeanPropertyRowMapper<>(KpiValue.class));			
+			resultValue = namedParameterJdbcTemplate.queryForObject(query, parametersMap, Long.class);			
 		} catch(EmptyResultDataAccessException exec) { 
 			log.info("Empty Data Set resulted - Code and Tenant ID does not have a record : " + exec);
 		} catch(Exception e) { 
 			log.error("Encountered an exception while fetching the data for Code and Tenant Id : " + e);
 		}
-		return value;
+		return resultValue;
 	}
 
 	@Override

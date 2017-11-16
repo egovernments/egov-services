@@ -90,7 +90,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String fetchKpiValueForCodeAndTenant() { 
-    	return "SELECT value.id, value.kpicode as kpiCode, value.actualvalue as actualValue, value.tenantid as tenantId FROM egpa_kpi_value value " 
+    	return "SELECT value.actualvalue as resultValue FROM egpa_kpi_value value " 
     			+ " LEFT JOIN egpa_kpi_master master on value.kpicode = master.code WHERE value.kpicode = :kpiCode and value.tenantid = :tenantId " ; 
     }
     

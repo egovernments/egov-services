@@ -512,15 +512,16 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.auditDetails.createdTime
               dbType: LONG
             - jsonPath: $.materialIssues.*.auditDetails.lastModifiedBy
-            - jsonPath: $.stores.*.auditDetails.lastModifiedTime
+            - jsonPath: $.materialIssues.*.auditDetails.lastModifiedTime
               dbType: LONG
               
         - query: >-
-            INSERT INTO materialissuedetails(id, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, quantitytobeissued, materialissuedfromreceiptsid, materialid, quantityissued,description, materialissueid)
+            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, quantitytobeissued, materialissuedfromreceiptsid, materialid, quantityissued,description)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.id
+            - jsonPath: $.materialIssues[?({id} in @.materialIssueDetails[*].id)].issueNumber
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.tenantId
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.orderNumber
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.value
@@ -529,11 +530,11 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityToBeIssued
-            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
-            - jsonPath: $.materialIssues.*.id
+           
             
 
 

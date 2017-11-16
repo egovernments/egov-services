@@ -6,11 +6,6 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.Indent;
-import org.egov.inv.model.MaterialIssueDetails;
-import org.egov.inv.model.Store;
-import org.egov.inv.model.WorkFlowDetails;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +16,7 @@ import javax.validation.constraints.*;
  * This object holds information for Indent Issue, Non Indent Issue and Transfer Outward Note. 
  */
 @ApiModel(description = "This object holds information for Indent Issue, Non Indent Issue and Transfer Outward Note. ")
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T08:36:20.118Z")
 
 public class MaterialIssue   {
   @JsonProperty("id")
@@ -36,7 +31,9 @@ public class MaterialIssue   {
   public enum IssueTypeEnum {
     INDENTISSUE("IndentIssue"),
     
-    NONINDENTISSUE("NonIndentIssue");
+    NONINDENTISSUE("NonIndentIssue"),
+    
+    MATERIAL_OUTWARD("Material Outward");
 
     private String value;
 
@@ -64,11 +61,14 @@ public class MaterialIssue   {
   @JsonProperty("issueType")
   private IssueTypeEnum issueType = null;
 
-  @JsonProperty("issuingStore")
-  private Store issuingStore = null;
+  @JsonProperty("fromStore")
+  private Store fromStore = null;
 
-  @JsonProperty("issueNoteNumber")
-  private String issueNoteNumber = null;
+  @JsonProperty("toStore")
+  private Store toStore = null;
+
+  @JsonProperty("issueNumber")
+  private String issueNumber = null;
 
   @JsonProperty("issueDate")
   private Long issueDate = null;
@@ -136,9 +136,9 @@ public class MaterialIssue   {
    * Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
    */
   public enum IssuePurposeEnum {
-    WRITEOFFORSCRAP("WriteOffORScrap"),
+    WRITEOFF_OR_SCRAP("WriteOff OR Scrap"),
     
-    RETURNTOSUPPLIER("ReturnToSupplier");
+    RETURN_TO_SUPPLIER("Return To Supplier");
 
     private String value;
 
@@ -166,8 +166,11 @@ public class MaterialIssue   {
   @JsonProperty("issuePurpose")
   private IssuePurposeEnum issuePurpose = null;
 
+  @JsonProperty("supplier")
+  private Supplier supplier = null;
+
   @JsonProperty("materialIssueDetails")
-  private List<MaterialIssueDetails> materialIssueDetails = null;
+  private List<MaterialIssueDetail> materialIssueDetails = null;
 
   @JsonProperty("workFlowDetails")
   private WorkFlowDetails workFlowDetails = null;
@@ -207,7 +210,8 @@ public class MaterialIssue   {
    * Tenant id of the Material Issue
    * @return tenantId
   **/
-  @ApiModelProperty(value = "Tenant id of the Material Issue")
+  @ApiModelProperty(required = true, value = "Tenant id of the Material Issue")
+  @NotNull
 
  @Size(min=4,max=128)
   public String getTenantId() {
@@ -239,46 +243,67 @@ public class MaterialIssue   {
     this.issueType = issueType;
   }
 
-  public MaterialIssue issuingStore(Store issuingStore) {
-    this.issuingStore = issuingStore;
+  public MaterialIssue fromStore(Store fromStore) {
+    this.fromStore = fromStore;
     return this;
   }
 
    /**
    * This field holds the issuing store information. 
-   * @return issuingStore
+   * @return fromStore
   **/
   @ApiModelProperty(required = true, value = "This field holds the issuing store information. ")
   @NotNull
 
   @Valid
 
-  public Store getIssuingStore() {
-    return issuingStore;
+  public Store getFromStore() {
+    return fromStore;
   }
 
-  public void setIssuingStore(Store issuingStore) {
-    this.issuingStore = issuingStore;
+  public void setFromStore(Store fromStore) {
+    this.fromStore = fromStore;
   }
 
-  public MaterialIssue issueNoteNumber(String issueNoteNumber) {
-    this.issueNoteNumber = issueNoteNumber;
+  public MaterialIssue toStore(Store toStore) {
+    this.toStore = toStore;
+    return this;
+  }
+
+   /**
+   * This field holds the receiving store information.     
+   * @return toStore
+  **/
+  @ApiModelProperty(value = "This field holds the receiving store information.     ")
+
+  @Valid
+
+  public Store getToStore() {
+    return toStore;
+  }
+
+  public void setToStore(Store toStore) {
+    this.toStore = toStore;
+  }
+
+  public MaterialIssue issueNumber(String issueNumber) {
+    this.issueNumber = issueNumber;
     return this;
   }
 
    /**
    * issue note number/outward note number.Auto generated number, read only. 
-   * @return issueNoteNumber
+   * @return issueNumber
   **/
   @ApiModelProperty(readOnly = true, value = "issue note number/outward note number.Auto generated number, read only. ")
 
  @Size(max=100)
-  public String getIssueNoteNumber() {
-    return issueNoteNumber;
+  public String getIssueNumber() {
+    return issueNumber;
   }
 
-  public void setIssueNoteNumber(String issueNoteNumber) {
-    this.issueNoteNumber = issueNoteNumber;
+  public void setIssueNumber(String issueNumber) {
+    this.issueNumber = issueNumber;
   }
 
   public MaterialIssue issueDate(Long issueDate) {
@@ -314,7 +339,7 @@ public class MaterialIssue   {
   @ApiModelProperty(required = true, value = "material issue status of the MaterialIssue ")
   @NotNull
 
- @Size(min=5,max=50)
+
   public MaterialIssueStatusEnum getMaterialIssueStatus() {
     return materialIssueStatus;
   }
@@ -334,7 +359,7 @@ public class MaterialIssue   {
   **/
   @ApiModelProperty(value = "description of the MaterialIssue")
 
- @Size(max=1000)
+ @Size(max=512)
   public String getDescription() {
     return description;
   }
@@ -486,14 +511,35 @@ public class MaterialIssue   {
     this.issuePurpose = issuePurpose;
   }
 
-  public MaterialIssue materialIssueDetails(List<MaterialIssueDetails> materialIssueDetails) {
+  public MaterialIssue supplier(Supplier supplier) {
+    this.supplier = supplier;
+    return this;
+  }
+
+   /**
+   * supplier code. Return of material to supplier against receipt. 
+   * @return supplier
+  **/
+  @ApiModelProperty(value = "supplier code. Return of material to supplier against receipt. ")
+
+  @Valid
+
+  public Supplier getSupplier() {
+    return supplier;
+  }
+
+  public void setSupplier(Supplier supplier) {
+    this.supplier = supplier;
+  }
+
+  public MaterialIssue materialIssueDetails(List<MaterialIssueDetail> materialIssueDetails) {
     this.materialIssueDetails = materialIssueDetails;
     return this;
   }
 
-  public MaterialIssue addMaterialIssueDetailsItem(MaterialIssueDetails materialIssueDetailsItem) {
+  public MaterialIssue addMaterialIssueDetailsItem(MaterialIssueDetail materialIssueDetailsItem) {
     if (this.materialIssueDetails == null) {
-      this.materialIssueDetails = new ArrayList<MaterialIssueDetails>();
+      this.materialIssueDetails = new ArrayList<MaterialIssueDetail>();
     }
     this.materialIssueDetails.add(materialIssueDetailsItem);
     return this;
@@ -507,11 +553,11 @@ public class MaterialIssue   {
 
   @Valid
 
-  public List<MaterialIssueDetails> getMaterialIssueDetails() {
+  public List<MaterialIssueDetail> getMaterialIssueDetails() {
     return materialIssueDetails;
   }
 
-  public void setMaterialIssueDetails(List<MaterialIssueDetails> materialIssueDetails) {
+  public void setMaterialIssueDetails(List<MaterialIssueDetail> materialIssueDetails) {
     this.materialIssueDetails = materialIssueDetails;
   }
 
@@ -590,8 +636,9 @@ public class MaterialIssue   {
     return Objects.equals(this.id, materialIssue.id) &&
         Objects.equals(this.tenantId, materialIssue.tenantId) &&
         Objects.equals(this.issueType, materialIssue.issueType) &&
-        Objects.equals(this.issuingStore, materialIssue.issuingStore) &&
-        Objects.equals(this.issueNoteNumber, materialIssue.issueNoteNumber) &&
+        Objects.equals(this.fromStore, materialIssue.fromStore) &&
+        Objects.equals(this.toStore, materialIssue.toStore) &&
+        Objects.equals(this.issueNumber, materialIssue.issueNumber) &&
         Objects.equals(this.issueDate, materialIssue.issueDate) &&
         Objects.equals(this.materialIssueStatus, materialIssue.materialIssueStatus) &&
         Objects.equals(this.description, materialIssue.description) &&
@@ -602,6 +649,7 @@ public class MaterialIssue   {
         Objects.equals(this.issuedToEmployee, materialIssue.issuedToEmployee) &&
         Objects.equals(this.issuedToDesignation, materialIssue.issuedToDesignation) &&
         Objects.equals(this.issuePurpose, materialIssue.issuePurpose) &&
+        Objects.equals(this.supplier, materialIssue.supplier) &&
         Objects.equals(this.materialIssueDetails, materialIssue.materialIssueDetails) &&
         Objects.equals(this.workFlowDetails, materialIssue.workFlowDetails) &&
         Objects.equals(this.stateId, materialIssue.stateId) &&
@@ -610,7 +658,7 @@ public class MaterialIssue   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, issueType, issuingStore, issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, fileStoreId, designation, indent, issuedToEmployee, issuedToDesignation, issuePurpose, materialIssueDetails, workFlowDetails, stateId, auditDetails);
+    return Objects.hash(id, tenantId, issueType, fromStore, toStore, issueNumber, issueDate, materialIssueStatus, description, totalIssueValue, fileStoreId, designation, indent, issuedToEmployee, issuedToDesignation, issuePurpose, supplier, materialIssueDetails, workFlowDetails, stateId, auditDetails);
   }
 
   @Override
@@ -621,8 +669,9 @@ public class MaterialIssue   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    issueType: ").append(toIndentedString(issueType)).append("\n");
-    sb.append("    issuingStore: ").append(toIndentedString(issuingStore)).append("\n");
-    sb.append("    issueNoteNumber: ").append(toIndentedString(issueNoteNumber)).append("\n");
+    sb.append("    fromStore: ").append(toIndentedString(fromStore)).append("\n");
+    sb.append("    toStore: ").append(toIndentedString(toStore)).append("\n");
+    sb.append("    issueNumber: ").append(toIndentedString(issueNumber)).append("\n");
     sb.append("    issueDate: ").append(toIndentedString(issueDate)).append("\n");
     sb.append("    materialIssueStatus: ").append(toIndentedString(materialIssueStatus)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
@@ -633,6 +682,7 @@ public class MaterialIssue   {
     sb.append("    issuedToEmployee: ").append(toIndentedString(issuedToEmployee)).append("\n");
     sb.append("    issuedToDesignation: ").append(toIndentedString(issuedToDesignation)).append("\n");
     sb.append("    issuePurpose: ").append(toIndentedString(issuePurpose)).append("\n");
+    sb.append("    supplier: ").append(toIndentedString(supplier)).append("\n");
     sb.append("    materialIssueDetails: ").append(toIndentedString(materialIssueDetails)).append("\n");
     sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
     sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
@@ -652,4 +702,3 @@ public class MaterialIssue   {
     return o.toString().replace("\n", "\n    ");
   }
 }
-

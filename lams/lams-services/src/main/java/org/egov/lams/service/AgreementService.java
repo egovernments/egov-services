@@ -496,11 +496,11 @@ public class AgreementService {
 	private Date getAdjustmentDate(Agreement agreement) {
 
 		Long monthsToReduce = (long) (agreement.getSecurityDeposit() / agreement.getRent());
-		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER)) {
+		if (PaymentCycle.QUARTER.equals(agreement.getPaymentCycle())) {
 			monthsToReduce = monthsToReduce * 3;
-		} else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR)) {
+		} else if (PaymentCycle.HALFYEAR.equals(agreement.getPaymentCycle())) {
 			monthsToReduce = monthsToReduce * 6;
-		} else if (agreement.getPaymentCycle().equals(PaymentCycle.ANNUAL)) {
+		} else if (PaymentCycle.ANNUAL.equals(agreement.getPaymentCycle())) {
 			monthsToReduce = monthsToReduce * 12;
 		}
 		Date expiryDate = agreement.getExpiryDate();

@@ -250,7 +250,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
 				}
 				String searchQuery1 = "select count(*) from pricelist where id in ( select pricelist from pricelistdetails where material = '" + plds.getMaterial().getCode() + "' and active=true and ( todate::bigint >= " + plds.getFromDate() + " and todate::bigint <= " + plds.getToDate() + " ) )and active=true and rateType='" + pl.getRateType().toString() + "'";
 				Long count1 = namedParameterJdbcTemplate.queryForObject(searchQuery, new HashMap(), Long.class);
-				if(count!=0l){
+				if(count1!=0l){
 					return true;
 				}
 			}

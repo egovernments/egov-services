@@ -600,4 +600,7 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.event.error.msg}")
 	private String eventResponseErrorMsg;
+	
+	@Value("${default.title}")
+	private String defaultTitle;
 }

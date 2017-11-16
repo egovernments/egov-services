@@ -102,6 +102,9 @@ public class AdvocateService {
 						personDetails.setTenantId(agency.getTenantId());
 						personDetails.setAgencyCode(agency.getCode());
 						personDetails.setAgencyName(agency.getName());
+						if (personDetails.getTitle() == null) {
+							personDetails.setTitle(propertiesManager.getDefaultTitle());
+						}
 					}
 				}
 
@@ -122,6 +125,9 @@ public class AdvocateService {
 
 					advocate.setIsIndividual(agency.getIsIndividual());
 					advocate.setTenantId(agency.getTenantId());
+					if (advocate.getTitle() == null) {
+						advocate.setTitle(propertiesManager.getDefaultTitle());
+					}
 
 					if (!advocate.getIsIndividual()) {
 
@@ -244,6 +250,9 @@ public class AdvocateService {
 				reqPersonDetails.setName(name);
 				reqPersonDetails.setAgencyCode(agency.getCode());
 				reqPersonDetails.setTenantId(agency.getTenantId());
+				if (reqPersonDetails.getTitle() == null) {
+					reqPersonDetails.setTitle(propertiesManager.getDefaultTitle());
+				}
 
 				if (reqPersonDetails.getCode() == null) {
 					String code = uniqueCodeGeneration.getUniqueCode(agency.getTenantId(),
@@ -277,14 +286,14 @@ public class AdvocateService {
 
 		if (agency.getAdvocates() != null && agency.getAdvocates().size() > 0) {
 			List<Advocate> advocatesOnDb = new ArrayList<Advocate>();
-			if(agency.getIsIndividual()){
+			if (agency.getIsIndividual()) {
 				advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(),
-						agency.getAdvocates().get(0).getCode(), agency.getIsIndividual());		
-			}else{
-				advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(),
-						agency.getCode(), agency.getIsIndividual());	
+						agency.getAdvocates().get(0).getCode(), agency.getIsIndividual());
+			} else {
+				advocatesOnDb = advocateRepository.getAdvocatesUsingCode(agency.getTenantId(), agency.getCode(),
+						agency.getIsIndividual());
 			}
-		
+
 			List<String> advocateCodes = advocatesOnDb.stream().map(Advocate -> Advocate.getCode())
 					.collect(Collectors.toList());
 
@@ -312,6 +321,9 @@ public class AdvocateService {
 					reqAdvocate.setNewsPaperAdvertismentDate(agency.getNewsPaperAdvertismentDate());
 					reqAdvocate.setEmpanelmentFromDate(agency.getEmpanelmentFromDate());
 					reqAdvocate.setEmpanelmentToDate(agency.getEmpanelmentToDate());
+					if (reqAdvocate.getTitle() != null) {
+						reqAdvocate.setTitle(propertiesManager.getDefaultTitle());
+					}
 				}
 
 				reqAdvocate.setName(name);

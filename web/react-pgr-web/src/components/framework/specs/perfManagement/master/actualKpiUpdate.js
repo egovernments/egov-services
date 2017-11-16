@@ -9,6 +9,29 @@ var dat = {
         "label": "Search Key Performance Indicator",
         "name": "kpi",
         "fields": [
+          {
+              "name": "kpiDepartment",
+              "jsonPath": "KPIs[0].departmentId",
+              "label": "perfManagement.create.KPIs.groups.kpiDepartment",
+              "isRequired": false,
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name",
+              "isDisabled": false,
+              "requiredErrMsg": ""
+          }, {
+              "name": "kpiDate",
+              "jsonPath": "KPIs[0].financialYear",
+              "label": "perfManagement.create.KPIs.groups.kpiDate",
+              "isRequired": false,
+              "pattern": "",
+              "type": "singleValueList",
+              "url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+              "isDisabled": false,
+              "requiredErrMsg": ""
+          },
+
+
         {
               "name": "searchKpi",
               "jsonPath": "kpiCodes",
@@ -35,8 +58,8 @@ var dat = {
       }
        ],
        "result": {
-      "header": [{label: "KPI Name"},{label: "Financial Year"},{label:"Target Value"},{label: "Actual Value"}],
-      "values": ["kpi.name","kpi.financialYear","kpi.targetDescription", "resultDescription"],
+      "header": [{label: "Department"},{label: "Financial Year"},{label: "KPI Name"},{label:"Instructions"},{label:"Target Value"}],
+      "values": ["kpi.department","kpi.financialYear","kpi.name","kpi.instructions", "kpi.resultDescription"],
       "resultPath": "kpiValues",
       "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}",
       "rowClickUrlView": "/view/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
@@ -85,7 +108,7 @@ var dat = {
               "isDisabled": true,
               "requiredErrMsg": ""
             },
-            {
+            /*{
               "name": "updateActualKpiTarget",
               "jsonPath": "kpiValues[0].kpi.targetDescription",
               "label": "Target Value",
@@ -93,20 +116,9 @@ var dat = {
               "type": "text",
               "isDisabled": true,
               "requiredErrMsg": ""
-            },
+            },*/
 
 
-
-            {
-              "name": "updateActualKpiInstruction",
-              "jsonPath": "kpiValues[0].kpi.instructions",
-              "label": "Instruction to Achieve Target",
-              "pattern": "",
-              "type": "textarea",
-              "fullWidth":true,
-              "isDisabled": true,
-              "requiredErrMsg": ""
-            },
             /*{
               "name": "updateActualKpiActual",
               "jsonPath": "kpiValues[0].resultDescription",
@@ -147,7 +159,17 @@ var dat = {
           				"isField": false
           			}]
           		}]
-          	}
+          	},
+            {
+              "name": "updateActualKpiInstruction",
+              "jsonPath": "kpiValues[0].kpi.instructions",
+              "label": "Instruction to Achieve Target",
+              "pattern": "",
+              "type": "textarea",
+              "fullWidth":true,
+              "isDisabled": true,
+              "requiredErrMsg": ""
+            },
 
             ]
         },

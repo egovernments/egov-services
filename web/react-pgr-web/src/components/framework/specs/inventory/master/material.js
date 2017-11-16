@@ -5,10 +5,11 @@ var dat =
       "useTimestamp":true,
       "objectName":"",
       "url":"/inventory-services/materials/_search",
+      "title":"inventory.material.title",
       "groups":[
          {
             "name":"search",
-            "label":"inventory.create.group.title.searchmaterial",
+            "label":"inventory.common.searchcriteria",
             "fields":[
                 {
                    "name":"code",
@@ -19,6 +20,7 @@ var dat =
                    "displayJsonPath":"materialName",
                    "isRequired":false,
                    "isDisabled":false,
+                   "isKeyValuePair":true,
                    "url":"/inventory-services/materials/_search?|$.materials[*].code|$.materials[*].name"
                 },
                 {
@@ -36,8 +38,9 @@ var dat =
                    "name":"store",
                    "pattern":"",
                    "label":"inventory.store.name",
-                   "type":"singleValueList",
+                   "type":"autoCompelete",
                    "jsonPath":"store",
+                   "isKeyValuePair":true,
                    "isRequired":false,
                    "isDisabled":false,
                    "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
@@ -108,6 +111,8 @@ var dat =
       "numCols":4,
       "useTimestamp":true,
       "objectName":"materials",
+      "url":"/inventory-services/materials/_search",
+      "title":"inventory.material.title",
       "groups":[
          {
             "name":"Add Material",
@@ -493,6 +498,8 @@ var dat =
       "numCols":4,
       "useTimestamp":true,
       "objectName":"materials",
+      "url":"/inventory-services/materials/_search",
+      "title":"inventory.material.title",
       "groups":[
            {
               "name":"View Material",
@@ -891,6 +898,8 @@ var dat =
       "numCols":4,
       "useTimestamp":true,
       "objectName":"materials",
+      "url":"/inventory-services/materials/_search",
+      "title":"inventory.material.title",
       "groups":[
            {
               "name":"Update Material",

@@ -286,7 +286,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Ids of Abstract Estimate to get the Project Code
-        - name: projectCodes
+        - name: codes
           in: query
           type: array
           items:
@@ -296,7 +296,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Project Codes
-        - name: estimateNumbers
+        - name: detailedEstimateNumbers
           in: query
           type: array
           items:
@@ -306,7 +306,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Estimate Numbers
-        - name: workIdentificationNumbers
+        - name: abstractEstimateNumbers
           in: query
           type: array
           items:
@@ -330,6 +330,7 @@ paths:
           in: query
           type: boolean
           description: If the value is True then get only active project codes. If boolean value is false then get inactive project codes.
+          default: true
       responses:
         200:
           description: Project Code(s) Retrieved Successfully
@@ -1959,5 +1960,6 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 
 

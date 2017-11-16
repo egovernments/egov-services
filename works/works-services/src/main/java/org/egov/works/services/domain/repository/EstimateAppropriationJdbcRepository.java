@@ -79,12 +79,12 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
 		}
 		
-		if (estimateAppropriationSearchContract.getDetailedEstimateNumber() != null) {
+		if (estimateAppropriationSearchContract.getDetailedEstimateNumbers() != null) {
 			if (params.length() > 0) {
 				params.append(" and ");
 			}
 			params.append("objectNumber =:objectnumber and objectType =:objecttype");
-			paramValues.put("objectnumber", estimateAppropriationSearchContract.getDetailedEstimateNumber());
+			paramValues.put("objectnumber", estimateAppropriationSearchContract.getDetailedEstimateNumbers());
 			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
 		}
 		

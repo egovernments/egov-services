@@ -15,7 +15,7 @@ public class EstimateAppropriationValidator {
 		Map<String, String> messages = new HashMap<>();
 		if ((estimateAppropriationSearchContract.getObjectNumber() != null
 				|| estimateAppropriationSearchContract.getAbstractEstimateNumbers() != null
-				|| estimateAppropriationSearchContract.getDetailedEstimateNumber() != null)
+				|| estimateAppropriationSearchContract.getDetailedEstimateNumbers() != null)
 				&& estimateAppropriationSearchContract.getObjectType() == null) {
 			messages.put(Constants.KEY_OBJECTTYPE_INVALID,
 					Constants.MESSAGE_OBJECTTYPE_INVALID);

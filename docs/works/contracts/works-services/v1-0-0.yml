@@ -300,7 +300,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Ids of Estimate Appropriation to get the Estimate Appropriations
-        - name: detailedEstimates
+        - name: workOrderNumbers
           in: query
           type: array
           items:
@@ -308,8 +308,8 @@ paths:
           maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Comma separated list of Detailed Estimates of Estimate Appropriation to get the Estimate Appropriations
-        - name: abstractEstimateDetails
+          description: Comma separated list of Work Order Numbers of Estimate Appropriation to get the Estimate Appropriations, Object Type of Estimate Appropriation also needs to be passed when searching with Work Order Numbers.
+        - name: detailedEstimateNumbers
           in: query
           type: array
           items:
@@ -317,7 +317,34 @@ paths:
           maxItems: 50
           required: false
           allowEmptyValue: true
-          description: Comma separated list of Abstract Estimate Details of Estimate Appropriation to get the Estimate Appropriations
+          description: Comma separated list of Detailed Estimate Numbers of Estimate Appropriation to get the Estimate Appropriations, Object Type of Estimate Appropriation also needs to be passed when searching with Detailed Estimate Numbers.
+        - name: abstractEstimateNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Abstract Estimate Numbers of Estimate Appropriation to get the Estimate Appropriations, Object Type of Estimate Appropriation also needs to be passed when searching with Abstract Estimate Numbers.
+        - name: budgetReferanceNumbers
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Comma separated list of Budget Referance Numbers of Estimate Appropriation to get the Estimate Appropriations
+        - name: objectType
+          in: query
+          type: array
+          items:
+            type: string
+          maxItems: 50
+          required: false
+          allowEmptyValue: true
+          description: Object Type of Estimate Appropriation to get the Estimate Appropriations
       responses:
         200:
           description: Estimate Appropriation(s) Retrieved Successfully

@@ -1189,5 +1189,373 @@
       "name": "New Appointment",
       "tenantId": "default"
     }
+  ],
+  "WorksStatus": [
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "NOTICEINVITINGTENDERRELEASED",
+      "description": "Notice inviting tender released",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "TENDER_DOCUMENT_RELEASED",
+      "description": "Tender document released",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "TENDER_OPENED",
+      "description": "Tender opened",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "TECHNICAL_EVALUATION_DONE",
+      "description": "Technical evaluation done",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "COMMERCIAL_EVALUATION_DONE",
+      "description": "Commercial evaluation done",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "L1_TENDER_FINALIZED",
+      "description": "L1 tender finalized",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "default"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "TECHNICALLY_APPROVED",
+      "description": "Technically Approved",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "BUDGET_SANCTIONED",
+      "description": "Budget Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "ADMINISTRATIVE_SANCTIONED",
+      "description": "Administrative Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "TECHNICAL_SANCTIONED",
+      "description": "Technical Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "MBHeader",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "Milestone",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "Milestone",
+      "tenantid": "default"
+    },
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "BUDGET_SANCTIONED",
+      "description": "Budget Sanctioned",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "TECH_SANCTIONED",
+      "description": "Technical Sanctioned",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "TrackMilestone",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "TrackMilestone",
+      "tenantid": "default"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "WorkOrder",
+      "tenantid": "default"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "WorkOrder",
+      "tenantid": "default"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "WorkOrder",
+      "tenantid": "default"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "WorkOrder",
+      "tenantid": "default"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "WorkOrder",
+      "tenantid": "default"
+    },
+    {
+      "code": "ACCEPTANCE_LETTER_ISSUED",
+      "description": "Acceptance letter issued",
+      "moduletype": "LetterOfAcceptanceOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "ACCEPTANCE_LETTER_ACKNOWLEDGED",
+      "description": "Acceptance letter acknowledged",
+      "moduletype": "LetterOfAcceptanceOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "AGREEMENT_ORDER_SIGNED",
+      "description": "Agreement order signed",
+      "moduletype": "LetterOfAcceptanceOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "WORK_ORDER_ACKNOWLEDGED",
+      "description": "Work order acknowledged",
+      "moduletype": "WorkOrderOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "SITE_HANDED_OVER",
+      "description": "Site handed over",
+      "moduletype": "WorkOrderOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "WORK_COMMENCED",
+      "description": "Work commenced",
+      "moduletype": "WorkOrderOffline",
+      "tenantid": "default"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "WorkOrder",
+      "tenantid": "default"
+    }
   ]
 }

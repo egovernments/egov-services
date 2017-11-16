@@ -33,7 +33,7 @@ public class EstimateAppropriationSearchContract {
 	
 	private List<String> workOrderNumbers;
 	
-	private List<String> detailedEstimateNumber;
+	private List<String> detailedEstimateNumbers;
 
 	private List<String> abstractEstimateNumbers;
 }

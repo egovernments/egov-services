@@ -51,17 +51,16 @@ public class ProjectCodeJdbcRepository extends JdbcRepository {
 			addAnd(params);
 			params.append("upper(code) in (:codes)");
 			paramValues.put("codes", projectCodeSearchContract.getWorkIdentificationNumbers().get(0).toUpperCase());
-		} else if (projectCodeSearchContract.getWorkIdentificationNumbers() != null
-				&& projectCodeSearchContract.getWorkIdentificationNumbers().size() != 1) {
+		} else if (projectCodeSearchContract.getWorkIdentificationNumbers() != null) {
 			params.append("code in (:codes)");
 			paramValues.put("codes", projectCodeSearchContract.getWorkIdentificationNumbers());
 		}
 
-		if (projectCodeSearchContract.getCodes() != null && projectCodeSearchContract.getCodes().size() != 1) {
+		if (projectCodeSearchContract.getCodes() != null && projectCodeSearchContract.getCodes().size() == 1) {
 			addAnd(params);
 			params.append("upper(code) in (:codes)");
 			paramValues.put("codes", projectCodeSearchContract.getCodes().get(0).toUpperCase());
-		} else if (projectCodeSearchContract.getCodes() != null && projectCodeSearchContract.getCodes().size() != 1) {
+		} else if (projectCodeSearchContract.getCodes() != null) {
 			params.append("code in (:codes)");
 			paramValues.put("codes", projectCodeSearchContract.getCodes());
 		}

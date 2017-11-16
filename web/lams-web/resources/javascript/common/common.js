@@ -2,18 +2,6 @@ var baseUrl = window.location.origin;
 
 var authToken = localStorage.getItem("auth-token");
 
-//request info from cookies
-var requestInfo = {
-    "apiId": "org.egov.pgr",
-    "ver": "1.0",
-    "ts": "01-04-2017 01:01:01",
-    "action": "asd",
-    "did": "4354648646",
-    "key": "xyz",
-    "msgId": "654654",
-    "requesterId": "61",
-    "authToken": authToken
-};
 
 var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
 
@@ -31,6 +19,19 @@ if (tenantId) {
   tenantId = tenantIds[tenantId] || "ap." + tenantId;
 
 }
+//request info from cookies
+var requestInfo = {
+    "apiId": "org.egov.pgr",
+    "ver": "1.0",
+    "ts": "01-04-2017 01:01:01",
+    "action": "asd",
+    "did": "4354648646",
+    "key": "xyz",
+    "msgId": "654654",
+    "requesterId": "61",
+    "authToken": authToken,
+    "tenantId":tenantId
+};
 
 function titleCase(field) {
     if (field) {

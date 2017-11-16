@@ -15,7 +15,7 @@ var dat = {
             label: "createstamp.create.createStampName",
             type: "text",
            // fullWidth:true,
-            isRequired: true,
+            isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
           }

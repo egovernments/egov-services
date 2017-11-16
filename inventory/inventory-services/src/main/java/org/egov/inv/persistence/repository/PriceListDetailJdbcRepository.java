@@ -78,7 +78,7 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
             paramValues.put("priceList", priceListDetailsSearchRequest.getPriceList());
         }
         
-        if (!isEmpty(priceListDetailsSearchRequest.getActive())) {
+        if (priceListDetailsSearchRequest.getActive()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}

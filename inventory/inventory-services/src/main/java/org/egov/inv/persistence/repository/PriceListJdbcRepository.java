@@ -138,7 +138,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
                 params.append(" and ");
             }
             params.append("rateContractNumber =:rateContractNumber");
-            paramValues.put("rateContractNumber", priceListSearchRequest.getRateContractNumber());
+            paramValues.put("rateContractNumber", priceListSearchRequest.getRateContractNumber().toUpperCase());
         }
         
         if (!isEmpty(priceListSearchRequest.getAgreementNumber())) {
@@ -146,7 +146,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         		params.append(" and ");
         	}
         	params.append("agreementNumber =:agreementNumber");
-        	paramValues.put("agreementNumber", priceListSearchRequest.getAgreementNumber());
+        	paramValues.put("agreementNumber", priceListSearchRequest.getAgreementNumber().toUpperCase());
         }
         
 		if (priceListSearchRequest.getAgreementNumbers() != null) {

@@ -59,6 +59,8 @@ public class PriceListService extends DomainService {
                 priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
                 priceList.getPriceListDetails().forEach(priceListDetail -> {
                 	priceListDetail.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+                	priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
+					priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
                 });
             });
             
@@ -97,6 +99,8 @@ public class PriceListService extends DomainService {
 		try {
 			priceListRequest.getPriceLists().stream().forEach(priceList -> {
 								priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
+								priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
+								priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
 							});
 
 			kafkaQue.send(updateTopic, updateKey, priceListRequest);

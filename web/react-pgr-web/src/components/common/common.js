@@ -2726,6 +2726,10 @@ var localization_EN_Data = {
  "referenceEvidence.create.description":"Description",
 
 //Inventory Store Master
+ "inventory.store.title":"Store Master",
+ "inventory.supplier.title":"Supplier Master",
+ "inventory.pricelist.title":"PriceList Master",
+ "inventory.material.title":"Material Master",
  "inventory.create.group.title.addStore":"Add Store",
  "inventory.create.group.title.updateStore":"Update Store",
  "inventory.create.group.title.viewStore":"View Store",
@@ -2742,6 +2746,7 @@ var localization_EN_Data = {
  "inventory.store.contactNo2" : "Contact No.2",
  "inventory.store.email" : "Email Address",
  "inventory.store.active" : "Active",
+ "inventory.create.field.message.code":"Store Code must be alphanumeric",
  "inventory.store.officeLocation":"Office Location",
  //Inventory Supplier Master
  "inventory.supplier.search.title":"Search Supplier",
@@ -2764,7 +2769,7 @@ var localization_EN_Data = {
  "inventory.material.materialtype":"Material Type Name",
  "inventory.material.oldcode":"Material Old Code",
  "inventory.material.description":"Material Description",
- "inventory.material.baseuom":"Base UOm Name",
+ "inventory.material.baseuom":"Base UOM Name",
  "inventory.material.purchasinginfo":"Purchasing Information",
  "inventory.material.purchaseuom":"Purchase UOM Name",
  "inventory.material.expenseacctcode":"Expense Account Code",
@@ -2811,6 +2816,7 @@ var localization_EN_Data = {
  "inventory.common.active":"Active",
  "inventory.common.status":"Status",
  "inventory.report.email":"Email",
+ "inventory.common.searchcriteria":"Search Criteria",
 // Opening Balance Report Labels
  "reports.inventory.openbal.Uom":"UOM",
  "reports.inventory.openbal.Qty.":"Qty.",

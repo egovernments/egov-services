@@ -483,7 +483,7 @@ ReportDefinitions:
     
   - name: advocate
     label: reports.lcms.advocate
-    type: singlevaluelist
+    type: url
     pattern: /lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid &agencyName={oragnization}&pageSize=500|$.agencies[*].advocates[*].code|$.agencies[*].advocates[*].name
     source: lcms
     isMandatory: false

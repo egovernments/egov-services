@@ -1774,16 +1774,16 @@ ReportDefinitions:
          and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, abstractestimate.abstractestimatenumber::character varying ||':'||comments as details,
-         replace('_url?/non-framework/works/transaction/viewAbstractEstimate/:id', ':id', abstractestimate.abstractestimatenumber::character varying) as url from EG_WF_STATES states JOIN
+         replace('_url?/non-framework/works/transaction/viewAbstractEstimate/:id', ':id', abstractestimate.id::character varying) as url from EG_WF_STATES states JOIN
          egw_abstractestimate abstractestimate ON abstractestimate.stateid = states.id::character varying where type = 'AbstractEstimate' and owner_pos IN ($positionId)
          and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
          (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, abstractestimate.abstractestimatenumber::character varying ||':'||comments as details,
-         replace('_url?/non-framework/works/transaction/viewAbstractEstimate/:id', ':id', abstractestimate.abstractestimatenumber::character varying) as url from EG_WF_STATES states JOIN
+         replace('_url?/non-framework/works/transaction/viewAbstractEstimate/:id', ':id', abstractestimate.id::character varying) as url from EG_WF_STATES states JOIN
          egw_abstractestimate abstractestimate ON abstractestimate.stateid = states.id::character varying where type = 'SpilloverAbstractEstimate' and owner_pos IN ($positionId)
          and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)
          union
-         (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, detailedestimate.estimatenumber::character varying ||':'||comments as details,
+         (select createddate as createddate,sendername as sendername,natureoftask as natureoftask,value as status, detailedestimate.id::character varying ||':'||comments as details,
          replace('_url?/non-framework/works/transaction/viewDetailedEstimate/:id', ':id', detailedestimate.estimatenumber::character varying) as url from EG_WF_STATES states JOIN
          egw_detailedestimate detailedestimate ON detailedestimate.stateid = states.id::character varying where type = 'DetailedEstimate' and owner_pos IN ($positionId)
          and states.tenantId=$tenantid and states.status<>2 order by states.createdDate desc)

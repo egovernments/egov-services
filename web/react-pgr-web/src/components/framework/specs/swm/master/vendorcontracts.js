@@ -24,7 +24,7 @@ var dat = {
 	      "type":"singleValueList",
 	      "isDisabled":false,
 	      "patternErrorMsg":"vendorcontracts.create.field.message.vendorNo",
-	      "url":"/swm-services/vendors/_search?|$..vendorNo|$..name"
+	      "url":"/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name"
           },
           {
             "name": "contractPeriodFrom",
@@ -138,7 +138,7 @@ var dat = {
 	      "maxLength":265,
 	      "minLength":1,
 	      "patternErrorMsg":"",
-	      "url":"/swm-services/vendors/_search?|$..vendorNo|$..name"
+	      "url":"/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name"
 	  },
           {
             "name": "contractDate",
@@ -206,7 +206,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "values": [{"label":"Monthly", "value":"Monthly"},{"label":"Bi-monthly", "value":"Bi-monthly"},{"label":"Quarterly", "value":"Quarterly"},{"label":"Yearly", "value":"Yearly"}],
+            "values": [{"label":"Monthly", "value":"Monthly"},{"label":"BiMonthly", "value":"BiMonthly"},{"label":"Quarterly", "value":"Quarterly"},{"label":"Yearly", "value":"Yearly"}],
             "defaultValue":"Monthly"
           },
           {
@@ -366,7 +366,7 @@ var dat = {
 	      "maxLength":265,
 	      "minLength":1,
 	      "patternErrorMsg":"",
-	      "url":"/swm-services/vendors/_search?|$..vendorNo|$..name"
+	      "url":"/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name"
 	  },
           {
             "name": "contractDate",
@@ -434,7 +434,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-            "values": [{"label":"Monthly", "value":"Monthly"},{"label":"Bi-monthly", "value":"Bi-monthly"},{"label":"Quarterly", "value":"Quarterly"},{"label":"Yearly", "value":"Yearly"}],
+            "values": [{"label":"Monthly", "value":"Monthly"},{"label":"BiMonthly", "value":"BiMonthly"},{"label":"Quarterly", "value":"Quarterly"},{"label":"Yearly", "value":"Yearly"}],
             "defaultValue":"Monthly"
           },
           {

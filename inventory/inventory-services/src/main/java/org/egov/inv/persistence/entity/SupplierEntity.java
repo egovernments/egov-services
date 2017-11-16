@@ -89,10 +89,10 @@ public class SupplierEntity {
 		this.name = supplier.getName();
 		this.code = supplier.getCode();
 		if(supplier.getType() != null)
-		this.type = supplier.getType().name();
+		this.type = supplier.getType().toString();
 		this.address = supplier.getAddress();
 		if(supplier.getStatus() != null)
-		this.status = supplier.getStatus().name();
+		this.status = supplier.getStatus().toString();
 		if(supplier.getInActiveDate() != null)
 		this.inactivedate = supplier.getInActiveDate();
 		this.contactno = supplier.getContactNo();

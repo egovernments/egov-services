@@ -47,7 +47,7 @@ public class ProjectCodeService {
 
 		String workIdentificationNumber;
 		for (ProjectCode projectCode : projectCodeRequest.getProjectCodes()) {
-			if (projectCode.getCode() != null || !projectCode.getCode().isEmpty())
+			if (projectCode.getCode() != null && !projectCode.getCode().isEmpty())
 				validateProjectCode(projectCode);
 			projectCode.setId(commonUtils.getUUID());
 

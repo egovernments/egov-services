@@ -334,7 +334,7 @@ const menuConvention={
 "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",
 "Inventory.Inventory Masters.Material Master.Material Create":"/create/inventory/material",
 "Inventory.Inventory Masters.Price List Master.PriceList Create":"/create/inventory/pricelists",
-"Inventory.Inventory Report.Opening Balance Report":"/inventory/reports/openingBalanceReport"
+"Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/abstractEstimate",
 

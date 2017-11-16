@@ -40,7 +40,7 @@ class EmployeePromotion extends React.Component {
           },
           accepted:"",
     positionList:[],departmentList:[],designationList:[],employees:[],promotionList:[],
-    fundList:[],functionaryList:[],districtList:[],transferList:[],reasonList:[],pNameList:[],userList:[]
+    fundList:[],functionaryList:[], transferList:[],reasonList:[],pNameList:[],userList:[]
   }
     this.handleChange=this.handleChange.bind(this);
     this.addOrUpdate=this.addOrUpdate.bind(this);
@@ -136,7 +136,7 @@ componentWillUpdate() {
     }
     $('#hp-citizen-title').text(titleCase(getUrlVars()["type"]) + " Employee Promotion");
 
-    var _state = {}, _this = this, count = 9;
+    var _state = {}, _this = this, count = 8;
     const checkCountAndCall = function(key, res) {
       _state[key] = res;
       count--;
@@ -169,9 +169,7 @@ componentWillUpdate() {
     getDropdown("transferType", function(res) {
       checkCountAndCall("transferList", res);
     });
-    getDropdown("districtList", function(res) {
-      checkCountAndCall("districtList", res);
-    });
+
 
     $('#enquiryPassedDate, #effectiveFrom').datepicker({
         format: 'dd/mm/yyyy',

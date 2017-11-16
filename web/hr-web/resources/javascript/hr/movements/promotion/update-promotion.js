@@ -47,7 +47,6 @@ class UpdateMovement extends React.Component {
         wfDesignationList: [],
         fundList: [],
         functionaryList: [],
-        districtList: [],
         transferList: [],
         reasonList: [],
         pNameList: [],
@@ -86,7 +85,7 @@ class UpdateMovement extends React.Component {
       var process;
       var transferWithPromotion;
 
-      var _state = {}, count = 9;
+      var _state = {}, count = 8;
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         count--;
@@ -117,9 +116,6 @@ class UpdateMovement extends React.Component {
       });
       getDropdown("transferType", function(res) {
         checkCountAndCall("transferList", res);
-      });
-      getDropdown("districtList", function(res) {
-        checkCountAndCall("districtList", res);
       });
 
 

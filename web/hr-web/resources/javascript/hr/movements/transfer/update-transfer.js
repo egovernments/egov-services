@@ -512,6 +512,18 @@ class UpdateMovement extends React.Component {
             }
         }
 
+        const renderOptionForDistrict=function(list) {
+            if(list)
+            {
+                return list.map((item, ind)=>
+                {
+                    return (<option key={ind} value={typeof item == "object" ? item.id : item}>
+                            {typeof item == "object" ? item.city.name : item}
+                      </option>)
+                })
+            }
+        }
+
         const renderOption = function(list) {
             if (list) {
               return list.map((item, ind) => {
@@ -792,7 +804,7 @@ class UpdateMovement extends React.Component {
                               <select id="transferedLocation" name="transferedLocation" value={transferedLocation}
                                 onChange={(e)=>{  handleChange(e,"transferedLocation") }}required>
                                 <option value="">Select District-ULB</option>
-                                {renderOption(this.state.districtList)}
+                                {renderOptionForDistrict(this.state.districtList)}
                              </select>
                              </div>
                           </div>

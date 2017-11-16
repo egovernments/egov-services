@@ -288,6 +288,20 @@ class Nominee extends React.Component{
         checkCountAndCall("allBankBranchList", res);
       })
 
+
+      if(getUrlVars()["type"] === "update"){
+
+        getCommonMaster("egf-masters", "bankbranches", function(err, res) {
+            if (res) {
+              _this.setState({
+                  ..._this.state,
+                  branchList: res.bankBranches
+              })
+            }
+        })
+
+      }
+
       getCommonMasterById("hr-employee","employees", id, function(err, res) {
         if(res && res.Employee && res.Employee[0]) {
           var obj = res.Employee[0];
@@ -388,7 +402,7 @@ class Nominee extends React.Component{
                 'auth-token': authToken
               },
               success: function(res) {
-                showSuccess("Nominee Created successfully.");
+                showSuccess("Nominee Updated successfully.");
                 _this.setState({allNomineeValue: {
                     "tenantId": tenantId,
                     "employee": {
@@ -650,7 +664,7 @@ class Nominee extends React.Component{
                 <label htmlFor="">Bank Account</label>
               </div>
               <div className="col-sm-6">
-                <input type="Number" name="bankAccount" value={bankAccount} onChange={(e)=>{ handleChange(e,"bankAccount")}}/>
+                <input type="text" name="bankAccount" value={bankAccount} onChange={(e)=>{ handleChange(e,"bankAccount")}}/>
               </div>
             </div>
           </div>

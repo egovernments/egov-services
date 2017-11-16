@@ -176,12 +176,12 @@ public class PerformanceAssessmentRowMapper {
 				value.setResultDescription(String.valueOf(rs.getLong("actualValue")));
 			} else if (null != rs.getString("targetType") && rs.getString("targetType").equals(FALSE_FLAG)) {
 				kpi.setTargetType(Boolean.FALSE);
-				if(rs.getLong("targetValue") == 1) kpi.setTargetDescription("YES");
-				else if(rs.getLong("targetValue") == 2) kpi.setTargetDescription("NO");
+				if(rs.getLong("targetValue") == 1) kpi.setTargetDescription("Yes");
+				else if(rs.getLong("targetValue") == 2) kpi.setTargetDescription("No");
 				else if(rs.getLong("targetValue") == 3) kpi.setTargetDescription("In Progress");
 				
-				if(rs.getLong("actualValue") == 1) value.setResultDescription("YES");
-				else if (rs.getLong("actualValue") == 2) value.setResultDescription("NO");
+				if(rs.getLong("actualValue") == 1) value.setResultDescription("Yes");
+				else if (rs.getLong("actualValue") == 2) value.setResultDescription("No");
 				else if (rs.getLong("actualValue") == 3) value.setResultDescription("In Progress");
 			}
 			value.setKpi(kpi);

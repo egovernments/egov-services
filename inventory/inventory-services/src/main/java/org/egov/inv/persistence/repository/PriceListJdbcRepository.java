@@ -118,7 +118,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
 					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getIds().split(","))));
 		}
         
-        if (!isEmpty(priceListSearchRequest.getSupplier())) {
+        if (priceListSearchRequest.getSupplier()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
@@ -126,7 +126,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         	paramValues.put("supplier", priceListSearchRequest.getSupplier());
         }
 
-        if (!isEmpty(priceListSearchRequest.getRateType())) {
+        if (priceListSearchRequest.getRateType()!=null) {
             if (params.length() > 0) {
                 params.append(" and ");
             }
@@ -134,7 +134,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             paramValues.put("rateType", priceListSearchRequest.getRateType());
         }
         
-        if (!isEmpty(priceListSearchRequest.getRateContractNumber())) {
+        if (priceListSearchRequest.getRateContractNumber()!=null) {
             if (params.length() > 0) {
                 params.append(" and ");
             }
@@ -142,7 +142,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             paramValues.put("rateContractNumber", priceListSearchRequest.getRateContractNumber().toUpperCase());
         }
         
-        if (!isEmpty(priceListSearchRequest.getAgreementNumber())) {
+        if (priceListSearchRequest.getAgreementNumber()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
@@ -159,7 +159,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
 					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getAgreementNumbers().split(","))));
 		}
         
-        if (!isEmpty(priceListSearchRequest.getAgreementStartDate())) {
+        if (priceListSearchRequest.getAgreementStartDate()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
@@ -167,7 +167,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         	paramValues.put("agreementStartDate", priceListSearchRequest.getAgreementStartDate());
         }
         
-        if (!isEmpty(priceListSearchRequest.getAgreementEndDate())) {
+        if (priceListSearchRequest.getAgreementEndDate()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
@@ -175,7 +175,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         	paramValues.put("agreementEndDate", priceListSearchRequest.getAgreementEndDate());
         }
         
-        if (!isEmpty(priceListSearchRequest.getActive())) {
+        if (priceListSearchRequest.getActive()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}

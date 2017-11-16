@@ -288,7 +288,7 @@ public class Supplier {
 	@NotNull
 
 	@Pattern(regexp = "^[a-zA-Z ]*$")
-	@Size(min = 5, max = 50)
+	@Size(max = 50)
 	public String getName() {
 		return name;
 	}
@@ -586,7 +586,7 @@ public class Supplier {
 	@ApiModelProperty(value = "name of the contact person    ")
 
 	@Pattern(regexp = "^[a-zA-Z ]*$")
-	@Size(min = 5, max = 50)
+	@Size(max = 50)
 	public String getContactPerson() {
 		return contactPerson;
 	}

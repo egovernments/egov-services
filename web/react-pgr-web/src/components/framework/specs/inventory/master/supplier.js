@@ -160,7 +160,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.name"
           }, {
             "name": "address",
@@ -274,7 +273,6 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "contactPersonNo",
@@ -433,7 +431,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.name"
           }, {
             "name": "address",
@@ -547,7 +544,6 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "contactPersonNo",
@@ -694,7 +690,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.name"
           }, {
             "name": "address",
@@ -808,7 +803,6 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "contactPersonNo",

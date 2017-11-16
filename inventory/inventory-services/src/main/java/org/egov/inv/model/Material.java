@@ -286,7 +286,7 @@ public class Material   {
     @ApiModelProperty(required = true, value = "name of the Material ")
     @NotNull
 
-    @Size(min=5,max=50)
+    @Size(max=50)
     public String getName() {
         return name;
     }

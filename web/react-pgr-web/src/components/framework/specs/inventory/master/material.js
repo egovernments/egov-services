@@ -152,7 +152,6 @@ var dat =
                   "isRequired":true,
                   "isDisabled":false,
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":""
                },
                {
@@ -543,7 +542,6 @@ var dat =
                     "isRequired":true,
                     "isDisabled":false,
                     "maxLength":50,
-                    "minLength":5,
                     "patternErrorMsg":""
                  },
                  {
@@ -943,7 +941,6 @@ var dat =
                     "isRequired":true,
                     "isDisabled":false,
                     "maxLength":50,
-                    "minLength":5,
                     "patternErrorMsg":""
                  },
                  {

@@ -109,7 +109,6 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":"inventory.create.field.message.name"
                },
                {
@@ -280,7 +279,6 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":"inventory.create.field.message.name"
                },
                {
@@ -451,7 +449,6 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":"inventory.create.field.message.name"
                },
                {

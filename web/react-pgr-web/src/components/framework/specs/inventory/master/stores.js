@@ -3,11 +3,12 @@ var dat = {
       "numCols":4,
       "useTimestamp":true,
       "objectName":"",
+      "title":"inventory.store.title",
       "url":"/inventory-services/stores/_search",
       "groups":[
          {
             "name":"search",
-            "label":"inventory.store.search.title",
+            "label":"inventory.common.searchcriteria",
             "fields":[
                {
                   "name":"name",
@@ -16,6 +17,7 @@ var dat = {
                   "type":"autoCompelete",
                   "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name",
                   "isDisabled":false,
+                  "isKeyValuePair":true,
                   "patternErrorMsg":"inventory.create.field.message.name"
                },
                {
@@ -61,8 +63,8 @@ var dat = {
             "code",
             "name",
             "department.code",
-            {valuePath:"isCentralStore", type:"checkbox"},
-            {valuePath:"active", type:"checkbox"}
+            "isCentralStore",
+            "active"
          ],
          "resultPath":"stores",
            "resultIdKey":"code",
@@ -79,6 +81,7 @@ var dat = {
       "numCols":4,
       "useTimestamp":true,
       "objectName":"stores",
+      "title":"inventory.store.title",
       "groups":[
          {
             "name":"Add Store",
@@ -94,7 +97,7 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":50,
-                  "patternErrorMsg":"inventory.create.field.message.code"
+                  "patternErrorMsg":"inventory.create.field.message.code" // Invalid PAN NO (max:)
                },
                {
                   "name":"name",
@@ -189,6 +192,7 @@ var dat = {
                   "url":"/hr-employee/employees/_search?|$..code|$..name",
                   "isRequired":true,
                   "isDisabled":false,
+                  "isKeyValuePair":true,
                   "defaultValue":"",
                   "patternErrorMsg":""
                },
@@ -248,6 +252,7 @@ var dat = {
       "numCols":4,
       "useTimestamp":true,
       "objectName":"stores",
+      "title":"inventory.store.title",
       "groups":[
          {
             "name":"View Store",
@@ -418,6 +423,7 @@ var dat = {
       "numCols":4,
       "useTimestamp":true,
       "objectName":"stores",
+      "title":"inventory.store.title",
       "groups":[
          {
             "name":"Add Store",
@@ -529,6 +535,7 @@ var dat = {
                   "url":"/hr-employee/employees/_search?|$..code|$..name",
                   "isRequired":true,
                   "isDisabled":false,
+                  "isKeyValuePair":true,
                   "defaultValue":"",
                   "patternErrorMsg":""
                },

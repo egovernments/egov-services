@@ -4,10 +4,11 @@ var dat = {
     "useTimestamp": true,
     "objectName": "",
     "url": "inventory-services/suppliers/_search",
+    "title":"inventory.supplier.title",
     "groups": [
       {
         "name": "search",
-        "label": "inventory.supplier.search.title",
+        "label": "inventory.common.searchcriteria",
         "fields": [
           {
             "name": "supplierName",
@@ -15,6 +16,7 @@ var dat = {
             "label": "inventory.supplier.name",
             "type": "autoCompelete",
             "url":"inventory-services/suppliers/_search?|$..code|$..name",
+            "isKeyValuePair":true,
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""
@@ -82,7 +84,7 @@ var dat = {
         }
       ],
       "values": [
-        "code","name", "type", {valuePath:"active", type:"checkbox"}
+        "code","name", "type", "active"
       ],
       "resultPath": "suppliers",
       "resultIdKey":"code",
@@ -99,6 +101,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "suppliers",
+    "title":"inventory.supplier.title",
     "groups": [
       {
         "name": "Add Supplier",
@@ -371,6 +374,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "suppliers",
+    "title":"inventory.supplier.title",
     "groups": [
       {
         "name": "View Supplier",
@@ -631,6 +635,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "suppliers",
+    "title":"inventory.supplier.title",
     "groups": [
       {
         "name": "Update Supplier",

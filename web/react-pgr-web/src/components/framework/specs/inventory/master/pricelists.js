@@ -297,14 +297,11 @@ var dat = {
         "fields": [
           {
             "type": "tableList",
-            "jsonPath": "",
+            "jsonPath": "priceLists[0].priceListDetails",
             "tableList": {
               "header": [
                 {
                   "label": "inventory.materialName"
-                },
-                {
-                  "label": "inventory.materialDesc"
                 },
                 {
                   "label": "inventory.Uom"
@@ -342,16 +339,6 @@ var dat = {
                       "valExp": "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
                     }
                   ]
-                },
-                {
-                  "name": "materialDescription",
-                  "jsonPath": "priceLists[0].priceListDetails[0].material.description",
-                  "pattern": "",
-                  "type": "text",
-                  "isRequired": false,
-                  "isDisabled": false,
-                  "defaultValue": "",
-                  "patternErrorMsg": ""
                 },
                 {
                   "name": "uom",
@@ -553,7 +540,123 @@ var dat = {
             "patternErrorMsg": ""
           }
         ]
+      },
+      {
+  "name": "Rate contract Details",
+  "label": "inventory.pricebdetails.title",
+  "fields": [
+    {
+      "type": "tableList",
+      "jsonPath": "priceLists[0].priceListDetails",
+      "tableList": {
+        actionsNotRequired:true,
+        "header": [
+          {
+            "label": "inventory.materialName"
+          },
+          {
+            "label": "inventory.Uom"
+          },
+          {
+            "label": "inventory.Rate"
+          },
+          {
+            "label": "inventory.from.date"
+          },
+          {
+            "label": "inventory.TO.date"
+          },
+          {
+            "label": "inventory.quantity"
+          },
+          {
+            "label": "inventory.active"
+          }
+        ],
+        "values": [
+          {
+            "name": "material",
+            "pattern": "",
+            "type": "autoCompelete",
+            "jsonPath": "priceLists[0].priceListDetails[0].material.code",
+            "displayJsonPath": "priceLists[0].priceListDetails[0].material.name",
+            "isRequired": true,
+            "isDisabled": true,
+            "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+            "depedants": [
+              {
+                "jsonPath": "priceLists[0].priceListDetails[0].material.description",
+                "type": "textField",
+                "valExp": "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
+              }
+            ]
+          },
+          {
+            "name": "uom",
+            "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": true,
+            "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+          },
+          {
+            "name": "ratePerUnit",
+            "jsonPath": "priceLists[0].priceListDetails[0].ratePerUnit",
+            "pattern": "",
+            "type": "number",
+            "isRequired": true,
+            "isDisabled": true,
+            "defaultValue": "",
+            "maxLength": 100,
+            "patternErrorMsg": "inventory.create.field.message.code"
+          },
+          {
+            "name": "fromDate",
+            "jsonPath": "priceLists[0].priceListDetails[0].fromDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": true,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "toDate",
+            "jsonPath": "priceLists[0].priceListDetails[0].toDate",
+            "pattern": "",
+            "type": "datePicker",
+            "isRequired": false,
+            "isDisabled": true,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "quantity",
+            "jsonPath": "priceLists[0].priceListDetails[0].quantity",
+            "pattern": "",
+            "type": "number",
+            "isRequired": false,
+            "isDisabled": true,
+            "defaultValue": "",
+            "patternErrorMsg": ""
+          },
+          {
+            "name": "active",
+            "jsonPath": "priceLists[0].priceListDetails[0].active",
+            "label": "",
+            "pattern": "",
+            "type": "checkbox",
+            "isRequired": true,
+            "isDisabled": true,
+            "defaultValue": true,
+            "patternErrorMsg": ""
+          }
+        ]
       }
+    }
+  ]
+}
     ],
     "tenantIdRequired": true,
     "url": "/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}"
@@ -687,7 +790,122 @@ var dat = {
             "patternErrorMsg": ""
           }
         ]
+      },
+      {
+   "name":"Rate contract Details",
+   "label":"inventory.pricebdetails.title",
+   "fields":[
+      {
+         "type":"tableList",
+         "jsonPath":"priceLists[0].priceListDetails",
+         "tableList":{
+            "header":[
+               {
+                  "label":"inventory.materialName"
+               },
+               {
+                  "label":"inventory.Uom"
+               },
+               {
+                  "label":"inventory.Rate"
+               },
+               {
+                  "label":"inventory.from.date"
+               },
+               {
+                  "label":"inventory.TO.date"
+               },
+               {
+                  "label":"inventory.quantity"
+               },
+               {
+                  "label":"inventory.active"
+               }
+            ],
+            "values":[
+               {
+                  "name":"material",
+                  "pattern":"",
+                  "type":"singleValueList",
+                  "jsonPath":"priceLists[0].priceListDetails[0].material.code",
+                  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                  "depedants":[
+                     {
+                        "jsonPath":"priceLists[0].priceListDetails[0].material.description",
+                        "type":"textField",
+                        "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
+                     }
+                  ]
+               },
+               {
+                  "name":"uom",
+                  "jsonPath":"priceLists[0].priceListDetails[0].uom.code",
+                  "pattern":"",
+                  "type":"singleValueList",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+               },
+               {
+                  "name":"ratePerUnit",
+                  "jsonPath":"priceLists[0].priceListDetails[0].ratePerUnit",
+                  "pattern":"",
+                  "type":"number",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "maxLength":100,
+                  "patternErrorMsg":"inventory.create.field.message.code"
+               },
+               {
+                  "name":"fromDate",
+                  "jsonPath":"priceLists[0].priceListDetails[0].fromDate",
+                  "pattern":"",
+                  "type":"datePicker",
+                  "isRequired":false,
+                  "isDisabled":true,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               },
+               {
+                  "name":"toDate",
+                  "jsonPath":"priceLists[0].priceListDetails[0].toDate",
+                  "pattern":"",
+                  "type":"datePicker",
+                  "isRequired":false,
+                  "isDisabled":true,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               },
+               {
+                  "name":"quantity",
+                  "jsonPath":"priceLists[0].priceListDetails[0].quantity",
+                  "pattern":"",
+                  "type":"number",
+                  "isRequired":false,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               },
+               {
+                  "name":"active",
+                  "jsonPath":"priceLists[0].priceListDetails[0].active",
+                  "label":"",
+                  "pattern":"",
+                  "type":"checkbox",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "defaultValue":true,
+                  "patternErrorMsg":""
+               }
+            ]
+         }
       }
+   ]
+}
     ],
     "url": "/inventory-services/pricelists/_update",
     "tenantIdRequired": true,

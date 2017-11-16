@@ -326,14 +326,22 @@ const menuConvention={
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch":"/search/perfManagement/actualKpiUpdate/view",
 
 //Inventoy Service
-"Inventory.Inventory Masters.Supplier Master.Supplier Search":"/non-framework/inventory/master/supplier",
-"Inventory.Inventory Masters.Store Master.Store Search":"/non-framework/inventory/master/store",
-"Inventory.Inventory Masters.Material Master.Material Search":"/non-framework/inventory/master/material",
-"Inventory.Inventory Masters.Price List Master.PriceList Search":"/search/inventory/pricelists/view",
-"Inventory.Inventory Masters.Store Master.Store Create":"/create/inventory/stores",
 "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",
+"Inventory.Inventory Masters.Supplier Master.Supplier Search":"/search/inventory/supplier/view",
+"Inventory.Inventory Masters.Supplier Master.Supplier Update":"/search/inventory/supplier/update",
+
 "Inventory.Inventory Masters.Material Master.Material Create":"/create/inventory/material",
+"Inventory.Inventory Masters.Material Master.Material Search":"/search/inventory/material/view",
+"Inventory.Inventory Masters.Material Master.Material Update":"/search/inventory/material/update",
+
+"Inventory.Inventory Masters.Store Master.Store Create":"/create/inventory/stores",
+"Inventory.Inventory Masters.Store Master.Store Search":"/search/inventory/stores/view",
+"Inventory.Inventory Masters.Store Master.Store Update":"/search/inventory/stores/update",
+
 "Inventory.Inventory Masters.Price List Master.PriceList Create":"/create/inventory/pricelists",
+"Inventory.Inventory Masters.Price List Master.PriceList Search":"/search/inventory/pricelists/view",
+"Inventory.Inventory Masters.Price List Master.PriceList Update":"/search/inventory/pricelists/update",
+//Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",
 //Works

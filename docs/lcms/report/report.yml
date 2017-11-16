@@ -481,6 +481,13 @@ ReportDefinitions:
     source: lcms
     isMandatory: false
     
+  - name: advocate
+    label: reports.lcms.advocate
+    type: singlevaluelist
+    pattern: /lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid &agencyName={oragnization}&pageSize=500|$.agencies[*].advocates[*].code|$.agencies[*].advocates[*].name
+    source: lcms
+    isMandatory: false
+    searchClause : AND lca.advocate ->> 'code' = $advocate 
     
   - name: department
     label: reports.lcms.department
@@ -505,13 +512,7 @@ ReportDefinitions:
     wrapper: true
     isMandatory: false
     searchClause : AND lc.courtname ->> 'code' = $courtName
-  - name: advocate
-    label: reports.lcms.advocate
-    type: singlevaluelist
-    pattern:/lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid &agencyName={oragnization}&pageSize=500|$..code|$..name
-    source: lcms
-    isMandatory: false
-    searchClause : AND lca.advocate ->> 'code' = $advocate
+  
   - name: caseStatus
     label: reports.lcms.caseStatus
     type: singlevaluelist

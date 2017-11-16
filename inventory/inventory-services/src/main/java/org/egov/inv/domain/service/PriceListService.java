@@ -122,12 +122,4 @@ public class PriceListService extends DomainService {
 		return response;
 	}
 	
-    private void uniqueCheck(PriceList priceList) {
-
-        if (!priceListJdbcRepository.uniqueCheck("rateContractNumber", new PriceListEntity().toEntity(priceList))) {
-            throw new CustomException("inv.0011", "Supplier and RateContract Number combination already exists " + priceList.getSupplier()
-                    + ", " + priceList.getRateContractNumber());
-        }
-    }
-
 }

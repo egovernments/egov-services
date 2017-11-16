@@ -2276,7 +2276,7 @@ var localization_EN_Data = {
 "reports.asset.previousfynetblock":"Net Block as at 31/03/2017",
 
 
-
+"legal.create.group.title.eventDetails":"My Events",
 "legal.create.group.title.CaseType" : "ENTRY TYPE",
 "legal.create.isSummon" :"Entry Type",
 "legal.create.isActive":"Summon",
@@ -4415,7 +4415,7 @@ var localization_MR_Data = {
 "error.license.feeDetailYearNotFound ": "Financial Does not exists for Current/Future Year-Marathi",
 //legal module
 
-
+"legal.create.group.title.eventDetails":"My Events-Marathi",
 "legal.create.group.title.CaseType" : "ENTRY TYPE-Marathi",
 "legal.create.isSummon" :"Entry Type-Marathi",
 "legal.create.isActive":"Summon-Marathi",

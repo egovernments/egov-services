@@ -34,6 +34,8 @@ import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
 import UiTimeField from './components/UiTimeField';
 import UiWindowForm from './components/UiWindowForm';
+import UiCalendar from './components/UiCalendar';
+
 let styles={
   reducePadding: {
     paddingTop:4,
@@ -215,6 +217,10 @@ export default class ShowFields extends Component {
       case 'window':
         return <UiWindowForm tabIndex={index} ui={this.props.ui}
         getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors}
+        handler={this.props.handler} screen={screen}/>;
+      case 'calendar':
+        return <UiCalendar ui={this.props.ui} getVal={this.props.getVal}
+        item={item} fieldErrors={this.props.fieldErrors}
         handler={this.props.handler} screen={screen}/>;
       case 'customComponent':
         // console.log(item.path);

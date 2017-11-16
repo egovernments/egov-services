@@ -587,7 +587,7 @@ var dat = {
 		"numCols": 4,
     "useTimestamp": true,
     "objectName": "abstractEstimates",
-		"url":"works-estimate/v1/abstractestimates/_search?ids={id}",
+		"url":"works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers={id}",
 		"tenantIdRequired": true,
 		"groups": [
 			{
@@ -1410,8 +1410,8 @@ var dat = {
 				"estimateAmount"
       ],
       "resultPath": "abstractEstimates",
-      "resultIdKey":"id",
-      "rowClickUrlView": "/non-framework/works/transaction/viewAbstractEstimate/{id}",
+      "resultIdKey":"abstractEstimateNumber",
+      "rowClickUrlView": "/non-framework/works/transaction/viewAbstractEstimate/{abstractEstimateNumber}",
     }
 	}
 }

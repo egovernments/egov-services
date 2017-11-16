@@ -14,6 +14,7 @@ import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utili
 import jp from "jsonpath";
 import template from '../../../framework/specs/works/master/abstractEstimate';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
+import UploadDocs from '../utility/uploadDocs';
 // import WorkFlow from '../workflow/WorkFlow';
 import styles from '../../../../styles/material-ui';
 
@@ -215,8 +216,8 @@ class AbstractEstimate extends Component {
     this.setState({
       pathname:this.props.history.location.pathname,
       sanctionType:sanctionType,
-      fileCount:1,
-      maxFile:5
+      // fileCount:1,
+      // maxFile:5
     });
 
     Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"Works","masterName":"EstimateSanctionAuthority"},{}, false, false, false, "", "", false).then(function(response)
@@ -1036,21 +1037,6 @@ class AbstractEstimate extends Component {
       }
   }
 
-  addFile = () => {
-    this.setState((prevState, props) => {
-      return {fileCount: prevState.fileCount + 1};
-    });
-  }
-
-  uploadDocs = () => {
-    return _.times(this.state.maxFile, idx=>{
-      return (<Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
-        <input type="file" className="form-control" onChange= {(e) => {this.handleChange({target:{value: e.target.files[0]}},"abstractEstimates[0].documents["+idx+"]",false)}}/>
-        <br/>
-      </Col>)
-    })
-  }
-
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
@@ -1128,18 +1114,7 @@ class AbstractEstimate extends Component {
               </Row>
             </CardText>
           </Card>
-          <Card style={styles.marginStyle}>
-            <CardHeader title={< div > {translate('works.create.groups.label.uploadDocs')}< /div>}/>
-            <CardText>
-              <Row>
-                {this.uploadDocs()}
-                {this.state.fileCount != this.state.maxFile ?
-                  <Col xs={12} sm={4} md={3} lg={3}>
-                    <div className="material-icons" style={{cursor:'pointer'}} onClick={()=>{this.addFile()}}>add</div>
-                  </Col> :''}
-              </Row>
-            </CardText>
-          </Card>
+          <UploadDocs maxFile="5" handler={handleChange}/>
           {/*<WorkFlow formData={formData} handler={handleChange}/>*/}
           <div style={{"textAlign": "center"}}>
             <br/>
@@ -1159,7 +1134,7 @@ class AbstractEstimate extends Component {
 
 const mapStateToProps = state => {
   // console.log(state.framework.mockData);
-  console.log(state.frameworkForm.requiredFields);
+  // console.log(state.frameworkForm.requiredFields);
   // console.log(state.frameworkForm.isFormValid);
   return ({
     metaData:state.framework.metaData,
@@ -1213,7 +1188,7 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
   },
   addRequiredFields: (requiredFields) => {
-    console.log(requiredFields);
+    // console.log(requiredFields);
     dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
   },
   removeFieldErrors: (key) => {

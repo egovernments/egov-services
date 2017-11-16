@@ -259,9 +259,9 @@ class UiMultiFieldTable extends Component {
 								item.tableList.header.map((v, i) => {
 									 var style={};
 									 if(v.style){
-										style =v.style; 
+										style =v.style;
 									 }
-									 
+
 									return (
 										<th style={style} key={i}>{translate(v.label)}</th>
 									)
@@ -279,7 +279,7 @@ class UiMultiFieldTable extends Component {
 										{
 											v.map((v2, i2) => {
 												return (
-													<td>
+													<td key={i2}>
 														{this.renderFields(v2, this.props.screen)}
 													</td>
 												)
@@ -302,7 +302,7 @@ class UiMultiFieldTable extends Component {
 						<tr>
 							{footerArray.map((val, index) => {
 								let value = val !== undefined ? val.toFixed(2) : '';
-							  return (<td className="text-right" style={{fontWeight:'bold'}}>{value ? `Total: ${value}` : ''}</td>)
+							  return (<td key={index} className="text-right" style={{fontWeight:'bold'}}>{value ? `Total: ${value}` : ''}</td>)
 							})}
 							{!item.tableList.actionsNotRequired ? <td></td> : ''}
 						</tr>

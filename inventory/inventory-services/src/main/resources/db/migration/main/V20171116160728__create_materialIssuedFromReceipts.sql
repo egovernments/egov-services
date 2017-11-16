@@ -10,7 +10,7 @@ quantity numeric,
 status boolean,
 issuedetailid varchar(50) NOT NULL,
 constraint pk_materialissuedfromreceipt primary key (id,tenantId),
-constraint for_materialissuedfromreceipt foreign key (materialissuedetailid,tenantid) REFERENCES 
+constraint for_materialissuedfromreceipt foreign key (issuedetailid,tenantid) REFERENCES 
 materialissuedetail(id,tenantId)
 );
 

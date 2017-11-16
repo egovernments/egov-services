@@ -2,6 +2,7 @@ package org.egov.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.TransactionType;
@@ -67,6 +68,7 @@ public class Disposal   {
 
   @JsonProperty("saleValue")
   @NotNull
+  @Min(0)
   private BigDecimal saleValue;
 
   @JsonProperty("transactionType")

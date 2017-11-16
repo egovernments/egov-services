@@ -139,7 +139,8 @@ public class AssetService {
 				requestInfo, tenantId);
 		Map<String,JSONArray> rsAssetMap = rsMasterMap.get("ASSET");
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(rsAssetMap.get("AssetCategory"));
-		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(rsMasterMap.get("egf-master").get("funs"));
+		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(rsMasterMap.get("egf-master").get("funds"));
+		
 		Map<String, Department> departmentMap = mDService
 				.getDepartmentMapFromJSONArray(rsMasterMap.get("common-masters").get("Department"));
 		Map<String, ModeOfAcquisition> modeOfAquisitionMap = mDService.getModeOfAcquisitionMapFromJSONArray(rsAssetMap.get("ModeOfAcquisition"));

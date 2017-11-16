@@ -1,7 +1,5 @@
 package org.egov.model;
 
-import org.egov.model.FundSource.FundSourceBuilder;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;

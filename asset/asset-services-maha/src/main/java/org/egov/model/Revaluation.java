@@ -2,6 +2,7 @@ package org.egov.model;
 
 import java.math.BigDecimal;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.TypeOfChange;
@@ -49,6 +50,7 @@ public class Revaluation   {
   private TypeOfChange typeOfChange;
 
   @NotNull
+  @Min(0)
   @JsonProperty("revaluationAmount")
   private BigDecimal revaluationAmount;
 

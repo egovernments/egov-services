@@ -13,8 +13,10 @@ import org.egov.model.Asset;
 import org.egov.model.AssetCategory;
 import org.egov.model.DefectLiability;
 import org.egov.model.Department;
+import org.egov.model.Disposal;
 import org.egov.model.FundSource;
 import org.egov.model.Location;
+import org.egov.model.Revaluation;
 import org.egov.model.enums.AssetCategoryType;
 import org.egov.service.AssetService;
 import org.egov.service.MasterDataService;
@@ -85,7 +87,7 @@ public class AssetValidator implements Validator {
 		System.err.println("the result : "+ResultDataMap);
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
 		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("funds"));
-		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Depratment"));
+		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Department"));
 
 		
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
@@ -107,6 +109,8 @@ public class AssetValidator implements Validator {
 			else
 				asset.setFundSource(fundSource);
 		}
+	
+		
 	}
 
 	private void validateAndEnrichUlbWideMasters(AssetRequest assetRequest) {
@@ -145,7 +149,8 @@ public class AssetValidator implements Validator {
 	}
 
 	public void validateForRevaluation(RevaluationRequest revaluationRequest) {
-		assetIdValidation(revaluationRequest.getRevaluation().getAssetId(),
+		Revaluation revaluation= revaluationRequest.getRevaluation();
+		assetIdValidation(revaluation.getAssetId(),
 				revaluationRequest.getRevaluation().getTenantId(), revaluationRequest.getRequestInfo());
 		Asset asset = assetService.getAsset(revaluationRequest.getRevaluation().getTenantId(),
 				revaluationRequest.getRevaluation().getAssetId(), revaluationRequest.getRequestInfo());
@@ -157,14 +162,18 @@ public class AssetValidator implements Validator {
 			errorMap.put("Revaluation", "Invalid Account details");
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
-
+		/*if(revaluation.getRevaluationAmount().longValue()<=0||revaluation.getRevaluationAmount()==null)
+			errorMap.put("Revaluation", "Invalid Revaluation amount");
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);*/
 	}
 
 	public void validateForDisposal(DisposalRequest disposalequest) {
-		assetIdValidation(disposalequest.getDisposal().getAssetId(), disposalequest.getDisposal().getTenantId(),
+		Disposal disposal = disposalequest.getDisposal();
+		assetIdValidation(disposal.getAssetId(), disposal.getTenantId(),
 				disposalequest.getRequestInfo());
-		Asset asset = assetService.getAsset(disposalequest.getDisposal().getTenantId(),
-				disposalequest.getDisposal().getAssetId(), disposalequest.getRequestInfo());
+		Asset asset = assetService.getAsset(disposal.getTenantId(),
+				disposal.getAssetId(), disposalequest.getRequestInfo());
 		if (asset.getAssetAccount() == null || asset.getAssetAccount().isEmpty()
 				|| asset.getRevaluationReserveAccount() == null || asset.getRevaluationReserveAccount().isEmpty()
 				|| asset.getAccumulatedDepreciationAccount() == null
@@ -173,6 +182,11 @@ public class AssetValidator implements Validator {
 			errorMap.put("Disposal", "Invalid Account details");
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
+		/*if(disposal.getSaleValue().longValue()<=0||disposal.getSaleValue()==null)
+			errorMap.put("Disposal", "Invalid sale amount");
+		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);*/
+			
 
 	}
 }

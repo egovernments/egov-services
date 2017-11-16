@@ -6,7 +6,7 @@ serviceMaps:
    description: Create a new KPI Master Record
    fromTopic: egov.pa.newkpi-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, targetvalue, targetdescription, instructions, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, targetvalue, targetdescription, instructions, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.KPIs.*
       jsonMaps:
 

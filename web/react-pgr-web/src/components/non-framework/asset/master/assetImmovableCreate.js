@@ -206,8 +206,8 @@ class assetImmovableCreate extends Component {
 
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
 
-        if ( specs[moduleName + "." + actionName].groups[i].jsonPath ) {
-
+        if ( _form.Asset.landDetails != null ) {
+          
           var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
           ind = i;
           var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
@@ -245,7 +245,7 @@ class assetImmovableCreate extends Component {
       }
       response.Assets[0].assetAttributesCheck = assetCheck;
       self.props.setFormData({Asset: response.Assets[0]});
-      self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications[`asset.update`].objectName);
+      self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications["asset.update"].objectName);
       self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
       self.warrantyFunction(response.Assets[0].warrantyAvailable);
 

@@ -265,7 +265,7 @@ public class Supplier {
 	@NotNull
 
 	@Pattern(regexp = "^[a-zA-Z0-9]*$")
-	@Size(min = 5, max = 50)
+	@Size(max = 50)
 	public String getCode() {
 		return code;
 	}

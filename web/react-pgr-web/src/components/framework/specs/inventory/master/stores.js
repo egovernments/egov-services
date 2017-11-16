@@ -33,6 +33,7 @@ var dat = {
                   "label":"inventory.store.active",
                   "type":"checkbox",
                   "isDisabled":false,
+                  "defaultValue":true,
                   "patternErrorMsg":"inventory.create.field.message.active"
                }
             ]
@@ -89,7 +90,6 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":"inventory.create.field.message.code"
                },
                {
@@ -231,7 +231,7 @@ var dat = {
                   "type":"checkbox",
                   "isRequired":false,
                   "isDisabled":false,
-                  "defaultValue":"",
+                  "defaultValue":true,
                   "patternErrorMsg":""
                }
             ]
@@ -259,7 +259,6 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":"inventory.create.field.message.code"
                },
                {
@@ -427,10 +426,9 @@ var dat = {
                   "pattern":"^[a-zA-Z0-9]+$",
                   "type":"text",
                   "isRequired":true,
-                  "isDisabled":false,
+                  "isDisabled":true,
                   "defaultValue":"",
                   "maxLength":50,
-                  "minLength":5,
                   "patternErrorMsg":"inventory.create.field.message.code"
                },
                {

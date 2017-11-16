@@ -144,7 +144,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "name",
@@ -417,7 +416,6 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "name",
@@ -676,9 +674,8 @@ var dat = {
             "label": "inventory.supplier.code",
             "type": "text",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "maxLength": 50,
-            "minLength": 5,
             "patternErrorMsg": ""
           }, {
             "name": "name",

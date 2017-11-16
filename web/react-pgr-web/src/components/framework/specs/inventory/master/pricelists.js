@@ -316,7 +316,7 @@ var dat = {
                   "label": "inventory.from.date"
                 },
                 {
-                  "label": "inventory.to.date"
+                  "label": "inventory.TO.date"
                 },
                 {
                   "label": "inventory.quantity" 
@@ -379,7 +379,7 @@ var dat = {
                   "pattern": "",
                   "type": "datePicker",
                   "isRequired": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },
@@ -389,7 +389,7 @@ var dat = {
                   "pattern": "",
                   "type": "datePicker",
                   "isRequired": false,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "defaultValue": "",
                   "patternErrorMsg": ""
                 },

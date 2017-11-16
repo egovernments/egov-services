@@ -2169,6 +2169,7 @@ var localization_EN_Data = {
  "reports.asset.assetCategory" : "Asset Category",
  "reports.asset.assetSubCategory" : "Asset Sub Category",
  "reports.asset.departmentCode" : "Department",
+ "reports.asset.totalrevalsum":"Revaluation Total",
  "reports.asset.id"                           : "AssetId",
  "reports.asset.code"                         : "Asset ID No",
  "reports.asset.quantity"                     : "Quantity",

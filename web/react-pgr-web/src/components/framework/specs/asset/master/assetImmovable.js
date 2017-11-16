@@ -812,7 +812,7 @@ var dat = {
 					},
 					{
 						"name": "AssetCategory",
-						"jsonPath": "assetParentCategory",
+						"jsonPath": "assetCategory",
 						"label": "ac.create.Asset.Category",
 						"pattern": "",
 						"type": "singleValueList",
@@ -822,19 +822,17 @@ var dat = {
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
 						"depedants": [{
-							"jsonPath": "assetCategory",
+							"jsonPath": "assetSubCategory",
 							"type": "dropDown",
-							"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+							"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F%28%40.parent%3D%3D'{assetCategory}'%29%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
 						}]
 					},
 					{
 						"name": "AssetSearchAssetSubCategory",
-						"jsonPath": "assetCategory",
+						"jsonPath": "assetSubCategory",
 						"label": "ac.create.Asset.SubCategory.Name",
 						"pattern": "",
 						"type": "singleValueList",
-						"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
-						// "url": "/egov-mdms-service/v1/_get?&masterName=AssetCategory&moduleName=ASSET|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -928,7 +926,7 @@ var dat = {
 		],
 		"result": {
 			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"}, {label:"ac.create.asset.asset.category.type"}, {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Department"},{label: "ac.create.Original.Value.of.Asset"}, {label: "ac.create.Opening.Written.down.Value"}],
-			"values": ["code","name","assetCategory.assetCategoryType", "assetCategory.name", "departmentCode","originalValue", "grossValue"],
+			"values": ["code","name","assetCategory.assetCategoryType", "assetCategory.name", "department.name","originalValue", "grossValue"],
 			"resultPath": "Assets",
 			 "rowClickUrlUpdate": "/non-framework/asset/master/assetImmovableCreate/{id}",
 			 "rowClickUrlView": "/non-framework/asset/master/assetImmovableView/{id}"
@@ -1029,7 +1027,7 @@ var dat = {
   					},
             {
   						"name": "Department",
-  						"jsonPath": "Assets[0].department.code",
+  						"jsonPath": "Assets[0].department.name",
   						"label": "ac.create.Department",
   						"pattern": "",
   						"type": "text",

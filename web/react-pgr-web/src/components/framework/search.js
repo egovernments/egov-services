@@ -436,9 +436,14 @@ class Search extends Component {
                   let queryStringObject=splitArray[1].split("|")[0].split("&");
                   for (var i = 0; i < queryStringObject.length; i++) {
                     if (i) {
+                      // if(queryStringObject[i].split("=")[1].startsWith("^")){
+                      //   id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\^/, "");
+                      //   continue;
+                      // }
                       if (queryStringObject[i].split("=")[1].search("{")>-1) {
                         if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                          id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                          console.log("replacing!!!", queryStringObject[i].split("=")[1], queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value))
+                          id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value) || "";
                         } else {
                           id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
                         }

@@ -415,7 +415,7 @@ export default class assetImmovableReport extends Component {
 													<b>{numberWithCommas(this.props.data[29]?this.props.data[29]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
-													<b>{numberWithCommas(this.props.data[23]?this.props.data[23]:"")}</b>
+													<b>{numberWithCommas(this.props.data[48]?this.props.data[48]:"")}</b>
 											</td>
 											<td style={{textAlign: "center"}} >
 													<b>{numberWithCommas(this.props.data[40]?this.props.data[40]:"")}</b>

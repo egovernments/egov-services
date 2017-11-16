@@ -28,6 +28,9 @@ var groups = [];
 var finArr = [];
 let reqRequired = [];
 let baseUrl="https://raw.githubusercontent.com/abhiegov/test/master/specs/";
+
+const REGEXP_FIND_IDX = /\[(.*?)\]+/g;
+
 class assetImmovableCreate extends Component {
   state={
     pathname:""
@@ -985,6 +988,9 @@ delete formData.Asset.assetAttributesCheck;
     setMockData(_mockData);
   }
 
+
+
+
   warrantyFunction = (_value) => {
     let valueWarranty = _value;
     let self = this;
@@ -1010,6 +1016,183 @@ delete formData.Asset.assetAttributesCheck;
         }
       }
    }
+  }
+
+  affectDependants = (obj, e, property)=>{
+
+    let {handleChange, setDropDownData} = this.props;
+    let {getVal, getValFromDropdownData} = this;
+
+
+    const findLastIdxOnJsonPath = (jsonPath) => {
+      var str = jsonPath.split(REGEXP_FIND_IDX);
+      for (let i = str.length - 1; i > -1; i--) {
+        if (str[i].match(/\d+/)) {
+          return str[i];
+        }
+      }
+      return undefined;
+    }
+
+    const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
+      var str = jsonPath.split(REGEXP_FIND_IDX);
+      var isReplaced = false;
+      for (let i = str.length - 1; i > -1; i--) {
+        if (str[i].match(/\d+/)) {
+          if (!isReplaced) {
+            isReplaced = true;
+            str[i] = `[${replaceIdx}]`;
+          } else
+            str[i] = `[${str[i]}]`;
+        }
+      }
+      return str.join("");
+    }
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+    let dependantIdx;
+    if (depedants.length === 0 && property) {
+      let currentProperty = property;
+      dependantIdx = findLastIdxOnJsonPath(property);
+      if (dependantIdx !== undefined)
+        currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+      depedants = jp.query(obj, `$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+
+      //Changes to handle table sum
+      var jpathname = property.substr(0, property.lastIndexOf("[") + 1) + '0' + property.substr(property.lastIndexOf("[") + 2);
+
+      var dependency = jp.query(obj, `$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
+      if (dependency.length > 0) {
+        let _formData = { ...this.props.formData
+        };
+        if (_formData) {
+          let field = property.substr(0, property.lastIndexOf("["));
+          let last = property.substr(property.lastIndexOf("]") + 2);
+          let curIndex = property.substr(property.lastIndexOf("[") + 1, 1);
+
+          let arrval = _.get(_formData, field);
+          if (arrval) {
+            let len = _.get(_formData, field).length;
+
+            let amtsum = 0;
+            let svalue = "";
+            for (var i = 0; i < len; i++) {
+              let ifield = field + '[' + i + ']' + '.' + last;
+              if (i == curIndex) {
+                svalue = e.target.value;
+              } else {
+                svalue = _.get(_formData, ifield);
+              }
+
+              amtsum += parseInt(svalue);
+            }
+            if (amtsum > 0) {
+              handleChange({
+                target: {
+                  value: amtsum
+                }
+              }, dependency[0], false, '', '');
+
+            }
+          }
+        }
+      }
+       }
+      _.forEach(depedants, function(value, key) {
+            if (value.type == "dropDown") {
+                let splitArray = value.pattern.split("?");
+                let context = "";
+                let id = {};
+                for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                  context+=splitArray[0].split("/")[j]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                for (var i = 0; i < queryStringObject.length; i++) {
+                  if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                    }
+                  }
+                }
+
+                Api.commonApiPost(context, id, {}, false, false, false, "", "", value.isStateLevel).then(function(response) {
+                  if(response) {
+                    let keys=jp.query(response,splitArray[1].split("|")[1]);
+                    let values=jp.query(response,splitArray[1].split("|")[2]);
+                    let dropDownData=[];
+                    for (var k = 0; k < keys.length; k++) {
+                        let obj={};
+                        obj["key"]=keys[k];
+                        obj["value"]=values[k];
+                        dropDownData.push(obj);
+                    }
+
+                    dropDownData.sort(function(s1, s2) {
+                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                    });
+                    dropDownData.unshift({key: null, value: "-- Please Select --"});
+                    setDropDownData(value.jsonPath, dropDownData);
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            } else if (value.type == "textField") {
+              try{
+                let exp = value.valExp;
+                if(dependantIdx){
+                  value.jsonPath = replaceLastIdxOnJsonPath(value.jsonPath, dependantIdx);
+                  exp = exp && exp.replace(/\*/g, dependantIdx);
+                }
+                let object={
+                  target: {
+                    value: exp && eval(exp) || eval(eval(value.pattern))
+                  }
+                }
+                handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
+              }
+              catch(ex){
+                console.log('ex', ex);
+              }
+            } else if (value.type == "autoFill") {
+              let splitArray = value.pattern.split("?");
+                let context = "";
+                let id = {};
+                for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                  context+=splitArray[0].split("/")[j]+"/";
+                }
+
+                let queryStringObject=splitArray[1].split("|")[0].split("&");
+                for (var i = 0; i < queryStringObject.length; i++) {
+                  if (i) {
+                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        id[queryStringObject[i].split("=")[0]] = e.target.value || "";
+                      } else {
+                        id[queryStringObject[i].split("=")[0]] = getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                      }
+                    } else {
+                      id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
+                    }
+                  }
+                }
+
+                Api.commonApiPost(context, id).then(function(response) {
+                  if(response) {
+                    for(let key in value.autoFillFields) {
+                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
+                    }
+                  }
+                },function(err) {
+                    console.log(err);
+                });
+            }
+      });
   }
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
@@ -1108,98 +1291,12 @@ delete formData.Asset.assetAttributesCheck;
           }
         }
       }
-      let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-      _.forEach(depedants, function(value, key) {
-            if (value.type == "dropDown") {
-                let splitArray = value.pattern.split("?");
-                let context = "";
-          			let id = {};
-          			for (var j = 0; j < splitArray[0].split("/").length; j++) {
-          				context+=splitArray[0].split("/")[j]+"/";
-          			}
+      this.affectDependants(obj, e, property);
 
-          			let queryStringObject=splitArray[1].split("|")[0].split("&");
-          			for (var i = 0; i < queryStringObject.length; i++) {
-          				if (i) {
-                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
-                      } else {
-                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                      }
-                    } else {
-                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
-                    }
-          				}
-          			}
-
-                Api.commonApiPost(context,id).then(function(response) {
-                  if(response) {
-                    let keys=jp.query(response,splitArray[1].split("|")[1]);
-                    let values=jp.query(response,splitArray[1].split("|")[2]);
-                    let dropDownData=[];
-                    for (var k = 0; k < keys.length; k++) {
-                        let obj={};
-                        obj["key"]=keys[k];
-                        obj["value"]=values[k];
-                        dropDownData.push(obj);
-                    }
-
-                    dropDownData.sort(function(s1, s2) {
-                      return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-                    });
-                    dropDownData.unshift({key: null, value: "-- Please Select --"});
-                    setDropDownData(value.jsonPath, dropDownData);
-                  }
-                },function(err) {
-                    console.log(err);
-                });
-                // console.log(id);
-                // console.log(context);
-            } else if (value.type == "textField") {
-              let object={
-                target: {
-                  value:eval(eval(value.pattern))
-                }
-              }
-              handleChange(object, value.jsonPath, value.isRequired, value.rg,value.requiredErrMsg, value.patternErrMsg);
-            } else if (value.type == "autoFill") {
-              let splitArray = value.pattern.split("?");
-                let context = "";
-                let id = {};
-                for (var j = 0; j < splitArray[0].split("/").length; j++) {
-                  context+=splitArray[0].split("/")[j]+"/";
-                }
-
-                let queryStringObject=splitArray[1].split("|")[0].split("&");
-                for (var i = 0; i < queryStringObject.length; i++) {
-                  if (i) {
-                    if (queryStringObject[i].split("=")[1].search("{")>-1) {
-                      if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]] = e.target.value || "";
-                      } else {
-                        id[queryStringObject[i].split("=")[0]] = getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
-                      }
-                    } else {
-                      id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
-                    }
-                  }
-                }
-
-                Api.commonApiPost(context, id).then(function(response) {
-                  if(response) {
-                    for(let key in value.autoFillFields) {
-                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
-                    }
-                  }
-                },function(err) {
-                    console.log(err);
-                });
-            }
-      });
   }
 
   incrementIndexValue = (group, jsonPath) => {

@@ -281,46 +281,6 @@
 			"response": []
 		},
 		{
-			"name": "Get KPI Type API",
-			"request": {
-				"method": "POST",
-				"header": [
-					{
-						"key": "Content-Type",
-						"value": "application/json"
-					}
-				],
-				"body": {
-					"mode": "raw",
-					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\" : \"352afec4-252e-4605-93ad-dbd49dff4735\"\n }\n}"
-				},
-				"url": {
-					"raw": "http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpimaster/_getkpitype?kpiCode=kpi1",
-					"protocol": "http",
-					"host": [
-						"egov-micro-dev",
-						"egovernments",
-						"org"
-					],
-					"path": [
-						"perfmanagement",
-						"v1",
-						"kpimaster",
-						"_getkpitype"
-					],
-					"query": [
-						{
-							"key": "kpiCode",
-							"value": "kpi1",
-							"equals": true
-						}
-					]
-				},
-				"description": "\t\t"
-			},
-			"response": []
-		},
-		{
 			"name": "Get Documents For KPI ",
 			"request": {
 				"method": "POST",
@@ -356,6 +316,45 @@
 					]
 				},
 				"description": ""
+			},
+			"response": []
+		},
+		{
+			"name": "Get KPI Type API",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1504157329616,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\" : \"352afec4-252e-4605-93ad-dbd49dff4735\"\n }\n}"
+				},
+				"url": {
+					"raw": "http://localhost:9901/perfmanagement/v1/kpimaster/_getkpitype?kpiCode=kpi1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "9901",
+					"path": [
+						"perfmanagement",
+						"v1",
+						"kpimaster",
+						"_getkpitype"
+					],
+					"query": [
+						{
+							"key": "kpiCode",
+							"value": "kpi1",
+							"equals": true
+						}
+					]
+				},
+				"description": "\t\t"
 			},
 			"response": []
 		}

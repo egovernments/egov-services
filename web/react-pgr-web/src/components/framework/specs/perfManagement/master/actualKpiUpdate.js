@@ -38,7 +38,8 @@ var dat = {
       "header": [{label: "KPI Name"},{label: "Financial Year"},{label:"Target Value"},{label: "Actual Value"}],
       "values": ["kpi.name","kpi.financialYear","kpi.targetValue", "resultValue"],
       "resultPath": "kpiValues",
-      "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
+      "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}",
+      "rowClickUrlView": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
       }
   },
   "perfManagement.update": {
@@ -127,7 +128,7 @@ var dat = {
               // "type": "documentList",
               // "pathToArray": "kpiValues[0].documents",
               // "displayNameJsonPath": "documents",
-              "url": "/tl-masters/documenttype/v2/_search",
+              //"url": "/tl-masters/documenttype/v2/_search",
               //"url": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
               "autoFillFields": [
                 {
@@ -141,4 +142,3 @@ var dat = {
   }
 }
 export default dat;
-

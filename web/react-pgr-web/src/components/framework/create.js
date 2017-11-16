@@ -1041,8 +1041,12 @@ class Report extends Component {
 
                 Api.commonApiPost(context, id).then(function(response) {
                   if(response) {
-                    for(let key in value.autoFillFields) {
-                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, key, false, '', '');
+                    for(var key in value.autoFillFields) {
+                        var keyField = key.substr(0, key.lastIndexOf("["));
+                        var keyLast = key.substr(key.lastIndexOf("]") + 2);
+                        var propertyCurIndex = property.substr(property.lastIndexOf("[") + 1, 1);
+                        var newKey = keyField+"["+propertyCurIndex+"]."+keyLast;
+                      handleChange({target: {value: _.get(response, value.autoFillFields[key])}}, newKey, false, '', '');
                     }
                   }
                 },function(err) {

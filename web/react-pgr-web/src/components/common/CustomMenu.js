@@ -305,6 +305,7 @@ const menuConvention={
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create":"/create/legal/register",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Search":"/search/legal/register/view",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Update":"/update/legal/register",
+"Legal Case Management.Legal Case Transactions.Case.Search Event":"/update/legal/eventcalendar/case",
 //legal case report
 "Legal Case Management.Legal Case Reports.Case Register Report":"/report/lcms/CaseRegisterReport",
 "Legal Case Management.Legal Case Reports.Case Summary Report":"/report/lcms/CaseSummaryReport",

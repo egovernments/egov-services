@@ -460,9 +460,11 @@ serviceMaps:
             - jsonPath: $.priceLists.*.id
             - jsonPath: $.priceLists.*.tenantId
 
-        - query: update pricelistdetails SET active=?, quantity=?, ratePerUnit=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
+        - query: update pricelistdetails SET material=?, uom=?, active=?, quantity=?, ratePerUnit=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
           basePath: $.priceLists.*.priceListDetails.*
           jsonMaps:
+            - jsonPath: $.priceLists.*.priceListDetails.*.material.code
+            - jsonPath: $.priceLists.*.priceListDetails.*.uom.code
             - jsonPath: $.priceLists.*.priceListDetails.*.active
               dbType: BOOLEAN
             - jsonPath: $.priceLists.*.priceListDetails.*.quantity

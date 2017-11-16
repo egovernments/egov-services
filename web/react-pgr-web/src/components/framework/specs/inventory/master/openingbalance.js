@@ -184,8 +184,8 @@ var dat = {
                   "defaultValue":"",
                   "patternErrorMsg":""
                }, {  
-                  "name":"openingRate",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].openingRate",
+                  "name":"unitRate",
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].unitRate",
                   "pattern":"",
                   "type":"number",
                   "isRequired":true,

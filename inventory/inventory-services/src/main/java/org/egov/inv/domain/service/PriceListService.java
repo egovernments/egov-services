@@ -3,10 +3,13 @@ package org.egov.inv.domain.service;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
+import org.egov.common.exception.ErrorCode;
+import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListRequest;
@@ -54,11 +57,13 @@ public class PriceListService extends DomainService {
         try {
         	
             List<String> priceListIdList = priceListJdbcRepository.getSequence(PriceList.class.getSimpleName(), priceListRequest.getPriceLists().size());
-
+            validate(priceListRequest.getPriceLists(), Constants.ACTION_CREATE);
             priceListRequest.getPriceLists().forEach(priceList -> {
                 priceList.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
                 priceList.getPriceListDetails().forEach(priceListDetail -> {
                 	priceListDetail.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+                	priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
+					priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
                 });
             });
             
@@ -97,6 +102,8 @@ public class PriceListService extends DomainService {
 		try {
 			priceListRequest.getPriceLists().stream().forEach(priceList -> {
 								priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
+								priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
+								priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
 							});
 
 			kafkaQue.send(updateTopic, updateKey, priceListRequest);
@@ -120,6 +127,47 @@ public class PriceListService extends DomainService {
         PriceListResponse response = new PriceListResponse();
         response.setPriceLists(searchPriceLists.getPagedData().size() > 0 ? searchPriceLists.getPagedData() : Collections.emptyList());
 		return response;
+	}
+	
+	private void validate(List<PriceList> priceLists, String method) {
+
+		try {
+
+			switch (method) {
+
+			case Constants.ACTION_CREATE: {
+				if (priceLists == null) {
+					throw new InvalidDataException("priceLists", ErrorCode.NOT_NULL.getCode(), null);
+				}
+			}
+				break;
+
+			}
+			
+			Long currentMilllis = System.currentTimeMillis();
+			
+			for(PriceList pl : priceLists){
+				if(Long.valueOf(pl.getAgreementDate()) > currentMilllis){
+					throw new InvalidDataException("agreementDate", "Agreement Date must be less than or equal to Today's date", Long.valueOf(pl.getAgreementDate()).toString());
+				}
+				
+				if(Long.valueOf(pl.getRateContractDate()) > currentMilllis){
+					throw new InvalidDataException("rateContractDate", "Rate Contract Date must be less than or equal to Today's date", Long.valueOf(pl.getRateContractDate()).toString());
+				}
+				
+				if(Long.valueOf(pl.getAgreementStartDate()) > currentMilllis){
+					throw new InvalidDataException("agreementStartDate", "Agreement Start Date must be less than or equal to Today's date", Long.valueOf(pl.getAgreementStartDate()).toString());
+				}
+				
+				if(Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())){
+					throw new InvalidDataException("agreementEndDate", "Agreement End Date must be greater than or equal to Agreement start date", Long.valueOf(pl.getAgreementEndDate()).toString());
+				}
+			}
+			
+		} catch (IllegalArgumentException e) {
+
+		}
+
 	}
 	
 }

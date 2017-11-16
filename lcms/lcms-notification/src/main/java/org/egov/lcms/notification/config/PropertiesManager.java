@@ -294,4 +294,28 @@ public class PropertiesManager {
 	
 	@Value("${egov.services.egov_user.searchpath}")
 	private String userSearchPath;
+	
+	/**
+	 * Advocate search url info
+	 */
+	@Value("${advocate.hostname}")
+	private String advocateHostName;
+	
+	@Value("${advocate.basepath}")
+	private String advocateBasepath;
+	
+	@Value("${advocate.searchpath}")
+	private String advocateSearchpath;
+	
+	/**
+	 * Case search url info
+	 */
+	@Value("${case.hostname}")
+	private String caseHostname;
+	
+	@Value("${case.basepath}")
+	private String caseBasepath;
+	
+	@Value("${case.searchpath}")
+	private String caseSearchpath;
 }

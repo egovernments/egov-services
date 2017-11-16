@@ -2,9 +2,9 @@ var dat = {
 	"works.create": {
 		"numCols": 4,
     "useTimestamp": true,
-		"title":"Create Abstract Estimate",
+		"title":"works.create.abstractEstimate",
     "objectName": "abstractEstimates",
-		"url":"works-estimate/abstractestimates/_create",
+		"url":"works-estimate/v1/abstractestimates/_create",
 		"tenantIdRequired":true,
 		"groups": [
 			{
@@ -371,6 +371,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.assetdetails",
 				"name": "Asset Details",
+				"hide":true,
 				"fields":[
 					{
 						"name": "code",
@@ -412,6 +413,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.asssetsland",
 				"name": "Assets - Land",
+				"hide":true,
 				"fields":[
 					{
 						"name": "landAssetRequired",
@@ -585,7 +587,7 @@ var dat = {
 		"numCols": 4,
     "useTimestamp": true,
     "objectName": "abstractEstimates",
-		"url":"works-estimate/abstractestimates/_search?ids={id}",
+		"url":"works-estimate/v1/abstractestimates/_search?ids={id}",
 		"tenantIdRequired": true,
 		"groups": [
 			{
@@ -672,7 +674,54 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"showHideFields": [
+								{
+									"ifValue": "New",
+									"hide": [
+										{
+												"name": "Asset Details",
+												"isGroup": true,
+												"isField": false
+										}
+									],
+									"show": [{
+											"name": "Assets - Land",
+											"isGroup": true,
+											"isField": false
+									}
+								]},
+								{
+									"ifValue": "Addition",
+									"show": [
+										{
+												"name": "Asset Details",
+												"isGroup": true,
+												"isField": false
+										}
+									],
+									"hide": [{
+											"name": "Assets - Land",
+											"isGroup": true,
+											"isField": false
+									}
+								]},
+								{
+									"ifValue": "Repairs",
+									"show": [
+										{
+												"name": "Asset Details",
+												"isGroup": true,
+												"isField": false
+										}
+									],
+									"hide": [{
+											"name": "Assets - Land",
+											"isGroup": true,
+											"isField": false
+									}
+								]},
+							]
             },
 						{
               "name": "modeOfAllotment",
@@ -859,27 +908,53 @@ var dat = {
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"showHideFields": [
+								{
+									"ifValue": "true",
+									"hide": [],
+									"show": [
+										{
+												"name": "pmcType",
+												"isGroup": false,
+												"isField": true
+										}
+									]
+								}]
             },
 						{
               "name": "pmcType",
               "jsonPath": "abstractEstimates[0].pmcType",
               "label": "works.create.groups.fields.pmcType",
               "pattern": "",
+							"hide":true,
               "type": "singleValueList",
               "url": "",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"showHideFields": [
+								{
+									"ifValue": "1",
+									"hide": [],
+									"show": [
+										{
+												"name": "pmcName",
+												"isGroup": false,
+												"isField": true
+										}
+									]
+								}]
             },
 						{
               "name": "pmcName",
               "jsonPath": "abstractEstimates[0].pmcName",
+							"hide":true,
               "label": "works.create.groups.fields.pmcName",
               "pattern": "",
               "type": "singleValueList",
-              "url": "",
+              "url": "/works-masters/v1/contractors/_search?&pmc=true|$..code|$..name",
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -901,6 +976,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.assetdetails",
 				"name": "Asset Details",
+				"hide":true,
 				"fields":[
 					{
 						"name": "code",
@@ -933,6 +1009,138 @@ var dat = {
 						"type": "textarea",
 						"isRequired": true,
 						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+				]
+			},
+			{
+				"label": "works.create.groups.label.asssetsland",
+				"name": "Assets - Land",
+				"hide":true,
+				"fields":[
+					{
+						"name": "landAssetRequired",
+						"jsonPath": "abstractEstimates[0].landAssetRequired",
+						"label": "works.create.groups.fields.landAssetRequired",
+						"pattern": "",
+						"type": "singleValueList",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": "",
+						"defaultValue":[
+							{key: null, value: "-- Please Select --"},
+							{
+									"key": true,
+									"value": "Yes"
+							},
+							{
+									"key": false,
+									"value": "No"
+							}
+						]
+					},
+					{
+						"name": "noOfLands",
+						"jsonPath": "abstractEstimates[0].noOfLands",
+						"label": "works.create.groups.fields.noOfLands",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+			      "type": "tableList",
+			      "jsonPath": "abstractEstimates[0].assetDetails",
+			      "tableList": {
+			        "header": [
+								{
+				          "label": "works.create.groups.label.landassetId"
+				        },
+								{
+				          "label": "works.create.groups.label.natureofownership"
+				        },
+								{
+				          "label": "works.create.groups.label.arealand"
+				        },
+								{
+				          "label": "works.create.groups.label.plotno"
+				        },
+								{
+				          "label": "works.create.groups.label.surveyno"
+				        },
+								{
+				          "label": "works.create.groups.label.landAssetCondition"
+				        }, {
+				          "label": "works.create.groups.label.constructionArea"
+			        }],
+			        "values": [
+								{
+				          "name": "landassetId",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].landassetId",
+				          "isRequired": false,
+				          "isDisabled": true
+				        },
+								{
+				          "name": "natureofownership",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].natureofownership",
+				          "isDisabled": true
+				        },
+								{
+				          "name": "arealand",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].arealand",
+				          "isDisabled": true
+				        },
+								{
+				          "name": "plotno",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].plotno",
+				          "isDisabled": true
+				        },
+								{
+				          "name": "surveyno",
+				          "pattern": "",
+				          "type": "text",
+				          "jsonPath": "abstractEstimates[0].assetDetails[0].surveyno",
+				          "isDisabled": true
+				        },
+								{
+			          "name": "landAssetCondition",
+			          "pattern": "",
+			          "type": "singleValueList",
+								"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name",
+			          "jsonPath": "abstractEstimates[0].assetDetails[0].landAssetCondition.name",
+			          "isRequired": false,
+			          "isDisabled": true,
+								"maxLength":1024
+			        }, {
+			          "name": "constructionArea",
+			          "pattern": "",
+			          "type": "text",
+			          "jsonPath": "abstractEstimates[0].assetDetails[0].constructionArea",
+			          "isRequired": false,
+			          "isDisabled": true
+			        }]
+			      }
+			    },
+					{
+						"name": "remarks",
+						"jsonPath": "abstractEstimates[0].assetDetails[0].assetRemarks",
+						"label": "works.create.groups.fields.remarks",
+						"pattern": "",
+						"type": "text",
+						"isRequired": false,
+						"isDisabled": true,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
 					},
@@ -1007,7 +1215,7 @@ var dat = {
 			          "type": "singleValueList",
 			          "jsonPath": "abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name",
 			          "isRequired": true,
-			          "isDisabled": false,
+			          "isDisabled": true,
 								"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name"
 			        }],
 							"actionsNotRequired":true
@@ -1016,6 +1224,195 @@ var dat = {
 			  ]
 			}
 		]
+	},
+	"works.search":{
+		"numCols": 4,
+    "useTimestamp": true,
+		"title":"works.create.searchEstimate",
+    "objectName": "abstractEstimates",
+    "url": "works-estimate/v1/abstractestimates/_search",
+		"groups": [
+      {
+				"name": "searchEstimate",
+        "label": "works.create.searchEstimate",
+				"fields": [
+					{
+            "name": "adminSanctionNumbers",
+            "jsonPath": "adminSanctionNumbers",
+            "label": "works.create.groups.fields.administrativesanction",
+            "type": "autoCompelete",
+            "url":"works-estimate/v1/abstractestimates/_search?&|$..adminSanctionNumber|$..adminSanctionNumber",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+					{
+						"name": "departmentCodes",
+						"jsonPath": "departmentCodes",
+						"label": "works.create.groups.fields.department",
+						"pattern": "",
+						"type": "multiValueList",
+						"url": "/egov-common-masters/departments/_search?&|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "adminSanctionFromDate",
+						"jsonPath": "adminSanctionFromDate",
+						"label": "works.create.groups.fields.adminSanctionFromDate",
+						"pattern": "",
+						"type": "datePicker",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "Please enter valid date",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "adminSanctionToDate",
+						"jsonPath": "adminSanctionToDate",
+						"label": "works.create.groups.fields.adminSanctionToDate",
+						"pattern": "",
+						"type": "datePicker",
+						"url": "",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "Please enter valid date",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "fundCodes",
+						"jsonPath": "fundCodes",
+						"label": "works.create.groups.fields.fundCodes",
+						"pattern": "",
+						"type": "multiValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "functionCodes",
+						"jsonPath": "functionCodes",
+						"label": "works.create.groups.fields.functionCodes",
+						"pattern": "",
+						"type": "multiValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=Function|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+						"name": "budgetHeadCodes",
+						"jsonPath": "budgetHeadCodes",
+						"label": "works.create.groups.fields.budgetHeadCodes",
+						"pattern": "",
+						"type": "multiValueList",
+						"url": "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+            "name": "spillOverFlag",
+            "jsonPath": "spillOverFlag",
+            "label": "works.create.groups.fields.spillOverFlag",
+            "type": "checkbox",
+            "defaultValue":false,
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+					{
+						"name": "statuses",
+						"jsonPath": "statuses",
+						"label": "works.create.groups.fields.statuses",
+						"pattern": "",
+						"type": "multiValueList",
+						"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=WorksStatus&filter=%5B%3F%28%40.moduleType%3D%3D'AbstractEstimate'%29%5D|$..code|$..name",
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					},
+					{
+            "name": "abstractEstimateNumbers",
+            "jsonPath": "abstractEstimateNumbers",
+            "label": "works.create.groups.fields.abstractEstimateNumbers",
+            "type": "autoCompelete",
+            "url":"works-estimate/v1/abstractestimates/_search?&|$..abstractEstimateNumber|$..abstractEstimateNumber",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+					{
+            "name": "workIdentificationNumbers",
+            "jsonPath": "workIdentificationNumbers",
+            "label": "works.create.groups.fields.workIdentificationNumbers",
+            "type": "autoCompelete",
+            "url":"works-estimate/v1/abstractestimates/_search?&|$..projectCode.code|$..projectCode.code",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+					{
+            "name": "nameOfWork",
+            "jsonPath": "nameOfWork",
+            "label": "works.create.groups.label.nameofthework",
+            "type": "textarea",
+            "url":"",
+            "isRequired": false,
+            "isDisabled": false,
+            "patternErrorMsg": ""
+          },
+				]
+			}
+		],
+		"result": {
+      "header": [
+        {
+          "label": "works.create.groups.fields.department"
+        }, {
+          "label": "works.create.groups.fields.abstractEstimateNumbers"
+        }, {
+          "label": "works.create.groups.fields.administrativesanction"
+        }, {
+          "label": "works.create.groups.fields.fundCodes"
+        }, {
+          "label": "works.create.groups.fields.functionCodes"
+        }, {
+          "label": "works.create.groups.fields.budgetHeadCodes"
+        }, {
+          "label": "works.create.groups.fields.createdby"
+        }, {
+          "label": "works.create.groups.fields.owner"
+        }, {
+          "label": "works.create.groups.fields.statuses"
+        }, {
+          "label": "works.create.groups.fields.totalamount"
+        }
+      ],
+      "values": [
+        "department.code",
+				"abstractEstimateNumber",
+				"adminSanctionNumber",
+				"fund.code",
+				"function.code",
+				"budgetGroup.name",
+				"auditDetails.createBy",
+				"workFlowDetails.assignee",
+				"status",
+				"estimateAmount"
+      ],
+      "resultPath": "abstractEstimates",
+      "resultIdKey":"id",
+      "rowClickUrlView": "/non-framework/works/transaction/viewAbstractEstimate/{id}",
+    }
 	}
 }
 

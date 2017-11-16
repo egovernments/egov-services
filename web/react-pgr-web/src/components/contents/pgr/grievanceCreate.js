@@ -77,7 +77,7 @@ class grievanceCreate extends Component {
     let {initForm, setRoute} = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({open: false});
-    setRoute("/pgr/viewGrievance/"+this.state.serviceRequestId);
+    setRoute("/pgr/viewGrievance/"+encodeURIComponent(this.state.serviceRequestId));
   };
 
   validateOTP = () => {

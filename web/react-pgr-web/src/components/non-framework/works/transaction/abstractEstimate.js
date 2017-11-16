@@ -381,7 +381,7 @@ class AbstractEstimate extends Component {
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g,"");
       _url = _url.replace(match, _.get(formData, jPath));
-      console.log('Modified URL:',_url);
+      // console.log('Modified URL:',_url);
     }
 
     // console.log(JSON.stringify(formData));

@@ -338,6 +338,7 @@ const menuConvention={
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/abstractEstimate",
+"Works Management.Abstract Estimate.Estimate Search":"/search/works/abstractEstimate/view"
 
 }
 

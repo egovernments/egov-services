@@ -50,6 +50,7 @@ public class Consumer {
 			"#{propertiesManager.getParawiseCommentsTopic()}",
 			"#{propertiesManager.getHearingProcessdetailsTopic()}",
 			"#{propertiesManager.getAdvocatePaymentTopic()}",
+			"#{propertiesManager.getUpdateAdvocatePaymentTopic()}",
 			"#{propertiesManager.getOpinionTopic()}"})
 	public void receive(Map<String, Object> consumerRecord, @Header(KafkaHeaders.RECEIVED_TOPIC) String topic)
 			throws Exception {
@@ -93,6 +94,11 @@ public class Consumer {
 			AdvocatePaymentRequest advocatePaymentRequest = objectMapper.convertValue(consumerRecord, AdvocatePaymentRequest.class);
 			notificationService.sendEmailAndSmsForAdvocatePayment(advocatePaymentRequest);
 			
+		} else if (topic.equalsIgnoreCase(propertiesManager.getUpdateAdvocatePaymentTopic())) {
+			
+			AdvocatePaymentRequest advocatePaymentRequest = objectMapper.convertValue(consumerRecord, AdvocatePaymentRequest.class);
+			notificationService.sendEmailAndSmsForUpdateAdvocatePayment(advocatePaymentRequest);
+
 		} else if (topic.equalsIgnoreCase(propertiesManager.getOpinionTopic())) {
 			
 			OpinionRequest opinionRequest = objectMapper.convertValue(consumerRecord, OpinionRequest.class);

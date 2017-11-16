@@ -63,6 +63,9 @@ public class PropertiesManager {
 	@Value("${egov.lcms.lcms-notification.advocate.payment}")
 	private String advocatePaymentTopic;
 	
+	@Value("${egov.lcms.lcms-notification.update.advocate.payment}")
+	private String updateAdvocatePaymentTopic;
+	
 	@Value("${egov.lcms.lcms-notification.opinion}")
 	private String opinionTopic;
 	

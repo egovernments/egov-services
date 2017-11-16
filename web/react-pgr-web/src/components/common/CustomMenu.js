@@ -329,6 +329,7 @@ const menuConvention={
 "Inventory.Inventory Masters.Supplier Master.Supplier Search":"/non-framework/inventory/master/supplier",
 "Inventory.Inventory Masters.Store Master.Store Search":"/non-framework/inventory/master/store",
 "Inventory.Inventory Masters.Material Master.Material Search":"/non-framework/inventory/master/material",
+"Inventory.Inventory Masters.Price List Master.PriceList Search":"/non-framework/inventory/transaction/pricelist",
 "Inventory.Inventory Masters.Store Master.Store Create":"/create/inventory/stores",
 "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",
 "Inventory.Inventory Masters.Material Master.Material Create":"/create/inventory/material",

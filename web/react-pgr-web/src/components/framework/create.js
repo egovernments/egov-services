@@ -872,7 +872,6 @@ class Report extends Component {
       }
       return str.join("");
     }
-
     let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     let dependantIdx;
     if (depedants.length === 0 && property) {
@@ -921,7 +920,7 @@ class Report extends Component {
           }
         }
       }
-
+       }
       _.forEach(depedants, function(value, key) {
             if (value.type == "dropDown") {
                 let splitArray = value.pattern.split("?");
@@ -1018,8 +1017,6 @@ class Report extends Component {
                 });
             }
       });
-
-    }
   }
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
@@ -1066,7 +1063,6 @@ class Report extends Component {
           }
         }
       }
-
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);

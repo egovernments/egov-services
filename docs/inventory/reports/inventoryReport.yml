@@ -185,7 +185,8 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND supplier.type = $supplierType
 
-  query:  select code, name, address, contactno, email, cstno, bankcode, bankacctno,
-          bankifsc, contactperson, contactpersonno
+  query:  select code as supplierCode, type as supplierType, name as supplierName, address,
+          contactno, email, cstno, bankcode as bankName, bankacctno,
+          bankifsc as ifsc, contactperson, contactpersonno
           from supplier as supplier
           where tenantid = $tenantid

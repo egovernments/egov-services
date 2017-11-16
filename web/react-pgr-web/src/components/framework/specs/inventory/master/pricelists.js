@@ -135,7 +135,7 @@ var dat = {
         "agreementDate",
         "agreementStartDate",
         "agreementEndDate",
-        {valuePath:"active", type:"checkbox"}
+        "active"
       ],
       "resultPath": "priceLists",
       "resultIdKey":"rateContractNumber",
@@ -585,7 +585,6 @@ var dat = {
             "name": "rateType",
             "jsonPath": "priceLists[0].rateType",
             "label": "inventory.rateType",
-            "pattern": "",
             "type": "singleValueList",
     "defaultValue":[
               {key: null, value: "-- Please Select --"},
@@ -608,7 +607,6 @@ var dat = {
             ],
             "isRequired": true,
             "isDisabled": false,
-            "defaultValue": "",
             "patternErrorMsg": ""
           },
           {

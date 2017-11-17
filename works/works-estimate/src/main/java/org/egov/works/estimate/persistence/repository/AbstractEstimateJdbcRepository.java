@@ -99,8 +99,8 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		}
 		if (abstractEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);
-			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) = :nameOfWork");
-			paramValues.put("nameOfWork", abstractEstimateSearchContract.getNameOfWork().toUpperCase());
+			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) like :nameOfWork");
+			paramValues.put("nameOfWork", '%' + abstractEstimateSearchContract.getNameOfWork().toUpperCase() + '%');
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			addAnd(params);

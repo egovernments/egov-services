@@ -113,8 +113,9 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 
 		if (detailedEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);
-			params.append("nameOfWork =:nameOfWork");
-			paramValues.put("nameOfWork", detailedEstimateSearchContract.getNameOfWork());
+			params.append("upper(nameOfWork) like :nameOfWork");
+			paramValues.put("nameOfWork", '%' + detailedEstimateSearchContract.getNameOfWork() + '%');
+			
 		}
 
 		if (detailedEstimateSearchContract.getWards() != null) {

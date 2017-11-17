@@ -1,5 +1,6 @@
 package org.egov.tenant.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
@@ -8,10 +9,9 @@ import org.egov.tenant.domain.exception.TenantInvalidCodeException;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.persistence.repository.MdmsRepository;
 import org.egov.tenant.persistence.repository.TenantRepository;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -19,13 +19,24 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import net.minidev.json.JSONArray;
 
 @Service
-@Transactional(readOnly = true)
 public class TenantService {
 
 	private TenantRepository tenantRepository;
 
 	@Autowired
 	private MdmsRepository mdmsRepository;
+	
+	@Value("${egov.services.tenantId}")
+	private String tenantId;
+	
+	@Value("${egov.services.moduleName}")
+	private String moduleName;
+	
+	@Value("${egov.services.masterDetailsName}")
+	private String masterDetailsName;
+	
+	@Value("${egov.services.filterFieldName}")
+	private String filterFieldName;
 
 	public TenantService(TenantRepository tenantRepository) {
 		this.tenantRepository = tenantRepository;
@@ -35,14 +46,15 @@ public class TenantService {
 
 		JSONArray responseJSONArray;
 		ObjectMapper mapper = new ObjectMapper();
+		List<Tenant> tenantList = new ArrayList<Tenant>();
 
-		responseJSONArray = mdmsRepository.getByCriteria("default", "tenant", "tenants", "code", code, requestInfo);
+		responseJSONArray = mdmsRepository.getByCriteria(tenantId, moduleName, masterDetailsName, filterFieldName, code, requestInfo);
 
 		if (responseJSONArray != null && responseJSONArray.size() > 0)
 			return mapper.convertValue(responseJSONArray, new TypeReference<List<Tenant>>() {
 			});
 		else
-			throw new CustomException("Tenants", "Given Tenant is invalid " + code);
+			return tenantList;
 	}
 
 	public Tenant createTenant(Tenant tenant) {

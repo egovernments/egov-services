@@ -1,5 +1,6 @@
 package org.egov.tenant.web.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -41,7 +42,10 @@ public class TenantController {
 	public SearchTenantResponse search(@RequestParam(value = "code", required = false) List<String> code,
 			@RequestBody SearchTenantRequest searchTenantRequest) {
 		List<org.egov.tenant.domain.model.Tenant> tenantModel = tenantService.getTenants(code,searchTenantRequest.getRequestInfo());
-		List<Tenant> tenants = tenantModel.stream().map(tenant -> new Tenant(tenant, new City(tenant.getCity()))).collect(Collectors.toList());
+		List<Tenant> tenants = new ArrayList<Tenant>();
+		if(tenantModel.size()>0){
+			tenants = tenantModel.stream().map(tenant -> new Tenant(tenant, new City(tenant.getCity()))).collect(Collectors.toList());
+		}
 		return new SearchTenantResponse(getResponseInfo(searchTenantRequest.getRequestInfo()), tenants);
 	}
 

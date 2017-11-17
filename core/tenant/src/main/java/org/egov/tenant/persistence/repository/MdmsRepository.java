@@ -95,7 +95,7 @@ public class MdmsRepository {
 				|| response.getMdmsRes().get(moduleName) == null
 				|| !response.getMdmsRes().get(moduleName).containsKey(masterName)
 				|| response.getMdmsRes().get(moduleName).get(masterName) == null) {
-			return null;
+			return new JSONArray();
 		} else {
 
 			return response.getMdmsRes().get(moduleName).get(masterName);

@@ -4,7 +4,7 @@ var dat ={
     title:"legal.create.group.title.eventDetails",
     "useTimestamp": true,
     "objectName": "events",
-    "searchUrl": "/lcms-services/legalcase/event/_get?entity={id}",
+    "searchUrl": "/lcms-services/legalcase/event/_get?id={id}",
     "groups": [
        {
         "name": "eventDetails",

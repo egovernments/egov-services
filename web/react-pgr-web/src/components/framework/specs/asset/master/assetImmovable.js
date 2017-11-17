@@ -1852,7 +1852,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"convertToNumber": true
+						"convertToString": true
           }
 
 				]

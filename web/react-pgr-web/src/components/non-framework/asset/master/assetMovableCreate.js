@@ -21,6 +21,7 @@ import $ from "jquery";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
+import UiBackButton from '../../../framework/components/UiBackButton';
 
 var specifications={};
 var fields = [];
@@ -1323,13 +1324,14 @@ delete formData.Asset.assetAttributesCheck;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     let self = this;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
-      
+
     // })}
 
 
 
     return (
       <div className="Report">
+      {actionName == "update" && <UiBackButton/>}
         <form onSubmit={(e) => {
           create(e)
         }}>

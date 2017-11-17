@@ -162,6 +162,12 @@ class UiSelectField extends Component {
 const mapStateToProps = (state, props) => {
   let {item} = props;
   let value =  _.get(state.frameworkForm.form, item.jsonPath);
+  if(item.convertToString && value)
+    value = value.toString();
+  else if(item.convertToNumber && value) {
+    value = parseInt(value);
+  }
+  
   return {
      dropDownData: state.framework.dropDownData[item.jsonPath],
      value:value

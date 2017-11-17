@@ -194,9 +194,9 @@ public class PriceListService extends DomainService {
 				}
 			}
 			
-			if(priceListJdbcRepository.isDuplicateContract(priceLists)){
-				throw new CustomException("inv.0011", "A ratecontract already exists in the system for the given material in the specified time duration. Please select alternate duration for the contract.");
-			}
+//			if(priceListJdbcRepository.isDuplicateContract(priceLists)){
+//				throw new CustomException("inv.0011", "A ratecontract already exists in the system for the given material in the specified time duration. Please select alternate duration for the contract.");
+//			}
 			
 		} catch (IllegalArgumentException e) {
 

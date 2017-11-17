@@ -477,7 +477,7 @@ ReportDefinitions:
   - name: oragnization
     label: reports.lcms.organization
     type: singlevaluelist
-    pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid&pageSize=500|$..name|$..name
+    pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid&pageSize=500|$.agencies[*].name|$.agencies[*].name
     source: lcms
     isMandatory: false
     

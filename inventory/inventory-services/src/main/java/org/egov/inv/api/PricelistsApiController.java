@@ -47,7 +47,7 @@ public class PricelistsApiController implements PricelistsApi {
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
             @ApiParam(value = "Name of the vendor supplying priceLists required ") @RequestParam(value = "supplierName", required = false) List<String> supplierName,
             @ApiParam(value = "reference no of the priceList contract from the supplier ") @RequestParam(value = "rateContractNumber", required = false) String rateContractNumber,
-            @ApiParam(value = "Agreement no with the supplier of priceLists ") @RequestParam(value = "agreementNumber", required = false) List<String> agreementNumber,
+            @ApiParam(value = "Agreement no with the supplier of priceLists ") @RequestParam(value = "agreementNumber", required = false) String agreementNumber,
             @ApiParam(value = "contract date of the rate for item with the supplier.Date in epoc format. ") @RequestParam(value = "rateContractDate", required = false) Long rateContractDate,
             @ApiParam(value = "Date on which agreement done with supplier ") @RequestParam(value = "agreementDate", required = false) Long agreementDate,
             @ApiParam(value = "Date from which the agreement is valid with supplier ") @RequestParam(value = "agreementStartDate", required = false) Long agreementStartDate,
@@ -63,6 +63,7 @@ public class PricelistsApiController implements PricelistsApi {
                     .tenantId(tenantId)
                     .rateContractNumber(rateContractNumber)
                     .rateContractDate(rateContractDate)
+                    .agreementNumber(agreementNumber)
                     .agreementDate(agreementDate)
                     .agreementStartDate(agreementStartDate)
                     .agreementEndDate(agreementEndDate)

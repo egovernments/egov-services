@@ -1606,8 +1606,8 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/RevisionType'
           description: Revision Type for the Revision Estimate Activity
         parent:
-          $ref: '#/definitions/EstimateActivity'
-          description: Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity)
+          type: string
+          description: Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity). Ref. is pk here.
         detailedEstimate:
           type: string
           description: Reference of the Detailed Estimate for Estimate Activity
@@ -1960,6 +1960,3 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
-
-
-

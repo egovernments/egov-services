@@ -65,11 +65,16 @@ class UiAutoComplete extends Component {
 
 			let queryStringObject=splitArray[1].split("|")[0].split("&");
 			for (var i = 0; i < queryStringObject.length; i++) {
-				// console.log(queryStringObject[i], queryStringObject[i].split("=")[0], queryStringObject[i].split("=")[1]);
-				if (i && keyUpValue) {
-					id[queryStringObject[i].split("=")[0]] = keyUpValue ? keyUpValue : queryStringObject[i].split("=")[1];
+				console.log(queryStringObject[i], queryStringObject[i].split("=")[0], queryStringObject[i].split("=")[1]);
+				if (i) {
+					if(keyUpValue)
+					  id[queryStringObject[i].split("=")[0]] = keyUpValue ? keyUpValue : queryStringObject[i].split("=")[1];
+					else
+					  id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
 				}
 			}
+
+			console.log(id);
 
 			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
 

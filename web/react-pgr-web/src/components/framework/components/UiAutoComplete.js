@@ -49,7 +49,7 @@ class UiAutoComplete extends Component {
 		// console.log('API called:', item.hasOwnProperty("url"), item.url.search("\\|"), item.url.search("{"));
 		if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1)
 		{
-			console.log(item.url.split("?"));
+			//console.log(item.url.split("?"));
 			let splitArray=item.url.split("?");
 			let context="";
 			let id={};
@@ -65,7 +65,7 @@ class UiAutoComplete extends Component {
 
 			let queryStringObject=splitArray[1].split("|")[0].split("&");
 			for (var i = 0; i < queryStringObject.length; i++) {
-				console.log(queryStringObject[i], queryStringObject[i].split("=")[0], queryStringObject[i].split("=")[1]);
+				//console.log(queryStringObject[i], queryStringObject[i].split("=")[0], queryStringObject[i].split("=")[1]);
 				if (i) {
 					if(keyUpValue)
 					  id[queryStringObject[i].split("=")[0]] = keyUpValue ? keyUpValue : queryStringObject[i].split("=")[1];
@@ -74,7 +74,7 @@ class UiAutoComplete extends Component {
 				}
 			}
 
-			console.log(id);
+			//console.log(id);
 
 			var response=Api.commonApiPost(context, id, {}, "", useTimestamp || false).then(function(response) {
 

@@ -3,8 +3,7 @@ var dat = {
     numCols: 4,
     title:"advocates.search.document.title",
     useTimestamp: true,
-    objectName: "",
-    url: "/lcms-services/legalcase/advocate/_search",
+    objectName: "agencies",
     groups: [
        {
         name: "agencyDetails",

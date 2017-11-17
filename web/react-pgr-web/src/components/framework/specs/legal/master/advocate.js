@@ -1988,6 +1988,7 @@ var dat ={
             "arrayPath": "personDetails",
             "label": "legal.advocates.create.additionalOwnerWindow",
             "displayField": "firstName",
+            "modulepath":"legal.create",
             "pattern": "",
             "type": "window",
             "tableConfig": {
@@ -2018,6 +2019,7 @@ var dat ={
             "label": "legal.advocates.create.additionalAdvocateWindow",
             "pattern": "",
             "displayField": "firstName",
+            "modulepath":"legal.create",
             "type": "window",
             "tableConfig": {
               "header": [

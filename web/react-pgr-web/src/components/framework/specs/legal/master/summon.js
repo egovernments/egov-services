@@ -264,13 +264,7 @@ var dat = {
               {
                 jsonPath: "summons[0].caseType.code",
                 type: "dropDown",
-                pattern:
-                  "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
-                // "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=[?(@.side.code == {summons[0].side.name})]|$..code|$..name"
-                // "pattern":"http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?tenantId=default&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.side.code%3D%3D%22CVL%22%29%5D"
-
-                // "pattern": "/swm-services/vehicles/_search?&vehicleTypeCode={vehicleFuellingDetails[0].vehicleType.code}|$..regNumber|$..regNumber"
-                //"pattern": "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&side.code={summons[0].side.name}|$.code|$.name"
+                 "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.side.code%3D%3D'{summons[0].side.code}'%29%5D|$..code|$..name"
               }
             ]
           },

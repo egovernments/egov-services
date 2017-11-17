@@ -506,8 +506,8 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.indent.id
             - jsonPath: $.materialIssues.*.issuedToEmployee
             - jsonPath: $.materialIssues.*.issuedToDesignation
-            - jsonPath: $.materialIssues.*.supplier.code
             - jsonPath: $.materialIssues.*.issuePurpose
+            - jsonPath: $.materialIssues.*.supplier.code
             - jsonPath: $.materialIssues.*.stateId
               dbType: LONG
             - jsonPath: $.materialIssues.*.auditDetails.createdBy

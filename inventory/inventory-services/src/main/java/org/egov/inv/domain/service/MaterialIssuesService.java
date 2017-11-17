@@ -120,11 +120,10 @@ public class MaterialIssuesService extends DomainService {
 		JdbcRepository.getByIdQuery("materialissuedetails", searchFields);
 	}
 
-	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract, RequestInfo requestInfo) {
+	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract) {
 		Pagination<MaterialIssue> materialIssues = materialIssueJdbcRepository.search(searchContract);
 		MaterialIssueResponse materialIssueResponse = new MaterialIssueResponse();
 		materialIssueResponse.setMaterialIssues(materialIssues.getPagedData());
-		materialIssueResponse.setResponseInfo(getResponseInfo(requestInfo));
 		return materialIssueResponse;
 
 	}

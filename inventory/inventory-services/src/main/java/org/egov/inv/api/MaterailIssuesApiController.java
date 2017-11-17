@@ -41,7 +41,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 
 	public ResponseEntity<MaterialIssueResponse> materialissuesSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
+			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
 			@ApiParam(value = "issuing store of the MaterialIssue ") @RequestParam(value = "fromStore", required = false) String fromStore,
 			@ApiParam(value = "receiving store of the MaterialIssue ") @RequestParam(value = "toStore", required = false) String toStore,
@@ -56,7 +56,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageSize, sortBy,
 				pageNumber);
-		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract, requestInfo);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract);
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 

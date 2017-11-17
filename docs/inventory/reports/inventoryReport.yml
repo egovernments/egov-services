@@ -72,7 +72,7 @@ ReportDefinitions:
     source: store
     isMandatory: true
     wrapper: true
-    
+
   - name: materialTypeName
     label: inventory.material.materialtype
     type: string
@@ -123,7 +123,7 @@ ReportDefinitions:
     type: string
     source: supplier
 
-  - name: contactno
+  - name: contactNo
     label: inventory.common.contactNo
     type: string
     source: supplier
@@ -163,9 +163,15 @@ ReportDefinitions:
     type: string
     source: supplier
 
-  query:  select code as supplierCode, type as supplierType, name as supplierName, status,
-          address, contactno, email, cstno, bankcode as bankName, bankacctno,
-          bankifsc as ifsc, contactperson, contactpersonno
-          from supplier as supplier
-          where tenantid = $tenantid
+  query:  select supplier.code as supplierCode, supplier.type as supplierType, supplier.name as supplierName,
+          supplier.status as status, supplier.address as address , supplier.contactno as contactNo,
+          supplier.email as email, supplier.cstno as cstNo,
+          bank.name as bankName, supplier.bankacctno as bankAcctNo,
+          supplier.bankifsc as ifsc, supplier.contactperson as contactPerson,
+          supplier.contactpersonno as contactPersonNo
+          from supplier as supplier, egov_master.egf_bank bank
+          where
+          bank.code = supplier.bankcode
+          and bank.tenantid = supplier.tenantid
+          and supplier.tenantid = $tenantid
           order by supplier.name asc;

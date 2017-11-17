@@ -273,14 +273,6 @@ class UiWindowForm extends Component {
                         >
                           edit
                         </div>
-                        <div
-                          className="material-icons"
-                          onClick={() => {
-                            this.deleteRow(i);
-                          }}
-                        >
-                          delete
-                        </div>
                       </td>
                     </tr>
                   );

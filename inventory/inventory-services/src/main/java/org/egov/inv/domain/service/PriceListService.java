@@ -85,6 +85,14 @@ public class PriceListService extends DomainService {
                 		if(priceListDetail.getTenantId()==null){
                 			priceListDetail.setTenantId(tenantId);
                 		}
+
+                		//populating agreement start and end date of pricelist in pricelistdetails if fromdate and todate are not mentioned
+                		if(priceListDetail.getFromDate()==null){
+                			priceListDetail.setFromDate(priceListRequest.getPriceLists().get(i).getAgreementStartDate());
+                		}
+                		if(priceListDetail.getToDate()==null){
+                			priceListDetail.setToDate(priceListRequest.getPriceLists().get(i).getAgreementEndDate());
+                		}
                 	}
                 }
                 

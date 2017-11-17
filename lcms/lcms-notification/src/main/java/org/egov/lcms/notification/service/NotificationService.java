@@ -42,7 +42,7 @@ public class NotificationService {
 
 	@Autowired
 	CaseRepository caseRepository;
-	
+
 	@Autowired
 	AdvocateRepository advocateRepository;
 
@@ -413,11 +413,9 @@ public class NotificationService {
 			for (AdvocateCharge advocateCharge : advocatePayment.getAdvocateCharges()) {
 				uniqueSummonRefNos.add(advocateCharge.getCaseDetails().getSummonReferenceNo());
 			}
-			List<String> code = new ArrayList<>();
-			code.add(advocatePayment.getAdvocate().getCode());
-			
-			code.add(advocatePayment.getAdvocate().getCode());
-			String advocateName = advocateRepository.getAdvocateName(advocatePayment.getTenantId(), code, advocatePaymentRequest.getRequestInfo());
+
+			String advocateName = advocateRepository.getAdvocateName(advocatePayment.getTenantId(),
+					advocatePayment.getAdvocate().getCode(), advocatePaymentRequest.getRequestInfo());
 			String summonRefNumbers = caseRepository.getCaseNumbers(advocatePayment.getTenantId(), uniqueSummonRefNos,
 					advocatePaymentRequest.getRequestInfo());
 			advocatePaymentMessage.put("Advocate Name", advocateName);

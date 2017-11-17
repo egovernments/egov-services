@@ -27,6 +27,7 @@ public class CaseRepository {
 		
 		log.info("Get caseNo repository, summonRefNos"+ summonRefNos);
 		StringBuilder sb= new StringBuilder();
+		String caseNos = "";
 		String filter = "";
 		
 		for(String refNo: summonRefNos) {
@@ -35,22 +36,23 @@ public class CaseRepository {
 		
 		filter = sb.toString();
 		filter = filter.substring(0, filter.length()-1);		
-		String summonRefNumbers = "";
 		Set<String> uniqueCaseNos = new HashSet<String>();
-		String searchQuery = "SELECT caseNo FROM egov_lcms_case WHERE tenantid = ?, summonReferenceNo IN("+filter+")";
+		String searchQuery = "SELECT caseNo FROM egov_lcms_case WHERE summonreferenceno IN("+filter+") AND tenantid = ?";
+		
 		try {
 			List<Map<String, Object>> rows = jdbcTemplate.queryForList(searchQuery, new Object[] {tenantId});
 			for (Map<String, Object> row : rows) {
-				uniqueCaseNos.add(getString(row.get("caseNo")));
+				uniqueCaseNos.add(getString(row.get("caseno")));
 			}
-			for(String summonRefNumber : uniqueCaseNos) {
-				summonRefNumbers = summonRefNumbers.concat(summonRefNumber);
+			for(String caseNo : uniqueCaseNos) {
+				caseNos = caseNos+caseNo+",";
 			}
+			caseNos = caseNos.substring(0, caseNos.length()-1);	
 		} catch (Exception e) {
 			log.info("Error occured while fetching case numbers!");
 			e.printStackTrace();
 		}		
-		return summonRefNumbers;
+		return caseNos;
 	}
 	
 	private String getString(Object object) {

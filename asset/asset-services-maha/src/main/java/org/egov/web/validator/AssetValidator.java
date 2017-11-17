@@ -1,5 +1,6 @@
 package org.egov.web.validator;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,6 +20,7 @@ import org.egov.model.FundSource;
 import org.egov.model.Location;
 import org.egov.model.Revaluation;
 import org.egov.model.enums.AssetCategoryType;
+import org.egov.model.enums.TypeOfChange;
 import org.egov.service.AssetService;
 import org.egov.service.MasterDataService;
 import org.egov.tracer.model.CustomException;
@@ -164,9 +166,21 @@ public class AssetValidator implements Validator {
 		
 		if(revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_REVALUATION_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
-		if(!(asset.getCurrentValue().subtract(revaluation.getRevaluationAmount()).doubleValue()
-				-(revaluation.getValueAfterRevaluation().doubleValue())  == 0))
-			errorMap.put("EGASSET_REVALUATION_VALUATION_AMOUNT", "THE Valuation Amount Calculation Is Wrong");
+		
+		if (asset != null) {
+			BigDecimal positiveTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
+			BigDecimal negativeTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
+
+			if (revaluation.getTypeOfChange().equals(TypeOfChange.DECREASED))
+				if (!(asset.getCurrentValue().subtract(revaluation.getRevaluationAmount()).doubleValue()
+						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))
+					errorMap.put("EGASSET_REVALUATION_VALUATION_AMOUNT", "THE Valuation Amount Calculation Is Wrong");
+
+			if (revaluation.getTypeOfChange().equals(TypeOfChange.INCREASED))
+				if (!(asset.getCurrentValue().add(revaluation.getRevaluationAmount()).doubleValue()
+						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))
+					errorMap.put("EGASSET_REVALUATION_VALUATION_AMOUNT", "THE Valuation Amount Calculation Is Wrong");
+		}
 		
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);

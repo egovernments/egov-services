@@ -1334,7 +1334,7 @@ var dat = {
 						"label": "works.create.groups.fields.statuses",
 						"pattern": "",
 						"type": "multiValueList",
-						"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=WorksStatus&filter=%5B%3F%28%40.moduleType%3D%3D'AbstractEstimate'%29%5D|$..code|$..name",
+						"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=WorksStatus&filter=%5B%3F%28%40.moduletype%3D%3D'AbstractEstimate'%29%5D|$..code|$..description",
 						"isRequired": false,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -1342,10 +1342,11 @@ var dat = {
 					},
 					{
             "name": "abstractEstimateNumbers",
+						"onLoad":false,
             "jsonPath": "abstractEstimateNumbers",
             "label": "works.create.groups.fields.abstractEstimateNumbers",
             "type": "autoCompelete",
-            "url":"works-estimate/v1/abstractestimates/_search?&|$..abstractEstimateNumber|$..abstractEstimateNumber",
+            "url":"works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers=&|$..abstractEstimateNumber|$..abstractEstimateNumber",
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": ""

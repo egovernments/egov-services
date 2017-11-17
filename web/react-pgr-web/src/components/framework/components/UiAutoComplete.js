@@ -24,12 +24,32 @@ class UiAutoComplete extends Component {
    }
 
 
-  initData(props) {
-   		let {item, setDropDownData, useTimestamp}=props;
-			let self = this;
-		// console.log(this.props.item);
+  initData() {
+   		let {item, setDropDownData}=this.props;
+			if(item.onLoad == false){
+				setDropDownData(item.jsonPath, []);
+			}else{
+				this.callAPI('');
+			}
+
+   }
+
+  // componentWillReceiveProps(nextProps, nextState) {
+  //  		if(!_.isEqual(nextProps, this.props)) {
+  //  			this.initData(nextProps);
+  //  		}
+  //  	}
+
+	componentDidMount() {
+		this.initData();
+	}
+
+	callAPI = (keyUpValue) => {
+		let {item, setDropDownData, useTimestamp}=this.props;
+		// console.log('API called:', item.hasOwnProperty("url"), item.url.search("\\|"), item.url.search("{"));
 		if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1)
 		{
+			console.log(item.url.split("?"));
 			let splitArray=item.url.split("?");
 			let context="";
 			let id={};
@@ -45,8 +65,9 @@ class UiAutoComplete extends Component {
 
 			let queryStringObject=splitArray[1].split("|")[0].split("&");
 			for (var i = 0; i < queryStringObject.length; i++) {
-				if (i) {
-					id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+				// console.log(queryStringObject[i], queryStringObject[i].split("=")[0], queryStringObject[i].split("=")[1]);
+				if (i && keyUpValue) {
+					id[queryStringObject[i].split("=")[0]] = keyUpValue ? keyUpValue : queryStringObject[i].split("=")[1];
 				}
 			}
 
@@ -94,19 +115,7 @@ class UiAutoComplete extends Component {
 		else if (item.hasOwnProperty("defaultValue") && typeof(item.defaultValue)=="object") {
 			setDropDownData(item.jsonPath,item.defaultValue);
 		}
-   }
-
-  // componentWillReceiveProps(nextProps, nextState) {
-  //  		if(!_.isEqual(nextProps, this.props)) {
-  //  			this.initData(nextProps);
-  //  		}
-  //  	}
-
-	componentDidMount() {
-		this.initData(this.props);
 	}
-
-
 
 	 renderAutoComplete =(item) => {
 		let {dropDownData}=this.props;
@@ -145,6 +154,7 @@ class UiAutoComplete extends Component {
              disabled={item.isDisabled}
              errorText={this.props.fieldErrors[item.jsonPath]}
              onKeyUp={(e) => {
+							 item.onLoad == false ? this.callAPI(e.target.value) : '';
              	//this.props.handler({target: {value: (item.allowWrite ? e.target.value : "")}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
              }}
              onNewRequest={(value,index) =>{

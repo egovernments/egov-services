@@ -15,7 +15,7 @@ import jp from "jsonpath";
 import template from '../../../framework/specs/works/master/abstractEstimate';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import UploadDocs from '../utility/uploadDocs';
-// import WorkFlow from '../workflow/WorkFlow';
+import WorkFlow from '../workflow/WorkFlow';
 import styles from '../../../../styles/material-ui';
 
 var specifications={};
@@ -1072,7 +1072,7 @@ class AbstractEstimate extends Component {
                                     workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id || this.props.match.params.master) : ""}
                                     />}
           <Card style={styles.marginStyle}>
-            <CardHeader title={< div > {translate('works.create.groups.label.sanctionDetails')}< /div>}/>
+            <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('works.create.groups.label.sanctionDetails')}</div>}/>
             <CardText>
               <Row>
                 <Col xs={12} sm={12} md={12} lg={12}>
@@ -1114,8 +1114,14 @@ class AbstractEstimate extends Component {
               </Row>
             </CardText>
           </Card>
-          <UploadDocs maxFile="5" handler={handleChange}/>
-          {/*<WorkFlow formData={formData} handler={handleChange}/>*/}
+          <UploadDocs maxFile="5"
+            path="abstractEstimates[0].documents"
+            handler={handleChange}
+          />
+          <WorkFlow formData={formData}
+            handler={handleChange}
+            path="abstractEstimates[0].workFlowDetails"
+          />
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Save", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google" handler={this.save}/>&nbsp;&nbsp;

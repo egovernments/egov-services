@@ -2662,6 +2662,7 @@ var localization_EN_Data = {
 "works.create.groups.fields.createdby":"Created By",
 "works.create.groups.fields.owner":"Owner",
 "works.create.groups.fields.totalamount":"Total Amount",
+"works.create.groups.label.workflowDetails":"Approval Details",
 
 //Performance Assessment
 "perfManagement.create.KPIs.groups.kpiMaster":"Key Performance Indicator Master",

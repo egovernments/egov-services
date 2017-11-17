@@ -27,8 +27,8 @@ export default class UploadDocs extends Component {
     return _.times(this.props.maxFile, idx=>{
       return (<Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
           <div className="input-group">
-            <input type="file" id={`file${idx}`} ref={`file${idx}`} className="form-control" onChange= {(e) => {this.props.handler({target:{value: e.target.files[0]}},"abstractEstimates[0].documents["+idx+"]",false)}}/>
-            <span className="input-group-addon" style={{cursor:'pointer'}} onClick={() => {document.getElementById(`file${idx}`).value = null; this.props.handler({target:{value: ''}},"abstractEstimates[0].documents["+idx+"]",false)}}><i className="glyphicon glyphicon-trash specific"></i></span>
+            <input type="file" id={`file${idx}`} ref={`file${idx}`} className="form-control" onChange= {(e) => {this.props.handler({target:{value: e.target.files[0]}},`${this.props.path}[${idx}]`,false)}}/>
+            <span className="input-group-addon" style={{cursor:'pointer'}} onClick={() => {document.getElementById(`file${idx}`).value = null; this.props.handler({target:{value: ''}},`${this.props.path}[${idx}]`,false)}}><i className="glyphicon glyphicon-trash specific"></i></span>
           </div>
           <br/>
         </Col>)
@@ -38,7 +38,7 @@ export default class UploadDocs extends Component {
     let {docs, addFile} = this;
     return (
       <Card style={styles.marginStyle}>
-        <CardHeader title={< div > {translate('works.create.groups.label.uploadDocs')}< /div>}/>
+        <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate('works.create.groups.label.uploadDocs')}</div>}/>
         <CardText>
           <Row>
             {docs()}

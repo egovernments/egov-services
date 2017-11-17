@@ -2,6 +2,7 @@ package org.egov.pgr.notification.domain.service.smsstrategy;
 
 import org.egov.pgr.notification.domain.model.NotificationContext;
 import org.egov.pgr.notification.domain.model.SMSMessageContext;
+import org.springframework.beans.factory.annotation.Value;
 import org.trimou.util.ImmutableMap;
 
 import java.util.Map;
@@ -16,9 +17,12 @@ public class ComplaintEscalatedFromEmployeeSMSMessageStrategy implements SMSMess
     private static final String POSITION = "position";
     private static final String TEMPLATE_NAME = "sms_complaint_escalated_from_employee";
 
+    @Value("${sms.escalation.enabled}")
+    private Boolean smsEnabled;
+
     @Override
     public boolean matches(NotificationContext context) {
-        return context.getServiceType().isComplaintType()
+        return smsEnabled && context.getServiceType().isComplaintType()
             && context.getSevaRequest().isEscalated()
             && isNotEmpty(context.getPreviousEmployee().getMobileNumber());
     }

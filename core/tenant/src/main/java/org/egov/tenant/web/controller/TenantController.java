@@ -5,7 +5,6 @@ import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.tenant.domain.model.TenantSearchCriteria;
 import org.egov.tenant.domain.service.TenantService;
 import org.egov.tenant.web.contract.City;
 import org.egov.tenant.web.contract.CreateTenantRequest;
@@ -41,10 +40,8 @@ public class TenantController {
 	@PostMapping(value = "_search")
 	public SearchTenantResponse search(@RequestParam(value = "code", required = false) List<String> code,
 			@RequestBody SearchTenantRequest searchTenantRequest) {
-		TenantSearchCriteria tenantSearchCriteria = new TenantSearchCriteria(code);
-		List<Tenant> tenants = tenantService.find(tenantSearchCriteria).stream()
-				.map(tenant -> new Tenant(tenant, new City(tenant.getCity()))).collect(Collectors.toList());
-
+		List<org.egov.tenant.domain.model.Tenant> tenantModel = tenantService.getTenants(code,searchTenantRequest.getRequestInfo());
+		List<Tenant> tenants = tenantModel.stream().map(tenant -> new Tenant(tenant, new City(tenant.getCity()))).collect(Collectors.toList());
 		return new SearchTenantResponse(getResponseInfo(searchTenantRequest.getRequestInfo()), tenants);
 	}
 

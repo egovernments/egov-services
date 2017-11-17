@@ -120,10 +120,10 @@ public class PriceListService extends DomainService {
 								priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
 								if(priceList.getTenantId()==null){
 									priceList.setTenantId(tenantId);
-									for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
-										if(priceListDetail.getTenantId()==null){
-											priceListDetail.setTenantId(tenantId);
-										}
+								}
+								for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
+									if(priceListDetail.getTenantId()==null){
+										priceListDetail.setTenantId(tenantId);
 									}
 								}
 							});

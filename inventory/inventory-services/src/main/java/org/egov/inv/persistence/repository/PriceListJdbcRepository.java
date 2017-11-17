@@ -147,7 +147,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         		params.append(" and ");
         	}
         	params.append("agreementNumber =:agreementNumber");
-        	paramValues.put("agreementNumber", priceListSearchRequest.getAgreementNumber().toUpperCase());
+        	paramValues.put("agreementNumber", priceListSearchRequest.getAgreementNumber());
         }
         
 		if (priceListSearchRequest.getAgreementNumbers() != null) {

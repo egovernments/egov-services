@@ -581,7 +581,7 @@ var dat = {
             "jsonPath": "priceLists[0].priceListDetails[0].material.code",
             "displayJsonPath": "priceLists[0].priceListDetails[0].material.name",
             "isRequired": true,
-            "isDisabled": true,
+            "isDisabled": false,
             "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
             "depedants": [
               {
@@ -597,7 +597,7 @@ var dat = {
             "pattern": "",
             "type": "singleValueList",
             "isRequired": true,
-            "isDisabled": true,
+            "isDisabled": false,
             "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
           },
           {
@@ -606,7 +606,7 @@ var dat = {
             "pattern": "",
             "type": "number",
             "isRequired": true,
-            "isDisabled": true,
+            "isDisabled": false,
             "defaultValue": "",
             "maxLength": 100,
             "patternErrorMsg": "inventory.create.field.message.code"
@@ -637,7 +637,7 @@ var dat = {
             "pattern": "",
             "type": "number",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
           },
@@ -648,7 +648,7 @@ var dat = {
             "pattern": "",
             "type": "checkbox",
             "isRequired": true,
-            "isDisabled": true,
+            "isDisabled": false,
             "defaultValue": true,
             "patternErrorMsg": ""
           }

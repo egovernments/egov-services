@@ -68,6 +68,14 @@ public class PriceListService extends DomainService {
                 	priceListDetail.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
                 	priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
 					priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
+					
+					if(priceListDetail.getFromDate()==null){
+						priceListDetail.setFromDate(priceList.getAgreementStartDate());
+					}
+					if(priceListDetail.getToDate()==null){
+						priceListDetail.setToDate(priceList.getAgreementEndDate());
+					}
+					
                 });
             });
             
@@ -84,14 +92,6 @@ public class PriceListService extends DomainService {
                 	for(PriceListDetails priceListDetail:priceListRequest.getPriceLists().get(i).getPriceListDetails()){
                 		if(priceListDetail.getTenantId()==null){
                 			priceListDetail.setTenantId(tenantId);
-                		}
-
-                		//populating agreement start and end date of pricelist in pricelistdetails if fromdate and todate are not mentioned
-                		if(priceListDetail.getFromDate()==null){
-                			priceListDetail.setFromDate(priceListRequest.getPriceLists().get(i).getAgreementStartDate());
-                		}
-                		if(priceListDetail.getToDate()==null){
-                			priceListDetail.setToDate(priceListRequest.getPriceLists().get(i).getAgreementEndDate());
                 		}
                 	}
                 }

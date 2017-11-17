@@ -14,6 +14,7 @@ import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.model.SupplierGetRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -72,6 +73,9 @@ public class PriceListJdbcRepository extends JdbcRepository {
 
     @Autowired
     PriceListDetailJdbcRepository priceListDetailJdbcRepository;
+    
+    @Autowired
+    SupplierJdbcRepository supplierJdbcRepository;
 
     public PriceListJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -236,14 +240,19 @@ public class PriceListJdbcRepository extends JdbcRepository {
         
         PriceList pl;
         PriceListDetailsSearchRequest pdlsr;
+        SupplierGetRequest sgr;
         
         for(PriceListEntity priceListEntity : priceListEntities){
         	pl = priceListEntity.toDomain();
         	String id = priceListEntity.getId();
+        	String supCode = priceListEntity.getSupplier();
         	pdlsr = new PriceListDetailsSearchRequest();
+        	sgr = new SupplierGetRequest();
         	pdlsr.setPriceList(id);
+        	sgr.setCode(Arrays.asList(supCode));
         	pdlsr.setTenantId(priceListEntity.getTenantId());
         	pl.setPriceListDetails(priceListDetailJdbcRepository.search(pdlsr).getPagedData());
+        	pl.setSupplier(supplierJdbcRepository.search(sgr).getPagedData().get(0));
         	priceListList.add(pl);
         }
 

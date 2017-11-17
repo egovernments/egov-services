@@ -127,7 +127,7 @@ var dat = {
         }
       ],
       "values": [
-        "supplier.code",
+        "supplier.name",
         "rateType",
         "rateContractNumber",
         "rateContractDate",

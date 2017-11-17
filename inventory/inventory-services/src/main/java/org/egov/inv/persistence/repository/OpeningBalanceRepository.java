@@ -2,11 +2,15 @@ package org.egov.inv.persistence.repository;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.egov.common.JdbcRepository;
+import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.model.OpeningBalanceSearchCriteria;
+import org.egov.inv.persistence.entity.MaterialEntity;
+import org.egov.inv.persistence.entity.OpeningBalanceEntity;
 import org.egov.inv.persistence.queryBuilder.OpeningbalanceQueryBuilder;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -26,10 +30,12 @@ public class OpeningBalanceRepository extends JdbcRepository{
 	
 public OpeningBalanceResponse search(OpeningBalanceSearchCriteria openBalSearchCriteria) {
 		
-		List<MaterialReceipt> materialList = getOpenbalList(
+		List<OpeningBalanceEntity> openingBalanceList = getOpenbalList(
 				openingbalanceQueryBuilder.getQuery(openBalSearchCriteria),
-				getDetailNamedQuery(openBalSearchCriteria), new BeanPropertyRowMapper<>(MaterialReceipt.class));
-		System.out.println(openingbalanceQueryBuilder.getQuery(openBalSearchCriteria));
+				getDetailNamedQuery(openBalSearchCriteria), new BeanPropertyRowMapper<>(OpeningBalanceEntity.class));
+        List<MaterialReceipt> materialList = openingBalanceList.stream().map(OpeningBalanceEntity::toDomain)
+                .collect(Collectors.toList());		
+        System.out.println(openingbalanceQueryBuilder.getQuery(openBalSearchCriteria));
 
 		return OpeningBalanceResponse.builder()
 		.materialReceipt(materialList)
@@ -37,8 +43,8 @@ public OpeningBalanceResponse search(OpeningBalanceSearchCriteria openBalSearchC
 		
     }
 
-private List<MaterialReceipt> getOpenbalList(String sql, HashMap<String, Object> searchNamedQuery,
-		BeanPropertyRowMapper<MaterialReceipt> rowMapper) {
+private List<OpeningBalanceEntity> getOpenbalList(String sql, HashMap<String, Object> searchNamedQuery,
+		BeanPropertyRowMapper<OpeningBalanceEntity> rowMapper) {
 	return namedParameterJdbcTemplate.query(sql, searchNamedQuery, rowMapper);
 }
 

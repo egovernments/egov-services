@@ -1,8 +1,13 @@
 package org.egov.inv.persistence.queryBuilder;
 
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
+import org.egov.inv.model.Material;
 import org.egov.inv.model.OpeningBalanceSearchCriteria;
+import org.egov.inv.persistence.entity.MaterialEntity;
+import org.egov.inv.persistence.entity.OpeningBalanceEntity;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -17,7 +22,6 @@ public class OpeningbalanceQueryBuilder {
 													+"matrcptdtl.receivedqty as receivedQty,"
 													+"matrcpt.mrnNumber as mrnNumber,"
 													+"matrcptdtl.receivedqty as qty,"
-													+"matrcptdtl.uomno as uom,"
 													+"matrcptdtl.unitrate as unitRate,"
 													+"(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,"
 													+"matrcptdtl.remarks as remarks FROM "
@@ -31,6 +35,7 @@ public String getQuery(OpeningBalanceSearchCriteria searchCriteria) {
 		System.out.println(selectQuery);
 		buildSearchQuery(selectQuery, searchCriteria);
 		addPagingClause(selectQuery, searchCriteria);
+
 		return selectQuery.toString();
 	}
 

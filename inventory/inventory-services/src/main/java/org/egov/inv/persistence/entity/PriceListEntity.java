@@ -47,7 +47,7 @@ public class PriceListEntity {
     
     private Long agreementEndDate;
     
-    private boolean active;
+    private Boolean active;
     
     private String fileStoreId;
     
@@ -72,7 +72,7 @@ public class PriceListEntity {
                 .agreementDate(agreementDate)
                 .agreementStartDate(agreementStartDate)
                 .agreementEndDate(agreementEndDate)
-                .active(active)
+                .active( null != active ? active :null )
                 .fileStoreId(fileStoreId)
                 .priceListDetails(getPriceListDetails(priceListDetails))
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))

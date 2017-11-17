@@ -38,7 +38,7 @@ public class PriceListDetailsEntity {
     
     private Long toDate;
     
-    private boolean active;
+    private Boolean active;
     
     private String tenantId;
 
@@ -57,7 +57,7 @@ public class PriceListDetailsEntity {
                 .ratePerUnit(ratePerUnit)
                 .fromDate(fromDate)
                 .toDate(toDate)
-                .active(active)
+                .active(null != active ? active : null )
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
                 .build();
     }

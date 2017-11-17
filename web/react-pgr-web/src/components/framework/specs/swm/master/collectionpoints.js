@@ -7,12 +7,12 @@ var collectionPointDetails ={
     "name": "details",
     "multiple":true,
     "jsonPath": "collectionPoints[0].collectionPointDetails[0]",
-    "label":"swm.collectionpoints.create.group.title.CollectionPoints",
+    "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
     "fields": [
       {  
         "name":"name",
         "jsonPath":"collectionPoints[0].collectionPointDetails[0].collectionType.code",
-        "label":"swm.collectionpoints.create.name",
+        "label":"swm.collectionpoints.create.group.title.CollectionType",
         "type":"singleValueList",
         "isRequired":true,
         "isDisabled":false,
@@ -123,60 +123,21 @@ var dat ={
   "swm.search":{  
      "numCols":4,
      "useTimestamp":true,
-     "objectName":"",
+     "objectName":"collectionPoints",
      "url":"/swm-services/collectionpoints/_search",
      "groups":[  
         {  
            "name":"search",
-           "label":"swm.search.title",
+           "label":"swm.collectionpoints.search.title",
            "fields":[  
-              {  
-                 "label":"swm.create.undefined",
-                 "type":"",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.undefined"
-              },
-              {  
-                 "name":"codes",
-                 "jsonPath":"codes",
-                 "label":"swm.create.codes",
-                 "type":"",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.codes"
-              },
               {  
                  "name":"name",
                  "jsonPath":"name",
-                 "label":"swm.create.name",
-                 "type":"singleValueList",
+                 "label":"swm.collectionpoints.name",
+                 "type":"text",
                  "isDisabled":false,
                  "maxLength":256,
                  "patternErrorMsg":"swm.create.field.message.name"
-              },
-              {  
-                 "name":"locationCode",
-                 "jsonPath":"locationCode",
-                 "label":"swm.create.locationCode",
-                 "type":"singleValueList",
-                 "isDisabled":false,
-                 "maxLength":256,
-                 "patternErrorMsg":"swm.create.field.message.locationCode"
-              },
-              {  
-                 "name":"offSet",
-                 "jsonPath":"offSet",
-                 "label":"swm.create.offSet",
-                 "type":"number",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.offSet"
-              },
-              {  
-                 "name":"sortBy",
-                 "jsonPath":"sortBy",
-                 "label":"swm.create.sortBy",
-                 "type":"text",
-                 "isDisabled":false,
-                 "patternErrorMsg":"swm.create.field.message.sortBy"
               }
            ]
         }
@@ -184,19 +145,19 @@ var dat ={
      "result":{  
         "header":[  
            {  
-              "label":"swm.search.result.code"
+              "label":"swm.collectionpoints.create.name"
            },
            {  
-              "label":"swm.search.result.name"
+              "label":"swm.collectionpoints.create.colony"
            }
         ],
         "values":[  
-           "code",
-           "name"
+           "name",
+           "location.name"
         ],
-        "resultPath":"collectionpoints",
-        "rowClickUrlUpdate":"/update/collectionpoints/{code}",
-        "rowClickUrlView":"/view/collectionpoints/{code}"
+        "resultPath":"collectionPoints",
+        "rowClickUrlUpdate":"/update/swm/collectionpoints/{code}",
+        "rowClickUrlView":"/view/swm/collectionpoints/{code}"
      }
   },
   "swm.create":{  
@@ -256,7 +217,7 @@ var dat ={
                 "depedants": [{
                   "jsonPath": "collectionPoints[0].location.code",
                   "type": "dropDown",
-                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.block}|$.Boundary.*.id|$.Boundary.*.name"
+                  "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.block}|$.Boundary.*.code|$.Boundary.*.name"
                 }]
             },
             {  
@@ -274,7 +235,7 @@ var dat ={
         },
         {  
           "name":"CollectionPointDetails",
-          "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
+          "label":"",
           "children":[collectionPointDetails,binDetails],
           "fields":[  
             {  
@@ -305,7 +266,7 @@ var dat ={
         "fields":[  
           {  
               "name":"Colony",
-              "jsonPath":"collectionPoints[0].location.code",
+              "jsonPath":"collectionPoints[0].location.name",
               "label":"swm.collectionpoints.create.colony",
               "type":"singleValueList",
               "isRequired":true,
@@ -318,7 +279,7 @@ var dat ={
       },
       {  
         "name":"CollectionPointDetails",
-        "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
+        "label":"",
         "children":[collectionPointDetails,binDetails],
         "fields":[  
           {  
@@ -342,6 +303,7 @@ var dat ={
      "numCols":3,
      "useTimestamp":true,
      "objectName":"collectionPoints",
+     "idJsonPath": "collectionPoints[0].code",
      "groups":[  
       {  
         "name":"LocationDetails",
@@ -411,7 +373,7 @@ var dat ={
       },
       {  
         "name":"CollectionPointDetails",
-        "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
+        "label":"",
         "children":[collectionPointDetails,binDetails],
         "fields":[  
           {  

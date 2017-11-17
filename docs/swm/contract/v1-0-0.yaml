@@ -912,13 +912,11 @@ paths:
             description: comma seperated list of codes
           - name: name
             type: string
-            format: singleValueList
             in: query
             description: name of the CollectionPoint
             maxLength: 256
           - name: locationCode
             type: string
-            format: singleValueList
             in: query
             description: location code of the CollectionPoint
             maxLength: 256  
@@ -2393,7 +2391,6 @@ definitions:
       - contractPeriodFrom
       - contractPeriodTo
       - securityDeposit
-      - servicesOffered
       - paymentTerms
       - paymentAmount
       
@@ -3458,6 +3455,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

@@ -33,7 +33,7 @@ public interface MaterailIssuesApi {
 			@ApiResponse(code = 200, message = "IndentIssue created Successfully", response = MaterialIssueResponse.class),
 			@ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
 
-	@RequestMapping(value = "/materialIssues/_create", produces = {
+	@RequestMapping(value = "/materialissues/_create", produces = {
 			"application/json" }, consumes = {
 					"application/json" }, method = RequestMethod.POST)
 	ResponseEntity<MaterialIssueResponse> materailIssuesCreatePost(
@@ -46,7 +46,7 @@ public interface MaterailIssuesApi {
 			@ApiResponse(code = 200, message = "IndentIssue retrieved Successfully", response = MaterialIssueResponse.class),
 			@ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
 
-	 @RequestMapping(value = "/materialIssues/_search",
+	 @RequestMapping(value = "/materialissues/_search",
      produces = { "application/json" }, 
      consumes = { "application/json" },
      method = RequestMethod.POST)
@@ -59,7 +59,7 @@ public interface MaterailIssuesApi {
 			@ApiResponse(code = 200, message = "IndentIssue updated Successfully", response = MaterialIssueResponse.class),
 			@ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
 
-	@RequestMapping(value = "/materialIssues/_update", produces = {
+	@RequestMapping(value = "/materialissues/_update", produces = {
 			"application/json" }, consumes = {
 					"application/json" }, method = RequestMethod.POST)
 	ResponseEntity<MaterialIssueResponse> materailIssuesUpdatePost(

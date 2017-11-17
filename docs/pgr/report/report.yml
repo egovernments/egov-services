@@ -1892,7 +1892,7 @@ ReportDefinitions:
     source: egpgr_complainttype
     linkedReport:
       reportName: DrillDownComplaintSummaryRegister
-      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}
+      linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}&categoryname={categoryname}
   - name: categoryname
     label: reports.pgr.complaint.category
     type: string
@@ -2000,8 +2000,13 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
+  - name: categoryname
+    label: reports.pgr.category.name
+    type: string
+    source: seva
+    isMandatory: true
   query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
-    and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and  tenantid = $tenantid) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid and boundarytype = (select id from eg_boundary_type where name = 'Ward' and hierarchytype = (select id from eg_hierarchy_type where name = 'ADMINISTRATION' and tenantid = $tenantid) and tenantid = $tenantid));
+    and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and  tenantid = $tenantid and category = (select id from egpgr_complainttype_category where name = $categoryname and tenantid = $tenantid)) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid and boundarytype = (select id from eg_boundary_type where name = 'Ward' and hierarchytype = (select id from eg_hierarchy_type where name = 'ADMINISTRATION' and tenantid = $tenantid) and tenantid = $tenantid));
     
 - reportName: DrillDownComplaintSummaryRegisterStatus
   summary: Report To List Complaints for Grievance Type and ward - based on a date period

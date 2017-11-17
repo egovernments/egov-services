@@ -46,7 +46,7 @@ import org.egov.tenant.web.contract.MdmsCriteria;
 import org.egov.tenant.web.contract.MdmsRequest;
 import org.egov.tenant.web.contract.MdmsResponse;
 import org.egov.tenant.web.contract.ModuleDetails;
-import org.egov.tenant.web.contract.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -72,6 +72,14 @@ public class MdmsRepository {
 
 	public JSONArray getByCriteria(String tenantId,String moduleName, String masterName, String filterFieldName,
 			List<String> filterFieldValue, RequestInfo requestInfo) {
+		
+		org.egov.tenant.web.contract.RequestInfo requestinfo = org.egov.tenant.web.contract.RequestInfo.builder().action(requestInfo.getAction())
+				.apiId(requestInfo.getApiId()).did(requestInfo.getDid()).key(requestInfo.getKey()).msgId(requestInfo.getMsgId()).ver(requestInfo.getVer())
+				.userInfo(requestInfo.getUserInfo()).build();
+
+		if(requestInfo.getTs()!=null){
+			requestinfo.setTs(requestInfo.getTs().getTime());
+		}
 
 		MasterDetails[] masterDetails;
 		ModuleDetails[] moduleDetails;
@@ -89,7 +97,7 @@ public class MdmsRepository {
 
 		request = MdmsRequest.builder()
 				.mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
-				.requestInfo(requestInfo).build();
+				.requestInfo(requestinfo).build();
 		response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
 		if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
 				|| response.getMdmsRes().get(moduleName) == null

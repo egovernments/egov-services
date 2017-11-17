@@ -1,5 +1,7 @@
 package org.egov.tenant.web.contract;
 
+import org.egov.common.contract.request.User;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +18,6 @@ public class RequestInfo {
   private String did;
   private String key;
   private String msgId;
+  private User userInfo;
 
 }

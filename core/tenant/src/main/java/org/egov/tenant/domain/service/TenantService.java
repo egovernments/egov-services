@@ -8,11 +8,10 @@ import org.egov.tenant.domain.exception.TenantInvalidCodeException;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.persistence.repository.MdmsRepository;
 import org.egov.tenant.persistence.repository.TenantRepository;
-import org.egov.tenant.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
+import org.egov.common.contract.request.RequestInfo;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 

@@ -1893,6 +1893,11 @@ ReportDefinitions:
     linkedReport:
       reportName: DrillDownComplaintSummaryRegister
       linkedColumn: _parent?reportName={reportName}&complaintcode={complainttype}&wardname={name}
+  - name: categoryname
+    label: reports.pgr.complaint.category
+    type: string
+    source: submission
+    showColumn: false
   - name: totalcount
     label: reports.pgr.totalcount
     type: number
@@ -1931,7 +1936,7 @@ ReportDefinitions:
     isMandatory: false
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=$tenantid|$..id|$..name
     searchClause: and sa.code::bigint in ($electionward)
-  query: SELECT boundary.name, (select name from egpgr_complainttype where code = ctype.code and tenantid = $tenantid) as complainttype, count(*) as totalcount, count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text,'REJECTED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text ='PROCESSING'::text THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'REOPENED'::character varying::text, 'REGISTERED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS pending,count(CASE WHEN cs.status::text ='ONHOLD'::text THEN 1 ELSE NULL::integer END) AS onhold FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
+  query: SELECT boundary.name, (select name from egpgr_complainttype where code = ctype.code and tenantid = $tenantid) as complainttype, (select name from egpgr_complainttype_category where id = ctype.category and tenantid = $tenantid) as categoryname, count(*) as totalcount, count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text,'REJECTED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text ='PROCESSING'::text THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'REOPENED'::character varying::text, 'REGISTERED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS pending,count(CASE WHEN cs.status::text ='ONHOLD'::text THEN 1 ELSE NULL::integer END) AS onhold FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword = 'complaint' and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
   groupBy: GROUP BY boundary.name, ctype.code ORDER By boundary.name;
   
 - reportName: DrillDownComplaintSummaryRegister

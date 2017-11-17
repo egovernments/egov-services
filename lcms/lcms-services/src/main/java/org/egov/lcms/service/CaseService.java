@@ -55,9 +55,11 @@ import org.springframework.stereotype.Service;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
 
 @Service
+@Slf4j
 public class CaseService {
 
 	@Autowired
@@ -536,7 +538,7 @@ public class CaseService {
 	}
 
 	private void createEvents(Case casee, HearingDetails hearingDetails, RequestInfo requestInfo) throws Exception {
-		
+
 		Event event = new Event();
 		event.setTenantId(casee.getTenantId());
 		event.setCaseNo(casee.getSummon().getCaseNo());
@@ -661,9 +663,14 @@ public class CaseService {
 	}
 
 	public EventResponse getEvent(EventSearchCriteria eventSearchCriteria, RequestInfo requestInfo) {
+		
+		if (requestInfo.getUserInfo() != null & requestInfo.getUserInfo().getName() != null) {
+			log.info("department concern person is : " + requestInfo.getUserInfo().getName() );
+			eventSearchCriteria.setDepartmentConcernPerson(requestInfo.getUserInfo().getName());
+		}
 		List<Event> events = caseSearchRepository.getEvent(eventSearchCriteria);
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED);
-		
+
 		return new EventResponse(responseInfo, events);
 	}
 }

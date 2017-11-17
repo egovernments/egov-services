@@ -3,12 +3,12 @@ package org.egov.tenant.domain.service;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tenant.domain.exception.DuplicateTenantCodeException;
 import org.egov.tenant.domain.exception.TenantInvalidCodeException;
 import org.egov.tenant.domain.model.Tenant;
 import org.egov.tenant.persistence.repository.MdmsRepository;
 import org.egov.tenant.persistence.repository.TenantRepository;
+import org.egov.tenant.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

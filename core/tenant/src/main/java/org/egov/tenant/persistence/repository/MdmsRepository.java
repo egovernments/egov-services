@@ -41,12 +41,12 @@ package org.egov.tenant.persistence.repository;
 
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tenant.web.contract.MasterDetails;
 import org.egov.tenant.web.contract.MdmsCriteria;
 import org.egov.tenant.web.contract.MdmsRequest;
 import org.egov.tenant.web.contract.MdmsResponse;
 import org.egov.tenant.web.contract.ModuleDetails;
+import org.egov.tenant.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

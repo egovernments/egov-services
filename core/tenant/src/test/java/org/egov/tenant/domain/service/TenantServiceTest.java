@@ -7,22 +7,18 @@ import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.tenant.domain.exception.DuplicateTenantCodeException;
 import org.egov.tenant.domain.exception.InvalidTenantDetailsException;
 import org.egov.tenant.domain.model.Tenant;
-import org.egov.tenant.persistence.repository.MdmsRepository;
 import org.egov.tenant.persistence.repository.TenantRepository;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-
-import net.minidev.json.JSONArray;
+import org.springframework.beans.factory.annotation.Value;
 
 @RunWith(MockitoJUnitRunner.class)
 public class TenantServiceTest {
@@ -31,17 +27,39 @@ public class TenantServiceTest {
     private TenantRepository tenantRepository;
 
     @Mock
-    private MdmsRepository mdmsRepository;
-    
-    @Mock
     private List<Tenant> tenants;
 
     private TenantService tenantService;
+    
+	@Value("${egov.services.tenantId}")
+	private String tenantId;
+	
+	@Value("${egov.services.moduleName}")
+	private String moduleName;
+	
+	@Value("${egov.services.masterDetailsName}")
+	private String masterDetailsName;
+	
+	@Value("${egov.services.filterFieldName}")
+	private String filterFieldName;
+
 
     @Before
     public void setUp() throws Exception {
         tenantService = new TenantService(tenantRepository);
     }
+    
+/*    @Test
+    public void test_should_fetch_tenant() {
+
+    	List<String> codeList = new ArrayList<String>();
+    	codeList.add("default123");
+    	RequestInfo requestInfo = RequestInfo.builder().apiId("emp").action("search").build();
+    	when(mdmsRepository.getByCriteria("default", "tenant", "tenants", "code", codeList, requestInfo)).thenReturn(new JSONArray());
+        List<Tenant> result = tenantService.getTenants(codeList, requestInfo);
+       assertThat(result.size()==0);
+        
+    }*/
 
     @Test
     public void test_should_save_tenant() {

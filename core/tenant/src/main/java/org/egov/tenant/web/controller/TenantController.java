@@ -41,7 +41,17 @@ public class TenantController {
 	@PostMapping(value = "_search")
 	public SearchTenantResponse search(@RequestParam(value = "code", required = false) List<String> code,
 			@RequestBody SearchTenantRequest searchTenantRequest) {
-		List<org.egov.tenant.domain.model.Tenant> tenantModel = tenantService.getTenants(code,searchTenantRequest.getRequestInfo());
+		
+		RequestInfo requestInfo = searchTenantRequest.getRequestInfo();
+		
+		org.egov.tenant.web.contract.RequestInfo request = org.egov.tenant.web.contract.RequestInfo.builder().action(requestInfo.getAction())
+				.apiId(requestInfo.getApiId()).did(requestInfo.getDid()).key(requestInfo.getKey()).msgId(requestInfo.getMsgId()).ver(requestInfo.getVer()).build();
+
+		if(request.getTs()!=null){
+			request.setTs(requestInfo.getTs().getTime());
+		}
+		
+		List<org.egov.tenant.domain.model.Tenant> tenantModel = tenantService.getTenants(code,request);
 		List<Tenant> tenants = new ArrayList<Tenant>();
 		if(tenantModel.size()>0){
 			tenants = tenantModel.stream().map(tenant -> new Tenant(tenant, new City(tenant.getCity()))).collect(Collectors.toList());

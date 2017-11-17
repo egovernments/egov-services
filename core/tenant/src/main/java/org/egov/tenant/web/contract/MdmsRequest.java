@@ -1,6 +1,6 @@
 package org.egov.tenant.web.contract;
 
-import org.egov.common.contract.request.RequestInfo;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 

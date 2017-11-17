@@ -29,11 +29,11 @@ public class MaterialIssue   {
    * Gets or Sets issueType
    */
   public enum IssueTypeEnum {
-    INDENTISSUE("IndentIssue"),
+    INDENTISSUE("INDENTISSUE"),
     
-    NONINDENTISSUE("NonIndentIssue"),
+    NONINDENTISSUE("NONINDENTISSUE"),
     
-    MATERIAL_OUTWARD("Material Outward");
+    MATERIALOUTWARD("MATERIALOUTWARD");
 
     private String value;
 
@@ -136,9 +136,9 @@ public class MaterialIssue   {
    * Applicable in case of None Indent Issue. This field holds information about Issuing purpose of the Non Indent Issue
    */
   public enum IssuePurposeEnum {
-    WRITEOFF_OR_SCRAP("WriteOff OR Scrap"),
+    WRITEOFFORSCRAP("WRITEOFFORSCRAP"),
     
-    RETURN_TO_SUPPLIER("Return To Supplier");
+    RETURNTOSUPPLIER("RETURNTOSUPPLIER");
 
     private String value;
 

@@ -10,9 +10,11 @@ let getFieldsFromInnerObject = function(fields, properties, module, jPath, isArr
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
         if(properties[key].properties) {
-            getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []), localeFields);
+            if(jPath.search("." + key) < 2)
+                getFieldsFromInnerObject(fields, properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []), localeFields);
         } else if(properties[key].items && properties[key].items.properties) {
-            getFieldsFromInnerObject(fields, properties[key].items.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []), localeFields);
+            if(jPath.search("." + key) < 2)
+                getFieldsFromInnerObject(fields, properties[key].items.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []), localeFields);
         } else {
             fields[(isArray ? (jPath + "[0]") : jPath) + "." + key] = {
                 "name": key,

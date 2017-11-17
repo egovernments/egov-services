@@ -15,7 +15,7 @@ const viewTemplate = require('./templates/view');
 const updateTemplate = require('./templates/update');
 
 //===================PARSER===================//
-let parse = function(yamlPath, module, cb) {
+let parse = function(yamlPath, module, references, cb) {
     mkdirp.sync("./output/" + module);
     SwaggerParser.dereference(yamlPath)
         .then(function(yamlJSON) {
@@ -24,9 +24,13 @@ let parse = function(yamlPath, module, cb) {
             let allUiInfo = {};
             let errors = {};
             for (var i = 0; i < yamlJSON["x-ui-info"].UIInfo.length; i++) {
-                allUiInfo[yamlJSON["x-ui-info"].UIInfo[i].referencePath] = yamlJSON["x-ui-info"].UIInfo[i];
+                if(references && references.length) {
+                    if (references.indexOf(yamlJSON["x-ui-info"].UIInfo[i].referencePath) > -1) 
+                        allUiInfo[yamlJSON["x-ui-info"].UIInfo[i].referencePath] = yamlJSON["x-ui-info"].UIInfo[i];
+                } else {
+                    allUiInfo[yamlJSON["x-ui-info"].UIInfo[i].referencePath] = yamlJSON["x-ui-info"].UIInfo[i];
+                }
             }
-
             for (let key in yamlJSON.paths) {
                 let arr = key.split("/");
                 arr.splice((arr.length - 1), 1);
@@ -101,10 +105,6 @@ let parse = function(yamlPath, module, cb) {
 
 app.use(express.static(path.join(__dirname, 'app')));
 app.use(bodyParser.json());
-// Catch all other routes and return the index file
-app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, 'app/index.html'));
-});
 
 app.post('/yaml/create', function(req, res) {
     if (!req.body.url || !req.body.module) {
@@ -112,7 +112,7 @@ app.post('/yaml/create', function(req, res) {
             message: "Invalid parameters"
         })
     } else {
-        parse(req.body.url, req.body.module, function(errors, fileNames) {
+        parse(req.body.url, req.body.module, req.body.references, function(errors, fileNames) {
             if (errors) {
                 //console.log(errors);
                 res.status(400).json({
@@ -124,6 +124,35 @@ app.post('/yaml/create', function(req, res) {
         });
     }
 })
+
+app.post('/reference/get', function(req, res) {
+    if (!req.body.url) {
+        res.status(400).json({
+            message: "Invalid parameters"
+        })
+    } else {
+
+        SwaggerParser.dereference(req.body.url)
+        .then(function(yamlJSON) {
+            let list = [];
+            for (var i = 0; i < yamlJSON["x-ui-info"].UIInfo.length; i++) {
+                list.push(yamlJSON["x-ui-info"].UIInfo[i].referencePath);
+            }
+
+            res.status(200).json(list);
+        }).catch(function(err) {
+            console.log(err);
+            res.status(400).json({
+                errors: err
+            })
+        });
+    }
+})
+
+// Catch all other routes and return the index file
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, 'app/index.html'));
+});
 
 const port = process.env.PORT || '4002';
 app.listen(port, function() {

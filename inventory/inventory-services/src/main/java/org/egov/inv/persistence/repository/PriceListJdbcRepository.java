@@ -158,12 +158,20 @@ public class PriceListJdbcRepository extends JdbcRepository {
 			paramValues.put("agreementNumbers",
 					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getAgreementNumbers().split(","))));
 		}
+		
+        if (priceListSearchRequest.getAgreementDate()!=null) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("agreementDate::bigint =:agreementDate");
+        	paramValues.put("agreementDate", priceListSearchRequest.getAgreementDate());
+        }
         
         if (priceListSearchRequest.getAgreementStartDate()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
-        	params.append("agreementStartDate =:agreementStartDate");
+        	params.append("agreementStartDate::bigint =:agreementStartDate");
         	paramValues.put("agreementStartDate", priceListSearchRequest.getAgreementStartDate());
         }
         
@@ -171,7 +179,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
-        	params.append("agreementEndDate =:agreementEndDate");
+        	params.append("agreementEndDate::bigint =:agreementEndDate");
         	paramValues.put("agreementEndDate", priceListSearchRequest.getAgreementEndDate());
         }
         

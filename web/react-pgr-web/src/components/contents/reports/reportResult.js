@@ -61,7 +61,8 @@ class ShowField extends Component {
       // console.log('nextprops');
       this.setState({
         reportName : nextprops.match.params.reportName,
-        moduleName : nextprops.match.params.moduleName
+        moduleName : nextprops.match.params.moduleName,
+        ck:{}
       });
       this.subHeader(nextprops.match.params.moduleName);
     // }

@@ -80,13 +80,15 @@ var dat =  {
           label: "legal.create.advocateName"
         },
         {
-          label: "advocatepayment.create.demandDate"
+          label: "advocatepayment.create.demandDate",
+          isDate:true
         },
         {
           label: "advocatepayment.create.instrumentNumber"
         },
         {
-          label: "advocatepayment.create.InstrumentDate"
+          label: "advocatepayment.create.InstrumentDate",
+           isDate:true
         },
         {
           label: "legal.create.modeOfPayment"

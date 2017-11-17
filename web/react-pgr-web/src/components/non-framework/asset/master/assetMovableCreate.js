@@ -985,12 +985,11 @@ delete formData.Asset.assetAttributesCheck;
     let valueWarranty = _value;
     let self = this;
     let spec = self.props.mockData;
-     console.log(spec);
-     console.log(self.state.action);
+
       for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
-        console.log("fire1");
+
         if (spec[`asset.${self.state.action}`].groups[q].name == "AssetField") {
-          console.log("fire2");
+
           for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
             if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == "WarrantyExpiryDate") {
               if (valueWarranty==false) {
@@ -1324,7 +1323,7 @@ delete formData.Asset.assetAttributesCheck;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     let self = this;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
-      console.log(this.props.dropDownData);
+      
     // })}
 
 

@@ -154,6 +154,18 @@ var dat = {
 					// ]
 				},
 				{
+					"name": "FromWhomAcquired",
+					"jsonPath": "Asset.acquiredFrom",
+					"label": "ac.create.From.whom.acquired",
+					"pattern": "",
+					"type": "text",
+					"url": "",
+					"isRequired": false,
+					"isDisabled": false,
+					"requiredErrMsg": "",
+					"patternErrMsg": ""
+				},
+				{
 					"name": "AssetCategoryType",
 					"jsonPath": "Asset.assetCategory.assetCategoryType",
 					"label": "ac.create.asset.asset.category.type",
@@ -443,18 +455,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "FromWhomAcquired",
-            "jsonPath": "Asset.acquiredFrom",
-            "label": "ac.create.From.whom.acquired",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
             "name": "TitleDocumentsAvailable",
             "jsonPath": "Asset.titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
@@ -465,19 +465,6 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-            "name": "SourceOfFunds",
-            "jsonPath": "Asset.fundSource.code",
-            "label": "ac.create.Source.of.funds",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -506,6 +493,19 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
+            "name": "SourceOfFunds",
+            "jsonPath": "Asset.fundSource.code",
+            "label": "ac.create.Source.of.funds",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"isStateLevel":true
+          },
+					{
             "name": "SecurityDepositRetained",
             "jsonPath": "Asset.securityDepositRetained",
             "label": "ac.create.Security.deposit.retained",
@@ -525,18 +525,6 @@ var dat = {
             "type": "number",
             "url": "",
             "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "AssetDescription",
-            "jsonPath": "Asset.description",
-            "label": "ac.create.Asset.description",
-            "pattern": "",
-            "type": "textarea",
-            "url": "",
-            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -576,6 +564,19 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+					{
+            "name": "AssetDescription",
+            "jsonPath": "Asset.description",
+            "label": "ac.create.Asset.description",
+            "pattern": "",
+            "type": "textarea",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"fullWidth":true
           },
           // {
           //   "name": "AssetAcountCode",
@@ -1680,17 +1681,29 @@ var dat = {
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-							"defaultValue": [  {
-	            "key": "ACQUIRED",
-	            "value": "ACQUIRED"
-	          },  {
-	            "key": "CONSTRUCTION",
-	            "value": "CONSTRUCTION"
-	          },  {
-	            "key": "PURCHASE",
-	            "value": "PURCHASE"
-	          }
-					]
+					// 		"defaultValue": [  {
+	        //     "key": "ACQUIRED",
+	        //     "value": "ACQUIRED"
+	        //   },  {
+	        //     "key": "CONSTRUCTION",
+	        //     "value": "CONSTRUCTION"
+	        //   },  {
+	        //     "key": "PURCHASE",
+	        //     "value": "PURCHASE"
+	        //   }
+					// ]
+				},
+				{
+					"name": "FromWhomAcquired",
+					"jsonPath": "Asset.acquiredFrom",
+					"label": "ac.create.From.whom.acquired",
+					"pattern": "",
+					"type": "text",
+					"url": "",
+					"isRequired": false,
+					"isDisabled": false,
+					"requiredErrMsg": "",
+					"patternErrMsg": ""
 				},
 				{
 					"name": "AssetCategoryType",
@@ -1982,18 +1995,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "FromWhomAcquired",
-            "jsonPath": "Asset.acquiredFrom",
-            "label": "ac.create.From.whom.acquired",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
             "name": "TitleDocumentsAvailable",
             "jsonPath": "Asset.titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
@@ -2004,19 +2005,6 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-            "name": "SourceOfFunds",
-            "jsonPath": "Asset.fundSource.code",
-            "label": "ac.create.Source.of.funds",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -2045,6 +2033,19 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
+            "name": "SourceOfFunds",
+            "jsonPath": "Asset.fundSource.code",
+            "label": "ac.create.Source.of.funds",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"isStateLevel":true
+          },
+					{
             "name": "SecurityDepositRetained",
             "jsonPath": "Asset.securityDepositRetained",
             "label": "ac.create.Security.deposit.retained",
@@ -2064,18 +2065,6 @@ var dat = {
             "type": "number",
             "url": "",
             "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "AssetDescription",
-            "jsonPath": "Asset.description",
-            "label": "ac.create.Asset.description",
-            "pattern": "",
-            "type": "textarea",
-            "url": "",
-            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -2115,6 +2104,19 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+					{
+            "name": "AssetDescription",
+            "jsonPath": "Asset.description",
+            "label": "ac.create.Asset.description",
+            "pattern": "",
+            "type": "textarea",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"fullWidth":true
           },
           // {
           //   "name": "AssetAcountCode",

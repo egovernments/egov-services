@@ -51,6 +51,8 @@ public class IntegrationService {
 			LOGGER.info("searchColumn:"+searchColumn);
 			if(searchColumn.getType().equals(TypeEnum.SINGLEVALUELIST) || searchColumn.getType().equals(TypeEnum.MULTIVALUELIST)){
 				LOGGER.info("if searchColumn:"+searchColumn);
+				LOGGER.info("Pattern is:"+searchColumn.getColName());
+				
 				String[] patterns= searchColumn.getPattern().split("\\|");
 				LOGGER.info("patterns:"+patterns.toString());
 				String url = patterns[0];

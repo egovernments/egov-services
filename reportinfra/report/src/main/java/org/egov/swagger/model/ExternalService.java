@@ -12,7 +12,14 @@ public class ExternalService {
 	public String keyOrder;
 	@JsonProperty("tableName")
 	public String tableName;
-	
+	@JsonProperty("stateData")
+	public Boolean stateData = false;
+	public Boolean getStateData() {
+		return stateData;
+	}
+	public void setStateData(Boolean stateData) {
+		this.stateData = stateData;
+	}
 	public String getTableName() {
 		return tableName;
 	}

@@ -39,7 +39,7 @@ public class ReportQueryBuilder {
 		String baseQuery = null;
 			try {
 		if(reportDefinition.getExternalService().size() > 0) {
-			baseQuery = populateExternalServiceValues(reportDefinition, reportDefinition.getQuery());
+			baseQuery = populateExternalServiceValues(reportDefinition, reportDefinition.getQuery(),tenantId);
 		} } catch(JSONException e){
 			e.printStackTrace();
 		}
@@ -96,17 +96,35 @@ public class ReportQueryBuilder {
 		return baseQuery;
 	}
 	
-	private String populateExternalServiceValues(ReportDefinition reportDefinition, String baseQuery)
+	private String populateExternalServiceValues(ReportDefinition reportDefinition, String baseQuery,String tenantid)
 			throws JSONException {
 		String url;
-		String res;
+		String res = "";
 		String replacetableQuery = baseQuery;
+		
 		for (ExternalService es : reportDefinition.getExternalService()) {
 			
-			
 			url = es.getApiURL();
+			
+			 String[] stateid = null;
+			if(es.getStateData() && (!tenantid.equals("default"))) {
+				stateid = tenantid.split("\\.");
+				url = url.replaceAll("\\$tenantid",stateid[0]);
+			} else {
+			
+			url = url.replaceAll("\\$tenantid",tenantid);
+			}
+			
+			System.out.println("The URL is: "+url);
+			
+			
+			
 			URI uri = URI.create(url);
+			try {
 			res = restTemplate.postForObject(uri, getRInfo(),String.class);
+			} catch(Exception e){
+				e.printStackTrace();
+			}
 
 			Object jsonObject = JsonPath.read(res,es.getEntity());
 			
@@ -139,6 +157,22 @@ public class ReportQueryBuilder {
 					finalString.append(sb);
 					LOGGER.info("Inline Table Values "+finalString.toString());
 				}
+			 
+			 if(mdmsArray.length() == 0) {
+				 StringBuffer sb = new StringBuffer();
+				 sb.append("(");
+				 int i = 0;
+				 for(String key: es.getKeyOrder().split(",")){
+					 if(i != es.getKeyOrder().split(",").length-1) {
+					 sb.append("'',");
+					 } else {
+						 sb.append("''");
+					 }
+					 i++;
+				 }
+				 sb.append(")");
+				 finalString.append(sb);
+			 }
 		       
 			 replacetableQuery = replacetableQuery.replace(es.getTableName(), finalString.toString());
 			

@@ -78,13 +78,13 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
             paramValues.put("priceList", priceListDetailsSearchRequest.getPriceList());
         }
         
-//        if (priceListDetailsSearchRequest.getActive()!=null) {
-//        	if (params.length() > 0) {
-//        		params.append(" and ");
-//        	}
-//        	params.append("active =:active");
-//        	paramValues.put("active", priceListDetailsSearchRequest.getActive());
-//        }
+        if (priceListDetailsSearchRequest.getActive()!=null) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("active =:active");
+        	paramValues.put("active", priceListDetailsSearchRequest.getActive());
+        }
         
         Pagination<PriceListDetails> page = new Pagination<>();
         if (priceListDetailsSearchRequest.getOffSet() != null) {

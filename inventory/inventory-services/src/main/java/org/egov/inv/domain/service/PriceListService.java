@@ -79,6 +79,16 @@ public class PriceListService extends DomainService {
                 priceListRequest.getPriceLists().get(i)
                         .setId(priceListIdList.get(i).toString());
                 
+                if(priceListRequest.getPriceLists().get(i).getTenantId()==null){
+                	priceListRequest.getPriceLists().get(i).setTenantId(tenantId);
+                	for(PriceListDetails priceListDetail:priceListRequest.getPriceLists().get(i).getPriceListDetails()){
+                		if(priceListDetail.getTenantId()==null){
+                			priceListDetail.setTenantId(tenantId);
+                		}
+                	}
+                }
+                
+                
                 List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), priceListRequest.getPriceLists().get(i).getPriceListDetails().size());
                 for(int j =0; j <= priceListDetailsIdList.size()-1; j++){
                 	priceListRequest.getPriceLists().get(i)
@@ -108,6 +118,14 @@ public class PriceListService extends DomainService {
 								priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
 								priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
 								priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
+								if(priceList.getTenantId()==null){
+									priceList.setTenantId(tenantId);
+									for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
+										if(priceListDetail.getTenantId()==null){
+											priceListDetail.setTenantId(tenantId);
+										}
+									}
+								}
 							});
 
 			kafkaQue.send(updateTopic, updateKey, priceListRequest);

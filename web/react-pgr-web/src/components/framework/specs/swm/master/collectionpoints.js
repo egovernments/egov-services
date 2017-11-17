@@ -134,10 +134,11 @@ var dat ={
                  "name":"name",
                  "jsonPath":"name",
                  "label":"swm.collectionpoints.name",
-                 "type":"text",
+                 "type":"autoCompelete",
                  "isDisabled":false,
                  "maxLength":256,
-                 "patternErrorMsg":"swm.create.field.message.name"
+                 "patternErrorMsg":"swm.create.field.message.name",
+                 "url": "swm-services/collectionpoints/_search?|$.collectionPoints.*.name|$.collectionPoints.*.name"
               }
            ]
         }

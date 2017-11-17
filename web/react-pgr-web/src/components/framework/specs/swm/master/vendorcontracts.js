@@ -13,9 +13,10 @@ var dat = {
             "name": "contractNo",
             "jsonPath": "contractNo",
             "label": "vendorcontracts.create.contractNo",
-            "type": "text",
+            "type": "autoCompelete",
             "isDisabled": false,
-            "patternErrorMsg": "vendorcontracts.create.field.message.contractNo"
+            "patternErrorMsg": "vendorcontracts.create.field.message.contractNo",
+            "url": "swm-services/vendorcontracts/_search?|$.vendorContracts.*.contractNo|$.vendorContracts.*.contractNo"
           },
           {
               "name":"vendor",
@@ -49,22 +50,6 @@ var dat = {
             "type": "datePicker",
             "isDisabled": false,
             "patternErrorMsg": "vendorcontracts.create.field.message.contractDate"
-          },
-          {
-            "name": "securityDeposit",
-            "jsonPath": "securityDeposit",
-            "label": "vendorcontracts.create.securityDeposit",
-            "type": "number",
-            "isDisabled": false,
-            "patternErrorMsg": "vendorcontracts.create.field.message.securityDeposit"
-          },
-          {
-            "name": "paymentAmount",
-            "jsonPath": "paymentAmount",
-            "label": "vendorcontracts.create.paymentAmount",
-            "type": "number",
-            "isDisabled": false,
-            "patternErrorMsg": "vendorcontracts.create.field.message.paymentAmount"
           }
         ]
       }
@@ -97,9 +82,6 @@ var dat = {
         },
         {
           "label": "vendorcontracts.search.result.paymentTerms"
-        },
-        {
-          "label": "vendorcontracts.search.result.remarks"
         }
       ],
       "values": [
@@ -110,8 +92,7 @@ var dat = {
         "contractPeriodTo",
         "securityDeposit",
         "paymentAmount",
-        "paymentTerms.label",
-        "remarks"
+        "paymentTerms.label"
       ],
       "resultPath": "vendorContracts",
       "rowClickUrlUpdate": "/update/swm/vendorcontracts/{contractNo}",
@@ -219,7 +200,7 @@ var dat = {
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 500,
-            "minLength": 15,
+            "minLength": 0,
             "patternErrorMsg": ""
           }
         ]
@@ -356,6 +337,19 @@ var dat = {
         "name": "VendorContractDetails",
         "label": "vendorcontracts.create.group.title.VendorContractDetails",
         "fields": [
+         {
+            "name": "contractNo",
+            "jsonPath": "vendorContracts[0].contractNo",
+            "label": "vendorcontracts.create.contractNo",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+            "isDisabled": true,
+            "defaultValue": "",
+            "maxLength": 128,
+            "minLength": 6,
+            "patternErrorMsg": ""
+          },
          {  
 	      "name":"vendor",
 	      "jsonPath":"vendorContracts[0].vendor.vendorNo",

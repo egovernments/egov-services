@@ -2,7 +2,7 @@ var dat = {
   "swm.search": {
     "numCols": 4,
     "useTimestamp": true,
-    "objectName": "",
+    "objectName": "vehicleFuellingDetails",
     "url": "/swm-services/vehiclefuellingdetails/_search",
     "groups": [
       {
@@ -64,20 +64,21 @@ var dat = {
         "vehicleReadingDuringFuelling",
         "refuellingStation.name",
         "fuelFilled",
-        "typeOfFuel",
+        "typeOfFuel.name",
         "totalCostIncurred",
         "receiptNo",
         "receiptDate"
       ],
       "resultPath": "vehicleFuellingDetails",
-      "rowClickUrlUpdate": "/update/vehiclefuellingdetails/{transactionNo}",
-      "rowClickUrlView": "/view/vehiclefuellingdetails/{transactionNo}"
+      "rowClickUrlUpdate": "/update/swm/vehiclefuellingdetails/{transactionNo}",
+      "rowClickUrlView": "/view/swm/vehiclefuellingdetails/{transactionNo}"
     }
   },
   "swm.create": {
     "numCols": 12/3,
     "useTimestamp": true,
     "objectName": "vehicleFuellingDetails",
+    "idJsonPath": "vehicleFuellingDetails[0].transactionNo",
     "title": "vehiclefuellingdetails.create.group.title.VehicleDetails1",
     "groups": [
       {
@@ -107,7 +108,7 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "url": "egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle|$..id|$..regNumber",
+            "url": "/swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/egov-mdms-service/v1/_get?moduleName=SWM&masterName=Vehicle&filter=[?(@.id=={value})]",
               "autoFillFields": {
@@ -153,7 +154,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=RefillingPumpStation|$..name|$..name"
+            "url": "/swm-services/refillingpumpstations/_search?|$.refillingPumpStations.*.code|$.refillingPumpStations.*.name"
           },
           {
             "name": "typeOfFuel",
@@ -246,7 +247,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 4,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType&tenantId=mh|$..id|undefined"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "regNumber",
@@ -258,7 +259,7 @@ var dat = {
             "maxLength": 12,
             "minLength": 6,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&tenantId=mh|$..id|undefined"
+            "url": "/swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber"
           },
           {
             "name": "vehicleReadingDuringFuelling",
@@ -285,7 +286,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=RefillingPumpStation&tenantId=mh|$..id|undefined"
+            "url": "/swm-services/refillingpumpstations/_search?|$.refillingPumpStations.*.code|$.refillingPumpStations.*.name"
           },
           {
             "name": "fuelFilled",
@@ -347,6 +348,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "vehicleFuellingDetails",
+    "idJsonPath": "vehicleFuellingDetails[0].transactionNo",
     "groups": [
       {
         "name": "VehicleDetails1",
@@ -377,7 +379,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 4,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType&tenantId=mh|$..id|undefined"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "regNumber",
@@ -389,7 +391,7 @@ var dat = {
             "maxLength": 12,
             "minLength": 6,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vehicle&tenantId=mh|$..id|undefined"
+            "url": "/swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber"
           },
           {
             "name": "vehicleReadingDuringFuelling",
@@ -416,7 +418,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=RefillingPumpStation&tenantId=mh|$..id|undefined"
+            "url": "/swm-services/refillingpumpstations/_search?|$.refillingPumpStations.*.code|$.refillingPumpStations.*.name
           },
           {
             "name": "fuelFilled",
@@ -473,7 +475,8 @@ var dat = {
       }
     ],
     "url": "/swm-services/vehiclefuellingdetails/_update",
-    "tenantIdRequired": true
+    "tenantIdRequired": true,
+    "searchUrl": "/swm-services/vehiclefuellingdetails/_search?transactionNo={transactionNo}"
   }
 }
  export default dat;

@@ -2381,7 +2381,7 @@ definitions:
           type: string
           description: ULB Admin can put remarks, if any
           maxLength: 500
-          minLength: 15
+          minLength: 0
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:

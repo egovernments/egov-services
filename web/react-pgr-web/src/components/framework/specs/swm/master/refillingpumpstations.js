@@ -31,6 +31,18 @@ var dat ={
               "minLength":1,
               "patternErrorMsg":"",
               "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=OilCompany|$..code|$..name"
+            },
+	   {  
+                "name":"name",
+                "jsonPath":"typeOfFuelCode",
+                "label":"swm.refillingpumpstations.typeOfFuel",
+                "type":"singleValueList",
+                "isRequired":false,
+                "isDisabled":false,
+                "maxLength":128,
+                "minLength":1,
+                "patternErrorMsg":"",
+                "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..name"
             }
           ]
         }
@@ -38,15 +50,27 @@ var dat ={
      "result":{  
         "header":[  
            {  
-              "label":"swm.search.result.code"
+              "label":"swm.refillingpumpstations.create.name"
            },
            {  
-              "label":"swm.search.result.name"
+              "label":"swm.refillingpumpstations.typeOfPump.name"
+           },
+	  {  
+              "label":"swm.refillingpumpstations.typeOfFuel"
+           },
+          {  
+              "label":"swm.refillingpumpstations.quantity"
+           },
+	  {  
+              "label":"swm.collectionpoints.create.colony"
            }
         ],
         "values":[  
-           "code",
-           "name"
+           "name",
+           "typeOfPump.name",
+	   "typeOfFuel.name",
+	   "quantity",
+	   "location.name"
         ],
         "resultPath":"refillingPumpStations",
         "rowClickUrlUpdate":"/update/swm/refillingpumpstations/{code}",
@@ -186,7 +210,7 @@ var dat ={
               "name":"name",
               "jsonPath":"refillingPumpStations[0].quantity",
               "label":"swm.refillingpumpstations.quantity",
-              "type":"text",
+              "type":"number",
               "isRequired":true,
               "isDisabled":false,
               "maxLength":128,
@@ -296,6 +320,7 @@ var dat ={
      "numCols":3,
      "useTimestamp":true,
      "objectName":"refillingpumpstations",
+     "idJsonPath": "refillingPumpStations[0].code",
      "groups":[  
       {  
         "name":"LocationDetails",
@@ -352,7 +377,7 @@ var dat ={
           },
           {  
               "name":"Colony",
-              "jsonPath":"refillingPumpStations[0].location.name",
+              "jsonPath":"refillingPumpStations[0].location.code",
               "label":"swm.collectionpoints.create.colony",
               "type":"singleValueList",
               "isRequired":true,
@@ -409,20 +434,21 @@ var dat ={
         "fields":[  
           {  
               "name":"name",
-              "jsonPath":"refillingPumpStations[0].typeOfFuel.name",
+              "jsonPath":"refillingPumpStations[0].typeOfFuel.code",
               "label":"swm.refillingpumpstations.typeOfFuel",
-              "type":"text",
+              "type":"singleValueList",
               "isRequired":true,
               "isDisabled":false,
               "maxLength":128,
               "minLength":1,
-              "patternErrorMsg":""
+              "patternErrorMsg":"",
+	      "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..name"
           },
           {  
             "name":"name",
             "jsonPath":"refillingPumpStations[0].quantity",
             "label":"swm.refillingpumpstations.quantity",
-            "type":"text",
+            "type":"number",
             "isRequired":true,
             "isDisabled":false,
             "maxLength":128,

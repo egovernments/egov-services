@@ -2,7 +2,7 @@ var dat = {
   "swm.search":{
      "numCols":4,
      "useTimestamp":true,
-     "objectName":"vehiclemaintenances",
+     "objectName":"vehicleMaintenances",
      "url":"/swm-services/vehiclemaintenances/_search",
      "groups":[
       {
@@ -11,17 +11,16 @@ var dat = {
          "fields":[
           {
             "name":"regNumber",
-            "jsonPath":"vehicleMaintenances[0].vehicle.regNumber",
+            "jsonPath":"regNumber",
             "label":"swm.vehicles.create.regNumber",
             "pattern":"",
             "type":"autoCompelete",
-            "isRequired":true,
             "isDisabled":false,
             "defaultValue":"",
             "maxLength":12,
             "minLength":6,
             "patternErrorMsg":"",
-            "url": "swm-services/vehicles/_search?|$..regNumber|$..regNumber",
+            "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
           }
         ]
       }
@@ -29,27 +28,35 @@ var dat = {
      "result":{
         "header":[
            {
-              "label":"swm.search.result.vehicleType"
+              "label":"swm.vehicles.create.vehicleType"
            },
            {
-              "label":"swm.search.result.regNumber"
+              "label":"swm.vehicles.create.regNumber"
            },
            {
-              "label":"swm.search.result.maintenanceAfter"
+              "label":"swm.create.maintenanceAfter"
+           },
+	   {
+              "label":"swm.create.maintenanceUom"
            },
            {
-              "label":"swm.search.result.downtimeforMaintenance"
+              "label":"swm.create.downtimeforMaintenance"
+           },
+ 	   {
+              "label":"swm.create.downtimeforMaintenanceUom"
            }
         ],
         "values":[
-           "vehicleType",
-           "regNumber",
+           "vehicle.vehicleType.name",
+           "vehicle.regNumber",
            "maintenanceAfter",
-           "downtimeforMaintenance"
+           "maintenanceUom",
+           "downtimeforMaintenance",
+	   "downtimeforMaintenanceUom"
         ],
-        "resultPath":"vehiclemaintenances",
-        "rowClickUrlUpdate":"/update/vehiclemaintenances/{code}",
-        "rowClickUrlView":"/view/vehiclemaintenances/{code}"
+        "resultPath":"vehicleMaintenances",
+        "rowClickUrlUpdate":"/update/swm/vehiclemaintenances/{code}",
+        "rowClickUrlView":"/view/swm/vehiclemaintenances/{code}"
      }
   },
   "swm.create":{
@@ -74,7 +81,7 @@ var dat = {
             "maxLength":12,
             "minLength":6,
             "patternErrorMsg":"",
-            "url": "swm-services/vehicles/_search?|$..regNumber|$..regNumber",
+            "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
               "autoFillFields": {
@@ -188,7 +195,7 @@ var dat = {
             "maxLength":12,
             "minLength":6,
             "patternErrorMsg":"",
-            "url": "swm-services/vehicles/_search?|$..regNumber|$..regNumber",
+            "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
             "autoCompleteDependancy": {
               "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
               "autoFillFields": {
@@ -298,12 +305,12 @@ var dat = {
               "pattern":"",
               "type":"autoCompelete",
               "isRequired":true,
-              "isDisabled":false,
+              "isDisabled":true,
               "defaultValue":"",
               "maxLength":12,
               "minLength":6,
               "patternErrorMsg":"",
-              "url": "swm-services/vehicles/_search?|$..regNumber|$..regNumber",
+              "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
               "autoCompleteDependancy": {
                 "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
                 "autoFillFields": {

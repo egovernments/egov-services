@@ -421,7 +421,7 @@ var dat = {
         "fields": [
           {
             "name": "code",
-            "jsonPath": "priceLists[0].supplier.code",
+            "jsonPath": "priceLists[0].supplier.name",
             "label": "inventory.supplier",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "text",

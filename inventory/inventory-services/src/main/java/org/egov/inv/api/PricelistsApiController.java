@@ -45,7 +45,7 @@ public class PricelistsApiController implements PricelistsApi {
 
     public ResponseEntity<PriceListResponse> pricelistsSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
-            @ApiParam(value = "Name of the vendor supplying priceLists required ") @RequestParam(value = "supplierName", required = false) List<String> supplierName,
+            @ApiParam(value = "Name of the vendor supplying priceLists required ") @RequestParam(value = "supplierName", required = false) String supplierName,
             @ApiParam(value = "reference no of the priceList contract from the supplier ") @RequestParam(value = "rateContractNumber", required = false) String rateContractNumber,
             @ApiParam(value = "Agreement no with the supplier of priceLists ") @RequestParam(value = "agreementNumber", required = false) String agreementNumber,
             @ApiParam(value = "contract date of the rate for item with the supplier.Date in epoc format. ") @RequestParam(value = "rateContractDate", required = false) Long rateContractDate,
@@ -61,6 +61,7 @@ public class PricelistsApiController implements PricelistsApi {
         	
             PriceListSearchRequest priceListSearchRequest = PriceListSearchRequest.builder()
                     .tenantId(tenantId)
+                    .supplierName(supplierName)
                     .rateContractNumber(rateContractNumber)
                     .rateContractDate(rateContractDate)
                     .agreementNumber(agreementNumber)

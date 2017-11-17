@@ -17,7 +17,7 @@ public class PriceListSearchRequest {
 
     private String id;
 
-    private String supplier;
+    private String supplierName;
     
     private String suppliers;
     

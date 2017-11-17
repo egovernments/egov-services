@@ -118,12 +118,12 @@ public class PriceListJdbcRepository extends JdbcRepository {
 					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getIds().split(","))));
 		}
         
-        if (priceListSearchRequest.getSupplier()!=null) {
+        if (priceListSearchRequest.getSupplierName()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
-        	params.append("supplier =:supplier");
-        	paramValues.put("supplier", priceListSearchRequest.getSupplier());
+        	params.append("supplier =:supplierName");
+        	paramValues.put("supplierName", priceListSearchRequest.getSupplierName());
         }
 
         if (priceListSearchRequest.getRateType()!=null) {
@@ -165,6 +165,14 @@ public class PriceListJdbcRepository extends JdbcRepository {
         	}
         	params.append("agreementDate::bigint =:agreementDate");
         	paramValues.put("agreementDate", priceListSearchRequest.getAgreementDate());
+        }
+        
+        if (priceListSearchRequest.getRateContractDate()!=null) {
+        	if (params.length() > 0) {
+        		params.append(" and ");
+        	}
+        	params.append("rateContractDate::bigint =:rateContractDate");
+        	paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
         }
         
         if (priceListSearchRequest.getAgreementStartDate()!=null) {

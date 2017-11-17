@@ -123,10 +123,10 @@ var dat = {
               label: "Ref Evidence",
               url:"/update/legal/referenceevidence/"
             },
-            {
-              label: "Update",
-              url:"/update/legal/casedetails/"
-            },
+            // {
+            //   label: "Update",
+            //   url:"/update/legal/casedetails/"
+            // },
             {
               label: "View",
               url:"/view/legal/casedetails/"

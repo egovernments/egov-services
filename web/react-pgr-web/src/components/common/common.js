@@ -2875,6 +2875,7 @@ var localization_EN_Data = {
   "legal.search.result.agencyAddress": "Agency Address",
    "advocates.create.group.title.agencySearch":"Agency Search",
    "advocates.search.document.title.agency":"Agency Search",
+   "legal.create.advocateFee":"Advocate Fee"
 
 
 
@@ -4920,8 +4921,9 @@ var localization_MR_Data = {
   "advocates.create.group.title.orgBankDetails":"Bank Details-marathi",
    "advocates.create.ownerTitle":"Title-marathi",
   "legal.search.result.agencyAddress":"Agency Address-marathi",
-   "advocates.create.group.title.agencySearch":"Agency Search",
-   "advocates.search.document.title.agency":"Agency Search",
+   "advocates.create.group.title.agencySearch":"Agency Search-marathi",
+   "advocates.search.document.title.agency":"Agency Search-marathi",
+   "legal.create.advocateFee":"Advocate Fee-marathi"
 }
 
 export function translate(locale_text) {

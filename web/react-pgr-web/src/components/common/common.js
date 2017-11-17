@@ -2868,7 +2868,14 @@ var localization_EN_Data = {
     "legal.search.result.agencyName":"Agency Name",
     "advocates.create.group.title.orgBankDetails":"Bank Details",
    "advocates.create.ownerTitle":"Title",
-  "legal.search.result.agencyAddress":"Agency Address"
+  "legal.search.result.agencyAddress":"Agency Address",
+  "advocates.create.group.title.additionalOwnerWindow":"Additional Owner",
+ "advocates.create.group.title.additionalAdvocateWindow":"Add Advocate",
+  "legal.create.additionalOwnerName":"Additional Owner Name",
+  "legal.search.result.agencyAddress": "Agency Address",
+   "advocates.create.group.title.agencySearch":"Agency Search",
+   "advocates.search.document.title.agency":"Agency Search",
+
 
 
 
@@ -4597,6 +4604,9 @@ var localization_MR_Data = {
 "legal.search.result.referenceNo":"Reference No-marathi",
 "legal.search.result.advocateName":"Advocate Name-marathi",
 "legal.search.result.isIndividual":"Type-marathi",
+ "advocates.create.group.title.additionalOwnerWindow":"Additional Owner-marathi",
+ "advocates.create.group.title.additionalAdvocateWindow":"Add Advocate-marathi",
+ "legal.create.additionalOwnerName":"Additional Owner Name-marathi",
 
 
 "caseRegistration.create.group.title.caseDetails":"Case Details-marathi",
@@ -4909,7 +4919,9 @@ var localization_MR_Data = {
   "legal.search.result.agencyName":"Agency Name-marathi",
   "advocates.create.group.title.orgBankDetails":"Bank Details-marathi",
    "advocates.create.ownerTitle":"Title-marathi",
-  "legal.search.result.agencyAddress":"Agency Address-marathi"
+  "legal.search.result.agencyAddress":"Agency Address-marathi",
+   "advocates.create.group.title.agencySearch":"Agency Search",
+   "advocates.search.document.title.agency":"Agency Search",
 }
 
 export function translate(locale_text) {

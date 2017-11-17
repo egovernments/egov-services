@@ -14,7 +14,7 @@ import {
   fileUpload,
   getInitiatorPosition
 } from "../../framework/utility/utility";
-import $ from "jquery";
+//import $ from "jquery";
 
 var specifications = {};
 let reqRequired = [];
@@ -388,7 +388,7 @@ class UiWindowForm extends Component {
                   label={translate("pt.create.groups.ownerDetails.fields.add")}
                   disabled={_.isEmpty(this.state.valuesObj)}
                   secondary={true}
-                  style={{ marginTop: 39 }}
+                  style={{ marginTop: 5 }}
                   onClick={e => {
                     var oldData = self.props.getVal(
                       self.props.item.jsonPath + "." + self.props.item.arrayPath
@@ -478,8 +478,8 @@ class UiWindowForm extends Component {
     this.setState({
       valuesObj: newObj
     });
-$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
-$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
+//$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
+//$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
     // dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   };
 

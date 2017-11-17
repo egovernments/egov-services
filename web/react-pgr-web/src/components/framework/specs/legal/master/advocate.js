@@ -1008,6 +1008,7 @@ var dat ={
             "name": "additionalOwnerWindow",
             "jsonPath": "agencies[0]",
             "arrayPath": "personDetails",
+            "modulepath":"legal.create",
             "label": "legal.advocates.create.additionalOwnerWindow",
             "displayField": "firstName",
             "pattern": "",
@@ -1022,6 +1023,7 @@ var dat ={
             "name": "additionalAdvocateWindow",
             "jsonPath": "agencies[0]",
             "arrayPath": "advocates",
+             "modulepath":"legal.create",
             "label": "legal.advocates.create.additionalAdvocateWindow",
             "pattern": "",
             "type": "window",
@@ -1084,6 +1086,10 @@ var dat ={
                     "name": "additionalAdvocateWindow",
                     "isGroup": true,
                     "isField": false
+                  },{
+                    "name":"additionalOwnerWindow",
+                    "isGroup": true,
+                    "isField": false
                   },
                   {
                     "name": "orgaction",
@@ -1114,6 +1120,10 @@ var dat ={
                   },
                   {
                     "name": "additionalAdvocateWindow",
+                    "isGroup": true,
+                    "isField": false
+                  },{
+                    "name":"additionalOwnerWindow",
                     "isGroup": true,
                     "isField": false
                   },
@@ -1978,16 +1988,15 @@ var dat ={
         ]
       },
       {
-        "name": "additionalAdvocateWindow",
+        "name": "additionalOwnerWindow",
         "hide": true,
-        "label": "",
+        "label": "advocates.create.group.title.additionalOwnerWindow",
         "fields": [
           {
             "name": "additionalOwnerWindow",
             "jsonPath": "agencies[0]",
             "arrayPath": "personDetails",
             "label": "legal.advocates.create.additionalOwnerWindow",
-            "displayField": "firstName",
             "modulepath":"legal.create",
             "pattern": "",
             "type": "window",
@@ -2011,20 +2020,25 @@ var dat ={
             "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
+          }
+        ]
+      },  {
+        "name": "additionalAdvocateWindow",
+        "hide": true,
+        "label": "advocates.create.group.title.additionalAdvocateWindow",
+        "fields": [
           {
             "name": "additionalAdvocateWindow",
             "jsonPath": "agencies[0]",
             "arrayPath": "advocates",
             "label": "legal.advocates.create.additionalAdvocateWindow",
             "pattern": "",
-            "displayField": "firstName",
             "modulepath":"legal.create",
             "type": "window",
             "tableConfig": {
               "header": [
                 {
-                  "label": "legal.create.advocateName",
+                  "label": "legal.create.additionalOwnerName",
                   "style": {
                     "width": "700px"
                   }

@@ -1,14 +1,14 @@
 var dat = {
   "legal.search": {
     numCols: 4,
-    title:"advocates.search.document.title",
+    title:"advocates.search.document.title.agency",
     useTimestamp: true,
     objectName: "",
     url: "/lcms-services/legalcase/advocate/agency/_search?isIndividual=false",
     groups: [
       {
         name: "applicantType",
-        label: "advocates.create.group.title.advocateSearch",
+        label: "advocates.create.group.title.agencySearch",
         fields: [
             {
             name: "agencOrganizationName",

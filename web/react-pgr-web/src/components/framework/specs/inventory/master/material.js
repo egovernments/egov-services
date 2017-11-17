@@ -194,7 +194,7 @@ var dat =
                   "isDisabled":false,
                   "patternErrorMsg":"",
                   "showHideFields": [{
-                      "ifValue": "ASSET",
+                      "ifValue": "Asset",
                       "hide": [],
                       "show": [{
                           "name": "assetCategory",
@@ -208,7 +208,7 @@ var dat =
                   "jsonPath":"materials[0].assetCategory.code",
                   "label":"inventory.material.assetcategory",
                   "type":"singleValueList",
-                  "isRequired":false,
+                  "isRequired":true,
                   "isDisabled":false,
                   "hide":true,
                   "patternErrorMsg":"",
@@ -367,7 +367,7 @@ var dat =
                   "isRequired":true,
                   "isDisabled":false,
                   "patternErrorMsg":"",
-                  "url": "/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name"
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
                },
                {
                   "name":"minQuantity",
@@ -584,7 +584,7 @@ var dat =
                     "isDisabled":false,
                     "patternErrorMsg":"",
                     "showHideFields": [{
-                        "ifValue": "ASSET",
+                        "ifValue": "Asset",
                         "hide": [],
                         "show": [{
                             "name": "assetCategory",
@@ -598,7 +598,7 @@ var dat =
                     "jsonPath":"materials[0].assetCategory.code",
                     "label":"inventory.material.assetcategory",
                     "type":"singleValueList",
-                    "isRequired":false,
+                    "isRequired":true,
                     "isDisabled":false,
                     "hide":true,
                     "patternErrorMsg":"",
@@ -983,7 +983,7 @@ var dat =
                     "isDisabled":false,
                     "patternErrorMsg":"",
                     "showHideFields": [{
-                        "ifValue": "ASSET",
+                        "ifValue": "Asset",
                         "hide": [],
                         "show": [{
                             "name": "assetCategory",
@@ -997,7 +997,7 @@ var dat =
                     "jsonPath":"materials[0].assetCategory.code",
                     "label":"inventory.material.assetcategory",
                     "type":"singleValueList",
-                    "isRequired":false,
+                    "isRequired":true,
                     "isDisabled":false,
                     "isHidden":true,
                     "patternErrorMsg":"",
@@ -1173,7 +1173,7 @@ var dat =
                     "isRequired":true,
                     "isDisabled":false,
                     "patternErrorMsg":"",
-                    "url": "/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name"
+                    "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
                  },
                  {
                     "name":"minQuantity",

@@ -481,13 +481,13 @@ ReportDefinitions:
     source: lcms
     isMandatory: false
     
-  - name: advocate
+  - name: advocatename
     label: reports.lcms.advocate
     type: url
     pattern: /lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid&agencyName={oragnization}&pageSize=500|$.agencies[*].advocates[*].code|$.agencies[*].advocates[*].name
     source: lcms
     isMandatory: false
-    searchClause : AND lca.advocate ->> 'code' = $advocate 
+    searchClause : AND lca.advocate ->> 'code' = $advocatename
     
   - name: department
     label: reports.lcms.department

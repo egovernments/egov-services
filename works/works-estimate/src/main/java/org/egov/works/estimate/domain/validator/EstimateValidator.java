@@ -689,7 +689,7 @@ public class EstimateValidator {
 
         validateModeOfAllotment(detailedEstimate.getModeOfAllotment(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateNatureOfWork(detailedEstimate.getNatureOfWork(), detailedEstimate.getTenantId(), requestInfo, messages);
-        validateWardBoundary(detailedEstimate.getWard(), detailedEstimate.getTenantId(), requestInfo, messages);
+//        validateWardBoundary(detailedEstimate.getWard(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateLocalityBoundary(detailedEstimate.getLocality(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateTypeOfWork(detailedEstimate.getWorksType(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateSubTypeOfWork(detailedEstimate.getWorksSubtype(), detailedEstimate.getTenantId(), requestInfo,

@@ -207,7 +207,7 @@ class assetImmovableCreate extends Component {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
 
         if ( _form.Asset.landDetails != null ) {
-          
+
           var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
           ind = i;
           var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);

@@ -218,16 +218,19 @@ class assetImmovableView extends Component {
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
-        console.log(specs[moduleName + "." + actionName].groups[i].jsonPath);
-        var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
-        ind = i;
-        var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
-        var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
-        for(var j=1; j < arr.length; j++) {
-          i++;
-          specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
-          specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+
+        if (_form.Assets[0].landDetails != null) {
+          var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
+          ind = i;
+          var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
+          var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
+          for(var j=1; j < arr.length; j++) {
+            i++;
+            specs[moduleName + "." + actionName].groups.splice(ind+1, 0, JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + "." + actionName].groups[ind].jsonPath + "[" + j + "]")));
+            specs[moduleName + "." + actionName].groups[ind+1].index = ind+1;
+          }
         }
+
       }
 
       for(var j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {

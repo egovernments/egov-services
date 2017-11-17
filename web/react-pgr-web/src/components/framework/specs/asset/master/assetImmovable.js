@@ -1085,6 +1085,18 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
+						{
+	            "name": "FromWhomAcquired",
+	            "jsonPath": "Assets[0].acquiredFrom",
+	            "label": "ac.create.From.whom.acquired",
+	            "pattern": "",
+	            "type": "text",
+	            "url": "",
+	            "isRequired": false,
+	            "isDisabled": false,
+	            "requiredErrMsg": "",
+	            "patternErrMsg": ""
+	          },
             // {
   					// 	"name": "LandAssetID",
   					// 	"jsonPath": "Asset[0].",
@@ -1222,7 +1234,7 @@ var dat = {
             "label": "ac.create.Election.Ward",
             "pattern": "",
             "type": "singleValueList",
-            "url": "/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$..id|$..name",
+            "url": "/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name",
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -1274,18 +1286,6 @@ var dat = {
             "patternErrMsg": ""
           },
           {
-            "name": "FromWhomAcquired",
-            "jsonPath": "Assets[0].acquiredFrom",
-            "label": "ac.create.From.whom.acquired",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
             "name": "TitleDocumentsAvailable",
             "jsonPath": "Assets[0].titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
@@ -1296,19 +1296,6 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
-          },
-          {
-            "name": "SourceOfFunds",
-            "jsonPath": "Assets[0].fundSource.code",
-            "label": "ac.create.Source.of.funds",
-            "pattern": "",
-            "type": "singleValueList",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-						"isStateLevel":true
           },
           {
             "name": "Warranty",
@@ -1337,6 +1324,19 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
+            "name": "SourceOfFunds",
+            "jsonPath": "Assets[0].fundSource.name",
+            "label": "ac.create.Source.of.funds",
+            "pattern": "",
+            "type": "singleValueList",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"isStateLevel":true
+          },
+					{
             "name": "SecurityDepositRetained",
             "jsonPath": "Assets[0].securityDepositRetained",
             "label": "ac.create.Security.deposit.retained",
@@ -1356,18 +1356,6 @@ var dat = {
             "type": "text",
             "url": "",
             "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-					{
-            "name": "AssetDescription",
-            "jsonPath": "Assets[0].description",
-            "label": "ac.create.Asset.description",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -1407,6 +1395,19 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+					{
+            "name": "AssetDescription",
+            "jsonPath": "Assets[0].description",
+            "label": "ac.create.Asset.description",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"fullWidth":true
           }
 				]
 			},

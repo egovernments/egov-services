@@ -896,18 +896,31 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
-  						"name": "OriginalValueofAsset",
-  						"jsonPath": "Assets[0].originalValue",
-  						"label": "ac.create.Original.Value.of.Asset",
-  						"pattern": "",
-  						"type": "number",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
+						{
+							"name": "ModeofAcquisition",
+							"jsonPath": "Assets[0].modeOfAcquisition.name",
+							"label": "ac.create.Mode.of.Acquisition",
+							"pattern": "",
+							"type": "singleValueList",
+							"url": "",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+						},
+						{
+							"name": "FromWhomAcquired",
+							"jsonPath": "Assets[0].acquiredFrom",
+							"label": "ac.create.From.whom.acquired",
+							"pattern": "",
+							"type": "text",
+							"url": "",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
+
 				]},
       {
 				"label": "ac.create.Location.Details",
@@ -996,58 +1009,23 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-						"name": "ModeofAcquisition",
-						"jsonPath": "Assets[0].modeOfAcquisition.name",
-						"label": "ac.create.Mode.of.Acquisition",
+						"name": "OriginalValueofAsset",
+						"jsonPath": "Assets[0].originalValue",
+						"label": "ac.create.Original.Value.of.Asset",
 						"pattern": "",
-						"type": "singleValueList",
+						"type": "number",
 						"url": "",
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": "",
-				// 		"defaultValue": [  {
-				// 		"key": "ACQUIRED",
-				// 		"value": "ACQUIRED"
-				// 	},  {
-				// 		"key": "CONSTRUCTION",
-				// 		"value": "CONSTRUCTION"
-				// 	},  {
-				// 		"key": "PURCHASE",
-				// 		"value": "PURCHASE"
-				// 	}
-				// ]
-			},
-          {
-            "name": "FromWhomAcquired",
-            "jsonPath": "Assets[0].acquiredFrom",
-            "label": "ac.create.From.whom.acquired",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+						"patternErrMsg": ""
+					},
           {
             "name": "TitleDocumentsAvailable",
             "jsonPath": "Assets[0].titleDocumentsAvalable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
             "type": "textarea",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "SourceOfFunds",
-            "jsonPath": "Assets[0].fundSource.code",
-            "label": "ac.create.Source.of.funds",
-            "pattern": "",
-            "type": "text",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -1081,13 +1059,37 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
-            "name": "AssetDescription",
-            "jsonPath": "Assets[0].description",
-            "label": "ac.create.Asset.description",
+            "name": "SourceOfFunds",
+            "jsonPath": "Assets[0].fundSource.name",
+            "label": "ac.create.Source.of.funds",
             "pattern": "",
-            "type": "textarea",
+            "type": "text",
             "url": "",
-            "isRequired": true,
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "SecurityDepositRetained",
+            "jsonPath": "Assets[0].securityDepositRetained",
+            "label": "ac.create.Security.deposit.retained",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "SecurityDepositRealized",
+            "jsonPath": "Assets[0].securityDepositRealized",
+            "label": "ac.create.Security.deposit.realized",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
@@ -1128,30 +1130,18 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
-
-          {
-            "name": "SecurityDepositRetained",
-            "jsonPath": "Assets[0].securityDepositRetained",
-            "label": "ac.create.Security.deposit.retained",
+					{
+            "name": "AssetDescription",
+            "jsonPath": "Assets[0].description",
+            "label": "ac.create.Asset.description",
             "pattern": "",
-            "type": "number",
+            "type": "textarea",
             "url": "",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "SecurityDepositRealized",
-            "jsonPath": "Assets[0].securityDepositRealized",
-            "label": "ac.create.Security.deposit.realized",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"fullWidth":true
           }
 				]
 			},

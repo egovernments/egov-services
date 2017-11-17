@@ -995,7 +995,7 @@ class Report extends Component {
                     // console.log(dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]]);
                     var arr=dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]];
                     var searchPropery=value.pattern.split("|")[2];
-                    var property=value.pattern.split("|")[3];
+                    var propertyRelToDepedant=value.pattern.split("|")[3];
                     object={
                       target: {
                         value:""
@@ -1004,7 +1004,7 @@ class Report extends Component {
                     for (var i = 0; i < arr.length; i++) {
                       if(arr[i][searchPropery]==e.target.value)
                       {
-                        object.target.value=arr[i][property]
+                        object.target.value=arr[i][propertyRelToDepedant]
                       }
                     }
 
@@ -1053,26 +1053,29 @@ class Report extends Component {
                     console.log(err);
                 });
             }
-            else if (value.type == "radio") {
-
-              var arr=dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]];
-              var searchPropery=value.pattern.split("|")[2];
-              var property=value.pattern.split("|")[3];
-              var object={
-                target: {
-                  value:""
+            else if (value.type == "radio")
+            {
+              if (value.hasFromDropDownOriginalData) {
+                var arr=dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]];
+                var searchPropery=value.pattern.split("|")[2];
+                var propertyRelToDepedant=value.pattern.split("|")[3];
+                var object={
+                  target: {
+                    value:""
+                  }
                 }
-              }
-              for (var i = 0; i < arr.length; i++) {
-                if(arr[i][searchPropery]==e.target.value)
-                {
-                  object.target.value=arr[i][property];
+                for (var i = 0; i < arr.length; i++) {
+                  if(arr[i][searchPropery]==e.target.value)
+                  {
+                    object.target.value=arr[i][propertyRelToDepedant];
+                  }
                 }
+
+                console.log(object);
+
+                handleChange(object, value.jsonPath,"","","","");
               }
 
-              console.log(object);
-
-              handleChange(object, value.jsonPath,"","","","");
 
 
             }

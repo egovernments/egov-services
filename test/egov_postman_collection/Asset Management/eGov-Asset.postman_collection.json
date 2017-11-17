@@ -1,0 +1,852 @@
+{
+	"info": {
+		"name": "eGov-Asset",
+		"_postman_id": "2792704c-632e-b188-7068-1d23df34406f",
+		"description": "",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Common",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									""
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"value": "TL001",
+									"type": "text"
+								},
+								{
+									"key": "password",
+									"value": "12345678",
+									"type": "text"
+								},
+								{
+									"key": "grant_type",
+									"value": "password",
+									"type": "text"
+								},
+								{
+									"key": "scope",
+									"value": "read",
+									"type": "text"
+								},
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"type": "text"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Format Test",
+			"item": [
+				{
+					"name": "etc",
+					"description": "",
+					"item": [
+						{
+							"name": "Create Immovable Asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});",
+											"// requestBody = JSON.parse(requestBody.data);",
+											"",
+											"// tests[\"MOVABLE\"] = requestBody.Asset.assetCategoryType;",
+											"",
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});",
+											"",
+											"jsonData = JSON.parse(responseBody);",
+											"",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510122611081,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Asset\": {\n    \"assetCategory\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 12,\n      \"name\": \"Roads and Bridges\",\n      \"code\": \"012\",\n      \"assetCategoryType\": \"IMMOVABLE\",\n      \"parent\": 2,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": null,\n      \"depreciationExpenseAccount\": null,\n      \"unitOfMeasurement\": \"NOS\",\n      \"version\": \"1.0\",\n      \"depreciationRate\": 6.66,\n      \"isDepreciationApplicable\": true,\n      \"assetFieldsDefination\": [\n        {\n          \"name\": \"Location\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Length\",\n          \"type\": \"Number\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"MinimumWidth\",\n          \"type\": \"Number\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"MaximumWidth\",\n          \"type\": \"Number\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Road Type\",\n          \"type\": \"Select\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": \"WBM, Bitomun, Concrete, Tremix concrete\",\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Layer description\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"No. Of Layers\",\n          \"type\": \"Number\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Layer Type\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Layer Size\",\n          \"type\": \"Number\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Area\",\n          \"type\": \"Number\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        }\n      ]\n    },\n    \"latitude\": 18.4389511,\n    \"warrantyAvailable\": false,\n    \"oldCode\": \"000071\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"name\": \"Roads\",\n    \"anticipatedLife\": 15,\n    \"departmentCode\": \"TP\",\n    \"orderNumber\": \"1230\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"modeOfAcquisition\": \"CONSTRUCTION\",\n    \"landDetails\": [\n      {\n        \"code\": \"Open Land\",\n        \"surveyNo\": \"bellandur01\",\n        \"area\": 2345\n      }\n    ],\n    \"totalArea\": 2345,\n    \"longitude\": 73.1167514,\n    \"location\": \"Mhasala - Tala Rd, Wali, Roha, Maharashtra 402109, India\",\n    \"address\": \"Roha, MH\",\n    \"locationDetails\": {\n      \"electionWard\": \"173\"\n    },\n    \"originalValue\": \"1000000\",\n    \"titleDocumentsAvalable\": [\n      \"land acquisition letter\",\n      \" approval letter\"\n    ],\n    \"securityDepositRetained\": \"100000\",\n    \"securityDepositRealized\": \"50000\",\n    \"description\": \"Construction of BT Roads\",\n    \"defectLiabilityPeriod\": {\n      \"year\": \"1\",\n      \"month\": \"12\",\n      \"day\": \"28\"\n    },\n    \"openingDate\": \"{{openingDate}}\",\n    \"grossValue\": \"200000\",\n    \"assetAccount\": \"Fixed Assets\",\n    \"accumulatedDepreciationAccount\": \"Accumulated Depreciation\",\n    \"revaluationReserveAccount\": \"Revaluation Reserve Account\",\n    \"depreciationExpenseAccount\": \"Depreciation Expense Account\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetAttributes\": [\n      {\n        \"key\": \"Location\",\n        \"type\": \"Text\",\n        \"value\": \"Roha\"\n      },\n      {\n        \"key\": \"Length\",\n        \"type\": \"Number\",\n        \"value\": \"98425.2\"\n      },\n      {\n        \"key\": \"MinimumWidth\",\n        \"type\": \"Number\",\n        \"value\": \"20\"\n      },\n      {\n        \"key\": \"MaximumWidth\",\n        \"type\": \"Number\",\n        \"value\": \"80\"\n      },\n      {\n        \"key\": \"Road Type\",\n        \"type\": \"Select\",\n        \"value\": \" Bitomun\"\n      },\n      {\n        \"key\": \"Layer description\",\n        \"type\": \"Text\",\n        \"value\": \"BT Road\"\n      },\n      {\n        \"key\": \"No\",\n        \"type\": \" Of Layers\",\n        \"value\": {\n          \"Number\": \"3\"\n        }\n      },\n      {\n        \"key\": \"Layer Type\",\n        \"type\": \"Text\",\n        \"value\": \"BT\"\n      },\n      {\n        \"key\": \"Layer Size\",\n        \"type\": \"Number\",\n        \"value\": \"5\"\n      },\n      {\n        \"key\": \"Area\",\n        \"type\": \"Number\",\n        \"value\": \"7874016\"\n      }\n    ]\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Movable Asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"// requestBody = JSON.parse(requestBody.data);",
+											"",
+											"// tests[\"MOVABLE\"] = requestBody.Asset.assetCategoryType;",
+											"",
+											"pm.test(\"Successful POST request\", function () {",
+											"    pm.expect(pm.response.code).to.be.oneOf([201,202]);",
+											"});",
+											"",
+											"jsonData = JSON.parse(responseBody);",
+											"",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var num1 = Math.floor((Math.random() * 10000) + 1);",
+											"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+											"var dates=[];",
+											"",
+											"for(var i=0; i<5; i++){",
+											"    dates.push(new Date().getTime());",
+											"}",
+											"pm.environment.set(\"dateOfCreation\", dates[0]);",
+											"pm.environment.set(\"acquisitionDate\", dates[1]);",
+											"pm.environment.set(\"orderDate\", dates[2]);",
+											"pm.environment.set(\"warrantyExpiryDate\", dates[3]);",
+											"pm.environment.set(\"openingDate\", dates[4]);",
+											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\t\"requestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510122611081,\n    \"action\": \"create\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Asset\": {\n  \t\"oldCode\": \"\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"name\": \"Motor Vehicles\",\n    \"assetCategory\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"id\": 28,\n    \"name\": \"Car\",\n    \"code\": \"028\",\n    \"assetCategoryType\": \"MOVABLE\",\n    \"parent\": 19,\n    \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n    \"isAssetAllow\": true,\n    \"assetAccount\": null,\n    \"accumulatedDepreciationAccount\": null,\n    \"revaluationReserveAccount\": null,\n    \"depreciationExpenseAccount\": null,\n    \"unitOfMeasurement\": \"NOS\",\n    \"version\": \"1.0\",\n    \"depreciationRate\": 15,\n    \"isDepreciationApplicable\": true,\n    \"assetFieldsDefination\": null\n    },\n    \"departmentCode\": \"AT\",\n    \"orderNumber\": \"1230\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"1500000\",\n    \"longitude\": 73.1167514,\n    \"latitude\": 18.4389511,\n    \"location\": \"Mhasala - Tala Rd, Wali, Roha, Maharashtra 402109, India\",\n    \"address\": \"Roha, MH\",\n    \"quantity\": \"1\",\n    \"anticipatedLife\": 7,\n    \"modeOfAcquisition\": \"PURCHASE\",\n    \"titleDocumentsAvalable\": [\n      \"Vehicle Registration doc\"\n    ],\n    \"warrantyAvailable\": true,\n    \"warrantyExpiryDate\": 1541671798000,\n    \"description\": \"Motor Vehicle for the Municipal Head Office\",\n    \"defectLiabilityPeriod\": {\n      \"year\": \"2\",\n      \"month\": \"5\",\n      \"day\": \"28\"\n    },\n    \"securityDepositRetained\": \"800000\",\n    \"securityDepositRealized\": \"500000\",\n    \"openingDate\": \"{{openingDate}}\",\n    \"grossValue\": \"1500000\",\n    \"assetAccount\": \"Fixed Assets\",\n    \"accumulatedDepreciationAccount\": \"Accumulated Depreciation\",\n    \"revaluationReserveAccount\": \"Revaluation Reserve Account\",\n    \"depreciationExpenseAccount\": \"Depreciation Expense Account\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetAttributes\": []\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search Asset",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"requestInfo\": {\n    \"action\": \"search\",\n    \"did\": \"1\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"apiId\": \"1\",\n    \"ver\": \"1.0\",\n    \"ts\": 1,\n    \"key\": \"abcdkey\",\n    \"authToken\": \"{{access_token}}\"\n\t}\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_search?tenantId={{tenantId}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Asset",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510209381264,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  },\n\t\n  \"Assets\": [\n    {\n      \"anticipatedLife\": 7,\n      \"orderNumber\": \"1\",\n      \"orderDate\": 1510165800000,\n      \"wipReferenceNo\": \"Rdefault/TP/012/113\",\n      \"acquiredFrom\": null,\n      \"warrantyAvailable\": true,\n      \"warrantyExpiryDate\": 1514745000000,\n      \"defectLiabilityPeriod\": {\n        \"year\": 1,\n        \"month\": 0,\n        \"day\": 0\n      },\n      \"securityDepositRetained\": 0,\n      \"securityDepositRealized\": 0,\n      \"acquisitionDate\": 1510165800000,\n      \"originalValue\": 12000,\n      \"assetAccount\": \"Fixed Assets\",\n      \"accumulatedDepreciationAccount\": \"Accumulated Depreciation\",\n      \"revaluationReserveAccount\": \"Revaluation Reserve Account\",\n      \"depreciationExpenseAccount\": \"Depreciation Expense Account\",\n      \"titleDocumentsAvalable\": [\n        \"Warranty Doc\"\n      ],\n      \"locationDetails\": {\n        \"locality\": null,\n        \"zone\": null,\n        \"revenueWard\": null,\n        \"block\": null,\n        \"street\": null,\n        \"electionWard\": null,\n        \"doorNo\": null,\n        \"pinCode\": null\n      },\n      \"totalArea\": null,\n      \"address\": \"Roha, MH\",\n      \"longitude\": 73.1167514,\n      \"latitude\": 18.4389511,\n      \"landSurveyNo\": null,\n      \"quantity\": 2,\n      \"tenantId\": \"default\",\n      \"id\": 83,\n      \"name\": \"Fixtures Toll kit\",\n      \"code\": \"default/WT/039/83\",\n      \"oldCode\": \"default/TP/012/113\",\n      \"departmentCode\": \"WT\",\n      \"assetCategory\": {\n        \"tenantId\": \"default\",\n        \"id\": 39,\n        \"name\": \"Fixtures\",\n        \"code\": \"039\",\n        \"assetCategoryType\": \"MOVABLE\",\n        \"parent\": 21,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"isDepreciationApplicable\": true,\n        \"depreciationRate\": 15,\n        \"assetFieldsDefination\": [\n          {\n            \"name\": \"Type\",\n            \"type\": \"Select\",\n            \"isActive\": true,\n            \"isMandatory\": false,\n            \"values\": \"wood,plastic,steel\",\n            \"localText\": null,\n            \"regExFormate\": null,\n            \"url\": null,\n            \"order\": null,\n            \"columns\": []\n          },\n          {\n            \"name\": \"Color\",\n            \"type\": \"Text\",\n            \"isActive\": true,\n            \"isMandatory\": false,\n            \"values\": null,\n            \"localText\": null,\n            \"regExFormate\": null,\n            \"url\": null,\n            \"order\": null,\n            \"columns\": []\n          }\n        ]\n      },\n      \"modeOfAcquisition\": \"PURCHASE\",\n      \"status\": null,\n      \"grossValue\": 12000,\n      \"accumulatedDepreciation\": null,\n      \"description\": \"Fixtures Toll kit for Water Dep\",\n      \"dateOfCreation\": 1510165800000,\n      \"remarks\": null,\n      \"version\": null,\n      \"assetReference\": null,\n      \"enableYearWiseDepreciation\": null,\n      \"assetAttributes\": [\n        {\n          \"key\": \"Type\",\n          \"type\": \"Select\",\n          \"value\": \"steel\"\n        },\n        {\n          \"key\": \"Color\",\n          \"type\": \"Text\",\n          \"value\": \"Sliver White\"\n        }\n      ],\n      \"depreciationRate\": null,\n      \"yearWiseDepreciationRate\": null,\n      \"auditDetails\": {\n        \"createdBy\": \"141\",\n        \"createdDate\": 1510211546356,\n        \"lastModifiedBy\": \"141\",\n        \"lastModifiedDate\": 1510211546356\n      },\n      \"fundSource\": \"FAKE FUND 1\",\n      \"location\": \"Mhasala - Tala Rd, Wali, Roha, Maharashtra 402109, India\",\n      \"openingDate\": 1510165800000,\n      \"landDetails\": null\n    }\n  ]\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services/assets/_update",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services",
+										"assets",
+										"_update"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search AssetCategory",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n\"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services/assetCategories/_search",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services",
+										"assetCategories",
+										"_search"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Location-BoundaryType",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n \"RequestInfo\": {\r\n   \"apiId\": \"asset-services\",\r\n   \"ver\": null,\r\n   \"ts\": null,\r\n   \"action\": null,\r\n   \"did\": null,\r\n   \"key\": null,\r\n   \"msgId\": \"search with from and to values\",\r\n   \"authToken\": \"{{access_token}}\"\r\n }\r\n}"
+								},
+								"url": {
+									"raw": "{{url}}/egov-location/boundarys/getByBoundaryType?tenantId={{tenantId}}&boundaryTypeId=10",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"egov-location",
+										"boundarys",
+										"getByBoundaryType"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true
+										},
+										{
+											"key": "boundaryTypeId",
+											"value": "10",
+											"equals": true
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					],
+					"_postman_isSubFolder": true
+				}
+			]
+		},
+		{
+			"name": "Validations",
+			"description": "",
+			"item": [
+				{
+					"name": "Asset_Create_withoutMandatoryFields",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"jsonData = JSON.parse(responseBody);",
+									"var Errors = [];",
+									"",
+									"pm.test(\"Errors\", function () {",
+									"    for(var i=0; i<10; i++){",
+									"    jsonData.Errors[i].code;",
+									"    console.log(jsonData.Errors[i].code);",
+									"    }",
+									"});",
+									"",
+									"pm.environment.set(\"Response:\", JSON.stringify(jsonData));",
+									"postman.getEnvironmentVariable(\"Response:\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var epoch1 = Math.round(new Date().getTime()/1000);",
+									"",
+									"",
+									"pm.environment.set(\"dateOfCreation\", epoch1);",
+									"pm.environment.set(\"acquisitionDate\", 1479280508);",
+									"pm.environment.set(\"orderNumber\", \"G\"+num1)",
+									"pm.environment.set(\"orderDate\", 1479280508);",
+									"",
+									"var reqBody = JSON.parse(request.data);",
+									"",
+									"if(reqBody.Asset.warrantyAvailable === true){",
+									"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+									"}",
+									"",
+									"pm.environment.set(\"openingDate\", epoch1);",
+									"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": null,\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": null,\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"defectLiabilityPeriod\": {\n      \"year\": 2017,\n      \"month\": 10,\n      \"day\": 24\n    },\n    \"securityDepositRetained\": 33,\n    \"securityDepositRealized\": 24501009,\n    \"acquisitionDate\": null,\n    \"originalValue\": null,\n    \"assetAccount\": 1234567890,\n    \"accumulatedDepreciationAccount\": 5678925410444,\n    \"revaluationReserveAccount\": 8687531545,\n    \"depreciationExpenseAccount\": 5678925410666,\n    \"titleDocumentsAvalable\": [\n      \"document1\",\n      \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"address\": null,\n    \"quantity\": 0,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": null,\n    \"oldCode\": \"oldcode3\",\n    \"departmentCode\": null,\n    \"assetCategory\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 7,\n      \"name\": \"Category_name02\",\n      \"code\": \"cat002\",\n      \"assetCategoryType\": \"LAND\",\n      \"parent\": 0,\n      \"isDepreciationApplicable\": true,\n      \"depreciationMethod\": \"Straight Line Method\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": 32456898876,\n      \"accumulatedDepreciationAccount\": 24545666644,\n      \"revaluationReserveAccount\": 24534543,\n      \"depreciationExpenseAccount\": 4524546565,\n      \"unitOfMeasurement\": 3,\n      \"version\": \"v1\",\n      \"depreciationRate\": 2,\n      \"assetFieldsDefination\": [\n        {\n          \"name\": \"Type of Truck\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"1\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Year of Manufacture\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"2\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Registration Details\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"3\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Engine Number\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"4\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Chassis Number\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"5\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Acquired from\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"6\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Acquisition Cost\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"7\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Available Doc List\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"8\",\n          \"columns\": []\n        }\n      ]\n    },\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CREATED\",\n    \"grossValue\": null,\n    \"accumulatedDepreciation\": 45653245,\n    \"description\": null,\n    \"dateOfCreation\": null,\n    \"remarks\": \"remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type of Truck\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Year of Manufacture\",\n        \"type\": \"Text\",\n        \"value\": \"2014\"\n      },\n      {\n        \"key\": \"Registration Details\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Engine Number\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Chassis Number\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Total Cost\",\n        \"type\": \"Text\",\n        \"value\": \"50000\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": \"2\"\n      }\n    ],\n    \"depreciationRate\": 10,\n    \"yearWiseDepreciationRate\": [\n      {\n        \"depreciationRate\": 12,\n        \"financialYear\": \"2017-18\",\n        \"assetId\": 2,\n        \"usefulLifeInYears\": 3\n      }\n    ],\n    \"auditDetails\": {\n      \"createdBy\": \"1\",\n      \"createdDate\": 1223446556,\n      \"lastModifiedBy\": \"1\",\n      \"lastModifiedDate\": 123455656\n    },\n    \"fundSource\": \"finance\",\n    \"Location\": \"bangalore\",\n    \"openingDate\": 123455656,\n    \"landDetails\": [\n      {\n        \"code\": \"iuytre\",\n        \"area\": 67.9,\n        \"surveyNo\": \"sur_no\"\n      }\n    ]\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/asset-services-maha/assets/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"asset-services-maha",
+								"assets",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "1NonMandat",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 400\", function () {",
+									"    pm.response.to.have.status(400);",
+									"});",
+									"",
+									"jsonData = JSON.parse(responseBody);",
+									"",
+									"pm.test(\"anticipatedLife field missing\", function () {",
+									"    jsonData.Errors[0].code;",
+									"    console.log(\"anticipatedLife field: \"+jsonData.Errors[0].message);",
+									"});",
+									"",
+									"pm.environment.set(\"Response:\", JSON.stringify(jsonData));",
+									"postman.getEnvironmentVariable(\"Response:\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var pYear = new Date().getFullYear()-1;",
+									"var fYear = new Date().getFullYear()+1",
+									"var month = new Date().getMonth();",
+									"var date = new Date().getDate();",
+									"",
+									"// var epoch1 = date+\"/\"+month+\"/\"+pYear;",
+									"",
+									"var epoch1 = Math.round(new Date().getTime()/1000);",
+									"// var epoch2 = Math.round(today.getTime()/1000);",
+									"// var epoch3 = Math.round(today.getTime()/1000);",
+									"",
+									"pm.environment.set(\"dateOfCreation\", epoch1);",
+									"pm.environment.set(\"acquisitionDate\", 1479280508);",
+									"pm.environment.set(\"orderNumber\", \"G\"+num1)",
+									"pm.environment.set(\"orderDate\", 1479280508);",
+									"",
+									"var reqBody = JSON.parse(request.data);",
+									"",
+									"if(reqBody.Asset.warrantyAvailable === true){",
+									"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+									"}",
+									"",
+									"pm.environment.set(\"openingDate\", epoch1);",
+									"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\" :\"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\":{\n      \"anticipatedLife\":null,\n      \"orderNumber\": \"{{orderNumber}}\",\n      \"orderDate\": \"{{orderDate}}\",\n      \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n      \"acquiredFrom\": \"Private\",\n      \"warrantyAvailable\": false,\n      \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n      \"defectLiabilityPeriod\": {\n        \"year\": 2017,\n        \"month\": 10,\n        \"day\": 24\n      },\n      \"securityDepositRetained\":33,\n      \"securityDepositRealized\": 24501009,\n      \"acquisitionDate\": \"{{acquisitionDate}}\",\n      \"originalValue\":20201002,\n      \"assetAccount\": 937468245,\n      \"accumulatedDepreciationAccount\": 5678925410444,\n      \"revaluationReserveAccount\": 8687531545,\n      \"depreciationExpenseAccount\": 5678925410666,\n      \"titleDocumentsAvalable\":[\n        \"document1\"\n        ],\n      \"usage\": \"usage\",\n      \"locationDetails\": {\n        \"locality\": 2,\n        \"zone\": 3,\n        \"revenueWard\": 4,\n        \"block\": 10,\n        \"street\": 6,\n        \"electionWard\": 13,\n        \"doorNo\": \"104\",\n        \"pinCode\": 560104\n      },\n    \n      \"totalArea\": 5.0,\n      \"address\": \"address\",\n      \"longitude\": 9.9,\n      \"latitude\": 6.6,\n      \"floors\": 4,\n      \"landSurveyNo\": \"Survey_num03\",\n      \"quantity\": 0,\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 16,\n      \"name\": \"name03\",\n      \"code\": \"code03\",\n      \"oldCode\": \"oldcode3\",\n      \"departmentCode\":\"AT\",\n      \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 7,\n        \"name\": \"Category_name02\",\n        \"code\": \"cat002\",\n        \"assetCategoryType\": \"LAND\",\n        \"parent\": 0,\n        \"isDepreciationApplicable\": true,\n        \"depreciationMethod\": \"Straight Line Method\",\n        \"isAssetAllow\": true,\n        \"assetAccount\":32456898876,\n        \"accumulatedDepreciationAccount\": 24545666644,\n        \"revaluationReserveAccount\": 24534543,\n        \"depreciationExpenseAccount\": 4524546565,\n        \"unitOfMeasurement\": 3,\n        \"version\": \"v1\",\n        \"depreciationRate\": 2,\n        \"assetFieldsDefination\": [\n        {\n                    \"name\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"1\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"2\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"3\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"4\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"5\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Acquired from\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"6\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Acquisition Cost\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"7\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"8\",\n                    \"columns\": []\n                }\n        ]\n      },\n      \"modeOfAcquisition\": \"ACQUIRED\",\n      \"status\": \"CREATED\",\n      \"grossValue\": 700,\n      \"accumulatedDepreciation\": 45653245,\n      \"description\": \"trucks\",\n      \"dateOfCreation\": 1504117800,\n      \"remarks\": \"remarks\",\n      \"version\": \"v1\",\n      \"assetReference\": 1,\n      \"enableYearWiseDepreciation\": true,\n      \"assetAttributes\": [\n        {\n                    \"key\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"value\": \"2014\"\n                },\n                {\n                    \"key\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Total Cost\",\n                    \"type\": \"Text\",\n                    \"value\": \"50000\"\n                },\n                {\n                    \"key\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"value\": \"2\"\n                }\n      ],\n      \"depreciationRate\": 5,\n      \"yearWiseDepreciationRate\": [\n        {\n          \"depreciationRate\":12,\n          \"financialYear\": \"2017-18\",\n          \"assetId\":2,\n          \"usefulLifeInYears\":3\n        }\n      ],\n       \"auditDetails\":{\n      \"createdBy\":\"1\",\n      \"createdDate\":1223446556,\n      \"lastModifiedBy\":\"1\",\n      \"lastModifiedDate\":123455656\n      \n    },\n    \"fundSource\":\"finance\",\n    \"Location\":\"bangalore\",\n    \"openingDate\":123455656,\n    \"landDetails\":[\n      {\n        \"code\":\"iuytre\",\n        \"area\":67.9,\n        \"surveyNo\":\"sur_no\"\n      \n      \n    }\n    ]\n    \n    }\n  \n}"
+						},
+						"url": {
+							"raw": "{{url}}/asset-services-maha/assets/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"asset-services-maha",
+								"assets",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Functional Test",
+			"item": [
+				{
+					"name": "Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"pm.test(\"Login as TL001\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"TL001\");",
+									"});",
+									"",
+									"var jsonData = JSON.parse(responseBody);",
+									"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+									"",
+									"tests[\"Login user has Super User role\"] = jsonData.UserRequest.roles[1].code;",
+									"",
+									"pm.test(\"Access Token generated successfully\", responseCode.status);",
+									"",
+									"postman.setNextRequest(\"Asset_Create\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/x-www-form-urlencoded"
+							},
+							{
+								"key": "Authorization",
+								"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+							}
+						],
+						"body": {
+							"mode": "urlencoded",
+							"urlencoded": [
+								{
+									"key": "username",
+									"type": "text",
+									"value": "TL001"
+								},
+								{
+									"key": "password",
+									"type": "text",
+									"value": "12345678"
+								},
+								{
+									"key": "grant_type",
+									"type": "text",
+									"value": "password"
+								},
+								{
+									"key": "scope",
+									"type": "text",
+									"value": "read"
+								},
+								{
+									"key": "tenantId",
+									"type": "text",
+									"value": "{{tenantId}}"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{url}}/user/oauth/token",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"oauth",
+								"token"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Asset_Create",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"jsonData = JSON.parse(responseBody);",
+									"",
+									"// pm.test(\"Environment to be Asset\", function () { ",
+									"//     pm.expect(pm.environment.get(\"env\")).to.equal(\"Asset\"); ",
+									"// });",
+									"",
+									"pm.test(\"Asset Created\", function () {",
+									"    pm.response.to.have.status(201);",
+									"});",
+									"",
+									"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+									"",
+									"postman.setNextRequest(\"Asset_Search\");"
+								]
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"var num1 = Math.floor((Math.random() * 10000) + 1);",
+									"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+									"var pYear = new Date().getFullYear()-1;",
+									"var fYear = new Date().getFullYear()+1",
+									"var month = new Date().getMonth();",
+									"var date = new Date().getDate();",
+									"",
+									"// var epoch1 = date+\"/\"+month+\"/\"+pYear;",
+									"",
+									"var epoch1 = Math.round(new Date().getTime()/1000);",
+									"// var epoch2 = Math.round(today.getTime()/1000);",
+									"// var epoch3 = Math.round(today.getTime()/1000);",
+									"",
+									"pm.environment.set(\"dateOfCreation\", epoch1);",
+									"pm.environment.set(\"acquisitionDate\", 1479280508);",
+									"pm.environment.set(\"orderNumber\", \"G\"+num1)",
+									"pm.environment.set(\"orderDate\", 1479280508);",
+									"",
+									"var reqBody = JSON.parse(request.data);",
+									"",
+									"if(reqBody.Asset.warrantyAvailable === true){",
+									"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+									"}",
+									"",
+									"pm.environment.set(\"openingDate\", epoch1);",
+									"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\" :\"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\":{\n      \"anticipatedLife\":50,\n      \"orderNumber\": \"{{orderNumber}}\",\n      \"orderDate\": \"{{orderDate}}\",\n      \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n      \"acquiredFrom\": \"Private\",\n      \"warrantyAvailable\": false,\n      \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n      \"defectLiabilityPeriod\": {\n        \"year\": 2017,\n        \"month\": 10,\n        \"day\": 24\n      },\n      \"securityDepositRetained\":33,\n      \"securityDepositRealized\": 24501009,\n      \"acquisitionDate\": \"{{acquisitionDate}}\",\n      \"originalValue\":20201002,\n      \"assetAccount\": 937468245,\n      \"accumulatedDepreciationAccount\": 5678925410444,\n      \"revaluationReserveAccount\": 8687531545,\n      \"depreciationExpenseAccount\": 5678925410666,\n      \"titleDocumentsAvalable\":[\n        \"document1\"\n        ],\n      \"usage\": \"usage\",\n      \"locationDetails\": {\n        \"locality\": 2,\n        \"zone\": 3,\n        \"revenueWard\": 4,\n        \"block\": 10,\n        \"street\": 6,\n        \"electionWard\": 13,\n        \"doorNo\": \"104\",\n        \"pinCode\": 560104\n      },\n    \n      \"totalArea\": 5.0,\n      \"address\": \"address\",\n      \"longitude\": 9.9,\n      \"latitude\": 6.6,\n      \"floors\": 4,\n      \"landSurveyNo\": \"Survey_num03\",\n      \"quantity\": 0,\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 16,\n      \"name\": \"name03\",\n      \"code\": \"code03\",\n      \"oldCode\": \"oldcode3\",\n      \"departmentCode\":\"AT\",\n      \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 7,\n        \"name\": \"Category_name02\",\n        \"code\": \"cat002\",\n        \"assetCategoryType\": \"LAND\",\n        \"parent\": 0,\n        \"isDepreciationApplicable\": true,\n        \"depreciationMethod\": \"Straight Line Method\",\n        \"isAssetAllow\": true,\n        \"assetAccount\":32456898876,\n        \"accumulatedDepreciationAccount\": 24545666644,\n        \"revaluationReserveAccount\": 24534543,\n        \"depreciationExpenseAccount\": 4524546565,\n        \"unitOfMeasurement\": 3,\n        \"version\": \"v1\",\n        \"depreciationRate\": 2,\n        \"assetFieldsDefination\": [\n        {\n                    \"name\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"1\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"2\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"3\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"4\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"5\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Acquired from\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"6\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Acquisition Cost\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"7\",\n                    \"columns\": []\n                },\n                {\n                    \"name\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"isActive\": true,\n                    \"isMandatory\": false,\n                    \"values\": null,\n                    \"localText\": null,\n                    \"regExFormate\": null,\n                    \"url\": null,\n                    \"order\": \"8\",\n                    \"columns\": []\n                }\n        ]\n      },\n      \"modeOfAcquisition\": \"ACQUIRED\",\n      \"status\": \"CREATED\",\n      \"grossValue\": 700,\n      \"accumulatedDepreciation\": 45653245,\n      \"description\": \"trucks\",\n      \"dateOfCreation\": 1504117800,\n      \"remarks\": \"remarks\",\n      \"version\": \"v1\",\n      \"assetReference\": 1,\n      \"enableYearWiseDepreciation\": true,\n      \"assetAttributes\": [\n        {\n                    \"key\": \"Type of Truck\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Year of Manufacture\",\n                    \"type\": \"Text\",\n                    \"value\": \"2014\"\n                },\n                {\n                    \"key\": \"Registration Details\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Engine Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Chassis Number\",\n                    \"type\": \"Text\",\n                    \"value\": null\n                },\n                {\n                    \"key\": \"Total Cost\",\n                    \"type\": \"Text\",\n                    \"value\": \"50000\"\n                },\n                {\n                    \"key\": \"Available Doc List\",\n                    \"type\": \"Text\",\n                    \"value\": \"2\"\n                }\n      ],\n      \"depreciationRate\": 5,\n      \"yearWiseDepreciationRate\": [\n        {\n          \"depreciationRate\":12,\n          \"financialYear\": \"2017-18\",\n          \"assetId\":2,\n          \"usefulLifeInYears\":3\n        }\n      ],\n       \"auditDetails\":{\n      \"createdBy\":\"1\",\n      \"createdDate\":1223446556,\n      \"lastModifiedBy\":\"1\",\n      \"lastModifiedDate\":123455656\n      \n    },\n    \"fundSource\":\"finance\",\n    \"Location\":\"bangalore\",\n    \"openingDate\":123455656,\n    \"landDetails\":[\n      {\n        \"code\":\"iuytre\",\n        \"area\":67.9,\n        \"surveyNo\":\"sur_no\"\n      \n      \n    }\n    ]\n    \n    }\n  \n}"
+						},
+						"url": {
+							"raw": "{{url}}/asset-services-maha/assets/_create",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"asset-services-maha",
+								"assets",
+								"_create"
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Asset_Search",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"pm.test(\"Status code is 200\", function () {",
+									"    pm.response.to.have.status(200);",
+									"});",
+									"",
+									"postman.setNextRequest(\"Logout\");"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"RequestInfo\":\n\t{\n    \t\"action\":\"search\",\n    \t\"did\":\"did\",\n    \t\"msgId\": \"msgId\",\n    \t\"requesterId\":\"reuesterId\",\n    \t\"authToken\":\"{{access_token}}\",\n    \t\"apiId\": \"123456789\",\n    \t\"ver\": \"159\",\n    \t\"ts\": null,\n    \t\"key\": \"key\"\n    }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/asset-services-maha/assets/_search?tenantId={{tenantId}}&code={{assetCode}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"asset-services-maha",
+								"assets",
+								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "code",
+									"value": "{{assetCode}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"tests[\"Status code is 200\"] = responseCode.code === 200;",
+									"",
+									"pm.test(\"User Logout Successfully\", function () {",
+									"    pm.expect(pm.response.text()).to.include(\"Logout successfully\");",
+									"});"
+								]
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+						},
+						"url": {
+							"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"user",
+								"_logout"
+							],
+							"query": [
+								{
+									"key": "access_token",
+									"value": "{{access_token}}",
+									"equals": true
+								}
+							]
+						},
+						"description": ""
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

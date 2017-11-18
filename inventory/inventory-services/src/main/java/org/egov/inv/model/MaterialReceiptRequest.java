@@ -22,7 +22,7 @@ public class MaterialReceiptRequest   {
   @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
-  @JsonProperty("MaterialReceipt")
+  @JsonProperty("materialReceipt")
   private List<MaterialReceipt> materialReceipt = new ArrayList<MaterialReceipt>();
 
   public MaterialReceiptRequest requestInfo(RequestInfo requestInfo) {

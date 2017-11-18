@@ -549,9 +549,74 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.quantity
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.status
             - jsonPath: $.materialIssues.*.materialIssueDetails[?({id} in @.materialIssuedFromReceipts[*].id)].id
-           
-            
 
-
-
-
+    - version: 1.0
+      name: Material Reciept Note
+      description: Create Material Receipt Note
+      fromTopic: inv-materialreceiptnote-save-topic
+      queryMaps:
+        - query: >-
+               INSERT INTO materialreceipt(id, mrnnumber, receivingstore, receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
+               challanno, challandate, description, paymentterms, receivedby, designation, mrnstatus, inspectedby, inspectiondate, inspectionremarks,
+               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?,?);
+          basePath: $.materialReceipt.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.id
+            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt.*.receivingStore.code
+            - jsonPath: $.materialReceipt.*.receiptDate
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptType
+            - jsonPath: $.materialReceipt.*.supplier.code
+            - jsonPath: $.materialReceipt.*.supplierBillNo
+            - jsonPath: $.materialReceipt.*.supplierBillDate
+            - jsonPath: $.materialReceipt.*.challanNo
+            - jsonPath: $.materialReceipt.*.challanDate
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.description
+            - jsonPath: $.materialReceipt.*.paymentTerms
+            - jsonPath: $.materialReceipt.*.receivedBy
+            - jsonPath: $.materialReceipt.*.designation
+            - jsonPath: $.materialReceipt.*.mrnStatus
+            - jsonPath: $.materialReceipt.*.inspectedBy
+            - jsonPath: $.materialReceipt.*.inspectionDate
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.inspectionRemarks
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+            - jsonPath: $.materialReceipt.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedTime
+              dbType: LONG
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, batchno, podetailid, mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.rejectionRemark
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.batchNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
+            - jsonPath: $.materialReceipt[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.createdBy
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedBy
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedTime
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
+              type: LONG

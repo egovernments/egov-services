@@ -2690,7 +2690,7 @@ definitions:
         RequestInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-        MaterialReceipt:
+        materialReceipt:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
@@ -2705,7 +2705,7 @@ definitions:
         ResponseInfo:
           $ref: >-
             https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
-        MaterialReceipt:
+        materialReceipt:
           type: array
           items:
             $ref: '#/definitions/MaterialReceipt'
@@ -3384,6 +3384,7 @@ definitions:
           minLength: 5
           description: |
             code of the Store
+          format: singleValueList
         name:
           type: string
           pattern: ^[a-zA-Z ]+$
@@ -3391,6 +3392,7 @@ definitions:
           minLength: 5
           description: |
             name of the Store
+          format: singleValueList  
         description:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$

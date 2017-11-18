@@ -1,435 +1,514 @@
 package org.egov.inv.model;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
 /**
  * Hold the material receipt note material level information. This will show which material is received based on which purchase order.
  */
 @ApiModel(description = "Hold the material receipt note material level information. This will show which material is received based on which purchase order.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-08T06:17:26.594Z")
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
-public class MaterialReceiptDetail   {
-  @JsonProperty("id")
-  private String id = null;
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-18T03:45:26.890Z")
 
-  @JsonProperty("tenantId")
-  private String tenantId = null;
+public class MaterialReceiptDetail {
+    @JsonProperty("id")
+    private String id = null;
 
-  @JsonProperty("mrnNumber")
-  private String mrnNumber = null;
-
-  @JsonProperty("material")
-  private Material material = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-  @JsonProperty("uom")
-  private Uom uom = null;
-
-  @JsonProperty("poline")
-  private PurchaseOrder poline = null;
+    @JsonProperty("material")
+    private Material material = null;
 
-  @JsonProperty("receivedQty")
-  private BigDecimal receivedQty = null;
-
-  @JsonProperty("acceptedQty")
-  private BigDecimal acceptedQty = null;
+    @JsonProperty("orderNumber")
+    private BigDecimal orderNumber = null;
 
-  @JsonProperty("unitRate")
-  private BigDecimal unitRate = null;
+    @JsonProperty("batchNo")
+    private String batchNo = null;
 
-  @JsonProperty("asset")
-  private Asset asset = null;
-
-  @JsonProperty("voucherHeader")
-  private String voucherHeader = null;
-
-  @JsonProperty("rejectionRemark")
-  private String rejectionRemark = null;
-
-  @JsonProperty("remarks")
-  private String remarks = null;
+    @JsonProperty("uom")
+    private Uom uom = null;
 
-  @JsonProperty("receiptDetailsAddnInfo")
-  private List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo = null;
-
-  public MaterialReceiptDetail id(String id) {
-    this.id = id;
-    return this;
-  }
+    @JsonProperty("purchaseOrderDetail")
+    private PurchaseOrderDetail purchaseOrderDetail = null;
 
-   /**
-   * The unique identifier for the receipt details.
-   * @return id
-  **/
-  @ApiModelProperty(required = true, value = "The unique identifier for the receipt details.")
-  @NotNull
-
-
-  public String getId() {
-    return id;
-  }
-
-  public void setId(String id) {
-    this.id = id;
-  }
-
-  public MaterialReceiptDetail tenantId(String tenantId) {
-    this.tenantId = tenantId;
-    return this;
-  }
+    @JsonProperty("receivedQty")
+    private BigDecimal receivedQty = null;
 
-   /**
-   * Tenant id of the Material Receipt Header
-   * @return tenantId
-  **/
-  @ApiModelProperty(value = "Tenant id of the Material Receipt Header")
-
- @Size(min=4,max=128)
-  public String getTenantId() {
-    return tenantId;
-  }
-
-  public void setTenantId(String tenantId) {
-    this.tenantId = tenantId;
-  }
-
-  public MaterialReceiptDetail mrnNumber(String mrnNumber) {
-    this.mrnNumber = mrnNumber;
-    return this;
-  }
-
-   /**
-   * Unique number to identify the maretial receipt note.
-   * @return mrnNumber
-  **/
-  @ApiModelProperty(required = true, value = "Unique number to identify the maretial receipt note.")
-  @NotNull
-
-
-  public String getMrnNumber() {
-    return mrnNumber;
-  }
-
-  public void setMrnNumber(String mrnNumber) {
-    this.mrnNumber = mrnNumber;
-  }
-
-  public MaterialReceiptDetail material(Material material) {
-    this.material = material;
-    return this;
-  }
-
-   /**
-   * Get material
-   * @return material
-  **/
-  @ApiModelProperty(value = "")
-
-  
-
-  public Material getMaterial() {
-    return material;
-  }
-
-  public void setMaterial(Material material) {
-    this.material = material;
-  }
-
-  public MaterialReceiptDetail uom(Uom uom) {
-    this.uom = uom;
-    return this;
-  }
-
-   /**
-   * Auto populate stocking unit of measure of selected material.
-   * @return uom
-  **/
-  @ApiModelProperty(value = "Auto populate stocking unit of measure of selected material.")
-
-  @Valid
-
-  public Uom getUom() {
-    return uom;
-  }
-
-  public void setUom(Uom uom) {
-    this.uom = uom;
-  }
-
-  public MaterialReceiptDetail poline(PurchaseOrder poline) {
-    this.poline = poline;
-    return this;
-  }
-
-   /**
-   * po line mandatory if receipt type is purchase receipt.
-   * @return poline
-  **/
-  @ApiModelProperty(value = "po line mandatory if receipt type is purchase receipt.")
-
-  @Valid
-
-  public PurchaseOrder getPoline() {
-    return poline;
-  }
-
-  public void setPoline(PurchaseOrder poline) {
-    this.poline = poline;
-  }
-
-  public MaterialReceiptDetail receivedQty(BigDecimal receivedQty) {
-    this.receivedQty = receivedQty;
-    return this;
-  }
-
-   /**
-   * The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM.
-   * @return receivedQty
-  **/
-  @ApiModelProperty(required = true, value = "The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM.")
-  @NotNull
-
-  @Valid
-
-  public BigDecimal getReceivedQty() {
-    return receivedQty;
-  }
-
-  public void setReceivedQty(BigDecimal receivedQty) {
-    this.receivedQty = receivedQty;
-  }
-
-  public MaterialReceiptDetail acceptedQty(BigDecimal acceptedQty) {
-    this.acceptedQty = acceptedQty;
-    return this;
-  }
-
-   /**
-   * The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity.
-   * @return acceptedQty
-  **/
-  @ApiModelProperty(value = "The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity.")
-
-  @Valid
-
-  public BigDecimal getAcceptedQty() {
-    return acceptedQty;
-  }
-
-  public void setAcceptedQty(BigDecimal acceptedQty) {
-    this.acceptedQty = acceptedQty;
-  }
-
-  public MaterialReceiptDetail unitRate(BigDecimal unitRate) {
-    this.unitRate = unitRate;
-    return this;
-  }
-
-   /**
-   * Per unit rate of the material as per the Purchase Order.
-   * @return unitRate
-  **/
-  @ApiModelProperty(value = "Per unit rate of the material as per the Purchase Order.")
-
-  @Valid
-
-  public BigDecimal getUnitRate() {
-    return unitRate;
-  }
-
-  public void setUnitRate(BigDecimal unitRate) {
-    this.unitRate = unitRate;
-  }
-
-  public MaterialReceiptDetail asset(Asset asset) {
-    this.asset = asset;
-    return this;
-  }
-
-   /**
-   * asset code if asset received. Create asset in asset module and save the reference.
-   * @return asset
-  **/
-  @ApiModelProperty(value = "asset code if asset received. Create asset in asset module and save the reference.")
-
-  @Valid
-
-  public Asset getAsset() {
-    return asset;
-  }
-
-  public void setAsset(Asset asset) {
-    this.asset = asset;
-  }
-
-  public MaterialReceiptDetail voucherHeader(String voucherHeader) {
-    this.voucherHeader = voucherHeader;
-    return this;
-  }
-
-   /**
-   * financial voucher passed id map
-   * @return voucherHeader
-  **/
-  @ApiModelProperty(value = "financial voucher passed id map")
-
-
-  public String getVoucherHeader() {
-    return voucherHeader;
-  }
-
-  public void setVoucherHeader(String voucherHeader) {
-    this.voucherHeader = voucherHeader;
-  }
-
-  public MaterialReceiptDetail rejectionRemark(String rejectionRemark) {
-    this.rejectionRemark = rejectionRemark;
-    return this;
-  }
-
-   /**
-   * The reason why certain quantities of materials were rejected.
-   * @return rejectionRemark
-  **/
-  @ApiModelProperty(value = "The reason why certain quantities of materials were rejected.")
-
-
-  public String getRejectionRemark() {
-    return rejectionRemark;
-  }
-
-  public void setRejectionRemark(String rejectionRemark) {
-    this.rejectionRemark = rejectionRemark;
-  }
-
-  public MaterialReceiptDetail remarks(String remarks) {
-    this.remarks = remarks;
-    return this;
-  }
-
-   /**
-   * General description about the materials.
-   * @return remarks
-  **/
-  @ApiModelProperty(value = "General description about the materials.")
-
- @Size(max=512)
-  public String getRemarks() {
-    return remarks;
-  }
-
-  public void setRemarks(String remarks) {
-    this.remarks = remarks;
-  }
-
-  public MaterialReceiptDetail receiptDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo) {
-    this.receiptDetailsAddnInfo = receiptDetailsAddnInfo;
-    return this;
-  }
-
-  public MaterialReceiptDetail addReceiptDetailsAddnInfoItem(MaterialReceiptDetailAddnlinfo receiptDetailsAddnInfoItem) {
-    if (this.receiptDetailsAddnInfo == null) {
-      this.receiptDetailsAddnInfo = new ArrayList<MaterialReceiptDetailAddnlinfo>();
+    @JsonProperty("acceptedQty")
+    private BigDecimal acceptedQty = null;
+
+    @JsonProperty("unitRate")
+    private BigDecimal unitRate = null;
+
+    @JsonProperty("openingRate")
+    private BigDecimal openingRate = null;
+
+    @JsonProperty("asset")
+    private Asset asset = null;
+
+    @JsonProperty("voucherHeader")
+    private String voucherHeader = null;
+
+    @JsonProperty("rejectionRemark")
+    private String rejectionRemark = null;
+
+    @JsonProperty("remarks")
+    private String remarks = null;
+
+    @JsonProperty("isScrapItem")
+    private Boolean isScrapItem = false;
+
+    @JsonProperty("receiptDetailsAddnInfo")
+    private List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo = null;
+
+    public MaterialReceiptDetail id(String id) {
+        this.id = id;
+        return this;
     }
-    this.receiptDetailsAddnInfo.add(receiptDetailsAddnInfoItem);
-    return this;
-  }
 
-   /**
-   * Material detail additional information referred
-   * @return receiptDetailsAddnInfo
-  **/
-  @ApiModelProperty(value = "Material detail additional information referred")
-
-  @Valid
-
-  public List<MaterialReceiptDetailAddnlinfo> getReceiptDetailsAddnInfo() {
-    return receiptDetailsAddnInfo;
-  }
-
-  public void setReceiptDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo) {
-    this.receiptDetailsAddnInfo = receiptDetailsAddnInfo;
-  }
+    /**
+     * The unique identifier for the receipt details.
+     *
+     * @return id
+     **/
+    @ApiModelProperty(required = true, value = "The unique identifier for the receipt details.")
+    @NotNull
 
 
-  @Override
-  public boolean equals(java.lang.Object o) {
-    if (this == o) {
-      return true;
+    public String getId() {
+        return id;
     }
-    if (o == null || getClass() != o.getClass()) {
-      return false;
+
+    public void setId(String id) {
+        this.id = id;
     }
-    MaterialReceiptDetail materialReceiptDetail = (MaterialReceiptDetail) o;
-    return Objects.equals(this.id, materialReceiptDetail.id) &&
-        Objects.equals(this.tenantId, materialReceiptDetail.tenantId) &&
-        Objects.equals(this.mrnNumber, materialReceiptDetail.mrnNumber) &&
-        Objects.equals(this.material, materialReceiptDetail.material) &&
-        Objects.equals(this.uom, materialReceiptDetail.uom) &&
-        Objects.equals(this.poline, materialReceiptDetail.poline) &&
-        Objects.equals(this.receivedQty, materialReceiptDetail.receivedQty) &&
-        Objects.equals(this.acceptedQty, materialReceiptDetail.acceptedQty) &&
-        Objects.equals(this.unitRate, materialReceiptDetail.unitRate) &&
-        Objects.equals(this.asset, materialReceiptDetail.asset) &&
-        Objects.equals(this.voucherHeader, materialReceiptDetail.voucherHeader) &&
-        Objects.equals(this.rejectionRemark, materialReceiptDetail.rejectionRemark) &&
-        Objects.equals(this.remarks, materialReceiptDetail.remarks) &&
-        Objects.equals(this.receiptDetailsAddnInfo, materialReceiptDetail.receiptDetailsAddnInfo);
-  }
 
-  @Override
-  public int hashCode() {
-    return Objects.hash(id, tenantId, mrnNumber, material, uom, poline, receivedQty, acceptedQty, unitRate, asset, voucherHeader, rejectionRemark, remarks, receiptDetailsAddnInfo);
-  }
-
-  @Override
-  public String toString() {
-    StringBuilder sb = new StringBuilder();
-    sb.append("class MaterialReceiptDetail {\n");
-    
-    sb.append("    id: ").append(toIndentedString(id)).append("\n");
-    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-    sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
-    sb.append("    material: ").append(toIndentedString(material)).append("\n");
-    sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
-    sb.append("    poline: ").append(toIndentedString(poline)).append("\n");
-    sb.append("    receivedQty: ").append(toIndentedString(receivedQty)).append("\n");
-    sb.append("    acceptedQty: ").append(toIndentedString(acceptedQty)).append("\n");
-    sb.append("    unitRate: ").append(toIndentedString(unitRate)).append("\n");
-    sb.append("    asset: ").append(toIndentedString(asset)).append("\n");
-    sb.append("    voucherHeader: ").append(toIndentedString(voucherHeader)).append("\n");
-    sb.append("    rejectionRemark: ").append(toIndentedString(rejectionRemark)).append("\n");
-    sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
-    sb.append("    receiptDetailsAddnInfo: ").append(toIndentedString(receiptDetailsAddnInfo)).append("\n");
-    sb.append("}");
-    return sb.toString();
-  }
-
-  /**
-   * Convert the given object to string with each line indented by 4 spaces
-   * (except the first line).
-   */
-  private String toIndentedString(java.lang.Object o) {
-    if (o == null) {
-      return "null";
+    public MaterialReceiptDetail tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
     }
-    return o.toString().replace("\n", "\n    ");
-  }
+
+    /**
+     * Tenant id of the Material Receipt Header.
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Material Receipt Header.")
+    @NotNull
+
+    @Size(min = 4, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
+
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
+
+    public MaterialReceiptDetail material(Material material) {
+        this.material = material;
+        return this;
+    }
+
+    /**
+     * Get material
+     *
+     * @return material
+     **/
+    @ApiModelProperty(value = "")
+
+    public Material getMaterial() {
+        return material;
+    }
+
+    public void setMaterial(Material material) {
+        this.material = material;
+    }
+
+    public MaterialReceiptDetail orderNumber(BigDecimal orderNumber) {
+        this.orderNumber = orderNumber;
+        return this;
+    }
+
+    /**
+     * Order of items received.
+     *
+     * @return orderNumber
+     **/
+    @ApiModelProperty(value = "Order of items received.")
+
+    @Valid
+
+    public BigDecimal getOrderNumber() {
+        return orderNumber;
+    }
+
+    public void setOrderNumber(BigDecimal orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+
+    public MaterialReceiptDetail batchNo(String batchNo) {
+        this.batchNo = batchNo;
+        return this;
+    }
+
+    /**
+     * batch number .
+     *
+     * @return batchNo
+     **/
+    @ApiModelProperty(value = "batch number .")
+
+    @Size(max = 50)
+    public String getBatchNo() {
+        return batchNo;
+    }
+
+    public void setBatchNo(String batchNo) {
+        this.batchNo = batchNo;
+    }
+
+    public MaterialReceiptDetail uom(Uom uom) {
+        this.uom = uom;
+        return this;
+    }
+
+    /**
+     * Auto populate stocking unit of measure of selected material.
+     *
+     * @return uom
+     **/
+    @ApiModelProperty(value = "Auto populate stocking unit of measure of selected material.")
+
+    public Uom getUom() {
+        return uom;
+    }
+
+    public void setUom(Uom uom) {
+        this.uom = uom;
+    }
+
+    public MaterialReceiptDetail purchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+        this.purchaseOrderDetail = purchaseOrderDetail;
+        return this;
+    }
+
+    /**
+     * po line mandatory if receipt type is purchase receipt.
+     *
+     * @return purchaseOrderDetail
+     **/
+    @ApiModelProperty(value = "po line mandatory if receipt type is purchase receipt.")
+
+    public PurchaseOrderDetail getPurchaseOrderDetail() {
+        return purchaseOrderDetail;
+    }
+
+    public void setPurchaseOrderDetail(PurchaseOrderDetail purchaseOrderDetail) {
+        this.purchaseOrderDetail = purchaseOrderDetail;
+    }
+
+    public MaterialReceiptDetail receivedQty(BigDecimal receivedQty) {
+        this.receivedQty = receivedQty;
+        return this;
+    }
+
+    /**
+     * The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM.
+     *
+     * @return receivedQty
+     **/
+    @ApiModelProperty(required = true, value = "The quantity of the material received for this particular purchase order or inter store  transfer. All the quantity needs to be saved in the database in the based UOM.")
+    @NotNull
+
+    @Valid
+
+    public BigDecimal getReceivedQty() {
+        return receivedQty;
+    }
+
+    public void setReceivedQty(BigDecimal receivedQty) {
+        this.receivedQty = receivedQty;
+    }
+
+    public MaterialReceiptDetail acceptedQty(BigDecimal acceptedQty) {
+        this.acceptedQty = acceptedQty;
+        return this;
+    }
+
+    /**
+     * The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.
+     *
+     * @return acceptedQty
+     **/
+    @ApiModelProperty(value = "The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.")
+
+    @Valid
+
+    public BigDecimal getAcceptedQty() {
+        return acceptedQty;
+    }
+
+    public void setAcceptedQty(BigDecimal acceptedQty) {
+        this.acceptedQty = acceptedQty;
+    }
+
+    public MaterialReceiptDetail unitRate(BigDecimal unitRate) {
+        this.unitRate = unitRate;
+        return this;
+    }
+
+    /**
+     * Per unit rate of the material as per the Purchase Order.
+     *
+     * @return unitRate
+     **/
+    @ApiModelProperty(value = "Per unit rate of the material as per the Purchase Order.")
+
+    @Valid
+
+    public BigDecimal getUnitRate() {
+        return unitRate;
+    }
+
+    public void setUnitRate(BigDecimal unitRate) {
+        this.unitRate = unitRate;
+    }
+
+    public MaterialReceiptDetail openingRate(BigDecimal openingRate) {
+        this.openingRate = openingRate;
+        return this;
+    }
+
+    /**
+     * Opening rate, applicable for Material Opening Balance Entry.
+     *
+     * @return openingRate
+     **/
+    @ApiModelProperty(value = "Opening rate, applicable for Material Opening Balance Entry.")
+
+    @Valid
+
+    public BigDecimal getOpeningRate() {
+        return openingRate;
+    }
+
+    public void setOpeningRate(BigDecimal openingRate) {
+        this.openingRate = openingRate;
+    }
+
+    public MaterialReceiptDetail asset(Asset asset) {
+        this.asset = asset;
+        return this;
+    }
+
+    /**
+     * asset code if asset received. Create asset in asset module and save the reference.
+     *
+     * @return asset
+     **/
+    @ApiModelProperty(value = "asset code if asset received. Create asset in asset module and save the reference.")
+
+    public Asset getAsset() {
+        return asset;
+    }
+
+    public void setAsset(Asset asset) {
+        this.asset = asset;
+    }
+
+    public MaterialReceiptDetail voucherHeader(String voucherHeader) {
+        this.voucherHeader = voucherHeader;
+        return this;
+    }
+
+    /**
+     * financial voucher passed id map
+     *
+     * @return voucherHeader
+     **/
+    @ApiModelProperty(value = "financial voucher passed id map")
+
+
+    public String getVoucherHeader() {
+        return voucherHeader;
+    }
+
+    public void setVoucherHeader(String voucherHeader) {
+        this.voucherHeader = voucherHeader;
+    }
+
+    public MaterialReceiptDetail rejectionRemark(String rejectionRemark) {
+        this.rejectionRemark = rejectionRemark;
+        return this;
+    }
+
+    /**
+     * The reason why certain quantities of materials were rejected.
+     *
+     * @return rejectionRemark
+     **/
+    @ApiModelProperty(value = "The reason why certain quantities of materials were rejected.")
+
+
+    public String getRejectionRemark() {
+        return rejectionRemark;
+    }
+
+    public void setRejectionRemark(String rejectionRemark) {
+        this.rejectionRemark = rejectionRemark;
+    }
+
+    public MaterialReceiptDetail remarks(String remarks) {
+        this.remarks = remarks;
+        return this;
+    }
+
+    /**
+     * General description about the materials.
+     *
+     * @return remarks
+     **/
+    @ApiModelProperty(value = "General description about the materials.")
+
+    @Size(max = 512)
+    public String getRemarks() {
+        return remarks;
+    }
+
+    public void setRemarks(String remarks) {
+        this.remarks = remarks;
+    }
+
+    public MaterialReceiptDetail isScrapItem(Boolean isScrapItem) {
+        this.isScrapItem = isScrapItem;
+        return this;
+    }
+
+    /**
+     * is scrap item flag. Donot use this data to issue material and show in any stock ledger report.
+     *
+     * @return isScrapItem
+     **/
+    @ApiModelProperty(value = "is scrap item flag. Donot use this data to issue material and show in any stock ledger report.")
+
+
+    public Boolean getIsScrapItem() {
+        return isScrapItem;
+    }
+
+    public void setIsScrapItem(Boolean isScrapItem) {
+        this.isScrapItem = isScrapItem;
+    }
+
+    public MaterialReceiptDetail receiptDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo) {
+        this.receiptDetailsAddnInfo = receiptDetailsAddnInfo;
+        return this;
+    }
+
+    public MaterialReceiptDetail addReceiptDetailsAddnInfoItem(MaterialReceiptDetailAddnlinfo receiptDetailsAddnInfoItem) {
+        if (this.receiptDetailsAddnInfo == null) {
+            this.receiptDetailsAddnInfo = new ArrayList<MaterialReceiptDetailAddnlinfo>();
+        }
+        this.receiptDetailsAddnInfo.add(receiptDetailsAddnInfoItem);
+        return this;
+    }
+
+    /**
+     * Material detail additional information referred
+     *
+     * @return receiptDetailsAddnInfo
+     **/
+    @ApiModelProperty(value = "Material detail additional information referred")
+
+    public List<MaterialReceiptDetailAddnlinfo> getReceiptDetailsAddnInfo() {
+        return receiptDetailsAddnInfo;
+    }
+
+    public void setReceiptDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> receiptDetailsAddnInfo) {
+        this.receiptDetailsAddnInfo = receiptDetailsAddnInfo;
+    }
+
+
+    @Override
+    public boolean equals(java.lang.Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        MaterialReceiptDetail materialReceiptDetail = (MaterialReceiptDetail) o;
+        return Objects.equals(this.id, materialReceiptDetail.id) &&
+                Objects.equals(this.tenantId, materialReceiptDetail.tenantId) &&
+                Objects.equals(this.material, materialReceiptDetail.material) &&
+                Objects.equals(this.orderNumber, materialReceiptDetail.orderNumber) &&
+                Objects.equals(this.batchNo, materialReceiptDetail.batchNo) &&
+                Objects.equals(this.uom, materialReceiptDetail.uom) &&
+                Objects.equals(this.purchaseOrderDetail, materialReceiptDetail.purchaseOrderDetail) &&
+                Objects.equals(this.receivedQty, materialReceiptDetail.receivedQty) &&
+                Objects.equals(this.acceptedQty, materialReceiptDetail.acceptedQty) &&
+                Objects.equals(this.unitRate, materialReceiptDetail.unitRate) &&
+                Objects.equals(this.openingRate, materialReceiptDetail.openingRate) &&
+                Objects.equals(this.asset, materialReceiptDetail.asset) &&
+                Objects.equals(this.voucherHeader, materialReceiptDetail.voucherHeader) &&
+                Objects.equals(this.rejectionRemark, materialReceiptDetail.rejectionRemark) &&
+                Objects.equals(this.remarks, materialReceiptDetail.remarks) &&
+                Objects.equals(this.isScrapItem, materialReceiptDetail.isScrapItem) &&
+                Objects.equals(this.receiptDetailsAddnInfo, materialReceiptDetail.receiptDetailsAddnInfo);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, material, orderNumber, batchNo, uom, purchaseOrderDetail, receivedQty, acceptedQty, unitRate, openingRate, asset, voucherHeader, rejectionRemark, remarks, isScrapItem, receiptDetailsAddnInfo);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class MaterialReceiptDetail {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    material: ").append(toIndentedString(material)).append("\n");
+        sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
+        sb.append("    batchNo: ").append(toIndentedString(batchNo)).append("\n");
+        sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
+        sb.append("    purchaseOrderDetail: ").append(toIndentedString(purchaseOrderDetail)).append("\n");
+        sb.append("    receivedQty: ").append(toIndentedString(receivedQty)).append("\n");
+        sb.append("    acceptedQty: ").append(toIndentedString(acceptedQty)).append("\n");
+        sb.append("    unitRate: ").append(toIndentedString(unitRate)).append("\n");
+        sb.append("    openingRate: ").append(toIndentedString(openingRate)).append("\n");
+        sb.append("    asset: ").append(toIndentedString(asset)).append("\n");
+        sb.append("    voucherHeader: ").append(toIndentedString(voucherHeader)).append("\n");
+        sb.append("    rejectionRemark: ").append(toIndentedString(rejectionRemark)).append("\n");
+        sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
+        sb.append("    isScrapItem: ").append(toIndentedString(isScrapItem)).append("\n");
+        sb.append("    receiptDetailsAddnInfo: ").append(toIndentedString(receiptDetailsAddnInfo)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(java.lang.Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
-

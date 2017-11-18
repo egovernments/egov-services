@@ -1,20 +1,11 @@
 package org.egov.inv.persistence.entity;
 
+import lombok.*;
+import org.egov.inv.model.*;
+import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
+
 import java.math.BigDecimal;
 import java.util.Arrays;
-
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.Material;
-import org.egov.inv.model.MaterialReceipt;
-import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
-import org.egov.inv.model.MaterialReceiptDetail;
-import org.egov.inv.model.Uom;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @Getter
 @Setter
@@ -22,9 +13,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @Builder
 public class OpeningBalanceEntity {
-	
+
     private String id;
-	private String financialYear;
+    private String financialYear;
     private String storeName;
     private String materialcode;
     private String mrnStatus;
@@ -44,29 +35,27 @@ public class OpeningBalanceEntity {
     private Long lastModifiedTime;
 
     public MaterialReceipt toDomain() {
-        return MaterialReceipt.builder()
-                .id(id)
+        MaterialReceipt materialReceipt = new MaterialReceipt();
+        return materialReceipt.id(id)
                 .financialYear(financialYear)
                 .mrnNumber(mrnNumber)
                 .receiptType(ReceiptTypeEnum.fromValue(receiptType))
                 .receiptDate(receiptDate)
-                .mrnStatus(mrnStatus)
+                .mrnStatus(MaterialReceipt.MrnStatusEnum.valueOf(mrnStatus))
                 .receiptDetails(Arrays.asList(mapMaterialReceiptDetail()))
-                .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
-                .build();
+                .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime));
     }
-    
+
     private MaterialReceiptDetail mapMaterialReceiptDetail() {
-        return MaterialReceiptDetail.builder()
-                .receivedQty(qty)
-                .mrnNumber(mrnNumber)
+        MaterialReceiptDetail materialReceiptDetail = new MaterialReceiptDetail();
+        return materialReceiptDetail.
+                receivedQty(qty)
+                //.mrnNumber(mrnNumber)
                 .material(mapmaterial())
                 .uom(mapUom())
                 .acceptedQty(receivedQty)
-                .unitRate(unitRate)
-                .build();
+                .unitRate(unitRate);
     }
-    
 
 
     private Uom mapUom() {
@@ -74,7 +63,7 @@ public class OpeningBalanceEntity {
                 .code(uom)
                 .build();
     }
-    
+
     private Material mapmaterial() {
         return Material.builder()
                 .code(materialcode)

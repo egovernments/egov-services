@@ -75,6 +75,40 @@ public class ReceiptNoteService extends DomainService {
                 .materialReceipt(materialReceipts);
     }
 
+
+    public MaterialReceiptResponse update(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
+        List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
+
+        materialReceipts.forEach(materialReceipt ->
+        {
+            if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
+                materialReceipt.setTenantId(tenantId);
+            }
+
+            materialReceipt.getReceiptDetails().forEach(materialReceiptDetail -> {
+                if (isEmpty(materialReceiptDetail.getTenantId())) {
+                    materialReceiptDetail.setTenantId(tenantId);
+                }
+
+                materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
+                        materialReceiptDetailAddnlInfo -> {
+                            if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
+                                materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+                            }
+                        }
+                );
+            });
+        });
+
+        logAwareKafkaTemplate.send(updateTopic, updateTopicKey, materialReceiptRequest);
+
+        MaterialReceiptResponse materialReceiptResponse = new MaterialReceiptResponse();
+
+        return materialReceiptResponse.responseInfo(null)
+                .materialReceipt(materialReceipts);
+    }
+
+
     private String appendString(MaterialReceipt materialReceipt) {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);

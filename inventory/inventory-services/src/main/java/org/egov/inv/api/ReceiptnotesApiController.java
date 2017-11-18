@@ -54,8 +54,8 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
 
     public ResponseEntity<MaterialReceiptResponse> receiptnotesUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
                                                                           @ApiParam(value = "Details for the new material receipts.", required = true) @Valid @RequestBody MaterialReceiptRequest materialReceipt) {
-        // do some magic!
-        return new ResponseEntity<MaterialReceiptResponse>(HttpStatus.OK);
+        MaterialReceiptResponse materialReceiptResponse = receiptNoteService.update(materialReceipt, tenantId);
+        return new ResponseEntity<MaterialReceiptResponse>(materialReceiptResponse, HttpStatus.OK);
     }
 
 }

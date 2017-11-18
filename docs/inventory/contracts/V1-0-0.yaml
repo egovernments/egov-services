@@ -540,6 +540,7 @@ paths:
           Create a new material receipt note. This will handle both purchase
           receipt as well as miscellaneous material receipts.
         parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialReceipt
             in: body
             description: Details for the new material receipt.
@@ -564,6 +565,7 @@ paths:
         summary: Update existing Material Receipts.
         description: Existing material receipt notes can be updated except the mrn number.
         parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialReceipt
             in: body
             description: Details for the new material receipts.
@@ -2492,6 +2494,11 @@ definitions:
           description: The challan number associated with this receipt.
           format: varchar
           maxLength: 52
+        paymentTerms:
+          type: string
+          description: payment terms of receipt.
+          format: varchar
+          maxLength: 1000
         challanDate:
           type: integer
           format: int64
@@ -2511,6 +2518,7 @@ definitions:
           description: Designation of the employee who has received the materials in store.
           format: varchar
         mrnStatus:
+          type: string
           description: >-
             Shows the current status of the receipt. By default the value will be
             "CREATED".
@@ -2520,7 +2528,7 @@ definitions:
             - CANCELED
         bill:
           type: string
-          description: Bill number reference, if bill is generatd in systemm for receipt.
+          description: Bill number reference, if bill is generatd in system for receipt.
         inspectedBy:
           type: string
           description: >-
@@ -2582,6 +2590,11 @@ definitions:
           type: number
           format: int32
           description: Order of items received.
+        batchNo:
+          type: string
+          description: batch number .
+          format: varchar
+          maxLength: 50
         uom:
           $ref: "#/definitions/Uom"
           description: Auto populate stocking unit of measure of selected material.

@@ -88,7 +88,6 @@ public void setId(String id) {
    * Unique Code of the Document.
    * @return code
   **/
- @Pattern(regexp="^[a-zA-Z0-9.]+$")
   public String getCode() {
     return code;
   }

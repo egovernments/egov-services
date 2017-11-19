@@ -24,5 +24,11 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.workorder.pagesize.max}")
     private String pageSizeMax;
+    
+    @Value("${works.loanumber.format}")
+    private String loaNumberFormat;
+    
+    @Value("${works.loanumber}")
+    private String worksLOANumber;
 
 }

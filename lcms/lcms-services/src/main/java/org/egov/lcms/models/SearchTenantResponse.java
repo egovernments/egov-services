@@ -1,7 +1,7 @@
 package org.egov.lcms.models;
 
 import java.util.List;
-import org.egov.common.contract.response.ResponseInfo;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,6 +20,6 @@ import lombok.ToString;
  */
 public class SearchTenantResponse {
 
-	private ResponseInfo responseInfo;
+	private TenantResponseInfo responseInfo;
 	private List<Tenant> tenant;
 }

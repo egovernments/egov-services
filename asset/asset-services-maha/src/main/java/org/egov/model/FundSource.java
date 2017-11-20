@@ -66,7 +66,6 @@ public class FundSource {
 	private String code;
 
 	@Length(min = 1, max = 25)
-	@NotNull
 	private String name;
 
 	@Length(min = 1, max = 25)
@@ -76,7 +75,6 @@ public class FundSource {
 
 	private BigDecimal llevel;
 
-	@NotNull
 	private Boolean active;
 
 	// is this required

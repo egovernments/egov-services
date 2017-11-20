@@ -15,172 +15,172 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-
 @AllArgsConstructor
 @EqualsAndHashCode
 @Getter
 @NoArgsConstructor
 @Setter
 @ToString
-public class Asset   {
+public class Asset {
 
-	  @JsonProperty("anticipatedLife")
-	  private Long anticipatedLife;
+	@JsonProperty("anticipatedLife")
+	private Long anticipatedLife;
 
-	  @JsonProperty("orderNumber")
-	  private String orderNumber;
+	@JsonProperty("orderNumber")
+	private String orderNumber;
 
-	  @JsonProperty("orderDate")
-	  private Long orderDate;
+	@JsonProperty("orderDate")
+	private Long orderDate;
 
-	  @JsonProperty("wipReferenceNo")
-	  private String wipReferenceNo;
+	@JsonProperty("wipReferenceNo")
+	private String wipReferenceNo;
 
-	  @JsonProperty("acquiredFrom")
-	  private String acquiredFrom;
+	@JsonProperty("acquiredFrom")
+	private String acquiredFrom;
 
-	  @JsonProperty("warrantyAvailable")
-	  private Boolean warrantyAvailable;
+	@JsonProperty("warrantyAvailable")
+	private Boolean warrantyAvailable;
 
-	  @JsonProperty("warrantyExpiryDate")
-	  private Long warrantyExpiryDate;
+	@JsonProperty("warrantyExpiryDate")
+	private Long warrantyExpiryDate;
 
-	  @JsonProperty("defectLiabilityPeriod")
-	  private DefectLiability defectLiabilityPeriod;
+	@JsonProperty("defectLiabilityPeriod")
+	private DefectLiability defectLiabilityPeriod;
 
-	  @JsonProperty("securityDepositRetained")
-	  private BigDecimal securityDepositRetained;
+	@JsonProperty("securityDepositRetained")
+	private BigDecimal securityDepositRetained;
 
-	  @JsonProperty("securityDepositRealized")
-	  private BigDecimal securityDepositRealized;
+	@JsonProperty("securityDepositRealized")
+	private BigDecimal securityDepositRealized;
 
-	  @NotNull
-	  @JsonProperty("acquisitionDate")
-	  private Long acquisitionDate;
+	@NotNull
+	@JsonProperty("acquisitionDate")
+	private Long acquisitionDate;
 
-	  @NotNull
-	  @JsonProperty("originalValue")
-	  private BigDecimal originalValue;
+	@NotNull
+	@JsonProperty("originalValue")
+	private BigDecimal originalValue;
 
-	  @JsonProperty("assetAccount")
-	  private String assetAccount;
-	  
-	  @JsonProperty("accumulatedDepreciationAccount")
-	  private String accumulatedDepreciationAccount;
+	@JsonProperty("assetAccount")
+	private String assetAccount;
 
-	  @JsonProperty("revaluationReserveAccount")
-	  private String revaluationReserveAccount;
-	  
-	  @JsonProperty("depreciationExpenseAccount")
-	  private String depreciationExpenseAccount;
+	@JsonProperty("accumulatedDepreciationAccount")
+	private String accumulatedDepreciationAccount;
 
-	  @JsonProperty("titleDocumentsAvalable")
-	  private List<String> titleDocumentsAvalable;
+	@JsonProperty("revaluationReserveAccount")
+	private String revaluationReserveAccount;
 
-	  @JsonProperty("locationDetails")
-	  private Location locationDetails;
+	@JsonProperty("depreciationExpenseAccount")
+	private String depreciationExpenseAccount;
 
-	  @JsonProperty("totalArea")
-	  private Double totalArea;
+	@JsonProperty("titleDocumentsAvalable")
+	private List<String> titleDocumentsAvalable;
 
-	  @NotNull
-	  @JsonProperty("address")
-	  private String address;
+	@JsonProperty("locationDetails")
+	private Location locationDetails;
 
-	  @JsonProperty("longitude")
-	  private Double longitude;
+	@JsonProperty("totalArea")
+	private Double totalArea;
 
-	  @JsonProperty("latitude")
-	  private Double latitude;
+	@NotNull
+	@JsonProperty("address")
+	private String address;
 
-	  @JsonProperty("quantity")
-	  private Long quantity;
+	@JsonProperty("longitude")
+	private Double longitude;
 
-	  @JsonProperty("tenantId")
-	  private String tenantId;
+	@JsonProperty("latitude")
+	private Double latitude;
 
-	  @JsonProperty("id")
-	  private Long id;
+	@JsonProperty("quantity")
+	private Long quantity;
 
-	  @NotNull
-	  @JsonProperty("name")
-	  private String name;
+	@JsonProperty("tenantId")
+	private String tenantId;
 
-	  @JsonProperty("code")
-	  private String code;
+	@JsonProperty("id")
+	private Long id;
 
-	  @JsonProperty("oldCode")
-	  private String oldCode;
+	@NotNull
+	@JsonProperty("name")
+	private String name;
 
-	  @NotNull
-	  @JsonProperty("department")
-	  private Department department;
+	@JsonProperty("code")
+	private String code;
 
-	  @NotNull
-	  @Valid
-	  @JsonProperty("assetCategory")
-	  private AssetCategory assetCategory;
+	@JsonProperty("oldCode")
+	private String oldCode;
 
-	  @NotNull
-	  @JsonProperty("modeOfAcquisition")
-	  @Valid
-	  private ModeOfAcquisition modeOfAcquisition;
+	@NotNull
+	@JsonProperty("department")
+	private Department department;
 
-	  @JsonProperty("status")
-	  private String status;
+	@NotNull
+	@Valid
+	@JsonProperty("assetCategory")
+	private AssetCategory assetCategory;
 
-	  @NotNull
-	  @JsonProperty("grossValue")
-	  private BigDecimal grossValue;
+	@NotNull
+	@JsonProperty("modeOfAcquisition")
+	@Valid
+	private ModeOfAcquisition modeOfAcquisition;
 
-	  @JsonProperty("accumulatedDepreciation")
-	  private BigDecimal accumulatedDepreciation;
+	@JsonProperty("status")
+	private String status;
 
-	  @NotNull
-	  @JsonProperty("description")
-	  private String description;
+	@NotNull
+	@JsonProperty("grossValue")
+	private BigDecimal grossValue;
 
-	  @NotNull
-	  @JsonProperty("dateOfCreation")
-	  private Long dateOfCreation;
+	@JsonProperty("accumulatedDepreciation")
+	private BigDecimal accumulatedDepreciation;
 
-	  @JsonProperty("remarks")
-	  private String remarks;
+	@NotNull
+	@JsonProperty("description")
+	private String description;
 
-	  @JsonProperty("version")
-	  private String version;
+	@NotNull
+	@JsonProperty("dateOfCreation")
+	private Long dateOfCreation;
 
-	  @JsonProperty("assetReference")
-	  private Long assetReference;
+	@JsonProperty("remarks")
+	private String remarks;
 
-	  @JsonProperty("enableYearWiseDepreciation")
-	  private Boolean enableYearWiseDepreciation;
+	@JsonProperty("version")
+	private String version;
 
-	  @JsonProperty("assetAttributes")
-	  private List<Attributes> assetAttributes;
+	@JsonProperty("assetReference")
+	private Long assetReference;
 
-	  @JsonProperty("depreciationRate")
-	  private Double depreciationRate;
+	@JsonProperty("enableYearWiseDepreciation")
+	private Boolean enableYearWiseDepreciation;
 
-	  @JsonProperty("yearWiseDepreciationRate")
-	  private List<YearWiseDepreciation> yearWiseDepreciationRate;
-	  
-	  @JsonProperty("auditDetails")
-	  private AuditDetails auditDetails;
-	  
-	  @JsonProperty("fundSource")
-	  private FundSource fundSource;
-	  
-	  @JsonProperty("location")
-	  private String location;
-	  
-	  @JsonProperty("openingDate")
-	  private Long openingDate;
+	@JsonProperty("assetAttributes")
+	private List<Attributes> assetAttributes;
 
-	  @JsonProperty("landDetails")
-	  @Valid
-	  private List<LandDetail> landDetails;
-	  
-	  @JsonProperty("currentValue")
-	  private BigDecimal currentValue;
+	@JsonProperty("depreciationRate")
+	private Double depreciationRate;
+
+	@JsonProperty("yearWiseDepreciationRate")
+	private List<YearWiseDepreciation> yearWiseDepreciationRate;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails;
+
+	@JsonProperty("fundSource")
+	@Valid
+	private FundSource fundSource;
+
+	@JsonProperty("location")
+	private String location;
+
+	@JsonProperty("openingDate")
+	private Long openingDate;
+
+	@JsonProperty("landDetails")
+	@Valid
+	private List<LandDetail> landDetails;
+
+	@JsonProperty("currentValue")
+	private BigDecimal currentValue;
 }

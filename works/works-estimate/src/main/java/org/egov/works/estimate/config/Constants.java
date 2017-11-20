@@ -294,7 +294,19 @@ public class Constants {
 
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
-
+    
+    public static final String KEY_ESTIMATE_NOT_EXISTS = "ESTIMATE_NOT_EXISTS";
+    public static final String MESSAGE_ESTIMATE_NOT_EXISTS = "Estimate does not exist with the given id";
+    
+    public static final String KEY_ESTIMATE_NUMBER_MODIFIED = "ESTIMATE_NUMBER_MODIFIED";
+    public static final String MESSAGE_ESTIMATE_NUMBER_MODIFIED = "Estimate Number can not be modified";
+    
+    public static final String KEY_ABSTRACT_ESTIMATE_NUMBER_MODIFIED = "ABSTRACT_ESTIMATE_NUMBER_MODIFIED";
+    public static final String MESSAGE_ABSTRACT_ESTIMATE_NUMBER_MODIFIED = "Abstract Estimate Number can not be modified";
+    
+    public static final String KEY_ABSTRACT_ESTIMATE_DETAIL_MODIFIED = "ABSTRACT_ESTIMATE_DETAIL_MODIFIED";
+    public static final String MESSAGE_ABSTRACT_ESTIMATE_DETAIL_MODIFIED = "Abstract Estimate Detail can not be modified";
+    
     public static final String ESTIMATE_NAMEOFWORK_NEW= "New";
     public static final String ESTIMATE_NAMEOFWORK_REPAIRS= "Repairs";
     public static final String ESTIMATE_NAMEOFWORK_ADDITION= "Addition";

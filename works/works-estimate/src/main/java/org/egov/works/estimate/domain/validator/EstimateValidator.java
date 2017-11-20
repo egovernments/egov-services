@@ -64,7 +64,8 @@ public class EstimateValidator {
             validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             validateEstimateAssetDetails(estimate, abstractEstimateRequest.getRequestInfo(), messages);
-
+            if (estimate.getId() != null)
+            	validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             if (!messages.isEmpty())
                 throw new CustomException(messages);
         }
@@ -383,14 +384,45 @@ public class EstimateValidator {
             validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
             validateOverheads(detailedEstimate, requestInfo, messages);
             validateDocuments(detailedEstimate, requestInfo, messages);
-
+            if (detailedEstimate.getId() != null)
+            	validateIsModified(detailedEstimate, requestInfo, messages);
 
         }
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
     }
 
-    private void validateDocuments(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
+    private void validateIsModified(DetailedEstimate detailedEstimate, RequestInfo requestInfo,
+			Map<String, String> messages) {
+    	DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
+                .tenantId(detailedEstimate.getTenantId()).ids(Arrays.asList(detailedEstimate.getId())).build();
+        List<DetailedEstimateHelper> lists= detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+        if (lists.isEmpty())
+        	messages.put(Constants.KEY_ESTIMATE_NOT_EXISTS, Constants.MESSAGE_ESTIMATE_NOT_EXISTS);
+        else {
+        	DetailedEstimateHelper estimateFromDb = lists.get(0);
+        	if (!estimateFromDb.getEstimateNumber().equals(detailedEstimate.getEstimateNumber()))
+        		messages.put(Constants.KEY_ESTIMATE_NUMBER_MODIFIED, Constants.MESSAGE_ESTIMATE_NUMBER_MODIFIED);
+        	if (!estimateFromDb.getAbstractEstimateDetail().equals(detailedEstimate.getAbstractEstimateDetail().getId()))
+        		messages.put(Constants.KEY_ABSTRACT_ESTIMATE_DETAIL_MODIFIED, Constants.KEY_ABSTRACT_ESTIMATE_DETAIL_MODIFIED);
+        }
+	}
+    
+    private void validateIsModified(AbstractEstimate abstractEstimate, RequestInfo requestInfo,
+			Map<String, String> messages) {
+    	AbstractEstimateSearchContract abstractEstimateSearchContract = AbstractEstimateSearchContract.builder()
+                .tenantId(abstractEstimate.getTenantId()).ids(Arrays.asList(abstractEstimate.getId())).build();
+        List<AbstractEstimate> lists= abstractEstimateRepository.search(abstractEstimateSearchContract);
+        if (lists.isEmpty())
+        	messages.put(Constants.KEY_ESTIMATE_NOT_EXISTS, Constants.MESSAGE_ESTIMATE_NOT_EXISTS);
+        else {
+        	AbstractEstimate estimateFromDb = lists.get(0);
+        	if (!estimateFromDb.getAbstractEstimateNumber().equals(abstractEstimate.getAbstractEstimateNumber()))
+        		messages.put(Constants.KEY_ABSTRACT_ESTIMATE_NUMBER_MODIFIED, Constants.MESSAGE_ABSTRACT_ESTIMATE_NUMBER_MODIFIED);
+        }
+	}
+
+	private void validateDocuments(DetailedEstimate detailedEstimate, RequestInfo requestInfo, Map<String, String> messages) {
         if(detailedEstimate.getDocumentDetails() != null) {
         for(DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
             boolean fileExists = fileStoreRepository.searchFileStore(detailedEstimate.getTenantId(), documentDetail.getFileStore(), requestInfo);

@@ -20,6 +20,8 @@ public enum DetailedEstimateStatus {
   
   APPROVED("APPROVED"),
   
+  TECHNICAL_SANCTIONED("TECHNICAL_SANCTIONED"),
+  
   CHECKED("CHECKED");
 
   private String value;

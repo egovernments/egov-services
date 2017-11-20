@@ -155,6 +155,7 @@ public class DetailedEstimateService {
 	}
 
 	public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest) {
+		validator.validateDetailedEstimates(detailedEstimateRequest);
 		AuditDetails updateDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), true);
 		AuditDetails createDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
 		AbstractEstimate abstactEstimate = null;

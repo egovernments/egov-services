@@ -263,7 +263,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.")
 //  @NotNull
 
-// @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
   public String getAbstractEstimateNumber() {
     return abstractEstimateNumber;
   }

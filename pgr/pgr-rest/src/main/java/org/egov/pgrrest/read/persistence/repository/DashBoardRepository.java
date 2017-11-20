@@ -41,6 +41,14 @@ public class DashBoardRepository {
 
     public List<DashboardResponse> getWeeklyRegisteredAndClosedComplaintsCount(String tenantId){
 
+        String registeredCountQuery = "select count(*) as count from submission where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
+            " and keyword in ('complaint', 'Complaint'))" +
+            " and createddate > current_date - interval '6' day and tenantid = :tenantId";
+
+        String closedCountQuery = "select count(*) as count from submission where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
+            " and keyword in ('complaint', 'Complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+            " and status in ('COMPLETED', 'REJECTED', 'WITHDRAWN')";
+
         String query = "select a.regcount, b.closedcount, a.day, a.date from" +
             " (select count(*) as regcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
             " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
@@ -54,6 +62,22 @@ public class DashBoardRepository {
             " group by date_trunc('day',createddate)" +
             " order by date_trunc('day',createddate) ASC) as b" +
             " where a.day = b.day";
+
+        Long registeredCount = getCount(registeredCountQuery, tenantId);
+        Long closedCount = getCount(closedCountQuery, tenantId);
+
+        if(registeredCount != 0 && closedCount == 0){
+            query = "select count(*) as regcount, 0 as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trun('day',createddate),'dd') as date from submission" +
+                " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
+                " and keyword in ('complaint', 'Complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+                " group by date_trunc('day',createddate) order by date_trunc('day',createddate) ASC";
+        }
+        else if(registeredCount == 0 && closedCount != 0){
+            query = "select 0 as regcount, count(*) as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
+                " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+                " and createddate > current_date - interval '6' day and tenantid = :tenantId and status in ('COMPLETED', 'REJECTED', 'WITHDRAWN')" +
+                " group by date_trunc('day',createddate) order by date_trunc('day',createddate) ASC";
+        }
 
         return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId),dailyCountRowMapper);
     }
@@ -82,6 +106,11 @@ public class DashBoardRepository {
 
         List<ComplaintTypeLegend> complaintTypeLegendList = namedParameterJdbcTemplate.query(query, getSearchMap(tenantId), new TopComplaintTypesLegendRowMapper());
         return updateRank(complaintTypeLegendList);
+    }
+
+    private Long getCount(String query, String tenantId){
+
+        return namedParameterJdbcTemplate.queryForObject(query,getSearchMap(tenantId), Long.class);
     }
 
     private List<ComplaintTypeLegend> updateRank(List<ComplaintTypeLegend> complaintTypeLegendList){

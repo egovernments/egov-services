@@ -1,9 +1,11 @@
 package org.egov.inv.domain.service;
 
 import org.egov.common.DomainService;
+import org.egov.common.Pagination;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceiptRequest;
 import org.egov.inv.model.MaterialReceiptResponse;
+import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.persistence.repository.ReceiptNoteRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.util.StringUtils.isEmpty;
@@ -33,6 +36,9 @@ public class ReceiptNoteService extends DomainService {
 
     @Value("${inv.materialreceiptnote.update.topic}")
     private String updateTopicKey;
+
+    @Autowired
+    private MaterialReceiptService materialReceiptService;
 
     @Autowired
     private ReceiptNoteRepository receiptNoteRepository;
@@ -109,6 +115,14 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
+    public MaterialReceiptResponse search(MaterialReceiptSearch materialReceiptSearch) {
+        Pagination<MaterialReceipt> materialReceiptPagination = materialReceiptService.search(materialReceiptSearch);
+        MaterialReceiptResponse response = new MaterialReceiptResponse();
+        return response
+                .responseInfo(null)
+                .materialReceipt(materialReceiptPagination.getPagedData().size() > 0 ? materialReceiptPagination.getPagedData() : Collections.EMPTY_LIST);
+    }
+
     private String appendString(MaterialReceipt materialReceipt) {
         Calendar cal = Calendar.getInstance();
         int year = cal.get(Calendar.YEAR);
@@ -118,5 +132,6 @@ public class ReceiptNoteService extends DomainService {
         String mrnNumber = code + idgen + "/" + year;
         return mrnNumber;
     }
+
 
 }

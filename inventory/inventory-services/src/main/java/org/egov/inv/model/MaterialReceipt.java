@@ -5,10 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.MaterialReceiptDetail;
-import org.egov.inv.model.Store;
-import org.egov.inv.model.Supplier;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;

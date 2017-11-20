@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiParam;
 import org.egov.inv.domain.service.ReceiptNoteService;
 import org.egov.inv.model.MaterialReceiptRequest;
 import org.egov.inv.model.MaterialReceiptResponse;
+import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.RequestInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,8 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.List;
+
+import static java.util.Arrays.asList;
 
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-17T10:03:53.250Z")
 
@@ -48,8 +51,18 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
                                                                           @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize,
                                                                           @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber,
                                                                           @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy) {
-        // do some magic!
-        return new ResponseEntity<MaterialReceiptResponse>(HttpStatus.OK);
+        MaterialReceiptSearch materialReceiptSearch = MaterialReceiptSearch.builder()
+                .tenantId(tenantId)
+                .mrnNumber(mrnNumber)
+                .receiptType(receiptType)
+                .mrnStatus(asList(mrnStatus))
+                .receivingStore(receivingStore)
+                .supplierCode(supplierCode)
+                .receiptDate(receiptDateFrom)
+                .receiptDate(receiptDateT0)
+                .build();
+        MaterialReceiptResponse materialReceiptResponse = receiptNoteService.search(materialReceiptSearch);
+        return new ResponseEntity<MaterialReceiptResponse>(materialReceiptResponse, HttpStatus.OK);
     }
 
     public ResponseEntity<MaterialReceiptResponse> receiptnotesUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,

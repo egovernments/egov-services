@@ -9,7 +9,6 @@ import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.MaterialEntity;
 import org.egov.inv.persistence.repository.MaterialJdbcRepository;
-import org.egov.inv.persistence.repository.MaterialRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,8 +25,6 @@ public class MaterialService extends DomainService {
 
     public static final String UPDATE = "UPDATE";
     public static final String CREATE = "CREATE";
-    @Autowired
-    private MaterialRepository materialRepository;
 
     @Autowired
     private MaterialJdbcRepository materialJdbcRepository;
@@ -116,7 +113,7 @@ public class MaterialService extends DomainService {
 
     public MaterialResponse search(MaterialSearchRequest materialSearchRequest, org.egov.common.contract.request.RequestInfo requestInfo) {
 
-        Pagination<Material> searchMaterial = materialRepository.search(materialSearchRequest);
+        Pagination<Material> searchMaterial = materialJdbcRepository.search(materialSearchRequest);
 
         for (Material material : searchMaterial.getPagedData()) {
             List<StoreMapping> storeMappings = new ArrayList<>();

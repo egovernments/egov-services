@@ -323,10 +323,18 @@ class assetImmovableCreate extends Component {
     //  var customFieldsArray = [];
     //  var customArr;
 
-    // self.props.addRequiredFields("Asset.assetAccount");
-    // self.props.addRequiredFields("Asset.accumulatedDepreciationAccount");
-    // self.props.addRequiredFields("Asset.revaluationReserveAccount");
-    // self.props.addRequiredFields("Asset.depreciationExpenseAccount");
+
+    Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET","masterName":"Assetconfiguration"},{}, false, false, false, "", "", true).then(function(response) {
+
+          if (response && response.MdmsRes && response.MdmsRes.ASSET && response.MdmsRes.ASSET.Assetconfiguration[0].keyname == "EnableVoucherGeneration") {
+            if ( response.MdmsRes.ASSET.Assetconfiguration[0].values[0].value == "true") {
+              self.props.addRequiredFields(["Asset.assetAccount"]);
+              self.props.addRequiredFields(["Asset.accumulatedDepreciationAccount"]);
+              self.props.addRequiredFields(["Asset.revaluationReserveAccount"]);
+              self.props.addRequiredFields(["Asset.depreciationExpenseAccount"]);
+            }
+          }
+    });
 
     Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Fixed Assets"},{}, false, false, false, "", "", false).then(function(response)
    {
@@ -1464,7 +1472,6 @@ delete formData.Asset.assetAttributesCheck;
     // })}
 
 
-
     return (
       <div className="Report">
       {actionName == "update" && <UiBackButton/>}
@@ -1510,10 +1517,10 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}></span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.assetAccount") > -1 ? " *" : ""}</span></span>}
                           value={this.getVal('Asset.assetAccount')}
             							onChange={(event, key, value) =>{
-            								this.handleChange({target: {value: value}},'Asset.assetAccount', true ? true : false, '', false, false, false, false)
+            								this.handleChange({target: {value: value}},'Asset.assetAccount', self.props.requiredFields.indexOf("Asset.assetAccount") > -1 ? true : false, '', false, false, false, false, false)
             							}}
 
             							maxHeight={200}>
@@ -1532,10 +1539,10 @@ delete formData.Asset.assetAttributesCheck;
             							errorStyle={{"float":"left"}}
             							fullWidth={true}
             							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}></span></span>}
+            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.accumulatedDepreciationAccount") > -1 ? " *" : ""}</span></span>}
                           value={this.getVal('Asset.accumulatedDepreciationAccount')}
             							onChange={(event, key, value) =>{
-            								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', true ? true : false, '', false, false, false, false)
+            								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', self.props.requiredFields.indexOf("Asset.accumulatedDepreciationAccount") > -1 ? true : false, '', false, false, false, false)
             							}}
 
             							maxHeight={200}>
@@ -1554,10 +1561,10 @@ delete formData.Asset.assetAttributesCheck;
                             errorStyle={{"float":"left"}}
                             fullWidth={true}
                             hintText="Please Select"
-                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}></span></span>}
+                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.revaluationReserveAccount") > -1 ? " *" : ""}</span></span>}
                             value={this.getVal('Asset.revaluationReserveAccount')}
                             onChange={(event, key, value) =>{
-                              this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', true ? true : false, '', false, false, false, false)
+                              this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', self.props.requiredFields.indexOf("Asset.revaluationReserveAccount") > -1 ? true : false, '', false, false, false, false, false)
                             }}
 
                             maxHeight={200}>
@@ -1576,10 +1583,10 @@ delete formData.Asset.assetAttributesCheck;
                           errorStyle={{"float":"left"}}
                           fullWidth={true}
                           hintText="Please Select"
-                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}></span></span>}
+                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.depreciationExpenseAccount") > -1 ? " *" : ""}</span></span>}
                           value={this.getVal('Asset.depreciationExpenseAccount')}
                           onChange={(event, key, value) =>{
-                            this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', true ? true : false, '', false, false, false, false)
+                            this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', self.props.requiredFields.indexOf("Asset.depreciationExpenseAccount") > -1 ? true : false, '', false, false, false, false, false)
                           }}
 
                           maxHeight={200}>

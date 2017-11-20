@@ -317,6 +317,21 @@ class assetMovableCreate extends Component {
     //  var customFieldsArray = [];
     //  var customArr;
 
+
+    Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET","masterName":"Assetconfiguration"},{}, false, false, false, "", "", true).then(function(response) {
+
+          if (response && response.MdmsRes && response.MdmsRes.ASSET && response.MdmsRes.ASSET.Assetconfiguration[0].keyname == "EnableVoucherGeneration") {
+            if ( response.MdmsRes.ASSET.Assetconfiguration[0].values[0].value == "true") {
+              self.props.addRequiredFields(["Asset.assetAccount"]);
+              self.props.addRequiredFields(["Asset.accumulatedDepreciationAccount"]);
+              self.props.addRequiredFields(["Asset.revaluationReserveAccount"]);
+              self.props.addRequiredFields(["Asset.depreciationExpenseAccount"]);
+            }
+          }
+    });
+
+
+
     Api.commonApiPost("/egf-masters/accountcodepurposes/_search",{"name":"Fixed Assets"},{}, false, false, false, "", "", false).then(function(response)
    {
      if(response) {
@@ -1361,101 +1376,101 @@ delete formData.Asset.assetAttributesCheck;
                                     autoComHandler={autoComHandler}/> : ""}
 
 
-                  <Card className="uiCard">
-                      <CardText>
-              					<Grid fluid>
-                        <SelectField
-            							className="custom-form-control-for-select"
-            							floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-            							labelStyle={{"color": "#5F5C57"}}
-            							floatingLabelFixed={true}
-            							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-            							style={{"display": ( 'inline-block')}}
-            							errorStyle={{"float":"left"}}
-            							fullWidth={true}
-            							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}></span></span>}
-                          value={this.getVal('Asset.assetAccount')}
-            							onChange={(event, key, value) =>{
-            								this.handleChange({target: {value: value}},'Asset.assetAccount', true ? true : false, '', false, false, false, false)
-            							}}
+                      <Card className="uiCard">
+                          <CardText>
+                  					<Grid fluid>
+                            <SelectField
+                							className="custom-form-control-for-select"
+                							floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                							labelStyle={{"color": "#5F5C57"}}
+                							floatingLabelFixed={true}
+                							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                							style={{"display": ( 'inline-block')}}
+                							errorStyle={{"float":"left"}}
+                							fullWidth={true}
+                							hintText="Please Select"
+                							floatingLabelText={<span>{translate("ac.create.Asset.account.code")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.assetAccount") > -1 ? " *" : ""}</span></span>}
+                              value={this.getVal('Asset.assetAccount')}
+                							onChange={(event, key, value) =>{
+                								this.handleChange({target: {value: value}},'Asset.assetAccount', self.props.requiredFields.indexOf("Asset.assetAccount") > -1 ? true : false, '', false, false, false, false, false)
+                							}}
 
-            							maxHeight={200}>
-                          {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.assetAccount') && self.props.dropDownData['Asset.assetAccount'].map((dd, index) => (
-    					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-    					            ))}
-            			            </SelectField>
+                							maxHeight={200}>
+                              {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.assetAccount') && self.props.dropDownData['Asset.assetAccount'].map((dd, index) => (
+        					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+        					            ))}
+                			            </SelectField>
 
-                        <SelectField
-            							className="custom-form-control-for-select"
-            							floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-            							labelStyle={{"color": "#5F5C57"}}
-            							floatingLabelFixed={true}
-            							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-            							style={{"display": ( 'inline-block')}}
-            							errorStyle={{"float":"left"}}
-            							fullWidth={true}
-            							hintText="Please Select"
-            							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}></span></span>}
-                          value={this.getVal('Asset.accumulatedDepreciationAccount')}
-            							onChange={(event, key, value) =>{
-            								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', true ? true : false, '', false, false, false, false)
-            							}}
+                            <SelectField
+                							className="custom-form-control-for-select"
+                							floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                							labelStyle={{"color": "#5F5C57"}}
+                							floatingLabelFixed={true}
+                							dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                							style={{"display": ( 'inline-block')}}
+                							errorStyle={{"float":"left"}}
+                							fullWidth={true}
+                							hintText="Please Select"
+                							floatingLabelText={<span>{translate("ac.create.Accumulated.Depreciation.Account")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.accumulatedDepreciationAccount") > -1 ? " *" : ""}</span></span>}
+                              value={this.getVal('Asset.accumulatedDepreciationAccount')}
+                							onChange={(event, key, value) =>{
+                								this.handleChange({target: {value: value}},'Asset.accumulatedDepreciationAccount', self.props.requiredFields.indexOf("Asset.accumulatedDepreciationAccount") > -1 ? true : false, '', false, false, false, false)
+                							}}
 
-            							maxHeight={200}>
-                          {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.accumulatedDepreciationAccount') && self.props.dropDownData['Asset.accumulatedDepreciationAccount'].map((dd, index) => (
-    					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-    					            ))}
-            			            </SelectField>
+                							maxHeight={200}>
+                              {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.accumulatedDepreciationAccount') && self.props.dropDownData['Asset.accumulatedDepreciationAccount'].map((dd, index) => (
+        					                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+        					            ))}
+                			            </SelectField>
 
-                          <SelectField
-                            className="custom-form-control-for-select"
-                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-                            labelStyle={{"color": "#5F5C57"}}
-                            floatingLabelFixed={true}
-                            dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                            style={{"display": ( 'inline-block')}}
-                            errorStyle={{"float":"left"}}
-                            fullWidth={true}
-                            hintText="Please Select"
-                            floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}></span></span>}
-                            value={this.getVal('Asset.revaluationReserveAccount')}
-                            onChange={(event, key, value) =>{
-                              this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', true ? true : false, '', false, false, false, false)
-                            }}
+                              <SelectField
+                                className="custom-form-control-for-select"
+                                floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                                labelStyle={{"color": "#5F5C57"}}
+                                floatingLabelFixed={true}
+                                dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                                style={{"display": ( 'inline-block')}}
+                                errorStyle={{"float":"left"}}
+                                fullWidth={true}
+                                hintText="Please Select"
+                                floatingLabelText={<span>{translate("ac.create.Revaluation.Reserve.Account")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.revaluationReserveAccount") > -1 ? " *" : ""}</span></span>}
+                                value={this.getVal('Asset.revaluationReserveAccount')}
+                                onChange={(event, key, value) =>{
+                                  this.handleChange({target: {value: value}},'Asset.revaluationReserveAccount', self.props.requiredFields.indexOf("Asset.revaluationReserveAccount") > -1 ? true : false, '', false, false, false, false, false)
+                                }}
 
-                            maxHeight={200}>
-                            {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.revaluationReserveAccount') && self.props.dropDownData['Asset.revaluationReserveAccount'].map((dd, index) => (
-                                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-                            ))}
-                        </SelectField>
+                                maxHeight={200}>
+                                {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.revaluationReserveAccount') && self.props.dropDownData['Asset.revaluationReserveAccount'].map((dd, index) => (
+                                    <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+                                ))}
+                            </SelectField>
 
-                        <SelectField
-                          className="custom-form-control-for-select"
-                          floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-                          labelStyle={{"color": "#5F5C57"}}
-                          floatingLabelFixed={true}
-                          dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                          style={{"display": ( 'inline-block')}}
-                          errorStyle={{"float":"left"}}
-                          fullWidth={true}
-                          hintText="Please Select"
-                          floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}></span></span>}
-                          value={this.getVal('Asset.depreciationExpenseAccount')}
-                          onChange={(event, key, value) =>{
-                            this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', true ? true : false, '', false, false, false, false)
-                          }}
+                            <SelectField
+                              className="custom-form-control-for-select"
+                              floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                              labelStyle={{"color": "#5F5C57"}}
+                              floatingLabelFixed={true}
+                              dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                              style={{"display": ( 'inline-block')}}
+                              errorStyle={{"float":"left"}}
+                              fullWidth={true}
+                              hintText="Please Select"
+                              floatingLabelText={<span>{translate("ac.create.Depreciation.Expenses.Account")} <span style={{"color": "#FF0000"}}>{self.props.requiredFields.indexOf("Asset.depreciationExpenseAccount") > -1 ? " *" : ""}</span></span>}
+                              value={this.getVal('Asset.depreciationExpenseAccount')}
+                              onChange={(event, key, value) =>{
+                                this.handleChange({target: {value: value}},'Asset.depreciationExpenseAccount', self.props.requiredFields.indexOf("Asset.depreciationExpenseAccount") > -1 ? true : false, '', false, false, false, false, false)
+                              }}
 
-                          maxHeight={200}>
-                          {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.depreciationExpenseAccount') && self.props.dropDownData['Asset.depreciationExpenseAccount'].map((dd, index) => (
-                              <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-                          ))}
-                  </SelectField>
+                              maxHeight={200}>
+                              {self.props.dropDownData && self.props.dropDownData.hasOwnProperty('Asset.depreciationExpenseAccount') && self.props.dropDownData['Asset.depreciationExpenseAccount'].map((dd, index) => (
+                                  <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+                              ))}
+                      </SelectField>
 
-              					</Grid>
-              				</CardText>
+                  					</Grid>
+                  				</CardText>
 
-              			</Card>
+                  			</Card>
                     </div>
                 }
           <div style={{"textAlign": "center"}}>

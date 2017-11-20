@@ -779,6 +779,7 @@ definitions:
       fundSource:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource
+        description: only code is mandatory for the FundSource object while asset is created.  
       location:
         type: string
         format: varchar
@@ -1033,6 +1034,46 @@ definitions:
         type: integer
         format: int64
         description: Number of days.
+        
+        
+  AssetConfiguration:
+    description: Hold the asset Configuration specific information.
+    type: object
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: unique id.
+      keyname:
+        type: string
+        format: string
+        description: name of the configuration.
+      description:
+        type: string
+        format: string
+        description: describes the particular config obejct and its purpose.
+      tenantid:
+        type: string
+        format: string
+        description: holds the tenant id info.
+      values:
+        type: array
+        items: 
+          $ref: '#/definitions/AssetConfigurationValue'
+          
+  AssetConfigurationValue:
+    description: Hold the asset Configuration value for specific key.
+    type: object
+    properties:
+      value:
+        type: string
+        format: string
+        description: contains the value for the respective key.
+      effectiveFrom:
+        type: integer
+        format: int64
+        description: contains epoch value of date from whicht the value will be taken into consideration.
+        
         
   Location:
     description: Hold the asset location specific information.

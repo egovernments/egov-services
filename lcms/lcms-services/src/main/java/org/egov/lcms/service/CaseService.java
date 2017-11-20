@@ -348,11 +348,15 @@ public class CaseService {
 					addHearingDetail(hearingDetail, caseStatus);
 				}
 
-				List<HearingDetails> details = hearingDetails.stream().filter(
-						status -> status.getCaseStatus().getCode().equalsIgnoreCase(caseObj.getCaseStatus().getCode()))
-						.collect(Collectors.toList());
+				if (hearingDetails != null && caseObj.getCaseStatus() != null
+						&& caseObj.getCaseStatus().getCode() != null) {
+					List<HearingDetails> details = hearingDetails.stream().filter(status -> status.getCaseStatus()
+							.getCode().equalsIgnoreCase(caseObj.getCaseStatus().getCode()))
+							.collect(Collectors.toList());
 
-				caseObj.setCaseStatus(details.get(0).getCaseStatus());
+					if (details != null && details.size() > 0)
+						caseObj.setCaseStatus(details.get(0).getCaseStatus());
+				}
 			}
 
 			break;

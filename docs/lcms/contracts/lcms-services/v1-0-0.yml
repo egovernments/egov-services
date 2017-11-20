@@ -416,16 +416,16 @@ paths:
       tags:
         - Case            
         
-  /case/_update:
+  /referenceevidence/_create:
     post:
-      summary: update existing case.
+      summary: Create new Reference Evidence.
       description: |
-          To update existing legal case in the system. API supports bulk updation with max limit as defined in the Legal case Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one legal case, please pass array with one Legal  Case object.
+          To create new refernce evidence in the system. API supports bulk creation with max limit as defined in the hearing details  request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one reference evidence, please pass array with one reference evidence object. 
           
       parameters:
         - name: caseRequest
           in: body
-          description: Details for the new case(s) + RequestInfo meta data.
+          description: Details for the new legal case referenceEvidence(s) + RequestInfo meta data.
           required: true
           schema:
             $ref: '#/definitions/CaseRequest'
@@ -435,15 +435,44 @@ paths:
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with Legal Case(s) updated sudcessfully
+          description: ReponseInfo with ReferenceEvidence(s) created successfully
           schema:
             $ref: '#/definitions/CaseResponse'
         400:
-          description: LegalCase(s) updation failed
+          description: ReferenceEvidenceResponse(s) creation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-        - Case
+        - Case  
+  /referenceevidence/_update:
+    post:
+      summary: update existing Reference Evidence.
+      description: |
+          To update existing reference evidence in the system. API supports bulk updation with max limit as defined in the hearing details request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one reference evidence, please pass array with one reference evidence object.
+          
+      parameters:
+        - name: caseRequest
+          in: body
+          description: Details for the new reference evidence comment(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/CaseRequest'
+      
+      responses:
+      ####################################################
+      # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
+      ###################################################
+        201:
+          description: ReponseInfo with referenceEvidence(s) updated sudcessfully
+          schema:
+            $ref: '#/definitions/CaseResponse'
+        400:
+          description: referenceEvidence(s) updation failed
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+        - Case      
+  
   /advocatepayment/_search:
     post:
       summary: Get the list of advocate payments defined in the system.
@@ -806,7 +835,214 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - Advocate           
-
+  /register/_create: 
+    post: 
+      summary: Create new register(stamp) request
+      description: > 
+        APIs for legal case management system. This modules handles creation of new stamp/register.
+      parameters:
+        - name: registerRequest
+          in: body
+          description: Details for the new satmp/register(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterRequest'
+      responses:
+        '201':
+          description: ReponseInfo with Registers(s) created successfully
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+        '400':
+          description: Register(s) creation failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Register
+  /register/_update:
+    post: 
+      summary: update existing register(stamp).
+      description: >
+        To update existing register in the system(workflow). API supports bulk updation with max limit as defined in the Register(stamp) Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one Register, please pass array with one Register.
+      parameters: 
+        - name: registerRequest
+          in: body
+          description: Details for the new register(s) + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/RegisterRequest'
+      responses:
+        '201':
+          description: ReponseInfo with Register(s) updated successfully
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+        '400':
+          description: register(s) updation failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Register
+  /register/_search:
+    post:
+      summary: Get the list of registers(stamps) defined in the system.
+      description: >
+        Search and get regsiter(s)  based on defined search criteria.
+        Currently search parameters are only allowed as HTTP query params.
+        In case multiple parameters are passed regsiter(s) will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of opinion as defined in RegisterResponse model. Search results will be sorted by the sortCase Provided in the parameters
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: code
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of codes of register.
+          
+        - name: register
+          in: query
+          description: register name
+          required: false
+          type: string
+        
+        - name: isActive
+          in: query
+          description: active or inactive register in Boolean value
+          required: false
+          type: boolean
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/sortCase'
+        
+      responses:
+        '200':
+          description: Register(s) Retrived Successfully
+          schema:
+            $ref: '#/definitions/RegisterResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Register
+  
+  /notice/_create:
+    post: 
+      summary: Create new notice request
+      description: > 
+        APIs for legal case management system. This modules handles creation of new Notice.
+      parameters:
+        - name: noticeRequest
+          in: body
+          description: Details for the new notice + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      responses:
+        '201':
+          description: ReponseInfo with Notice created successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: Notice creation failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Notice
+  /notice/_update:
+    post: 
+      summary: Update existing notice.
+      description: >
+        To update existing notice in the system.
+      parameters: 
+        - name: noticeRequest
+          in: body
+          description: Details for the new notice + RequestInfo meta data.
+          required: true
+          schema:
+            $ref: '#/definitions/NoticeRequest'
+      responses:
+        '201':
+          description: ReponseInfo with Notice updated successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: notice updation failed
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Notice
+  /notice/_search:
+    post:
+      summary: Get the list of notice defined in the system.
+      description: >
+        Search and get notice(s)  based on defined search criteria.
+        Currently search parameters are only allowed as HTTP query params.
+        In case multiple parameters are passed notice(s) will be searched as an AND combination of all the parameters. Maximum result size is restricted based on the maxlength of notice as defined in NoticeResponse model. Search results will be sorted by the sortCase Provided in the parameters
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+        - name: code
+          type: array
+          items:
+            type: integer
+            format: int64
+          in: query
+          maxItems: 50
+          description: comma seperated list of codes of register.
+        - name: exhibitNo
+          in: query
+          description: exhibit Number name
+          required: false
+          type: string
+        - name: applicant
+          type: string
+          in: query
+          description: applicant name
+          required: false
+        - name: defendant
+          type: string
+          in: query
+          description: defendant name
+          required: false
+        - name: noticeType
+          type: string
+          enum:
+          - CREATE_VAKALATNAMA
+          in: query
+          description: defendant name
+          required: false  
+        - name: advocateName
+          type: string
+          in: query
+          description: advocate name
+          required: false
+        - $ref: '#/parameters/pageSize'
+        - $ref: '#/parameters/pageNumber'
+        - $ref: '#/parameters/sortCase'
+        
+      responses:
+        '200':
+          description: Notice(s) Retrived Successfully
+          schema:
+            $ref: '#/definitions/NoticeResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+      tags:
+        - Notice
 definitions:
 ########################################################
 #RequestInfo and ResponseInfo object should be reffered from Common.
@@ -925,7 +1161,7 @@ definitions:
     required:
       - code
       - tenantId
-  Stamp:
+  Register:
     type: object
     properties:
       name:
@@ -1622,7 +1858,7 @@ definitions:
       side:
         $ref: '#/definitions/Side'
       stamp:
-        $ref: '#/definitions/Stamp'
+        $ref: '#/definitions/Register'
       caseDetails:
         type: string
         description: This field hold information about the case details
@@ -1771,6 +2007,10 @@ definitions:
       remarks:
         type: string
         description: This field holds information about the remarks
+      caseStatus:
+        $ref: '#/definitions/CaseStatus'
+      referenceEvidences:
+        $ref: '#/definitions/ReferenceEvidence'
     required:
      - summon
      - caseRegistrationDate
@@ -2193,6 +2433,159 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Advocate'
+  
+  RegisterRequest:
+    type: object
+    description: This object holds information about the legal case request
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      registers: 
+        type: array
+        items:
+          $ref: '#/definitions/Register'
+  RegisterResponse: 
+    type: object
+    description: This object holds information about the opinion response
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      registers:
+        type: array
+        items:
+          $ref: '#/definitions/Register' 
+  ReferenceEvidence:
+    type: object
+    description: This object holds information about Reference Evidence about the case
+    properties:
+      code:
+        type: string
+        description: System will generate based on tenantId and sequenceNo
+      referenceType:
+         type: string
+         description: this field holds information about referenceType        
+      referenceDate:
+        type: integer
+        format: int64
+        description: this field holds reference evidence reference date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
+      caseNo:
+         type: string
+         description: this field holds reference evidence case number
+      description:
+         type: string
+         description: this field holds reference evidence description
+      tenantId:
+        type: string
+        maxLength: 128
+        minLength: 4
+        description: this field holds information about the tenantId
+      caseCode:
+        type: string
+        description: this field holds information of case code
+      referenceCaseNo:
+        type: string
+        description: this field holds information of referenceCaseNo
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      documents:
+        type: array
+        items:
+          $ref: '#/definitions/Document'
+    
+    required:
+    - referenceType 
+    - referenceDate
+    - description
+  Notice:
+    type: object
+    properties:
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: System will generate composite key based on tenant id and sequence number.
+      tenantId:
+        type: string
+        description: tenant id of Notice 
+        maxLength: 128
+        minLength: 4
+      caseNo:
+        type: string
+        description: case number for Notice
+      caseCode:
+        type: string
+        description: case code for Notice
+      caseRefernceNo:
+        type: string
+        description: case Refernce Number for Notice
+      summonReferenceNo:
+        type: string
+        description: summon Reference Number for Notice
+      exhibitNo:
+        type: string
+        description: exhibit Number for Notice
+      courtName:
+        type: string
+        description: court name 
+      courtAddress:
+        type: string
+        description: court Address
+      applicant:
+        type: string
+        description: applicant name
+      defendant:
+        type: string
+        description: defendant name
+      chiefOfficerDetails:
+        type: string
+        description: chief Officer Details
+      advocateName:
+        type: string
+        description: advocate name
+      days:
+        type: string
+        description: vakalatnama date
+      witness:
+        type: array
+        items:
+          type: string
+        description: array of the witness  names
+      noticeType:
+        type: string
+        description: This filed holds information about the Notice type
+        enum:
+          - CREATE_VAKALATNAMA
+      fileStoreId:
+        type: string
+        description: file Store Id
+      auditDetails:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
+    required:
+      - tenantId
+      - noticeType
+      - fileStoreId
+  NoticeRequest:
+    type: object
+    description: This object holds information about the notice request
+    properties:
+      RequestInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      notice: 
+        $ref: '#/definitions/Notice'
+  NoticeResponse:
+    type: object
+    description: This object holds information about the notice response
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      notice:
+        $ref: '#/definitions/Notice'  
 parameters:
 ##########################################################
 #Parameter name must start with small case followed by camel case.
@@ -2231,5 +2624,10 @@ tags:
   - name: Case
     description: APIs required for  case Management flow.
   - name: Advocate
-    description: APIs required for  advocate.  
+    description: APIs required for  advocate.
+  - name: Register
+    description: APIs required for  register.  
+  - name: Notice
+    description: APIs required for  notice.
+  
     

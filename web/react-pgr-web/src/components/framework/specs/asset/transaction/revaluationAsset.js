@@ -244,6 +244,7 @@ var dat = {
 	          "isDisabled": false,
 	          "requiredErrMsg": "",
 	          "patternErrMsg": "",
+						"maxDate":"today"
 	        },
 	        {
 	          "name": "OrderNo",
@@ -267,6 +268,7 @@ var dat = {
 	          "isDisabled": false,
 	          "requiredErrMsg": "", //Remove required messages
 	          "patternErrMsg": "",
+						"maxDate":"today"
 	        },
 	        {
 	          "name": "ValuationAmount",

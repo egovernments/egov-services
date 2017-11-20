@@ -20,7 +20,8 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"maxDate":"today"
 					},
 						{
 							"name": "AssetSearchCode",

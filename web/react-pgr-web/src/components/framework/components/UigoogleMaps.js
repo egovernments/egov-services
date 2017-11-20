@@ -189,46 +189,52 @@ export default class UigoogleMaps extends Component {
 		switch (this.props.ui) {
 			case 'google':
 			const actions = [
-      <FlatButton
-        label="Select"
-        primary={true}
-        onClick={this.handleClose}
-      />
-
-    ];
-				return (
+        <FlatButton
+          label="Select"
+          primary={true}
+          onClick={this.handleClose}
+        />
+      ];
+			return (
 					<div>
-					<FlatButton id={item.label.split(".").join("-")}
-          icon={<img src="./temp/images/mapicon.png" height="50" width="70" />}
-          type={item.uiType || "button"} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
-          <Dialog
-          title="Google Maps"
-					style={{width: '90%', height: '90%'}}
-          actions={actions}
-          modal={true}
-          open={this.state.open}
-        >
-					<div style={{width: '100%', height: 400}}>
-						<SimpleMap markers={[]} handler={(lat, lng)=>{this.getAddress(lat, lng);
-              let self = this;
-						this.props.handler({target: {value:lng}}, item.jsonPathLng, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-						this.props.handler({target: {value:lat}}, item.jsonPathLat, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-            console.log(item);
-                axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
-          				.then(function (response) {
-          					addressHolder = response.data.results[0] ? response.data.results[0].formatted_address : '';
-                    console.log(addressHolder);
-                    self.props.handler({target: {value:addressHolder}}, item.jsonPathAddress, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
-          				});
-
-
-
-
-					}}
-						/>
-					</div>
-        </Dialog>
-				</div>
+            <TextField
+            floatingLabelFixed={true}
+            floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000", "fontSize": "18px"}}>{item.isRequired ? " *" : ""}</span></span>}
+            style={{width: '70%', padding: "0px"}}
+            textareaStyle = {{color: 'black'}}
+            className="custom-form-control-for-textarea"
+            disabled = {true}
+            multiLine = {true}
+            value={this.props.getVal(item.jsonPathAddress)}
+            />
+            <FlatButton id={item.label.split(".").join("-")}
+            style={{width: '20%'}}
+            icon={<img src="./temp/images/map_logo.png" height="37px" width="30%" />}
+            type={item.uiType || "button"} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.handleOpen} disabled={item.isDisabled ? true : false}/>
+            <Dialog
+            title="Google Maps"
+  					style={{width: '90%', height: '90%'}}
+            actions={actions}
+            modal={true}
+            open={this.state.open}
+            >
+    					<div style={{width: '100%', height: 400}}>
+    						<SimpleMap markers={[]} handler={(lat, lng)=>{this.getAddress(lat, lng);
+                  let self = this;
+      						this.props.handler({target: {value:lng}}, item.jsonPathLng, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+      						this.props.handler({target: {value:lat}}, item.jsonPathLat, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+                  console.log(item);
+                  axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng='+lat+','+lng+'&sensor=true')
+              				.then(function (response) {
+              					addressHolder = response.data.results[0] ? response.data.results[0].formatted_address : '';
+                        console.log(addressHolder);
+                        self.props.handler({target: {value:addressHolder}}, item.jsonPathAddress, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg)
+              		  });
+    					    }}
+    					  />
+    					</div>
+            </Dialog>
+  				</div>
 					);
   		}
   	}

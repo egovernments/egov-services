@@ -9,6 +9,8 @@ import lombok.NoArgsConstructor;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
+
+import java.math.BigDecimal;
 import java.util.Objects;
 
 /**
@@ -31,6 +33,12 @@ public class Uom {
 
     @JsonProperty("code")
     private String code = null;
+    
+    @JsonProperty("conversionFactor")
+    private BigDecimal conversionFactor = null;
+    
+    @JsonProperty("active")
+    private Boolean active = false;
 
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;

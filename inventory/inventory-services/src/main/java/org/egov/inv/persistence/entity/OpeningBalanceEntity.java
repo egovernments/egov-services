@@ -41,7 +41,7 @@ public class OpeningBalanceEntity {
                 .mrnNumber(mrnNumber)
                 .receiptType(ReceiptTypeEnum.fromValue(receiptType))
                 .receiptDate(receiptDate)
-                .mrnStatus(MaterialReceipt.MrnStatusEnum.valueOf(mrnStatus))
+                .mrnStatus(null != MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) ? MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) : null)             
                 .receiptDetails(Arrays.asList(mapMaterialReceiptDetail()))
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime));
     }

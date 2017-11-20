@@ -373,22 +373,30 @@ public class CaseService {
 		for (int i = 0; i < courts.size(); i++) {
 			LinkedHashMap<String, Object> court = (LinkedHashMap<String, Object>) courts.get(i);
 			Court courtObj = new Court();
-			courtObj.setCode(court.get("code").toString());
-			courtObj.setActive((Boolean) court.get("active"));
-			courtObj.setName(court.get("name").toString());
-			courtObj.setTenantId(court.get("tenantId").toString());
+			courtObj.setCode(getString(court.get("code")));
+			courtObj.setActive(getBoolean(court.get("active")));
+			courtObj.setName(getString(court.get("name")));
+			courtObj.setTenantId(getString(court.get("tenantId")));
 
 			Address address = new Address();
-			address.setAddressLine1(court.get("courtAddress1").toString());
-			address.setCity(court.get("courtAddress2").toString());
-			address.setAddressLine2(court.get("courtAddress3").toString());
-			address.setPincode(court.get("pincode").toString());
+			address.setAddressLine1(getString(court.get("courtAddress1")));
+			address.setCity(getString(court.get("courtAddress2")));
+			address.setAddressLine2(getString(court.get("courtAddress3")));
+			address.setPincode(getString(court.get("pincode")));
 			courtObj.setAddress(address);
 
 			caseObj.getSummon().setCourtName(courtObj);
 		}
 	}
 
+	private Boolean getBoolean(Object object) {
+		return object == null ? null : Boolean.valueOf(object.toString());
+	}
+
+	private String getString(Object object) {
+		return object == null ? null : object.toString();
+	}
+	
 	/**
 	 * This will filter the Hearing detail
 	 * 

@@ -82,9 +82,8 @@ public class AssetQueryBuilder {
 			preparedStatementValues.add(searchAsset.getDepartment());
 		}
 
-		if (searchAsset.getAssetCategory() != null) {
-			selectQuery.append(" AND ASSET.assetCategory = ?");
-			preparedStatementValues.add(searchAsset.getAssetCategory());
+		if (searchAsset.getAssetSubCategory() != null && !searchAsset.getAssetSubCategory().isEmpty()) {
+			selectQuery.append(" AND ASSET.assetCategory IN ("+ getIdQuery(searchAsset.getAssetSubCategory())+") ");
 		}
 
 		if (searchAsset.getAssetCreatedFrom() != null && searchAsset.getAssetCreatedto() != null) {

@@ -2,6 +2,7 @@ package org.egov.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -24,10 +25,12 @@ import org.egov.model.enums.Sequence;
 import org.egov.model.enums.Status;
 import org.egov.model.enums.TransactionType;
 import org.egov.repository.AssetRepository;
+import org.egov.repository.MasterDataRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.web.wrapperfactory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -56,6 +59,9 @@ public class AssetService {
 
 	@Autowired
 	private CurrentValueService currentValueService;
+	
+	@Autowired
+	private MasterDataRepository mDRepo;
 
 	public AssetResponse createAsync(final AssetRequest assetRequest) {
 		final Asset asset = assetRequest.getAsset();
@@ -108,6 +114,29 @@ public class AssetService {
 		log.info("AssetService getAssets");
 
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+		
+		if (searchAsset.getAssetSubCategory() == null || CollectionUtils.isEmpty(searchAsset.getAssetSubCategory())) {
+
+			Map<String, String> paramsMap = new HashMap<>();
+			Map<String, Map<String, String>> masterMap = new HashMap<>();
+			Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
+
+			paramsMap.put("parent", assetCommonService.getIdQuery(searchAsset.getAssetCategory()));
+			masterMap.put("AssetCategory", paramsMap);
+			moduleMap.put("ASSET", masterMap);
+
+			String tenantId = searchAsset.getTenantId();
+			if (!tenantId.equals("default"))
+				tenantId = tenantId.split(".")[0];
+
+			JSONArray jsonArray = mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET")
+					.get("AssetCategory");
+			Map<Long, AssetCategory> asCatMap = mDService.getAssetCategoryMapFromJSONArray(jsonArray);
+			if (searchAsset.getAssetSubCategory() == null)
+				searchAsset.setAssetSubCategory(asCatMap.keySet());
+			else
+				searchAsset.getAssetSubCategory().addAll(asCatMap.keySet());
+		}
 		
 		if (!assets.isEmpty())
 			mapMasters(assets, requestInfo, searchAsset.getTenantId());

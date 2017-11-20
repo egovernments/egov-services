@@ -637,12 +637,12 @@ paths:
       description: |
           To create new advocate in the system. API supports bulk creation with max limit as defined in the advocate Request. Please note that either whole batch succeeds or fails, there's no partial batch success. To create one para wise comment, please pass array with one advocate object. 
       parameters:
-        - name: advocateRequest
+        - name: agencyRequest
           in: body
           description: Details for the new Advocate(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/AdvocateRequest'
+            $ref: '#/definitions/AgencyRequest'
       
       responses:
       ####################################################
@@ -651,7 +651,7 @@ paths:
         201:
           description: ReponseInfo with Advocate(s) created successfully
           schema:
-            $ref: '#/definitions/AdvocateResponse'
+            $ref: '#/definitions/AgencyResponse'
         400:
           description: Advocate(s) creation failed
           schema:
@@ -665,23 +665,23 @@ paths:
           To update existing advocate in the system(workflow). API supports bulk updation with max limit as defined in the advocate request. Please note that either whole batch succeeds or fails, there's no partial batch success. To update one advocate, please pass array with one advocate.
           
       parameters:
-        - name: advocateRequest
+        - name: agencyRequest
           in: body
           description: Details for the new advocate(s) + RequestInfo meta data.
           required: true
           schema:
-            $ref: '#/definitions/AdvocateRequest'
+            $ref: '#/definitions/AgencyRequest'
       
       responses:
       ####################################################
       # All errors will be returned with HTTP error code 400 with customized error code and messages. Consumer of the API need to handle 400 with customized error code and message
       ###################################################
         201:
-          description: ReponseInfo with ParaWiseComment(s) updated sudcessfully
+          description: ReponseInfo with advocate(s) updated sudcessfully
           schema:
-            $ref: '#/definitions/CaseResponse'
+            $ref: '#/definitions/AgencyResponse'
         400:
-          description: ParaWiseComment(s) updation failed
+          description: Advocate(s) updation failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
@@ -711,29 +711,11 @@ paths:
           in: query
           maxItems: 50
           description: comma seperated list of Ids of advocate 
-        - name: isIndividual
-          in: query
-          required: false
-          description: either advocate is individual or not
-          type: boolean
-        
         - name: advocateName
           in: query
           required: false
           description: name of advocate
           type: string
-        - name: organizationName
-          in: query
-          required: false
-          description: organization name of advocate
-          type: string
-        - name: isActive
-          in: query
-          required: false
-          description: either advocate is active or not
-          type: boolean
-   
-        
       responses:
         200:
           description: Advocate(s) Retrived Successfully
@@ -744,7 +726,48 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
-       - Advocate      
+       - Advocate 
+  /advocate/agency/_search:
+    post:
+      summary: Get the list of agencies defined in the system.
+      description: |
+          Search and get agency(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed agency(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of agency as defined in AdvocateResponse model.
+          
+          Search results will be sorted by the sortCase Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+        - $ref: "#/parameters/pageSize"
+        - $ref: "#/parameters/pageNumber"
+        - $ref: "#/parameters/sortCase"
+        - name: code
+          type: array
+          items:
+            type: string
+          in: query
+          maxItems: 50
+          description: comma seperated list of Ids of agencies 
+        - name: agencyName
+          in: query
+          required: false
+          description: agency name of advocate
+          type: string
+      responses:
+        200:
+          description: Agency(s) Retrived Successfully
+          schema:
+            $ref: "#/definitions/AgencyResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Advocate           
 
 definitions:
 ########################################################
@@ -889,8 +912,199 @@ definitions:
         maxLength: 128
         minLength: 4
     required:
+      - tenantId
+      - code
+      
+  Agency:
+    type: object
+    description: This object holds agencies information
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the Ageency
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the Agency(Combination of tenantId,Agency,sequnceNo)  
+      dateOfEmpanelment:
+        type: integer
+        format: int64
+        description: date of the Empanelment
+      standingCommitteeDecisionDate:
+        type: integer
+        format: int64
+        description: date of the Standing Committee Decision
+      empanelmentFromDate:
+        type: integer
+        format: int64
+        description: from date of the Empanelment
+      newsPaperAdvertismentDate:
+        type: integer
+        format: int64
+        description: NewsPaper Advertisment Date of the agency
+      bankName:
+        type: string
+        description: Bank Name of the advocate
+      bankBranch:
+        type: string
+        description: Bank branch of the advocate
+      bankAccountNo:
+        type: string
+        description: Bank account number of the advocate
+      isfcCode:
+        type: string
+        description: isfc code of the advocate
+      micr:
+        type: string
+        description: MICR code of the advocate
+      isActive:
+        type: boolean
+        default: true
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      isTerminate:
+        type: string
+        default: 'False'
+        description: >-
+          True will be set for Active Status False will be set for InActive
+          Status
+      inActiveDate:
+        type: integer
+        format: int64
+        description: InActive Date of the advocate
+      terminationDate:
+        type: integer
+        format: int64
+        description: Termination Date of the advocate
+      reasonOfTermination:
+        type: string
+        description: Reason of Termination / Deactive  of the advocate
+      tenantId:
+        type: string
+        description: tenant id of the court
+        maxLength: 128
+        minLength: 4
+      status:
+        type: string
+        description: This filed holds information about the status of agency
+      auditDetails:
+        $ref:  "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      advocates:
+        type: array
+        description: This filed holds information about the advocates of agency
+        items:
+          $ref: '#/definitions/Advocate'
+      personDetails:
+        type: array
+        description: This filed holds information about the owners of agency
+        items:
+          $ref: '#/definitions/PersonDetails'
+      isIndividual:
+        type: boolean
+        default: true
+        description: This filed holds information about the either organization/advocate is individual or not
+        
+    required:
+      - tenantId
+      - isIndividual
+    
+  PersonDetails:
+    type: object
+    description: This object holds information about the agency owner
+    properties:
+      name:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the owner
+      code:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique code of the owner
+      title:
+        type: string
+        description: title of the owner
+      firstName:
+        type: string
+        description: First name of the owner
+      secondName:
+        type: string
+        description: Second name of the owner
+      lastName:
+        type: string
+        description: Last name of the owner
+      address:
+        type: string
+        description: Adress of the owner
+      tenantId:
+        type: string
+        description: tenant id of the court
+        maxLength: 128
+        minLength: 4
+      agencyName:
+        type: string
+        maxLength: 100
+        minLength: 1
+        description: Unique Name of the Agency/organization name
+      agencyCode:
+        type: string
+        description: code of the agency
+      auditDetails:
+        $ref:  "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"  
+      aadhar:
+        type: string
+        description: Aadhar number of the owner
+      gender:
+        type: string
+        description: Gender of the owner
+      age:
+        type: string
+        description: Age of the owner
+      dob:
+        type: integer
+        format: int64
+        description: D.O.B of the owner
+      mobileNumber:
+        type: string
+        description: Mobile number of the owner
+      emailId:
+        type: string
+        description: Email Id of the owner
+      pan:
+        type: string
+        description: PAN number of the owner
+      vatTinNo:
+        type: string
+        description: VAT TIN Number of the owner
+      contactNo:
+        type: string
+        description: Contact number of the owner  
+    required:
+      - name
       - code
       - tenantId
+      - agencyName
+      - title
+      - firstName
+      - secondName
+      - lastName
+      - address
+      - contactNo
+      - aadhar
+      - gender
+      - age
+      - dob
+      - mobileNumber
+      - emailId
+      - pan
+      - vatTinNo
+
+      
   Advocate:
     type: object
     properties:
@@ -904,7 +1118,7 @@ definitions:
         maxLength: 100
         minLength: 1
         description: Unique code of the advocate
-      organizationName:
+      agencyName:
         type: string
         maxLength: 100
         minLength: 1
@@ -912,9 +1126,8 @@ definitions:
       isIndividual:
         type: boolean
         default: true
-        description: >-
-          True will be set for Active Status False will be set for InActive
-          Status
+        description: This filed holds information about the either advocate is individual or not
+         
       title:
         type: string
         description: title of the advocate
@@ -1021,6 +1234,13 @@ definitions:
         description: tenant id of the court
         maxLength: 128
         minLength: 4
+      agencyCode:
+        type: string
+        description: code of the agency  
+      status:
+        type: string
+        description: This filed holds information about the status of advocate  
+        
       auditDetails:
         $ref: >-
           https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails
@@ -1028,7 +1248,7 @@ definitions:
       - name
       - code
       - tenantId
-      - organizationName
+      - agencyName
       - title
       - firstName
       - secondName
@@ -1842,6 +2062,29 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Opinion'
+  AgencyRequest:
+    type: object
+    description: This object holds information about the agency request
+    properties:
+      RequestInfo:
+        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+      agencies:
+        type: array
+        items:
+          $ref: '#/definitions/Agency'
+      
+  AgencyResponse:
+    type: object
+    description: This object holds information about the agency response
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      agencies:
+        type: array
+        items:
+          $ref: '#/definitions/Agency'
+          
   CaseVoucher:
     type: object
     description: This object holds information about the case voucher details
@@ -1873,17 +2116,6 @@ definitions:
         description: This field holds information about the officer Signature
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"   
-        
-  AdvocateRequest:
-    type: object
-    description: This object holds information about the advocate request
-    properties:
-      RequestInfo:
-        $ref: https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
-      advocates:
-        type: array
-        items:
-          $ref: '#/definitions/Advocate'
       
   AdvocateResponse:
     type: object

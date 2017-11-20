@@ -33,8 +33,6 @@ public class MaterialReceiptSearch {
 
     private String receivedBy;
 
-    private List<String> receiptDetailIds;
-
     private String tenantId;
 
     private String sortBy;

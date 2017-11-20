@@ -240,24 +240,12 @@ var dat = {
 						"jsonPathAddress": "Asset.location",
             "jsonPathLng": "Asset.longitude",
 						"jsonPathLat": "Asset.latitude",
-            "label": "search",
+            "label": "ac.create.Location",
             "pattern": "",
             "type": "googleMaps",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "Location",
-						"jsonPath": "Asset.location",
-            "label": "ac.create.Location",
-            "pattern": "",
-            "type": "text",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -291,7 +279,7 @@ var dat = {
             "jsonPath": "Asset.address",
             "label": "ac.create.Address",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": true,
             "isDisabled": false,
@@ -311,6 +299,19 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+					{
+            "name": "Location",
+						"jsonPath": "Asset.location",
+            "label": "ac.create.Location",
+            "pattern": "",
+            "type": "text",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": true,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+						"isHidden": true
           }
 
 				]

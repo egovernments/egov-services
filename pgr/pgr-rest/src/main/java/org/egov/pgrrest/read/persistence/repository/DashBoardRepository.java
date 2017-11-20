@@ -67,7 +67,7 @@ public class DashBoardRepository {
         Long closedCount = getCount(closedCountQuery, tenantId);
 
         if(registeredCount != 0 && closedCount == 0){
-            query = "select count(*) as regcount, 0 as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trun('day',createddate),'dd') as date from submission" +
+            query = "select count(*) as regcount, 0 as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate),'dd') as date from submission" +
                 " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
                 " and keyword in ('complaint', 'Complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
                 " group by date_trunc('day',createddate) order by date_trunc('day',createddate) ASC";

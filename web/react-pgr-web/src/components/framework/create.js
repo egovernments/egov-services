@@ -182,6 +182,13 @@ class Report extends Component {
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
+        console.log('--------');
+        console.log(arr,i);
+        console.log(specs[moduleName + "." + actionName].groups[i].jsonPath);
+        console.log(_form);
+        console.log(_.get);
+        console.log(specs[moduleName + "." + actionName].groups,i);
+        console.log('--------');
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
@@ -561,13 +568,15 @@ class Report extends Component {
     return typeof _val != "undefined" ? _val : "";
   }
 
-  hideField = (_mockData, hideObject, reset) => {
+  hideField = (_mockData, hideObject, reset,val) => {
     let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = {...this.props.formData};
     if(hideObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
           if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].fields[j].name) {
+
+            reset = this.resetCheck(_mockData,hideObject.name,val);
             _mockData[moduleName + "." + actionName].groups[i].fields[j].hide = reset ? false : true;
             if(!reset) {
               _.set(_formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, '');
@@ -590,7 +599,11 @@ class Report extends Component {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
         if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].name) {
           flag = 1;
+
+          reset = this.resetCheck(_mockData,hideObject.name,val);
+          //console.log(hideObject.name,reset);
           _mockData[moduleName + "." + actionName].groups[i].hide = reset ? false : true;
+
           if(!reset) {
             var _rReq = [];
             for(var j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
@@ -620,6 +633,7 @@ class Report extends Component {
             for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].children.length; j++) {
               for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].children[j].groups.length; k++) {
                 if(hideObject.name == _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].name) {
+                  reset = this.resetCheck(_mockData,hideObject.name,val);
                   _mockData[moduleName + "." + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if(!reset) {
                     var _rReq = [];
@@ -647,8 +661,38 @@ class Report extends Component {
         }
       }
     }
-
     return _mockData;
+  }
+
+  resetCheck  = (mockData,element,val) =>{
+    //let val = 'TEXT';
+    console.log('reset check here');
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
+
+        for(let j=0; j<mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+
+          if (mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields) {
+            for(let k=0; k<mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+              if(mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue)
+              {
+                for (var l = 0; l < mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; l++) {
+                  if (val == mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue && element == mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[l].name) {
+                    return false;
+                  }
+                }
+                for (var l = 0; l < mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; l++) {
+                  if (val == mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue && element == mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[l].name) {
+                    return true;
+                  }
+                }
+              }
+
+            }
+
+          }
+        }
+    }
   }
 
   showField = (_mockData, showObject, reset) => {
@@ -820,7 +864,7 @@ class Report extends Component {
           for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
               for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
-                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y],false,val);
               }
 
               for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
@@ -828,7 +872,7 @@ class Report extends Component {
               }
             } else {
               for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
-                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
+                _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true,val);
               }
 
               for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
@@ -839,7 +883,6 @@ class Report extends Component {
         }
       }
     }
-
     setMockData(_mockData);
   }
 
@@ -928,7 +971,9 @@ class Report extends Component {
         }
       }
        }
+
       _.forEach(depedants, function(value, key) {
+        //console.log(value.type);
             if (value.type == "dropDown") {
                 let splitArray = value.pattern.split("?");
                 let context = "";
@@ -1080,6 +1125,63 @@ class Report extends Component {
 
 
             }
+            // else if (value.type == "documentList") {
+            //
+            //   let splitArray = value.pattern.split("?");
+            //   let context = "";
+            //   let id = {};
+            //   for (var j = 0; j < splitArray[0].split("/").length; j++) {
+            //     context+=splitArray[0].split("/")[j]+"/";
+            //   }
+            //
+            //
+            //   let queryStringObject=splitArray[1].split("|")[0].split("&");
+            //   for (var i = 0; i < queryStringObject.length; i++) {
+            //     if (i) {
+            //       if (queryStringObject[i].split("=")[1].search("{")>-1) {
+            //         if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+            //           id[queryStringObject[i].split("=")[0]] = e.target.value || "";
+            //         } else {
+            //           console.log(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+            //           id[queryStringObject[i].split("=")[0]] = e.target.value;//getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+            //         }
+            //       } else {
+            //         id[queryStringObject[i].split("=")[0]] = queryStringObject[i].split("=")[1];
+            //       }
+            //     }
+            //   }
+            //
+            //
+            //   Api.commonApiPost(context, id).then(function(response) {
+            //     if(response) {
+            //       //console.log(item);
+            //       var documents = [];
+          	// 			//console.log(this.props);
+            //       //let {documentList, useTimestamp, handler} = props;
+            //       for (var k = 0; k < response.length; k++) {
+            //
+            //         var temp = {
+        		// 					"fileStoreId": "",
+        		// 					"displayName": response[k].name,
+        		// 					"name": ""
+        		// 				};
+            //
+            //         documents.push(temp);
+            //       }
+            //       handleChange({target: {value: documents}}, value.jsonPath, false, '');
+            //
+            //       //handleChange({target: {value: temp}}, value.jsonPath, false, '', '');
+            //     }
+            //   },function(err) {
+            //       console.log(err);
+            //   });
+            //   // var arr=dropDownOringalData[value.pattern.split("|")[0]][value.pattern.split("|")[1]];
+            //   // var searchPropery=value.pattern.split("|")[2];
+            //   // var property=value.pattern.split("|")[3];
+            //   //console.log(props,'here');
+            //
+            // }
+            //console.log(value.type);
       });
   }
 

@@ -321,7 +321,7 @@ const menuConvention={
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterSearch":"/search/perfManagement/kpi/view",
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueUpdate":"/search/perfManagement/actualKpiUpdate/update",
 
-"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/non-framework/create/perfManagement/actualKpiCreate/",
+"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/create/perfManagement/actualKpiCreate/",
 
 
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch":"/search/perfManagement/actualKpiUpdate/view",

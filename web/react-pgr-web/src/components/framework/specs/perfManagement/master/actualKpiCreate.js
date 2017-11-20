@@ -30,7 +30,8 @@ var dat = {
           {
           "jsonPath": "kpiValues[0].documents",
           "type": "documentList",
-          "pattern": "/tl-masters/documenttype/v2/_search"
+          "pattern": "/perfmanagement/v1/kpimaster/_getDocumentForKpi?tenantId=default&kpiCode={KPIs}",
+          //"url": "/perfmanagement/v1/kpimaster/_getDocumentForKpi?kpiCode=CODEEGOV"
           },
           {
           "jsonPath": "kpiValues[0].targetType",
@@ -66,23 +67,71 @@ var dat = {
           "isDisabled": true,
           "requiredErrMsg": "",
           "patternErrMsg": "",
-          "values": [{
-              "label": "perfManagement.create.KPIs.groups.kpitype.value",
-              "value": true
-          }, {
-              "label": "perfManagement.create.KPIs.groups.kpitype.objective",
-              "value": false
-          }],
+          "values": [ {
+                    "label": "perfManagement.update.KPIs.groups.updatekpitype.text",
+                    "value": "TEXT"
+                      },{
+                      "label": "perfManagement.create.KPIs.groups.kpitype.value",
+                      "value": "VALUE"
+                  }, {
+                      "label": "perfManagement.create.KPIs.groups.kpitype.objective",
+                      "value": 'OBJECTIVE'
+                  }],
           "defaultValue": true,
           "showHideFields": [{
-              "ifValue": false,
+              "ifValue": "OBJECTIVE",
+
               "hide": [{
                   "name": "kpiTargetBlock",
                   "isGroup": true,
                   "isField": false
-              }],
+              },
+              {
+                  "name": "kpiTargetTextBlock",
+                  "isGroup": true,
+                  "isField": false
+              }
+            ],
               "show": [{
                   "name": "kpiTargetRadioBlock",
+                  "isGroup": true,
+                  "isField": false
+              }]
+          },
+          {
+              "ifValue": "VALUE",
+              "hide": [{
+                  "name": "kpiTargetRadioBlock",
+                  "isGroup": true,
+                  "isField": false
+              },
+              {
+                  "name": "kpiTargetTextBlock",
+                  "isGroup": true,
+                  "isField": false
+              }
+            ],
+              "show": [{
+                  "name": "kpiTargetBlock",
+                  "isGroup": true,
+                  "isField": false
+              }]
+          },
+          {
+              "ifValue": "TEXT",
+              "hide": [{
+                  "name": "kpiTargetRadioBlock",
+                  "isGroup": true,
+                  "isField": false
+              },
+              {
+                  "name": "kpiTargetBlock",
+                  "isGroup": true,
+                  "isField": false
+              }
+            ],
+              "show": [{
+                  "name": "kpiTargetTextBlock",
                   "isGroup": true,
                   "isField": false
               }]
@@ -91,14 +140,29 @@ var dat = {
     ]
     },
     {
-      "label": "Actual Value",
-        "name": "kpiTargetBlock",
+        "label": "Text",
+        "name": "kpiTargetTextBlock",
         "hide": false,
+        "multiple": false,
+        "fields": [{
+            "name": "kpiTargetText",
+            "jsonPath": "kpiValues[0].targetDescription",
+            "label": "",
+            "pattern": "",
+            "type": "text",
+            "isDisabled": false,
+            "requiredErrMsg": ""
+        }]
+    },
+    {
+        "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock",
+        "name": "kpiTargetBlock",
+        "hide": true,
         "multiple": false,
         "fields": [{
             "name": "kpiTarget",
             //"hide":false,
-            "jsonPath": "kpiValues[0].resultValue",
+            "jsonPath": "kpiValues[0].targetValue",
             "label": "",
             "pattern": "[0-9]",
             "type": "text",
@@ -108,7 +172,7 @@ var dat = {
         }]
     },
     {
-        "label": "Actual Value",
+        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
         "name": "kpiTargetRadioBlock",
         "hide": true,
         "multiple": false,
@@ -136,7 +200,6 @@ var dat = {
         }]
     },
 
-
       {
           "name": "UploadDocument",
           "label": "legal.create.group.title.UploadDocument",
@@ -146,10 +209,11 @@ var dat = {
               "type": "documentList",
               "pathToArray": "documentTypes",
               "displayNameJsonPath": "name",
+              "url": "/tl-masters/documenttype/v2/_search",
               "autoFillFields": [
                 {
                   "name": "documentTypeId",
-                  "url": "/tl-masters/documenttype/v2/_search",
+                  //"url": "/tl-masters/documenttype/v2/_search",
                   "jsonPath": "id"
                 }
               ]

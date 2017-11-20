@@ -183,7 +183,6 @@ import NoMatch from './components/common/NoMatch';
 //works
 import abstractEstimate from './components/non-framework/works/transaction/abstractEstimate';
 import viewAbstractEstimate from './components/non-framework/works/transaction/viewAbstractEstimate';
-import actualKpiCreate from './components/non-framework/perfManagement/master/actualKpiCreate';
 
 const base = "";
 
@@ -377,8 +376,7 @@ const Main = () => {
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>
-      <Route exact path= {base + '/non-framework/create/perfManagement/actualKpiCreate/'} component={actualKpiCreate}/>
-
+      
 
       <Route component={NoMatch}/>
 

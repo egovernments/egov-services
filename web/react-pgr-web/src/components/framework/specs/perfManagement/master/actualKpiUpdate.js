@@ -11,7 +11,7 @@ var dat = {
         "fields": [
           {
               "name": "kpiDepartment",
-              "jsonPath": "KPIs[0].departmentId",
+              "jsonPath": "departmentId",
               "label": "perfManagement.create.KPIs.groups.kpiDepartment",
               "isRequired": false,
               "pattern": "",
@@ -21,7 +21,7 @@ var dat = {
               "requiredErrMsg": ""
           }, {
               "name": "kpiDate",
-              "jsonPath": "KPIs[0].financialYear",
+              "jsonPath": "finYear",
               "label": "perfManagement.create.KPIs.groups.kpiDate",
               "isRequired": false,
               "pattern": "",
@@ -32,7 +32,7 @@ var dat = {
           },
 
 
-        {
+        /*{
               "name": "searchKpi",
               "jsonPath": "kpiCodes",
               "label": "KPI",
@@ -53,13 +53,13 @@ var dat = {
               "url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
               "isDisabled": false,
               "requiredErrMsg": ""
-            }
+            }*/
         ]
       }
        ],
        "result": {
       "header": [{label: "Department"},{label: "Financial Year"},{label: "KPI Name"},{label:"Instructions"},{label:"Target Value"}],
-      "values": ["kpi.department","kpi.financialYear","kpi.name","kpi.instructions", "kpi.resultDescription"],
+      "values": ["kpi.department","kpi.financialYear","kpi.name","kpi.instructions", "kpi.targetDescription"],
       "resultPath": "kpiValues",
       "rowClickUrlUpdate": "/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}",
       "rowClickUrlView": "/view/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}"
@@ -138,7 +138,8 @@ var dat = {
           		"isDisabled": true,
           		"requiredErrMsg": "",
           		"patternErrMsg": "",
-          		"values": [{
+          		"values": [
+                {
           			"label": "perfManagement.create.KPIs.groups.kpitype.value",
           			"value": true
           		}, {
@@ -147,33 +148,83 @@ var dat = {
           		}],
           		"defaultValue": true,
           		"showHideFields": [{
-          			"ifValue": false,
-          			"hide": [{
-          				"name": "kpiTargetBlock",
-          				"isGroup": true,
-          				"isField": false
-          			}],
-          			"show": [{
-          				"name": "kpiTargetRadioBlock",
-          				"isGroup": true,
-          				"isField": false
-          			}]
-          		}]
+                  "ifValue": "OBJECTIVE",
+
+                  "hide": [{
+                      "name": "kpiTargetBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiTargetTextBlock",
+                      "isGroup": true,
+                      "isField": false
+                  }
+                ],
+                  "show": [{
+                      "name": "kpiTargetRadioBlock",
+                      "isGroup": true,
+                      "isField": false
+                  }]
+              },
+              {
+                  "ifValue": "VALUE",
+                  "hide": [{
+                      "name": "kpiTargetRadioBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiTargetTextBlock",
+                      "isGroup": true,
+                      "isField": false
+                  }
+                ],
+                  "show": [{
+                      "name": "kpiTargetBlock",
+                      "isGroup": true,
+                      "isField": false
+                  }]
+              },
+              {
+                  "ifValue": "TEXT",
+                  "hide": [{
+                      "name": "kpiTargetRadioBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiTargetBlock",
+                      "isGroup": true,
+                      "isField": false
+                  }
+                ],
+                  "show": [{
+                      "name": "kpiTargetTextBlock",
+                      "isGroup": true,
+                      "isField": false
+                  }]
+              }]
           	},
-            {
-              "name": "updateActualKpiInstruction",
-              "jsonPath": "kpiValues[0].kpi.instructions",
-              "label": "Instruction to Achieve Target",
-              "pattern": "",
-              "type": "textarea",
-              "fullWidth":true,
-              "isDisabled": true,
-              "requiredErrMsg": ""
-            },
+
 
             ]
         },
-
+        {
+            "label": "Text",
+            "name": "kpiTargetTextBlock",
+            "hide": false,
+            "multiple": false,
+            "fields": [{
+                "name": "kpiTargetText",
+                "jsonPath": "kpiValues[0].targetDescription",
+                "label": "",
+                "pattern": "",
+                "type": "text",
+                "isDisabled": false,
+                "requiredErrMsg": ""
+            }]
+        },
         {
         "label": "perfManagement.create.KPIs.groups.kpiTargetBlock",
         "name": "kpiTargetBlock",
@@ -191,6 +242,8 @@ var dat = {
           "requiredErrMsg": ""
         }]
         },
+
+
         {
         "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
         "name": "kpiTargetRadioBlock",
@@ -219,6 +272,22 @@ var dat = {
           }]
         }]
         },
+
+        {
+	        "name": "",
+	        "label": "",
+	        fields:[{
+          "name": "updateActualKpiInstruction",
+          "jsonPath": "kpiValues[0].kpi.instructions",
+          "label": "Instruction to Achieve Target",
+          "pattern": "",
+          "type": "textarea",
+          "fullWidth":true,
+          "isDisabled": true,
+          "requiredErrMsg": "",
+          }]
+        },
+
         {
 	        "name": "UploadDocument",
 	        "label": "legal.create.group.title.UploadDocument",

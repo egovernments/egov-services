@@ -2,6 +2,7 @@ package org.egov.lcms.repository;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.tracer.http.LogAwareRestTemplate;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -34,14 +35,18 @@ public class TenantRepository {
 		tenantCodeUrl.append(propertiesManager.getTenantBasePath());
 		tenantCodeUrl.append(propertiesManager.getTenantSearchPath());
 		String url = tenantCodeUrl.toString();
+		
+		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+		requestInfoWrapper.setRequestInfo(requestInfo);
+		
 		// Query parameters
 		UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(url)
 				// Add query parameter
 				.queryParam("code", tenantId);
 		String response = null;
 		try {
-			logger.info("calling tennat service url :" + tenantCodeUrl.toString() + " request is " + requestInfo);
-			response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfo, String.class);
+			logger.info("calling tennat service url :" + tenantCodeUrl.toString() + " request is " + requestInfoWrapper);
+			response = restTemplate.postForObject(builder.buildAndExpand().toUri(), requestInfoWrapper, String.class);
 			logger.info("after calling tennat service response :" + response);
 			if (response == null) {
 				throw new CustomException(propertiesManager.getTenantCode(),

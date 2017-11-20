@@ -45,13 +45,12 @@ public class SummonService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
-	
+
 	@Autowired
 	private SummonValidator summonValidator;
-	
-	
+
 	@Autowired
-    private SummonRepository summonRepository;
+	private SummonRepository summonRepository;
 
 	/**
 	 * This API will create the summon
@@ -60,7 +59,7 @@ public class SummonService {
 	 * @return {@link SummonResponse}
 	 */
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
-         
+
 		for (Summon Summon : summonRequest.getSummons()) {
 			if (Summon.getIsUlbinitiated() == null) {
 				Summon.setIsUlbinitiated(Boolean.FALSE);
@@ -69,7 +68,7 @@ public class SummonService {
 		generateSummonReferenceNumber(summonRequest);
 
 		kafkaTemplate.send(propertiesManager.getCreateSummonvalidated(), summonRequest);
-		
+
 		pushSummonToIndexer(summonRequest);
 		return new SummonResponse(
 				responseInfoFactory.getResponseInfo(summonRequest.getRequestInfo(), HttpStatus.CREATED),
@@ -78,14 +77,14 @@ public class SummonService {
 	}
 
 	private void pushSummonToIndexer(SummonRequest summonRequest) {
-		
-		for(Summon summon : summonRequest.getSummons()){
+
+		for (Summon summon : summonRequest.getSummons()) {
 			Case caseobj = new Case();
 			caseobj.setCode(summon.getCode());
 			caseobj.setSummon(summon);
 			kafkaTemplate.send(propertiesManager.getPushSummonCreateToIndexer(), summonRequest);
 		}
-		
+
 	}
 
 	private void generateSummonReferenceNumber(SummonRequest summonRequest) throws Exception {
@@ -93,11 +92,12 @@ public class SummonService {
 		for (Summon summon : summonRequest.getSummons()) {
 
 			String code = uniqueCodeGeneration.getUniqueCode(summon.getTenantId(), summonRequest.getRequestInfo(),
-					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null,Boolean.FALSE);
+					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null,
+					Boolean.FALSE);
 
 			String summonRefrence = uniqueCodeGeneration.getUniqueCode(summon.getTenantId(),
 					summonRequest.getRequestInfo(), propertiesManager.getSummonRefrenceFormat(),
-					propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null,Boolean.TRUE);
+					propertiesManager.getSummonReferenceGenName(), Boolean.FALSE, null, Boolean.TRUE);
 
 			summon.setSummonReferenceNo(summonRefrence);
 			summon.setCode(code);
@@ -108,6 +108,7 @@ public class SummonService {
 
 	/**
 	 * This will assign the advocate for the case
+	 * 
 	 * @param caseRequest
 	 * @return {@link CaseResponse}
 	 * @throws Exception
@@ -119,10 +120,8 @@ public class SummonService {
 		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
 				caseRequest.getCases());
 	}
-	
-	
 
-/**
+	/**
 	 * 
 	 * @param caseRequest
 	 * @throws Exception
@@ -138,7 +137,6 @@ public class SummonService {
 			List<AdvocateDetails> advocateDetails = caseObj.getAdvocateDetails();
 
 			for (AdvocateDetails advocateDetail : advocateDetails) {
-				
 
 				if (advocateDetail.getCode() == null) {
 
@@ -171,14 +169,14 @@ public class SummonService {
 				kafkaTemplate.send(propertiesManager.getUpdateAssignAdvocate(), caseRequest);
 			}
 
-			
-			if ( advocateCodes.size()>0 )
-			summonRepository.deleteAdvocateDetails(advocateCodes);
+			if (advocateCodes.size() > 0)
+				summonRepository.deleteAdvocateDetails(advocateCodes);
 		}
 	}
 
 	/**
 	 * This API will generate the advocate code
+	 * 
 	 * @param caseRequest
 	 * @throws Exception
 	 */
@@ -190,9 +188,7 @@ public class SummonService {
 			for (AdvocateDetails advocatedetail : caseObj.getAdvocateDetails()) {
 				String advocateCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(),
 						caseRequest.getRequestInfo(), propertiesManager.getAdvocateDetailsCodeFormat(),
-						propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null,Boolean.FALSE);
-
-	
+						propertiesManager.getAdvocateDetailsCodeName(), Boolean.FALSE, null, Boolean.FALSE);
 
 				advocatedetail.setCode(advocateCode);
 			}
@@ -202,21 +198,23 @@ public class SummonService {
 
 	/**
 	 * This will search the cases based on the given parameters
+	 * 
 	 * @param caseSearchCriteria
 	 * @param requestInfo
 	 * @return {@link CaseResponse}
+	 * @throws Exception 
 	 */
-	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) {
+	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) throws Exception {
 
-		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
+		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria, requestInfo);
 
 		return new CaseResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
 
 	}
 
-	
 	/**
 	 * This API will validate the assign advocate details
+	 * 
 	 * @param caseRequest
 	 */
 	private void validateAssignAdvocate(CaseRequest caseRequest) {
@@ -244,12 +242,12 @@ public class SummonService {
 				}
 
 			}
-			
-			if ( caseObj.getAdvocateDetails()==null || caseObj.getAdvocateDetails().size()<=0 ){
-				
+
+			if (caseObj.getAdvocateDetails() == null || caseObj.getAdvocateDetails().size() <= 0) {
+
 				throw new CustomException(propertiesManager.getAdvocateDetailsSize(),
 						propertiesManager.getAdvocateDetailsSizeMessage());
-				
+
 			}
 		}
 

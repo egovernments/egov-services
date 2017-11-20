@@ -1,8 +1,11 @@
 package org.egov.lcms.repository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.models.Advocate;
 import org.egov.lcms.models.AdvocateDetails;
@@ -10,12 +13,14 @@ import org.egov.lcms.models.AdvocateSearchCriteria;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseDetails;
 import org.egov.lcms.models.CaseSearchCriteria;
+import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseVoucher;
 import org.egov.lcms.models.Event;
 import org.egov.lcms.models.EventSearchCriteria;
 import org.egov.lcms.models.HearingDetails;
 import org.egov.lcms.models.ParaWiseComment;
 import org.egov.lcms.models.ReferenceEvidence;
+import org.egov.lcms.models.RequestInfoWrapper;
 import org.egov.lcms.repository.builder.CaseBuilder;
 import org.egov.lcms.repository.rowmapper.AdvocateDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.CaseDetailsRowMapper;
@@ -26,12 +31,17 @@ import org.egov.lcms.repository.rowmapper.EvidenceRowMapper;
 import org.egov.lcms.repository.rowmapper.HearingDetailsRowMapper;
 import org.egov.lcms.repository.rowmapper.ParaWiseRowMapper;
 import org.egov.lcms.utility.ConstantUtility;
+import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 /**
  * 
@@ -78,13 +88,21 @@ public class CaseSearchRepository {
 	@Autowired
 	EventRowMapper eventRowMapper;
 
+	@Autowired
+	MdmsRepository mdmsRepository;
+
+	@Autowired
+	ObjectMapper objectMapper;
+
 	/**
 	 * This will search the cases based on the given casesearchCriteria
 	 * 
 	 * @param caseSearchCriteria
-	 * @return
+	 * @param requestInfo
+	 * @return case list
+	 * @throws Exception
 	 */
-	public List<Case> searchCases(CaseSearchCriteria caseSearchCriteria) {
+	public List<Case> searchCases(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) throws Exception {
 
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		final String queryStr = caseBuilder.getQuery(caseSearchCriteria, preparedStatementValues);
@@ -102,6 +120,39 @@ public class CaseSearchRepository {
 				casee.setParawiseComments(searchParaWiseComments(casee));
 				casee.setHearingDetails(searchHearingDetails(casee));
 				casee.setReferenceEvidences(searchRefernceEvidence(casee));
+			} else {
+				
+				Map<String, String> masterMap = new HashMap<>();
+				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
+				requestInfoWrapper.setRequestInfo(requestInfo);
+				
+				List<CaseStatus> caseStatusList = new ArrayList<CaseStatus>();
+				
+				if (casee.getCaseStatus() != null && casee.getCaseStatus().getCode() != null) {
+
+					masterMap.put("caseStatus", casee.getCaseStatus().getCode());
+
+					MdmsResponse mdmsResponse = mdmsRepository.getMasterData(casee.getTenantId(), masterMap,
+							requestInfoWrapper);
+
+					Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
+
+					Map<String, JSONArray> mastersmap = response.get("lcms");
+
+					for (String key : mastersmap.keySet()) {
+
+						String masterName = key;
+
+						if (masterName == "caseStatus") {
+							caseStatusList = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+									new TypeReference<List<CaseStatus>>() {
+									});
+						}
+					}
+					
+					if (caseStatusList != null && caseStatusList.size() > 0)
+						casee.setCaseStatus(caseStatusList.get(0));
+				}
 			}
 			casee.setAdvocateDetails(searchAdvocateDetails(casee));
 

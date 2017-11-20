@@ -199,7 +199,7 @@ public class CaseService {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria);
+		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria, requestInfo);
 		addDepartmentDetails(cases, requestInfo);
 		addMasterDetails(cases, caseSearchCriteria.getSearchResultLevel(), requestInfo);
 

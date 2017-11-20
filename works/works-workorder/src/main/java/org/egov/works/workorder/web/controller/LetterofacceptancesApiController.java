@@ -9,9 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import org.egov.works.workorder.domain.service.LetterOfAcceptanceService;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -52,7 +50,12 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
 			@Size(max = 50) @ApiParam(value = "Comma separated list of the LOA Status") @RequestParam(value = "statuses", required = false) List<String> statuses,
 			@Size(max = 50) @ApiParam(value = "Comma separated list of Names of the contractor to which Letter Of Acceptance belongs to.") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
 			@Size(max = 50) @ApiParam(value = "Comma separated list of codes of the contractor to which Letter Of Acceptance belongs to.") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes) {
-		// do some magic!
+
+        LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria = LetterOfAcceptanceSearchCriteria.builder()
+                .tenantId(tenantId).contractorCodes(contractorCodes).contractorNames(contractorNames)
+                .pageNumber(pageNumber).pageSize(pageSize).department(department).detailedEstimateNumbers(detailedEstimateNumbers)
+                .fileNumber(fileNumber).fromDate(fromDate).ids(ids).loaNumbers(loaNumbers).fromDate(fromDate).toDate(toDate).build();
+        LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService.search(letterOfAcceptanceSearchCriteria,requestInfo);
 		return new ResponseEntity<LetterOfAcceptanceResponse>(HttpStatus.OK);
 	}
 

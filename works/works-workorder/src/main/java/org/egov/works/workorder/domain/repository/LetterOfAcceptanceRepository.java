@@ -1,10 +1,21 @@
 package org.egov.works.workorder.domain.repository;
 
+import org.egov.works.workorder.web.contract.LetterOfAcceptance;
+import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchCriteria;
+import org.egov.works.workorder.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
-/**
- * Created by ramki on 11/11/17.
- */
+import java.util.List;
+
 @Repository
 public class LetterOfAcceptanceRepository {
+
+    @Autowired
+    private LetterOfAcceptanceJdbcRepository letterOfAcceptanceJdbcRepository;
+
+    public List<LetterOfAcceptance> searchLOAs(final LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria,
+                                                     final RequestInfo requestInfo) {
+       return letterOfAcceptanceJdbcRepository.searchLOAs(letterOfAcceptanceSearchCriteria,requestInfo);
+    }
 }

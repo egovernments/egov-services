@@ -1,13 +1,14 @@
 package org.egov.works.workorder.domain.service;
 
+import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
 import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.workorder.utils.WorkOrderUtils;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
 
 /**
  * Created by ramki on 11/11/17.
@@ -25,6 +26,9 @@ public class LetterOfAcceptanceService {
 	@Autowired
 	private IdGenerationRepository idGenerationRepository;
 
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+
 	public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
 
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
@@ -40,4 +44,10 @@ public class LetterOfAcceptanceService {
 		workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false);
 		return new LetterOfAcceptanceResponse();
 	}
+
+    public LetterOfAcceptanceResponse search(final LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria, final RequestInfo requestInfo) {
+        LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
+        letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchCriteria, requestInfo));
+        return letterOfAcceptanceResponse;
+    }
 }

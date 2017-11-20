@@ -4,6 +4,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +13,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
+import org.egov.lcms.models.Address;
 import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.AuditDetails;
 import org.egov.lcms.models.Bench;
@@ -290,11 +292,8 @@ public class CaseService {
 
 		switch (masterName) {
 		case "court": {
-			List<Court> courts = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
-					new TypeReference<List<Court>>() {
-					});
-			if (courts != null && courts.size() > 0)
-				caseObj.getSummon().setCourtName(courts.get(0));
+			JSONArray courts = mastersmap.get(masterName);
+			getCourtDetails(courts, caseObj);
 			break;
 		}
 
@@ -366,6 +365,28 @@ public class CaseService {
 			break;
 		}
 
+	}
+
+	@SuppressWarnings("unchecked")
+	private void getCourtDetails(JSONArray courts, Case caseObj) {
+
+		for (int i = 0; i < courts.size(); i++) {
+			LinkedHashMap<String, Object> court = (LinkedHashMap<String, Object>) courts.get(i);
+			Court courtObj = new Court();
+			courtObj.setCode(court.get("code").toString());
+			courtObj.setActive((Boolean) court.get("active"));
+			courtObj.setName(court.get("name").toString());
+			courtObj.setTenantId(court.get("tenantId").toString());
+
+			Address address = new Address();
+			address.setAddressLine1(court.get("courtAddress1").toString());
+			address.setCity(court.get("courtAddress2").toString());
+			address.setAddressLine2(court.get("courtAddress3").toString());
+			address.setPincode(court.get("pincode").toString());
+			courtObj.setAddress(address);
+
+			caseObj.getSummon().setCourtName(courtObj);
+		}
 	}
 
 	/**

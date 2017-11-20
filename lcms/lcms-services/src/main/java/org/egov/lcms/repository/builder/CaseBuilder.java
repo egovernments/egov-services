@@ -80,21 +80,8 @@ public class CaseBuilder {
 
 		if (caseSearchCriteria.getCaseStatus() != null && !caseSearchCriteria.getCaseStatus().isEmpty()) {
 			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			List<String> caseCodes = hearingRepository.getCaseCodesByCaseStatus(caseSearchCriteria.getCaseStatus());
-
-			int count = 1;
-			String code = "";
-			for (String caseCode : caseCodes) {
-				if (count < caseCodes.size())
-					code = code + "'" + caseCode + "',";
-				else
-					code = code + "'" + caseCode + "'";
-				count++;
-
-			}
-
-			selectQuery.append(" code IN(" + code + ")");
-
+			selectQuery.append(" casestatus->>'code'=?");
+			preparedStatementValues.add(caseSearchCriteria.getCaseStatus());
 		}
 
 		if (caseSearchCriteria.getDepartmentName() != null && !caseSearchCriteria.getDepartmentName().isEmpty()) {
@@ -106,8 +93,7 @@ public class CaseBuilder {
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
 			List<String> caseCodes = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
-			
-			
+
 			int count = 1;
 			String code = "";
 			for (String caseCode : caseCodes) {
@@ -186,7 +172,7 @@ public class CaseBuilder {
 		StringBuilder searchQuery = new StringBuilder();
 		searchQuery.append("SELECT * FROM " + tableName);
 		log.info("case code for getting hearing details is" + caseObj.getCode());
-		
+
 		searchQuery.append(" WHERE casecode=?");
 		preparedStatementValues.add(caseObj.getCode());
 

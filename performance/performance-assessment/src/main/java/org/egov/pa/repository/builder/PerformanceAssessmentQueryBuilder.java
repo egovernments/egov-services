@@ -122,6 +122,11 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
+    public String getDocumentForKpiValue() { 
+    	return " SELECT documentcode as code, kpicode as kpiCode, filestoreid as fileStoreId, id, valueid as valueId " 
+    			+ " FROM egpa_kpi_value_documents WHERE valueid = :vid " ; 
+    }
+    
     public String getKpiTypeQuery() { 
     	return "SELECT targettype FROM egpa_kpi_master WHERE code = ? " ; 
     }

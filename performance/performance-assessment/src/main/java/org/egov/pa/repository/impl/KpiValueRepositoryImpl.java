@@ -8,6 +8,7 @@ import java.util.Map;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.ValueDocument;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
@@ -75,6 +76,15 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq, preparedStatementValues);
 		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper();
 		List<KpiValue> listOfValues = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+		if(listOfValues.size() == 1) { 
+			String docQuery = queryBuilder.getDocumentForKpiValue();
+			for(KpiValue value : listOfValues) { 
+				final HashMap<String, Object> parametersMap = new HashMap<>(); 
+				parametersMap.put("vid", value.getId());
+				List<ValueDocument> docList = namedParameterJdbcTemplate.query(docQuery, parametersMap, new BeanPropertyRowMapper<>(ValueDocument.class));
+				value.setDocuments(docList);
+			}
+		}
 		return listOfValues;
 	}
 

@@ -139,7 +139,7 @@ public class KpiValueController implements KpiValue {
     @PostMapping(value = "/_search")
     @ResponseBody
 	public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
-			 @RequestParam("departmentId") Long departmentId,
+			 @RequestParam(value="departmentId", required = false) Long departmentId,
 			 @RequestParam("finYear") List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);

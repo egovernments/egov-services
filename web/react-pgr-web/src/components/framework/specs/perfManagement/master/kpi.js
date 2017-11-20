@@ -241,7 +241,7 @@ var dat = {
                         "requiredErrMsg": "",
                         "patternErrMsg": ""
                     },
-                    {
+                    /*{
                         "name": "kpidocCode",
                         "jsonPath": "KPIs[0].documentsReq[0].code",
                         "label": "perfManagement.create.KPIs.groups.kpidocCode",
@@ -251,7 +251,7 @@ var dat = {
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
                         "url": ""
-                    },
+                    },*/
                     {
                         "name": "kpidocMandatory",
                         "jsonPath": "KPIs[0].documentsReq[0].active",

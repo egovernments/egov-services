@@ -38,7 +38,7 @@ export default class UiDocumentList extends Component {
 					return (
 						<Col xs={12} md={12}>
 							<TextField
-								id={item.jsonPath.split(".").join("-")}		
+								id={item.jsonPath.split(".").join("-")}
 								floatingLabelStyle={{"color": "#696969", "fontSize": "20px"}}
 								floatingLabelFixed={true}
 								fullWidth={true}

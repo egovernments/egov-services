@@ -1,5 +1,7 @@
 package org.egov.model;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +24,7 @@ public class ModeOfAcquisition {
 	@JsonProperty("id")
 	private Long id;
 	
+	@NotNull
 	@JsonProperty("code")
 	private String code;
 	

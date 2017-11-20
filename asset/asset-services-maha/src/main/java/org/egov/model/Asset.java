@@ -123,6 +123,7 @@ public class Asset   {
 
 	  @NotNull
 	  @JsonProperty("modeOfAcquisition")
+	  @Valid
 	  private ModeOfAcquisition modeOfAcquisition;
 
 	  @JsonProperty("status")
@@ -177,6 +178,7 @@ public class Asset   {
 	  private Long openingDate;
 
 	  @JsonProperty("landDetails")
+	  @Valid
 	  private List<LandDetail> landDetails;
 	  
 	  @JsonProperty("currentValue")

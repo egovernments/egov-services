@@ -188,6 +188,7 @@ class AbstractEstimate extends Component {
     let { setMetaData, setModuleName, handleChange, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications['works.create'];
     reqRequired = [];
+
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
@@ -198,8 +199,10 @@ class AbstractEstimate extends Component {
     if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
 
-    handleChange (new Date().valueOf(), "abstractEstimates[0].dateOfProposal", true);
-    handleChange (false, "abstractEstimates[0].spillOverFlag", false);
+    this.props.addRequiredFields([`${obj.objectName}[0].workFlowDetails.department`, `${obj.objectName}[0].workFlowDetails.designation`, `${obj.objectName}[0].workFlowDetails.assignee`]);
+
+    handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
+    handleChange (false, `${obj.objectName}[0].spillOverFlag`, false);
 
     var sanctionType=[
       {key:'FINANCIAL_SANCTION',value:"FINANCIAL SANCTION"},
@@ -208,8 +211,8 @@ class AbstractEstimate extends Component {
 
     sanctionType.map((sanction, index)=>{
       for(var key in sanction){
-        handleChange (sanction['key'], "abstractEstimates[0].sanctionDetails["+index+"].sanctionType", false);
-        handleChange ('', "abstractEstimates[0].sanctionDetails["+index+"].sanctionAuthority.name", false);
+        handleChange (sanction['key'], `${obj.objectName}[0].sanctionDetails[${index}].sanctionType`, false);
+        handleChange ('', `${obj.objectName}[0].sanctionDetails[${index}].sanctionAuthority.name`, false);
       }
     })
 
@@ -388,7 +391,7 @@ class AbstractEstimate extends Component {
     // console.log(JSON.stringify(formData));
     let objectName=self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName;
     let data = {...formData};
-    _.set(data,'abstractEstimates[0].workFlowDetails.assignee',1);
+    _.set(data,`${objectName}[0].workFlowDetails.action`, action || 'create');
 
     // console.log(JSON.stringify(data));
 
@@ -444,6 +447,7 @@ class AbstractEstimate extends Component {
   // }
 
   hideField = (_mockData, hideObject, reset) => {
+    // console.log(reset);
     let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = {...this.props.formData};
     if(hideObject.isField) {
@@ -456,6 +460,7 @@ class AbstractEstimate extends Component {
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
               if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+                // console.log('came to hide', _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
                 delRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
                 removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
               }
@@ -534,8 +539,8 @@ class AbstractEstimate extends Component {
   }
 
   showField = (_mockData, showObject, reset) => {
-    // console.log(_mockData, showObject, reset);
-    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
+    console.log(reset, showObject);
+    let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields, handleChange} = this.props;
     let _formData = {...this.props.formData};
     if(showObject.isField) {
       for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
@@ -551,6 +556,8 @@ class AbstractEstimate extends Component {
                 addRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
               }
             } else if(_mockData[moduleName + "." + actionName].groups[i].fields[j].isRequired) {
+              if(showObject['jpath'])
+                handleChange ('', showObject['jpath'], false);
               delRequiredFields([_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath]);
               removeFieldErrors(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath);
             }
@@ -696,8 +703,61 @@ class AbstractEstimate extends Component {
     setMockData(_mockData);
   }
 
+  checkMandatory = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData, addRequiredFields, delRequiredFields} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(jsonPath == _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath && _mockData[moduleName + "." + actionName].groups[i].fields[j].checkMandatory && _mockData[moduleName + "." + actionName].groups[i].fields[j].checkMandatory.length){
+          let obj = _mockData[moduleName + "." + actionName].groups[i].fields[j].checkMandatory.find((checkmandat)=>{
+            return JSON.parse(checkmandat.ifValue) == JSON.parse(val);
+          });
+          if(obj.required && obj.required.length){
+            let req=[];
+            let temp = _mockData['works.create']['groups'];
+            for(let k=0;k<obj.required.length;k++){
+                for(let key in obj.required[k]){
+                  req.push(obj.required[k][key]);
+                  //Add Asterisk symbol in floating label text - update mockdata
+                  for(let a=0;a<temp.length;a++){
+                    for(let b=0;b<temp[a].fields.length;b++){
+                      for(let mockkey in temp[a].fields[b]){
+                        if(mockkey == 'jsonPath' && temp[a].fields[b][mockkey] == obj.required[k][key]){
+                          temp[a].fields[b]['isRequired']=true;
+                        }
+                      }
+                    }
+                  }
+                }
+            }
+            addRequiredFields(req);
+          }
+          if(obj.notRequired && obj.notRequired.length){
+            let notReqFields=[];
+            let temp = _mockData['works.create']['groups'];
+            for(let k=0;k<obj.notRequired.length;k++){
+                for(var key in obj.notRequired[k]){
+                  notReqFields.push(obj.notRequired[k][key]);
+                  //Remove Asterisk symbol in floating label text - update mockdata
+                  for(let a=0;a<temp.length;a++){
+                    for(let b=0;b<temp[a].fields.length;b++){
+                      for(let mockkey in temp[a].fields[b]){
+                        if(mockkey == 'jsonPath' && temp[a].fields[b][mockkey] == obj.notRequired[k][key]){
+                          temp[a].fields[b]['isRequired']=false;
+                        }
+                      }
+                    }
+                  }
+                }
+            }
+            delRequiredFields(notReqFields);
+          }
+        }
+      }
+    }
+  }
+
   checkIfHasShowHideFields = (jsonPath, val) => {
-    // console.log(jsonPath, val);
     let _mockData = {...this.props.mockData};
     let {moduleName, actionName, setMockData} = this.props;
     for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
@@ -706,6 +766,7 @@ class AbstractEstimate extends Component {
           // console.log('showHidefields matches for jsonPath');
           // console.log(_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields);
           for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            console.log(val,  _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue);
             if(val == _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
               for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
                 _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
@@ -715,11 +776,14 @@ class AbstractEstimate extends Component {
                 _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
+              // console.log('came to hide');
               for(let y=0; y<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                // console.log('first for loop');
                 _mockData = this.hideField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
               for(let z=0; z<_mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                // console.log('second for loop');
                 _mockData = this.showField(_mockData, _mockData[moduleName + "." + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
@@ -775,9 +839,9 @@ class AbstractEstimate extends Component {
         }
       }
       let depedants=jp.query(obj,`$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
-      // console.log(property, depedants);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
+      this.checkMandatory(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
       _.forEach(depedants, function(value, key) {
@@ -1040,7 +1104,7 @@ class AbstractEstimate extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
-
+    // console.log(this.props.requiredFields);
     return (
       <div className="Report">
         <div style={{padding:'0 15px'}}>
@@ -1139,9 +1203,6 @@ class AbstractEstimate extends Component {
 }
 
 const mapStateToProps = state => {
-  // console.log(state.framework.mockData);
-  // console.log(state.frameworkForm.requiredFields);
-  // console.log(state.frameworkForm.isFormValid);
   return ({
     metaData:state.framework.metaData,
     mockData: state.framework.mockData,
@@ -1177,7 +1238,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type:"SET_ACTION_NAME", actionName})
   },
   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
-    // console.log(e.target ? e.target.value : e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
     dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target ? e.target.value : e, isRequired, pattern, requiredErrMsg, patternErrMsg});
   },
   setLoadingStatus: (loadingStatus) => {
@@ -1194,7 +1254,6 @@ const mapDispatchToProps = dispatch => ({
     dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
   },
   addRequiredFields: (requiredFields) => {
-    // console.log(requiredFields);
     dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
   },
   removeFieldErrors: (key) => {

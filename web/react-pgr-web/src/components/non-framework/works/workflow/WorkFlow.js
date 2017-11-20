@@ -4,7 +4,6 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
 import _ from "lodash";
 import styles from '../../../../styles/material-ui';
 import {translate} from '../../../common/common';
@@ -16,77 +15,88 @@ class WorkFlow extends Component {
   constructor(props) {
     super(props);
     this.state={
+      workFlowDepartment:[],
+      workFlowDesignation:[]
     };
   }
   componentDidMount(){
-    // if(this.props.viewLicense.applications){
-      // console.log('Did Mount',this.props.viewLicense.departmentId, this.props.viewLicense.designationId, this.props.viewLicense.positionId );
       this.initCall();
-    // }
   }
-  // componentWillReceiveProps(nextProps){
-  //   this.initCall();
-  //   // if(!_.isEqual(this.props, nextProps)){
-  //   //   // console.log('Will Receive Props',nextProps.viewLicense);
-  //   //   this.initCall(nextProps.viewLicense);
-  //   // }
+  // shouldComponentUpdate(nextProps, nextState){
+  //   console.log('props: ', this.props.formData, nextProps.formData);
+  //   if(this.props !== nextProps){
+  //       return true;
+  //   }else{
+  //     return false;
+  //   }
   // }
-  shouldComponentUpdate(nextProps, nextState){
-    console.log('props: ', this.props.formData, nextProps.formData);
-    return true;
-  }
   initCall = () => {
-    // this.setState({
-    //   departmentId : obj.departmentId,
-    //   designationId : obj.designationId,
-    //   positionId : obj.positionId,
-    //   stateId : obj.applications[0].state_id,
-    //   statusName : obj.applications[0].statusName,
-    //   approvalComments : obj.approvalComments
-    // });
-    // console.log('came to init call:',obj.departmentId, this.state.workFlowDepartment.length);
-    // if(!obj.departmentId && this.state.workFlowDepartment.length === 0){
-      // console.log('try to load department');
-      Promise.all([
-        Api.commonApiPost( 'egov-common-masters/departments/_search')
-        // Api.commonApiPost('egov-common-workflows/process/_search', {},{}, false, true)
-      ]).then(responses => {
-        // console.log(responses[1].processInstance);
+
+    Promise.all([
+      Api.commonApiPost( 'egov-common-masters/departments/_search')
+      // Api.commonApiPost('egov-common-workflows/process/_search', {},{}, false, true)
+    ]).then(responses => {
+      // console.log(responses[1].processInstance);
+      try{
         self.setState({
           workFlowDepartment: responses[0].Department
           // process : responses[1].processInstance});
         });
-      });
-      // Api.commonApiPost( 'egov-common-masters/departments/_search').then((response)=>{
-      //   self.setState({workFlowDepartment: response.Department});
-      //   self.worKFlowActions();
-      // },function(err) {
-      //   self.props.handleError(err.message);
-      // });
-    // }
+      }catch(e){
+        console.log('Error:',e);
+      }
+
+    });
   }
   loadDesignation = (departmentId) => {
-      let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId)
-      console.log(departmentObj);
+      //clear designation and position
+      if(_.get(this.props.formData, `${this.props.path}.designation`))
+        this.props.handler({target:{value:''}}, `${this.props.path}.designation`, false, "");
+
+      if(_.get(this.props.formData, `${this.props.path}.assignee`))
+        this.props.handler({target:{value:''}}, `${this.props.path}.assignee`, false, "");
+
+      this.setState({workFlowDesignation: []});
+
+      let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId);
+
+      if(!departmentObj.name){
+          return;
+      }
+
        Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'AbstractEstimate',departmentRule:'',currentStatus:'',amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
-        console.log(res);
-        // for(var i=0; i<res.length;i++){
-        //   Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
-        //     // response.Designation.unshift({id:-1, name:'None'});
-        //     self.setState({
-        //         ...self.state,
-        //         workFlowDesignation: [
-        //           ...self.state.workFlowDesignation,
-        //           ...response.Designation
-        //         ]
-        //     });
-        //   },function(err) {
-        //     self.props.handleError(err.message);
-        //   });
-        // }
+        for(var i=0; i<res.length;i++){
+          Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
+            // response.Designation.unshift({id:-1, name:'None'});
+            self.setState({
+                ...self.state,
+                workFlowDesignation: [
+                  ...self.state.workFlowDesignation,
+                  ...response.Designation
+                ]
+            });
+          },function(err) {
+            // self.props.handleError(err.message);
+          });
+        }
        },function(err) {
-         self.props.handleError(err.message);
+        //  self.props.handleError(err.message);
        });
+  }
+  loadPosition = (designationId) => {
+    //clear position
+    if(_.get(this.props.formData, `${this.props.path}.assignee`))
+      this.props.handler({target:{value:''}}, `${this.props.path}.assignee`, false, "");
+
+    this.setState({workFlowPosition: []});
+
+    let departmentId = _.get(this.props.formData, `${this.props.path}.department`);
+    Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:departmentId, designationId:designationId}).then((response)=>{
+        self.setState({workFlowPosition: response.Employee});
+        // self.props.handleChange(designationId, property, isRequired, pattern);
+    },function(err) {
+      // self.props.handleError(err.message);
+    });
   }
   // worKFlowActions = () => {
     // console.log('came to workflow actions');
@@ -102,62 +112,6 @@ class WorkFlow extends Component {
         // });
     //   }
     // }
-  // }
-  // handleDesignation = (departmentId, property, isRequired, pattern) => {
-  //   // Load designation based on department
-  //   this.setState({
-  //     workFlowDesignation : [],
-  //     workFlowPosition : []
-  //   });
-  //
-  //   if(!departmentId){
-  //     this.props.handleChange('', 'departmentId', isRequired, pattern);
-  //     return;
-  //   }else{
-  //     self.props.handleChange(departmentId, property, isRequired, pattern);
-  //   }
-  //
-  //   this.props.handleChange('', 'designationId', isRequired, pattern);
-  //   this.props.handleChange('', 'positionId', isRequired, pattern);
-  //
-  //   let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId)
-  //    Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'New Trade License',departmentRule:'',currentStatus:self.state.process.status,amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
-  //     for(var i=0; i<res.length;i++){
-  //       Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
-  //         // response.Designation.unshift({id:-1, name:'None'});
-  //         self.setState({
-  //             ...self.state,
-  //             workFlowDesignation: [
-  //               ...self.state.workFlowDesignation,
-  //               ...response.Designation
-  //             ]
-  //         });
-  //       },function(err) {
-  //         self.props.handleError(err.message);
-  //       });
-  //     }
-  //    },function(err) {
-  //      self.props.handleError(err.message);
-  //    });
-  // }
-  // handlePosition = (designationId, property, isRequired, pattern) => {
-  //   this.setState({
-  //     workFlowPosition : []
-  //   });
-  //   self.props.handleChange('', 'positionId', isRequired, pattern);
-  //   // Load position based on designation and department
-  //
-  //   if(!designationId){
-  //     this.props.handleChange('', 'designationId', isRequired, pattern);
-  //     return;
-  //   }
-  //
-  //   Api.commonApiPost( '/hr-employee/employees/_search', {departmentId:self.state.departmentId, designationId:designationId}).then((response)=>{
-  //       self.setState({workFlowPosition: response.Employee});
-  //       self.props.handleChange(designationId, property, isRequired, pattern);
-  //   },function(err) {
-  //     self.props.handleError(err.message);
-  //   });
   // }
   // handleChange = (value, property, isRequired, pattern) => {
   //   //Check position or approval comments
@@ -185,9 +139,11 @@ class WorkFlow extends Component {
         {/*this.state.process && this.state.process.attributes.nextAction.code !== 'END' && this.state.process.attributes.nextAction.code !== 'Pending For License Fee Collection' ?*/}
           <Row>
             <Col xs={12} sm={6} md={4} lg={4}>
-              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.department')} maxHeight={200}
+              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle}
+                floatingLabelFixed={true} maxHeight={200}
+                floatingLabelText={<span>{translate('tl.view.workflow.department')} <span style={{"color": "#FF0000"}}> *</span></span>}
                 className="custom-form-control-for-select" dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                value = {this.state.departmentId || '' }
+                value = {_.get(this.props.formData, `${this.props.path}.department`) || '' }
                 id="department"
                 onChange={(event, key, value) => { this.props.handler({target: {value}}, `${this.props.path}.department`, true, ""); this.loadDesignation(value) }}
                 >
@@ -198,11 +154,13 @@ class WorkFlow extends Component {
               </SelectField>
             </Col>
             <Col xs={12} sm={6} md={4} lg={4}>
-              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.designation')} maxHeight={200}
+              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                maxHeight={200}
+                floatingLabelText={<span>{translate('tl.view.workflow.designation')} <span style={{"color": "#FF0000"}}> *</span></span>}
                 className="custom-form-control-for-select" dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                value = {this.state.designationId || '' }
+                value = {_.get(this.props.formData, `${this.props.path}.designation`) || '' }
                 id="designation"
-                onChange={(event, key, value) => {  }}
+                onChange={(event, key, value) => { this.props.handler({target: {value}}, `${this.props.path}.designation`, true, ""); this.loadPosition(value) }}
                 >
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowDesignation && this.state.workFlowDesignation.map((designation, index) => (
@@ -211,15 +169,17 @@ class WorkFlow extends Component {
               </SelectField>
             </Col>
             <Col xs={12} sm={6} md={4} lg={4}>
-              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.approver')} maxHeight={200}
+              <SelectField fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true}
+                maxHeight={200}
+                floatingLabelText={<span>{translate('tl.view.workflow.approver')} <span style={{"color": "#FF0000"}}> *</span></span>}
                 className="custom-form-control-for-select" dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                value = {this.state.positionId || '' }
+                value = {_.get(this.props.formData, `${this.props.path}.assignee`) || '' }
                 id="assignee"
-                onChange={(event, key, value) => {  }}>
+                onChange={(event, key, value) => { this.props.handler({target: {value}}, `${this.props.path}.assignee`, true, ""); }}>
                   <MenuItem value="" primaryText="Select" />
                   {this.state.workFlowPosition && this.state.workFlowPosition.map((position, index) => (
                       position.assignments.map((assignment, idx) => (
-                          assignment.isPrimary ? <MenuItem value={assignment.position+'~'+position.name+'~'+assignment.designation} key={index} primaryText={position.name} /> : ''
+                          assignment.isPrimary ? <MenuItem value={assignment.position} key={index} primaryText={position.name} /> : ''
                       ))
                   ))}
               </SelectField>
@@ -229,9 +189,9 @@ class WorkFlow extends Component {
         <Row>
           <Col xs={12} sm={12} md={12} lg={12}>
             <TextField floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('tl.view.workflow.comments')} fullWidth={true} multiLine={true} rows={2} rowsMax={4} maxLength="500"
-            className="custom-form-control-for-textarea" value = {this.state.approvalComments || '' }
-            id="comments"
-            onChange={(event, newValue) => { this.handleChange(newValue, "comments", false, /^.[^]{0,500}$/) }} />
+            className="custom-form-control-for-textarea" id="comments"
+            value = {_.get(this.props.formData, `${this.props.path}.comments`) || '' }
+            onChange={(event, newValue) => { this.props.handler({target:{value:newValue}}, `${this.props.path}.comments`, false)}} />
           </Col>
           {/*<Col xs={12} sm={12} md={12} lg={12}>
             <div className="text-center">

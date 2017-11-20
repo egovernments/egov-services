@@ -29,7 +29,7 @@ var dat = {
               "label": "works.create.groups.fields.department",
               "pattern": "",
               "type": "singleValueList",
-							"url": "/egov-common-masters/departments/_search?&|$..id|$..name",
+							"url": "/egov-common-masters/departments/_search?&|$..code|$..name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
@@ -322,6 +322,7 @@ var dat = {
 									"show": [
 										{
 												"name": "pmcType",
+												"jpath":"abstractEstimates[0].pmcType",
 												"isGroup": false,
 												"isField": true
 										}
@@ -347,6 +348,7 @@ var dat = {
 									"show": [
 										{
 												"name": "pmcName",
+												"jpath":"abstractEstimates[0].pmcName",
 												"isGroup": false,
 												"isField": true
 										}
@@ -379,7 +381,7 @@ var dat = {
 						"label": "works.create.groups.fields.assetCode",
 						"pattern": "",
 						"type": "text",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -391,7 +393,7 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": ""
@@ -402,7 +404,7 @@ var dat = {
 						"label": "works.create.groups.fields.assetRemarks",
 						"pattern": "",
 						"type": "textarea",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
@@ -421,7 +423,7 @@ var dat = {
 						"label": "works.create.groups.fields.landAssetRequired",
 						"pattern": "",
 						"type": "singleValueList",
-						"isRequired": false,
+						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
 						"patternErrMsg": "",
@@ -434,6 +436,27 @@ var dat = {
 							{
 									"key": false,
 									"value": "No"
+							}
+						],
+						"checkMandatory":[
+							{
+								"ifValue": "true",
+								"required": [
+									{
+										"jpath": "abstractEstimates[0].noOfLands",
+									}
+								],
+								"notRequired":[
+
+								]
+							},
+							{
+								"ifValue": "false",
+								"notRequired": [
+									{
+										"jpath": "abstractEstimates[0].noOfLands",
+									}
+								]
 							}
 						]
 					},

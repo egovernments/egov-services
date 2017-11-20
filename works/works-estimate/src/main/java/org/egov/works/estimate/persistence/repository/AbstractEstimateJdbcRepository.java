@@ -122,11 +122,11 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			params.append("upper(estimate.createdBy) =:createdBy");
 			paramValues.put("createdBy", abstractEstimateSearchContract.getCreatedBy().toUpperCase());
 		}
-		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null && abstractEstimateSearchContract.getAbstractEstimateNumbers().size() == 1) {
+		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null && abstractEstimateSearchContract.getAbstractEstimateNumbers().size() == 1 && !abstractEstimateSearchContract.getAbstractEstimateNumbers().isEmpty()) {
 			addAnd(params);
 			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");
 			paramValues.put("abstractEstimateNumbers", abstractEstimateSearchContract.getAbstractEstimateNumbers().get(0).toUpperCase());
-		} else if(abstractEstimateSearchContract.getAbstractEstimateNumbers() != null) {
+		} else if(abstractEstimateSearchContract.getAbstractEstimateNumbers() != null && !abstractEstimateSearchContract.getAbstractEstimateNumbers().isEmpty()) {
 			addAnd(params);
 			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");
 			paramValues.put("abstractEstimateNumbers", abstractEstimateSearchContract.getAbstractEstimateNumbers());

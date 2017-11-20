@@ -103,6 +103,7 @@
   ],
   "Material": [
     {
+      "code": "MAT1",
       "tenantId": "default",
       "materialType": {
         "code": "MT1"
@@ -127,6 +128,7 @@
       }
     },
     {
+      "code": "MAT2",
       "tenantId": "default",
       "materialType": {
         "code": "MT2"
@@ -151,6 +153,7 @@
       }
     },
     {
+      "code": "MAT3",
       "tenantId": "default",
       "materialType": {
         "code": "MT3"
@@ -175,9 +178,10 @@
       }
     },
     {
+      "code": "MAT4",
       "tenantId": "default",
       "materialType": {
-        "code": "MT4"
+        "code": "MT1"
       },
       "name": "LAPTOPS",
       "description": "Laptops",
@@ -199,9 +203,10 @@
       }
     },
     {
+      "code": "MAT5",
       "tenantId": "default",
       "materialType": {
-        "code": "MT5"
+        "code": "MT2"
       },
       "name": "IRON NAILS",
       "description": "Iron Nails",
@@ -223,9 +228,10 @@
       }
     },
     {
+      "code": "MAT6",
       "tenantId": "default",
       "materialType": {
-        "code": "MT6"
+        "code": "MT3"
       },
       "name": "SIlk THREAD",
       "description": "Silk Thread",
@@ -247,9 +253,10 @@
       }
     },
     {
+      "code": "MAT7",
       "tenantId": "default",
       "materialType": {
-        "code": "MT7"
+        "code": "MT1"
       },
       "name": "OIL GREASE",
       "description": "Oil Grease",
@@ -271,9 +278,10 @@
       }
     },
     {
+      "code": "MAT8",
       "tenantId": "default",
       "materialType": {
-        "code": "MT8"
+        "code": "MT2"
       },
       "name": "PAINT",
       "description": "paint",
@@ -295,9 +303,10 @@
       }
     },
     {
+      "code": "MAT9",
       "tenantId": "default",
       "materialType": {
-        "code": "MT9"
+        "code": "MT3"
       },
       "name": "SCREWS",
       "description": "Screws",
@@ -319,9 +328,10 @@
       }
     },
     {
+      "code": "MAT10",
       "tenantId": "default",
       "materialType": {
-        "code": "MT10"
+        "code": "MT1"
       },
       "name": "WATER PUMP",
       "description": "Water Pump",
@@ -343,9 +353,10 @@
       }
     },
     {
+      "code": "MAT11",
       "tenantId": "default",
       "materialType": {
-        "code": "MT11"
+        "code": "MT2"
       },
       "name": "PROTECTOR OIL SEAL",
       "description": "Protector Oil Seal",
@@ -367,9 +378,10 @@
       }
     },
     {
+      "code": "MAT12",
       "tenantId": "default",
       "materialType": {
-        "code": "MT12"
+        "code": "MT3"
       },
       "name": "OFC CABLE",
       "description": "OFC Cable",
@@ -391,9 +403,10 @@
       }
     },
     {
+      "code": "MAT13",
       "tenantId": "default",
       "materialType": {
-        "code": "MT13"
+        "code": "MT1"
       },
       "name": "AIR COOLER",
       "description": "Air Cooler",
@@ -415,9 +428,10 @@
       }
     },
     {
+      "code": "MAT14",
       "tenantId": "default",
       "materialType": {
-        "code": "MT14"
+        "code": "MT2"
       },
       "name": "BULB",
       "description": "Bulb",
@@ -425,7 +439,7 @@
         "code": "KVA"
       },
       "expenseAccount": {
-        "glCode": "44020"
+        "glCode": "44014"
       },
       "minQuantity": "10",
       "maxQuantity": "20",
@@ -439,9 +453,10 @@
       }
     },
     {
+      "code": "MAT15",
       "tenantId": "default",
       "materialType": {
-        "code": "MT15"
+        "code": "MT3"
       },
       "name": "PAPER",
       "description": "Paper",
@@ -449,7 +464,7 @@
         "code": "KGS"
       },
       "expenseAccount": {
-        "glCode": "44020"
+        "glCode": "44015"
       },
       "minQuantity": "25",
       "maxQuantity": "100",
@@ -463,9 +478,10 @@
       }
     },
     {
+      "code": "MAT16",
       "tenantId": "default",
       "materialType": {
-        "code": "MT16"
+        "code": "MT1"
       },
       "name": "TILES",
       "description": "Tiles",
@@ -487,9 +503,10 @@
       }
     },
     {
+      "code": "MAT17",
       "tenantId": "default",
       "materialType": {
-        "code": "MT17"
+        "code": "MT2"
       },
       "name": "METAL SHEAT",
       "description": "Metal Sheat",
@@ -511,9 +528,10 @@
       }
     },
     {
+      "code": "MAT18",
       "tenantId": "default",
       "materialType": {
-        "code": "MT18"
+        "code": "MT3"
       },
       "name": "COTTON",
       "description": "Cotton",
@@ -535,9 +553,10 @@
       }
     },
     {
+      "code": "MAT19",
       "tenantId": "default",
       "materialType": {
-        "code": "MT19"
+        "code": "MT1"
       },
       "name": "CEMENT",
       "description": "Cement",
@@ -559,9 +578,10 @@
       }
     },
     {
+      "code": "MAT20",
       "tenantId": "default",
       "materialType": {
-        "code": "MT20"
+        "code": "MT2"
       },
       "name": "IRON",
       "description": "Iron",

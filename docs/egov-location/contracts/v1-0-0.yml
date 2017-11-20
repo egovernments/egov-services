@@ -687,6 +687,29 @@ paths:
           schema:
             $ref: >-
               https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+
+  /boundarys/getshapefile:
+    get:
+      summary: Return the shapefile for the given tenant.
+      description: >-
+        This API checks whether the GIS shape file exists or not for given
+        tenant Id. The API returns shape file if shape file exists.
+      parameters:
+        - $ref: >-
+            https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+      tags:
+        - Boundary
+      responses:
+        '200':
+          description: Successful Response.
+          schema:
+            type: file
+        '400':
+          description: Tenantid was not provided or General service error
+          schema:
+            $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
               
   '/boundarys/getLocationByLocationName':
     post:

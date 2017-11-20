@@ -583,7 +583,7 @@ class Transaction extends Component {
           				if (i) {
                     if (queryStringObject[i].split("=")[1].search("{")>-1) {
                       if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
-                        id[queryStringObject[i].split("=")[0]]=e.target.value || "";
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value) || "";
                       } else {
                         id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
                       }
@@ -827,5 +827,8 @@ const mapDispatchToProps = dispatch => ({
   setFormData: (data) => {
     dispatch({type: "SET_FORM_DATA", data});
   },
+  setDropDownData:(fieldName,dropDownData)=>{
+    dispatch({type:"SET_DROPDWON_DATA",fieldName,dropDownData})
+  }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(Transaction);

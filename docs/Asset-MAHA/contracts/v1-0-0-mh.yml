@@ -1037,7 +1037,7 @@ definitions:
         
         
   AssetConfiguration:
-    description: Hold the asset Configuration specific information.
+    description: Hold the asset Configuration specific information, These values will be obtained from MDMS service.
     type: object
     properties:
       id:

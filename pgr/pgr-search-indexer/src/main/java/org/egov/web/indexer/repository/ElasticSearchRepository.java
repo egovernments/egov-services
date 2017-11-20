@@ -9,6 +9,8 @@ import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.Map;
 
@@ -39,8 +41,8 @@ public class ElasticSearchRepository {
         this.documentType = documentType;
     }
 
-    public void index(ServiceRequestDocument document) {
-        String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, document.getId());
+    public void index(ServiceRequestDocument document) throws UnsupportedEncodingException {
+        String url = String.format("%s%s/%s/%s", this.indexServiceHost, indexName, documentType, URLEncoder.encode(document.getId(), "UTF-8"));
         HttpHeaders headers = getHttpHeaders();
         restTemplate.exchange(url, HttpMethod.PUT, new HttpEntity<>(document, headers), Map.class);
     }

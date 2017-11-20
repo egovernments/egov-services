@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -38,7 +39,7 @@ public class IndexerListenerTest {
     }
 
     @Test
-    public void test_should_index_document() {
+    public void test_should_index_document() throws UnsupportedEncodingException {
         final ServiceRequestDocument expectedDocumentToIndex = new ServiceRequestDocument();
         final HashMap<String, Object> sevaRequestMap = getSevaRequestMap();
         when(documentService.enrich(any(SevaRequest.class))).thenReturn(expectedDocumentToIndex);

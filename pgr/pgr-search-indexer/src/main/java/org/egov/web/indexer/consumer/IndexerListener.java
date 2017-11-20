@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.stereotype.Service;
 
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 
 @Service
@@ -29,7 +30,7 @@ public class IndexerListener {
     }
 
     @KafkaListener(topics = "${kafka.topics.egov.index.name}")
-    public void listen(HashMap<String, Object> sevaRequestMap) {
+    public void listen(HashMap<String, Object> sevaRequestMap) throws UnsupportedEncodingException {
         SevaRequest sevaRequest = objectMapper.convertValue(sevaRequestMap, SevaRequest.class);
         final ServiceRequestDocument document = documentService.enrich(sevaRequest);
         elasticSearchRepository.index(document);

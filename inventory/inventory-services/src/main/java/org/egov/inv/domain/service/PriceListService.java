@@ -75,7 +75,10 @@ public class PriceListService extends DomainService {
 					if(priceListDetail.getToDate()==null){
 						priceListDetail.setToDate(priceList.getAgreementEndDate());
 					}
-					
+					if(priceListDetail.getUom()!=null)
+					{
+						priceListDetail.setQuantity((priceListDetail.getMaterial().getPurchaseUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
+					}
                 });
             });
             

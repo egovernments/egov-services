@@ -214,34 +214,34 @@ serviceMaps:
 
     - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
 
-      basePath: $.abstractEstimates.*.documentdetails.*
+      basePath: $.abstractEstimates.*.documentDetails.*
       jsonMaps:
          
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.id
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.id
          
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.tenantId
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.tenantId
          
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectId
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.objectId
        
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectType
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.objectType
        
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.documentType
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.documentType
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.fileStore
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.fileStore
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.latitude
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.latitude
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.longitude
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.longitude
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.description
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.description
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.dateOfCapture
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.dateOfCapture
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.workProgress
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.workProgress
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdBy
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.createdBy
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.createdTime
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.createdTime
 
  - version: 1.0
    name: AbstractEstimate Update
@@ -430,34 +430,34 @@ serviceMaps:
 
     - query: UPDATE egw_documentdetail SET objectid=?, objecttype=?, documenttype=?, filestore=?, latitude=?, longitude=?, description=?, dateofcapture=?, workprogress=?, lastmodifiedby=?, lastmodifiedtime=? WHERE id=? AND tenantid=?;
 
-      basePath: $.abstractEstimates.*.documentdetails.*
+      basePath: $.abstractEstimates.*.documentDetails.*
       jsonMaps:
          
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectId
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.objectId
        
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.objectType
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.objectType
        
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.documentType
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.documentType
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.fileStore
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.fileStore
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.latitude
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.latitude
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.longitude
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.longitude
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.description
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.description
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.dateOfCapture
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.dateOfCapture
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.workProgress
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.workProgress
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedBy
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.lastModifiedBy
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.lastModifiedTime
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.lastModifiedTime
 
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.id
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.id
          
-       - jsonPath: $.abstractEstimates.*.documentdetails.*.tenantId
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.tenantId
 
 
  - version: 1.0

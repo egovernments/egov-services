@@ -397,6 +397,14 @@ class UpdateMovement extends React.Component {
           }
       })
 
+    }else if (name === "documents") {
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              documents:e.target.files
+          }
+      })
+
     } else {
       this.setState({
           movement:{
@@ -945,7 +953,8 @@ class UpdateMovement extends React.Component {
                           </div>
                           <div className="col-sm-6">
                               <div className="styled-file">
-                              <input id="documents" name="documents" type="file" multiple/>
+                              <input id="documents" name="documents" type="file"
+                                 onChange={(e)=>{handleChange(e,"documents")}} multiple/>
                              </div>
                           </div>
                       </div>

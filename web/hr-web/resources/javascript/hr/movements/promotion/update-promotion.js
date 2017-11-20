@@ -350,6 +350,14 @@ class UpdateMovement extends React.Component {
             }
         })
 
+      }else if (name === "documents") {
+        this.setState({
+            movement:{
+                ...this.state.movement,
+                documents:e.target.files
+            }
+        })
+
       }else {
         this.setState({
             movement:{
@@ -431,7 +439,7 @@ class UpdateMovement extends React.Component {
 
         let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
               departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId} = this.state.movement
-        let {isSearchClicked,employee,transferWithPromotion, buttons}=this.state;
+        let {isSearchClicked,employee,transferWithPromotion,buttons}=this.state;
         let mode = getUrlVars()["type"];
 
         const renderProcesedBtns = function() {
@@ -808,7 +816,8 @@ class UpdateMovement extends React.Component {
                         </div>
                         <div className="col-sm-6">
                             <div className="styled-file">
-                            <input id="documents" name="documents" type="file" required multiple/>
+                            <input id="documents" name="documents" type="file"
+                               onChange={(e)=>{handleChange(e,"documents")}} multiple/>
                            </div>
                         </div>
                     </div>

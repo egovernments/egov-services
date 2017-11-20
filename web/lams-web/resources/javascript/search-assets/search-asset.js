@@ -41,7 +41,7 @@ class AssetSearch extends React.Component {
 
     if(assetIds) {
       try {
-        var agreements = commonApiPost("lams-services", "agreements", "_search", {asset: assetIds}).responseJSON["Agreements"] || [];
+        var agreements = commonApiPost("lams-services", "agreements", "_search", { tenantId, asset: assetIds}).responseJSON["Agreements"] || [];
         list.map(function(val, ind) {
           for(var i=0; i<agreements.length; i++) {
             if(val.id == agreements[i].asset.id) {

@@ -3286,7 +3286,8 @@ definitions:
           description: |
             code of the uom
         conversionFactor:
-          type: BigDecimal
+          type: number
+          format: BigDecimal
           description: |
            conversionFactor of the particular uom
         active:

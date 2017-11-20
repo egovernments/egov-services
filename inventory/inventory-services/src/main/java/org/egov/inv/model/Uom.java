@@ -1,5 +1,6 @@
 package org.egov.inv.model;
 
+import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -17,7 +18,7 @@ import lombok.NoArgsConstructor;
  * Unit of Measurement 
  */
 @ApiModel(description = "Unit of Measurement ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-20T08:47:33.948Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-20T09:33:12.146Z")
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -33,6 +34,9 @@ public class Uom   {
 
   @JsonProperty("code")
   private String code = null;
+
+  @JsonProperty("conversionFactor")
+  private BigDecimal conversionFactor = null;
 
   @JsonProperty("active")
   private Boolean active = null;
@@ -120,6 +124,27 @@ public class Uom   {
     this.code = code;
   }
 
+  public Uom conversionFactor(BigDecimal conversionFactor) {
+    this.conversionFactor = conversionFactor;
+    return this;
+  }
+
+   /**
+   * conversionFactor of the particular uom 
+   * @return conversionFactor
+  **/
+  @ApiModelProperty(value = "conversionFactor of the particular uom ")
+
+  @Valid
+
+  public BigDecimal getConversionFactor() {
+    return conversionFactor;
+  }
+
+  public void setConversionFactor(BigDecimal conversionFactor) {
+    this.conversionFactor = conversionFactor;
+  }
+
   public Uom active(Boolean active) {
     this.active = active;
     return this;
@@ -175,13 +200,14 @@ public class Uom   {
         Objects.equals(this.tenantId, uom.tenantId) &&
         Objects.equals(this.name, uom.name) &&
         Objects.equals(this.code, uom.code) &&
+        Objects.equals(this.conversionFactor, uom.conversionFactor) &&
         Objects.equals(this.active, uom.active) &&
         Objects.equals(this.auditDetails, uom.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, code, active, auditDetails);
+    return Objects.hash(id, tenantId, name, code, conversionFactor, active, auditDetails);
   }
 
   @Override
@@ -193,6 +219,7 @@ public class Uom   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
+    sb.append("    conversionFactor: ").append(toIndentedString(conversionFactor)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");

@@ -113,10 +113,11 @@ public class AssetService {
 	public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
 		log.info("AssetService getAssets");
 
-		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
-		
-		if (searchAsset.getAssetSubCategory() == null || CollectionUtils.isEmpty(searchAsset.getAssetSubCategory())) {
+		if ((searchAsset.getAssetSubCategory() == null || CollectionUtils.isEmpty(searchAsset.getAssetSubCategory())) &&
 
+				(searchAsset.getAssetCategory() != null || !CollectionUtils.isEmpty(searchAsset.getAssetCategory()))) {
+
+			System.err.println("the set : " + CollectionUtils.isEmpty(searchAsset.getAssetCategory()));
 			Map<String, String> paramsMap = new HashMap<>();
 			Map<String, Map<String, String>> masterMap = new HashMap<>();
 			Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
@@ -137,7 +138,9 @@ public class AssetService {
 			else
 				searchAsset.getAssetSubCategory().addAll(asCatMap.keySet());
 		}
-		
+
+		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+
 		if (!assets.isEmpty())
 			mapMasters(assets, requestInfo, searchAsset.getTenantId());
 		return getAssetResponse(assets, requestInfo);

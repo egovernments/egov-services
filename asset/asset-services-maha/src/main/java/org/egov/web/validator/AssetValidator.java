@@ -217,10 +217,10 @@ public class AssetValidator implements Validator {
 		Map<String, String> errorMap = new HashMap<>();
 				
 		
-		if(assetCriteria.getAssetSubCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetSubCategory())) {
+		/*if(assetCriteria.getAssetSubCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetSubCategory())) {
 			if(assetCriteria.getAssetCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetCategory()))
 				errorMap.put("EGASSET_SEARCH_ASSET_CATEGORY", "Either AssetCategory Or AssetSubCategory Has To Be Given For Search");
-		}
+		}*/
 		
 		if(!errorMap.isEmpty())
 			throw new CustomException(errorMap);

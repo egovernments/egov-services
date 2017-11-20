@@ -213,7 +213,6 @@ public class AssetQueryBuilder {
 		query = new StringBuilder("'" + arr[0].toString() + "'");
 		for (int i = 1; i < arr.length; i++)
 			query.append("," + "'" + arr[i].toString() + "'");
-		System.err.println("query" + query);
 		return query.toString();
 	}
 }

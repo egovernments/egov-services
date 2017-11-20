@@ -35,7 +35,7 @@ public class AssetCriteria {
 	private BigDecimal originalValueFrom;
 	private BigDecimal originalValueTo;
 	private Long assetCreatedFrom;
-	private Long assetCreatedto;
+	private Long assetCreatedTo;
 	private Long toDate; // exclusive for depreciation search
 
 	private Long locality;

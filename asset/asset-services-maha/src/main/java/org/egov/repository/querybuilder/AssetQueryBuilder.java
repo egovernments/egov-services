@@ -86,16 +86,16 @@ public class AssetQueryBuilder {
 			selectQuery.append(" AND ASSET.assetCategory IN ("+ getIdQuery(searchAsset.getAssetSubCategory())+") ");
 		}
 
-		if (searchAsset.getAssetCreatedFrom() != null && searchAsset.getAssetCreatedto() != null) {
+		if (searchAsset.getAssetCreatedFrom() != null && searchAsset.getAssetCreatedTo() != null) {
 			selectQuery.append(" AND (ASSET.dateofcreation BETWEEN ? AND ?)");
 			preparedStatementValues.add(searchAsset.getAssetCreatedFrom());
-			preparedStatementValues.add(searchAsset.getAssetCreatedto());
+			preparedStatementValues.add(searchAsset.getAssetCreatedTo());
 		} else if (searchAsset.getAssetCreatedFrom() != null) {
 			selectQuery.append(" AND ASSET.dateofcreation >= ?");
 			preparedStatementValues.add(searchAsset.getAssetCreatedFrom());
-		} else if (searchAsset.getAssetCreatedto() != null) {
+		} else if (searchAsset.getAssetCreatedTo() != null) {
 			selectQuery.append(" AND ASSET.dateofcreation <= ?");
-			preparedStatementValues.add(searchAsset.getAssetCreatedto());
+			preparedStatementValues.add(searchAsset.getAssetCreatedTo());
 		}
 
 		if (searchAsset.getOriginalValueFrom() != null && searchAsset.getOriginalValueTo() != null) {

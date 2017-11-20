@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.DisposalRequest;
 import org.egov.contract.RevaluationRequest;
@@ -61,12 +62,15 @@ public class AssetValidator implements Validator {
 		AssetCategory assetCategory = asset.getAssetCategory();
 
 		addMissingPathForPersister(asset);
-		validateAndEnrichStateWideMasters(assetRequest,errorMap);
-		if(!asset.getAssetCategory().getAssetCategoryType().equals(AssetCategoryType.LAND))
-		validateAnticipatedLife(asset.getAnticipatedLife(),assetCategory.getDepreciationRate(),errorMap);
-		else
-			asset.setAnticipatedLife(null);
-		/* assetAccountValidate(asset, errorMap); */
+		validateAndEnrichStateWideMasters(assetRequest, errorMap);
+		if (!assetCategory.getAssetCategoryType().equals(AssetCategoryType.LAND)) {
+			validateAnticipatedLife(asset.getAnticipatedLife(), assetCategory.getAssetCategoryType(),
+					assetCategory.getDepreciationRate(), errorMap);
+			if (asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
+				errorMap.put("EGASSET_WIP_REF_NUMBER",
+						"WIP Reference number is mandatory for " + assetCategory.getAssetCategoryType() + " Assets");
+			}
+		}/* assetAccountValidate(asset, errorMap); */
 
 		if (asset.getWarrantyAvailable()) {
 			if (asset.getWarrantyExpiryDate() == null)
@@ -121,15 +125,15 @@ public class AssetValidator implements Validator {
 
 	}
 
-	private void validateAnticipatedLife(Long anticipatedLife, Double depreciationRate, Map<String, String> errorMap) {
+	private void validateAnticipatedLife(Long anticipatedLife,AssetCategoryType type, Double depreciationRate, Map<String, String> errorMap) {
 
+		if(anticipatedLife!=null) {
 		long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
-		log.info("newVal : " + newVal);
-		log.info("anticipated val : "+anticipatedLife);
-		log.info("before the if statement : "+ (anticipatedLife-newVal));
 		if (anticipatedLife-newVal != 0) {
 			errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
 		}
+		}else
+			errorMap.put("Asset_anticipatedLife", "anticipatedLife Cannot be Null For "+ type.toString()+ " Assets");			
 	}
 
 	public void addMissingPathForPersister(Asset asset) {

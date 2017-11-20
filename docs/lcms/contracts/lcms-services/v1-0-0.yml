@@ -103,6 +103,12 @@ paths:
           required: false
           type: integer
           format: int64
+        - name: searchResultLevel
+          in: query
+          required: false
+          description: either case search result data need fully or partially
+          type: string
+        
         
       responses:
         200:
@@ -115,7 +121,39 @@ paths:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
       tags:
        - Case
-       
+  /caseno/_search:
+    post:
+      summary: Get the list of legal case numbers defined in the system.
+      description: |
+          Search and get legal case number(s)  based on defined search criteria.
+          Currently search parameters are only allowed as HTTP query params.
+          
+          In case multiple parameters are passed Legal Case number(s) will be searched as an AND combination of all the parameters.
+          
+          Maximum result size is restricted based on the maxlength of LegalCase as defined in LegalcaseResponse model.
+          
+          Each LegalCase in the Reponse will contain SupportDocuments. 
+          
+          Search results will be sorted by the sortCase Provided in the parameters
+      parameters:
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
+        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+
+        - name: advocateName
+          type: string
+          description: advocate name 
+          in: query
+      responses:
+        200:
+          description: Legal Caseno(s) Retrived Successfully
+          schema:
+            $ref: "#/definitions/CaseDetailsResponse"
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+      tags:
+       - Case     
   /summmon/_create:
     post:
       summary: Create new summon .
@@ -1889,8 +1927,7 @@ definitions:
       caseType: 
         $ref: '#/definitions/CaseType'     
       caseNo:
-        type: string
-        description: This field holds information about the cae no.
+        $ref: '#/definitions/CaseDetails'
       caseStatus:
         $ref: '#/definitions/CaseStatus'
       amountClaimed:
@@ -1966,6 +2003,30 @@ definitions:
     - invoiceDoucment
     - workFlowDetails
     - advocate
+  CaseDetails:
+    type: object
+    description: This object holds information about the caseno and summonrefernceno
+    properties:
+      caseno:
+        type: string
+        description: This field holds information about the caseno
+      summonRefernceNo:
+        type: string
+        description: This field holds information about the summonrfernceno
+        
+  CaseDetailsResponse:
+    type: object
+    description: This object holds information about the case detail response
+    properties:
+      ResponseInfo:
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo
+      caseDetails:
+        type: array
+        items:
+          $ref: '#/definitions/CaseDetails'       
+    
+    
   AdvocatePaymentRequest:
     type: object
     description: This object holds information about the advocate payment request
@@ -2009,6 +2070,9 @@ definitions:
         type: array
         items:
           $ref: '#/definitions/Document'
+      caseNo:
+        $ref: '#/definitions/CaseDetails'
+        
       opinionDescription:
         type: string
         description: This field holds information about the opinion descriptions.
@@ -2039,6 +2103,7 @@ definitions:
     - departmentName
     - opinionOn
     - workFlowDetails
+    - caseNo
    
   OpinionRequest:
     type: object

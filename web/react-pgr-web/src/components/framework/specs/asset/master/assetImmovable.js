@@ -979,19 +979,7 @@ var dat = {
               "requiredErrMsg": "",
               "patternErrMsg": ""
             },
-            {
-  						"name": "RefNoOfWIP",
-  						"jsonPath": "Assets[0].wipReferenceNo",
-  						"label": "ac.create.Ref.WIP.Register",
-  						"pattern": "",
-  						"type": "text",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
-            {
+						{
   						"name": "AssetName",
   						"jsonPath": "Assets[0].name",
   						"label": "ac.create.Asset.Name",
@@ -1028,6 +1016,18 @@ var dat = {
   						"patternErrMsg": ""
   					},
             {
+  						"name": "RefNoOfWIP",
+  						"jsonPath": "Assets[0].wipReferenceNo",
+  						"label": "ac.create.Ref.WIP.Register",
+  						"pattern": "",
+  						"type": "text",
+  						"url": "",
+  						"isRequired": true,
+  						"isDisabled": false,
+  						"requiredErrMsg": "",
+  						"patternErrMsg": ""
+  					},
+            {
   						"name": "Department",
   						"jsonPath": "Assets[0].department.name",
   						"label": "ac.create.Department",
@@ -1039,29 +1039,6 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
-            {
-  						"name": "NoOfOrder",
-  						"jsonPath": "Assets[0].orderNumber",
-  						"label": "ac.create.No.Of.Order",
-  						"pattern": "",
-  						"type": "number",
-  						"url": "",
-  						"isRequired": false,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
-            {
-              "name": "DateOfOrder",
-              "jsonPath": "Assets[0].orderDate",
-              "label": "ac.create.Date.Of.Order",
-              "pattern": "",
-              "type": "datePicker",
-              "isRequired": false,
-              "isDisabled": false,
-              "requiredErrMsg": "",
-              "patternErrMsg": ""
-            },
             {
               "name": "DateOfAcquisition",
               "jsonPath": "Assets[0].acquisitionDate",
@@ -1097,6 +1074,29 @@ var dat = {
 	            "requiredErrMsg": "",
 	            "patternErrMsg": ""
 	          },
+						{
+  						"name": "NoOfOrder",
+  						"jsonPath": "Assets[0].orderNumber",
+  						"label": "ac.create.No.Of.Order",
+  						"pattern": "",
+  						"type": "number",
+  						"url": "",
+  						"isRequired": false,
+  						"isDisabled": false,
+  						"requiredErrMsg": "",
+  						"patternErrMsg": ""
+  					},
+            {
+              "name": "DateOfOrder",
+              "jsonPath": "Assets[0].orderDate",
+              "label": "ac.create.Date.Of.Order",
+              "pattern": "",
+              "type": "datePicker",
+              "isRequired": false,
+              "isDisabled": false,
+              "requiredErrMsg": "",
+              "patternErrMsg": ""
+            }
             // {
   					// 	"name": "LandAssetID",
   					// 	"jsonPath": "Asset[0].",
@@ -1250,6 +1250,18 @@ var dat = {
         "jsonPath":"Assets",
 				"fields": [
 					{
+            "name": "OriginalValueOfAsset",
+            "jsonPath": "Assets[0].originalValue",
+            "label": "ac.create.Original.Value.of.Asset",
+            "pattern": "",
+            "type": "number",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
             "name": "AnticipatedLifeOfAsset",
             "jsonPath": "Assets[0].anticipatedLife",
             "label": "ac.create.Anticipated.life.of.Asset",
@@ -1273,10 +1285,22 @@ var dat = {
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
+					{
+            "name": "OpeningDate",
+            "jsonPath": "Assets[0].openingDate",
+            "label": "ac.create.Opening.date",
+            "pattern": "",
+            "type": "datePicker",
+            "url": "",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
           {
-            "name": "OriginalValueOfAsset",
-            "jsonPath": "Assets[0].originalValue",
-            "label": "ac.create.Original.Value.of.Asset",
+            "name": "OpeningWrittenDownValue",
+            "jsonPath": "Assets[0].grossValue",
+            "label": "ac.create.Opening.Written.down.Value",
             "pattern": "",
             "type": "number",
             "url": "",
@@ -1291,32 +1315,6 @@ var dat = {
             "label": "ac.create.Title.documents.available",
             "pattern": "",
             "type": "textarea",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "Warranty",
-            "jsonPath": "Assets[0].warrantyAvailable",
-            "label": "ac.create.Warranty",
-            "pattern": "",
-            "type": "radio",
-            "url": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "values": [{"label":"Yes", "value":true},{"label":"No", "value":false}],
-            "defaultValue":true
-          },
-          {
-            "name": "WarrantyExpiryDate",
-            "jsonPath": "Assets[0].warrantyExpiryDate",
-            "label": "ac.create.Warranty.expiry.date",
-            "pattern": "",
-            "type": "datePicker",
             "url": "",
             "isRequired": false,
             "isDisabled": false,
@@ -1397,6 +1395,32 @@ var dat = {
             "patternErrMsg": ""
           },
 					{
+            "name": "Warranty",
+            "jsonPath": "Assets[0].warrantyAvailable",
+            "label": "ac.create.Warranty",
+            "pattern": "",
+            "type": "radio",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "values": [{"label":"Yes", "value":true},{"label":"No", "value":false}],
+            "defaultValue":true
+          },
+          {
+            "name": "WarrantyExpiryDate",
+            "jsonPath": "Assets[0].warrantyExpiryDate",
+            "label": "ac.create.Warranty.expiry.date",
+            "pattern": "",
+            "type": "datePicker",
+            "url": "",
+            "isRequired": false,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+					{
             "name": "AssetDescription",
             "jsonPath": "Assets[0].description",
             "label": "ac.create.Asset.description",
@@ -1411,34 +1435,11 @@ var dat = {
           }
 				]
 			},
-      {
-				"name": "TableField",
-        "jsonPath":"Assets",
-				"fields": [
-          {
-            "name": "OpeningDate",
-            "jsonPath": "Assets[0].openingDate",
-            "label": "ac.create.Opening.date",
-            "pattern": "",
-            "type": "datePicker",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "OpeningWrittenDownValue",
-            "jsonPath": "Assets[0].grossValue",
-            "label": "ac.create.Opening.Written.down.Value",
-            "pattern": "",
-            "type": "number",
-            "url": "",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
+      // {
+			// 	"name": "TableField",
+      //   "jsonPath":"Assets",
+			// 	"fields": [
+
           // {
           //   "name": "AdditionDate",
           //   "jsonPath": "Asset[0].",
@@ -1536,8 +1537,8 @@ var dat = {
           //   "patternErrMsg": ""
           // }
 
-				]
-			},
+			// 	]
+			// },
 		]
 	},
 	"asset.update": {

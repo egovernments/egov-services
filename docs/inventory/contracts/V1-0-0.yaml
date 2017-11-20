@@ -2557,6 +2557,11 @@ definitions:
           type: string
           description: |
             fileStoreId  File Store id of the Material Receipt
+        paymentTerms:
+          type: string
+          maxLength: 1000
+          description: |
+            payment terms of the Material Receipt            
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -2696,7 +2701,7 @@ definitions:
             $ref: '#/definitions/MaterialReceipt'
       required:
       - RequestInfo
-      - MaterialReceipt
+      - materialReceipt
 
     MaterialReceiptResponse:
       type: object
@@ -3280,6 +3285,14 @@ definitions:
           type: string
           description: |
             code of the uom
+        conversionFactor:
+          type: BigDecimal
+          description: |
+           conversionFactor of the particular uom
+        active:
+          type: boolean
+          description: |
+           Boolean flag of the uom
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
 

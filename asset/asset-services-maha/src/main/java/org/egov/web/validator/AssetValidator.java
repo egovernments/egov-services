@@ -7,7 +7,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.contract.AssetRequest;
 import org.egov.contract.DisposalRequest;
 import org.egov.contract.RevaluationRequest;
@@ -19,6 +18,7 @@ import org.egov.model.Disposal;
 import org.egov.model.FundSource;
 import org.egov.model.Location;
 import org.egov.model.Revaluation;
+import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.AssetCategoryType;
 import org.egov.model.enums.TypeOfChange;
 import org.egov.service.AssetService;
@@ -26,6 +26,7 @@ import org.egov.service.MasterDataService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -208,6 +209,20 @@ public class AssetValidator implements Validator {
 			errorMap.put("EGASSET_DISPOSAL_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
 		
 		if (!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+	}
+
+	public void validateSearch(AssetCriteria assetCriteria) {
+		
+		Map<String, String> errorMap = new HashMap<>();
+				
+		
+		if(assetCriteria.getAssetSubCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetSubCategory())) {
+			if(assetCriteria.getAssetCategory() == null || CollectionUtils.isEmpty(assetCriteria.getAssetCategory()))
+				errorMap.put("EGASSET_SEARCH_ASSET_CATEGORY", "Either AssetCategory Or AssetSubCategory Has To Be Given For Search");
+		}
+		
+		if(!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
 }

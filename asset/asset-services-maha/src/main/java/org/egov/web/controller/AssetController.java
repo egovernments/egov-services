@@ -65,6 +65,7 @@ public class AssetController {
 	public ResponseEntity<?> search(@RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
 			@ModelAttribute @Valid final AssetCriteria assetCriteria) {
 		log.debug("assetCriteria::" + assetCriteria + "requestInfoWrapper::" + requestInfoWrapper);
+		assetValidator.validateSearch(assetCriteria);
 		AssetResponse assetResponse = assetService.getAssets(assetCriteria, requestInfoWrapper.getRequestInfo());
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 

@@ -2098,8 +2098,8 @@
     },
     {
       "id": 6,
-      "keyname": "AssetDefaultCapitalizedValue",
-      "description": "Asset Default Capitalized Value",
+      "keyname": "AssetmhCapitalizedValue",
+      "description": "Asset mh Capitalized Value",
       "tenantid": "mh",
       "values": [
         {

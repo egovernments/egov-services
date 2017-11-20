@@ -44,6 +44,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import org.apache.log4j.Logger;
 import org.egov.demand.domain.service.DemandService;
 import org.egov.demand.persistence.entity.EgDemand;
 import org.egov.demand.persistence.entity.EgDemandDetails;
@@ -73,6 +74,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/demand")
 public class DemandConroller {
+	private static final Logger LOGGER = Logger.getLogger(DemandConroller.class);
 	@Autowired
 	private DemandRepository demandRepository;
 	@Autowired
@@ -89,7 +91,7 @@ public class DemandConroller {
 	public ResponseEntity<?> search(@ModelAttribute @Valid DemandSearchCriteria demandSearchCriteria,@RequestBody RequestInfo requestInfo,
 			 BindingResult bindingResult) {
 
-		System.out.println("the request info object : "+requestInfo + "the modelatribute values ::: "+demandSearchCriteria);
+		LOGGER.info("the request info object : "+requestInfo + "the modelatribute values ::: "+demandSearchCriteria);
 		List<Demand> demands = new ArrayList<Demand>();
 		List<DemandDetails> demandDetails = new ArrayList<DemandDetails>();
 		EgDemand egDemand = null;
@@ -98,16 +100,17 @@ public class DemandConroller {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, requestInfo);
 		}
 		try {
-			System.out.println("before calling demand repository the id value of demand :::  "+demandSearchCriteria.getDemandId());
+			LOGGER.info("before calling demand repository the id value of demand :::  "+demandSearchCriteria.getDemandId());
 			egDemand = demandRepository.findOne(demandSearchCriteria.getDemandId());
-			System.out.println("before calling todomain ::::   "+demandSearchCriteria.getDemandId());
+			LOGGER.info("before calling todomain ::::   "+demandSearchCriteria.getDemandId());
 			Demand demand = egDemand.toDomain();
 			demand.setTenantId(egDemand.getTenantId());
 			for(EgDemandDetails egdemandDetails: egDemand.getEgDemandDetails()){
-				System.out.println("inside the loop");
+				LOGGER.info("inside the loop");
 				demandDetail = egdemandDetails.toDomain();
 				demandDetails.add(demandDetail);
 			}
+			demandDetails.sort((d1, d2) -> d1.getPeriodStartDate().compareTo(d2.getPeriodStartDate()));
 			demand.setDemandDetails(demandDetails);
 			demands.add(demand);
 		} catch (Exception e) {
@@ -121,7 +124,7 @@ public class DemandConroller {
 	public ResponseEntity<?> create(@RequestBody @Valid DemandRequest demandRequest, BindingResult bindingResult) {
 		EgDemand egDemand = null;
 		
-		System.out.println("DemandConroller.create - demandRequest - "+demandRequest);
+		LOGGER.info("DemandConroller.create - demandRequest - "+demandRequest);
 		if (bindingResult.hasErrors()) {
 			return errHandler.getErrorResponseEntityForBindingErrors(bindingResult, demandRequest.getRequestInfo());
 		}

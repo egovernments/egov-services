@@ -690,6 +690,224 @@ serviceMaps:
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
             - jsonPath: $.materialReceipt.*.tenantId
-
-
-              
+    - version: 1.0
+      name: Purchase Order with indent
+      description: Create Purchase order with indent
+      fromTopic: inv-purchaseorders-save-topic
+      queryMaps:
+        - query: >-
+              insert into PurchaseOrder (store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, fileStoreId, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.purchaseorder.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.store.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.purchaseType
+            - jsonPath: $.purchaseorder.*.rateType
+            - jsonPath: $.purchaseorder.*.supplier.code
+            - jsonPath: $.purchaseorder.*.advanceAmount
+            - jsonPath: $.purchaseorder.*.advancePercentage
+            - jsonPath: $.purchaseorder.*.expectedDeliveryDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.deliveryTerms
+            - jsonPath: $.purchaseorder.*.paymentTerms
+            - jsonPath: $.purchaseorder.*.remarks
+            - jsonPath: $.purchaseorder.*.status
+            - jsonPath: $.purchaseorder.*.fileStoreId
+            - jsonPath: $.purchaseorder.*.designation
+            - jsonPath: $.purchaseorder.*.stateId
+            - jsonPath: $.purchaseorder.*.auditDetails.createdBy
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedBy
+            - jsonPath: $.purchaseorder.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.id
+            - jsonPath: $.purchaseorder.*.tenantId
+              dbType: LONG
+        - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description  )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+          basePath: $.purchaseorder.*.purchaseOrderDetails.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.material.code
+            - jsonPath: $.purchaseorder[?({id} in @.purchaseOrderDetails[*].id)].purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.uom.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.receivedQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.unitPrice
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
+            
+        - query: INSERT INTO PurchaseIndentDetail(id, purchaseOrderDetail, tenantId, indentDetail, quantity )VALUES ( ?, ?, ?, ?, ?);
+          basePath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails[?({id} in @.purchaseIndentDetails[*].id)].id
+            - jsonPath: $.purchaseorder.*.tenantId
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
+    - version: 1.0
+      name: Update Purchase Order with indent
+      description: Update Purchase Order with indent
+      fromTopic: inv-purchaseorders-update-topic
+      queryMaps:
+        - query: >-
+               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?; 
+          basePath: $.purchaseorder.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.store.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.purchaseType
+            - jsonPath: $.purchaseorder.*.rateType
+            - jsonPath: $.purchaseorder.*.supplier.code
+            - jsonPath: $.purchaseorder.*.advanceAmount
+            - jsonPath: $.purchaseorder.*.advancePercentage
+            - jsonPath: $.purchaseorder.*.expectedDeliveryDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.deliveryTerms
+            - jsonPath: $.purchaseorder.*.paymentTerms
+            - jsonPath: $.purchaseorder.*.remarks
+            - jsonPath: $.purchaseorder.*.status
+            - jsonPath: $.purchaseorder.*.fileStoreId
+            - jsonPath: $.purchaseorder.*.designation
+            - jsonPath: $.purchaseorder.*.stateId
+            - jsonPath: $.purchaseorder.*.auditDetails.createdBy
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedBy
+            - jsonPath: $.purchaseorder.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.tenantId
+            
+        - query: >-
+               update purchaseOrderDetails set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
+          basePath: $.purchaseorder.*.purchaseOrderDetails.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.material.code
+            - jsonPath: $.purchaseorder[?({id} in @.purchaseOrderDetails[*].id)].purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.uom.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.receivedQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.unitPrice
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
+            
+        - query: >-
+               update PurchaseIndentDetail set purchaseOrderDetail = ?, indentDetail = ?, quantity = ?  where id = ? and tenantid = ?;
+          basePath:  $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails[?({id} in @.purchaseIndentDetails[*].id)].id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*.id
+            - jsonPath: $.materialReceipt.*.tenantId
+    - version: 1.0
+      name: Purchase Order for non indent
+      description: Create Purchase order for non indent
+      fromTopic: inv-purchaseorders-nonindent-save-topic
+      queryMaps:
+        - query: >-
+              insert into PurchaseOrder (store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, fileStoreId, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+          basePath: $.purchaseorder.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.store.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.purchaseType
+            - jsonPath: $.purchaseorder.*.rateType
+            - jsonPath: $.purchaseorder.*.supplier.code
+            - jsonPath: $.purchaseorder.*.advanceAmount
+            - jsonPath: $.purchaseorder.*.advancePercentage
+            - jsonPath: $.purchaseorder.*.expectedDeliveryDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.deliveryTerms
+            - jsonPath: $.purchaseorder.*.paymentTerms
+            - jsonPath: $.purchaseorder.*.remarks
+            - jsonPath: $.purchaseorder.*.status
+            - jsonPath: $.purchaseorder.*.fileStoreId
+            - jsonPath: $.purchaseorder.*.designation
+            - jsonPath: $.purchaseorder.*.stateId
+            - jsonPath: $.purchaseorder.*.auditDetails.createdBy
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedBy
+            - jsonPath: $.purchaseorder.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.id
+            - jsonPath: $.purchaseorder.*.tenantId
+              dbType: LONG
+        - query: INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description  )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+          basePath: $.purchaseorder.*.purchaseOrderDetails.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.material.code
+            - jsonPath: $.purchaseorder[?({id} in @.purchaseOrderDetails[*].id)].purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.uom.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.receivedQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.unitPrice
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
+            
+    - version: 1.0
+      name: Update Purchase Order for non indent
+      description: Update Purchase Order for non indent
+      fromTopic: inv-purchaseorders-nonindent-update-topic
+      queryMaps:
+        - query: >-
+               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?; 
+          basePath: $.purchaseorder.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.store.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.purchaseType
+            - jsonPath: $.purchaseorder.*.rateType
+            - jsonPath: $.purchaseorder.*.supplier.code
+            - jsonPath: $.purchaseorder.*.advanceAmount
+            - jsonPath: $.purchaseorder.*.advancePercentage
+            - jsonPath: $.purchaseorder.*.expectedDeliveryDate
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.deliveryTerms
+            - jsonPath: $.purchaseorder.*.paymentTerms
+            - jsonPath: $.purchaseorder.*.remarks
+            - jsonPath: $.purchaseorder.*.status
+            - jsonPath: $.purchaseorder.*.fileStoreId
+            - jsonPath: $.purchaseorder.*.designation
+            - jsonPath: $.purchaseorder.*.stateId
+            - jsonPath: $.purchaseorder.*.auditDetails.createdBy
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedBy
+            - jsonPath: $.purchaseorder.*.auditDetails.createdTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.purchaseorder.*.purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.tenantId
+            
+        - query: >-
+               update purchaseOrderDetails set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
+          basePath: $.purchaseorder.*.purchaseOrderDetails.*
+          jsonMaps:
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.material.code
+            - jsonPath: $.purchaseorder[?({id} in @.purchaseOrderDetails[*].id)].purchaseOrderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderNumber
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.uom.code
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.priceList.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.orderQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.receivedQuantity
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.unitPrice
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
+            - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
+            

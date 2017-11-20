@@ -4,7 +4,6 @@ import java.net.URI;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.notification.config.PropertiesManager;
-import org.egov.lcms.notification.model.Advocate;
 import org.egov.lcms.notification.model.AdvocateResponse;
 import org.egov.lcms.notification.model.RequestInfoWrapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +33,7 @@ public class AdvocateRepository {
 		final StringBuffer advocateUrl = new StringBuffer();
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		advocateUrl.append(propertiesManager.getAdvocateHostName() + propertiesManager.getAdvocateBasepath());
+		advocateUrl.append(propertiesManager.getHostName() + propertiesManager.getBasepath());
 		advocateUrl.append(propertiesManager.getAdvocateSearchpath());		
 		
 		final MultiValueMap<String, String> requestMap = new LinkedMultiValueMap<String, String>();

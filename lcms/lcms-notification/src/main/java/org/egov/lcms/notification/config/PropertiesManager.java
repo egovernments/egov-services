@@ -296,26 +296,22 @@ public class PropertiesManager {
 	private String userSearchPath;
 	
 	/**
-	 * Advocate search url info
+	 * Host and base path name
 	 */
-	@Value("${advocate.hostname}")
-	private String advocateHostName;
+	@Value("${egov.services.lcms-services.hostname}")
+	private String hostName;
 	
-	@Value("${advocate.basepath}")
-	private String advocateBasepath;
-	
+	@Value("${basepath}")
+	private String basepath;
+	/**
+	 * Advocate search url info
+	 */	
 	@Value("${advocate.searchpath}")
 	private String advocateSearchpath;
 	
 	/**
 	 * Case search url info
-	 */
-	@Value("${case.hostname}")
-	private String caseHostname;
-	
-	@Value("${case.basepath}")
-	private String caseBasepath;
-	
+	 */	
 	@Value("${case.searchpath}")
 	private String caseSearchpath;
 }

@@ -558,8 +558,9 @@ class assetImmovableCreate extends Component {
         if(formData.Asset.landDetails && formData.Asset.landDetails.length) {
             let area = 0;
             for(let i=0; i< formData.Asset.landDetails.length; i++) {
-              area += formData.Asset.landDetails[i].area || 0;
+              area += Number(formData.Asset.landDetails[i].area || 0);
             }
+
             self.props.handleChange({target: {value: area}}, "Asset.totalArea", false, '', '', '');
         }
     }, function(err){
@@ -1219,7 +1220,6 @@ delete formData.Asset.assetAttributesCheck;
          let SubProperty = property.split(".");
          SubProperty.pop();
          SubProperty = SubProperty.join(".");
-         console.log(SubProperty);
          var _val = e.target.value;
          Api.commonApiPost("/asset-services-maha/assets/_search",{name:_val},{}, false, false, false, "", "", false).then(function(response)
         {
@@ -1239,7 +1239,7 @@ delete formData.Asset.assetAttributesCheck;
               if(self.props.formData.Asset.landDetails && self.props.formData.Asset.landDetails.length) {
                   let area = 0;
                   for(let i=0; i< self.props.formData.Asset.landDetails.length; i++) {
-                    area += self.props.formData.Asset.landDetails[i].area || 0;
+                    area += Number(self.props.formData.Asset.landDetails[i].area || 0);
                   }
                   self.props.handleChange({target: {value: area}}, "Asset.totalArea", false, '', '', '');
               }

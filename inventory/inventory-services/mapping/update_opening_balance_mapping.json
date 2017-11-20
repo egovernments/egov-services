@@ -1,0 +1,54 @@
+
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "mrnNumber": {
+            "type": "keyword"
+        },
+        "financialYear": {
+            "type": "keyword"
+        },
+        "receiptType": {
+            "type": "keyword"
+        },
+        "expiryDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+        },
+        "lotNo": {
+            "type": "keyword"
+        },
+        "receivedDate": {
+            "type": "date",
+            "format": "strict_date_optional_time||epoch_millis"
+        },
+        "unitRate": {
+            "type": "integer"
+        },
+        "receivedQty": {
+            "type": "integer"
+        },
+        "remarks": {
+            "type": "keyword"
+        },
+        "mrnStatus": {
+            "type": "keyword"
+        },
+        "createdTime": {
+            "type": "date",
+            "format": "date_optional_time"
+        },
+        "lastModifiedTime": {
+            "type": "date",
+            "format": "date_optional_time"
+        }
+    }
+}

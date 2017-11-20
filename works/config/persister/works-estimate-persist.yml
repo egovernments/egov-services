@@ -239,9 +239,9 @@ serviceMaps:
 
        - jsonPath: $.abstractEstimates.*.documentDetails.*.workProgress
 
-       - jsonPath: $.abstractEstimates.*.documentDetails.*.createdBy
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.auditDetails.createdBy
 
-       - jsonPath: $.abstractEstimates.*.documentDetails.*.createdTime
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.auditDetails.createdTime
 
  - version: 1.0
    name: AbstractEstimate Update
@@ -451,9 +451,9 @@ serviceMaps:
 
        - jsonPath: $.abstractEstimates.*.documentDetails.*.workProgress
 
-       - jsonPath: $.abstractEstimates.*.documentDetails.*.lastModifiedBy
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.auditDetails.lastModifiedBy
 
-       - jsonPath: $.abstractEstimates.*.documentDetails.*.lastModifiedTime
+       - jsonPath: $.abstractEstimates.*.documentDetails.*.auditDetails.lastModifiedTime
 
        - jsonPath: $.abstractEstimates.*.documentDetails.*.id
          

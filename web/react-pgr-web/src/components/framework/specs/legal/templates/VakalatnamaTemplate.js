@@ -66,9 +66,9 @@ export default class VakalatnamaTemplate extends Component{
       header: {
       	text:[
       		{text: "Exhibit No. ", alignment:'right'},
-      		{text: "           .", alignment:'right', decoration: 'underline'}
+      		{text: "                   .", alignment:'right', decoration: 'underline'}
       	],
-      	margin:[10, 10, 10, 0]
+      	margin:[10, 20, 10, 0]
       },
       content: [
         {

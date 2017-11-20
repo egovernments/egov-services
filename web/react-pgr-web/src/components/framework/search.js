@@ -174,6 +174,18 @@ class Search extends Component {
               tmp.push(eval(valuePath.valExp));
               continue;
             }
+            if(typeof valuePath === 'object' && valuePath.isObj){
+              var childArray=[];
+                if(valuePath.childArray && valuePath.childArray.length>0){ 
+                  for(var k=0;k<valuePath.childArray.length;k++){
+                    childArray.push(_.get(values[i],valuePath.childArray[k]));
+                  }
+                }
+
+
+              tmp.push(childArray);
+              continue;
+            }
             // if ((resultList.resultHeader[j].label.search("Date")>-1 || resultList.resultHeader[j].label.search("date")>-1)  && !(specsValuesList[j].search("-")>-1)) {
             //   tmp.push(new Date(_.get(values[i],specsValuesList[j])).getDate()+"/"+new Date(_.get(values[i],specsValuesList[j])).getMonth()+"/"+new Date(_.get(values[i],specsValuesList[j])).getFullYear());
             // } else {
@@ -504,12 +516,16 @@ class Search extends Component {
             }
       });
   }
-   rowButtonClickHandler = (buttonUrl) => {
-     let {selectedRecordId} =this.state;
+   rowButtonClickHandler = (buttonUrl, id) => {
+     if(id){
+      this.props.setRoute(buttonUrl+id);
+     }else{
+         let {selectedRecordId} =this.state;
       if(selectedRecordId){
        this.props.setRoute(buttonUrl+selectedRecordId);
       }
-
+     }
+   
  }
   rowCheckboxClickHandler=(code)=>{
     this.setState({

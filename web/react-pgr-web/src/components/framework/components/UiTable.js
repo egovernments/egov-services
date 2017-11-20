@@ -191,9 +191,20 @@ class UiTable extends Component {
 							return 	(<span style={{"margin-right":"20px"}}><UiCheckBox item={resultList.resultHeader[i2].checkedItem}ui="google" handler={()=>{rowCheckboxClickHandler(item2)}} isSelected={selected}/></span>)
 			
 				}else if(resultList.resultHeader[i2].isAction){
-					return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
-							return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2)}}/></span>)
+							if(_.isArray(item2)){
+									return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
+
+											return 	(<span style={{"margin-right":"20px"}}><a onClick={()=>{rowButtonClickHandler(actionitem.url,item2[1])}}>{item2[0]}</a></span>)
+
+					//		return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": item2[0], "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2[1])}}/></span>)
 					}) 
+
+							}else{
+             	return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
+							return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2)}}/></span>)
+				     	}) 
+							}
+				
 				}else if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
   			} else if(resultList.resultHeader[i2].isDate) {

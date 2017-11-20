@@ -142,7 +142,12 @@ var dat = {
           }
         },
         {
-          label: "legal.create.referenceNo"
+          label: "legal.create.referenceNo",
+          isAction:true,
+          actionItems:[{
+            label: "View",
+            url:"/view/legal/casedetails/"
+          }]
         },
         {
           label: "caseRegistration.create.referenceCaseNo"
@@ -164,7 +169,10 @@ var dat = {
       ],
       values: [
          "code",
-        "summon.summonReferenceNo",
+          {
+          childArray:["summon.summonReferenceNo","code"],
+          isObj:true
+         },
         "caseRefernceNo",
         "hearingDetails[0].caseStatus.name",
         "summon.caseNo",

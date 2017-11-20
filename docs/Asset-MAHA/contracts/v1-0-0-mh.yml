@@ -682,10 +682,6 @@ definitions:
         type: number
         description: latitude coordinate of asset location.
         format: double
-      landSurveyNo:
-        type: string
-        format: string
-        description: Survey No of land on which structure is located.
       quantity:
         type: integer
         format: int64
@@ -712,9 +708,8 @@ definitions:
         description: >-
           This is the asset code as per the legacy system. This will be applicable when doing legacy data entry.
         format: varchar
-      departmentCode:
-        type: string
-        description: code of the department to which the asset belongs
+      department:
+        $ref: '#/definitions/Department'
       assetCategory:
         $ref: '#/definitions/AssetCategory'
       modeOfAcquisition:
@@ -782,9 +777,8 @@ definitions:
         items:
           $ref: '#/definitions/YearWiseDepreciation'
       fundSource:
-        type: string
-        format: varchar
-        description:  The unique code from the Fund master
+        $ref: >-
+          https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/Fundsource
       location:
         type: string
         format: varchar
@@ -801,14 +795,12 @@ definitions:
 
     required:
       - name
-      - departmentCode
+      - department
       - assetCategory
       - grossValue
       - originalValue
       - description
       - dateOfCreation
-      - wipReferenceNo
-      - anticipatedLife
       - acquisitionDate
       - address
 
@@ -852,6 +844,10 @@ definitions:
         type: string
         description: code of the landdetails
         format: varchar
+    required:
+      - code
+      - area
+      - surveyNo
   ModeOfAcquisition:
     type: object
     description: This shows the various ways by which an asset can come into the system. The Various values can be - purchased, constructed, acquired and so on.
@@ -875,7 +871,26 @@ definitions:
       isActive:
         type: boolean
         description: states whether the value is active or not.
+    required:
+      - code
+      
         
+  Department:
+    type: object
+    description: the department to which the asset belongs,This master data is defined under MDMS and only the code field needs to be sent during creation of asset.
+    properties:
+      id:
+        type: integer
+        format: int64
+        description: Unique identifier of the department
+      name:
+        type: string
+        description: Name of the department.
+        format: varchar
+      code:
+        type: string
+        description: Department code.
+        format: varchar        
         
   AssetCategory:
     type: object
@@ -1382,8 +1397,8 @@ definitions:
     description: Hold the Asset Depreciation information.
     properties:
       voucherReference:
-        type: integer
-        format: int64
+        type: string
+        format: string
         description: >-
           The unique voucher id that is getting created as part of the asset
           Depreciation.

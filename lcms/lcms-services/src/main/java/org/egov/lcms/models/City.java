@@ -2,6 +2,8 @@ package org.egov.lcms.models;
 
 import java.util.Date;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -20,20 +22,15 @@ import lombok.ToString;
 @ToString
 public class City {
 
-	private Long id;
 	private String name;
 	private String localName;
 	private String districtCode;
 	private String districtName;
 	private String regionName;
+	@JsonProperty("ulbGrade")
+	private String ulbGrade;
 	private Double longitude;
 	private Double latitude;
-	private String tenantCode;
-	private String ulbGrade;
-	private Long createdBy;
-	private Date createdDate;
-	private Long lastModifiedBy;
-	private Date lastModifiedDate;
 	private String shapeFileLocation;
 	private String captcha;
 	private String code;

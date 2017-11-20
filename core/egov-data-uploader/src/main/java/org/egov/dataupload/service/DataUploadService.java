@@ -1,6 +1,5 @@
 package org.egov.dataupload.service;
 
-import java.io.IOException;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -15,7 +14,9 @@ import org.apache.poi.ss.usermodel.Row;
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.dataupload.model.Definition;
+import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
+import org.egov.dataupload.model.UploaderResponse;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -43,44 +44,35 @@ public class DataUploadService {
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 
-	public Object buildRequest(MultipartFile file, String moduleName, RequestInfo requestInfo) throws Exception {
+	public UploaderResponse doInterServiceCall(MultipartFile file, String moduleName, RequestInfo requestInfo) throws Exception {
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
 	    Definition uploadDefinition = getUploadDefinition(uploadDefinitionMap, moduleName, file.getName());
+	    List<ResponseMetaData> success = new ArrayList<>();
+	    List<ResponseMetaData> failure = new ArrayList<>();
 	    Object response = null;
 		HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
         HSSFSheet sheet = wb.getSheetAt(0);
         logger.info("Workbook: "+sheet);
         List<String> jsonPathList = new ArrayList<>();
-        List<Object> dataList = new ArrayList<>();
-        List<List<Object>> excelData = new ArrayList<>(); 
-        Iterator<Row> iterator = sheet.iterator();
-        while(iterator.hasNext()){
-            Row nextRow = iterator.next();
-            Iterator<Cell> cellIterator = nextRow.cellIterator();
-            while(cellIterator.hasNext()){
-	            Cell cell = cellIterator.next();
-	            if(0 == cell.getRowIndex())
-	            	jsonPathList.add(cell.getStringCellValue());
-	            else{
-	            	dataList.add(cell.getStringCellValue());
-	            }
-            }
-            excelData.add(dataList);
-        }
-	    logger.info("jsonPathList: "+jsonPathList);
-	    logger.info("excelData: "+excelData);
-	    
+        List<List<Object>> excelData = readExcelFile(sheet, jsonPathList);
 	    if(uploadDefinition.getIsBulkApi()){
-	    	String request = prepareDataForBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo);
+	    	String request = prepareDataForBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
 	    	response = hitApi(request, uploadDefinition.getUri());
 	    } else{
-	    	String request = prepareDataForNonBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo);
-	    	response = hitApi(request, uploadDefinition.getUri());
+	    	callNonBulkApis(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
 	    }
         if(null == response){
-        	throw new CustomException("500", "External Service returned an error");
+			ResponseMetaData responseMetaData= new ResponseMetaData();
+			responseMetaData.setRowData(excelData);
+        	failure.add(responseMetaData);
+        //	throw new CustomException("500", "External Service returned an error");
         }
-        return response;
+        
+        UploaderResponse uploaderResponse = new UploaderResponse();
+        uploaderResponse.setSuccess(success);
+        uploaderResponse.setFailure(failure);
+        
+        return uploaderResponse;
 	}
 	
 	private Definition getUploadDefinition(Map<String, UploadDefinition> searchDefinitionMap,
@@ -108,70 +100,88 @@ public class DataUploadService {
 		
 	}
 	
-	private String prepareDataForNonBulkApi(List<List<Object>> excelData,
-			     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo){
-		List<Object> list = excelData.get(0);
+	private String callNonBulkApis(List<List<Object>> excelData,
+			     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo,
+			     List<ResponseMetaData> success, List<ResponseMetaData> failure){
 		String request = null;
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
-    	try{
-		    if(!list.isEmpty()){
-		           for(int i = 0; i < jsonPathList.size(); i++){
-		                String[] expressionArray = (jsonPathList.get(i)).split("[.]");
-		            	StringBuilder expression = new StringBuilder();
-		            	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
-		            		expression.append(expressionArray[j]);
-		            		if(j != expressionArray.length - 2)
-		            			expression.append(".");
-		            	}	            		
-		            	documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], 
-		            				list.get(i));	            	
-		            	} 	
-		            	logger.info("RequestInfo: "+requestInfo);
-		            	try{
-			            	documentContext.put("$", "RequestInfo", requestInfo);
-			            	request = documentContext.jsonString().toString();
-		            	}catch(Exception e){
-			            	documentContext.put("$", "requestInfo", requestInfo);
-			            	request = documentContext.jsonString().toString();
-		            	}
-	            }else{
-	            	logger.info("The excel sheet is empty");
-	            }
-    	}catch(Exception e){
-    		logger.error("Exception caused while processing the excel data", e);
-			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
-					"Exception caused while processing the excel data");
-    	}
+		for(List<Object> row: excelData){
+		    	   try{
+					   if(!row.isEmpty()){
+				           for(int i = 0; i < jsonPathList.size(); i++){
+				                String[] expressionArray = (jsonPathList.get(i)).split("[.]");
+				            	StringBuilder expression = new StringBuilder();
+				            	for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
+				            		expression.append(expressionArray[j]);
+				            		if(j != expressionArray.length - 2)
+				            			expression.append(".");
+				            	}	            		
+				            	documentContext.put(expression.toString(), expressionArray[expressionArray.length - 1], 
+				            			row.get(i));	            	
+				            	} 	
+				            	logger.info("RequestInfo: "+requestInfo);
+				            	try{
+					            	documentContext.put("$", "RequestInfo", requestInfo);
+					            	request = documentContext.jsonString().toString();
+				            	}catch(Exception e){
+					            	documentContext.put("$", "requestInfo", requestInfo);
+					            	request = documentContext.jsonString().toString();
+				            	}
+				            	
+				            	hitApi(request, uploadDefinition.getUri());
+				            	
+					   }else{
+						   continue;
+					   }
+			    	}catch(Exception e){
+	    			logger.error("Error while processing row (here row 1 is the first data row after headers): "+excelData.indexOf(row), e);
+	    			ResponseMetaData responseMetaData= new ResponseMetaData();
+	    			responseMetaData.setRownum(excelData.indexOf(row));
+	    			responseMetaData.setRowData(row);
+	    			failure.add(responseMetaData);	    			
+	    			continue;
+		        }
+		}
 	    
 	    return request;
 	}
 	
 	private String prepareDataForBulkApi(List<List<Object>> excelData,
-		     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo) throws JsonProcessingException{
+		     List<String> jsonPathList, Definition uploadDefinition, RequestInfo requestInfo, List<ResponseMetaData> success,
+		     List<ResponseMetaData> failure) throws JsonProcessingException{
 		ObjectMapper mapper = new ObjectMapper();
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
     	List<String> dataList = new ArrayList<>();
     	try{
 	    	for(List<Object> list: excelData){
-		    	StringBuilder object = new StringBuilder(); 
-		    	object.append(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()).toString());
-		    	object.deleteCharAt(0).deleteCharAt(object.toString().length() - 1);
-		    	String json = mapper.writeValueAsString(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()));
-		    	json = json.substring(1, json.length() - 1);
-		    	logger.info("json: "+json);
-		    	DocumentContext docContext = JsonPath.parse(json);
-		    	for(int i = 0; i < jsonPathList.size(); i++){
-		    		String[] expressionArray = (jsonPathList.get(i)).split("[.]");
-		    		StringBuilder expression = new StringBuilder();
-		    		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
-		    			expression.append(expressionArray[j]);
-		    			if(j != expressionArray.length - 2)
-		    				expression.append(".");
-		    		}            	
-		    		docContext.put("$", expressionArray[expressionArray.length - 1], 
-		    				list.get(i));	            	
-		    		}	    	
-		    	dataList.add(docContext.jsonString().toString());
+	    		try{
+			    	StringBuilder object = new StringBuilder(); 
+			    	object.append(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()).toString());
+			    	object.deleteCharAt(0).deleteCharAt(object.toString().length() - 1);
+			    	String json = mapper.writeValueAsString(JsonPath.read(uploadDefinition.getApiRequest(), uploadDefinition.getArrayPath()));
+			    	json = json.substring(1, json.length() - 1);
+			    	logger.info("json: "+json);
+			    	DocumentContext docContext = JsonPath.parse(json);
+			    	for(int i = 0; i < jsonPathList.size(); i++){
+			    		String[] expressionArray = (jsonPathList.get(i)).split("[.]");
+			    		StringBuilder expression = new StringBuilder();
+			    		for(int j = 0; j < (expressionArray.length - 1) ; j++ ){
+			    			expression.append(expressionArray[j]);
+			    			if(j != expressionArray.length - 2)
+			    				expression.append(".");
+			    		}            	
+			    		docContext.put("$", expressionArray[expressionArray.length - 1], 
+			    				list.get(i));	            	
+			    		}	    	
+			    	dataList.add(docContext.jsonString().toString());
+	    		}catch(Exception e){
+	    			logger.error("error while parsing row (here row 1 is the first data row after headers): "+excelData.indexOf(list), e);
+	    			ResponseMetaData responseMetaData= new ResponseMetaData();
+	    			responseMetaData.setRownum(excelData.indexOf(list));
+	    			responseMetaData.setRowData(list);
+	    			failure.add(responseMetaData);
+	    			continue;
+	    		}
 	    	}	    
 			String[] expressionArray = (uploadDefinition.getArrayPath()).split("[.]");
 			StringBuilder expression = new StringBuilder();
@@ -197,6 +207,32 @@ public class DataUploadService {
 
     	return documentContext.jsonString().toString();
     	
+	}
+	
+	private List<List<Object>> readExcelFile(HSSFSheet sheet, List<String> jsonPathList){
+        List<List<Object>> excelData = new ArrayList<>(); 
+        Iterator<Row> iterator = sheet.iterator();
+        while(iterator.hasNext()){
+            Row nextRow = iterator.next();
+            Iterator<Cell> cellIterator = nextRow.cellIterator();
+            List<Object> dataList = new ArrayList<>();
+            while(cellIterator.hasNext()){
+	            Cell cell = cellIterator.next();
+	            if(0 == cell.getRowIndex())
+	            	jsonPathList.add(cell.getStringCellValue());
+	            else{
+	            	dataList.add(cell.getStringCellValue());
+	            }
+            }
+            excelData.add(dataList);
+        }
+	    logger.info("jsonPathList: "+jsonPathList);
+	    logger.info("excelData: "+excelData);
+
+        
+        return excelData;
+
+		
 	}
 		
 	private Object hitApi(String request, String uri){

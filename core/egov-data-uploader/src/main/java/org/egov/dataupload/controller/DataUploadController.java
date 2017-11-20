@@ -5,6 +5,7 @@ import java.util.Map;
 
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.dataupload.model.UploaderResponse;
 import org.egov.dataupload.service.DataUploadService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,11 +45,13 @@ public class DataUploadController {
 			@PathVariable("moduleName") String moduleName) throws Exception {
 		try {
 				logger.info("Inside controller");
-				Object result = dataUploadService.buildRequest(inputFile, moduleName, new RequestInfo());
-			    Type type = new TypeToken<Map<String, Object>>() {}.getType();
+				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("b6ae3ec1-429e-4400-b823-225fdc71f1b0")
+				.did("1").msgId("20170310130900").ts(10032017L).build();
+				UploaderResponse result = dataUploadService.doInterServiceCall(inputFile, moduleName, requestInfo);
+			   /* Type type = new TypeToken<Map<String, Object>>() {}.getType();
 				Gson gson = new Gson();
-				Map<String, Object> data = gson.fromJson(result.toString(), type);
-				return new ResponseEntity<>(data, HttpStatus.OK);
+		    	Map<String, Object> data = gson.fromJson(result.toString(), type); */
+				return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch(Exception e){
 			throw e;
 		}

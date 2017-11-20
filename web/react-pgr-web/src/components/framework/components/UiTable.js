@@ -189,7 +189,7 @@ class UiTable extends Component {
 										selected=true;
 									}
 							return 	(<span style={{"margin-right":"20px"}}><UiCheckBox item={resultList.resultHeader[i2].checkedItem}ui="google" handler={()=>{rowCheckboxClickHandler(item2)}} isSelected={selected}/></span>)
-			
+
 				}else if(resultList.resultHeader[i2].isAction){
 							if(_.isArray(item2)){
 									return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
@@ -197,14 +197,14 @@ class UiTable extends Component {
 											return 	(<span style={{"margin-right":"20px"}}><a onClick={()=>{rowButtonClickHandler(actionitem.url,item2[1])}}>{item2[0]}</a></span>)
 
 					//		return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": item2[0], "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2[1])}}/></span>)
-					}) 
+					})
 
 							}else{
              	return resultList.resultHeader[i2].actionItems.map((actionitem,index) =>{
 							return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2)}}/></span>)
-				     	}) 
+				     	})
 							}
-				
+
 				}else if(resultList.resultHeader[i2].url) {
   				return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : (item2 + "");
   			} else if(resultList.resultHeader[i2].isDate) {
@@ -212,7 +212,18 @@ class UiTable extends Component {
 					return ('0' + _date.getDate()).slice(-2) + '/'
 					+ ('0' + (_date.getMonth()+1)).slice(-2) + '/'
 					+ _date.getFullYear();
-				} else {
+				} else if (resultList.resultHeader[i2].isComma) {
+						let _commaVal = item2.toString();
+			 		 var y = _commaVal.split(".")[1];
+			 		 _commaVal =_commaVal.split(".")[0];
+			 		 var lastThree = _commaVal.substring(_commaVal.length-3);
+			 		 var otherNumbers = _commaVal.substring(0,_commaVal.length-3);
+			 		 if(otherNumbers != '')
+			 				 lastThree = ',' + lastThree;
+			 		 var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree ;
+			 		 var res = (y==null) ? resCal : (resCal + "." + y);
+			 		 return res;
+				}else {
   				return item2 === true ? translate("employee.createPosition.groups.fields.outsourcepost.value1") : (item2 === false ? translate("employee.createPosition.groups.fields.outsourcepost.value2") : (item2 === null ? "" : (item2 + "")));
   			}
   		}
@@ -220,7 +231,7 @@ class UiTable extends Component {
 
 			const _removeEnumUnderScore = function(item2, i2){
 				if(resultList.resultHeader[i2].label == "Rate Type"){
-					
+
 				}
 			}
 
@@ -244,7 +255,7 @@ class UiTable extends Component {
 		          <tbody>
 
 		                {resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
-											
+
 		                  return (
 		                    <tr key={i} onClick={() => { if(!resultList.disableRowClick){rowClickHandler(i)}}}>
 		                      {

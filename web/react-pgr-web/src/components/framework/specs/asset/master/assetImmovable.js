@@ -927,8 +927,8 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"}, {label:"ac.create.asset.asset.category.type"}, {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Department"},{label: "ac.create.Original.Value.of.Asset"}, {label: "ac.create.Opening.Written.down.Value"}],
-			"values": ["code","name","assetCategory.assetCategoryType", "assetCategory.name", "department.name","originalValue", "grossValue"],
+			"header": [{label: "Asset Code"},{label: "ac.create.Asset.Name"}, {label: "ac.create.Asset.SubCategory.Name"},{label: "ac.create.Department"},{label: "ac.create.Original.Value.of.Asset" , isComma :true}, {label: "ac.create.Opening.Written.down.Value" , isComma :true}],
+			"values": ["code","name", "assetCategory.name", "department.name","originalValue", "grossValue"],
 			"resultPath": "Assets",
 			 "rowClickUrlUpdate": "/non-framework/asset/master/assetImmovableCreate/{id}",
 			 "rowClickUrlView": "/non-framework/asset/master/assetImmovableView/{id}"

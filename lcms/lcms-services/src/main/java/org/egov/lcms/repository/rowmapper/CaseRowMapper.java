@@ -10,6 +10,7 @@ import org.egov.lcms.models.Address;
 import org.egov.lcms.models.Bench;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseCategory;
+import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
 import org.egov.lcms.models.Department;
@@ -162,6 +163,12 @@ public class CaseRowMapper implements RowMapper<Case> {
 			}
 
 			caseObj.setSummon(summon);
+			
+			if(rs.getString("casestatus") != null){
+				TypeReference<CaseStatus> caseStatusRef = new TypeReference<CaseStatus>() {
+				};
+				caseObj.setCaseStatus(objectMapper.readValue(getString(rs.getString("casestatus")), caseStatusRef));
+			}
 
 		} catch (Exception e) {
 

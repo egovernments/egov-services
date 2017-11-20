@@ -1130,6 +1130,17 @@ serviceMaps:
         type: CURRENTDATE
         dbType: LONG
         
+    - query: UPDATE egov_lcms_case SET casestatus=? WHERE code=? AND tenantId=?;
+      basePath: $.cases.*
+      jsonMaps:
+      - jsonPath: $.cases.*.caseStatus
+        type: JSON
+        dbType: JSONB      
+ 
+      - jsonPath: $.cases.*.code
+      
+      - jsonPath: $.cases.*.tenantId
+        
   - version: 1.0
     name: lcms-update-hearingdetails
     description: update hearing details in lcms
@@ -1180,6 +1191,17 @@ serviceMaps:
         dbType: LONG
         
       - jsonPath: $.hearingDetails.*.code
+      
+    - query: UPDATE egov_lcms_case SET casestatus=? WHERE code=? AND tenantId=?;
+      basePath: $.cases.*
+      jsonMaps:
+      - jsonPath: $.cases.*.caseStatus
+        type: JSON
+        dbType: JSONB
+ 
+      - jsonPath: $.cases.*.code
+      
+      - jsonPath: $.cases.*.tenantId
       
   - version: 1.0
     name: create notice
@@ -1393,7 +1415,7 @@ serviceMaps:
     fromTopic: lcms-evidence-create
     isTransaction: true
     queryMaps: 
-    - query: INSERT INTO egov_lcms_reference_evidence (code, tenantid, referencetype, caseno, casecode, referencedate, description, documents, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_reference_evidence (code, tenantid, referencetype, caseno, casecode, referencedate, description, documents, referencecaseno, createdBy, lastModifiedBy, createdTime, lastModifiedTime) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*.referenceEvidences.*
       jsonMaps:
 
@@ -1416,6 +1438,8 @@ serviceMaps:
          type: JSON
          dbType: JSONB       
 
+       - jsonPath: $.referenceEvidences.*.referenceCaseNo
+       
        - jsonPath: $.RequestInfo.userInfo.id
          type: STRING
 
@@ -1437,7 +1461,7 @@ serviceMaps:
     fromTopic: lcms-evidence-update
     isTransaction: true
     queryMaps: 
-    - query: UPDATE egov_lcms_reference_evidence SET referencetype=?, caseno=?, casecode=?, referencedate=?, description=?, documents=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
+    - query: UPDATE egov_lcms_reference_evidence SET referencetype=?, caseno=?, casecode=?, referencedate=?, description=?, documents=?, referencecaseno=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? and tenantid=?;
       basePath: $.cases.*.referenceEvidences.*
       jsonMaps:
 
@@ -1456,6 +1480,8 @@ serviceMaps:
          type: JSON
          dbType: JSONB       
 
+       - jsonPath: $.referenceEvidences.*.referenceCaseNo
+       
        - jsonPath: $.RequestInfo.userInfo.id
          type: STRING        
 

@@ -1,0 +1,1 @@
+ALTER TABLE egov_lcms_reference_evidence ADD COLUMN referenceCaseNo character varying;

@@ -347,6 +347,12 @@ public class CaseService {
 
 					addHearingDetail(hearingDetail, caseStatus);
 				}
+
+				List<HearingDetails> details = hearingDetails.stream().filter(
+						status -> status.getCaseStatus().getCode().equalsIgnoreCase(caseObj.getCaseStatus().getCode()))
+						.collect(Collectors.toList());
+
+				caseObj.setCaseStatus(details.get(0).getCaseStatus());
 			}
 
 			break;
@@ -529,6 +535,9 @@ public class CaseService {
 					if (hearingDetails.getNextHearingDate() != null) {
 						createEvents(casee, hearingDetails, requestInfo);
 					}
+
+					if (hearingDetails.getCaseStatus() != null)
+						casee.setCaseStatus(hearingDetails.getCaseStatus());
 				}
 			}
 		}
@@ -570,6 +579,15 @@ public class CaseService {
 	}
 
 	public CaseResponse updateHearingDetails(CaseRequest caseRequest) {
+
+		for (Case casee : caseRequest.getCases()) {
+			if (casee.getHearingDetails() != null) {
+				for (HearingDetails hearingDetails : casee.getHearingDetails()) {
+					casee.setCaseStatus(hearingDetails.getCaseStatus());
+				}
+			}
+		}
+
 		kafkaTemplate.send(propertiesManager.getHearingUpdateValidated(), caseRequest);
 		return getResponseInfo(caseRequest);
 	}
@@ -663,9 +681,9 @@ public class CaseService {
 	}
 
 	public EventResponse getEvent(EventSearchCriteria eventSearchCriteria, RequestInfo requestInfo) {
-		
+
 		if (requestInfo.getUserInfo() != null & requestInfo.getUserInfo().getName() != null) {
-			log.info("department concern person is : " + requestInfo.getUserInfo().getName() );
+			log.info("department concern person is : " + requestInfo.getUserInfo().getName());
 			eventSearchCriteria.setDepartmentConcernPerson(requestInfo.getUserInfo().getName());
 		}
 		List<Event> events = caseSearchRepository.getEvent(eventSearchCriteria);

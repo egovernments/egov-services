@@ -45,6 +45,9 @@ public class ReferenceEvidence {
 
 	@JsonProperty("caseCode")
 	private String caseCode;
+	
+	@JsonProperty("referenceCaseNo")
+	private String referenceCaseNo;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;

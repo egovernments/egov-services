@@ -36,6 +36,7 @@ public class EvidenceRowMapper implements RowMapper<ReferenceEvidence> {
 		referenceEvidence.setReferenceDate(getLong(rs.getLong("referencedate")));
 		referenceEvidence.setDescription(getString(rs.getString("description")));
 		referenceEvidence.setCaseCode(getString(rs.getString("casecode")));
+		referenceEvidence.setReferenceCaseNo(getString(rs.getString("referencecaseno")));
 		
 		AuditDetails auditDetails = new AuditDetails();
 		auditDetails.setCreatedBy(rs.getString("createdby"));

@@ -174,7 +174,7 @@ var dat = {
           isObj:true
          },
         "caseRefernceNo",
-        "hearingDetails[0].caseStatus.name",
+        "caseStatus.name",
         "summon.caseNo",
         "summon.departmentName.name",
         "summon.caseType.name",

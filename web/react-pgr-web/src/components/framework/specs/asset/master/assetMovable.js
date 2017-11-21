@@ -988,7 +988,8 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"isComma": true
 					},
           {
             "name": "AnticipatedLifeOfAsset",
@@ -1036,7 +1037,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true
           },
           {
             "name": "TitleDocumentsAvailable",
@@ -1072,7 +1074,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true
           },
           {
             "name": "SecurityDepositRealized",
@@ -1084,7 +1087,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true
           },
 					{
             "name": "DefectLiabilityPeriod",

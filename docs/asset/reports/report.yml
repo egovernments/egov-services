@@ -8,12 +8,12 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
     stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
     stateData: true

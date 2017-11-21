@@ -269,7 +269,7 @@ var commom_fields_rules = {
         phone: true
     },
     "user.pan": {
-        required: true,
+        required: false,
         panNo: true
     },
     "user.aadhaarNumber": {
@@ -660,7 +660,7 @@ var user = {
         required: false
     },
     pan: {
-        required: true
+        required: false
     },
     aadhaarNumber: {
         required: true

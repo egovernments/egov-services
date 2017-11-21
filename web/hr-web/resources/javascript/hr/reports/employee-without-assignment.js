@@ -7,7 +7,7 @@ class WithoutAssignment extends React.Component {
     this.state = {
         "result": [],
         "searchSet": {
-            "date": ""
+            "asOnDate": ""
         },
         "isSearchClicked": false
     };
@@ -34,7 +34,10 @@ class WithoutAssignment extends React.Component {
         buttons: [
           'copy', 'csv', 'excel', 'pdf', 'print'
         ],
-        ordering: false
+        ordering: false,
+        language: {
+          "emptyTable": "No Records"
+        }
       });
     }
   }
@@ -43,17 +46,17 @@ class WithoutAssignment extends React.Component {
 
     var _this = this;
 
-    $('#date').datepicker({
+    $('#asOnDate').datepicker({
       format: 'dd/mm/yyyy',
       autoclose: true,
       defaultDate: ""
     });
 
-    $('#date').on('changeDate', function(e) {
+    $('#asOnDate').on('changeDate', function(e) {
       _this.setState({
         searchSet: {
           ..._this.state.searchSet,
-          "date": $("#date").val(),
+          "asOnDate": $("#asOnDate").val(),
         }
       });
     });
@@ -65,14 +68,19 @@ class WithoutAssignment extends React.Component {
     var _this = this
     $('#employeeTable').dataTable().fnDestroy();
     try {
+        flag = 1;
         commonApiPost("hr-employee", "employees", "_employeewithoutassignmentreport", {...this.state.searchSet, tenantId},function(err,res){
           if(res && res.EmployeeInfo){
-            flag = 1;
           _this.setState({
             ..._this.state,
             isSearchClicked: true,
             result : res.EmployeeInfo
           });
+         }else {
+           _this.setState({
+             ..._this.state,
+               isSearchClicked: true
+           })
          }
         });
     } catch (e) {
@@ -87,7 +95,7 @@ class WithoutAssignment extends React.Component {
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
     let {result} = this.state;
-    let {date} = this.state.searchSet;
+    let {asOnDate} = this.state.searchSet;
 
     const renderTr = () => {
         return result.map((item, ind) => {
@@ -133,7 +141,7 @@ class WithoutAssignment extends React.Component {
                                 <div className="col-sm-6">
                                     <div className="text-no-ui">
                                         <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                        <input type="text" id="date" value={date} onChange={(e) => {handleChange(e, "date")}} required/>
+                                        <input type="text" id="asOnDate" value={asOnDate} onChange={(e) => {handleChange(e, "asOnDate")}} required/>
                                     </div>
                                 </div>
                             </div>

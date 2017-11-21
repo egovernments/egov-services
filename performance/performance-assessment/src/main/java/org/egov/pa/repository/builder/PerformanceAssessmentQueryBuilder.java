@@ -134,7 +134,7 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getDocumentForKpi() { 
     	return "SELECT CAST (id AS BIGINT) as id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active, mandatoryflag as mandatory  "
-    			+ " FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
+    			+ ", 'default' as tenantId, true as enabled, 'category' as category, 'subcategory' as subCategory, 'categoryname' as categoryName, 'subcategoryname' as subCategoryName FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

@@ -195,6 +195,12 @@ public class PriceListService extends DomainService {
 				if(Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())){
 					throw new CustomException("agreementEndDate", "Agreement End Date must be greater than or equal to Agreement start date");
 				}
+				
+				for(PriceListDetails priceListDetail : pl.getPriceListDetails()){
+					if(priceListDetail.getQuantity().doubleValue()<0){
+						throw new CustomException("quantity", "Material "+ priceListDetail.getMaterial().getCode() + "'s quantity should be positive");
+					}
+				}
 			}
 			
 //			if(priceListJdbcRepository.isDuplicateContract(priceLists)){

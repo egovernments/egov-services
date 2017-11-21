@@ -328,7 +328,7 @@ var dat = {
                   "pattern": "",
                   "type":"autoCompelete",
                   "jsonPath": "priceLists[0].priceListDetails[0].material.code",
-      "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+                  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
@@ -850,13 +850,18 @@ var dat = {
                   "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
                   "isRequired":true,
                   "isDisabled":false,
-                  "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
-                  "depedants":[
-                     {
-                        "jsonPath":"priceLists[0].priceListDetails[0].material.description",
-                        "type":"textField",
-                        "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
-                     }
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')"
+                    },
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                    }
                   ]
                },
                {
@@ -865,8 +870,15 @@ var dat = {
                   "pattern":"",
                   "type":"singleValueList",
                   "isRequired":true,
-                  "isDisabled":false,
-                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+                  "isDisabled":true,
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..description|$..conversionFactor1",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
                },
                {
                   "name":"ratePerUnit",

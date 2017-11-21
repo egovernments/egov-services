@@ -31,14 +31,22 @@ var dat = {
             patternErrorMsg: ""
           },
           {
-            name: "referenceCaseNo",
+            name: "caseNo",
             jsonPath: "cases[0].summon.caseNo",
-            label: "referenceEvidence.create.referenceCaseNo",
+            label: "referenceEvidence.create.caseNo",
             type: "text",
             isRequired: true,
             isDisabled: true,
             url:
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name",
+            patternErrorMsg: ""
+          },{
+            name: "referenceCaseNo",
+            jsonPath: "cases[0].referenceEvidences[0].referenceCaseNo",
+            label: "referenceEvidence.create.referenceCaseNo",
+            type: "text",
+            isRequired: false,
+            isDisabled: false,
             patternErrorMsg: ""
           },{
             name: "description",

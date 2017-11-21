@@ -102,7 +102,7 @@ public class AgreementValidator {
 						"CollectedGoodWillAmount should not be greater than GoodWillAmount");
 
 		}
-		if(currentDate.before(expiryDate)){
+		if(currentDate.after(expiryDate)){
 			errors.rejectValue("Agreement.TimePeriod", "",
 					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}

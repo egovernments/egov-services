@@ -603,4 +603,7 @@ public class PropertiesManager {
 	
 	@Value("${default.title}")
 	private String defaultTitle;
+	
+	@Value("${egov.lcms.agency.status}")
+	private String agencyStatus;
 }

@@ -50,6 +50,10 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 				logger.error("Exception while loading yaml files: ",e);
 			}
     }
+    
+	public IndexerApplicationRunnerImpl(ResourceLoader resourceLoader) {
+    	this.resourceLoader = resourceLoader;
+    }
        
     public void readFiles(){
     	ConcurrentHashMap<String, Mapping> mappingsMap = new ConcurrentHashMap<>();

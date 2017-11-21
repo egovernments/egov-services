@@ -67,7 +67,6 @@ public class DataUploadUtils {
 			throw new CustomException(HttpStatus.BAD_REQUEST.toString(), 
 					"There's no Upload Definition provided for this upload feature");
 		}
-		
 		logger.info("Definition to be used: "+definitions.get(0));
 
 		return definitions.get(0);

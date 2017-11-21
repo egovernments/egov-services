@@ -70,7 +70,6 @@ public class DataUploadService {
 			ResponseMetaData responseMetaData= new ResponseMetaData();
 			responseMetaData.setRowData(excelData);
         	failure.add(responseMetaData);
-        //	throw new CustomException("500", "External Service returned an error");
         }
         
         UploaderResponse uploaderResponse = new UploaderResponse();
@@ -86,40 +85,37 @@ public class DataUploadService {
 		String request = null;
     	DocumentContext documentContext = JsonPath.parse(uploadDefinition.getApiRequest());
 		for(List<Object> row: excelData){
-		    	   try{
-					   if(!row.isEmpty()){
-				           for(int i = 0; i < jsonPathList.size(); i++){
-				            	StringBuilder expression = new StringBuilder();
-				            	String key = dataUploadUtils.getJsonPathKey(jsonPathList.get(i), expression);
-				            	documentContext.put(expression.toString(), key, row.get(i));	            	
-				            } 	
-				            logger.info("RequestInfo: "+requestInfo);
-				            try{
-					            documentContext.put("$", "RequestInfo", requestInfo);
-					            request = documentContext.jsonString().toString();
-				            }catch(Exception e){
-					            documentContext.put("$", "requestInfo", requestInfo);
-					            request = documentContext.jsonString().toString();
-				            }
+			try{
+				if(!row.isEmpty()){
+					for(int i = 0; i < jsonPathList.size(); i++){
+						StringBuilder expression = new StringBuilder();
+				        String key = dataUploadUtils.getJsonPathKey(jsonPathList.get(i), expression);
+				        documentContext.put(expression.toString(), key, row.get(i));	            	
+					} 	
+				    logger.info("RequestInfo: "+requestInfo);
+				    try{
+				    	documentContext.put("$", "RequestInfo", requestInfo);
+					    request = documentContext.jsonString().toString();
+				    }catch(Exception e){
+				    	documentContext.put("$", "requestInfo", requestInfo);
+					    request = documentContext.jsonString().toString();
+				    }
 				            	
-				            hitApi(request, uploadDefinition.getUri());
+				    hitApi(request, uploadDefinition.getUri());
 				            	
-				    		ResponseMetaData responseMetaData= new ResponseMetaData();
-				    		responseMetaData.setRownum((excelData.indexOf(row) + 2));
-				    		responseMetaData.setRowData(row);
-				    		success.add(responseMetaData);	 
-				            	
-					   }else{
-						   continue;
-					   }
-			    	}catch(Exception e){
-		    			logger.error("Error while processing row (here row 1 is the first data row after headers): "+(excelData.indexOf(row) + 2), e);
-		    			ResponseMetaData responseMetaData= new ResponseMetaData();
-		    			responseMetaData.setRownum((excelData.indexOf(row) + 2));
-		    			responseMetaData.setRowData(row);
-		    			failure.add(responseMetaData);	    			
-		    			continue;
-		        }
+				    ResponseMetaData responseMetaData= new ResponseMetaData();
+				    responseMetaData.setRownum((excelData.indexOf(row) + 2));
+				    responseMetaData.setRowData(row);
+				    success.add(responseMetaData);	         	
+				}
+			}catch(Exception e){
+				logger.error("Error while processing row (here row 1 is the first data row after headers): "+(excelData.indexOf(row) + 2), e);
+		    	ResponseMetaData responseMetaData= new ResponseMetaData();
+		    	responseMetaData.setRownum((excelData.indexOf(row) + 2));
+		    	responseMetaData.setRowData(row);
+		    	failure.add(responseMetaData);	    			
+		    	continue;
+		    }
 		}
 	    
 	    return request;

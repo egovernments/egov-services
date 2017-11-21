@@ -279,8 +279,8 @@ var dat = {
                   pattern: "",
                   type: "text",
                   jsonPath: "cases[0].advocateDetails[0].advocatestaus",
-                  isRequired: true,
-                  isDisabled: false
+                  isRequired: false,
+                  isDisabled: true
                 }
               ]
             }

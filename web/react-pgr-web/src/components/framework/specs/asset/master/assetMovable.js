@@ -1088,7 +1088,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"isComma": true
+						"isComma": true 
           },
 					{
             "name": "DefectLiabilityPeriod",

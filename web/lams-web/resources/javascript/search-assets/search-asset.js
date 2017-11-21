@@ -212,7 +212,6 @@ class AssetSearch extends React.Component {
                 handleSelectChange(e.target.value, item.id, item.assetCategory.name)
               }} defaultValue="" value="">
                   <option value="">Select Action</option>
-                  <option value="create">Create</option>
                   <option value="dataEntry"> Data Entry </option>
               </select>
           </div>

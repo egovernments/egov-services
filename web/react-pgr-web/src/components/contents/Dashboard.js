@@ -455,7 +455,7 @@ class Dashboard extends Component {
                 }
               ]
             };
-            Api.commonApiPost("/report/pgr/_get", {}, bodyReq, null, true).then(function(res) {
+            Api.commonApiPost("/report/common/_get", {}, bodyReq, null, true).then(function(res) {
               current.setState({
                 workflowResult: res,
                 hasData: true

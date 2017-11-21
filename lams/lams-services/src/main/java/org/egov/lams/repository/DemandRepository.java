@@ -103,11 +103,74 @@ public class DemandRepository {
 		Agreement agreement = agreementRequest.getAgreement();
 		String taxReason = null;
 		taxReason = propertiesManager.getTaxReasonRent();
-		Date effectiveTodate = agreement.getExpiryDate();
+		Date effectiveTodate = getEfectiveTodate(agreement);
 		demandReasons.addAll(getDemandReasonsForTaxReason(agreementRequest, effectiveTodate, taxReason));
 		return demandReasons;
 
 	}
+	
+	/*
+	 * API to fetch current installment end date based on agreement payment
+	 * cycle and current date
+	 */
+	private Date getEfectiveTodate(Agreement agreement) {
+		Calendar cal = Calendar.getInstance();
+		if (agreement.getPaymentCycle().equals(PaymentCycle.QUARTER)) {
+			cal = getEffectiveQuarterToDate();
+		} else if (agreement.getPaymentCycle().equals(PaymentCycle.HALFYEAR)) {
+
+			cal = getEffectiveHalfYearToDate();
+		} else if (agreement.getPaymentCycle().equals(PaymentCycle.ANNUAL)) {
+
+			cal = getEffectiveFinYearToDate();
+		}
+
+		cal.set(Calendar.DATE, cal.getActualMaximum(Calendar.DATE));
+		return cal.getTime();
+
+	}
+
+	private Calendar getEffectiveQuarterToDate() {
+		Calendar cal = Calendar.getInstance();
+		int month = cal.get(Calendar.MONTH);
+		if (month < 3) {
+			cal.set(Calendar.MONTH, 2); // 4th quarter
+		} else if (month < 6) {
+			cal.set(Calendar.MONTH, 5); // 1st Quarter
+		} else if (month < 9) {
+			cal.set(Calendar.MONTH, 8); // 2nd quarter
+		} else {
+			cal.set(Calendar.MONTH, 11); // 3rd quarter
+		}
+		return cal;
+	}
+
+	private Calendar getEffectiveHalfYearToDate() {
+		Calendar cal = Calendar.getInstance();
+		int month = cal.get(Calendar.MONTH);
+		if (month < 3) {
+			cal.set(Calendar.MONTH, 2);
+		} else if (month >= 3 && month <= 8) {
+			cal.set(Calendar.MONTH, 8);
+		} else {
+			cal.set(Calendar.MONTH, 2);
+			cal.add(Calendar.YEAR, 1);
+		}
+		return cal;
+	}
+
+	private Calendar getEffectiveFinYearToDate() {
+		Calendar cal = Calendar.getInstance();
+		int month = cal.get(Calendar.MONTH);
+		if (month < 3) {
+			cal.set(Calendar.MONTH, 2);
+		} else {
+			cal.set(Calendar.MONTH, 2);
+			cal.add(Calendar.YEAR, 1);
+		}
+		return cal;
+	}
+	
 	
 	private List<DemandReason> getDemandReasonsForTaxReason(AgreementRequest agreementRequest, Date date,
 			String taxReason) {

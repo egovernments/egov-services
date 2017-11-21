@@ -122,11 +122,11 @@ public class PerformanceAssessmentRowMapper {
 				doc.setCode(rs.getString("documentcode"));
 				doc.setName(rs.getString("documentname"));
 				doc.setActive(rs.getBoolean("mandatoryflag"));
-				docList.add(doc);
-				docIdList.add(rs.getLong("docid"));
 				if (StringUtils.isNotBlank(rs.getString("documentcode"))) {
-					docMap.put(String.valueOf(rs.getLong("id")), docList);
+					docList.add(doc);
+					docIdList.add(rs.getLong("docid"));
 				}
+				docMap.put(String.valueOf(rs.getLong("id")), docList);
 			}
 			return null;
 		}

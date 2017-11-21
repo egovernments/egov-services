@@ -163,6 +163,10 @@ public class PerformanceAssessmentConstants {
     public static final String ACTUAL_VALUE_ALREADY_EXISTS_CODE = "pa.0026";
     public static final String ACTUAL_VALUE_ALREADY_EXISTS_FIELD_NAME = "resultValue";
     public static final String ACTUAL_VALUE_ALREADY_EXISTS_ERROR_MESSAGE = "Actual Value for this KPI already exisits. Use update screen to update the same!";
+    
+    public static final String MANDATORY_DOCS_REQUIRED_CODE = "pa.0027";
+    public static final String MANDATORY_DOCS_REQUIRED_FIELD_NAME = "documents";
+    public static final String MANDATORY_DOCS_REQUIRED_ERROR_MESSAGE = "Mandatory Documents are missing for the KPI Value Entry. Please upload and try again!";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

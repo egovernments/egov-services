@@ -81,6 +81,10 @@ public class PerformanceAssessmentQueryBuilder {
     	return "select nextval('seq_egpa_kpi_value') FROM GENERATE_SERIES(1,:size)" ; 
     }
     
+    public static String numberOfDocsReqQuery() { 
+    	return "SELECT count(*) FROM egpa_kpi_master_document WHERE kpicode = :kpiCode AND mandatoryflag IS TRUE " ;
+    }
+    
     public static String fetchKpiByNameOrCode() { 
     	return "SELECT name, code, finyear as financialYear, targetvalue as targetValue, targetdescription as targetDescription, targettype as targetType, " 
     			+ " department as departmentId FROM egpa_kpi_master WHERE (name = :name and finyear = :finyear) OR (code = :code and finyear = :finyear) "; 

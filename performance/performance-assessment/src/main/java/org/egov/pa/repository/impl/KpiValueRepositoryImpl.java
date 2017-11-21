@@ -156,4 +156,17 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		return idList;
 	}
 
+	@Override
+	public int numberOfDocsRequired(String kpiCode) {
+		String query = PerformanceAssessmentQueryBuilder.numberOfDocsReqQuery();
+		Map<String, Object> paramValues = new HashMap<>();
+		paramValues.put("kpiCode", kpiCode);
+		int numberOfDocsReq = 0; 
+		try {
+			numberOfDocsReq = namedParameterJdbcTemplate.queryForObject(query, paramValues, Integer.class);
+		} catch (Exception e) {
+		}
+		return numberOfDocsReq;
+	}
+
 }

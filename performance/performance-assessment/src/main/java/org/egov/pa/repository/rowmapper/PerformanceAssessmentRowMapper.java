@@ -104,7 +104,7 @@ public class PerformanceAssessmentRowMapper {
 
 			if (docMap.containsKey(String.valueOf(rs.getLong("id")))) {
 				List<Document> docList = docMap.get(String.valueOf(rs.getLong("id")));
-				if (StringUtils.isNotBlank(rs.getString("documentcode")) && !docIdList.contains(rs.getLong("docid"))) { 
+				if (StringUtils.isNotBlank(rs.getString("documentname")) && !docIdList.contains(rs.getLong("docid"))) { 
 						Document doc = new Document();
 						doc.setId(String.valueOf(rs.getLong("docid")));
 						doc.setKpiCode(rs.getString("dockpicode"));
@@ -122,7 +122,7 @@ public class PerformanceAssessmentRowMapper {
 				doc.setCode(rs.getString("documentcode"));
 				doc.setName(rs.getString("documentname"));
 				doc.setActive(rs.getBoolean("mandatoryflag"));
-				if (StringUtils.isNotBlank(rs.getString("documentcode"))) {
+				if (StringUtils.isNotBlank(rs.getString("documentname"))) {
 					docList.add(doc);
 					docIdList.add(rs.getLong("docid"));
 				}

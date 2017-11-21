@@ -374,13 +374,13 @@ serviceMaps:
               dbType: LONG  
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
-        - query: UPDATE materialreceiptdetailaddnlinfo SET   lotNo =?,expiryDate =? where receiptDetailId=? AND tenantId= ?;
+        - query: UPDATE materialreceiptdetailaddnlinfo SET   lotNo =?,expiryDate =? where id=? AND tenantId= ?;
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
               type: LONG
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
             - jsonPath: $.materialReceipt.*.tenantId
 
     - version: 1.0

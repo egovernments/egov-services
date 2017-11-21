@@ -380,7 +380,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
               type: LONG
-            - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.tenantId
     
     - version: 1.0

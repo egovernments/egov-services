@@ -73,6 +73,8 @@ public class AgreementValidator {
 		Double securityDeposit = agreement.getSecurityDeposit();
 		Date solvencyCertificateDate = agreement.getSolvencyCertificateDate();
 		Date bankGuaranteeDate = agreement.getBankGuaranteeDate();
+		Date expiryDate = agreementService.getExpiryDate(agreement);
+		Date currentDate = new Date();
 
 		String securityDepositFactor = getConfigurations(propertiesManager.getSecurityDepositFactor(),
 				agreement.getTenantId()).get(0);
@@ -99,6 +101,10 @@ public class AgreementValidator {
 				errors.rejectValue("Agreement.CollectedGoodWillAmount", "",
 						"CollectedGoodWillAmount should not be greater than GoodWillAmount");
 
+		}
+		if(currentDate.before(expiryDate)){
+			errors.rejectValue("Agreement.TimePeriod", "",
+					"Can not create history agreement,please change Timeperiod/CommencementDate");
 		}
 		validateAsset(agreementRequest, errors);
 		validateAllottee(agreementRequest, errors);
@@ -272,6 +278,10 @@ public class AgreementValidator {
 	private void checkRentDue(String demandId, RequestInfo requestInfo, Errors errors, String processName) {
 
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		if(demandId == null){
+			errors.rejectValue("No Demand", "", "No demandId in this agreement request");
+		
+		}else{
 		demandSearchCriteria.setDemandId(Long.getLong(demandId));
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
 		if (demand == null)
@@ -284,6 +294,7 @@ public class AgreementValidator {
 					errors.rejectValue("Demands unpaid", "",
 							"all due must be paid till current month to initiate " + processName);
 			}
+		}
 		}
 	}
 

@@ -483,7 +483,7 @@ public class AgreementService {
 		agreement.setLastmodifiedDate(new Date());
 	}
 
-	private Date getExpiryDate(Agreement agreement) {
+	public Date getExpiryDate(Agreement agreement) {
 		Date commencementDate = agreement.getCommencementDate();
 		Instant instant = Instant.ofEpochMilli(commencementDate.getTime());
 		LocalDateTime localDateTime = LocalDateTime.ofInstant(instant, ZoneId.systemDefault());

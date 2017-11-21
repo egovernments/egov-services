@@ -25,6 +25,14 @@ public class CurrentValueQueryBuilder {
 				+ "where ungroupedvalue.tenantid='" + tenantId + "' " + assetIdString.replace(
 						"assetid","ungroupedvalue.assetid");
 	}
+	
+	public String getNonTransactedAssetQuery(final Set<Long> assetIds, final String tenantId) {
+		
+
+		return "select assetid from egasset_current_value where  assetid not in (select assetid from egasset_current_value where assettrantype!='CREATE');";
+		
+	}
+
 
 	private static String getIdQueryForList(Set<Long> idList) {
 

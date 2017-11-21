@@ -46,6 +46,13 @@ public class CurrentValueService {
         return new AssetCurrentValueResponse(responseInfoFactory.createResponseInfoFromRequestHeaders(requestInfo),
                 currentValueRepository.getCurrentValues(assetIds, tenantId));
     }
+    
+    public List<Long> getNonTransactedCurrentValues(final Set<Long> assetIds, final String tenantId,
+            final RequestInfo requestInfo) {
+
+        return  currentValueRepository.getNonTransactedCurrentValues(assetIds, tenantId);
+    }
+
 
     public AssetCurrentValueResponse createCurrentValueAsync(final AssetCurrentValueRequest assetCurrentValueRequest) {
         log.info(" CurrentValueService  assetCurrentValueRequest"+assetCurrentValueRequest);

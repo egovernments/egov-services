@@ -9,6 +9,7 @@ import java.util.Set;
 import org.egov.model.CurrentValue;
 import org.egov.model.AuditDetails;
 import org.egov.repository.querybuilder.CurrentValueQueryBuilder;
+import org.egov.repository.rowmapper.CurrentValAssetidRowMapper;
 import org.egov.repository.rowmapper.CurrentValueRowMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BatchPreparedStatementSetter;
@@ -29,6 +30,9 @@ public class CurrentValueRepository {
 
     @Autowired
     private CurrentValueRowMapper currentValueRowMapper;
+    
+    @Autowired
+    private CurrentValAssetidRowMapper currentValAssetidRowMapper;
 
    /* @Autowired
     private AssetConfigurationService assetConfigurationService;*/
@@ -40,6 +44,15 @@ public class CurrentValueRepository {
         log.debug("the query for fetching currentValues : " + sql);
         return jdbcTemplate.query(sql, currentValueRowMapper);
     }
+    
+    public List<Long> getNonTransactedCurrentValues(final Set<Long> assetIds, final String tenantId) {
+
+        final String sql = currentValueQueryBuilder.getNonTransactedAssetQuery(assetIds, tenantId);
+
+        log.debug("the query for fetching currentValues : " + sql);
+        return jdbcTemplate.query(sql, currentValAssetidRowMapper);
+    }
+
 
     public void create(final List<CurrentValue> assetCurrentValues) {
 

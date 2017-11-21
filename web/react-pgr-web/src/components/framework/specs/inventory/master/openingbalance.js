@@ -36,16 +36,21 @@ var dat = {
              "isDisabled":false,
              "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
           },
-
           {
-            "name": "receiptNumber",
-            "jsonPath": "receiptNumber",
-            "label": "inventory.receiptNumber",
-            "type": "text",
+            "name": "materialTypeName",
+            "jsonPath": "materialTypeName",
+            "label": "inventory.materialTypeName",
+            "type": "singleValueList",
             "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.receiptNumber"
+            "defaultValue":[
+              {key: null, value: "-- Please Select --"},
+                    {"key":"PURCHASE RECEIPT","value":"PURCHASE RECEIPT"},
+                       {"key":"OPENING BALANCE", "value":"OPENING BALANCE"},
+                          {"key":"INWARD RECEIPT", "value":"INWARD RECEIPT"},
+                             {"key":"MISCELLANEOUS RECEIPT", "value":"MISCELLANEOUS RECEIPT"},
+                              ],
+            "patternErrorMsg": "inventory.create.field.message.materialTypeName"
           }
-
         ]
       }
     ],
@@ -61,7 +66,7 @@ var dat = {
           "label": "inventory.Uom"
         },
         {
-          "label": "inventory.materialTypeName"
+          "label": "inventory.receiptType"
         },
         {
           "label": "inventory.receiptDate"
@@ -86,7 +91,7 @@ var dat = {
         "financialYear",
         "receiptDetails[0].material.code",
         "receiptDetails[0].uom.code",
-        "materialTypeName",
+        "receiptType",
         "receiptDate",
         "mrnNumber",
         "receiptDetails[0].receivedQty",
@@ -95,7 +100,7 @@ var dat = {
         "remarks"
       ],
       "resultPath": "materialReceipt",
-      "rowClickUrlUpdate": "/update/inventory/openingbalance/{mrnNumber}",
+      "rowClickUrlUpdate": "/update/inventory/openingbalance/{receiptDetails[0].id}",
       "rowClickUrlView": "/view/inventory/openingbalance/{mrnNumber}"
     }
   },
@@ -527,11 +532,23 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"0",
                   "patternErrorMsg":""
-               }, {
+               },
+                {
                   "name":"unitRate",
                   "jsonPath":"materialReceipt[0].receiptDetails[0].unitRate",
                   "pattern":"",
                   "type":"number",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "defaultValue":"0",
+                  "maxLength":100,
+                  "patternErrorMsg":"inventory.create.field.message.code"
+               },
+               {
+                  "name":"receiptNumber",
+                  "jsonPath":"materialReceipt[0].mrnNumber",
+                  "pattern":"",
+                  "type":"text",
                   "isRequired":true,
                   "isDisabled":true,
                   "defaultValue":"0",

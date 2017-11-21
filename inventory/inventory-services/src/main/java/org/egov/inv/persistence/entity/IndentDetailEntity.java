@@ -29,7 +29,7 @@ public class IndentDetailEntity  {
 	private String parentIndentLine;
 	private BigDecimal orderNumber;
 	private String projectCode;
-	private String indent;
+	private String indentNumber;
 	private String asset;
 	private BigDecimal indentQuantity;
 	private BigDecimal totalProcessedQuantity;
@@ -43,8 +43,8 @@ public class IndentDetailEntity  {
 		IndentDetail indentDetail = new IndentDetail();
 		indentDetail.setId(this.id);
 		indentDetail.setTenantId(this.tenantId);
-		indentDetail.setMaterial(new Material().id(material));
-		indentDetail.setUom(new Uom().id(uom));
+		indentDetail.setMaterial(new Material().code(material));
+		indentDetail.setUom(new Uom().code(uom));
 		indentDetail.setParentIndentLine(this.parentIndentLine);
 		indentDetail.setOrderNumber(this.orderNumber);
 		indentDetail.setProjectCode(new ProjectCode().id(projectCode));
@@ -62,8 +62,9 @@ public class IndentDetailEntity  {
 	public IndentDetailEntity toEntity(IndentDetail indentDetail) {
 		this.id = indentDetail.getId();
 		this.tenantId = indentDetail.getTenantId();
-		this.material = indentDetail.getMaterial() != null ? indentDetail.getMaterial().getId() : null;
-		this.uom = indentDetail.getUom() != null ? indentDetail.getUom().getId() : null;
+		//this.indentNumber = indentDetail.ge();
+		this.material = indentDetail.getMaterial() != null ? indentDetail.getMaterial().getCode() : null;
+		this.uom = indentDetail.getUom() != null ? indentDetail.getUom().getCode() : null;
 		this.parentIndentLine = indentDetail.getParentIndentLine();
 		this.orderNumber = indentDetail.getOrderNumber();
 		this.projectCode = indentDetail.getProjectCode() != null ? indentDetail.getProjectCode().getId() : null;

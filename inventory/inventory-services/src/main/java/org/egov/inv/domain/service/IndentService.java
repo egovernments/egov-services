@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -9,10 +10,14 @@ import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.Indent;
+import org.egov.inv.model.Indent.IndentStatusEnum;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
+import org.egov.inv.persistence.entity.IndentDetailEntity;
+import org.egov.inv.persistence.entity.IndentEntity;
+import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +33,6 @@ public class IndentService extends DomainService {
 	 * @Autowired private DepartmentRepository departmentRepository;
 	 */
 
-	 
 	@Autowired
 	private IndentJdbcRepository indentRepository;
 	@Value("${inv.indents.save.topic}")
@@ -36,10 +40,13 @@ public class IndentService extends DomainService {
 	@Value("${inv.indents.save.key}")
 	private String saveKey;
 
-	@Value("${inv.indents.save.topic}")
+	@Value("${inv.indents.update.topic}")
 	private String updateTopic;
-	@Value("${inv.indents.save.key}")
+	@Value("${inv.indents.update.key}")
 	private String updateKey;
+
+	@Autowired
+	private IndentDetailJdbcRepository indentDetailJdbcRepository;
 
 	@Transactional
 	public IndentResponse create(IndentRequest indentRequest) {
@@ -47,25 +54,28 @@ public class IndentService extends DomainService {
 		try {
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
 			validate(indents, Constants.ACTION_CREATE);
-		    List<String> sequenceNos = indentRepository.getSequence(Indent.class.getSimpleName(),indents.size());
-		    int i=0;
+			List<String> sequenceNos = indentRepository.getSequence(Indent.class.getSimpleName(), indents.size());
+			int i = 0;
 			for (Indent b : indents) {
 				b.setId(sequenceNos.get(i));
-				//move to id-gen with format <ULB short code>/<Store Code>/<fin. Year>/<serial No.>
+				// move to id-gen with format <ULB short code>/<Store
+				// Code>/<fin. Year>/<serial No.>
 				b.setIndentNumber(sequenceNos.get(i));
-			    i++;
-			    int j=0;
-			    b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_CREATE));
-			    List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),indents.size()); 
-			    for(IndentDetail d : b.getIndentDetails())
-			    {
-			    	 d.setId(detailSequenceNos.get(j));
-			    	 d.setTenantId(b.getTenantId());
-			    	 j++;
-			    }
+				i++;
+				int j = 0;
+				//TO-DO : when workflow implemented change this to created
+				b.setIndentStatus(IndentStatusEnum.APPROVED);
+				b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_CREATE));
+				List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),
+						indents.size());
+				for (IndentDetail d : b.getIndentDetails()) {
+					d.setId(detailSequenceNos.get(j));
+					d.setTenantId(b.getTenantId());
+					j++;
+				}
 			}
 			kafkaQue.send(saveTopic, saveKey, indentRequest);
-			
+
 			IndentResponse response = new IndentResponse();
 			response.setIndents(indentRequest.getIndents());
 			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
@@ -75,17 +85,35 @@ public class IndentService extends DomainService {
 		}
 
 	}
+
 	@Transactional
 	public IndentResponse update(IndentRequest indentRequest) {
 
 		try {
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
 			validate(indents, Constants.ACTION_UPDATE);
-		   
-		    
-			 
-			kafkaQue.send(saveTopic, saveKey, indentRequest);
+
 			
+			for (Indent b : indents) {
+				 
+				// move to id-gen with format <ULB short code>/<Store
+				// Code>/<fin. Year>/<serial No.>
+			 
+				int j = 0;
+				//TO-DO : when workflow implemented change this to created
+			 
+				b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+				List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),
+						indents.size());
+				for (IndentDetail d : b.getIndentDetails()) {
+					if(d.getId()==null)
+						d.setId(indentRepository.getSequence(IndentDetail.class.getSimpleName(),1).get(0));
+					d.setTenantId(b.getTenantId());
+					j++;
+				}
+			}
+			kafkaQue.send(updateTopic, updateKey, indentRequest);
+
 			IndentResponse response = new IndentResponse();
 			response.setIndents(indentRequest.getIndents());
 			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
@@ -95,16 +123,34 @@ public class IndentService extends DomainService {
 		}
 
 	}
-	
-	 
+
 	public IndentResponse search(IndentSearch is) {
-		IndentResponse response=new IndentResponse();
-		 Pagination<Indent> search = indentRepository.search(is);
-		 response.setIndents(search.getPagedData());
-		 response.setPage(getPage(search));
-		 return response;
-	
+		IndentResponse response = new IndentResponse();
+		Pagination<Indent> search = indentRepository.search(is);
+		if (!search.getPagedData().isEmpty()) {
+			List<String> indentNumbers = new ArrayList<>();
+			for (Indent indent : search.getPagedData()) {
+				indentNumbers.add(indent.getIndentNumber());
+			}
+
+			List<IndentDetailEntity> indentDetails = indentDetailJdbcRepository.find(indentNumbers, is.getTenantId());
+
+			IndentDetail detail = null;
+			for (Indent indent : search.getPagedData()) {
+				for (IndentDetailEntity detailEntity : indentDetails) {
+					if (indent.getIndentNumber().equalsIgnoreCase(detailEntity.getIndentNumber())) {
+						detail = detailEntity.toDomain();
+						indent.addIndentDetailsItem(detail);
+					}
+				}
+			}
+		}
+		response.setIndents(search.getPagedData());
+		response.setPage(getPage(search));
+		return response;
+
 	}
+
 	private void validate(List<Indent> indents, String method) {
 
 		try {

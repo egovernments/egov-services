@@ -2801,6 +2801,23 @@ var localization_EN_Data = {
  "inventory.material.status":"Material Status",
  "inventory.material.maptostore":"Material Map To Store",
 
+// indent
+
+"inventory.create.group.title.indent":"Add Indent",
+"inventory.store.name":"Store Name",
+"inventory.indent.date": "Indent Date",
+"inventory.indent.number":"Indent Number",
+"inventory.indent.purpose":"Indent Purpose",
+"inventory.indent.type":"Indent Type",
+"inventory.inventory.type":"Inventory Type",
+"inventory.expecteddeliverydate":"Expected Delivery Date",
+"inventory.narration":"Description",
+"inventory.materialhandoverto":"Material Hand Over To",
+"inventory.designation":"Designation",
+"inventory.create.group.title.indentdetails":"Indent Details",
+"inventory.indent.status":"Status",
+"inventory.indenting.store":"Indenting Store",
+
  //Inventory Common Lables
  "inventory.common.contactNo":"Contact No",
  "inventory.common.faxno":"Fax No",

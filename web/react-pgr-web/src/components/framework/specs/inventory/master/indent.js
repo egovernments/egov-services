@@ -3,112 +3,119 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "/inventory-inventory/v110/indents/_search",
+    "url": "/inventory-services/indents/_search",
     "groups": [
       {
         "name": "search",
         "label": "inventory.search.title",
         "fields": [
-          {
-            "name": "ids",
-            "jsonPath": "ids",
-            "label": "inventory.create.ids",
-            "type": "",
-            "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.ids"
-          },
-          {
-            "name": "issueStore",
-            "jsonPath": "issueStore",
-            "label": "inventory.create.issueStore",
-            "type": "number",
-            "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.issueStore"
-          },
-          {
-            "name": "indentDate",
-            "jsonPath": "indentDate",
-            "label": "inventory.create.indentDate",
-            "type": "datePicker",
-            "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.indentDate"
-          },
-          {
+					 {
             "name": "indentNumber",
             "jsonPath": "indentNumber",
-            "label": "inventory.create.indentNumber",
+            "label": "inventory.indent.number",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "inventory.create.field.message.indentNumber"
           },
+
+         
+          {
+            "name": "indentDate",
+            "jsonPath": "indentDate",
+            "label": "inventory.indent.date",
+            "type": "datePicker",
+            "isDisabled": false,
+            "patternErrorMsg": "inventory.create.field.message.indentDate"
+          },
+         
           {
             "name": "indentPurpose",
             "jsonPath": "indentPurpose",
-            "label": "inventory.create.indentPurpose",
+            "label": "inventory.indent.purpose",
             "type": "singleValueList",
             "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.indentPurpose"
+            "patternErrorMsg": "inventory.create.field.message.indentPurpose",
+						"defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"Consumption",
+                 "value":"Consumption"
+              },
+              {
+                 "key":"Repairs and Maintenance",
+                 "value":"Repairs and Maintenance"
+              },
+              {
+                 "key":"Capital",
+                 "value":"Capital"
+              }
+            ],
           },
-          {
-            "name": "indentStatus",
-            "jsonPath": "indentStatus",
-            "label": "inventory.create.indentStatus",
+           {
+            "name": "inventoryType",
+            "jsonPath": "inventoryType",
+            "label": "inventory.inventory.type",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": false,
+            "isDisabled": false,
+						 "defaultValue":[ {key: null, value: "-- Please Select --"},
+              {
+                 "key":"Asset",
+                 "value":"Asset"
+              },
+              {
+                 "key":"Consumable",
+                 "value":"Consumable"
+              }
+            ],
+
+            "patternErrorMsg": ""
+          },
+				 {
+            "name": "issueStore",
+            "jsonPath": "issueStore",
+            "label": "inventory.indenting.store",
             "type": "singleValueList",
             "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.indentStatus"
+            "patternErrorMsg": "inventory.create.field.message.issueStore",
+						"url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
           },
-          {
-            "name": "totalIndentValue",
-            "jsonPath": "totalIndentValue",
-            "label": "inventory.create.totalIndentValue",
-            "type": "number",
-            "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.totalIndentValue"
-          },
-          {
-            "name": "sortBy",
-            "jsonPath": "sortBy",
-            "label": "inventory.create.sortBy",
-            "type": "text",
-            "isDisabled": false,
-            "defaultValue": "id",
-            "patternErrorMsg": "inventory.create.field.message.sortBy"
-          }
         ]
       }
     ],
     "result": {
       "header": [
         {
-          "label": "inventory.search.result.indents[0].indentNumber"
+          "label": "inventory.indent.number"
         },
         {
-          "label": "inventory.search.result.indents[0].indentDate"
+          "label": "inventory.indent.date"
+        },
+ 				{
+          "label": "inventory.indenting.store"
         },
         {
-          "label": "inventory.search.result.indents[0].indentPurpose"
+          "label": "inventory.indent.purpose"
         },
+         
         {
-          "label": "inventory.search.result.indents[0].inventoryType"
-        },
-        {
-          "label": "inventory.search.result.indents[0].stateId"
-        },
-        {
-          "label": "inventory.search.result.indents[0].indentStore.name"
+          "label": "inventory.indent.status"
         }
       ],
       "values": [
-        "indents[0].indentNumber",
-        "indents[0].indentDate",
-        "indents[0].indentPurpose",
-        "indents[0].inventoryType",
-        "indents[0].stateId",
-        "indents[0].indentStore.name"
+        "indentNumber",
+        "indentDate",
+				"issueStore.name",
+        "indentPurpose",
+        "status"
       ],
+
+      "resultIdKey":"indentNumber",
       "resultPath": "indents",
-      "rowClickUrlUpdate": "/update/indents/{indentNumber}",
-      "rowClickUrlView": "/view/indents/{indentNumber}"
+      "rowClickUrlUpdate": "/update/inventory/indent/{indentNumber}",
+      "rowClickUrlView": "/view/inventory/indent/{indentNumber}",
+  		"rowClickUrlAdd" : "/create/inventory/indent"
     }
   },
   "inventory.create": {
@@ -123,7 +130,7 @@ var dat = {
           {
             "name": "name",
             "jsonPath": "indents[0].issueStore.code",
-            "label": "inventory.create.store.name",
+            "label": "inventory.store.name",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
@@ -134,7 +141,7 @@ var dat = {
           {
             "name": "indentDate",
             "jsonPath": "indents[0].indentDate",
-            "label": "inventory.create.indentDate",
+            "label": "inventory.indent.date",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -145,7 +152,7 @@ var dat = {
           {
             "name": "indentNumber",
             "jsonPath": "indents[0].indentNumber",
-            "label": "inventory.create.indentNumber",
+            "label": "inventory.indent.number",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -157,7 +164,7 @@ var dat = {
           {
             "name": "indentPurpose",
             "jsonPath": "indents[0].indentPurpose",
-            "label": "inventory.create.indentPurpose",
+            "label": "inventory.indent.purpose",
             "pattern": "",
             "type": "singleValueList",
 						"defaultValue":[
@@ -179,11 +186,11 @@ var dat = {
             "isDisabled": false,
             "patternErrorMsg": ""
           },
-          
+
           {
             "name": "indentType",
             "jsonPath": "indents[0].indentType",
-            "label": "inventory.create.indentType",
+            "label": "inventory.indent.type",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -194,7 +201,7 @@ var dat = {
           {
             "name": "inventoryType",
             "jsonPath": "indents[0].inventoryType",
-            "label": "inventory.create.inventoryType",
+            "label": "inventory.inventory.type",
             "pattern": "",
             "type": "singleValueList",
             "isRequired": true,
@@ -207,15 +214,15 @@ var dat = {
               {
                  "key":"Consumable",
                  "value":"Consumable"
-              } 
+              }
             ],
-          
+
             "patternErrorMsg": ""
           },
           {
             "name": "expectedDeliveryDate",
             "jsonPath": "indents[0].expectedDeliveryDate",
-            "label": "inventory.create.expectedDeliveryDate",
+            "label": "inventory.expecteddeliverydate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
@@ -226,7 +233,7 @@ var dat = {
           {
             "name": "narration",
             "jsonPath": "indents[0].narration",
-            "label": "inventory.create.narration",
+            "label": "inventory.narration",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -235,21 +242,11 @@ var dat = {
             "maxLength": 1000,
             "patternErrorMsg": ""
           },
+
           {
-            "name": "indentStatus",
-            "jsonPath": "indents[0].indentStatus",
-            "label": "inventory.create.indentStatus",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": true,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "indentCreatedBy",
-            "jsonPath": "indents[0].indentCreatedBy",
-            "label": "inventory.create.indentRaisedBy",
+            "name": "materialHandOverTo",
+            "jsonPath": "indents[0].materialHandOverTo",
+            "label": "inventory.materialhandoverto",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -261,7 +258,7 @@ var dat = {
           {
             "name": "designation",
             "jsonPath": "indents[0].designation",
-            "label": "inventory.create.designation",
+            "label": "inventory.designation",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -269,10 +266,10 @@ var dat = {
             "defaultValue": "",
             "patternErrorMsg": ""
           }
-          
+
         ]
       },
-		
+
     {
 
 						 "name":"Indent Details",
@@ -280,7 +277,7 @@ var dat = {
             "fields":[
                {
                   "type":"tableList",
-                  "jsonPath":"",
+                  "jsonPath":"indents[0].indentDetails",
                   "tableList":{
                      "header":[
                         {
@@ -305,25 +302,25 @@ var dat = {
                      ],
                      "values":[
 
-               {  
+               {
           			"name":"material",
                  "pattern":"",
                  "type":"singleValueList",
-                 "jsonPath":"indents[0].indentdetails[0].material.code",
+                 "jsonPath":"indents[0].indentDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
                  "depedants":[
                       {
-                         "jsonPath":"indentdetails[0].material.description",
+                         "jsonPath":"indents[0].indentDetails[0].material.description",
                          "type":"textField",
                          "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others')"
                       }
                     ]
                },
-               {  
+               {
                   "name":"materialDescription",
-                  "jsonPath":"indents[0].indentdetails[0].material.description",
+                  "jsonPath":"indents[0].indentDetails[0].material.description",
                   "pattern":"",
                   "type":"text",
                   "isRequired":false,
@@ -331,28 +328,28 @@ var dat = {
                   "defaultValue":"",
                   "patternErrorMsg":""
                },
-               {  
+               {
                   "name":"uom",
-                  "jsonPath":"indents[0].indentdetails[0].uom.code",
+                  "jsonPath":"indents[0].indentDetails[0].uom.code",
                   "pattern":"",
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
                    "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
                },
-              
-               {  
+
+               {
                   "name":"asset",
-                  "jsonPath":"indents[0].indentdetails[0].asset.code",
+                  "jsonPath":"indents[0].indentDetails[0].asset.code",
                   "pattern":"",
                   "type":"text",
                   "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
-               }, {  
+               }, {
                   "name":"projectcode",
-                  "jsonPath":"indents[0].indentdetails[0].projectCode.code",
+                  "jsonPath":"indents[0].indentDetails[0].projectCode.code",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
                   "type":"text",
                   "isRequired":false,
@@ -361,9 +358,9 @@ var dat = {
                   "maxLength":100,
                   "patternErrorMsg":"inventory.create.field.message.code"
                },
-               {  
+               {
                   "name":"indentQuantity",
-                  "jsonPath":"indents[0].indentdetails[0].indentQuantity",
+                  "jsonPath":"indents[0].indentDetails[0].indentQuantity",
                   "pattern":"",
                   "type":"number",
                   "isRequired":true,
@@ -371,184 +368,269 @@ var dat = {
                   "defaultValue":"",
                   "patternErrorMsg":""
                }
- 
-
-     ]
-                  }
-               }
+              ]
+            }
+           }
             ]
          }
       ],
-    "url": "/inventory-inventory/v110/indents/_create",
+    "url": "/inventory-services/indents/_create",
     "tenantIdRequired": true
   },
   "inventory.view": {
-    "numCols": 4,
-    "useTimestamp": true,
-    "objectName": "indents",
-    "groups": [
+
+      "numCols": 4,
+      "useTimestamp": true,
+      "objectName": "indents",
+      "groups": [
+        {
+          "name": "indent",
+          "label": "inventory.create.group.title.indent",
+          "fields": [
+            {
+              "name": "name",
+              "jsonPath": "indents[0].issueStore.code",
+              "label": "inventory.store.name",
+              "type": "singleValueList",
+              "isRequired": true,
+              "isDisabled": false,
+              "defaultValue": "",
+              "patternErrorMsg": "inventory.create.field.message.store.name",
+  						"url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
+            },
+            {
+              "name": "indentDate",
+              "jsonPath": "indents[0].indentDate",
+              "label": "inventory.indent.date",
+              "pattern": "",
+              "type": "datePicker",
+              "isRequired": true,
+              "isDisabled": false,
+              "defaultValue": "",
+              "patternErrorMsg": ""
+            },
+            {
+              "name": "indentNumber",
+              "jsonPath": "indents[0].indentNumber",
+              "label": "inventory.indent.number",
+              "pattern": "",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": true,
+              "defaultValue": "",
+              "maxLength": 64,
+              "patternErrorMsg": ""
+            },
+            {
+              "name": "indentPurpose",
+              "jsonPath": "indents[0].indentPurpose",
+              "label": "inventory.indent.purpose",
+              "pattern": "",
+              "type": "singleValueList",
+  						"defaultValue":[
+                {key: null, value: "-- Please Select --"},
+                {
+                   "key":"Consumption",
+                   "value":"Consumption"
+                },
+                {
+                   "key":"Repairs and Maintenance",
+                   "value":"Repairs and Maintenance"
+                },
+                {
+                   "key":"Capital",
+                   "value":"Capital"
+                }
+              ],
+              "isRequired": true,
+              "isDisabled": false,
+              "patternErrorMsg": ""
+            },
+
+           
+            {
+              "name": "inventoryType",
+              "jsonPath": "indents[0].inventoryType",
+              "label": "inventory.inventory.type",
+              "pattern": "",
+              "type": "singleValueList",
+              "isRequired": true,
+              "isDisabled": false,
+  						 "defaultValue":[ {key: null, value: "-- Please Select --"},
+                {
+                   "key":"Asset",
+                   "value":"Asset"
+                },
+                {
+                   "key":"Consumable",
+                   "value":"Consumable"
+                }
+              ],
+
+              "patternErrorMsg": ""
+            },
+            {
+              "name": "expectedDeliveryDate",
+              "jsonPath": "indents[0].expectedDeliveryDate",
+              "label": "inventory.expecteddeliverydate",
+              "pattern": "",
+              "type": "datePicker",
+              "isRequired": false,
+              "isDisabled": false,
+              "defaultValue": "",
+              "patternErrorMsg": ""
+            },
+            {
+              "name": "narration",
+              "jsonPath": "indents[0].narration",
+              "label": "inventory.narration",
+              "pattern": "",
+              "type": "textarea",
+              "isRequired": false,
+              "isDisabled": false,
+              "defaultValue": "",
+              "maxLength": 1000,
+              "patternErrorMsg": ""
+            },
+
+            {
+              "name": "materialHandOverTo",
+              "jsonPath": "indents[0].materialHandOverTo",
+              "label": "inventory.materialhandoverto",
+              "pattern": "",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": false,
+              "defaultValue": "",
+              "maxLength": 128,
+              "patternErrorMsg": ""
+            },
+            {
+              "name": "designation",
+              "jsonPath": "indents[0].designation",
+              "label": "inventory.designation",
+              "pattern": "",
+              "type": "text",
+              "isRequired": false,
+              "isDisabled": false,
+              "defaultValue": "",
+              "patternErrorMsg": ""
+            }
+
+          ]
+        },
+
       {
-        "name": "indent",
-        "label": "inventory.create.group.title.indent",
-        "fields": [
-          {
-            "name": "name",
-            "jsonPath": "indents[0].issueStore.name",
-            "label": "inventory.create.name",
-            "pattern": "^[a-zA-Z ]+$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "maxLength": 50,
-            "minLength": 5,
-            "patternErrorMsg": "inventory.create.field.message.name"
-          },
-          {
-            "name": "indentDate",
-            "jsonPath": "indents[0].indentDate",
-            "label": "inventory.create.indentDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": true,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "indentNumber",
-            "jsonPath": "indents[0].indentNumber",
-            "label": "inventory.create.indentNumber",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": true,
-            "defaultValue": "",
-            "maxLength": 64,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "indentPurpose",
-            "jsonPath": "indents[0].indentPurpose",
-            "label": "inventory.create.indentPurpose",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "name",
-            "jsonPath": "indents[0].indentStore.name",
-            "label": "inventory.create.name",
-            "pattern": "^[a-zA-Z ]+$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "maxLength": 50,
-            "minLength": 5,
-            "patternErrorMsg": "inventory.create.field.message.name"
-          },
-          {
-            "name": "indentType",
-            "jsonPath": "indents[0].indentType",
-            "label": "inventory.create.indentType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "inventoryType",
-            "jsonPath": "indents[0].inventoryType",
-            "label": "inventory.create.inventoryType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "expectedDeliveryDate",
-            "jsonPath": "indents[0].expectedDeliveryDate",
-            "label": "inventory.create.expectedDeliveryDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "narration",
-            "jsonPath": "indents[0].narration",
-            "label": "inventory.create.narration",
-            "pattern": "",
-            "type": "textarea",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "maxLength": 1000,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "indentStatus",
-            "jsonPath": "indents[0].indentStatus",
-            "label": "inventory.create.indentStatus",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "indentCreatedBy",
-            "jsonPath": "indents[0].indentCreatedBy",
-            "label": "inventory.create.indentCreatedBy",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "maxLength": 128,
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "designation",
-            "jsonPath": "indents[0].designation",
-            "label": "inventory.create.designation",
-            "pattern": "",
-            "type": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "stateId",
-            "jsonPath": "indents[0].stateId",
-            "label": "inventory.create.stateId",
-            "pattern": "",
-            "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          }
-        ]
-      }
-    ],
-    "tenantIdRequired": true,
-    "url": "/inventory-inventory/v110/indents/_search?tenantId={tenantId}"
+
+  					 "name":"Indent Details",
+              "label":"inventory.create.group.title.indentdetails",
+              "fields":[
+                  {
+                  "type":"tableList",
+                  "jsonPath":"indents[0].indentDetails",
+                  "tableList":{
+                     "header":[
+                        {
+                           "label":"Material Name"
+                        },
+                        {
+                           "label":"Material Descr."
+                        },
+                        {
+                           "label":"Uom"
+                        },
+                        {
+                           "label":"Asset Code"
+                        },
+                        {
+                           "label":"Project Code"
+                        },
+												 {
+                           "label":"Quantity Reqd."
+                        }
+
+                     ],
+                     "values":[
+
+               {
+          			"name":"material",
+                 "pattern":"",
+                 "type":"singleValueList",
+                 "jsonPath":"indents[0].indentDetails[0].material.code",
+                 "isRequired":true,
+                 "isDisabled":false,
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "depedants":[
+                      {
+                         "jsonPath":"indents[0].indentDetails[0].material.description",
+                         "type":"textField",
+                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others')"
+                      }
+                    ]
+               },
+               {
+                  "name":"materialDescription",
+                  "jsonPath":"indents[0].indentDetails[0].material.description",
+                  "pattern":"",
+                  "type":"text",
+                  "isRequired":false,
+                  "isDisabled":true,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               },
+               {
+                  "name":"uom",
+                  "jsonPath":"indents[0].indentDetails[0].uom.code",
+                  "pattern":"",
+                  "type":"singleValueList",
+                  "isRequired":true,
+                  "isDisabled":false,
+                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+               },
+
+               {
+                  "name":"asset",
+                  "jsonPath":"indents[0].indentDetails[0].asset.code",
+                  "pattern":"",
+                  "type":"text",
+                  "isRequired":false,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               }, {
+                  "name":"projectcode",
+                  "jsonPath":"indents[0].indentDetails[0].projectCode.code",
+                  "pattern":"[a-zA-Z0-9-\\\\]+",
+                  "type":"text",
+                  "isRequired":false,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "maxLength":100,
+                  "patternErrorMsg":"inventory.create.field.message.code"
+               },
+               {
+                  "name":"indentQuantity",
+                  "jsonPath":"indents[0].indentDetails[0].indentQuantity",
+                  "pattern":"",
+                  "type":"number",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               }
+
+
+       ]
+                    }
+                 }
+              ]
+           }
+        ],
+      "tenantIdRequired": true,
+       "url": "/inventory-services/indents/_search?indentNumber={indentNumber}"
   },
   "inventory.update": {
-    "numCols": 4,
+     "numCols": 4,
     "useTimestamp": true,
     "objectName": "indents",
     "groups": [
@@ -558,21 +640,19 @@ var dat = {
         "fields": [
           {
             "name": "name",
-            "jsonPath": "indents[0].issueStore.name",
-            "label": "inventory.create.name",
-            "pattern": "^[a-zA-Z ]+$",
-            "type": "text",
-            "isRequired": false,
+            "jsonPath": "indents[0].issueStore.code",
+            "label": "inventory.store.name",
+            "type": "singleValueList",
+            "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
-            "maxLength": 50,
-            "minLength": 5,
-            "patternErrorMsg": "inventory.create.field.message.name"
+            "patternErrorMsg": "inventory.create.field.message.store.name",
+						"url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
           },
           {
             "name": "indentDate",
             "jsonPath": "indents[0].indentDate",
-            "label": "inventory.create.indentDate",
+            "label": "inventory.indent.date",
             "pattern": "",
             "type": "datePicker",
             "isRequired": true,
@@ -583,7 +663,7 @@ var dat = {
           {
             "name": "indentNumber",
             "jsonPath": "indents[0].indentNumber",
-            "label": "inventory.create.indentNumber",
+            "label": "inventory.indent.number",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -595,53 +675,64 @@ var dat = {
           {
             "name": "indentPurpose",
             "jsonPath": "indents[0].indentPurpose",
-            "label": "inventory.create.indentPurpose",
+            "label": "inventory.indent.purpose",
             "pattern": "",
             "type": "singleValueList",
+						"defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"Consumption",
+                 "value":"Consumption"
+              },
+              {
+                 "key":"Repairs and Maintenance",
+                 "value":"Repairs and Maintenance"
+              },
+              {
+                 "key":"Capital",
+                 "value":"Capital"
+              }
+            ],
             "isRequired": true,
             "isDisabled": false,
-            "defaultValue": "",
             "patternErrorMsg": ""
           },
-          {
-            "name": "name",
-            "jsonPath": "indents[0].indentStore.name",
-            "label": "inventory.create.name",
-            "pattern": "^[a-zA-Z ]+$",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "maxLength": 50,
-            "minLength": 5,
-            "patternErrorMsg": "inventory.create.field.message.name"
-          },
+
           {
             "name": "indentType",
             "jsonPath": "indents[0].indentType",
-            "label": "inventory.create.indentType",
+            "label": "inventory.indent.type",
             "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "defaultValue": "",
+            "type": "text",
+            "isRequired": false,
+            "defaultValue":"Indent",
             "patternErrorMsg": ""
           },
           {
             "name": "inventoryType",
             "jsonPath": "indents[0].inventoryType",
-            "label": "inventory.create.inventoryType",
+            "label": "inventory.inventory.type",
             "pattern": "",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
-            "defaultValue": "",
+						 "defaultValue":[ {key: null, value: "-- Please Select --"},
+              {
+                 "key":"Asset",
+                 "value":"Asset"
+              },
+              {
+                 "key":"Consumable",
+                 "value":"Consumable"
+              }
+            ],
+
             "patternErrorMsg": ""
           },
           {
             "name": "expectedDeliveryDate",
             "jsonPath": "indents[0].expectedDeliveryDate",
-            "label": "inventory.create.expectedDeliveryDate",
+            "label": "inventory.expecteddeliverydate",
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
@@ -652,7 +743,7 @@ var dat = {
           {
             "name": "narration",
             "jsonPath": "indents[0].narration",
-            "label": "inventory.create.narration",
+            "label": "inventory.narration",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -661,21 +752,11 @@ var dat = {
             "maxLength": 1000,
             "patternErrorMsg": ""
           },
+
           {
-            "name": "indentStatus",
-            "jsonPath": "indents[0].indentStatus",
-            "label": "inventory.create.indentStatus",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "indentCreatedBy",
-            "jsonPath": "indents[0].indentCreatedBy",
-            "label": "inventory.create.indentCreatedBy",
+            "name": "materialHandOverTo",
+            "jsonPath": "indents[0].materialHandOverTo",
+            "label": "inventory.materialhandoverto",
             "pattern": "",
             "type": "text",
             "isRequired": false,
@@ -687,31 +768,125 @@ var dat = {
           {
             "name": "designation",
             "jsonPath": "indents[0].designation",
-            "label": "inventory.create.designation",
+            "label": "inventory.designation",
             "pattern": "",
-            "type": "",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "stateId",
-            "jsonPath": "indents[0].stateId",
-            "label": "inventory.create.stateId",
-            "pattern": "",
-            "type": "number",
+            "type": "text",
             "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
           }
+
         ]
-      }
-    ],
-    "url": "/inventory-inventory/v110/indents/_update",
+      },
+
+    {
+
+						 "name":"Indent Details",
+            "label":"inventory.create.group.title.indentdetails",
+            "fields":[
+               {
+                  "type":"tableList",
+                  "jsonPath":"indents[0].indentDetails",
+                  "tableList":{
+                     "header":[
+                        {
+                           "label":"Material Name"
+                        },
+                        {
+                           "label":"Material Descr."
+                        },
+                        {
+                           "label":"Uom"
+                        },
+                        {
+                           "label":"Asset Code"
+                        },
+                        {
+                           "label":"Project Code"
+                        },
+												 {
+                           "label":"Quantity Reqd."
+                        }
+
+                     ],
+                     "values":[
+
+               {
+          			"name":"material",
+                 "pattern":"",
+                 "type":"singleValueList",
+                 "jsonPath":"indents[0].indentDetails[0].material.code",
+                 "isRequired":true,
+                 "isDisabled":false,
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "depedants":[
+                      {
+                         "jsonPath":"indents[0].indentDetails[0].material.description",
+                         "type":"textField",
+                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others')"
+                      }
+                    ]
+               },
+               {
+                  "name":"materialDescription",
+                  "jsonPath":"indents[0].indentDetails[0].material.description",
+                  "pattern":"",
+                  "type":"text",
+                  "isRequired":false,
+                  "isDisabled":true,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               },
+               {
+                  "name":"uom",
+                  "jsonPath":"indents[0].indentDetails[0].uom.code",
+                  "pattern":"",
+                  "type":"singleValueList",
+                  "isRequired":true,
+                  "isDisabled":false,
+                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+               },
+
+               {
+                  "name":"asset",
+                  "jsonPath":"indents[0].indentDetails[0].asset.code",
+                  "pattern":"",
+                  "type":"text",
+                  "isRequired":false,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               }, {
+                  "name":"projectcode",
+                  "jsonPath":"indents[0].indentDetails[0].projectCode.code",
+                  "pattern":"[a-zA-Z0-9-\\\\]+",
+                  "type":"text",
+                  "isRequired":false,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "maxLength":100,
+                  "patternErrorMsg":"inventory.create.field.message.code"
+               },
+               {
+                  "name":"indentQuantity",
+                  "jsonPath":"indents[0].indentDetails[0].indentQuantity",
+                  "pattern":"",
+                  "type":"number",
+                  "isRequired":true,
+                  "isDisabled":false,
+                  "defaultValue":"",
+                  "patternErrorMsg":""
+               }
+              ]
+            }
+           }
+            ]
+         }
+      ],
+    "url": "/inventory-services/indents/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-inventory/v110/indents/_search?tenantId={tenantId}"
+    "searchUrl": "/inventory-services/indents/_search?indentNumber={indentNumber}"
   }
 }
 export default dat;

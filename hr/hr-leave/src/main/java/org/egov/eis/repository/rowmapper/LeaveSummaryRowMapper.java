@@ -38,80 +38,37 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.eis.model;
+package org.egov.eis.repository.rowmapper;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
-import lombok.*;
+import org.egov.eis.model.LeaveApplication;
+import org.egov.eis.model.LeaveType;
+import org.springframework.jdbc.core.RowMapper;
+import org.springframework.stereotype.Component;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.util.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.SimpleDateFormat;
 
-@AllArgsConstructor
-@EqualsAndHashCode
-@Getter
-@NoArgsConstructor
-@Setter
-@ToString
-public class LeaveApplication {
+@Component
+public class LeaveSummaryRowMapper implements RowMapper<LeaveApplication> {
 
-    private Long id;
+    @Override
+    public LeaveApplication mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 
-    @Size(max = 100)
-    private String applicationNumber;
+        final LeaveApplication leaveApplication = new LeaveApplication();
+        leaveApplication.setId(rs.getLong("la_id"));
+        leaveApplication.setEmployee(rs.getLong("la_employeeId"));
+        leaveApplication.setNoOfDays(rs.getFloat("opb_noofdays"));
+        leaveApplication.setAvailableDays(rs.getFloat("eligibleLeaves"));
+        leaveApplication.setTotalLeavesEligible(rs.getFloat("totalLeavesEligible"));
+        leaveApplication.setLeaveDays(rs.getFloat("leaveappl_approvedcount"));
+        leaveApplication.setBalance(rs.getFloat("balance"));
+        final LeaveType leaveType = new LeaveType();
+        leaveType.setId(rs.getLong("lt_id"));
+        leaveType.setName(rs.getString("lt_name"));
+        leaveApplication.setLeaveType(leaveType);
+        leaveApplication.setTenantId(rs.getString("la_tenantId"));
 
-    @NotNull
-    private Long employee;
-
-    private LeaveType leaveType;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date fromDate;
-
-    @NotNull
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date toDate;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date compensatoryForDate;
-
-    private Float leaveDays;
-
-    private Float availableDays;
-
-    private Float totalLeavesEligible;
-
-    private Float balance;
-
-    private Float noOfDays;
-
-    private Integer halfdays;
-
-    private Boolean firstHalfleave;
-
-    @Size(min = 5, max = 500)
-    private String reason;
-
-    private Long status;
-
-    private Long stateId;
-
-    private Long createdBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date createdDate;
-
-    private Long lastModifiedBy;
-
-    @JsonFormat(pattern = "dd/MM/yyyy")
-    private Date lastModifiedDate;
-
-    @Size(max = 256)
-    private String tenantId;
-
-    private WorkFlowDetails workflowDetails;
-
-    private String errorMsg;
-
+        return leaveApplication;
+    }
 }

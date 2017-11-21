@@ -140,6 +140,7 @@ public class LeaveApplicationController {
         leaveApplicationRequest.getLeaveApplication().setId(leaveApplicationId);
 
         return leaveApplicationService.updateLeaveApplication(leaveApplicationRequest);
+
     }
 
     @PostMapping("_leavereport")
@@ -168,6 +169,33 @@ public class LeaveApplicationController {
 
         return getSuccessResponse(leaveApplicationsList, requestInfo);
     }
+
+    @PostMapping("_leavesummaryreport")
+    @ResponseBody
+    public ResponseEntity<?> getLeaveSummaryReport(@ModelAttribute @Valid final LeaveSearchRequest leaveSearchRequest,
+                                                   final BindingResult modelAttributeBindingResult, @RequestBody @Valid final RequestInfoWrapper requestInfoWrapper,
+                                                   final BindingResult requestBodyBindingResult) {
+        final RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+        // validate input params
+        if (modelAttributeBindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForMissingParameters(modelAttributeBindingResult, requestInfo);
+
+        // validate input params
+        if (requestBodyBindingResult.hasErrors())
+            return errorHandler.getErrorResponseEntityForMissingRequestInfo(requestBodyBindingResult, requestInfo);
+
+        // Call service
+        List<LeaveApplication> leaveApplicationsList = null;
+        try {
+            leaveApplicationsList = leaveApplicationService.getLeaveSummaryReport(leaveSearchRequest, requestInfo);
+        } catch (final Exception exception) {
+            logger.error("Error while processing request " + leaveSearchRequest, exception);
+            return errorHandler.getResponseEntityForUnexpectedErrors(requestInfo);
+        }
+
+        return getSuccessResponse(leaveApplicationsList, requestInfo);
+    }
+
 
     /**
      * Populate Response object and return leaveApplicationsList

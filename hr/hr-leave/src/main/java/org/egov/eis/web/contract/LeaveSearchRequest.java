@@ -62,6 +62,8 @@ public class LeaveSearchRequest {
 
     private List<Long> employeeIds;
 
+    private List<EmployeeInfo> employees;
+
     @Size(min = 1, max = 256)
     private String code;
 
@@ -74,6 +76,8 @@ public class LeaveSearchRequest {
     private Long employeeStatus;
 
     private Long leaveType;
+
+    private Boolean isPrimary;
 
     @JsonFormat(pattern = "dd/MM/yyyy")
     @DateTimeFormat(pattern = "dd/MM/yyyy")

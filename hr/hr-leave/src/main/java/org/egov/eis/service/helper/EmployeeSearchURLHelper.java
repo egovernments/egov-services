@@ -39,6 +39,9 @@ public class EmployeeSearchURLHelper {
         if (leaveSearchRequest.getEmployeeStatus() != null)
             searchURL.append("&employeeStatus=" + leaveSearchRequest.getEmployeeStatus());
 
+        if (leaveSearchRequest.getIsPrimary() != null)
+            searchURL.append("&isPrimary=true");
+
         searchURL.append("&pageSize=" + applicationProperties.hrLeaveSearchPageSizeMax());
 
         return searchURL.toString();

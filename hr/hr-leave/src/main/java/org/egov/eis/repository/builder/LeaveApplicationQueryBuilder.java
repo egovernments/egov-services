@@ -54,6 +54,7 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 import static org.springframework.util.ObjectUtils.isEmpty;
@@ -74,6 +75,8 @@ public class LeaveApplicationQueryBuilder {
             + " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
             + " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
             + " FROM egeis_leaveApplication la" + " LEFT JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+
+
     @Autowired
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     @Autowired
@@ -161,6 +164,45 @@ public class LeaveApplicationQueryBuilder {
         addPagingClauseForReports(selectQuery, preparedStatementValues, leaveSearchRequest.getPageSize(), leaveSearchRequest.getPageNumber());
         logger.debug("Query : " + selectQuery);
         return selectQuery.toString();
+    }
+
+
+    public String getLeaveSummaryReportQuery(final LeaveSearchRequest leaveSearchRequest, final List preparedStatementValues,
+                                             final RequestInfo requestInfo) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(leaveSearchRequest.getToDate());
+        int year = calendar.get(Calendar.YEAR);
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+
+        String summaryReportQuery = "select la.id AS la_id, la.employeeid AS la_employeeId, lt.id AS lt_id, lt.name AS lt_name, COALESCE(opb.noofdays,0) AS opb_noofdays,"
+                + " COALESCE(ROUND(((ltt.noofdays+0.0)/356.0) * (TO_DATE(':todate', 'DD-MM-YYYY') - TO_DATE(':fromdate', 'DD-MM-YYYY'))),0) AS eligibleLeaves,"
+                + " COALESCE(ROUND(((ltt.noofdays+0.0)/356.0) * (TO_DATE(':todate', 'DD-MM-YYYY') - TO_DATE(':fromdate', 'DD-MM-YYYY'))) + COALESCE(opb.noofdays,0) ,0) AS totalLeavesEligible,"
+                + " COALESCE(leaveappl.approvedcount,0) AS leaveappl_approvedcount, la.tenantid AS la_tenantId,"
+                + " COALESCE((ROUND(((ltt.noofdays+0.0)/356.0) * (TO_DATE(':todate', 'DD-MM-YYYY') - TO_DATE(':fromdate', 'DD-MM-YYYY'))) + COALESCE(opb.noofdays,0) - COALESCE(leaveappl.approvedcount,0))) AS balance"
+                + " from  egeis_leaveallotment ltt, egeis_leavetype lt, egeis_leaveapplication la"
+                + " LEFT JOIN  egeis_leaveopeningbalance opb ON opb.leavetypeid=la.leavetypeid and opb.employeeid = la.employeeid and opb.calendaryear=:year and opb.tenantid = la.tenantid "
+                + " LEFT JOIN "
+                + " (select count(*) as approvedcount,employeeid,status,leavetypeid,tenantid from egeis_leaveapplication where status in (:statusid)"
+                + " group by employeeid,status,leavetypeid,tenantid"
+                + " )leaveappl ON leaveappl.employeeid = la.employeeid and leaveappl.leavetypeid=la.leavetypeid and leaveappl.tenantid=la.tenantid  where lt.id=la.leavetypeid ";
+
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
+
+        Long statusId = hrStatusService.getHRStatuses("APPROVED", leaveSearchRequest.getTenantId(),
+                requestInfo).get(0).getId();
+
+        summaryReportQuery = summaryReportQuery.replace(":todate", sdf.format(leaveSearchRequest.getToDate()));
+        summaryReportQuery = summaryReportQuery.replace(":fromdate", sdf.format(leaveSearchRequest.getFromDate()));
+        summaryReportQuery = summaryReportQuery.replace(":statusid", statusId.toString());
+        summaryReportQuery = summaryReportQuery.replace(":year", String.valueOf(year));
+
+        final StringBuilder selectQuery = new StringBuilder(summaryReportQuery);
+        addSummaryReportWhereClause(selectQuery, preparedStatementValues, leaveSearchRequest, requestInfo);
+        addPagingClauseForReports(selectQuery, preparedStatementValues, leaveSearchRequest.getPageSize(), leaveSearchRequest.getPageNumber());
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+
     }
 
     @SuppressWarnings({"unchecked", "rawtypes"})
@@ -287,6 +329,30 @@ public class LeaveApplicationQueryBuilder {
         final String sortOrder = leaveSearchRequest.getSortOrder() == null ? "ASC"
                 : leaveSearchRequest.getSortOrder();
         selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+
+    }
+
+    private void addSummaryReportWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+                                             final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
+
+        if (leaveSearchRequest.getTenantId() != null) {
+            selectQuery.append(" and la.tenantid=?");
+            preparedStatementValues.add(leaveSearchRequest.getTenantId());
+        }
+
+        if (leaveSearchRequest.getLeaveType() != null) {
+            selectQuery.append(" and la.leavetypeid=?");
+            preparedStatementValues.add(leaveSearchRequest.getLeaveType());
+        }
+
+        if (leaveSearchRequest.getDesignationId() != null) {
+            selectQuery.append(" and ltt.designationid=?");
+            preparedStatementValues.add(leaveSearchRequest.getDesignationId());
+        }
+
+        if (leaveSearchRequest.getEmployeeIds() != null) {
+            selectQuery.append(" and la.employeeid in  " + getIdQuery(leaveSearchRequest.getEmployeeIds()));
+        }
 
     }
 

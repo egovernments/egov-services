@@ -48,6 +48,7 @@ import org.egov.eis.model.LeaveType;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.CommonMastersRepository;
 import org.egov.eis.repository.EmployeeRepository;
+import org.egov.eis.repository.LeaveAllotmentRepository;
 import org.egov.eis.repository.LeaveApplicationRepository;
 import org.egov.eis.util.ApplicationConstants;
 import org.egov.eis.web.contract.*;
@@ -62,10 +63,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.text.ParseException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.List;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.max;
@@ -86,6 +88,9 @@ public class LeaveApplicationService {
 
     @Autowired
     private LeaveApplicationRepository leaveApplicationRepository;
+
+    @Autowired
+    private LeaveAllotmentRepository leaveAllotmentRepository;
 
     @Autowired
     private CommonMastersRepository commonMastersRepository;
@@ -149,14 +154,112 @@ public class LeaveApplicationService {
     }
 
     public List<LeaveApplication> getLeaveApplicationsReport(final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
-
-        List<Long> employeeIds = null;
-        EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
-        employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
-        leaveSearchRequest.setEmployeeIds(employeeIds);
-
+        getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
         return leaveApplicationRepository.findForReportCriteria(leaveSearchRequest, requestInfo);
+    }
 
+    public List<LeaveApplication> getLeaveSummaryReport(final LeaveSearchRequest leaveSearchRequest, final RequestInfo requestInfo) {
+        List<LeaveApplication> leaveSummary;
+        if (leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null) {
+            getEmployeeIdForRequest(leaveSearchRequest, requestInfo);
+            leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
+        } else {
+            leaveSearchRequest.setIsPrimary(true);
+            EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
+            leaveSummary = leaveApplicationRepository.findForLeaveSummaryCriteria(leaveSearchRequest, requestInfo);
+            leaveSummary.stream().forEach(leaveApplication -> {
+                int i = 0;
+
+                List<EmployeeInfo> employeesInfo = employeeResponse.getEmployees().stream().filter(employeeDetail -> employeeDetail.getId().equals(leaveApplication.getEmployee()))
+                        .collect(Collectors.toList());
+                if (employeesInfo.size() > 0) {
+
+                    if (leaveSearchRequest.getEmployeeType() != null && !employeesInfo.get(0).getEmployeeType().equals(leaveSearchRequest.getEmployeeType())) {
+                        leaveSummary.remove(leaveApplication);
+
+                    } else if (leaveSearchRequest.getEmployeeStatus() != null && !employeesInfo.get(0).getEmployeeStatus().equals(leaveSearchRequest.getEmployeeStatus())) {
+                        leaveSummary.remove(leaveApplication);
+                    } else if (leaveSearchRequest.getDepartmentId() != null) {
+                        List<Assignment> assignments = employeesInfo.get(0).getAssignments();
+                        for (Assignment assign : assignments) {
+                            if (!assign.getDepartment().equals(leaveSearchRequest.getDepartmentId()))
+                                i++;
+                        }
+                        if (i > 0)
+                            leaveSummary.remove(leaveApplication);
+                    } else {
+                        Float eligibleDays = getEligibleDays(leaveSearchRequest.getToDate(), employeesInfo, leaveApplication);
+                        leaveApplication.setAvailableDays(eligibleDays);
+                        leaveApplication.setTotalLeavesEligible(eligibleDays + leaveApplication.getNoOfDays());
+                        leaveApplication.setBalance(leaveApplication.getTotalLeavesEligible() - leaveApplication.getLeaveDays());
+                    }
+                }
+
+            });
+        }
+        return leaveSummary;
+    }
+
+    public Float getEligibleDays(Date asOnDate, List<EmployeeInfo> employees, LeaveApplication leaveApplication) {
+        LocalDate yearStartDate = null, asondate = null, dateOfAppointment = null;
+        Long designationid = null;
+        Float allotmentValue = 0f, proratedAllotmentValue = 0f;
+
+        if (asOnDate != null) {
+            asondate = LocalDate.parse(new SimpleDateFormat("dd/MM/yyyy").format(asOnDate), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+            yearStartDate = LocalDate.parse("01/01/" + asondate.getYear(), DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+        }
+
+
+        if (employees.size() > 0 && employees.get(0).getDateOfAppointment() != null) {
+            dateOfAppointment = LocalDate.parse(new SimpleDateFormat("yyyy-MM-dd").format(employees.get(0).getDateOfAppointment()));
+            if (!employees.get(0).getAssignments().isEmpty()) {
+                List<Assignment> assignments = employees.get(0).getAssignments().stream()
+                        .filter(assign -> (assign.getIsPrimary().equals(true) && assign.getToDate().after(new Date()))).collect(Collectors.toList());
+                designationid = assignments.stream().map(assign -> assign.getDesignation()).collect(Collectors.toList()).get(0);
+            }
+        }
+
+        if (dateOfAppointment != null && dateOfAppointment.isAfter(yearStartDate))
+            yearStartDate = dateOfAppointment;
+
+
+        List<Map<String, Object>> leaveAllotmentsList = leaveAllotmentRepository.getLeaveAllotmentByDesignation(leaveApplication.getLeaveType().getId(), designationid, leaveApplication.getTenantId());
+
+        if (leaveAllotmentsList != null && !leaveAllotmentsList.isEmpty()) {
+            Object noofdays = leaveAllotmentsList.get(0).get("noofdays");
+            allotmentValue = Float.valueOf(noofdays.toString());
+        }
+
+
+        if (allotmentValue != null)
+            proratedAllotmentValue = allotmentValue / 356
+                    * Duration.between(yearStartDate.atTime(0, 0), asondate.atTime(0, 0)).toDays();
+
+
+        Float.valueOf(String.format("%.0f", proratedAllotmentValue));
+
+
+        return Float.valueOf(String.format("%.0f", proratedAllotmentValue));
+    }
+
+    private void getEmployeeIdForRequest(LeaveSearchRequest leaveSearchRequest, RequestInfo requestInfo) {
+        List<Long> employeeIds = null;
+        if (leaveSearchRequest.getCode() != null && leaveSearchRequest.getDesignationId() == null)
+            leaveSearchRequest.setIsPrimary(true);
+        if (leaveSearchRequest.getDepartmentId() != null || leaveSearchRequest.getDesignationId() != null || leaveSearchRequest.getCode() != null
+                || leaveSearchRequest.getEmployeeType() != null || leaveSearchRequest.getEmployeeStatus() != null) {
+            EmployeeInfoResponse employeeResponse = employeeRepository.getEmployeesForLeaveRequest(leaveSearchRequest, requestInfo);
+            if (employeeResponse.getEmployees().size() == 1) {
+                List<Assignment> assignments = employeeResponse.getEmployees().get(0).getAssignments().stream().map(assignment -> {
+                    assignment.getToDate().after(new Date());
+                    return assignment;
+                }).collect(Collectors.toList());
+                leaveSearchRequest.setDesignationId(assignments.get(0).getDesignation());
+            }
+            employeeIds = employeeResponse.getEmployees().stream().map(employeeInfo -> employeeInfo.getId()).collect(Collectors.toList());
+        }
+        leaveSearchRequest.setEmployeeIds(employeeIds);
     }
 
     private List<LeaveApplication> validate(final LeaveApplicationRequest leaveApplicationRequest, final Boolean isExcelUpload) {
@@ -233,10 +336,7 @@ public class LeaveApplicationService {
     }
 
     public LeaveApplicationRequest create(final LeaveApplicationRequest leaveApplicationRequest) {
-        if (leaveApplicationRequest.getLeaveApplication().size() > 0 && leaveApplicationRequest.getLeaveApplication().get(0).getLeaveType() != null)
-            return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
-        else
-            return leaveApplicationRepository.saveCompoffLeaveApplication(leaveApplicationRequest);
+        return leaveApplicationRepository.saveLeaveApplication(leaveApplicationRequest);
     }
 
     public ResponseEntity<?> updateLeaveApplication(final LeaveApplicationSingleRequest leaveApplicationRequest) {

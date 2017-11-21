@@ -55,77 +55,91 @@ import org.springframework.stereotype.Repository;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Repository
 public class LeaveAllotmentRepository {
 
-	public static final String INSERT_LEAVEALLOTMENT_QUERY = "INSERT INTO egeis_leaveAllotment"
-			+ " (id, designationId, leaveTypeId, noOfDays, createdBy, createdDate,"
-			+ " lastModifiedBy, lastModifiedDate, tenantId)"
-			+ " VALUES (nextval('seq_egeis_leaveAllotment'),?,?,?,?,?,?,?,?)";
+    public static final String INSERT_LEAVEALLOTMENT_QUERY = "INSERT INTO egeis_leaveAllotment"
+            + " (id, designationId, leaveTypeId, noOfDays, createdBy, createdDate,"
+            + " lastModifiedBy, lastModifiedDate, tenantId)"
+            + " VALUES (nextval('seq_egeis_leaveAllotment'),?,?,?,?,?,?,?,?)";
 
-	public static final String UPDATE_LEAVEALLOTMENT_QUERY = "UPDATE egeis_leaveAllotment"
-			+ " SET designationId=?,  leaveTypeId=?, noOfDays=?,"
-			+ " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
+    public static final String UPDATE_LEAVEALLOTMENT_QUERY = "UPDATE egeis_leaveAllotment"
+            + " SET designationId=?,  leaveTypeId=?, noOfDays=?,"
+            + " lastModifiedBy=?, lastModifiedDate=?, tenantId=? where id=? and tenantid=? ";
 
-	@Autowired
-	private JdbcTemplate jdbcTemplate;
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
 
-	@Autowired
-	private LeaveAllotmentRowMapper leaveAllotmentRowMapper;
+    @Autowired
+    private LeaveAllotmentRowMapper leaveAllotmentRowMapper;
 
-	@Autowired
-	private LeaveAllotmentQueryBuilder leaveAllotmentQueryBuilder;
-	
-	@Autowired
-	private UserService userService;
+    @Autowired
+    private LeaveAllotmentQueryBuilder leaveAllotmentQueryBuilder;
 
-	public List<LeaveAllotment> findForCriteria(LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
-		List<Object> preparedStatementValues = new ArrayList<Object>();
-		String queryStr = leaveAllotmentQueryBuilder.getQuery(leaveAllotmentGetRequest, preparedStatementValues);
-		List<LeaveAllotment> leaveAllotments = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
-				leaveAllotmentRowMapper);
-		return leaveAllotments;
-	}
+    @Autowired
+    private UserService userService;
 
-	public void create(LeaveAllotmentRequest leaveAllotmentRequest) {
-		List<Object[]> batchArgs = new ArrayList<>();
-                final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-                        leaveAllotmentRequest.getRequestInfo());
-		for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
-			Object[] laRecord = { la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
-			                userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
-			                userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
-					la.getTenantId() };
-			batchArgs.add(laRecord);
-		}
+    public List<LeaveAllotment> findForCriteria(LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
+        List<Object> preparedStatementValues = new ArrayList<Object>();
+        String queryStr = leaveAllotmentQueryBuilder.getQuery(leaveAllotmentGetRequest, preparedStatementValues);
+        List<LeaveAllotment> leaveAllotments = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveAllotmentRowMapper);
+        return leaveAllotments;
+    }
 
-		try {
-			jdbcTemplate.batchUpdate(INSERT_LEAVEALLOTMENT_QUERY, batchArgs);
-		} catch (DataAccessException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex.getMessage());
-		}
+    public void create(LeaveAllotmentRequest leaveAllotmentRequest) {
+        List<Object[]> batchArgs = new ArrayList<>();
+        final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                leaveAllotmentRequest.getRequestInfo());
+        for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
+            Object[] laRecord = {la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
+                    userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+                    userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+                    la.getTenantId()};
+            batchArgs.add(laRecord);
+        }
 
-	}
+        try {
+            jdbcTemplate.batchUpdate(INSERT_LEAVEALLOTMENT_QUERY, batchArgs);
+        } catch (DataAccessException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex.getMessage());
+        }
 
-	public void update(LeaveAllotmentRequest leaveAllotmentRequest) {
-		List<Object[]> batchArgs = new ArrayList<>();
-		final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
-                        leaveAllotmentRequest.getRequestInfo());
-		for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
-			Object[] laRecord = { la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
-			                userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
-					la.getTenantId(), la.getId(), la.getTenantId() };
-			batchArgs.add(laRecord);
-		}
+    }
 
-		try {
-			jdbcTemplate.batchUpdate(UPDATE_LEAVEALLOTMENT_QUERY, batchArgs);
-		} catch (DataAccessException ex) {
-			ex.printStackTrace();
-			throw new RuntimeException(ex.getMessage());
-		}
+    public void update(LeaveAllotmentRequest leaveAllotmentRequest) {
+        List<Object[]> batchArgs = new ArrayList<>();
+        final UserResponse userResponse = userService.findUserByUserNameAndTenantId(
+                leaveAllotmentRequest.getRequestInfo());
+        for (LeaveAllotment la : leaveAllotmentRequest.getLeaveAllotment()) {
+            Object[] laRecord = {la.getDesignation(), la.getLeaveType().getId(), la.getNoOfDays(),
+                    userResponse.getUsers().get(0).getId(), new Date(System.currentTimeMillis()),
+                    la.getTenantId(), la.getId(), la.getTenantId()};
+            batchArgs.add(laRecord);
+        }
 
-	}
+        try {
+            jdbcTemplate.batchUpdate(UPDATE_LEAVEALLOTMENT_QUERY, batchArgs);
+        } catch (DataAccessException ex) {
+            ex.printStackTrace();
+            throw new RuntimeException(ex.getMessage());
+        }
+
+    }
+
+    public List<Map<String, Object>> getLeaveAllotmentByDesignation(final Long employeeid, final Long designationid, final String tenantId) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        preparedStatementValues.add(employeeid);
+        preparedStatementValues.add(designationid);
+        preparedStatementValues.add(tenantId);
+
+        String query = leaveAllotmentQueryBuilder.selectLeaveAllotmentByDesignationQuery();
+
+        List<Map<String, Object>> maps = jdbcTemplate.queryForList(query, preparedStatementValues.toArray());
+        return maps;
+
+    }
 }

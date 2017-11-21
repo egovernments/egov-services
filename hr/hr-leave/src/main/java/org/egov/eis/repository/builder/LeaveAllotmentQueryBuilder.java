@@ -52,120 +52,122 @@ import java.util.List;
 @Component
 public class LeaveAllotmentQueryBuilder {
 
-	private static final Logger logger = LoggerFactory.getLogger(LeaveAllotmentQueryBuilder.class);
+    private static final Logger logger = LoggerFactory.getLogger(LeaveAllotmentQueryBuilder.class);
+    private static final String BASE_QUERY = "SELECT la.id AS la_id, la.designationId AS la_designationId,"
+            + " la.noOfDays AS la_noOfDays, la.createdBy AS la_createdBy, la.createdDate AS la_createdDate,"
+            + " la.lastModifiedBy AS la_lastModifiedBy, la.lastModifiedDate AS la_lastModifiedDate,"
+            + " la.tenantId AS la_tenantId," + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
+            + " lt.halfdayAllowed AS lt_halfdayAllowed, lt.payEligible AS lt_payEligible,"
+            + " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
+            + " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
+            + " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
+            + " FROM egeis_leaveAllotment la" + " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	@Autowired
-	private ApplicationProperties applicationProperties;
+    private static String getIdQuery(List<Long> idList) {
+        StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1 && idList.get(0) != null) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++) {
+                query.append(", " + idList.get(i));
+            }
+        }
+        return query.append(")").toString();
+    }
 
-	private static final String BASE_QUERY = "SELECT la.id AS la_id, la.designationId AS la_designationId,"
-			+ " la.noOfDays AS la_noOfDays, la.createdBy AS la_createdBy, la.createdDate AS la_createdDate,"
-			+ " la.lastModifiedBy AS la_lastModifiedBy, la.lastModifiedDate AS la_lastModifiedDate,"
-			+ " la.tenantId AS la_tenantId," + " lt.id AS lt_id, lt.name AS lt_name, lt.description AS lt_description,"
-			+ " lt.halfdayAllowed AS lt_halfdayAllowed, lt.payEligible AS lt_payEligible,"
-			+ " lt.accumulative AS lt_accumulative, lt.encashable AS lt_encashable,"
-			+ " lt.active AS lt_active, lt.createdBy AS lt_createdBy, lt.createdDate AS lt_createdDate,"
-			+ " lt.lastModifiedBy AS lt_lastModifiedBy, lt.lastModifiedDate AS lt_lastModifiedDate"
-			+ " FROM egeis_leaveAllotment la" + " JOIN egeis_leaveType lt ON la.leaveTypeId = lt.id";
+    public static String selectLeaveAllotmentByDesignationQuery() {
+        return " select * from egeis_leaveallotment where leavetypeid = ? and designationid = ? and tenantId = ? ";
+    }
 
-	@SuppressWarnings("rawtypes")
-	public String getQuery(LeaveAllotmentGetRequest leaveAllotmentGetRequest, List preparedStatementValues) {
-		StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
+    @SuppressWarnings("rawtypes")
+    public String getQuery(LeaveAllotmentGetRequest leaveAllotmentGetRequest, List preparedStatementValues) {
+        StringBuilder selectQuery = new StringBuilder(BASE_QUERY);
 
-		addWhereClause(selectQuery, preparedStatementValues, leaveAllotmentGetRequest);
-		addOrderByClause(selectQuery, leaveAllotmentGetRequest);
-		addPagingClause(selectQuery, preparedStatementValues, leaveAllotmentGetRequest);
+        addWhereClause(selectQuery, preparedStatementValues, leaveAllotmentGetRequest);
+        addOrderByClause(selectQuery, leaveAllotmentGetRequest);
+        addPagingClause(selectQuery, preparedStatementValues, leaveAllotmentGetRequest);
 
-		logger.debug("Query : " + selectQuery);
-		return selectQuery.toString();
-	}
+        logger.debug("Query : " + selectQuery);
+        return selectQuery.toString();
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
-			LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addWhereClause(StringBuilder selectQuery, List preparedStatementValues,
+                                LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
 
-		if (leaveAllotmentGetRequest.getId() == null && leaveAllotmentGetRequest.getDesignationId() == null
-				&& leaveAllotmentGetRequest.getLeaveType() == null && leaveAllotmentGetRequest.getTenantId() == null)
-			return;
+        if (leaveAllotmentGetRequest.getId() == null && leaveAllotmentGetRequest.getDesignationId() == null
+                && leaveAllotmentGetRequest.getLeaveType() == null && leaveAllotmentGetRequest.getTenantId() == null)
+            return;
 
-		selectQuery.append(" WHERE");
-		boolean isAppendAndClause = false;
+        selectQuery.append(" WHERE");
+        boolean isAppendAndClause = false;
 
-		if (leaveAllotmentGetRequest.getTenantId() != null) {
-			isAppendAndClause = true;
-			selectQuery.append(" la.tenantId = ?");
-			preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" lt.tenantId = ?");
-			preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
-		}
+        if (leaveAllotmentGetRequest.getTenantId() != null) {
+            isAppendAndClause = true;
+            selectQuery.append(" la.tenantId = ?");
+            preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" lt.tenantId = ?");
+            preparedStatementValues.add(leaveAllotmentGetRequest.getTenantId());
+        }
 
-		if (leaveAllotmentGetRequest.getId() != null && !leaveAllotmentGetRequest.getId().isEmpty()) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" la.id IN " + getIdQuery(leaveAllotmentGetRequest.getId()));
-		}
+        if (leaveAllotmentGetRequest.getId() != null && !leaveAllotmentGetRequest.getId().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.id IN " + getIdQuery(leaveAllotmentGetRequest.getId()));
+        }
 
-		if (leaveAllotmentGetRequest.getDesignationId() != null
-				&& !leaveAllotmentGetRequest.getDesignationId().isEmpty() && leaveAllotmentGetRequest.getDesignationId().get(0) != null) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" la.designationId IN " + getIdQuery(leaveAllotmentGetRequest.getDesignationId()));
-		}
+        if (leaveAllotmentGetRequest.getDesignationId() != null
+                && !leaveAllotmentGetRequest.getDesignationId().isEmpty() && leaveAllotmentGetRequest.getDesignationId().get(0) != null) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.designationId IN " + getIdQuery(leaveAllotmentGetRequest.getDesignationId()));
+        }
 
-		if (leaveAllotmentGetRequest.getLeaveType() != null && !leaveAllotmentGetRequest.getLeaveType().isEmpty()) {
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" la.leaveTypeId IN " + getIdQuery(leaveAllotmentGetRequest.getLeaveType()));
-		}
-	}
+        if (leaveAllotmentGetRequest.getLeaveType() != null && !leaveAllotmentGetRequest.getLeaveType().isEmpty()) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" la.leaveTypeId IN " + getIdQuery(leaveAllotmentGetRequest.getLeaveType()));
+        }
+    }
 
-	private void addOrderByClause(StringBuilder selectQuery, LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
-		String sortBy = (leaveAllotmentGetRequest.getSortBy() == null ? "lt.name"
-				: leaveAllotmentGetRequest.getSortBy());
-		String sortOrder = (leaveAllotmentGetRequest.getSortOrder() == null ? "ASC"
-				: leaveAllotmentGetRequest.getSortOrder());
-		selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
-	}
+    private void addOrderByClause(StringBuilder selectQuery, LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
+        String sortBy = (leaveAllotmentGetRequest.getSortBy() == null ? "lt.name"
+                : leaveAllotmentGetRequest.getSortBy());
+        String sortOrder = (leaveAllotmentGetRequest.getSortOrder() == null ? "ASC"
+                : leaveAllotmentGetRequest.getSortOrder());
+        selectQuery.append(" ORDER BY " + sortBy + " " + sortOrder);
+    }
 
-	@SuppressWarnings({ "unchecked", "rawtypes" })
-	private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
-			LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
-		// handle limit(also called pageSize) here
-		selectQuery.append(" LIMIT ?");
-		long pageSize = Integer.parseInt(applicationProperties.hrLeaveSearchPageSizeDefault());
-		if (leaveAllotmentGetRequest.getPageSize() != null)
-			pageSize = leaveAllotmentGetRequest.getPageSize();
-		preparedStatementValues.add(pageSize); // Set limit to pageSize
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private void addPagingClause(StringBuilder selectQuery, List preparedStatementValues,
+                                 LeaveAllotmentGetRequest leaveAllotmentGetRequest) {
+        // handle limit(also called pageSize) here
+        selectQuery.append(" LIMIT ?");
+        long pageSize = Integer.parseInt(applicationProperties.hrLeaveSearchPageSizeDefault());
+        if (leaveAllotmentGetRequest.getPageSize() != null)
+            pageSize = leaveAllotmentGetRequest.getPageSize();
+        preparedStatementValues.add(pageSize); // Set limit to pageSize
 
-		// handle offset here
-		selectQuery.append(" OFFSET ?");
-		int pageNumber = 0; // Default pageNo is zero meaning first page
-		if (leaveAllotmentGetRequest.getPageNumber() != null)
-			pageNumber = leaveAllotmentGetRequest.getPageNumber() - 1;
-		preparedStatementValues.add(pageNumber * pageSize); // Set offset to
-															// pageNo * pageSize
-	}
+        // handle offset here
+        selectQuery.append(" OFFSET ?");
+        int pageNumber = 0; // Default pageNo is zero meaning first page
+        if (leaveAllotmentGetRequest.getPageNumber() != null)
+            pageNumber = leaveAllotmentGetRequest.getPageNumber() - 1;
+        preparedStatementValues.add(pageNumber * pageSize); // Set offset to
+        // pageNo * pageSize
+    }
 
-	/**
-	 * This method is always called at the beginning of the method so that and
-	 * is prepended before the field's predicate is handled.
-	 * 
-	 * @param appendAndClauseFlag
-	 * @param queryString
-	 * @return boolean indicates if the next predicate should append an "AND"
-	 */
-	private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
-		if (appendAndClauseFlag)
-			queryString.append(" AND ");
+    /**
+     * This method is always called at the beginning of the method so that and
+     * is prepended before the field's predicate is handled.
+     *
+     * @param appendAndClauseFlag
+     * @param queryString
+     * @return boolean indicates if the next predicate should append an "AND"
+     */
+    private boolean addAndClauseIfRequired(boolean appendAndClauseFlag, StringBuilder queryString) {
+        if (appendAndClauseFlag)
+            queryString.append(" AND ");
 
-		return true;
-	}
-
-	private static String getIdQuery(List<Long> idList) {
-		StringBuilder query = new StringBuilder("(");
-		if (idList.size() >= 1 && idList.get(0) != null) {
-			query.append(idList.get(0).toString());
-			for (int i = 1; i < idList.size(); i++) {
-				query.append(", " + idList.get(i));
-			}
-		}
-		return query.append(")").toString();
-	}
+        return true;
+    }
 }

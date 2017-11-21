@@ -46,6 +46,7 @@ import org.egov.eis.model.LeaveApplication;
 import org.egov.eis.model.enums.LeaveStatus;
 import org.egov.eis.repository.builder.LeaveApplicationQueryBuilder;
 import org.egov.eis.repository.rowmapper.LeaveApplicationRowMapper;
+import org.egov.eis.repository.rowmapper.LeaveSummaryRowMapper;
 import org.egov.eis.service.HRStatusService;
 import org.egov.eis.service.UserService;
 import org.egov.eis.service.WorkFlowService;
@@ -66,6 +67,9 @@ public class LeaveApplicationRepository {
 
     @Autowired
     private LeaveApplicationRowMapper leaveApplicationRowMapper;
+
+    @Autowired
+    private LeaveSummaryRowMapper leaveSummaryRowMapper;
 
     @Autowired
     private LeaveApplicationQueryBuilder leaveApplicationQueryBuilder;
@@ -96,6 +100,16 @@ public class LeaveApplicationRepository {
                 requestInfo);
         final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
                 leaveApplicationRowMapper);
+        return leaveApplications;
+    }
+
+    public List<LeaveApplication> findForLeaveSummaryCriteria(final LeaveSearchRequest leaveSearchRequest,
+                                                              final RequestInfo requestInfo) {
+        final List<Object> preparedStatementValues = new ArrayList<Object>();
+        final String queryStr = leaveApplicationQueryBuilder.getLeaveSummaryReportQuery(leaveSearchRequest, preparedStatementValues,
+                requestInfo);
+        final List<LeaveApplication> leaveApplications = jdbcTemplate.query(queryStr, preparedStatementValues.toArray(),
+                leaveSummaryRowMapper);
         return leaveApplications;
     }
 

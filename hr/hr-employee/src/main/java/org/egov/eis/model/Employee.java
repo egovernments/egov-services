@@ -135,17 +135,13 @@ public class Employee {
 
     private String gpfNo;
 
-    @NotNull
     private Long bank;
 
-    @NotNull
     private Long bankBranch;
 
-    @NotNull
     @Size(max = 20)
     private String bankAccount;
 
-    @NotNull
     @Size(max = 20)
     private String ifscCode;
 

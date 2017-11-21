@@ -226,6 +226,7 @@ class ShowField extends Component {
         let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response) {
           if(response.viewPath && response.reportData && response.reportData[0]) {
             localStorage.reportData = JSON.stringify(response.reportData);
+            localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
             setRoute("/print/report/" + response.viewPath);
           } else {
             pushReportHistory({tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams})
@@ -353,6 +354,7 @@ class ShowField extends Component {
       let response=Api.commonApiPost("/report/"+match.params.moduleName+"/_get",{},{tenantId:tenantId,reportName:splitArray[0].split("=")[1],searchParams}).then(function(response) {
         if(response.viewPath && response.reportData) {
           localStorage.reportData = JSON.stringify(response.reportData);
+          localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
           setRoute("/print/report/" + response.viewPath);
         }
       },function(err) {

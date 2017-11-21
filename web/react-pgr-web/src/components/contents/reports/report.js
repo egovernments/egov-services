@@ -15,6 +15,15 @@ class Report extends Component {
 
   componentDidMount(){
     this.initData(this.props.match.params.moduleName, this.props.match.params.reportName);
+    this.hasReturnUrl();
+  }
+
+  hasReturnUrl()
+  {
+    if (localStorage.getItem("returnUrl")) {
+      window.localStorage.setItem("returnUrl","");
+
+    }
   }
 
   initData = (moduleName, reportName) => {

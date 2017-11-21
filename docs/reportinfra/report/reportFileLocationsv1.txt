@@ -8,3 +8,4 @@ citizen=https://raw.githubusercontent.com/egovernments/egov-services/master/docs
 asset=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/asset/reports/report.yml
 lcms=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/report/report.yml
 inventory=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/inventory/reports/inventoryReport.yml
+common=https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/reports/report.yml

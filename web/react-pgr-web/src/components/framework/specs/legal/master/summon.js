@@ -243,6 +243,7 @@ var dat = {
             jsonPath: "summons[0].year",
             label: "legal.create.year",
             type: "singleValueList",
+            isCurrentYear:true,
             isRequired: true,
             isDisabled: false,
             url:

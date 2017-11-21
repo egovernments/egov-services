@@ -47,6 +47,17 @@ class UiSelectField extends Component {
                if(item.hasOwnProperty("isKeyOtherPair") && item.isKeyOtherPair){
                    otherPair=jp.query(response, `$..${item.isKeyOtherPair}`);
                }
+                if(item.hasOwnProperty("isCurrentYear") && item.isCurrentYear){
+                    var date = new Date();
+                  var currentYear = date.getFullYear();
+                  keys = _.filter(keys, function(key) {
+                    return key<=currentYear;
+                  });
+                values = _.filter(values, function(value) {
+                    return value<=currentYear;
+                  });
+
+                }
 
                let others=[];
                if(queries.length>3){

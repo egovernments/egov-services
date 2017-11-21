@@ -39,7 +39,7 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
         return new ResponseEntity<MaterialReceiptResponse>(materialReceiptResponse, HttpStatus.OK);
     }
 
-    public ResponseEntity<MaterialReceiptResponse> receiptnotesSearchPost(@ApiParam(value = "Request header for the service request details.", required = true) @Valid @RequestBody RequestInfo requestInfo,
+    public ResponseEntity<MaterialReceiptResponse> receiptnotesSearchPost(@ApiParam(value = "Request header for the service request details.", required = true) @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
                                                                           @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
                                                                           @Size(max = 100) @ApiParam(value = "Pass List of unique mrn number(s) then the API will returns list of receipts.") @RequestParam(value = "mrnNumber", required = false) List<String> mrnNumber,
                                                                           @Size(max = 3) @ApiParam(value = "Mention the type of the receipt.") @RequestParam(value = "receiptType", required = false) List<String> receiptType,
@@ -60,6 +60,8 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
                 .supplierCode(supplierCode)
                 .receiptDate(receiptDateFrom)
                 .receiptDate(receiptDateT0)
+                .pageNumber(pageNumber)
+				.pageSize(pageSize)
                 .build();
         MaterialReceiptResponse materialReceiptResponse = receiptNoteService.search(materialReceiptSearch);
         return new ResponseEntity<MaterialReceiptResponse>(materialReceiptResponse, HttpStatus.OK);

@@ -4,7 +4,7 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 
 
-export default class UiDialogBox extends Component {
+export default class UiHyperLink extends Component {
 	constructor(props) {
        super(props);
 			 this.state = {
@@ -38,9 +38,9 @@ export default class UiDialogBox extends Component {
     ];
 				return (
 					<div>
-					<FlatButton href="https://github.com/callemall/material-ui"
+					<FlatButton href={item.url}
       target="_blank" id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false}
-			//onClick={this.handleOpen} 
+			//onClick={this.handleOpen}
 			disabled={item.isDisabled ? true : false}/>
 					<Dialog
           title="Dialog With Actions"

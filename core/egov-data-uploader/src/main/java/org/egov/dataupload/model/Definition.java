@@ -16,8 +16,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class Definition {
 
-	@JsonProperty("fileName")
-	private String fileName;
+	@JsonProperty("defName")
+	private String defName;
 	
 	@JsonProperty("apiRequest")
 	private Object apiRequest;

@@ -1,12 +1,12 @@
 UploadDefinitions: 
- moduleName: citizen-service
- summary: Citizen Services Report
+ moduleName: performance-management
+ summary: Performance assessment module
  version: 1.0.0
  definitions:
- - fileName: file
-   apiRequest: {"serviceReq": {"tenantId": "mh.rohatest","serviceRequestId": null,"serviceCode": "WATER_NEWCONN","address": "address","backendServiceDetails": [{"url": "http://billing-service:8080/billing-service/bill/_generate?businessService=CS&tenantId=mh.rohatest&consumerCode=","request": {"RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1506070431624,"authToken": "078c0e5b-bdcb-4dd3-9123-ded6e4293c6e","userInfo": {"id": 13514,"userName": "7975179334","name": "Manju","active": true,"tenantId": "mh.rohatest"}}}}]},
-                 "RequestInfo": {"apiId": "org.egov.pt","ver": "1.0","ts": 1506070685050,"action": "asd","authToken": "f551114d-68c5-4917-860c-73387d1e2df6"}}
-   isBulkApi: false
-   arrayPath: $.serviceReqs
-   uri: http://egov-micro-dev.egovernments.org/citizen-services/v1/requests/_create
+ - defName: kpimastercreate
+   apiRequest: {"RequestInfo": {} , "KPIs" : [{"name" : "MYKPIONE","code" : "MKO","description" : "KPIONENAME","financialYear" : "2017-18","departmentId" : 1, "targetType" :     "VALUE","targetValue":1000,"instructions" : "InsNew","documentsReq" : [{"name" : "Aadhaar Card","code" : "AACA", "active" : true},{"name" : "PAN Card","code" : "PACA", "active" : false}]}]}
+   isBulkApi: true
+   arrayPath: $.KPIs
+   uri: http://egov-micro-dev.egovernments.org/perfmanagement/v1/kpimaster/_create
+
   

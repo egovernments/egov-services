@@ -1,4 +1,4 @@
-package org.egov.dataupload.model;
+package org.egov.dataupload.utils;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;

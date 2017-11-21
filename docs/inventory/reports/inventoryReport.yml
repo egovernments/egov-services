@@ -143,6 +143,11 @@ ReportDefinitions:
     type: string
     source: supplier
 
+  - name: bankBranch
+    label: inventory.common.bankbranchname
+    type: string
+    source: supplier
+
   - name: bankAcctNo
     label: inventory.common.bankacctno
     type: string
@@ -166,7 +171,7 @@ ReportDefinitions:
   query:  select supplier.code as supplierCode, supplier.type as supplierType, supplier.name as supplierName,
           supplier.status as status, supplier.address as address , supplier.contactno as contactNo,
           supplier.email as email, supplier.cstno as cstNo,
-          bank.name as bankName, supplier.bankacctno as bankAcctNo,
+          bank.name as bankName, supplier.bankbranch as bankBranch, supplier.bankacctno as bankAcctNo,
           supplier.bankifsc as ifsc, supplier.contactperson as contactPerson,
           supplier.contactpersonno as contactPersonNo
           from supplier as supplier, egov_master.egf_bank bank

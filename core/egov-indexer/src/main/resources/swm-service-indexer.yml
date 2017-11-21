@@ -6,6 +6,6 @@ ServiceMaps:
     indexes:
     - name: vehiclefuellingdetails
       type: vehiclefuellingdetails
-      id: $.id
+      id: $.transactionNo
       isBulk: true
       jsonPath: $.vehicleFuellingDetails.*

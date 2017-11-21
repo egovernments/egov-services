@@ -136,6 +136,10 @@ public class PriceListService extends DomainService {
 									if(priceListDetail.getTenantId()==null){
 										priceListDetail.setTenantId(tenantId);
 									}
+									if(priceListDetail.getUom().getCode()!=null)
+									{
+										priceListDetail.setQuantity((priceListDetail.getUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
+									}
 								}
 							});
 

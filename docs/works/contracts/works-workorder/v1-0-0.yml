@@ -1194,7 +1194,7 @@ definitions:
         x-displayformat: 'dd/MM/yyyy'
         description: Epoch time of File Date of the Letter Of Acceptance. Future date is not allowed.
       parent:
-        $ref: '#/definitions/LetterOfAcceptance'
+        type: string
         description: Parent of Letter Of Acceptance. This is required in case of Revision Work Order 
       stateId:
         type: string
@@ -1389,7 +1389,7 @@ definitions:
         maxLength: 100
         minLength: 1
       parent:
-        $ref: '#/definitions/LOAActivity'
+        type: string
         description: Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.
       approvedRate:
         type: number
@@ -1565,7 +1565,7 @@ definitions:
         maxLength: 128
         minLength: 2
       workOrder:
-        $ref: '#/definitions/WorkOrder'
+        type: string
         description: Reference of Work Order
       remarks:
         type: string
@@ -1659,7 +1659,8 @@ definitions:
         maxLength: 128
         minLength: 2
       notice:
-        $ref: '#/definitions/Notice'
+        type: string
+        description: Reference of Notice
       remarks:
         type: string
         description: Remarks for the Notice.
@@ -1757,7 +1758,8 @@ definitions:
         maxLength: 128
         minLength: 2
       milestone:
-        $ref: '#/definitions/Milestone'
+        type: string
+        description: Reference of Milestone
       scheduleStartDate:
         type: integer
         format: int64
@@ -1871,7 +1873,7 @@ definitions:
         maxLength: 128
         minLength: 2
       trackMilestone:
-        $ref: '#/definitions/TrackMilestone'
+        type: string
         description: Track Milestone reference
       milestoneActivity:
         $ref: '#/definitions/MilestoneActivity'
@@ -1993,6 +1995,7 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 
 

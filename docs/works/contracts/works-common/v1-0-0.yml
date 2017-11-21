@@ -52,6 +52,7 @@ definitions:
       - APPROVED
       - RESUBMITTED
       - CHECKED
+      - FINANCIAL_SANCTIONED
       
   DetailedEstimateStatus:
     type: string
@@ -63,6 +64,7 @@ definitions:
       - CANCELLED
       - APPROVED
       - CHECKED
+      - TECHNICAL_SANCTIONED
   
   LOAStatus:
     type: string
@@ -1255,6 +1257,3 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
-
-
-

@@ -31,6 +31,9 @@ public class Court {
 	@NotNull
 	@JsonProperty("active")
 	private Boolean active = true;
+	
+	@JsonProperty("type")
+	private String type;
 
 	@NotEmpty
 	@NotNull

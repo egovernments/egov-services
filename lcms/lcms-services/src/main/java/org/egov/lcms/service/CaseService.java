@@ -377,6 +377,7 @@ public class CaseService {
 			courtObj.setActive(getBoolean(court.get("active")));
 			courtObj.setName(getString(court.get("name")));
 			courtObj.setTenantId(getString(court.get("tenantId")));
+			courtObj.setType(getString(court.get("type")));
 
 			Address address = new Address();
 			address.setAddressLine1(getString(court.get("courtAddress1")));

@@ -54,8 +54,7 @@ public class ServiceRequestService {
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         //Pagination
         if(serviceRequestSearchCriteria.getFromIndex() != null && serviceRequestSearchCriteria.getPageSize() != null){
-            return serviceRequestList.subList(serviceRequestSearchCriteria.getFromIndex(),
-                (serviceRequestSearchCriteria.getFromIndex() + serviceRequestSearchCriteria.getPageSize()));
+            return getPageData(serviceRequestList, serviceRequestSearchCriteria);
         }
         return serviceRequestList;
     }
@@ -95,6 +94,15 @@ public class ServiceRequestService {
 
         return serviceRequestRepository.getCrnBySubmissionAttributes(serviceRequestSearchCriteria);
 
+    }
+
+    private List<ServiceRequest> getPageData(List<ServiceRequest> serviceRequestList, ServiceRequestSearchCriteria serviceRequestSearchCriteria){
+        Integer fromIndex = serviceRequestSearchCriteria.getFromIndex();
+        Integer toIndex = serviceRequestSearchCriteria.getFromIndex() + serviceRequestSearchCriteria.getPageSize();
+        if(toIndex > serviceRequestList.size())
+            toIndex = serviceRequestList.size() - 1;
+
+        return serviceRequestList.subList(fromIndex,toIndex);
     }
 
     private void enrichWithComputedFields(ServiceRequest serviceRequest, SevaRequest contractSevaRequest,

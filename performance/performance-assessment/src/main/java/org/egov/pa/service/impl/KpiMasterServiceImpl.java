@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.Document;
+import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
@@ -140,7 +141,7 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     }
 
 	@Override
-	public List<Document> getDocumentForKpi(String kpiCode) {
+	public List<DocumentTypeContract> getDocumentForKpi(String kpiCode) {
 		return kpiMasterRepository.getDocumentForKpi(kpiCode);
 	}
 

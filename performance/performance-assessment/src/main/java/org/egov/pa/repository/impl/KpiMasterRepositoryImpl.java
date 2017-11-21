@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 
 import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
+import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
@@ -212,11 +213,11 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 
 	@Override
-	public List<Document> getDocumentForKpi(String kpiCode) {
+	public List<DocumentTypeContract> getDocumentForKpi(String kpiCode) {
 		String query = queryBuilder.getDocumentForKpi();
 		final HashMap<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("kpiCode", kpiCode);
-		List<Document> documentList = namedParameterJdbcTemplate.query(query,parametersMap, new BeanPropertyRowMapper<>(Document.class));
+		List<DocumentTypeContract> documentList = namedParameterJdbcTemplate.query(query,parametersMap, new BeanPropertyRowMapper<>(DocumentTypeContract.class));
 		return documentList;
 	}
 

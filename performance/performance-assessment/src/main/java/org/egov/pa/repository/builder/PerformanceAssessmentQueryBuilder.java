@@ -82,7 +82,8 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public static String fetchKpiByNameOrCode() { 
-    	return "SELECT * FROM egpa_kpi_master WHERE (name = :name and finyear = :finyear) OR (code = :code and finyear = :finyear) "; 
+    	return "SELECT name, code, finyear as financialYear, targetvalue as targetValue, targetdescription as targetDescription, targettype as targetType, " 
+    			+ " department as departmentId FROM egpa_kpi_master WHERE (name = :name and finyear = :finyear) OR (code = :code and finyear = :finyear) "; 
     }
     
     public static String fetchTargetForKpi() { 
@@ -132,7 +133,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public String getDocumentForKpi() { 
-    	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active "
+    	return "SELECT CAST (id AS BIGINT) as id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active, mandatoryflag as mandatory  "
     			+ " FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
     }
     

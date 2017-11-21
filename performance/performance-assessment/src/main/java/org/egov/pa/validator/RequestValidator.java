@@ -47,6 +47,7 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.service.impl.KpiMasterServiceImpl;
 import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.egov.pa.web.contract.KPIRequest;
@@ -71,6 +72,9 @@ public class RequestValidator {
 	
 	@Autowired 
 	private KpiValueServiceImpl kpiValueService;
+	
+	@Autowired
+	private KpiMasterServiceImpl kpiMasterService; 
 	
 	private static final String DEFAULT_COUNT = "0"; 
 	private static final String SEARCH_POSSIBLE = "YES"; 
@@ -122,11 +126,17 @@ public class RequestValidator {
 	                    PerformanceAssessmentConstants.FINYEAR_MANDATORY_FIELD_NAME));
 			}
 			
-			if(null != kpi.getDepartmentId() && kpi.getDepartmentId() <= 0) { 
-					errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_CODE, 
-		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_ERROR_MESSAGE,
-		                    PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_FIELD_NAME));
-				}
+			if (null != kpi.getDepartmentId() && kpi.getDepartmentId() <= 0) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_CODE,
+						PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.DEPARTMENT_CODE_MANDATORY_FIELD_NAME));
+			}
+			
+			if(kpiMasterService.checkNameOrCodeExists(kpiRequest, createOrUpdate)) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.NAMECODE_UNIQUE_CODE, 
+	                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_ERROR_MESSAGE,
+	                    PerformanceAssessmentConstants.NAMECODE_UNIQUE_FIELD_NAME));
+			}
 			
 			// Check whether the document details are available and validate them
 			if(createOrUpdate && null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 

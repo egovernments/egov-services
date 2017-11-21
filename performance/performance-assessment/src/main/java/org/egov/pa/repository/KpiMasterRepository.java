@@ -2,7 +2,7 @@ package org.egov.pa.repository;
 
 import java.util.List;
 
-import org.egov.pa.model.Document;
+import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.web.contract.KPIGetRequest;
@@ -28,6 +28,6 @@ public interface KpiMasterRepository {
     
     public Boolean getKpiType(String kpiCode, String tenantId); 
     
-    public List<Document> getDocumentForKpi(String kpiCode); 
+    public List<DocumentTypeContract> getDocumentForKpi(String kpiCode); 
     
 }

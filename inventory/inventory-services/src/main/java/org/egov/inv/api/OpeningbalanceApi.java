@@ -67,6 +67,7 @@ public interface OpeningbalanceApi {
                 method = RequestMethod.POST)
    ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
             @RequestParam(value = "tenantId", required = true) String tenantId,
+    		@NotNull@ApiParam(value = "Unique id .", required = false) @RequestParam(value = "ids", required = true) String ids,
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  ) 
             @Valid @RequestBody RequestInfo requestInfo,
             @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String finanncilaYear,

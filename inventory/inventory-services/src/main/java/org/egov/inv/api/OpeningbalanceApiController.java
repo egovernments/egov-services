@@ -67,6 +67,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     public ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( 
     		@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
     		@RequestParam(value = "tenantId", required = true) String tenantId,
+    		@NotNull@ApiParam(value = "Unique id .", required = false) @RequestParam(value = "ids", required = true) String ids,
             @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
             @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String financialYear,
             @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
@@ -78,6 +79,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
             @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
     	MaterialReceiptSearch receiptSearch = MaterialReceiptSearch
     			.builder()
+    			.ids(null != ids ? Arrays.asList(ids) : null)
     			.tenantId(tenantId)
 				.financialYear(financialYear)
 				.receiptType(null != materialTypeName ? Arrays.asList(materialTypeName) : null)

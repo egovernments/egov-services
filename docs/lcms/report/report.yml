@@ -7,7 +7,7 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.lcms.court
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantid
+    apiURL:  http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantid
     keyOrder: code,name
     tableName: tbl_court   
   sourceColumns:
@@ -185,7 +185,7 @@ ReportDefinitions:
     wrapper: true
     isMandatory: false
     searchClause : AND lhd.casestatus ->> 'code' = $caseStatus
-  query: select lc.caseno, lc.plantiffname, lc.defendant, lc.pleaderengagementdetails  ,lc.sectionapplied, lc.summondate, CONCAT(lc.resloution, ', ', lc.resloutiondate) AS resolutiondetails, lc.vakalatnamagenerationdate, (select name from tbl_court where code=lc.courtname::jsonb ->> 'code')as courtname, lc.departmentperson, lhd.judgementdate, lhd.casejudgement, lhd.advocateopinion, lhd.furtherprocesssdetails, lc.remarks from egov_lcms_case lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON (lc.code = lhd.casecode AND lhd.casestatus ->> 'code'= 'FO') WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
+  query: select lc.caseno, lc.plantiffname, lc.defendant, lc.pleaderengagementdetails  ,lc.sectionapplied, lc.summondate, CONCAT(lc.resloution, ', ', lc.resloutiondate) AS resolutiondetails, lc.vakalatnamagenerationdate, (select name from (VALUES tbl_court) as ac (code,name) where code=lc.courtname::jsonb ->> 'code')as courtname, lc.departmentperson, lhd.judgementdate, lhd.casejudgement, lhd.advocateopinion, lhd.furtherprocesssdetails, lc.remarks from egov_lcms_case lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON (lc.code = lhd.casecode AND lhd.casestatus ->> 'code'= 'FO') WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
 - reportName: CaseSummaryReport
   summary: Case Summary Report
   version: 1.0.0

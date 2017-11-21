@@ -29,9 +29,8 @@ var requestInfo = {
     "key": "xyz",
     "msgId": "654654",
     "requesterId": "61",
-    "authToken": authToken,
-    "tenantId":tenantId
-};
+    "authToken": authToken
+   };
 
 function titleCase(field) {
     if (field) {
@@ -232,7 +231,7 @@ function getNameById(object, id, property = "") {
 
 function getDesignations(status, cb, businessKey) {
     $.ajax({
-        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + (businessKey || "Agreement") + "&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&additionalRule=&pendingAction=&designation=&amountRule=",
+        url: baseUrl + "/egov-common-workflows/designations/_search?businessKey=" + (businessKey || "Agreement") + "&approvalDepartmentName=&departmentRule=&currentStatus=" + (status || "") + "&tenantId=default&additionalRule=&pendingAction=&designation=&amountRule=",
         type: 'POST',
         dataType: 'json',
         data: JSON.stringify({ RequestInfo: requestInfo }),

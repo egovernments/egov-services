@@ -52,6 +52,10 @@ public class ServiceRequestService {
         serviceRequestList = postgresEnabled ? serviceRequestRepository.findFromDb(serviceRequestSearchCriteria) :
             getRecordFromES(serviceRequestSearchCriteria);
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
+        //Pagination
+        if(serviceRequestSearchCriteria.getFromIndex() != null && serviceRequestSearchCriteria.getPageSize() != null){
+            return serviceRequestList.subList(serviceRequestSearchCriteria.getFromIndex(), serviceRequestSearchCriteria.getPageSize());
+        }
         return serviceRequestList;
     }
 

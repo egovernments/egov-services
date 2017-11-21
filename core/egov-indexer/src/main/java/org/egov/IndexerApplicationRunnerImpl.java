@@ -37,10 +37,6 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
 
     public static ConcurrentHashMap<String, Mapping> mappingMaps  = new ConcurrentHashMap<>();
 	
-    public IndexerApplicationRunnerImpl(ResourceLoader resourceLoader) {
-    	this.resourceLoader = resourceLoader;
-    }
-	
     @Override
     public void run(final ApplicationArguments arg0) throws Exception {
     	try {

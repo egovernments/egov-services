@@ -49,19 +49,19 @@ public class DataUploadService {
 	    Definition uploadDefinition = getUploadDefinition(uploadDefinitionMap, moduleName, file.getName());
 	    List<ResponseMetaData> success = new ArrayList<>();
 	    List<ResponseMetaData> failure = new ArrayList<>();
-	    Object response = null;
 		HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
         HSSFSheet sheet = wb.getSheetAt(0);
         logger.info("Workbook: "+sheet);
         List<String> jsonPathList = new ArrayList<>();
         List<List<Object>> excelData = readExcelFile(sheet, jsonPathList);
-	    if(uploadDefinition.getIsBulkApi()){
-	    	String request = prepareDataForBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
-	    	response = hitApi(request, uploadDefinition.getUri());
-	    } else{
-	    	callNonBulkApis(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
-	    }
-        if(null == response){
+        try{
+		    if(uploadDefinition.getIsBulkApi()){
+		    	String request = prepareDataForBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
+		        hitApi(request, uploadDefinition.getUri());
+		    } else{
+		    	callNonBulkApis(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
+		    }
+        }catch(Exception e){
 			ResponseMetaData responseMetaData= new ResponseMetaData();
 			responseMetaData.setRowData(excelData);
         	failure.add(responseMetaData);
@@ -134,9 +134,9 @@ public class DataUploadService {
 						   continue;
 					   }
 			    	}catch(Exception e){
-	    			logger.error("Error while processing row (here row 1 is the first data row after headers): "+excelData.indexOf(row), e);
+	    			logger.error("Error while processing row (here row 1 is the first data row after headers): "+(excelData.indexOf(row) + 2), e);
 	    			ResponseMetaData responseMetaData= new ResponseMetaData();
-	    			responseMetaData.setRownum(excelData.indexOf(row));
+	    			responseMetaData.setRownum((excelData.indexOf(row) + 2));
 	    			responseMetaData.setRowData(row);
 	    			failure.add(responseMetaData);	    			
 	    			continue;
@@ -175,9 +175,9 @@ public class DataUploadService {
 			    		}	    	
 			    	dataList.add(docContext.jsonString().toString());
 	    		}catch(Exception e){
-	    			logger.error("error while parsing row (here row 1 is the first data row after headers): "+excelData.indexOf(list), e);
+	    			logger.error("error while parsing row (here row 1 is the first data row after headers): "+(excelData.indexOf(list) + 2), e);
 	    			ResponseMetaData responseMetaData= new ResponseMetaData();
-	    			responseMetaData.setRownum(excelData.indexOf(list));
+	    			responseMetaData.setRownum(excelData.indexOf(list) + 2);
 	    			responseMetaData.setRowData(list);
 	    			failure.add(responseMetaData);
 	    			continue;

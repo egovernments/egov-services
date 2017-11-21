@@ -329,7 +329,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
             - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
-            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt[?({id} in @.receiptDetails[*].id)].mrnNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
@@ -347,7 +347,7 @@ serviceMaps:
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
             - jsonPath: $.materialReceipt.*.tenantId
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.receivedDate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo

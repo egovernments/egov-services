@@ -633,6 +633,8 @@ class assetImmovableCreate extends Component {
     if (formData.Asset.titleDocumentsAvalable) {
       console.log(formData.Asset.titleDocumentsAvalable);
       formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");
+    } else {
+      formData.Asset.titleDocumentsAvalable = [];
     }
     if (formData.Asset.assetCategory.id) {
     formData.Asset.assetCategory = self.state.cateoryObject[formData.Asset.assetCategory.id];

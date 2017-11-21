@@ -1,0 +1,145 @@
+{
+	"id": "cbc9fb47-f303-5dad-c9b2-6b7c3c4d929c",
+	"name": "open",
+	"description": "",
+	"order": [
+		"3fc2a8ae-cb19-d916-bf6f-745886b07ee2",
+		"6c135b4d-b8ff-1e86-1d29-e70d023dcfa0",
+		"2a7907e7-c8fe-0eb9-73fe-f4fd238c9720"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1510567669490,
+	"owner": "1498965",
+	"public": false,
+	"requests": [
+		{
+			"id": "2a7907e7-c8fe-0eb9-73fe-f4fd238c9720",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/inventory-services/openingbalance/_search?ids=45&tenantId=default&pageSize =1\n",
+			"queryParams": [
+				{
+					"key": "ids",
+					"value": "45",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				},
+				{
+					"key": "pageSize ",
+					"value": "1\n",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1511276786474,
+			"name": "openBal_search",
+			"description": "",
+			"collectionId": "cbc9fb47-f303-5dad-c9b2-6b7c3c4d929c",
+			"responses": [],
+			"rawModeData": "{\"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510400603623,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"7d3eb4e7-f937-4093-8eef-70e2c8522702\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n  }\n}"
+		},
+		{
+			"id": "3fc2a8ae-cb19-d916-bf6f-745886b07ee2",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/inventory-services/openingbalance/_create?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1511276774885,
+			"name": "openingbalance_create",
+			"description": "",
+			"collectionId": "cbc9fb47-f303-5dad-c9b2-6b7c3c4d929c",
+			"responses": [],
+			"rawModeData": "{\n  \"materialReceipt\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"ABC\"\n      },\n      \"financialYear\": \"2040\",\n      \"receiptDetails\": [\n        {\n          \"material\": {\n            \"code\": \"MAT2\",\n            \"description\": \"\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": \"4\",\n          \"unitRate\": \"5\",\n          \"remarks\": \"ABCD\",\n          \"receiptDetailsAddnInfo\": [\n            {\n            \t\"lotNo\":123,\n              \"receivedDate\": \"1510117560000\",\n              \"expiryDate\": \"1510808760000\"\n            }\n          ]\n        }\n      ],\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510549656506,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8824bb71-bec6-4175-98af-e0d7e87c9710\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n   \n  }\n}"
+		},
+		{
+			"id": "6c135b4d-b8ff-1e86-1d29-e70d023dcfa0",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://localhost:8080/inventory-services/openingbalance/_update?tenantId=default",
+			"queryParams": [
+				{
+					"key": "tenantId",
+					"value": "default",
+					"equals": true,
+					"description": "",
+					"enabled": true
+				}
+			],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"version": 2,
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1511276781410,
+			"name": "openBal_update",
+			"description": "",
+			"collectionId": "cbc9fb47-f303-5dad-c9b2-6b7c3c4d929c",
+			"responses": [],
+			"rawModeData": "{\n  \"materialReceipt\": [\n    {\n      \"receivingStore\": {\n        \"code\": \"ABC\"\n      },\n      \"financialYear\": \"20177\",\n      \"receiptDetails\": [\n        {\n        \t\"id\" :\"5\",\n          \"material\": {\n            \"code\": \"ffff\",\n            \"description\": \"\"\n          },\n          \"uom\": {\n            \"code\": \"NOS\"\n          },\n          \"receivedQty\": \"8888\",\n          \"unitRate\": \"88\",\n          \"receiptDetailsAddnInfo\": [\n            {\n            \t\"id\":5,\n            \t\"lotNo\":8888,\n              \"receivedDate\": \"1510117560000\",\n              \"expiryDate\": \"1500000000000\"\n            }\n          ]\n        }\n      ],\n      \"tenantId\": \"default\"\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1510549656506,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"8824bb71-bec6-4175-98af-e0d7e87c9710\",\n    \"userInfo\":{  \n         \"id\":1,\n         \"userName\":\"testUser\",\n         \"name\":\"test user\"\n      }\n   \n  }\n}"
+		}
+	]
+}

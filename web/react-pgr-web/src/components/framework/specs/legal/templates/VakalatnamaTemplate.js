@@ -46,13 +46,13 @@ export default class VakalatnamaTemplate extends Component{
   }
 
   getAdvocateNames = (array) => {
-	return array.map(function(obj) {
-		if(obj['advocate']){
-			return obj['advocate'].name;
-		} else {
-			return;
-		}
-	});
+  return array.map(function(obj) {
+    if(obj['advocate']){
+      return obj['advocate'].name;
+    } else {
+      return;
+    }
+  });
   }
 
   generatePdf = (ulbLogo, stateLogo, ulbName) => {
@@ -62,8 +62,9 @@ export default class VakalatnamaTemplate extends Component{
     pdfMake.fonts = fonts;
 
 var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtName.address.addressLine1 + ', ' : '';
-   addres += data.summon.courtName.address.addressLine2 ? data.summon.courtName.address.addressLine2 + ', ' : '';
-   addres += data.summon.courtName.address.city ? data.summon.courtName.address.city : '';
+    addres += data.summon.courtName.address.city ? data.summon.courtName.address.city : '';
+    addres += data.summon.courtName.address.addressLine2 ? data.summon.courtName.address.addressLine2 + ', ' : '';
+
     console.log(data.witness);
     console.log(data);
     var d = new Date(data.vakalatnamaGenerationDate);
@@ -94,87 +95,87 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
           text: "VAKALATNAMA", alignment:'center', margin:[10, 10, 10, 10]
         },
         {
-        	columns: [
-        	{
-        		width: 100,
-        		columns: [
-					[{
-						width: 70,
-						fit:[60,80],
-						image : ulbLogo,
-						alignment:'left',
-						margin:[10, 10, 10, 10]
-			      	},{
-			      		width: 70,
-			            fit:[60,80],
-			            image : stateLogo,
-			            alignment:'left',
-			            margin:[10, 10, 10, 10]
-			      	}]
-				]
-        	},
-        	[{
-				text:[
-		      		{text: "IN THE COURT OF "},
-		      		{text: (data.summon.courtName.name ? data.summon.courtName.name : "           ."), alignment:'left', decoration: 'underline'},
-		      		{text: " AT ", alignment:'left'},
-		      		{text: (addres), alignment:'left', decoration: 'underline'},
-		      		{text: " No. ", alignment:'left'},
-		      		{text: data.summon.caseNo+".", alignment:'left', decoration: 'underline'},
-		      		{text: " OF ", alignment:'left'}
-		      		
-	      		],
-	      		margin:[20,0, 0,0]
-			},
+          columns: [
+          {
+            width: 100,
+            columns: [
+          [{
+            width: 70,
+            fit:[60,80],
+            image : ulbLogo,
+            alignment:'left',
+            margin:[10, 10, 10, 10]
+              },{
+                width: 70,
+                  fit:[60,80],
+                  image : stateLogo,
+                  alignment:'left',
+                  margin:[10, 10, 10, 10]
+              }]
+        ]
+          },
+          [{
+        text:[
+              {text: "IN THE COURT OF "},
+              {text: (data.summon.courtName.name ? data.summon.courtName.name : "           ."), alignment:'left', decoration: 'underline'},
+              {text: " AT ", alignment:'left'},
+              {text: (addres), alignment:'left', decoration: 'underline'},
+              {text: " No. ", alignment:'left'},
+              {text: data.summon.caseNo+".", alignment:'left', decoration: 'underline'},
+              {text: " OF ", alignment:'left'}
+              
+            ],
+            margin:[20,0, 0,0]
+      },
       {text: (data.summon.plantiffName ? data.summon.plantiffName :  "           ."), alignment:'left', decoration: 'underline',margin:[20,0, 0,0]},
       {text: " Versus ",margin:[20,0, 0,0]},
       {text: (data.summon.defendant ? data.summon.defendant : "           ."), decoration: 'underline',margin:[20,0, 0,0]},
      {
-				text:[
-					{text: "I /We, the undersigned "},
+        text:[
+          {text: "I /We, the undersigned "},
           {text: (data.coName ? data.coName : ''), alignment:'left', decoration: 'underline'},
-					{text: " the ", alignment:'left'},
+          {text: " the ", alignment:'left'},
           {text: (data.summon.courtName.name ? data.summon.courtName.name : "           ."), alignment:'left', decoration: 'underline'},
-			    {text: " above mentioned hereby appoint & authorize ",alignment:'left'}
-	      		],
-	      		margin:[20,20, 0, 0]
-			},
+          {text: " above mentioned hereby appoint & authorize ",alignment:'left'}
+            ],
+            margin:[20,20, 0, 0]
+      },
       {text: ((data.advocateDetails && data.advocateDetails.length) ? `${getAdvocateNames(data.advocateDetails) }` : "           ."), alignment:'left', decoration: 'underline',margin:[20,5, 0, 0]},
       {text: (addres), alignment:'left', decoration: 'underline',margin:[20,5, 0, 0]},
       {text: " to appear and plead for me /us as my/ our Advocate/s in the matter.",alignment:'left',margin:[20,5, 0, 0]},
       {
-				text:[
-		      		{text: "In witness whereof, I/We have signed below this "},
+        text:[
+              {text: "In witness whereof, I/We have signed below this "},
               {text: day, alignment:'left'},
-		      		{text: " Day of ", alignment:'left'},
+              {text: " Day of ", alignment:'left'},
               {text: month, alignment:'left'},
               {text: ', '},
               {text: year, alignment:'left'}
-	      		],
-	      		margin:[20, 10, 5, 5]
-			},
+            ],
+            margin:[20, 10, 5, 5]
+      },
       {
-				text:[
+        text:[
         {text: "Witness  "},
         
         ],margin:[20, 0, 0, 0]
-			},
+      },
         {
         ul: witnessObj.ul
       ,margin:[20, 5, 5, 5]},
       {
-				text:[
-		      		{text: "Accepted and Filed on  ", alignment:'left'},
-		      		{text: `${epochToDate(data.vakalatnamaGenerationDate)}`, alignment:'left', decoration: 'underline'}
-	      		],
-	      		margin:[20, 5, 5, 5]
-			},{
-				text:[
-		      		{text: "Signature of Advocate/s  ", alignment:'left'}
-	      		],
-	      		margin:[20, 5, 5, 5]
-			}]
-			]
+        text:[
+              {text: "Accepted and Filed on  ", alignment:'left'},
+              {text: `${epochToDate(data.vakalatnamaGenerationDate)}`, alignment:'left', decoration: 'underline'}
+            ],
+            margin:[20, 5, 5, 5]
+      },{
+        text:[
+              {text: "Signature of Advocate/s  ", alignment:'left'}
+            ],
+            margin:[20, 5, 5, 5]
+      }]
+      ]
         }
       ],
       styles: {

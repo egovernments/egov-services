@@ -193,13 +193,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
-          }
-        ]
-      },
-      {
-        name: "caseDetails",
-        label:"",
-        fields: [
+          },
           {
             name: "departmentConcernedPerson",
             jsonPath: "cases[0].departmentPerson",

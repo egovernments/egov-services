@@ -45,11 +45,19 @@ serviceMaps:
    fromTopic: works.documentdetails.update
    isTransaction: true
    queryMaps:   
-    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifieddate, lastmodifiedby) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
-             filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, latitude=EXCLUDED.latitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress,
-             lastmodifieddate=EXCLUDED.lastmodifieddate, lastmodifiedby=EXCLUDED.lastmodifiedby;
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
+             filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress,
+             lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
       basePath: $.documentDetails.*
       jsonMaps:
+
+       - jsonPath: $.documentDetails.*.id
+
+       - jsonPath: $.documentDetails.*.tenantId
+
+       - jsonPath: $.documentDetails.*.objectId
+
+       - jsonPath: $.documentDetails.*.objectType
          
        - jsonPath: $.documentDetails.*.documentType
        
@@ -64,15 +72,18 @@ serviceMaps:
        - jsonPath: $.documentDetails.*.dateOfCapture
        
        - jsonPath: $.documentDetails.*.workProgress
+
+       - jsonPath: $.documentDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.documentDetails.*.auditDetails.createdTime
+         dbType: LONG
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedBy
        
        - jsonPath: $.documentDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-       - jsonPath: $.documentDetails.*.id
 
-       - jsonPath: $.documentDetails.*.tenantId 
 
  - version: 1.0
    name: Estimate Appropriation

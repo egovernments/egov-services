@@ -53,6 +53,8 @@ public class DocumentDetailsService {
 
 	public List<DocumentDetail> updateDocuments(final DocumentDetailRequest documentDetailRequest) {
 		for (DocumentDetail document : documentDetailRequest.getDocumentDetails()) {
+            if(StringUtils.isBlank(document.getId()))
+                document.setId(commonUtils.getUUID());
 			document.setAuditDetails(serviceUtils
 					.setAuditDetails(documentDetailRequest.getRequestInfo(), true));
 		}

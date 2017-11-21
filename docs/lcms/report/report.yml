@@ -7,7 +7,7 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.lcms.court
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantId
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantid
     keyOrder: code,name
     tableName: tbl_court   
   sourceColumns:

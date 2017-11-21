@@ -73,8 +73,8 @@ public class Asset {
 	@JsonProperty("depreciationExpenseAccount")
 	private String depreciationExpenseAccount;
 
-	@JsonProperty("titleDocumentsAvalable")
-	private List<String> titleDocumentsAvalable;
+	@JsonProperty("titleDocumentsAvailable")
+	private List<String> titleDocumentsAvailable;
 
 	@JsonProperty("locationDetails")
 	private Location locationDetails;

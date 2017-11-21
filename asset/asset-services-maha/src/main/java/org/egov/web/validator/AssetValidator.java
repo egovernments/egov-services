@@ -71,13 +71,33 @@ public class AssetValidator implements Validator {
 						"WIP Reference number is mandatory for " + assetCategory.getAssetCategoryType() + " Assets");
 			}
 		}/* assetAccountValidate(asset, errorMap); */
-
+		
 		if (asset.getWarrantyAvailable()) {
 			if (asset.getWarrantyExpiryDate() == null)
 				errorMap.put("Asset_warranty", "warrantyExpiryDate is Mandatory if Warranty is available");
 			else if (asset.getWarrantyExpiryDate().compareTo(asset.getDateOfCreation()) <= 0)
 				errorMap.put("Asset_warranty", "warrantyExpiryDate should be greater than asset date");
 		}
+		
+		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
+			errorMap.put("Asset_DateOfCreation", "DateOfCreation cannot be future Date");
+		
+		if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
+			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be less than Dateofcreation");
+			
+		if(asset.getOriginalValue()!=null && asset.getOriginalValue().longValue()<=0)
+			errorMap.put("Asset_OriginalValue", "Negative  Amount Cannot Be Accepted for OriginalValue");
+		
+		if(asset.getGrossValue()!=null && asset.getGrossValue().longValue()<=0)
+			errorMap.put("Asset_GrossValue", "Negative  Amount Cannot Be Accepted for GrossValue");
+		
+		if(asset.getCurrentValue()!=null && asset.getCurrentValue().longValue()<=0)
+			errorMap.put("Asset_CurrentValue", "Negative  Amount Cannot Be Accepted for CurrentValue");
+		
+		
+		if(asset.getAccumulatedDepreciation()!=null && asset.getAccumulatedDepreciation().longValue()<=0)
+			errorMap.put("Asset_AccumulatedDepreciation", "Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
+		
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
@@ -146,8 +166,8 @@ public class AssetValidator implements Validator {
 			asset.setFundSource(new FundSource());
 		
 		//FIXME TODO remove it after ghansyam handles it in persister
-		if(asset.getTitleDocumentsAvalable()==null) {
-			asset.setTitleDocumentsAvalable(new ArrayList<>());
+		if(asset.getTitleDocumentsAvailable()==null) {
+			asset.setTitleDocumentsAvailable(new ArrayList<>());
 		}
 	}
 

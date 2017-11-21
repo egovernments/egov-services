@@ -108,7 +108,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 } catch (Exception e) {
           
                 }
-                asset.setTitleDocumentsAvalable(tda);
+                asset.setTitleDocumentsAvailable(tda);
                 
                 final String properties = rs.getString("assetAttributes");
                 List<Attributes> asset2 = null;

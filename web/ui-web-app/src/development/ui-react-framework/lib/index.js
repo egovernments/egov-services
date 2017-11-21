@@ -44,90 +44,37 @@ var routes = [{
 }, {
 	component: create,
 	route: '/update/:moduleName/:master?/:id?'
-}, {
-	component: UiTextField,
-	route: ''
-}, {
-	component: UiSelectField,
-	route: ''
-}, {
-	component: UiSelectFieldMultiple,
-	route: ''
-}, {
-	component: UiButton,
-	route: ''
-}, {
-	component: UiCheckBox,
-	route: ''
-}, {
-	component: UiEmailField,
-	route: ''
-}, {
-	component: UiMobileNumber,
-	route: ''
-}, {
-	component: UiTextArea,
-	route: ''
-}, {
-	component: UiNumberField,
-	route: ''
-}, {
-	component: UiDatePicker,
-	route: ''
-}, {
-	component: UiMultiFileUpload,
-	route: ''
-}, {
-	component: UiSingleFileUpload,
-	route: ''
-}, {
-	component: UiAadharCard,
-	route: ''
-}, {
-	component: UiPanCard,
-	route: ''
-}, {
-	component: UiLabel,
-	route: ''
-}, {
-	component: UiRadioButton,
-	route: ''
-}, {
-	component: UiTextSearch,
-	route: ''
-}, {
-	component: UiDocumentList,
-	route: ''
-}, {
-	component: UiAutoComplete,
-	route: ''
-}, {
-	component: UiPinCode,
-	route: ''
-}, {
-	component: UiArrayField,
-	route: ''
-}, {
-	component: UiFileTable,
-	route: ''
-}, {
-	component: UiMultiFieldTable,
-	route: ''
-}, {
-	component: UiDialogBox,
-	route: ''
-}, {
-	component: UigoogleMaps,
-	route: ''
-}, {
-	component: UiWorkflow,
-	route: ''
-}, {
-	component: UiTimeField,
-	route: ''
-}, {
-	component: UiCalendar,
-	route: ''
 }];
 
-module.exports = routes;
+module.exports = {
+	routes,
+	UiTextField,
+	UiSelectField,
+	UiSelectFieldMultiple,
+	UiButton,
+	UiCheckBox,
+	UiEmailField,
+	UiMobileNumber,
+	UiTextArea,
+	UiMultiSelectField,
+	UiNumberField,
+	UiDatePicker,
+	UiMultiFileUpload,
+	UiSingleFileUpload,
+	UiAadharCard,
+	UiPanCard,
+	UiLabel,
+	UiRadioButton,
+	UiTextSearch,
+	UiDocumentList,
+	UiAutoComplete,
+	UiPinCode,
+	UiArrayField,
+	UiFileTable,
+	UiMultiFieldTable,
+	UiDialogBox,
+	UigoogleMaps,
+	UiWorkflow,
+	UiTimeField,
+	UiCalendar
+};

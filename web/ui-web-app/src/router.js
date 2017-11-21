@@ -191,29 +191,61 @@ var swm;
 
 if(process.env.NODE_ENV === "production") {
     fwRoutes = require('ui-react-framework');
-    /*assets = require('assets');
+    assets = require('assets');
     works = require('works');
     perf = require('performance');
     lcms = require('lcms');
     pgr = require('pgr');
-    swm = require('swm');*/
+    swm = require('swm');
 } else {
     fwRoutes = require('./development/ui-react-framework/lib/index');
-    /*assets = require('./development/assets/lib/index');
+    assets = require('./development/assets/lib/index');
     works = require('./development/works/lib/index');
     perf = require('./development/perf/lib/index');
     lcms = require('./development/lcms/lib/index');
     pgr = require('./development/pgr/lib/index');
-    swm = require('./development/swm/lib/index');*/
+    swm = require('./development/swm/lib/index');
 }
-
-console.log(fwRoutes);
 
 const Main = () => {
     return (
     <main style={{"marginBottom": "50px"}}>
     <Switch>
+        {
+            fwRoutes && fwRoutes.routes && fwRoutes.routes.length && fwRoutes.routes.map(function(r) {
+                <Route exact path= {r.route} component={r.component}/>
+            })
+        }
 
+        {
+            assets && assets.routes && assets.routes.length && assets.routes.map(function(r) {
+                <Route exact path= {r.route} component={r.component}/>
+            })
+        }
+
+        {
+            perf && perf.routes && perf.routes.length && perf.routes.map(function(r) {
+                <Route exact path= {r.route} component={r.component}/>
+            })
+        }
+
+        {
+            lcms && lcms.routes && lcms.routes.length && lcms.routes.map(function(r) {
+                <Route exact path= {r.route} component={r.component}/>
+            })
+        }
+
+        {
+            pgr && pgr.routes && pgr.routes.length && pgr.routes.map(function(r) {
+                <Route exact path= {r.route} component={r.component}/>
+            })
+        }
+
+        {
+            swm && swm.routes && swm.routes.length && swm.routes.map(function(r) {
+                <Route exact path= {r.route} component={r.component}/>
+            })
+        }
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
         <Route exact path={base + '/service/request/search'} component={ServiceRequests}/>
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>

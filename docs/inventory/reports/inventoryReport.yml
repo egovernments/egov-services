@@ -94,7 +94,7 @@ ReportDefinitions:
 
 #  Supplier Report
 - reportName: supplierreport
-  summary: Supplier Report
+  summary: Supplier List
   version: 1.0.0
   moduleName: inventory
   sourceColumns:

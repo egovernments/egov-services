@@ -153,19 +153,25 @@ public class PgrWorkflow implements Workflow {
             else
                 t.setSender("");
             if (stateHistory.getOwnerUser() != null) {
-
                 user = employeeRepository.getEmployeeForUserIdAndTenantId(state.getOwnerUser(), tenantId).getEmployees().get(0);
                 t.setOwner(user.getUsername() + "::" + user.getName());
                 final Long dept = user.getAssignments().get(0).getDepartment();
                 DepartmentRes departmentRes = departmentRestRepository.getDepartmentById(dept, tenantId);
                 t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
             } else {
-                final Employee emp = employeeRepository
-                    .getEmployeeForPositionAndTenantId(stateHistory.getOwnerPosition(), new LocalDate(), tenantId).getEmployees().get(0);
-                t.setOwner(emp.getUsername() + "::" + emp.getName());
-                final Long dept = emp.getAssignments().get(0).getDepartment();
-                DepartmentRes departmentRes = departmentRestRepository.getDepartmentById(dept, tenantId);
-                t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
+                final List<Employee> employeeList = employeeRepository
+                    .getEmployeeForPositionAndTenantId(stateHistory.getOwnerPosition(), new LocalDate(), tenantId).getEmployees();
+                if(!employeeList.isEmpty()){
+                    Employee employee = employeeList.get(0);
+                    t.setOwner(employee.getUsername() + "::" + employee.getName());
+                    final Long dept = employee.getAssignments().get(0).getDepartment();
+                    DepartmentRes departmentRes = departmentRestRepository.getDepartmentById(dept, tenantId);
+                    t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
+                }
+                else{
+                    t.setOwner("NO EMPLOYEE Assigned");
+                    t.getAttributes().put(DEPARTMENT, putDepartmentValues("NO DEPARTMENT"));
+                }
             }
             t.setNatureOfTask(stateHistory.getNatureOfTask());
             tasks.add(t);
@@ -189,12 +195,19 @@ public class PgrWorkflow implements Workflow {
             DepartmentRes departmentRes = departmentRestRepository.getDepartmentById(dept, tenantId);
             t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
         } else {
-            final Employee emp = employeeRepository.getEmployeeForPositionAndTenantId(state.getOwnerPosition(), new LocalDate(), tenantId)
-                .getEmployees().get(0);
-            t.setOwner(emp.getUsername() + "::" + emp.getName());
-            final Long dept = emp.getAssignments().get(0).getDepartment();
-            DepartmentRes departmentRes = departmentRestRepository.getDepartmentById(dept, tenantId);
-            t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
+            final List<Employee> employeeList = employeeRepository
+                .getEmployeeForPositionAndTenantId(state.getOwnerPosition(), new LocalDate(), tenantId).getEmployees();
+            if(!employeeList.isEmpty()){
+                Employee employee = employeeList.get(0);
+                t.setOwner(employee.getUsername() + "::" + employee.getName());
+                final Long dept = employee.getAssignments().get(0).getDepartment();
+                DepartmentRes departmentRes = departmentRestRepository.getDepartmentById(dept, tenantId);
+                t.getAttributes().put(DEPARTMENT, putDepartmentValues(departmentRes.getDepartment().get(0).getName()));
+            }
+            else{
+                t.setOwner("NO EMPLOYEE Assigned");
+                t.getAttributes().put(DEPARTMENT, putDepartmentValues("NO DEPARTMENT"));
+            }
         }
         t.setNatureOfTask(state.getNatureOfTask());
         tasks.add(t);

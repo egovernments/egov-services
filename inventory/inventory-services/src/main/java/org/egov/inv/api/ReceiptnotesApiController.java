@@ -5,7 +5,6 @@ import org.egov.inv.domain.service.ReceiptNoteService;
 import org.egov.inv.model.MaterialReceiptRequest;
 import org.egov.inv.model.MaterialReceiptResponse;
 import org.egov.inv.model.MaterialReceiptSearch;
-import org.egov.inv.model.RequestInfo;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -55,13 +54,13 @@ public class ReceiptnotesApiController implements ReceiptnotesApi {
                 .tenantId(tenantId)
                 .mrnNumber(mrnNumber)
                 .receiptType(receiptType)
-                .mrnStatus(asList(mrnStatus))
+                .mrnStatus(null != mrnStatus ? asList(mrnStatus) : null)
                 .receivingStore(receivingStore)
                 .supplierCode(supplierCode)
                 .receiptDate(receiptDateFrom)
                 .receiptDate(receiptDateT0)
                 .pageNumber(pageNumber)
-				.pageSize(pageSize)
+                .pageSize(pageSize)
                 .build();
         MaterialReceiptResponse materialReceiptResponse = receiptNoteService.search(materialReceiptSearch);
         return new ResponseEntity<MaterialReceiptResponse>(materialReceiptResponse, HttpStatus.OK);

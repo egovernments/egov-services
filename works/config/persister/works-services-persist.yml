@@ -45,7 +45,9 @@ serviceMaps:
    fromTopic: works.documentdetails.update
    isTransaction: true
    queryMaps:   
-    - query: UPDATE egw_documentdetail SET documentType=?, fileStore=?, latitude=?, longitude=?, description=?, dateOfCapture=?, workProgress=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifieddate, lastmodifiedby) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
+             filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, latitude=EXCLUDED.latitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress,
+             lastmodifieddate=EXCLUDED.lastmodifieddate, lastmodifiedby=EXCLUDED.lastmodifiedby;
       basePath: $.documentDetails.*
       jsonMaps:
          

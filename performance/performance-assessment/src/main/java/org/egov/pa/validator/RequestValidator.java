@@ -228,6 +228,13 @@ public class RequestValidator {
 			                    PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.CODE_TENANT_UNIQUE_FIELD_NAME));
 					}
+					
+					int numberOfDocsReq = kpiValueService.numberOfDocsRequired(eachValue.getKpi().getCode());
+					if(null != eachValue.getDocuments() && eachValue.getDocuments().size() < numberOfDocsReq) { 
+						errorFields.add(buildErrorField(PerformanceAssessmentConstants.MANDATORY_DOCS_REQUIRED_CODE, 
+			                    PerformanceAssessmentConstants.MANDATORY_DOCS_REQUIRED_ERROR_MESSAGE,
+			                    PerformanceAssessmentConstants.MANDATORY_DOCS_REQUIRED_FIELD_NAME));
+					}
 				}
 				
 			} else { 

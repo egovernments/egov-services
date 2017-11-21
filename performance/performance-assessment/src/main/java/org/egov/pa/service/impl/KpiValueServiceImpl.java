@@ -98,6 +98,10 @@ public class KpiValueServiceImpl implements KpiValueService {
     	}
     }
 	
+	public int numberOfDocsRequired(String kpiCode) { 
+		return kpiValueRepository.numberOfDocsRequired(kpiCode); 
+	}
+	
 	public boolean checkKpiTargetExists(String kpiCode) {
     	String finYear = getFiscalYear();
     	if(kpiTargetMap.containsKey(kpiCode)) { 

@@ -49,11 +49,11 @@ class EmployeeTransfer extends React.Component {
     this.setInitialState = this.setInitialState.bind(this);
     this.vacantPositionFun = this.vacantPositionFun.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
+    this.makeAjaxUpload = this.makeAjaxUpload.bind(this);
 
   }
 
 addOrUpdate(e){
-
 
   e.preventDefault();
 
@@ -68,6 +68,79 @@ addOrUpdate(e){
     movement.promotionBasis = {id : ""};
     movement.enquiryPassedDate="";
   }
+
+//FILE UPLOADS
+    if (movement.documents && movement.documents.constructor == FileList) {
+        let counter = movement.documents.length,
+            breakout = 0, docs = [];
+        for (let i = 0, len = movement.documents.length; i < len; i++) {
+            this.makeAjaxUpload(movement.documents[i], function(err, res) {
+                if (breakout == 1){
+                  console.log("breakout", breakout);
+                  return;
+                  }
+
+                else if (err) {
+                    showError("Error uploding the files. Please contact Administrator");
+                    breakout = 1;
+                } else {
+                    counter--;
+                    docs.push(res.files[0].fileStoreId);
+                    console.log("docs",docs);
+                    if (counter == 0 && breakout == 0) {
+                        movement.documents =  docs;
+
+                        var body = {
+                            "RequestInfo":requestInfo,
+                            "Movement":[movement]
+                        };
+
+                            $.ajax({
+                                url:baseUrl+"/hr-employee-movement/movements/_create?tenantId=" + tenantId,
+                                type: 'POST',
+                                dataType: 'json',
+                                data:JSON.stringify(body),
+                                contentType: 'application/json',
+                                headers:{
+                                  'auth-token': authToken
+                                },
+                                success: function(res) {
+                                  var employee,designation;
+
+                                  commonApiPost("hr-employee","employees","_search",{"positionId":movement.workflowDetails.assignee,tenantId}, function(err, res) {
+                                      if(res && res.Employee && res.Employee[0])
+                                        employee = res.Employee[0];
+
+                                      employee.assignments.forEach(function(item) {
+                                                              if(item.isPrimary)
+                                                                designation = item.designation;
+                                                            });
+                                      var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList,designation);
+
+                                  window.location.href=`app/hr/movements/ack-page.html?type=TransferApply&owner=${ownerDetails}`;
+                                });
+                                },
+                                error: function(err) {
+                                  if(err["responseJSON"].message)
+                                    showError(err["responseJSON"].message);
+                                  else if (err["responseJSON"].Movement[0]) {
+                                    showError(err["responseJSON"].Movement[0].errorMsg)
+                                  }else{
+                                    showError("Something went wrong. Please contact Administrator");
+                                  }
+                                }
+
+                            })
+
+                    }
+                }
+            })
+        }
+        // if (breakout == 1)
+        //     return;
+    } else {
+
+
 
       var body = {
           "RequestInfo":requestInfo,
@@ -110,6 +183,10 @@ addOrUpdate(e){
               }
 
           })
+
+    }
+//END FILE UPLOADS
+
 }
 
 setInitialState(initState) {
@@ -276,6 +353,36 @@ componentDidUpdate(){
 
   }
 
+  makeAjaxUpload(file, cb) {
+      if(file.constructor == File) {
+          let formData = new FormData();
+          formData.append("jurisdictionId", "ap.public");
+          formData.append("module", "PGR");
+          formData.append("file", file);
+          $.ajax({
+              url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+              data: formData,
+              cache: false,
+              contentType: false,
+              processData: false,
+              type: 'POST',
+              success: function(res) {
+                  cb(null, res);
+              },
+              error: function(jqXHR, exception) {
+                  cb(jqXHR.responseText || jqXHR.statusText);
+              }
+          });
+      } else {
+          cb(null, {
+                files: [{
+                  fileStoreId: file
+                }]
+              });
+      }
+  }
+
+
   handleChange(e,name){
     var _this = this;
     switch (name) {
@@ -376,12 +483,36 @@ componentDidUpdate(){
     })
 
   }else if (name === "documents") {
-    this.setState({
-        movement:{
-            ...this.state.movement,
-            documents:e.target.files
-        }
-    })
+
+    if(e.currentTarget.files)
+    {
+      var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+          //2097152 = 2mb
+          if(e.currentTarget.files[0].size > 2097152 && fileTypes.indexOf(e.currentTarget.files[0].type) == -1) {
+              $("#documents").val('');
+              return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+          } else if(e.currentTarget.files[0].size > 2097152) {
+              $("#documents").val('');
+              return showError("Maximum file size allowed is 2 MB.");
+          } else if(fileTypes.indexOf(e.currentTarget.files[0].type) == -1) {
+              $("#documents").val('');
+              return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+          }
+
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              documents:e.currentTarget.files
+          }
+      })
+    }else {
+      this.setState({
+          movement:{
+              ...this.state.movement,
+              documents:e.currentTarget.files
+          }
+      })
+  }
 
   } else {
     this.setState({

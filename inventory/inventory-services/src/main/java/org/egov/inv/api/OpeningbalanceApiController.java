@@ -80,7 +80,7 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
     			.builder()
     			.tenantId(tenantId)
 				.financialYear(financialYear)
-				.receiptType(Arrays.asList(materialTypeName))
+				.receiptType(null != materialTypeName ? Arrays.asList(materialTypeName) : null)
 				.storeName(storeName)
 				.pageNumber(pageNumber)
 				.pageSize(pageSize)

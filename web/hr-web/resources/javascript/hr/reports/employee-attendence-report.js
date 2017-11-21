@@ -108,7 +108,10 @@ class EmployeeAttendence extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             language: {
+               "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -132,15 +135,20 @@ class EmployeeAttendence extends React.Component {
    $('#employeeTable').dataTable().fnDestroy();
    var _this = this;
    try {
+        flag = 1;
         commonApiPost("hr-attendance", "attendances", "_attendancereport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
           if(res && res.Attendance) {
-            flag = 1;
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
                 noOfDaysInMonth:res.noOfDaysInMonth,
                 noOfWorkingDays:res.noOfWorkingDays,
                 result : res.Attendance
+            })
+          }else {
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true
             })
           }
         });
@@ -154,7 +162,7 @@ class EmployeeAttendence extends React.Component {
 
  render () {
     let {handleChange, searchEmployeeAttendance, closeWindow} = this;
-    let {result, employeeTypes, departments, designations, months, calenderYears, employeeList, error} = this.state;
+    let {result, employeeTypes, departments, noOfDaysInMonth, noOfWorkingDays, designations, months, calenderYears, employeeList, error} = this.state;
     let {code, departmentId, designationId, employeeType, month, year} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -191,6 +199,11 @@ class EmployeeAttendence extends React.Component {
                 <div>
                     <br/>
                     <br/>
+                    <div className="form-section" >
+
+                    <h3 className="pull-left">Employee Details </h3>
+                    <div className="clearfix"></div>
+
                     <div className="row">
                         <div className="col-sm-6">
                             <div className="row">
@@ -213,9 +226,7 @@ class EmployeeAttendence extends React.Component {
                             </div>
                         </div>
                     </div>
-                <div className="form-section" >
-                    <h3 className="pull-left">Employee Details </h3>
-                    <div className="clearfix"></div>
+
 
                     <div className="land-table">
                         <table id="employeeTable" className="table table-bordered">

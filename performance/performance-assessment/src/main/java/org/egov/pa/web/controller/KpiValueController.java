@@ -121,7 +121,7 @@ public class KpiValueController implements KpiValue {
 									 @RequestParam("kpiCodes") List<String> kpiCodes,
 									 @RequestParam("finYear") List<String> finYearList,
 									 @RequestBody RequestInfoWrapper requestInfo) {
-    	log.info("Request Received for Compare and Search : " + tenantIdList + "\n" + kpiCodes + "\n" + finYearList);
+    	log.info("Request Received for Compare and Search : " + tenantIdList + "\n" + kpiCodes + "\n" + finYearList + "\n" + kpiCodes);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
     	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
     	kpiValueSearchReq.setFinYear(finYearList);
@@ -140,6 +140,7 @@ public class KpiValueController implements KpiValue {
     @ResponseBody
 	public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
 			 @RequestParam(value="departmentId", required = false) Long departmentId,
+			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam("finYear") List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
@@ -147,6 +148,7 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
     	kpiValueSearchReq.setFinYear(finYearList);
     	kpiValueSearchReq.setDepartmentId(departmentId);
+    	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
         List<org.egov.pa.model.KpiValue> kpiValueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
         return getSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 

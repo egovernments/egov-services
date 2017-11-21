@@ -167,7 +167,7 @@ public class KpiMasterController implements KpiMaster {
 	public ResponseEntity<?>  getDocumentForKpi(@RequestParam("kpiCode") String kpiCode,
 			 @RequestBody RequestInfoWrapper requestInfo) {
 		List<DocumentTypeContract> docTypeList = kpiMasterService.getDocumentForKpi(kpiCode);
-		return new ResponseEntity<>(docTypeList, HttpStatus.OK);
+		return getDocumentResponse(docTypeList,requestInfo.getRequestInfo()); 
 	}
     
     public ResponseEntity<?> getSuccessResponse(final List<KPI> kpiList,

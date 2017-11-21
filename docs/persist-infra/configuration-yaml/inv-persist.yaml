@@ -382,7 +382,7 @@ serviceMaps:
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.tenantId
-    
+
     - version: 1.0
       name: priceLists create
       description: create pricelist in inventory
@@ -480,7 +480,7 @@ serviceMaps:
 
     - version: 1
       name: Material Issue create
-      description: create material issue 
+      description: create material issue
       fromTopic: inv-issues-save-topic
       queryMaps:
         - query: >-
@@ -516,7 +516,7 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.auditDetails.lastModifiedBy
             - jsonPath: $.materialIssues.*.auditDetails.lastModifiedTime
               dbType: LONG
-              
+
         - query: >-
             INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, quantitytobeissued, materialid, quantityissued,description)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
@@ -535,7 +535,7 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
-           
+
         - query: >-
             INSERT INTO materialissuedfromreceipt(id, tenantId, receiptid, receiptdetailId, receiptdetailaddnlinfoid, quantity, status, issuedetailid)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?);
@@ -584,10 +584,10 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.inspectionRemarks
             - jsonPath: $.materialReceipt.*.tenantId
             - jsonPath: $.materialReceipt.*.auditDetails.createdBy
-            - jsonPath: $.materialReceipt.*.auditDetails.createdTime
+            - type: CURRENTDATE
               dbType: LONG
             - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
-            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedTime
+            - type: CURRENTDATE
               dbType: LONG
         - query: INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark, batchno, podetailid, mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
           basePath: $.materialReceipt.*.receiptDetails.*
@@ -604,10 +604,11 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
             - jsonPath: $.materialReceipt[?({id} in @.receiptDetails[*].id)].mrnNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.createdBy
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedBy
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.createdTime
+            - type: CURRENTDATE
               dbType: LONG
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedTime
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedBy
+            - type: CURRENTDATE
+              dbType: LONG
         - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
@@ -672,7 +673,8 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.batchNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedBy
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedTime
+            - type: CURRENTDATE
+              dbType: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
 
@@ -740,7 +742,7 @@ serviceMaps:
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.unitPrice
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
-            
+
         - query: INSERT INTO PurchaseIndentDetail(id, purchaseOrderDetail, tenantId, indentDetail, quantity )VALUES ( ?, ?, ?, ?, ?);
           basePath: $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*
           jsonMaps:
@@ -755,7 +757,7 @@ serviceMaps:
       fromTopic: inv-purchaseorders-update-topic
       queryMaps:
         - query: >-
-               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?; 
+               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
           basePath: $.purchaseorder.*
           jsonMaps:
             - jsonPath: $.purchaseorder.*.store.code
@@ -783,7 +785,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.purchaseorder.*.purchaseOrderNumber
             - jsonPath: $.purchaseorder.*.tenantId
-            
+
         - query: >-
                update purchaseOrderDetails set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
           basePath: $.purchaseorder.*.purchaseOrderDetails.*
@@ -799,7 +801,7 @@ serviceMaps:
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
-            
+
         - query: >-
                update PurchaseIndentDetail set purchaseOrderDetail = ?, indentDetail = ?, quantity = ?  where id = ? and tenantid = ?;
           basePath:  $.purchaseorder.*.purchaseOrderDetails.*.purchaseIndentDetails.*
@@ -859,14 +861,14 @@ serviceMaps:
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.unitPrice
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
-            
+
     - version: 1.0
       name: Update Purchase Order for non indent
       description: Update Purchase Order for non indent
       fromTopic: inv-purchaseorders-nonindent-update-topic
       queryMaps:
         - query: >-
-               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?; 
+               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
           basePath: $.purchaseorder.*
           jsonMaps:
             - jsonPath: $.purchaseorder.*.store.code
@@ -894,7 +896,7 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.purchaseorder.*.purchaseOrderNumber
             - jsonPath: $.purchaseorder.*.tenantId
-            
+
         - query: >-
                update purchaseOrderDetails set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
           basePath: $.purchaseorder.*.purchaseOrderDetails.*
@@ -910,4 +912,4 @@ serviceMaps:
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
-            
+

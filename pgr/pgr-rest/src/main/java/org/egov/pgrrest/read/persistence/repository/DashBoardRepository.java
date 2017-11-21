@@ -31,7 +31,7 @@ public class DashBoardRepository {
     public List<DashboardResponse> getCountByComplaintType(String tenantId){
 
         String query = "select count(*) as count, to_char(date_trunc('month',createddate), 'MON') as month, to_char(date_trunc('year',createddate), 'YYYY') as year from submission " +
-            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and upper(keyword) = upper('complaint'))" +
             " and tenantid = :tenantId"+
             " group by date_trunc('month',createddate), date_trunc('year',createddate)" +
             " order by date_trunc('year',createddate), date_trunc('month',createddate) DESC LIMIT 7";
@@ -43,21 +43,21 @@ public class DashBoardRepository {
     public List<DashboardResponse> getWeeklyRegisteredAndClosedComplaintsCount(String tenantId){
 
         String registeredCountQuery = "select count(*) as count from submission where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
-            " and keyword in ('complaint', 'Complaint'))" +
+            " and upper(keyword) = upper('complaint'))" +
             " and createddate > current_date - interval '6' day and tenantid = :tenantId";
 
         String closedCountQuery = "select count(*) as count from submission where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
-            " and keyword in ('complaint', 'Complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+            " and upper(keyword) = upper('complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
             " and status in ('COMPLETED', 'REJECTED', 'WITHDRAWN')";
 
         String query = "select a.regcount, b.closedcount, a.day, a.date from" +
             " (select count(*) as regcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
-            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and upper(keyword) = upper('complaint'))" +
             " and createddate > current_date - interval '6' day and tenantid = :tenantId" +
             " group by date_trunc('day',createddate)" +
             " order by date_trunc('day',createddate) ASC ) as a," +
             " (select count(*) as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
-            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and upper(keyword) = upper('complaint'))" +
             " and createddate > current_date - interval '6' day and tenantid = :tenantId" +
             " and status in ('COMPLETED', 'REJECTED', 'WITHDRAWN')" +
             " group by date_trunc('day',createddate)" +
@@ -70,12 +70,12 @@ public class DashBoardRepository {
         if(registeredCount != 0 && closedCount == 0){
             query = "select count(*) as regcount, 0 as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate),'dd') as date from submission" +
                 " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId" +
-                " and keyword in ('complaint', 'Complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
+                " and upper(keyword) = upper('complaint')) and createddate > current_date - interval '6' day and tenantid = :tenantId" +
                 " group by date_trunc('day',createddate) order by date_trunc('day',createddate) ASC";
         }
         else if(registeredCount == 0 && closedCount != 0){
             query = "select 0 as regcount, count(*) as closedcount, to_char(date_trunc('day',createddate), 'DAY') as day, to_char(date_trunc('day',createddate), 'dd') as date from submission" +
-                " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+                " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and upper(keyword) = upper('complaint'))" +
                 " and createddate > current_date - interval '6' day and tenantid = :tenantId and status in ('COMPLETED', 'REJECTED', 'WITHDRAWN')" +
                 " group by date_trunc('day',createddate) order by date_trunc('day',createddate) ASC";
         }
@@ -87,7 +87,7 @@ public class DashBoardRepository {
 
         String query = "select count(*) as count, ctype.name as complainttypename, cs.servicecode as code" +
             " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
-            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
+            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')" +
             " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId " +
             "group by cs.servicecode, complainttypename order by count DESC LIMIT :size";
 
@@ -99,7 +99,7 @@ public class DashBoardRepository {
 
         String query = "select count(*) as count, ctype.name as complainttypename, cs.servicecode as code" +
             " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
-            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
+            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')" +
             " and cs.createddate > current_date - interval '7' month" +
             " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId" +
             " group by cs.servicecode, complainttypename" +
@@ -128,12 +128,12 @@ public class DashBoardRepository {
         String query = "select count(*) as count, cs.servicecode as code, ctype.name as complainttypename, extract(month from date_trunc('month',cs.createddate)) as month" +
             " from submission cs, egpgr_complainttype ctype" +
             " where cs.servicecode = ctype.code" +
-            " and servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword = 'complaint')" +
+            " and servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and upper(keyword) = upper('complaint'))" +
             " and cs.createddate > current_date - interval '7' month" +
             " and cs.tenantid = :tenantId and ctype.tenantid = :tenantId" +
             " and servicecode in (select result.code from (select count(*) as count, ctype.name as complainttypename, cs.servicecode as code" +
             " from submission cs, egpgr_complainttype ctype, servicetype_keyword sk" +
-            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and sk.keyword = 'complaint'" +
+            " where cs.servicecode = ctype.code and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')" +
             " and cs.createddate > current_date - interval '7' month" +
             " and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId" +
             " group by cs.servicecode, complainttypename" +
@@ -152,7 +152,7 @@ public class DashBoardRepository {
             " count(*) as count" +
             " from submission cs, submission_attribute csa, servicetype_keyword sk" +
             " where cs.crn = csa.crn and csa.key = 'systemLocationId'" +
-            " and cs.servicecode = sk.servicecode and sk.keyword = 'complaint'" +
+            " and cs.servicecode = sk.servicecode and upper(sk.keyword) = upper('complaint')" +
             " and cs.tenantid = :tenantId and csa.tenantid = :tenantId and sk.tenantid = :tenantId");
 
         if(type.trim().equalsIgnoreCase("wardwise"))
@@ -189,7 +189,7 @@ public class DashBoardRepository {
             " NULL::integer END) AS interval5" +
             " FROM egpgr_complainttype ctype, submission cs, servicetype_keyword sk" +
             " WHERE cs.servicecode = ctype.code and cs.createddate <= now() and cs.status IN ('REGISTERED', 'FORWARDED', 'PROCESSING', 'REOPENED', 'ONHOLD')" +
-            " and ctype.code = sk.servicecode and sk.keyword = 'complaint' and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId";
+            " and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint') and cs.tenantid = :tenantId and sk.tenantid = :tenantId and ctype.tenantid = :tenantId";
 
         return namedParameterJdbcTemplate.query(query, getSearchMap(tenantId), new AgeingRowMapper());
 

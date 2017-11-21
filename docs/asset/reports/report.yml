@@ -72,6 +72,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27IMMOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
+    stateData: true
     wrapper: true
     searchClause : AND assetsubcategory.assetsubcategoryparent =$assetcategory
   - name: assetsubcategory
@@ -80,6 +81,7 @@ ReportDefinitions:
     type: url
     pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
+    stateData: true
     wrapper: true
     searchClause : AND asset.assetcategory=$assetsubcategory
   - name: department
@@ -88,6 +90,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
     source: asset
+    stateData: true
     wrapper: true
     searchClause : AND asset.departmentcode=$department
   - name: name
@@ -146,17 +149,20 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
+    stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27IMMOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
+    stateData: true
   - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=default
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=$tenantid
     keyOrder: id,tenantId,name,code
-    tableName: tbl_funds 
+    tableName: tbl_funds
+    stateData: true
   sourceColumns:
   - name: id
     label: reports.asset.id
@@ -418,8 +424,8 @@ ReportDefinitions:
        left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
        assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
        ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
-       inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
-       assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
+       inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as  
+       assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid 
        left outer join (select funds.name fundsourcename,funds.code from (VALUES tbl_funds) as funds (id,tenantId,name,code)) as funds ON asset.fundsource=funds.code
        where asset.tenantid = $tenantid AND asset.assetCategoryType='IMMOVABLE'
          
@@ -432,13 +438,15 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
+    stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
-    tableName: tbl_assetcategory 
+    tableName: tbl_assetcategory
+    stateData: true
   sourceColumns:
   - name: name
     label: reports.asset.name
@@ -495,6 +503,7 @@ ReportDefinitions:
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27MOVABLE%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND assetsubcategory.assetsubcategoryparent =$assetcategory
   - name: assetsubcategory
     label: reports.asset.assetSubCategory
@@ -503,6 +512,7 @@ ReportDefinitions:
     pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND asset.assetcategory=$assetsubcategory
   - name: department
     label: reports.asset.departmentCode
@@ -511,6 +521,7 @@ ReportDefinitions:
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND asset.departmentcode=$department
   - name: name
     label: reports.asset.name
@@ -563,8 +574,8 @@ ReportDefinitions:
          left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
          assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
          ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
-         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
-         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
+         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as  
+         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid 
          where asset.tenantid = $tenantid AND asset.assetCategoryType='MOVABLE'
          
          
@@ -576,17 +587,20 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
+    stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27MOVABLE%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
+    stateData: true
   - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=default
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=$tenantid
     keyOrder: id,tenantId,name,code
     tableName: tbl_funds
+    stateData: true
   sourceColumns:
   - name: id
     label: reports.asset.id
@@ -857,8 +871,8 @@ ReportDefinitions:
          left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
          assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
          ac.name as assetparentcategoryname,ac.id assetparentcategoryid from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
-         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
-         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid left outer join (select funds.name fundsourcename,funds.code from (VALUES tbl_funds) as funds (id,tenantId,name,code)) as funds ON asset.fundsource=funds.code 
+         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id) as  
+         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid  left outer join (select funds.name fundsourcename,funds.code from (VALUES tbl_funds) as funds (id,tenantId,name,code)) as funds ON asset.fundsource=funds.code 
          where asset.tenantid = $tenantid AND asset.assetCategoryType='MOVABLE'
 
          
@@ -870,13 +884,15 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
+    stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
-    tableName: tbl_assetcategory 
+    tableName: tbl_assetcategory
+    stateData: true
   sourceColumns:
   - name: assetparentcategoryname
     label: reports.asset.assetparentcategoryname
@@ -980,6 +996,7 @@ ReportDefinitions:
     pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27{assetcategorytype}%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : 
   - name: assetsubcategory
     label: reports.asset.assetSubCategory
@@ -987,6 +1004,7 @@ ReportDefinitions:
     type: url
     pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
+    stateData: true
     wrapper: true
     searchClause : AND asset.assetcategory=$assetsubcategory
   - name: department
@@ -996,6 +1014,7 @@ ReportDefinitions:
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND asset.departmentcode=$department
   - name: name
     label: reports.asset.name
@@ -1052,8 +1071,8 @@ ReportDefinitions:
     left outer join ( select assetSubcategory.name as assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
     ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
-    inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
-    assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
+    inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as  
+    assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid 
     WHERE asset.tenantid=$tenantid
 
 
@@ -1065,13 +1084,15 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
+    stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
+    stateData: true
   sourceColumns:
   - name: name
     label: reports.asset.name
@@ -1128,6 +1149,7 @@ ReportDefinitions:
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27LAND%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND assetsubcategory.assetsubcategoryparent =$assetcategory
   - name: assetsubcategory
     label: reports.asset.assetSubCategory
@@ -1136,6 +1158,7 @@ ReportDefinitions:
     pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.parent%3D%3D{assetcategory})%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND asset.assetcategory=$assetsubcategory
   - name: department
     label: reports.asset.departmentCode
@@ -1144,6 +1167,7 @@ ReportDefinitions:
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid|$..id|$..name
     source: asset
     wrapper: true
+    stateData: true
     searchClause : AND asset.departmentcode=$department
   - name: name
     label: reports.asset.name
@@ -1187,8 +1211,8 @@ ReportDefinitions:
          left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
          assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
          ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
-         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
-         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid
+         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as  
+         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid 
          where asset.tenantid = $tenantid AND asset.assetCategoryType='LAND'
              
     
@@ -1200,17 +1224,20 @@ ReportDefinitions:
   selectiveDownload: true
   externalService:
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dtrue%29%5D
     keyOrder: id,name,depreciationRate,parent,tenantId
     tableName: tbl_assetsubcategory
+    stateData: true
   - entity: $.MdmsRes.ASSET.AssetCategory
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=default&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F%28+%40.assetCategoryType%3D%3D%27LAND%27++%26%26+%40.isAssetAllow%3D%3Dfalse%29%5D
     keyOrder: id,name,tenantId
     tableName: tbl_assetcategory
+    stateData: true
   - entity: $.MdmsRes.egf-master.funds
-    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=default
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=egf-master&masterName=funds&tenantId=$tenantid
     keyOrder: id,tenantId,name,code
     tableName: tbl_funds
+    stateData: true
   sourceColumns:
   - name: id
     label: reports.asset.id
@@ -1471,6 +1498,6 @@ ReportDefinitions:
          left outer join ( select assetSubcategory.name assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
          assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,
          ac.name as assetparentcategoryname from (VALUES tbl_assetsubcategory) as assetSubcategory (id,name,depreciationRate,parent,tenantId) 
-         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id and assetSubcategory.tenantid=ac.tenantid) as  
-         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid AND asset.tenantid=assetsubcategory.tenantid left outer join (select funds.name fundsourcename,funds.code from (VALUES tbl_funds) as funds (id,tenantId,name,code)) as funds ON asset.fundsource=funds.code 
+         inner join (VALUES tbl_assetcategory) as ac (id,name,tenantId) ON assetSubcategory.parent = ac.id ) as  
+         assetsubcategory ON asset.assetcategory::character varying=assetsubcategory.assetsubcategoryid  left outer join (select funds.name fundsourcename,funds.code from (VALUES tbl_funds) as funds (id,tenantId,name,code)) as funds ON asset.fundsource=funds.code 
          where asset.tenantid = $tenantid AND asset.assetCategoryType='LAND'

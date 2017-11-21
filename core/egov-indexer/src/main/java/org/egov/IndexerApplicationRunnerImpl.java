@@ -33,9 +33,13 @@ public class IndexerApplicationRunnerImpl implements ApplicationRunner {
     @Value("${egov.indexer.yml.repo.path}")
     private String yamllist;
 	
-	public static final Logger logger = LoggerFactory.getLogger(IndexerApplicationRunnerImpl.class);
+    public static final Logger logger = LoggerFactory.getLogger(IndexerApplicationRunnerImpl.class);
 
     public static ConcurrentHashMap<String, Mapping> mappingMaps  = new ConcurrentHashMap<>();
+	
+    public IndexerApplicationRunnerImpl(ResourceLoader resourceLoader) {
+    	this.resourceLoader = resourceLoader;
+    }
 	
     @Override
     public void run(final ApplicationArguments arg0) throws Exception {

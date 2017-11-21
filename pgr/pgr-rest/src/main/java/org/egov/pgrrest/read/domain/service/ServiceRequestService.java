@@ -54,7 +54,8 @@ public class ServiceRequestService {
         maskCitizenDetailsForAnonymousRequest(serviceRequestSearchCriteria, serviceRequestList);
         //Pagination
         if(serviceRequestSearchCriteria.getFromIndex() != null && serviceRequestSearchCriteria.getPageSize() != null){
-            return serviceRequestList.subList(serviceRequestSearchCriteria.getFromIndex(), serviceRequestSearchCriteria.getPageSize());
+            return serviceRequestList.subList(serviceRequestSearchCriteria.getFromIndex(),
+                (serviceRequestSearchCriteria.getFromIndex() + serviceRequestSearchCriteria.getPageSize()));
         }
         return serviceRequestList;
     }

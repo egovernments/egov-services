@@ -305,11 +305,11 @@ ReportDefinitions:
   externalService:
   - entity: $.MdmsRes.lcms.court
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantid
-    keyOrder: code,name
+    keyOrder: code,name,type
     tableName: tbl_court
   - entity: $.MdmsRes.lcms.caseCategory
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=caseCategory&tenantId=$tenantid
-    keyOrder: code,name,type
+    keyOrder: code,name
     tableName: tbl_casecategory
   - entity: $.MdmsRes.lcms.caseStatus
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=caseStatus&tenantId=$tenantid

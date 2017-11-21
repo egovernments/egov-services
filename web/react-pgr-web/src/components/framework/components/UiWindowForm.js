@@ -326,6 +326,9 @@ class UiWindowForm extends Component {
     if (item.displayField && val && val.constructor == Array) {
       val = jp.query(val, `$..${item.displayField}`);
     }
+    if(item.isExceptFirstRecord && val && val.constructor == Array){
+           val.shift();
+    }
     if (this.props.readonly === "true") {
       return (
         <div>

@@ -997,6 +997,7 @@ var dat ={
             "label": "legal.advocates.create.additionalOwnerWindow",
             "displayField": "firstName",
             "pattern": "",
+            "isExceptFirstRecord":true,
             "type": "window",
             "subPath": "legal/master/addowner",
             "isRequired": false,
@@ -1983,6 +1984,7 @@ var dat ={
             "arrayPath": "personDetails",
             "label": "legal.advocates.create.additionalOwnerWindow",
             "modulepath":"legal.create",
+            "isExceptFirstRecord":true,
             "pattern": "",
             "type": "window",
             "tableConfig": {

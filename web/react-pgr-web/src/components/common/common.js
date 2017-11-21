@@ -2886,6 +2886,7 @@ var localization_EN_Data = {
     "inventory.mrnNumber":"MRN Number",
     "inventory.create.openingBalance.title":"Create Opening Balance",
   "inventory.openingbalance.opbdetails.title":"Opening Balance Detail",
+  "inventory.search.title":"Search Indent",
 
  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",

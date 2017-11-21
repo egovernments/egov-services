@@ -272,7 +272,7 @@ var dat = {
               {
                 jsonPath: "summons[0].caseType.code",
                 type: "dropDown",
-                 "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.side.code%3D%3D'{summons[0].side.code}'%29%5D|$..code|$..name"
+                 "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType&filter=%5B%3F%28%40.sideCode%3D%3D'{summons[0].side.code}'%29%5D|$..code|$..name"
               }
             ]
           },

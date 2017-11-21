@@ -31,9 +31,10 @@ public class DashBoardRepository {
     public List<DashboardResponse> getCountByComplaintType(String tenantId){
 
         String query = "select count(*) as count, to_char(date_trunc('month',createddate), 'MON') as month, to_char(date_trunc('year',createddate), 'YYYY') as year from submission " +
-            "where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword = 'complaint')" +
-            "group by date_trunc('month',createddate), date_trunc('year',createddate)" +
-            "order by date_trunc('year',createddate), date_trunc('month',createddate) DESC LIMIT 7";
+            " where servicecode in (select servicecode from servicetype_keyword where tenantid = :tenantId and keyword in ('complaint', 'Complaint'))" +
+            " and tenantid = :tenantId"+
+            " group by date_trunc('month',createddate), date_trunc('year',createddate)" +
+            " order by date_trunc('year',createddate), date_trunc('month',createddate) DESC LIMIT 7";
 
         return namedParameterJdbcTemplate.query(query,getSearchMap(tenantId),dashboardRowMapper);
 

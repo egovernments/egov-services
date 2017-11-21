@@ -100,7 +100,7 @@ public class ServiceRequestService {
         Integer fromIndex = serviceRequestSearchCriteria.getFromIndex();
         Integer toIndex = serviceRequestSearchCriteria.getFromIndex() + serviceRequestSearchCriteria.getPageSize();
         if(toIndex > serviceRequestList.size())
-            toIndex = serviceRequestList.size() - 1;
+            toIndex = serviceRequestList.size();
 
         return serviceRequestList.subList(fromIndex,toIndex);
     }

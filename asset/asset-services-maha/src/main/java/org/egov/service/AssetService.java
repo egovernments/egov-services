@@ -168,7 +168,7 @@ public class AssetService {
 
 			String tenantId = searchAsset.getTenantId();
 			if (!tenantId.equals("default"))
-				tenantId = tenantId.split(".")[0];
+				tenantId = tenantId.split("\\.")[0];
 
 			JSONArray jsonArray = mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET")
 					.get("AssetCategory");

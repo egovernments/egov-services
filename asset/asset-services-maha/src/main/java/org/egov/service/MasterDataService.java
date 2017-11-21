@@ -44,7 +44,7 @@ public class MasterDataService {
 	public Map<String, Map<String, JSONArray>> getStateWideMastersByListParams(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
 
 		if (!tenantId.equals("default"))
-			tenantId = tenantId.split(".")[0];
+			tenantId = tenantId.split("\\.")[0];
 		return mDRepo.getMastersByListParams(getStateWideParams(assets), requestInfo, tenantId);
 	}
 

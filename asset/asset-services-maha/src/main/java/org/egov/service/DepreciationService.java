@@ -272,7 +272,7 @@ public class DepreciationService {
 		moduleMap.put("ASSET", masterMap);
 
 		if(!tenantId.equals("default"))
-			tenantId=tenantId.split(".")[0];
+			tenantId=tenantId.split("\\.")[0];
 		Map<String,JSONArray>  assetMap= mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET");
 		
 		if(!assetMap.get("AssetCategory").isEmpty()) {

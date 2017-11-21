@@ -73,7 +73,7 @@ public class MasterDataRepository {
 		map.put("egf-master", masterDetails);
 
 		if (!tenantId.equals("default"))
-			tenantId = tenantId.split(".")[0];
+			tenantId = tenantId.split("\\.")[0];
 		mdmsClientService.getMaster(requestInfo, tenantId, map).getMdmsRes().get("egf-master").get("financialYears")
 				.get(0);
 

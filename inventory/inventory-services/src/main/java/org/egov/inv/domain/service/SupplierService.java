@@ -90,7 +90,7 @@ public class SupplierService extends DomainService {
     @Value("${es.enabled}")
     private Boolean isESEnabled;
 
-    public SupplierResponse create(SupplierRequest supplierRequest,String tenantId) {
+    public SupplierResponse create(SupplierRequest supplierRequest, String tenantId) {
         try {
             validate(supplierRequest.getSuppliers(), Constants.ACTION_CREATE);
             List<String> sequenceNos = supplierJdbcRepository.getSequence(Supplier.class.getSimpleName(), supplierRequest.getSuppliers().size());
@@ -100,6 +100,7 @@ public class SupplierService extends DomainService {
                     supplier.setTenantId(tenantId);
                 }
                 supplier.setId(sequenceNos.get(i));
+                supplier.setStatus(Supplier.StatusEnum.ACTIVE);
                 i++;
                 supplier.setAuditDetails(mapAuditDetails(
                         supplierRequest.getRequestInfo()));
@@ -122,6 +123,9 @@ public class SupplierService extends DomainService {
             for (Supplier supplier : supplierRequest.getSuppliers()) {
                 if (isEmpty(supplier.getTenantId())) {
                     supplier.setTenantId(tenantId);
+                }
+                if (!supplier.getActive()) {
+                    supplier.setStatus(Supplier.StatusEnum.INACTIVE);
                 }
                 supplier.setAuditDetails(mapAuditDetailsForUpdate(supplierRequest.getRequestInfo()));
             }

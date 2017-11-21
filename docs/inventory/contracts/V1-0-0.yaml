@@ -39,6 +39,8 @@ consumes:
 produces:
   - application/json
 basePath: "/inventory-inventory/v110"
+x-ui-info:
+  $ref: /home/pradeep/egov-services/egov-services/docs/inventory/contracts/po-ui-info.yaml
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/inventory-inventory/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.inventory.inventory'
 paths:
@@ -359,7 +361,7 @@ paths:
             description: comma seperated list of Ids
           - name: store
             type: integer
-            format: int64
+            format: singleValueList
             in: query
             description: |
               store of the PurchaseOrder
@@ -370,7 +372,7 @@ paths:
               purchaseOrderNumber  Auto generated number, read only
           - name: purchaseOrderDate
             type: integer
-            format: int64
+            format: date
             x-displayformat: 'dd/MM/yyyy'
             in: query
             description: |
@@ -2237,6 +2239,7 @@ definitions:
             rate type of the PurchaseOrder
         supplier:
           $ref: "#/definitions/Supplier"
+          format: autoComplete
           description: |
             supplier code of the purchase order
         advanceAmount:
@@ -2298,12 +2301,11 @@ definitions:
         designation:
           type: string
           description: Designation of the created by user at the time of Purchase Order creation.
-          format: varchar
+          maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
       - store
-      - purchaseOrderNumber
       - purchaseOrderDate
       - rateType
       - supplier

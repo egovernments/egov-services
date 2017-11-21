@@ -1,0 +1,74 @@
+UIInfo:
+- referencePath: "/purchaseorders"
+  searchUrl: "/purchaseorders/_search?tenantId={tenantId}"
+  groups:
+    Group1:
+      fields:
+      - purchaseOrders[0].store.code
+      - purchaseOrders[0].purchaseOrderNumber
+      - purchaseOrders[0].purchaseOrderDate
+      - purchaseOrders[0].purchaseType
+      - purchaseOrders[0].rateType
+      - purchaseOrders[0].supplier.code
+      - purchaseOrders[0].advanceAmount
+      - purchaseOrders[0].advancePercentage
+      - purchaseOrders[0].expectedDeliveryDate
+      - purchaseOrders[0].deliveryTerms
+      - purchaseOrders[0].paymentTerms
+      - purchaseOrders[0].remarks
+      - purchaseOrders[0].stateId
+      - purchaseOrders[0].designation
+
+  tables:
+    purchaseOrders[0].purchaseOrderDetails:
+      group: Group1
+      columns:
+      - material
+      - material description
+      - uom
+      - Rate contract
+      - quantity
+      - unit price
+      - total value
+      - Tender Quantity
+      - Used Quantity
+
+      values:
+      - purchaseOrders[0].purchaseOrderDetails[0].material.code
+      - purchaseOrders[0].purchaseOrderDetails[0].material.name
+      - purchaseOrders[0].purchaseOrderDetails[0].uom.code
+      - purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber
+      - purchaseOrders[0].purchaseOrderDetails[0].orderQuantity
+      - purchaseOrders[0].purchaseOrderDetails[0].unitPrice
+ 
+  externalData:
+  - fieldName: purchaseOrders[0].store.code
+    url: "/inventory-services/stores/_search"
+    keyPath: "$..code"
+    valPath: "$..name"
+  - fieldName: purchaseOrders[0].supplier.code
+    url: "/inventory-services/suppliers/_search"
+    keyPath: "$..code"
+    valPath: "$..name"
+  - fieldName: purchaseOrders[0].purchaseOrderDetails[0].material.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material"
+    keyPath: "$..code"
+    valPath: "$..name"
+  - fieldName: purchaseOrders[0].purchaseOrderDetails[0].uom.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom"
+    keyPath: "$..code"
+    valPath: "$..description"
+  searchResult:
+    rowClickUrlUpdate: "/update/inventory/purchaseorders/{purchaseOrderNumber}"
+    rowClickUrlView: "/view/inventory/purchaseorders/{purchaseOrderNumber}"
+    columns:
+    - purchaseOrderNumber
+    - purchaseOrderDate
+    - store
+    values:
+    - purchaseOrders[0].purchaseOrderNumber
+    - purchaseOrders[0].purchaseOrderDate
+    - purchaseOrders[0].store.code
+    - purchaseOrders[0].active
+    resultObjectName: purchaseOrders
+

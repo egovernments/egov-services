@@ -6,7 +6,7 @@ MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 # INSTRUCTIONS ON HOW TO BUILD JAR:
 # Move to the location where pom.xml is exist in project and build project using below command
 # "mvn clean package"
-COPY /target/report-1.0.3-SNAPSHOT.jar /opt/egov/report.jar
+COPY /target/egov-data-uploader-0.0.1-SNAPSHOT.jar /opt/egov/egov-data-uploader.jar
 
 COPY start.sh /usr/bin/start.sh
 

@@ -1,22 +1,26 @@
 package org.egov.inv.domain.service;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
+import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
+
 import org.egov.common.DomainService;
+import org.egov.common.Pagination;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.exception.CustomBindException;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
+import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
-import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.egov.inv.persistence.repository.OpeningBalanceRepository;
+import org.egov.inv.persistence.repository.ReceiptNoteRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
-import java.util.Calendar;
-import java.util.List;
-
-import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class OpeningBalanceService extends DomainService {
@@ -35,13 +39,20 @@ public class OpeningBalanceService extends DomainService {
 
     @Value("${inv.openbal.idgen.name}")
     private String idGenNameForTargetNumPath;
+    
+
+    @Autowired
+    private MaterialReceiptService materialReceiptService;
+
+    @Autowired
+    private ReceiptNoteRepository receiptNoteRepository;
 
     @Autowired
     private OpeningBalanceRepository openingBalanceRepository;
 
-    public List<MaterialReceipt> create(OpeningBalanceRequest headerRequest, String tenantId) {
-
-        headerRequest.getMaterialReceipt().stream().forEach(materialReceipt -> {
+    public List<MaterialReceipt> create(OpeningBalanceRequest openBalReq, String tenantId) {
+    	try {
+            openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
             materialReceipt.setId(openingBalanceRepository.getSequence("seq_materialreceipt"));
             materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
             if (isEmpty(materialReceipt.getTenantId())) {
@@ -63,16 +74,20 @@ public class OpeningBalanceService extends DomainService {
                 });
             });
         });
-        for (MaterialReceipt material : headerRequest.getMaterialReceipt()) {
+        for (MaterialReceipt material : openBalReq.getMaterialReceipt()) {
             material.setAuditDetails(
-                    getAuditDetails(headerRequest.getRequestInfo(), "CREATE"));
+                    getAuditDetails(openBalReq.getRequestInfo(), "CREATE"));
             material.setId(openingBalanceRepository.getSequence(material));
         }
-        kafkaTemplate.send(createTopic, headerRequest);
-        return headerRequest.getMaterialReceipt();
+        kafkaTemplate.send(createTopic, openBalReq);
+        return openBalReq.getMaterialReceipt();
+    	} catch (CustomBindException e) {
+            throw e;
+        }
     }
 
     public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
+    	try {
         openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
             if (isEmpty(materialReceipt.getTenantId())) {
                 materialReceipt.setTenantId(tenantId);
@@ -95,14 +110,22 @@ public class OpeningBalanceService extends DomainService {
         }
         kafkaTemplate.send(updateTopic, openBalReq);
         return openBalReq.getMaterialReceipt();
+    	}
+    	catch (CustomBindException e) {
+            throw e;
+        }
     }
 
 
-    public OpeningBalanceResponse search(OpeningBalanceSearchCriteria request) {
-        return openingBalanceRepository.search(request);
-
+    public OpeningBalanceResponse search(MaterialReceiptSearch materialReceiptSearch) {
+        Pagination<MaterialReceipt> materialReceiptPagination = materialReceiptService.search(materialReceiptSearch);
+        OpeningBalanceResponse response = new OpeningBalanceResponse();
+        return response
+                .responseInfo(null)
+                .materialReceipt(materialReceiptPagination.getPagedData().size() > 0 ? materialReceiptPagination.getPagedData() : Collections.EMPTY_LIST);
     }
-
+    
+   
 
     private String generateTargetNumber(String tenantId, RequestInfo requestInfo) {
         return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);

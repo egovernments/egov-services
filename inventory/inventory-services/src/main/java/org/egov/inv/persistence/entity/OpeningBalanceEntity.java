@@ -23,6 +23,7 @@ public class OpeningBalanceEntity {
     private Long receiptDate;
     private String uom;
     private BigDecimal receivedQty;
+    private BigDecimal acceptedQty;
     private String mrnNumber;
     private BigDecimal qty;
     private BigDecimal unitRate;
@@ -39,18 +40,41 @@ public class OpeningBalanceEntity {
         return materialReceipt.id(id)
                 .financialYear(financialYear)
                 .mrnNumber(mrnNumber)
-                .receiptType(ReceiptTypeEnum.fromValue(receiptType))
+                .receiptType(null != ReceiptTypeEnum.fromValue(receiptType) ? ReceiptTypeEnum.fromValue(receiptType) : null)
                 .receiptDate(receiptDate)
-                .mrnStatus(null != MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) ? MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) : null)             
+                .mrnStatus(null != MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) ? MaterialReceipt.MrnStatusEnum.fromValue(mrnStatus) : null)
                 .receiptDetails(Arrays.asList(mapMaterialReceiptDetail()))
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime));
     }
+    
+    public OpeningBalanceEntity toEntity(MaterialReceipt materialReceipt)
+    {
+        return OpeningBalanceEntity.builder()
+        		.id(materialReceipt.getId())
+        		.financialYear(materialReceipt.getFinancialYear())
+        		.createdBy(materialReceipt.getAuditDetails().getCreatedBy())
+                .createdTime(materialReceipt.getAuditDetails().getCreatedTime())
+                .mrnNumber(materialReceipt.getMrnNumber())
+                .receiptDate(materialReceipt.getReceiptDate())
+        		.build();
+
+    }
+    public OpeningBalanceEntity toEntity(MaterialReceiptDetail materialReceiptDetail)
+    {
+        return OpeningBalanceEntity.builder()
+        		.id(materialReceiptDetail.getId())
+        		.receivedQty(materialReceiptDetail.getAcceptedQty())
+        		.receivedQty(materialReceiptDetail.getReceivedQty())
+                .unitRate(materialReceiptDetail.getUnitRate())
+        		.build();
+
+    }
+    
 
     private MaterialReceiptDetail mapMaterialReceiptDetail() {
         MaterialReceiptDetail materialReceiptDetail = new MaterialReceiptDetail();
         return materialReceiptDetail.
                 receivedQty(qty)
-                //.mrnNumber(mrnNumber)
                 .material(mapmaterial())
                 .uom(mapUom())
                 .acceptedQty(receivedQty)

@@ -21,8 +21,6 @@ public class MaterialReceiptSearch {
 
     private List<String> receiptType;
 
-    private String financialYear;
-
     private String receiptPurpose;
 
     private String receivingStore;
@@ -32,12 +30,20 @@ public class MaterialReceiptSearch {
     private String supplierCode;
 
     private String receivedBy;
+    
+    private String materialTypeName;
+    
+    private String storeName;
+    
+    private String financialYear;
 
     private String tenantId;
 
     private String sortBy;
 
     private Integer pageSize;
+    
+    private Integer pageNumber;
 
     private Integer offset;
 }

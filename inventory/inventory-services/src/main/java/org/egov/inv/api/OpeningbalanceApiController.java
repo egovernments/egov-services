@@ -1,5 +1,6 @@
 package org.egov.inv.api;
 
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -9,12 +10,11 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.common.contract.response.ResponseInfo;
 import org.egov.inv.domain.service.OpeningBalanceService;
 import org.egov.inv.model.MaterialReceipt;
+import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
-import org.egov.inv.model.OpeningBalanceSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,21 +76,19 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
             @ApiParam(value = "Page number", defaultValue = "1")
     		@RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
             @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
-    	OpeningBalanceSearchCriteria receiptSearch = OpeningBalanceSearchCriteria
+    	MaterialReceiptSearch receiptSearch = MaterialReceiptSearch
     			.builder()
     			.tenantId(tenantId)
 				.financialYear(financialYear)
-				.materialTypeName(materialTypeName)
+				.receiptType(Arrays.asList(materialTypeName))
 				.storeName(storeName)
-				.pageSize(pageSize)
 				.pageNumber(pageNumber)
-				.sortBy(sortBy)
+				.pageSize(pageSize)
 				.build();
     	
             return  new ResponseEntity<>(openingBalanceService.search(receiptSearch) ,HttpStatus.OK);
         }
 
-    
     private OpeningBalanceResponse buildOpenBalanceResponse(List<MaterialReceipt> material, org.egov.inv.model.RequestInfo requestInfo) 
     {
 		return OpeningBalanceResponse.builder().responseInfo(getResponseInfo(requestInfo)).materialReceipt(material).build();

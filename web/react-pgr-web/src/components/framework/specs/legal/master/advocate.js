@@ -110,11 +110,6 @@ var dat ={
                     "name": "additionalAdvocateWindow",
                     "isGroup": true,
                     "isField": false
-                  },
-                  {
-                    "name": "orgaction",
-                    "isGroup": true,
-                    "isField": false
                   }
                 ],
                 "show": [
@@ -147,11 +142,6 @@ var dat ={
                     "name": "orgBankDetails",
                     "isGroup": true,
                     "isField": false
-                  },
-                  {
-                    "name": "orgaction",
-                    "isGroup": true,
-                    "isField": false
                   }
                 ],
                 "hide": [
@@ -167,11 +157,6 @@ var dat ={
                   },
                   {
                     "name": "bankDetails",
-                    "isGroup": true,
-                    "isField": false
-                  },
-                  {
-                    "name": "action",
                     "isGroup": true,
                     "isField": false
                   }
@@ -820,185 +805,185 @@ var dat ={
           }
         ]
       },
-      {
-        "name": "action",
-        "label": "advocates.create.group.title.action",
-        "fields": [
-          {
-            "name": "actionType",
-            "jsonPath": "agencies[0].advocates[0].status",
-            "label": "advocates.create.actionType",
-            "type": "radio",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": "",
-            "values": [
-              {
-                "label": "advocates.create.active",
-                "value": "active"
-              },
-              {
-                "label": "advocates.create.inactive",
-                "value": "inactive"
-              },
-              {
-                "label": "advocates.create.terminate",
-                "value": "terminate"
-              }
-            ],
-            "defaultValue": "active",
-            "enableDisableaFields": [
-              {
-                "ifValue": "active",
-                 "enable": [],
-                "disable": [
-                  "terminationDate",
-                  "inActivationDate"
-                ]
-              },
-              {
-                "ifValue": "inactive",
-                "enable": [
-                  "inActivationDate"
-                ],
-                "disable": [
-                  "terminationDate"
-                ]
-              },
-              {
-                "ifValue": "terminate",
-                "enable": [
-                  "terminationDate"
-                ],
-                "disable": [
-                  "inActivationDate"
-                ]
-              }
-            ]
-          },
-          {
-            "name": "inActivationDate",
-            "jsonPath": "agencies[0].advocates[0].inActiveDate",
-            "label": "advocates.create.inActivationDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "terminationDate",
-            "jsonPath": "agencies[0].advocates[0].terminationDate",
-            "label": "advocates.create.terminationDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].advocates[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          }
-        ]
-      },
-      {
-        "name": "orgaction",
-        "hide": true,
-        "label": "advocates.create.group.title.action",
-        "fields": [
-          {
-            "name": "actionType",
-            "jsonPath": "agencies[0].status",
-            "label": "advocates.create.actionType",
-            "type": "radio",
-            "isRequired": true,
-            "isDisabled": false,
-            "patternErrorMsg": "",
-            "values": [
-              {
-                "label": "advocates.create.active",
-                "value": "active"
-              },
-              {
-                "label": "advocates.create.inactive",
-                "value": "inactive"
-              },
-              {
-                "label": "advocates.create.terminate",
-                "value": "terminate"
-              }
-            ],
-            "defaultValue": "active",
-            "enableDiasableFields": [
-              {
-                "ifValue": "active",
-                 "enable": [],
-                "disable": [
-                  "terminationDate",
-                  "inActivationDate"
-                ]
-              },
-              {
-                "ifValue": "inactive",
-                "enable": [
-                  "inActivationDate"
-                ],
-                "disable": [
-                  "terminationDate"
-                ]
-              },
-              {
-                "ifValue": "terminate",
-                "enable": [
-                  "terminationDate"
-                ],
-                "disable": [
-                  "inActivationDate"
-                ]
-              }
-            ]
-          },
-          {
-            "name": "inActivationDate",
-            "jsonPath": "agencies[0].inActiveDate",
-            "label": "advocates.create.inActivationDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "terminationDate",
-            "jsonPath": "agencies[0].terminationDate",
-            "label": "advocates.create.terminationDate",
-            "pattern": "",
-            "type": "datePicker",
-            "isRequired": false,
-            "isDisabled": true,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
-          }
-        ]
-      },
+      // {
+      //   "name": "action",
+      //   "label": "advocates.create.group.title.action",
+      //   "fields": [
+      //     {
+      //       "name": "actionType",
+      //       "jsonPath": "agencies[0].advocates[0].status",
+      //       "label": "advocates.create.actionType",
+      //       "type": "radio",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "patternErrorMsg": "",
+      //       "values": [
+      //         {
+      //           "label": "advocates.create.active",
+      //           "value": "active"
+      //         },
+      //         {
+      //           "label": "advocates.create.inactive",
+      //           "value": "inactive"
+      //         },
+      //         {
+      //           "label": "advocates.create.terminate",
+      //           "value": "terminate"
+      //         }
+      //       ],
+      //       "defaultValue": "active",
+      //       "enableDisableaFields": [
+      //         {
+      //           "ifValue": "active",
+      //            "enable": [],
+      //           "disable": [
+      //             "terminationDate",
+      //             "inActivationDate"
+      //           ]
+      //         },
+      //         {
+      //           "ifValue": "inactive",
+      //           "enable": [
+      //             "inActivationDate"
+      //           ],
+      //           "disable": [
+      //             "terminationDate"
+      //           ]
+      //         },
+      //         {
+      //           "ifValue": "terminate",
+      //           "enable": [
+      //             "terminationDate"
+      //           ],
+      //           "disable": [
+      //             "inActivationDate"
+      //           ]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       "name": "inActivationDate",
+      //       "jsonPath": "agencies[0].advocates[0].inActiveDate",
+      //       "label": "advocates.create.inActivationDate",
+      //       "pattern": "",
+      //       "type": "datePicker",
+      //       "isRequired": false,
+      //       "isDisabled": true,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "terminationDate",
+      //       "jsonPath": "agencies[0].advocates[0].terminationDate",
+      //       "label": "advocates.create.terminationDate",
+      //       "pattern": "",
+      //       "type": "datePicker",
+      //       "isRequired": false,
+      //       "isDisabled": true,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "reasonOfTerminationOrDeactivation",
+      //       "jsonPath": "agencies[0].advocates[0].reasonOfTerminationOrDeactivation",
+      //       "label": "advocates.create.reasonOfTerminationOrDeactivation",
+      //       "type": "textArea",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "patternErrorMsg": ""
+      //     }
+      //   ]
+      // },
+      // {
+      //   "name": "orgaction",
+      //   "hide": true,
+      //   "label": "advocates.create.group.title.action",
+      //   "fields": [
+      //     {
+      //       "name": "actionType",
+      //       "jsonPath": "agencies[0].status",
+      //       "label": "advocates.create.actionType",
+      //       "type": "radio",
+      //       "isRequired": true,
+      //       "isDisabled": false,
+      //       "patternErrorMsg": "",
+      //       "values": [
+      //         {
+      //           "label": "advocates.create.active",
+      //           "value": "active"
+      //         },
+      //         {
+      //           "label": "advocates.create.inactive",
+      //           "value": "inactive"
+      //         },
+      //         {
+      //           "label": "advocates.create.terminate",
+      //           "value": "terminate"
+      //         }
+      //       ],
+      //       "defaultValue": "active",
+      //       "enableDiasableFields": [
+      //         {
+      //           "ifValue": "active",
+      //            "enable": [],
+      //           "disable": [
+      //             "terminationDate",
+      //             "inActivationDate"
+      //           ]
+      //         },
+      //         {
+      //           "ifValue": "inactive",
+      //           "enable": [
+      //             "inActivationDate"
+      //           ],
+      //           "disable": [
+      //             "terminationDate"
+      //           ]
+      //         },
+      //         {
+      //           "ifValue": "terminate",
+      //           "enable": [
+      //             "terminationDate"
+      //           ],
+      //           "disable": [
+      //             "inActivationDate"
+      //           ]
+      //         }
+      //       ]
+      //     },
+      //     {
+      //       "name": "inActivationDate",
+      //       "jsonPath": "agencies[0].inActiveDate",
+      //       "label": "advocates.create.inActivationDate",
+      //       "pattern": "",
+      //       "type": "datePicker",
+      //       "isRequired": false,
+      //       "isDisabled": true,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "terminationDate",
+      //       "jsonPath": "agencies[0].terminationDate",
+      //       "label": "advocates.create.terminationDate",
+      //       "pattern": "",
+      //       "type": "datePicker",
+      //       "isRequired": false,
+      //       "isDisabled": true,
+      //       "requiredErrMsg": "",
+      //       "patternErrMsg": ""
+      //     },
+      //     {
+      //       "name": "reasonOfTerminationOrDeactivation",
+      //       "jsonPath": "agencies[0].reasonOfTerminationOrDeactivation",
+      //       "label": "advocates.create.reasonOfTerminationOrDeactivation",
+      //       "type": "textArea",
+      //       "isRequired": false,
+      //       "isDisabled": false,
+      //       "patternErrorMsg": ""
+      //     }
+      //   ]
+      // },
       {
         "name": "additionalAdvocateWindow",
         "hide": true,

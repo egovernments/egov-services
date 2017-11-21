@@ -582,6 +582,8 @@ var dat = {
                                 },
                                 {
                                     label: "referenceEvidence.create.description"
+                                },{
+                                     label: "referenceEvidence.create.referenceCaseNo"
                                 }
                             ],
                             values: [
@@ -599,6 +601,14 @@ var dat = {
                                     type: "datePicker",
                                     isRequired: false,
                                     isDisabled: false,
+                                    patternErrorMsg: ""
+                                },{
+                                    name: "referenceCaseNo",
+                                    jsonPath: "cases[0].referenceEvidences[0].referenceCaseNo",
+                                    label: "referenceEvidence.create.referenceCaseNo",
+                                    type: "text",
+                                    isRequired: false,
+                                    isDisabled: true,
                                     patternErrorMsg: ""
                                 },
                                 {

@@ -2727,8 +2727,9 @@ var localization_EN_Data = {
 "referenceEvidence.create.group.title.addReferenceEvidences":"Add Reference Evidences",
 "referenceEvidence.create.typeOfReference":"Type Of Reference",
 "referenceEvidence.create.referenceDate":"Reference Date",
-"referenceEvidence.create.referenceCaseNo":"Case No",
+"referenceEvidence.create.referenceCaseNo":"Reference Case No",
  "referenceEvidence.create.description":"Description",
+ "referenceEvidence.create.caseNo":"Case No",
 
 //Inventory Store Master
  "inventory.store.title":"Store Master",
@@ -4912,7 +4913,8 @@ var localization_MR_Data = {
 "referenceEvidence.create.group.title.addReferenceEvidences":"Add Reference Evidences-marathi",
 "referenceEvidence.create.typeOfReference":"Type Of Reference-marathi",
 "referenceEvidence.create.referenceDate":"Reference Date-marathi",
-"referenceEvidence.create.referenceCaseNo":"Case No-marathi",
+"referenceEvidence.create.referenceCaseNo":"Reference Case No-marathi",
+ "referenceEvidence.create.caseNo":"Case No-marathi",
  "referenceEvidence.create.description":"Description-marathi",
   "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate-marathi",
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate-marathi",

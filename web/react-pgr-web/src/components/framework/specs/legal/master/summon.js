@@ -127,10 +127,10 @@ var dat = {
             //   label: "Update",
             //   url:"/update/legal/casedetails/"
             // },
-            {
-              label: "View",
-              url:"/view/legal/casedetails/"
-            }
+            // {
+            //   label: "View",
+            //   url:"/view/legal/casedetails/"
+            // }
           ],
       header: [
         {
@@ -389,6 +389,7 @@ var dat = {
             jsonPath: "summons[0].courtName.code",
             label: "legal.create.courtName",
             type: "singleValueList",
+            isKeyOtherPair:"type",
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",

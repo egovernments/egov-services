@@ -418,7 +418,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"textAlign": "right"
           },
           {
             "name": "AnticipatedLifeOfAsset",
@@ -1251,7 +1252,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true
           },
 					{
             "name": "AnticipatedLifeOfAsset",

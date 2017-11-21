@@ -320,8 +320,32 @@ class assetImmovableView extends Component {
   }
 
 
-getVal = (path,isDate) => {
+getVal = (path, isDate) => {
   var val = _.get(this.props.formData, path);
+  let self = this;
+  let spec = self.props.mockData;
+  if(this.props.mockData){
+    for (var q = 0; q < spec[`asset.view`].groups.length; q++) {
+      for (var l = 0; l < spec[`asset.view`].groups[q].fields.length; l++) {
+        if((spec[`asset.view`].groups[q].fields[l].jsonPath == path) && spec[`asset.view`].groups[q].fields[l].isComma){
+          // var stringVal = val;
+          if(val != null || val != undefined){
+            let _commaVal = val.toString();
+            var y = _commaVal.split(".")[1];
+            _commaVal =_commaVal.split(".")[0];
+            var lastThree = _commaVal.substring(_commaVal.length-3);
+            var otherNumbers = _commaVal.substring(0,_commaVal.length-3);
+            if(otherNumbers != '')
+              lastThree = ',' + lastThree;
+            var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ",") + lastThree ;
+            var res = (y==null) ? resCal : (resCal + "." + y);
+            return res;
+          }
+        }
+      }
+    }
+  }
+
 
   if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
     var _date = new Date(Number(val));
@@ -329,6 +353,8 @@ getVal = (path,isDate) => {
              + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
              + _date.getFullYear();
   }
+
+
 
   return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? ((val === true || val === "true" ? "Yes" : (val === "false" || val === false ? "No" : val )) + "") : "";
 }

@@ -56,7 +56,7 @@ public class IntegrationService {
 				String[] patterns= searchColumn.getPattern().split("\\|");
 				LOGGER.info("patterns:"+patterns.toString());
 				String url = patterns[0];
-				url = url.replaceAll("\\$tenantid",metadataResponse.getTenantId());
+				//url = url.replaceAll("\\$tenantid",metadataResponse.getTenantId());
 				LOGGER.info("url:"+url);
 				ColumnDetail columnDetail = colNameMap.get(searchColumn.getName());
 				
@@ -74,7 +74,14 @@ public class IntegrationService {
 				}else{
 					
 					String res = "";
-				
+					 String[] stateid = null;
+						if(searchColumn.getStateData() && (!metadataResponse.getTenantId().equals("default"))) {
+							stateid = metadataResponse.getTenantId().split("\\.");
+							url = url.replaceAll("\\$tenantid",stateid[0]);
+						} else {
+						
+						url = url.replaceAll("\\$tenantid",metadataResponse.getTenantId());
+						}
 					
 					try{
 					if(searchColumn.getWrapper()){

@@ -30,7 +30,18 @@ public class SearchColumn extends ColumnDetail  {
   @JsonProperty("wrapper")
   private Boolean wrapper = false;
   
+  @JsonProperty("stateData")
+  private Boolean stateData = false;
+  
  
+public Boolean getStateData() {
+	return stateData;
+}
+
+public void setStateData(Boolean stateData) {
+	this.stateData = stateData;
+}
+
 public Boolean getWrapper() {
 	return wrapper;
 }

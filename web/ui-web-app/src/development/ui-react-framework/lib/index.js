@@ -1,7 +1,7 @@
 import create from './create';
 import view from './view';
 import search from './search';
-import showFields from './showFields';
+import ShowFields from './showFields';
 import UiTextField from './components/UiTextField'
 import UiSelectField from './components/UiSelectField'
 import UiSelectFieldMultiple from './components/UiSelectFieldMultiple'
@@ -31,6 +31,8 @@ import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
 import UiTimeField from './components/UiTimeField';
 import UiCalendar from './components/UiCalendar';
+import UiDynamicTable from './components/uiDynamicTable2';
+import {int_to_words, getFullDate, fileUpload, getInitiatorPosition, getTitleCase} from './utility/utility';
 
 var routes = [{
 	component: create,
@@ -49,6 +51,7 @@ var routes = [{
 module.exports = {
 	routes,
 	UiTextField,
+	ShowFields,
 	UiSelectField,
 	UiSelectFieldMultiple,
 	UiButton,
@@ -76,5 +79,11 @@ module.exports = {
 	UigoogleMaps,
 	UiWorkflow,
 	UiTimeField,
-	UiCalendar
+	UiCalendar,
+	int_to_words, 
+	getFullDate, 
+	fileUpload, 
+	getInitiatorPosition, 
+	getTitleCase,
+	UiDynamicTable
 };

@@ -136,6 +136,7 @@ var dat = {
             jsonPath: "cases[0].summon.courtName.code",
             label: "legal.create.courtName",
             type: "singleValueList",
+            isKeyOtherPair: "type",
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
@@ -239,7 +240,7 @@ var dat = {
                   label: "legal.create.advocateAssignDate"
                 },
                 {
-                  label: "legal.create.advocateFee"
+                  label: "legal.create.advocateStatus"
                 }
               ],
               values: [
@@ -252,7 +253,19 @@ var dat = {
                   isRequired: true,
                   isDisabled: false,
                   url:
-                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name",
+                     depedants: [
+                    {
+                      jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                      type: "autoFill",
+                    //  pattern:
+                     //   "/lcms-services/legalcase/advocate/_search?code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status",
+                     pattern:"/lcms-services/legalcase/advocate/_search?tenantId=default&code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status",
+                      autoFillFields:
+                      {
+                        "cases[0].advocateDetails[0].advocatestaus": "advocates[0].status"
+                      }
+                    }]
                 },
                 {
                   name: "advocateAssignDate",
@@ -263,12 +276,12 @@ var dat = {
                   isDisabled: false
                 },
                 {
-                  name: "advocateFee",
+                  name: "advocatestaus",
                   pattern: "",
                   type: "text",
-                  jsonPath: "cases[0].advocateDetails[0].fee",
-                  isRequired: true,
-                  isDisabled: false
+                  jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                  isRequired: false,
+                  isDisabled: true
                 }
               ]
             }

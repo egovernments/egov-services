@@ -7,15 +7,16 @@ var dat = {
     "groups": [
       {
         "name": "search",
-        "label": "swm.search.title",
+        "label": "vehiclefuellingdetails.search.title",
         "fields": [
           {
-            "name": "offSet",
-            "jsonPath": "offSet",
-            "label": "swm.createoffSet",
-            "type": "number",
+            "name": "transactionNo",
+            "jsonPath": "transactionNo",
+            "label": "vehiclefuellingdetails.create.transactionNo",
+            "type": "autoCompelete",
             "isDisabled": false,
-            "patternErrorMsg": "swm.create.field.message.offSet"
+            "patternErrorMsg": "swm.create.field.message.transactionNo",
+	    "url": "swm-services/vehiclefuellingdetails/_search?|$.vehicleFuellingDetails.*.transactionNo|$.vehicleFuellingDetails.*.transactionNo"
           }
         ]
       }
@@ -23,51 +24,27 @@ var dat = {
     "result": {
       "header": [
         {
-          "label": "swm.search.result.transactionNo"
+          "label": "vehiclefuellingdetails.create.transactionNo"
         },
         {
-          "label": "swm.search.result.transactionDate"
+          "label": "vehiclefuellingdetails.create.transactionDate"
         },
         {
-          "label": "swm.search.result.vehicleType"
+          "label": "vehiclefuellingdetails.create.vehicleType"
         },
         {
-          "label": "swm.search.result.vehicleRegNo"
+          "label": "vehiclefuellingdetails.create.regNumber"
         },
         {
-          "label": "swm.search.result.vehicleReadingDuringFuelling"
-        },
-        {
-          "label": "swm.search.result.refuellingStation"
-        },
-        {
-          "label": "swm.search.result.fuelFilled"
-        },
-        {
-          "label": "swm.search.result.typeOfFuel"
-        },
-        {
-          "label": "swm.search.result.totalCostIncurred"
-        },
-        {
-          "label": "swm.search.result.receiptNo"
-        },
-        {
-          "label": "swm.search.result.receiptDate"
+          "label": "vehiclefuellingdetails.search.result.refuellingStation"
         }
       ],
       "values": [
         "transactionNo",
         "transactionDate",
-        "vehicleType.name",
-        "vehicleRegNo.regNumber",
-        "vehicleReadingDuringFuelling",
-        "refuellingStation.name",
-        "fuelFilled",
-        "typeOfFuel.name",
-        "totalCostIncurred",
-        "receiptNo",
-        "receiptDate"
+        "vehicle.vehicleType.name",
+        "vehicle.regNumber",
+        "refuellingStation.name"
       ],
       "resultPath": "vehicleFuellingDetails",
       "rowClickUrlUpdate": "/update/swm/vehiclefuellingdetails/{transactionNo}",

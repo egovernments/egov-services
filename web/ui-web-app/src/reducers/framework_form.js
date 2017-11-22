@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {translate} from '../components/common/common';
+import {translate} from 'common-utility';
 
 const defaultState = {
     form: {},

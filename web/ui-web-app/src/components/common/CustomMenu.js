@@ -346,6 +346,10 @@ const menuConvention={
 "Inventory.Inventory Transactions.Indent.Indent Create":"/create/inventory/indent",
 "Inventory.Inventory Transactions.Indent.Indent Search":"/search/inventory/indent/view",
 "Inventory.Inventory Transactions.Indent.Indent Update":"/search/inventory/indent/update",
+
+"Inventory.Inventory Transactions.Opening Balance.Opening Balance Create" : "/create/inventory/openingbalance",
+"Inventory.Inventory Transactions.Opening Balance.Opening Balance Update" : "/search/inventory/openingbalance/update",
+"Inventory.Inventory Transactions.Opening Balance.Opening Balance Search" : "/search/inventory/openingbalance/view",
 //Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",

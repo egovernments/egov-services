@@ -6,9 +6,8 @@ import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'mat
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
-import DataTable from '../common/Table';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {translate} from '../common/common';
+import {translate, DataTable, Api, constants} from 'common-utility';
 import SwipeableViews from 'react-swipeable-views';
 import {ListItem} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';
@@ -22,16 +21,11 @@ import Drawer from 'material-ui/Drawer';
 import MetisMenu from 'react-metismenu';
 
 
-
-//api import
-import Api from "../../api/api";
-
 const $ = require('jquery');
 $.DataTable = require('datatables.net');
 const dt = require('datatables.net-bs');
 
 const buttons = require('datatables.net-buttons-bs');
-const constants = require('../common/constants');
 
 require('datatables.net-buttons/js/buttons.colVis.js'); // Column visibility
 require('datatables.net-buttons/js/buttons.html5.js'); // HTML 5 file export

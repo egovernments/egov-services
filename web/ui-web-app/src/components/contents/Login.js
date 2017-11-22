@@ -17,8 +17,7 @@ import FontIcon from 'material-ui/FontIcon';
 import Dialog from 'material-ui/Dialog';
 import Snackbar from 'material-ui/Snackbar';
 import {Redirect} from 'react-router-dom'
-import Api from '../../api/api';
-import {translate} from '../common/common';
+import {Api,translate} from 'common-utility';
 import IconButton from 'material-ui/IconButton';
 import $ from 'jquery';
 var axios = require('axios');

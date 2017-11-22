@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.1",
+    "common-utility": "0.0.1",
     "create-react-class": "^15.5.3",
     "datatables-buttons": "^1.0.3",
     "datatables.net": "^1.10.15",
@@ -42,13 +43,13 @@
     "react-rating": "^0.8.0",
     "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
+    "react-scripts": "^1.0.7",
     "react-swipeable-views": "^0.12.3",
     "react-tap-event-plugin": "^2.0.1",
     "recharts": "^1.0.0-alpha.6",
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "common-utility": "0.0.1",
     "ui-react-framework": "0.0.1"
   },
   "devDependencies": {

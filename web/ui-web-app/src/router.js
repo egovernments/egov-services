@@ -4,7 +4,7 @@ import Route from "./AuthRoute";
 
 import Login from './components/contents/Login';
 import Dashboard from './components/contents/Dashboard';
-import ProfileEdit from './components/contents/settings/profileEdit';
+//import ProfileEdit from './components/contents/settings/profileEdit';
 
 //ADMINISTRATION
 import searchUserRole from './components/contents/administration/userManagement/searchUserRole';
@@ -71,8 +71,8 @@ import InboxAcknowledgement from './components/contents/propertyTax/master/Ackno
 import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 
 import PayTaxCreate from './components/non-framework/collection/master/paytax/PayTaxCreate';
-import Transaction from './components/framework/transaction';
-import Inbox from './components/framework/inbox';
+//import Transaction from './components/framework/transaction';
+//import Inbox from './components/framework/inbox';
 
 import createPenaltyRates from './components/non-framework/tl/masters/create/createPenaltyRates';
 import updatePenaltyRates from './components/non-framework/tl/masters/update/updatePenaltyRates';
@@ -123,10 +123,10 @@ import createVoucher from './components/non-framework/egf/transaction/createVouc
 import acknowledgementWc from './components/non-framework/wc/acknowledgement';
 
 //Template parser
-import TemplateParser from './components/framework/templates/templateParser/templateParser';
+// import TemplateParser from './components/framework/templates/templateParser/templateParser';
 
 //LegalTemplate parser
-import LegalTemplateParser  from 'legal/templateParser/legalTemplateParser';
+//import LegalTemplateParser  from 'legal/templateParser/legalTemplateParser';
 
 import NoMatch from './components/common/NoMatch';
 
@@ -150,14 +150,14 @@ if(process.env.NODE_ENV === "production") {
     swm = require('swm');
     inventory = require('inventory');
 } else {
-    fwRoutes = require('./development/ui-react-framework/lib/index');
-    assets = require('./development/assets/lib/index');
-    works = require('./development/works/lib/index');
-    perfManagement = require('./development/perfManagement/lib/index');
-    legal = require('./development/legal/lib/index');
-    pgr = require('./development/pgr/lib/index');
-    swm = require('./development/swm/lib/index');
-    inventory = require('./development/inventory/lib/index');
+    // fwRoutes = require('./development/ui-react-framework/lib/index');
+    // assets = require('./development/assets/lib/index');
+    // works = require('./development/works/lib/index');
+    // perfManagement = require('./development/perfManagement/lib/index');
+    // legal = require('./development/legal/lib/index');
+    // pgr = require('./development/pgr/lib/index');
+    // swm = require('./development/swm/lib/index');
+    // inventory = require('./development/inventory/lib/index');
 }
 
 const Main = () => {
@@ -177,13 +177,13 @@ const Main = () => {
         }
 
         {
-            perf && perf.routes && perf.routes.length && perf.routes.map(function(r) {
+            perfManagement && perfManagement.routes && perfManagement.routes.length && perfManagement.routes.map(function(r) {
                 <Route exact path= {r.route} component={r.component}/>
             })
         }
 
         {
-            lcms && lcms.routes && lcms.routes.length && lcms.routes.map(function(r) {
+            legal && legal.routes && legal.routes.length && legal.routes.map(function(r) {
                 <Route exact path= {r.route} component={r.component}/>
             })
         }
@@ -203,7 +203,7 @@ const Main = () => {
         <Route exact path={base + '/service/request/search'} component={ServiceRequests}/>
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
-        <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
+        {/*<Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>*/}
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>
         <Route exact path={base+'/administration/searchUserRole'} component={searchUserRole}/>
         <Route exact path={base+'/administration/updateUserRole/:userId'} component={updateUserRole}/>
@@ -271,8 +271,8 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
 		  <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
 		  <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>
-          <Route exact path= {base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction}/>
-		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
+          {/*<Route exact path= {base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction}/>*/}
+		  {/*<Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>*/}
 
       <Route exact path= {base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates}/>
       <Route exact path= {base + '/non-framework/tl/masters/update/updatePenaltyRates/:id'} component={updatePenaltyRates}/>
@@ -322,8 +322,8 @@ const Main = () => {
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
       <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
       <Route exact path= {base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc}/>
-      <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
-      <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>
+      {/*<Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>*/}
+      {/*<Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>*/}
       <Route component={NoMatch}/>
 
     </Switch>

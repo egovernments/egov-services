@@ -156,14 +156,17 @@ public class DepreciationService {
 			List<DepreciationDetail> depDetList, List<CurrentValue> currValList, Long fromDate, Long toDate) {
 
 		depreciationInputsList.forEach(a -> {
-			
-			log.info("the current depreciation input object : "+ a);
+
+			log.info("the current depreciation input object : " + a);
 			// TODO get value form master
 			BigDecimal minValue = BigDecimal.ONE;
 			DepreciationStatus status = DepreciationStatus.FAIL;
 			BigDecimal amtToBeDepreciated = null;
 			BigDecimal valueAfterDep = null;
 			ReasonForFailure reason = null;
+			
+			// getting the indvidual fromDate
+			Long invidualFromDate = getFromDateForIndvidualAsset(a, fromDate);;
 
 			if (a.getCurrentValue().compareTo(minValue) <= 0) {
 
@@ -171,8 +174,9 @@ public class DepreciationService {
 			} else {
 
 				status = DepreciationStatus.SUCCESS;
+
 				// getting the amt to be depreciated
-				amtToBeDepreciated = getAmountToBeDepreciated(a, fromDate, toDate);
+				amtToBeDepreciated = getAmountToBeDepreciated(a, invidualFromDate, toDate);
 
 				// calculating the valueAfterDepreciation
 				valueAfterDep = a.getCurrentValue().subtract(amtToBeDepreciated);
@@ -185,7 +189,7 @@ public class DepreciationService {
 
 			// adding the depreciation detail object to list
 			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId()).reasonForFailure(reason)
-					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciated)
+					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciated).fromDate(invidualFromDate)
 					.valueAfterDepreciation(valueAfterDep).valueBeforeDepreciation(a.getCurrentValue()).status(status)
 					.build());
 		});
@@ -196,25 +200,16 @@ public class DepreciationService {
 	 * DepreciationInput Object
 	 * 
 	 * @param depInputs
-	 * @param fromDate
+	 * @param indvidualFromDate
 	 * @param toDate
 	 * @return
 	 */
-	private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs, Long fromDate, Long toDate) {
-
-		// deciding the from date from the last depreciation date
-		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
-			fromDate = depInputs.getLastDepreciationDate();
-			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
-		} else if (depInputs.getDateOfCreation() > fromDate) {
-			fromDate = depInputs.getDateOfCreation();
-			//fromDate += 86400000l;
-		}
+	private BigDecimal getAmountToBeDepreciated(DepreciationInputs depInputs, Long indvidualFromDate, Long toDate) {
 
 		// getting the no of days betweeen the from and todate (including both from and
 		// to date)
-		Long noOfDays = ((toDate - fromDate) / 1000 / 60 / 60 / 24) + 1;
-		log.info("no of days between fromdate : " + fromDate + " and todate : " + toDate + " is : " + noOfDays);
+		Long noOfDays = ((toDate - indvidualFromDate) / 1000 / 60 / 60 / 24) + 1;
+		log.info("no of days between fromdate : " + indvidualFromDate + " and todate : " + toDate + " is : " + noOfDays);
 
 		// deprate for the no of days = no of days * calculated dep rate per day
 		Double depRateForGivenPeriod = noOfDays * depInputs.getDepreciationRate() / 365;
@@ -228,11 +223,23 @@ public class DepreciationService {
 		else
 			return BigDecimal.valueOf((depInputs.getCurrentValue()).doubleValue() * (depRateForGivenPeriod / 100));
 	}
+	
+	private Long getFromDateForIndvidualAsset(DepreciationInputs depInputs, Long fromDate) {
+		
+		// deciding the from date from the last depreciation date
+		if (depInputs.getLastDepreciationDate()!=null && depInputs.getLastDepreciationDate().compareTo(fromDate) >= 0) {
+			fromDate = depInputs.getLastDepreciationDate();
+			fromDate += 86400000l; // adding one day in milli seconds to start depreciation from next day
+		} else if (depInputs.getDateOfCreation() > fromDate) {
+			fromDate = depInputs.getDateOfCreation();
+			//fromDate += 86400000l;
+		}
+		return fromDate;
+	}
 
 	private void getFinancialYearData(DepreciationRequest depreciationRequest) {
 
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
-		String tenantId = criteria.getTenantId();
 		Long todate = criteria.getToDate();
 
 		

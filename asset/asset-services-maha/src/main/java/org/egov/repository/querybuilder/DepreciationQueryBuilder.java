@@ -39,7 +39,7 @@ public class DepreciationQueryBuilder {
 			
 			+ "AND asset.tenantid=? AND id NOT IN (select assetid from egasset_depreciation where todate>=? AND status='SUCCESS') "
 			
-			+ "AND asset.dateofcreation<=?; {assetids};";
+			+ "AND asset.dateofcreation<=? {assetids};";
 
 	public String getDepreciationQuery(DepreciationCriteria depreciationCriteria,List<Object> preparedStatementValues) {
 

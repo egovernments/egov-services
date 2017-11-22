@@ -12,6 +12,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
@@ -136,58 +137,36 @@ public class PriceListService extends DomainService {
 								priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
 								priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
 								priceList.setAgreementNumber(priceList.getAgreementNumber().toUpperCase());
+								
 								if(priceList.getTenantId()==null){
 									priceList.setTenantId(tenantId);
 								}
 								
-								PriceListDetailsSearchRequest priceListDetailsSearchRequest = new PriceListDetailsSearchRequest();
-								priceListDetailsSearchRequest.setPriceList(priceList.getId());
-								priceListDetailsSearchRequest.setActive(true);
-								priceListDetailsSearchRequest.setDeleted(false);
-								
-								List<PriceListDetails> oldPriceListDetails = priceListDetailsJdbcRepository.search(priceListDetailsSearchRequest).getPagedData();
-								int actualOldCount = oldPriceListDetails.size();
-								
 								for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
-									if(priceListDetail.getTenantId()==null){
+									if(priceListDetail.getId()==null)
+									{
+										priceListDetail.setId(priceListDetailsJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(),1).get(0));
+										priceListDetail.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+									}
+									if(priceListDetail.getTenantId()==null)
+									{
 										priceListDetail.setTenantId(tenantId);
 									}
 									if(priceListDetail.getUom().getCode()!=null)
 									{
 										priceListDetail.setQuantity((priceListDetail.getUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
 									}
-									Iterator<PriceListDetails> iter = oldPriceListDetails.iterator();
-									while(iter.hasNext()){
-										if(iter.next().getId().equals(priceListDetail.getId()))
-											iter.remove();
+									if(priceListDetail.getFromDate()==null)
+									{
+										priceListDetail.setFromDate(priceList.getAgreementStartDate());
 									}
-								}
-								
-								int removedIdsCount = oldPriceListDetails.size();
-								int newIdsCount = priceList.getPriceListDetails().size() + removedIdsCount - actualOldCount;
-								int newIdStartRange = actualOldCount-removedIdsCount;
-								
-								List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), newIdsCount);
-								
-								for(PriceListDetails pldl:priceList.getPriceListDetails()){
-									if(pldl.getId()==null){
-										pldl.setId(priceListDetailsIdList.get(0));
-										pldl.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
-										if(pldl.getFromDate()==null){
-											pldl.setFromDate(priceList.getAgreementStartDate());
-										}
-										if(pldl.getToDate()==null){
-											pldl.setToDate(priceList.getAgreementEndDate());
-										}
-										priceListDetailsIdList.remove(0);
+									if(priceListDetail.getToDate()==null)
+									{
+										priceListDetail.setToDate(priceList.getAgreementEndDate());
 									}
-									ids.add(pldl.getId());
+									ids.add(priceListDetail.getId());
 								}
 								
-								for(PriceListDetails pld:oldPriceListDetails){
-									pld.setDeleted(true);
-									priceList.getPriceListDetails().add(pld);
-								}
 							});
 
 			kafkaQue.send(updateTopic, updateKey, priceListRequest);

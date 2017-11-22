@@ -177,7 +177,7 @@ var dat = {
      "numCols":3,
      "useTimestamp":true,
      "objectName":"vehicleMaintenances",
-     "searchUrl": "swm-services/vehicleMaintenances/_search?code={code}",     
+     "searchUrl": "swm-services/vehiclemaintenances/_search?code={code}",     
      "groups":[
       {
          "name":"VehicleMaintenanceDetails",

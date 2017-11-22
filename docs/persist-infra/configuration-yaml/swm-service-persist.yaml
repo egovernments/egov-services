@@ -47,28 +47,6 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
-    - query: INSERT INTO egswm_document(id, tenantid, refCode, fileStoreId, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
-      basePath: $.vehicleFuellingDetails.*.receiptCopy
-      jsonMaps:
-       
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.id
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.tenantId
-         
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.refCode
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.fileStoreId
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.createdBy
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.lastModifiedBy
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.createdTime
-         dbType: LONG
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.lastModifiedTime
-         dbType: LONG
-
  - version: 1.0
    name: vehicleFuellingDetails update
    description: update vehicleFuellingDetails in egswm_vehiclefuellingdetails
@@ -110,21 +88,6 @@ serviceMaps:
        - jsonPath: $.vehicleFuellingDetails.*.transactionNo
 
        - jsonPath: $.vehicleFuellingDetails.*.tenantId
-
-    - query: update egswm_document set fileStoreId=?, lastmodifiedby=?, lastmodifiedtime=? where refCode=? and tenantId=?;
-      basePath: $.vehicleFuellingDetails.*.receiptCopy
-      jsonMaps:
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.fileStoreId
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.lastModifiedBy
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.auditDetails.lastModifiedTime
-         dbType: LONG
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.refCode
-
-       - jsonPath: $.vehicleFuellingDetails.*.receiptCopy.tenantId
 
 
  - version: 1.0

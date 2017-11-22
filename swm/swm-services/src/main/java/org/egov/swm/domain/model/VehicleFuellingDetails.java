@@ -21,60 +21,60 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleFuellingDetails {
 
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Length(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@Length(min = 1, max = 256)
-	@JsonProperty("transactionNo")
-	private String transactionNo = null;
+    @Length(min = 1, max = 256)
+    @JsonProperty("transactionNo")
+    private String transactionNo = null;
 
-	@NotNull
-	@JsonProperty("transactionDate")
-	private Long transactionDate = null;
+    @NotNull
+    @JsonProperty("transactionDate")
+    private Long transactionDate = null;
 
-	@NotNull
-	@JsonProperty("vehicle")
-	private Vehicle vehicle = null;
+    @NotNull
+    @JsonProperty("vehicle")
+    private Vehicle vehicle = null;
 
-	@NotNull
-	@Min(value = 1)
-	@Max(value = 300000)
-	@JsonProperty("vehicleReadingDuringFuelling")
-	private Long vehicleReadingDuringFuelling = null;
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 300000)
+    @JsonProperty("vehicleReadingDuringFuelling")
+    private Long vehicleReadingDuringFuelling = null;
 
-	@NotNull
-	@JsonProperty("refuellingStation")
-	private RefillingPumpStation refuellingStation = null;
+    @NotNull
+    @JsonProperty("refuellingStation")
+    private RefillingPumpStation refuellingStation = null;
 
-	@NotNull
-	@Min(value = 1)
-	@Max(value = 100)
-	@JsonProperty("fuelFilled")
-	private Double fuelFilled = null;
+    @NotNull
+    @Min(value = 1)
+    @Max(value = 100)
+    @JsonProperty("fuelFilled")
+    private Double fuelFilled = null;
 
-	@NotNull
-	@JsonProperty("typeOfFuel")
-	private FuelType typeOfFuel = null;
+    @NotNull
+    @JsonProperty("typeOfFuel")
+    private FuelType typeOfFuel = null;
 
-	@NotNull
-	@JsonProperty("totalCostIncurred")
-	private Double totalCostIncurred = null;
+    @NotNull
+    @JsonProperty("totalCostIncurred")
+    private Double totalCostIncurred = null;
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("receiptNo")
-	private String receiptNo = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("receiptNo")
+    private String receiptNo = null;
 
-	@NotNull
-	@JsonProperty("receiptDate")
-	private Long receiptDate = null;
+    @NotNull
+    @JsonProperty("receiptDate")
+    private Long receiptDate = null;
 
-	@JsonProperty("receiptCopy")
-	private Document receiptCopy = null;
+    @JsonProperty("receiptCopy")
+    private Document receiptCopy = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

@@ -99,11 +99,11 @@ public class VehicleMaintenanceDetailsService {
 		return vehicleMaintenanceDetailsList;
 	}
 
-	public long calaculateNextSceduledMaintenanceDate(String tenantId, String vehicleCode) {
+	public long calaculateNextSceduledMaintenanceDate(String tenantId, String vehicleRegNumber) {
 		// Fetch vehicle maintenance detail using code and tenantid
 		VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch = new VehicleMaintenanceDetailsSearch();
 		vehicleMaintenanceDetailsSearch.setTenantId(tenantId);
-		vehicleMaintenanceDetailsSearch.setVehicle(Vehicle.builder().regNumber(vehicleCode).build());
+		vehicleMaintenanceDetailsSearch.setVehicle(Vehicle.builder().regNumber(vehicleRegNumber).build());
 		vehicleMaintenanceDetailsSearch.setSortBy("createddate");
 
 		Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsPage = vehicleMaintenanceDetailsRepository

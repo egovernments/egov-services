@@ -231,9 +231,10 @@ const menuConvention={
 
 //SWM
 
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/swm/vehiclefuellingdetails",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/swm/vehiclefuellingdetails/view",
-"Solid Waste Management.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/swm/vehiclefuellingdetails/update",
+
+"Solid Waste Management.SWM Transactions.Vehicle Fuelling.VehicleFuellingDetails Create": "/create/swm/vehiclefuellingdetails",
+"Solid Waste Management.SWM Transactions.Vehicle Fuelling.VehicleFuellingDetails Search": "/search/swm/vehiclefuellingdetails/view",
+"Solid Waste Management.SWM Transactions.Vehicle Fuelling.VehicleFuellingDetails Update": "/search/swm/vehiclefuellingdetails/update",
 
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Create": "/create/swm/vehicles",
 "Solid Waste Management.SWM Masters.Vehicle.Vehicle Search": "/search/swm/vehicles/view",
@@ -247,17 +248,13 @@ const menuConvention={
 "Solid Waste Management.SWM Masters.Vendor.Vendor Search": "/search/swm/vendors/view",
 "Solid Waste Management.SWM Masters.Vendor.Vendor Update": "/search/swm/vendors/update",
 
-"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Create": "/create/swm/sourcesegregations",
-"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Search": "/search/swm/sourcesegregations/view",
-"Solid Waste Management.SWM Masters.Source Segregation.SourceSegregation Update": "/search/swm/sourcesegregations/update",
+"Solid Waste Management.SWM Transactions.Source Segregation.SourceSegregation Create": "/create/swm/sourcesegregations",
+"Solid Waste Management.SWM Transactions.Source Segregation.SourceSegregation Search": "/search/swm/sourcesegregations/view",
+"Solid Waste Management.SWM Transactions.Source Segregation.SourceSegregation Update": "/search/swm/sourcesegregations/update",
 
-"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Create": "/create/swm/collectionpointdetails",
-"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Search": "/search/swm/collectionpointdetails/view",
-"Solid Waste Management.SWM Masters.Collection Point Details.CollectionPointDetails Update": "/search/swm/collectionpointdetails/update",
-
-"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Create": "/create/swm/vehiclemaintenances",
-"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Search": "/search/swm/vehiclemaintenances/view",
-"Solid Waste Management.SWM Masters.VehicleMaintenance.VehicleMaintenance Update": "/search/swm/vehiclemaintenances/update",
+"Solid Waste Management.SWM Masters.Vehicle Maintenance.VehicleMaintenance Create": "/create/swm/vehiclemaintenances",
+"Solid Waste Management.SWM Masters.Vehicle Maintenance.VehicleMaintenance Search": "/search/swm/vehiclemaintenances/view",
+"Solid Waste Management.SWM Masters.Vehicle Maintenance.VehicleMaintenance Update": "/search/swm/vehiclemaintenances/update",
 
 "Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Create": "/create/swm/vendorcontracts",
 "Solid Waste Management.SWM Masters.Vendor Contract.VendorContract Search": "/search/swm/vendorcontracts/view",
@@ -267,13 +264,13 @@ const menuConvention={
 "Solid Waste Management.SWM Masters.Route.Route Search": "/search/swm/routes/view",
 "Solid Waste Management.SWM Masters.Route.Route Update": "/search/swm/routes/update",
 
-"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Create": "/create/swm/vehiclemaintenancedetails",
-"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Search": "/search/swm/vehiclemaintenancedetails/view",
-"Solid Waste Management.SWM Masters.Vehicle Maintenance Details.Vehicle Maintenance Details Update": "/search/swm/vehiclemaintenancedetails/update",
+"Solid Waste Management.SWM Transactions.Vehicle Maintenance Details.Vehicle Maintenance Details Create": "/create/swm/vehiclemaintenancedetails",
+"Solid Waste Management.SWM Transactions.Vehicle Maintenance Details.Vehicle Maintenance Details Search": "/search/swm/vehiclemaintenancedetails/view",
+"Solid Waste Management.SWM Transactions.Vehicle Maintenance Details.Vehicle Maintenance Details Update": "/search/swm/vehiclemaintenancedetails/update",
 
-"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Create": "/create/swm/vehicleschedules",
-"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Search": "/search/swm/vehicleschedules/view",
-"Solid Waste Management.SWM Masters.Vehicle Schedule.VehicleSchedule Update": "/search/swm/vehicleschedules/update",
+"Solid Waste Management.SWM Transactions.Vehicle Schedule.VehicleSchedule Create": "/create/swm/vehicleschedules",
+"Solid Waste Management.SWM Transactions.Vehicle Schedule.VehicleSchedule Search": "/search/swm/vehicleschedules/view",
+"Solid Waste Management.SWM Transactions.Vehicle Schedule.VehicleSchedule Update": "/search/swm/vehicleschedules/update",
 
 "Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Create": "/create/swm/sanitationstafftargets",
 "Solid Waste Management.SWM Masters.Sanitation Staff Target.SanitationStaffTarget Search": "/search/swm/sanitationstafftargets/view",
@@ -283,13 +280,17 @@ const menuConvention={
 "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Search": "/search/swm/refillingpumpstations/view",
 "Solid Waste Management.SWM Masters.Refillin Pump Station.RefillinPumpStation Update": "/search/swm/refillingpumpstations/update",
 
-"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Create": "/create/swm/vehicletripsheetdetails",
-"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Search": "/search/swm/vehicletripsheetdetails/view",
-"Solid Waste Management.SWM Masters.Vehicle Trip Sheet Details.VehicleTripSheetDetails Update": "/search/swm/vehicletripsheetdetails/update",
+"Solid Waste Management.SWM Transactions.Vehicle Trip Sheet Details.VehicleTripSheetDetails Create": "/create/swm/vehicletripsheetdetails",
+"Solid Waste Management.SWM Transactions.Vehicle Trip Sheet Details.VehicleTripSheetDetails Search": "/search/swm/vehicletripsheetdetails/view",
+"Solid Waste Management.SWM Transactions.Vehicle Trip Sheet Details.VehicleTripSheetDetails Update": "/search/swm/vehicletripsheetdetails/update",
 
-"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Create": "/create/swm/sanitationstaffschedules",
-"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Search": "/search/swm/sanitationstaffschedules/view",
-"Solid Waste Management.SWM Masters.Sanitation Staff Schedule.SanitationStaffSchedule Update": "/search/swm/sanitationstaffschedules/update",
+"Solid Waste Management.SWM Transactions.Sanitation Staff Schedule.SanitationStaffSchedule Create": "/create/swm/sanitationstaffschedules",
+"Solid Waste Management.SWM Transactions.Sanitation Staff Schedule.SanitationStaffSchedule Search": "/search/swm/sanitationstaffschedules/view",
+"Solid Waste Management.SWM Transactions.Sanitation Staff Schedule.SanitationStaffSchedule Update": "/search/swm/sanitationstaffschedules/update",
+
+"Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Create": "/create/swm/vendorpaymentdetails",
+"Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Search": "/search/swm/vendorpaymentdetails/view",
+"Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Update": "/search/swm/vendorpaymentdetails/update",
 
 //legal case
 "Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacycase",

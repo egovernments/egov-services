@@ -75,10 +75,10 @@ public class VehicleMaintenanceDetailsController {
 	@PostMapping("/_getnextscheduleddate")
 	@ResponseStatus(HttpStatus.OK)
 	public ScheduledMaintenanceDateResponse getScheduledMaintenanceDate(@RequestBody RequestInfo requestInfo,
-			@RequestParam String tenantId, @RequestParam String vehicleCode) {
+			@RequestParam String tenantId, @RequestParam String vehicleRegNumber) {
 
 		Long scheduledDate = vehicleMaintenanceDetailsService.calaculateNextSceduledMaintenanceDate(tenantId,
-				vehicleCode);
+		        vehicleRegNumber);
 
 		return ScheduledMaintenanceDateResponse.builder().responseInfo(new ResponseInfo()).sceduledDate(scheduledDate)
 				.build();

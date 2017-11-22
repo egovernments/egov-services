@@ -1,6 +1,6 @@
 def build(path, ci_image) {
     stage("Build") {
-        docker.image("egovio/ci-react:0.0.3").inside {
+        docker.image("egovio/ci-react:0.0.4").inside {
             withCredentials([string(credentialsId: "verdaccio-host-url", variable: "NPM_URL")]) {
               sh "npm set registry ${NPM_URL}";
               }

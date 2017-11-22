@@ -6,7 +6,6 @@ import _ from "lodash";
 import ShowFields from "./showFields";
 
 import {translate, Api} from 'common-utility';
-import  from '../../api/api';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';

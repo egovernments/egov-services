@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import * as Templates from "../templates/index";
+import UiBackButton from "../../components/UiBackButton";
+import {connect} from 'react-redux';
+import { withRouter } from 'react-router'
 
-export default class TemplateParser extends Component {
+class TemplateParser extends Component {
 	constructor(props) {
 		super(props);
 	}
@@ -30,14 +33,30 @@ export default class TemplateParser extends Component {
 	    }, 1000);
 	}
 
+	back=(e)=>
+	{
+				let {setRoute}=this.props;
+				setRoute("/"+localStorage.getItem("returnUrl"));
+	}
+
 	render() {
 		const Template = Templates[this.props.match.params.templatePath];
+		let {back} = this;
 		return(
 			<div>
 				<div id="printTemplate">
 					{localStorage.reportData ? JSON.parse(localStorage.reportData).map((v, i) => {
 						return (
 							<div>
+							<div style={{"textAlign": "right",
+							"paddingRight": "15px"}}>
+								<br/>
+									<RaisedButton type="button" onClick={(e)=>{
+										back(e)
+									}} primary={true} label={"Back"} />
+								<br/>
+								<br/>
+							</div>
 								<Template data={v}/>
 								<br/>
 								<div style={{"page-break-after": "always"}}></div>
@@ -52,3 +71,14 @@ export default class TemplateParser extends Component {
 		)
 	}
 }
+
+
+const mapStateToProps = state => ({
+});
+
+const mapDispatchToProps = dispatch => ({
+  setRoute: (route) => dispatch({type: "SET_ROUTE", route})
+});
+
+
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TemplateParser));

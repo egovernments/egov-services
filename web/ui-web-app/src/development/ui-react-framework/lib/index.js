@@ -31,7 +31,9 @@ import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
 import UiTimeField from './components/UiTimeField';
 import UiCalendar from './components/UiCalendar';
-import UiDynamicTable from './components/uiDynamicTable2';
+import UiDynamicTable from './components/UiDynamicTable';
+import UiDynamicTable2 from './components/uiDynamicTable2';
+import UiWindowForm from './components/UiWindowForm';
 import {int_to_words, getFullDate, fileUpload, getInitiatorPosition, getTitleCase} from './utility/utility';
 
 var routes = [{
@@ -85,5 +87,7 @@ module.exports = {
 	fileUpload, 
 	getInitiatorPosition, 
 	getTitleCase,
-	UiDynamicTable
+	UiDynamicTable,
+	UiDynamicTable2,
+	UiWindowForm
 };

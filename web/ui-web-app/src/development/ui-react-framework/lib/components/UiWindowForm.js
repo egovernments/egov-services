@@ -12,7 +12,7 @@ import jp from "jsonpath";
 import {
   fileUpload,
   getInitiatorPosition
-} from "../utility/utility";
+} from "../../framework/utility/utility";
 //import $ from "jquery";
 
 var specifications = {};
@@ -204,8 +204,7 @@ class UiWindowForm extends Component {
 
   initData() {
     var self = this;
-    specifications = require(`../../framework/specs/${this.props.item.subPath}`)
-      .default;
+    specifications = (process.end.NODE_ENV == "production") ? require(`${this.props.item.subPath}.specs`).default; : require(`../../${this.props.item.subPath}.specs`).default;
     var result =
       typeof results == "string" ? JSON.parse(specifications) : specifications;
     let obj = specifications[this.props.item.modulepath];
@@ -324,6 +323,9 @@ class UiWindowForm extends Component {
     let val = this.props.getVal(item.jsonPath + "." + item.arrayPath);
     if (item.displayField && val && val.constructor == Array) {
       val = jp.query(val, `$..${item.displayField}`);
+    }
+    if(item.isExceptFirstRecord && val && val.constructor == Array){
+           val.shift();
     }
     if (this.props.readonly === "true") {
       return (

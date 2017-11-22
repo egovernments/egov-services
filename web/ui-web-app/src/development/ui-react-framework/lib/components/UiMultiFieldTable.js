@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from 'react-redux';
-import {translate} from '../../common/common';
+import {translate} from 'common-utility';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import UiTextField from './UiTextField'

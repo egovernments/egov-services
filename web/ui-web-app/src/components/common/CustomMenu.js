@@ -342,6 +342,10 @@ const menuConvention={
 "Inventory.Inventory Masters.Price List Master.PriceList Create":"/create/inventory/pricelists",
 "Inventory.Inventory Masters.Price List Master.PriceList Search":"/search/inventory/pricelists/view",
 "Inventory.Inventory Masters.Price List Master.PriceList Update":"/search/inventory/pricelists/update",
+
+"Inventory.Inventory Transactions.Indent.Indent Create":"/create/inventory/indent",
+"Inventory.Inventory Transactions.Indent.Indent Search":"/search/inventory/indent/view",
+"Inventory.Inventory Transactions.Indent.Indent Update":"/search/inventory/indent/update",
 //Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",

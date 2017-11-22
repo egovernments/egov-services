@@ -29,7 +29,7 @@ import UiPinCode from './components/UiPinCode';
 import UiArrayField from './components/UiArrayField';
 import UiFileTable from './components/UiFileTable';
 import UiMultiFieldTable from './components/UiMultiFieldTable';
-import UiDialogBox from './components/UiDialogBox'
+import UiHyperLink from './components/UiHyperLink'
 import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
 import UiTimeField from './components/UiTimeField';
@@ -239,8 +239,8 @@ export default class ShowFields extends Component {
 
           var CustomComonent=require(item.path+".js").default;
           return <CustomComonent/>
-          case 'dialogBox':
-      			return <UiDialogBox tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
+          case 'hyperLink':
+      			return <UiHyperLink tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
 
           case 'googleMaps':
         		return <UigoogleMaps tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>

@@ -3,13 +3,8 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import _ from "lodash";
-import ShowFields from "../../framework/showFields";
-import {translate} from '../../common/common';
-import Api from '../../../api/api';
-
-import UiButton from '../../framework/components/UiButton';
-import {fileUpload,getInitiatorPosition} from '../../framework/utility/utility';
-import UiDynamicTable from '../../framework/components/uiDynamicTable2';
+import {ShowFields, UiButton, fileUpload, getInitiatorPosition, UiDynamicTable2} from "ui-react-framework";
+import {translate, Api} from 'common-utility';
 
 import jp from "jsonpath";
 import $ from "jquery";
@@ -134,7 +129,7 @@ class Transaction extends Component {
 
   initData() {
     let self = this;
-      specifications = require(`../../framework/specs/asset/transaction/generalDepericiation`).default;
+      specifications = require(`./specifications/transaction/generalDepericiation.specs`).default;
 
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications["asset.transaction"];
@@ -790,7 +785,7 @@ class Transaction extends Component {
 
         </form>
 
-                  {showResult && <UiDynamicTable resultList={resultList} ui="google"  handler={handleChange} getVal={getVal} fieldErrors={fieldErrors}/>}
+                  {showResult && <UiDynamicTable2 resultList={resultList} ui="google"  handler={handleChange} getVal={getVal} fieldErrors={fieldErrors}/>}
 
                   <br/>
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}

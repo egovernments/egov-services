@@ -8,18 +8,14 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
-import ShowFields from "../../framework/showFields";
+import {ShowFields, fileUpload, getInitiatorPosition, UiButton, UiTable} from "ui-react-framework";
 
-import {translate} from '../../common/common';
-import Api from '../../../api/api';
+import {translate, Api} from 'common-utility';
 import jp from "jsonpath";
-import UiButton from '../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../framework/utility/utility';
 import $ from "jquery";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
-import UiTable from '../../framework/components/UiTable';
 
 var specifications={};
 const styles = {

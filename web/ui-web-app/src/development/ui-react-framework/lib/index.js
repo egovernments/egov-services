@@ -34,6 +34,7 @@ import UiCalendar from './components/UiCalendar';
 import UiDynamicTable from './components/UiDynamicTable';
 import UiDynamicTable2 from './components/uiDynamicTable2';
 import UiWindowForm from './components/UiWindowForm';
+import UiBackButton from './components/UiBackButton';
 import {int_to_words, getFullDate, fileUpload, getInitiatorPosition, getTitleCase} from './utility/utility';
 
 var routes = [{
@@ -89,5 +90,6 @@ module.exports = {
 	getTitleCase,
 	UiDynamicTable,
 	UiDynamicTable2,
-	UiWindowForm
+	UiWindowForm,
+	UiBackButton
 };

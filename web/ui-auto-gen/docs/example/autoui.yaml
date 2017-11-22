@@ -11,7 +11,7 @@ info:
 basePath: "/egov-autoui"
 
 x-ui-info:
-  $ref: C:\Users\GoodWorkLabs\Desktop\GIT\egov-services\web\ui-auto-gen\docs\example\autoui-info.yaml
+  $ref: C:\Users\hp\Desktop\GIT\egov-services\web\ui-auto-gen\docs\example\autoui-info.yaml
 
 paths:
 

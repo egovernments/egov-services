@@ -8,20 +8,16 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
+import {ShowFields, UiButton, fileUpload, getInitiatorPosition, UiBackButton} from "ui-react-framework";
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import {translate, Api} from 'common-utility';
 import jp from "jsonpath";
-import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
 import $ from "jquery";
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
-import UiBackButton from '../../../framework/components/UiBackButton';
 
 var specifications={};
 var fields = [];
@@ -226,7 +222,7 @@ class assetMovableCreate extends Component {
   modifyData(urlId) {
     let self = this;
     let assetCheck ={};
-    let specifications = require(`../../../framework/specs/asset/master/assetMovable`).default;
+    let specifications = require(`../specifications/master/assetMovable.specs`).default;
 
     Api.commonApiPost("asset-services-maha/assets/_search",{id:urlId}, {}, false, false, false, "", "", false).then(function(response){
 

@@ -282,7 +282,7 @@ public class AgreementValidator {
 			errors.rejectValue("No Demand", "", "No demandId in this agreement request");
 		
 		}else{
-		demandSearchCriteria.setDemandId(Long.getLong(demandId));
+		demandSearchCriteria.setDemandId(Long.valueOf(demandId));
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
 		if (demand == null)
 			errors.rejectValue("Agreement.demands", "", "No Demands found for the given agreement");

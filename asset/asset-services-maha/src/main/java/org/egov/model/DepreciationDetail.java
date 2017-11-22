@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @NoArgsConstructor
@@ -21,6 +20,8 @@ public class DepreciationDetail {
 
     @JsonProperty("id")
     private Long id = null;
+    
+    private String assetCode;
 
     @JsonProperty("assetId")
     private Long assetId = null;

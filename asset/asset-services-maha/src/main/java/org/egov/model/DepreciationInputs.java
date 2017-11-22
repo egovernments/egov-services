@@ -12,6 +12,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 public class DepreciationInputs {
+	
+	private String assetCode;
 
 	private Long assetId;
 	

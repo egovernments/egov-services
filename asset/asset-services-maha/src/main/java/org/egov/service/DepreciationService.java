@@ -188,7 +188,7 @@ public class DepreciationService {
 			}
 
 			// adding the depreciation detail object to list
-			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId()).reasonForFailure(reason)
+			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId()).reasonForFailure(reason).assetCode(a.getAssetCode())
 					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciated).fromDate(invidualFromDate)
 					.valueAfterDepreciation(valueAfterDep).valueBeforeDepreciation(a.getCurrentValue()).status(status)
 					.build());

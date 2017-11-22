@@ -9,7 +9,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class DepreciationQueryBuilder {
 	
-	static private final String BASEDEPRECIATIONQUERY = "select asset.id as assetid,asset.tenantid,asset.grossvalue,asset.accumulateddepreciation,asset.assetcategory,"
+	static private final String BASEDEPRECIATIONQUERY = "select asset.code assetcode,asset.id as assetid,asset.tenantid,asset.grossvalue,asset.accumulateddepreciation,asset.assetcategory,"
 			
 			+ "currentval.currentamount as currentvalue,depreciation.maxtodate as lastdepreciationdate,depreciation.depreciationvaluesum,asset.originalvalue,"
 			

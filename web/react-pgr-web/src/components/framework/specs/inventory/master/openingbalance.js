@@ -17,11 +17,7 @@ var dat = {
             "isDisabled": false,
             "defaultValue":[
               {key: null, value: "-- Please Select --"},
-                    {"key":"2017","value":"2017"},
-                       {"key":"2018", "value":"2018"},
-                          {"key":"2019", "value":"2019"},
-                             {"key":"2020", "value":"2020"},
-                                {"key":"2021","value":"2021"}
+                    {"key":"2017-2018","value":"2017-2018"},
                               ],
             "patternErrorMsg": "inventory.create.field.message.financialYear"
           },
@@ -35,21 +31,6 @@ var dat = {
              "isRequired":false,
              "isDisabled":false,
              "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
-          },
-          {
-            "name": "materialTypeName",
-            "jsonPath": "materialTypeName",
-            "label": "inventory.material.materialtype",
-            "type": "singleValueList",
-            "isDisabled": false,
-            "defaultValue":[
-              {key: null, value: "-- Please Select --"},
-                    {"key":"PURCHASE RECEIPT","value":"PURCHASE RECEIPT"},
-                       {"key":"OPENING BALANCE", "value":"OPENING BALANCE"},
-                          {"key":"INWARD RECEIPT", "value":"INWARD RECEIPT"},
-                             {"key":"MISCELLANEOUS RECEIPT", "value":"MISCELLANEOUS RECEIPT"},
-                              ],
-            "patternErrorMsg": "inventory.create.field.message.materialTypeName"
           }
         ]
       }
@@ -60,44 +41,17 @@ var dat = {
           "label": "inventory.financialYear"
         },
         {
-          "label": "inventory.material.code"
-        },
-        {
-          "label": "inventory.Uom"
-        },
-        {
-          "label": "inventory.receiptType"
-        },
-        {
-          "label": "inventory.receiptDate"
+          "label": "inventory.store"
         },
         {
           "label": "inventory.mrnNumber"
-        },
-        {
-          "label": "inventory.quantity"
-        },
-        {
-          "label": "inventory.unitRate"
-        },
-        {
-          "label": "inventory.totalamount"
-        },
-        {
-          "label": "inventory.remarks"
         }
+        
       ],
       "values": [
         "financialYear",
-        "receiptDetails[0].material.code",
-        "receiptDetails[0].uom.code",
-        "receiptType",
-        "receiptDate",
-        "mrnNumber",
-        "receiptDetails[0].receivedQty",
-        "receiptDetails[0].unitRate",
-        "totalamount",
-        "remarks"
+        "receivingStore.code",
+        "mrnNumber"
       ],
       "resultPath": "materialReceipt",
       "rowClickUrlUpdate": "/update/inventory/openingbalance/{id}",
@@ -125,11 +79,7 @@ var dat = {
             "isDisabled": false,
       "defaultValue":[
               {key: null, value: "-- Please Select --"},
-                    {"key":"2017","value":"2017"},
-                       {"key":"2018", "value":"2018"},
-                          {"key":"2019", "value":"2019"},
-                             {"key":"2020", "value":"2020"},
-                                {"key":"2021","value":"2021"}
+                    {"key":"2017-2018","value":"2017-2018"},
                         ],
             "patternErrorMsg": ""
           },
@@ -145,7 +95,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
           }
         ]
       },
@@ -162,9 +112,6 @@ var dat = {
                      "header":[
                         {
                            "label":"inventory.materialName"
-                        },
-                        {
-                           "label":"inventory.materialDesc"
                         },
                         {
                            "label":"inventory.Uom"
@@ -192,40 +139,43 @@ var dat = {
                      "values":[
 
                {
-                "name":"material",
-                 "pattern":"",
-                 "type":"singleValueList",
-                 "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
-                 "isRequired":true,
-                 "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
-                 "depedants":[
-                      {
-                         "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                         "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
-                      }
-                    ]
-               },
-               {
-                  "name":"materialDescription",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                  "pattern":"",
-                  "type":"text",
-                  "isRequired":false,
-                  "isDisabled":false,
-                  "defaultValue":"",
-                  "patternErrorMsg":""
-               },
-               {
-                  "name":"uom",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
-                  "pattern":"",
-                  "type":"singleValueList",
-                  "isRequired":true,
-                  "isDisabled":false,
-                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
-               },
+                  "name": "material",
+                  "pattern": "",
+                  "type":"autoCompelete",
+                  "jsonPath": "priceLists[0].priceListDetails[0].material.code",
+                  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')"
+                    },
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
+                },
+                {
+                  "name": "uom",
+                  "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                  "pattern": "",
+                  "type": "singleValueList",
+                  "isRequired": true,
+                  "isDisabled": true,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
+                },
 
                {
                   "name":"receivedQty",
@@ -338,7 +288,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
           }
         ]
       },
@@ -356,9 +306,7 @@ var dat = {
                         {
                            "label":"inventory.materialName"
                         },
-                        {
-                           "label":"inventory.materialDesc"
-                        },
+                       
                         {
                            "label":"inventory.Uom"
                         },
@@ -385,40 +333,43 @@ var dat = {
                      "values":[
 
                {
-                "name":"material",
-                 "pattern":"",
-                 "type":"singleValueList",
-                 "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
-                 "isRequired":true,
-                 "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
-                 "depedants":[
-                      {
-                         "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                         "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
-                      }
-                    ]
-               },
-               {
-                  "name":"materialDescription",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                  "pattern":"",
-                  "type":"text",
-                  "isRequired":false,
-                  "isDisabled":false,
-                  "defaultValue":"",
-                  "patternErrorMsg":""
-               },
-               {
-                  "name":"uom",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
-                  "pattern":"",
-                  "type":"singleValueList",
-                  "isRequired":true,
-                  "isDisabled":false,
-                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
-               },
+                  "name": "material",
+                  "pattern": "",
+                  "type":"autoCompelete",
+                  "jsonPath": "priceLists[0].priceListDetails[0].material.code",
+                  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')"
+                    },
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
+                },
+                {
+                  "name": "uom",
+                  "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                  "pattern": "",
+                  "type": "singleValueList",
+                  "isRequired": true,
+                  "isDisabled": true,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor",
+                  "depedants": [
+                    {
+                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
+                },
 
                {
                   "name":"receivedQty",
@@ -514,7 +465,6 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": true,
       "defaultValue":[
-              {key: null, value: "-- Please Select --"},
                     {"key":"2017","value":"2017"},
                        {"key":"2018", "value":"2018"},
                           {"key":"2019", "value":"2019"},
@@ -534,7 +484,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
           }
         ]
       },
@@ -552,9 +502,6 @@ var dat = {
                      "header":[
                         {
                            "label":"inventory.materialName"
-                        },
-                        {
-                           "label":"inventory.materialDesc"
                         },
                         {
                            "label":"inventory.Uom"
@@ -597,15 +544,6 @@ var dat = {
                     ]
                },
                {
-                  "name":"materialDescription",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                  "pattern":"",
-                  "type":"text",
-                  "isDisabled":true,
-                  "defaultValue":"",
-                  "patternErrorMsg":""
-               },
-               {
                   "name":"uom",
                   "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
                   "pattern":"",
@@ -620,7 +558,7 @@ var dat = {
                   "pattern":"",
                   "type":"number",
                   "isDisabled":true,
-                  "defaultValue":"0",
+                  "defaultValue":"",
                   "patternErrorMsg":""
                },
                 {
@@ -639,7 +577,7 @@ var dat = {
                   "pattern":"",
                   "type":"text",
                   "isDisabled":true,
-                  "defaultValue":"0",
+                  "defaultValue":"",
                   "maxLength":100,
                   "patternErrorMsg":"inventory.create.field.message.code"
                },

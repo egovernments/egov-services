@@ -3,24 +3,27 @@ package org.egov.works.workorder.domain.repository;
 import org.apache.commons.lang3.StringUtils;
 import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.LetterOfAcceptanceHelper;
-import org.egov.works.workorder.web.contract.Contractor;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchCriteria;
-import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Repository
 public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
     @Autowired
     private WorksMastersRepository worksMastersRepository;
+
+    @Autowired
+    private EstimateRepository estimateRepository;
+
+    @Autowired
+    private SecurityDepositeJdbcRepository securityDepositeJdbcRepository;
+
+    @Autowired
+    private LetterOfAcceptanceEstimateRepository letterOfAcceptanceEstimateRepository;
 
 
     public static final String TABLE_NAME = "egw_letterofacceptance loa";
@@ -42,7 +45,8 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             validateEntityFieldName(letterOfAcceptanceSearchCriteria.getSortBy(), LetterOfAcceptance.class);
         }
 
-        if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty())
+        if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && !letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().isEmpty()
+                || letterOfAcceptanceSearchCriteria.getDepartment() != null && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty())
             tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
         String orderBy = "order by id";
@@ -51,7 +55,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             orderBy = "order by " + letterOfAcceptanceSearchCriteria.getSortBy();
         }
 
-        searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+        searchQuery = searchQuery.replace(":tablename", tableName);
 
         searchQuery = searchQuery.replace(":selectfields", " * ");
 
@@ -119,6 +123,18 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
               searchByContractorCodes(contractorCodes, params, paramValues);
         }
 
+        List<String> estimateNumbers = new ArrayList<>();
+        if(letterOfAcceptanceSearchCriteria.getDepartment() != null && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty()) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(letterOfAcceptanceSearchCriteria.getDepartment(),letterOfAcceptanceSearchCriteria.getTenantId(),requestInfo);
+            for(DetailedEstimate detailedEstimate : detailedEstimates)
+                estimateNumbers.add(detailedEstimate.getEstimateNumber());
+
+            addAnd(params);
+            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber");
+            paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
+
+        }
+
         if (letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers() != null && letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers().size() == 1) {
             addAnd(params);
             params.append("loaestimate.letterofacceptance = loa.loanumber and upper(loaestimate.detailedestimate) like :detailedestimatenumber");
@@ -145,7 +161,19 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         List<LetterOfAcceptance> loas = new ArrayList<>();
         for (LetterOfAcceptanceHelper letterOfAcceptanceHelper : loaList) {
             LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceHelper.toDomain();
+
+            LetterOfAcceptanceEstimateSearchCriteria letterOfAcceptanceEstimateSearchCriteria = LetterOfAcceptanceEstimateSearchCriteria.builder()
+                    .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
+
+            SecurityDepositeSearchCriteria securityDepositeSearchCriteria = SecurityDepositeSearchCriteria.builder()
+                    .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
+
+            letterOfAcceptance.setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));
+            letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria));
+
             loas.add(letterOfAcceptance);
+
+
         }
         return loas;
     }

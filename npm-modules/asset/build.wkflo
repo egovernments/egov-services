@@ -5,7 +5,7 @@ def build(path, ci_image) {
               sh "npm set registry ${NPM_URL}";
               }
             withCredentials([string(credentialsId: "verdaccio-npm-token", variable: "NPM_TOKEN")]) {
-              sh "cp -a /tmp/node_modules ${path}/ && cd ${path} && export NPM_TOKEN=${NPM_TOKEN} && echo "     NPM Token is  $NPM_TOKEN" && npm install && npx babel lib --out-dir dist && cp package.json dist/package.json && cd dist && npm publish";
+              sh "cp -a /tmp/node_modules ${path}/ && cd ${path} && export NPM_TOKEN=${NPM_TOKEN} && npm config list -l && npm install && npx babel lib --out-dir dist && cp package.json dist/package.json && cd dist && npm publish";
               }
         }
     }

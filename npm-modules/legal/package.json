@@ -1,5 +1,5 @@
 {
-  "name": "legal",
+  "name": "egov-legal",
   "version": "0.0.1",
   "description": "Common methods",
   "main": "index.js",

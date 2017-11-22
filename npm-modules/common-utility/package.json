@@ -1,5 +1,5 @@
 {
-  "name": "common-utility",
+  "name": "egov-common-utility",
   "version": "0.0.1",
   "description": "Common methods",
   "main": "index.js",

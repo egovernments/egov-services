@@ -97,7 +97,7 @@ public class ProjectCode   {
   **/
   @ApiModelProperty(value = "Code of the Project")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=100)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=100)
   public String getCode() {
     return code;
   }

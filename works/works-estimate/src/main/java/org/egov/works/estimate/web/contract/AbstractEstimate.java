@@ -263,7 +263,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.")
 //  @NotNull
 
-  @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
+  @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
   public String getAbstractEstimateNumber() {
     return abstractEstimateNumber;
   }
@@ -327,7 +327,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Letter Reference Number of the Abstract Estimate")
   @NotNull
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=100)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(min=1,max=100)
   public String getReferenceNumber() {
     return referenceNumber;
   }
@@ -588,7 +588,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Council resolution number of the Abstract Estimate")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+")
+ @Pattern(regexp="[a-zA-Z0-9-/]+")
   public String getCouncilResolutionNumber() {
     return councilResolutionNumber;
   }
@@ -748,7 +748,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Unique number of admin sanction for the Abstract Estimate")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(min=1,max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(min=1,max=50)
   public String getAdminSanctionNumber() {
     return adminSanctionNumber;
   }
@@ -809,7 +809,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Financial sanction number of the Abstract Estimate")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
   public String getFinancialSanctionNumber() {
     return financialSanctionNumber;
   }

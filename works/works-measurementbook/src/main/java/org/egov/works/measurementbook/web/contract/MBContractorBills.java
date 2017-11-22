@@ -26,7 +26,7 @@ public class MBContractorBills {
 	private String tenantId = null;
 
 	@JsonProperty("measurementBook")
-	private MeasurementBook measurementBook = null;
+	private String measurementBook = null;
 
 	@JsonProperty("contractorBill")
 	private ContractorBill contractorBill = null;
@@ -76,7 +76,7 @@ public class MBContractorBills {
 		this.tenantId = tenantId;
 	}
 
-	public MBContractorBills measurementBook(MeasurementBook measurementBook) {
+	public MBContractorBills measurementBook(String measurementBook) {
 		this.measurementBook = measurementBook;
 		return this;
 	}
@@ -91,11 +91,11 @@ public class MBContractorBills {
 
 	@Valid
 
-	public MeasurementBook getMeasurementBook() {
+	public String getMeasurementBook() {
 		return measurementBook;
 	}
 
-	public void setMeasurementBook(MeasurementBook measurementBook) {
+	public void setMeasurementBook(String measurementBook) {
 		this.measurementBook = measurementBook;
 	}
 

@@ -29,8 +29,8 @@ public class MBMeasurementSheet {
 	@JsonProperty("remarks")
 	private String remarks = null;
 
-	@JsonProperty("no")
-	private BigDecimal no = null;
+	@JsonProperty("number")
+	private BigDecimal number = null;
 
 	@JsonProperty("length")
 	private BigDecimal length = null;
@@ -45,7 +45,10 @@ public class MBMeasurementSheet {
 	private BigDecimal quantity = null;
 
 	@JsonProperty("measurementBookDetail")
-	private MeasurementBookDetail measurementBookDetail = null;
+	private String measurementBookDetail = null;
+	
+	@JsonProperty("loaMeasurementSheet")
+	private LOAMeasurementSheet loaMeasurementSheet = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
@@ -114,26 +117,26 @@ public class MBMeasurementSheet {
 		this.remarks = remarks;
 	}
 
-	public MBMeasurementSheet no(BigDecimal no) {
-		this.no = no;
+	public MBMeasurementSheet number(BigDecimal number) {
+		this.number = number;
 		return this;
 	}
 
 	/**
-	 * No. of the Measurement sheet
+	 * Number of the Measurement sheet
 	 * 
-	 * @return no
+	 * @return number
 	 **/
-	@ApiModelProperty(value = "No. of the Measurement sheet")
+	@ApiModelProperty(value = "Number of the Measurement sheet")
 
 	@Valid
 
-	public BigDecimal getNo() {
-		return no;
+	public BigDecimal getNumber() {
+		return number;
 	}
 
-	public void setNo(BigDecimal no) {
-		this.no = no;
+	public void setNumber(BigDecimal number) {
+		this.number = number;
 	}
 
 	public MBMeasurementSheet length(BigDecimal length) {
@@ -225,7 +228,7 @@ public class MBMeasurementSheet {
 		this.quantity = quantity;
 	}
 
-	public MBMeasurementSheet measurementBookDetail(MeasurementBookDetail measurementBookDetail) {
+	public MBMeasurementSheet measurementBookDetail(String measurementBookDetail) {
 		this.measurementBookDetail = measurementBookDetail;
 		return this;
 	}
@@ -240,12 +243,29 @@ public class MBMeasurementSheet {
 
 	@Valid
 
-	public MeasurementBookDetail getMeasurementBookDetail() {
+	public String getMeasurementBookDetail() {
 		return measurementBookDetail;
 	}
 
-	public void setMeasurementBookDetail(MeasurementBookDetail measurementBookDetail) {
+	public void setMeasurementBookDetail(String measurementBookDetail) {
 		this.measurementBookDetail = measurementBookDetail;
+	}
+
+	/**
+	 * LOAMeasurementSheet reference
+	 * 
+	 * @return loaMeasurementSheet
+	 **/
+	@ApiModelProperty(required = true, value = "LOA Measurement sheet reference")
+	@NotNull
+
+	@Valid
+	public LOAMeasurementSheet getLoaMeasurementSheet() {
+		return loaMeasurementSheet;
+	}
+
+	public void setLoaMeasurementSheet(LOAMeasurementSheet loaMeasurementSheet) {
+		this.loaMeasurementSheet = loaMeasurementSheet;
 	}
 
 	public MBMeasurementSheet auditDetails(AuditDetails auditDetails) {
@@ -282,7 +302,7 @@ public class MBMeasurementSheet {
 		return Objects.equals(this.id, mbMeasurementSheet.id)
 				&& Objects.equals(this.tenantId, mbMeasurementSheet.tenantId)
 				&& Objects.equals(this.remarks, mbMeasurementSheet.remarks)
-				&& Objects.equals(this.no, mbMeasurementSheet.no)
+				&& Objects.equals(this.number, mbMeasurementSheet.number)
 				&& Objects.equals(this.length, mbMeasurementSheet.length)
 				&& Objects.equals(this.width, mbMeasurementSheet.width)
 				&& Objects.equals(this.depthOrHeight, mbMeasurementSheet.depthOrHeight)
@@ -293,7 +313,7 @@ public class MBMeasurementSheet {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, remarks, no, length, width, depthOrHeight, quantity, measurementBookDetail,
+		return Objects.hash(id, tenantId, remarks, number, length, width, depthOrHeight, quantity, measurementBookDetail,
 				auditDetails);
 	}
 
@@ -305,7 +325,7 @@ public class MBMeasurementSheet {
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
-		sb.append("    no: ").append(toIndentedString(no)).append("\n");
+		sb.append("    number: ").append(toIndentedString(number)).append("\n");
 		sb.append("    length: ").append(toIndentedString(length)).append("\n");
 		sb.append("    width: ").append(toIndentedString(width)).append("\n");
 		sb.append("    depthOrHeight: ").append(toIndentedString(depthOrHeight)).append("\n");

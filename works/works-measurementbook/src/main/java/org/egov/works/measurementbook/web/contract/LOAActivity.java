@@ -35,7 +35,7 @@ public class LOAActivity {
 	private String estimateActivity = null;
 
 	@JsonProperty("parent")
-	private LOAActivity parent = null;
+	private String parent = null;
 
 	@JsonProperty("approvedRate")
 	private BigDecimal approvedRate = null;
@@ -141,7 +141,7 @@ public class LOAActivity {
 		this.estimateActivity = estimateActivity;
 	}
 
-	public LOAActivity parent(LOAActivity parent) {
+	public LOAActivity parent(String parent) {
 		this.parent = parent;
 		return this;
 	}
@@ -156,11 +156,11 @@ public class LOAActivity {
 
 	@Valid
 
-	public LOAActivity getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParent(LOAActivity parent) {
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
 

@@ -8,9 +8,12 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import org.egov.works.measurementbook.domain.service.MeasurementBookService;
 import org.egov.works.measurementbook.web.contract.MeasurementBookRequest;
 import org.egov.works.measurementbook.web.contract.MeasurementBookResponse;
+import org.egov.works.measurementbook.web.contract.MeasurementBookSearchContract;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -24,10 +27,13 @@ import io.swagger.annotations.ApiParam;
 @Controller
 public class MeasurementbooksApiController implements MeasurementbooksApi {
 
+	@Autowired
+	private MeasurementBookService measurementBookService;
+
 	public ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
 			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
-		// do some magic!
-		return new ResponseEntity<MeasurementBookResponse>(HttpStatus.OK);
+		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.create(measurementBookRequest),
+				HttpStatus.OK);
 	}
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksSearchPost(
@@ -49,14 +55,20 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 			@ApiParam(value = "The user who created the Measurement Book") @RequestParam(value = "createdBy", required = false) String createdBy,
 			@Size(max = 50) @ApiParam(value = "Comma separated list of Names of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
 			@Size(max = 50) @ApiParam(value = "Comma separated list of codes of the contractor to which Measurement Book belongs to") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes) {
-		// do some magic!
-		return new ResponseEntity<MeasurementBookResponse>(HttpStatus.OK);
+		MeasurementBookSearchContract measurementBookSearchContract = MeasurementBookSearchContract.builder()
+				.tenantId(tenantId).pageSize(pageSize).pageNumber(pageNumber).sortProperty(sortBy).ids(ids)
+				.statuses(statuses).workOrderNumbers(workOrderNumbers).mbRefNumbers(mbRefNumbers).loaNumbers(loaNumbers)
+				.detailedEstimateNumbers(detailedEstimateNumbers).workIdentificationNumbers(workIdentificationNumbers)
+				.fromDate(fromDate).toDate(toDate).departmentCodes(department).createdBy(createdBy)
+				.contractorNames(contractorNames).contractorCodes(contractorCodes).build();
+		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.search(measurementBookSearchContract, requestInfo),
+				HttpStatus.OK);
 	}
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
 			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
-		// do some magic!
-		return new ResponseEntity<MeasurementBookResponse>(HttpStatus.OK);
+		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.update(measurementBookRequest),
+				HttpStatus.OK);
 	}
 
 }

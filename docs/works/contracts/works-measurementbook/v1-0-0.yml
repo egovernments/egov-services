@@ -299,7 +299,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Epoch time till when bill is created
-        - name: billType
+        - name: billTypes
           in: query
           type: array
           items:
@@ -329,7 +329,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Contractor Bill Status
-        - name: workIdentificationNumber
+        - name: workIdentificationNumbers
           in: query
           type: array
           items:
@@ -349,7 +349,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of contractor names
-        - name: department
+        - name: departmentCodes
           in: query
           type: array
           items:
@@ -579,7 +579,7 @@ definitions:
         maxLength: 128
         minLength: 2
       measurementBook:
-        $ref: '#/definitions/MeasurementBook'
+        type: string
         description: Measurement book reference
       contractorBill:
         $ref: '#/definitions/ContractorBill'
@@ -594,7 +594,7 @@ definitions:
       
   MeasurementBookDetail:
     type: object
-    description: An Object that hold details for the given Measuremnet book. At least one data should be given to create an Measurement book
+    description: An Object that hold details for the given Measurement book. At least one data should be given to create an Measurement book
     properties:
       id:
         type: string
@@ -605,10 +605,10 @@ definitions:
         maxLength: 128
         minLength: 2
       measurementBook:
-        $ref: '#/definitions/MeasurementBook'
+        type: string
         description: Measurement book reference
-     # loaActivity:
-      #  $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAActivity"        
+      loaActivity:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAActivity"        
       quantity:
         type: number
         format: double
@@ -654,7 +654,7 @@ definitions:
       - rate
       - quantity
       - amount
-     # - loaActivity
+      - loaActivity
       - measurementBook
         
   MBMeasurementSheet:
@@ -674,10 +674,10 @@ definitions:
           description: Remarks of the Measurement sheet
           pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]"
           maxLength: 1024
-        no:
+        number:
           type: number
           format: BigDecimal
-          description: No. of the Measurement sheet
+          description: Number of the Measurement sheet
           maxLength: 20
         length:
           type: number
@@ -701,17 +701,17 @@ definitions:
           minLength: 1
           maxLength: 20
         measurementBookDetail:
-          $ref: '#/definitions/MeasurementBookDetail'
+          type: string
           description: Measurement Book Details reference
-        #loaMeasurementSheet:
-         # $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAMeasurementSheet"
+        loaMeasurementSheet:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAMeasurementSheet"
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
         - tenantId
         - quantity
         - measurementBookDetail
-        #- loaMeasurementSheet
+        - loaMeasurementSheet
         
   MeasurementBookRequest:
       description: Contract class to send response. Array of Measurement Book items are used in case of search results, also multiple  Measurement Book item is used for create and update

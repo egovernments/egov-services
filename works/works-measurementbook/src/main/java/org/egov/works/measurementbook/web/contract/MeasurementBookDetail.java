@@ -30,7 +30,10 @@ public class MeasurementBookDetail {
 	private String tenantId = null;
 
 	@JsonProperty("measurementBook")
-	private MeasurementBook measurementBook = null;
+	private String measurementBook = null;
+	
+	@JsonProperty("loaActivity")
+	private LOAActivity loaActivity = null;
 
 	@JsonProperty("quantity")
 	private Double quantity = null;
@@ -98,7 +101,7 @@ public class MeasurementBookDetail {
 		this.tenantId = tenantId;
 	}
 
-	public MeasurementBookDetail measurementBook(MeasurementBook measurementBook) {
+	public MeasurementBookDetail measurementBook(String measurementBook) {
 		this.measurementBook = measurementBook;
 		return this;
 	}
@@ -113,12 +116,29 @@ public class MeasurementBookDetail {
 
 	@Valid
 
-	public MeasurementBook getMeasurementBook() {
+	public String getMeasurementBook() {
 		return measurementBook;
 	}
 
-	public void setMeasurementBook(MeasurementBook measurementBook) {
+	public void setMeasurementBook(String measurementBook) {
 		this.measurementBook = measurementBook;
+	}
+
+	/**
+	 * LOAActivity reference
+	 * 
+	 * @return loaActivity
+	 **/
+	@ApiModelProperty(required = true, value = "LOA Activity reference")
+	@NotNull
+
+	@Valid
+	public LOAActivity getLoaActivity() {
+		return loaActivity;
+	}
+
+	public void setLoaActivity(LOAActivity loaActivity) {
+		this.loaActivity = loaActivity;
 	}
 
 	public MeasurementBookDetail quantity(Double quantity) {

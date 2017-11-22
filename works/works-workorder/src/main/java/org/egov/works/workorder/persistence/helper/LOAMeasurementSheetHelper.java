@@ -45,7 +45,7 @@ public class LOAMeasurementSheetHelper {
         LOAMeasurementSheet loaMeasurementSheet = new LOAMeasurementSheet();
         loaMeasurementSheet.setId(this.id);
         loaMeasurementSheet.setTenantId(this.tenantId);
-        loaMeasurementSheet.setNumber(this.number);
+        loaMeasurementSheet.setNo(this.number);
         loaMeasurementSheet.setLength(this.length);
         loaMeasurementSheet.setWidth(this.width);
         loaMeasurementSheet.setDepthOrHeight(this.depthOrHeight);

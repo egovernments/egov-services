@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Hold the asset specific information.
  */
 @ApiModel(description = "Hold the asset specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class Asset {
 	@JsonProperty("anticipatedLife")
@@ -86,9 +86,6 @@ public class Asset {
 	@JsonProperty("latitude")
 	private Double latitude = null;
 
-	@JsonProperty("landSurveyNo")
-	private String landSurveyNo = null;
-
 	@JsonProperty("quantity")
 	private Long quantity = null;
 
@@ -107,8 +104,8 @@ public class Asset {
 	@JsonProperty("oldCode")
 	private String oldCode = null;
 
-	@JsonProperty("departmentCode")
-	private String departmentCode = null;
+	@JsonProperty("department")
+	private Department department = null;
 
 	@JsonProperty("assetCategory")
 	private AssetCategory assetCategory = null;
@@ -153,7 +150,7 @@ public class Asset {
 	private List<YearWiseDepreciation> yearWiseDepreciationRate = null;
 
 	@JsonProperty("fundSource")
-	private String fundSource = null;
+	private Fundsource fundSource = null;
 
 	@JsonProperty("location")
 	private String location = null;
@@ -176,8 +173,7 @@ public class Asset {
 	 * 
 	 * @return anticipatedLife
 	 **/
-	@ApiModelProperty(required = true, value = "Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.")
-	@NotNull
+	@ApiModelProperty(value = "Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.")
 
 	public Long getAnticipatedLife() {
 		return anticipatedLife;
@@ -237,8 +233,7 @@ public class Asset {
 	 * 
 	 * @return wipReferenceNo
 	 **/
-	@ApiModelProperty(required = true, value = "Ref No of WIP(work in progress) Register.")
-	@NotNull
+	@ApiModelProperty(value = "Ref No of WIP(work in progress) Register.")
 
 	public String getWipReferenceNo() {
 		return wipReferenceNo;
@@ -649,26 +644,6 @@ public class Asset {
 		this.latitude = latitude;
 	}
 
-	public Asset landSurveyNo(String landSurveyNo) {
-		this.landSurveyNo = landSurveyNo;
-		return this;
-	}
-
-	/**
-	 * Survey No of land on which structure is located.
-	 * 
-	 * @return landSurveyNo
-	 **/
-	@ApiModelProperty(value = "Survey No of land on which structure is located.")
-
-	public String getLandSurveyNo() {
-		return landSurveyNo;
-	}
-
-	public void setLandSurveyNo(String landSurveyNo) {
-		this.landSurveyNo = landSurveyNo;
-	}
-
 	public Asset quantity(Long quantity) {
 		this.quantity = quantity;
 		return this;
@@ -793,25 +768,27 @@ public class Asset {
 		this.oldCode = oldCode;
 	}
 
-	public Asset departmentCode(String departmentCode) {
-		this.departmentCode = departmentCode;
+	public Asset department(Department department) {
+		this.department = department;
 		return this;
 	}
 
 	/**
-	 * code of the department to which the asset belongs
+	 * Get department
 	 * 
-	 * @return departmentCode
+	 * @return department
 	 **/
-	@ApiModelProperty(required = true, value = "code of the department to which the asset belongs")
+	@ApiModelProperty(required = true, value = "")
 	@NotNull
 
-	public String getDepartmentCode() {
-		return departmentCode;
+	@Valid
+
+	public Department getDepartment() {
+		return department;
 	}
 
-	public void setDepartmentCode(String departmentCode) {
-		this.departmentCode = departmentCode;
+	public void setDepartment(Department department) {
+		this.department = department;
 	}
 
 	public Asset assetCategory(AssetCategory assetCategory) {
@@ -1138,23 +1115,25 @@ public class Asset {
 		this.yearWiseDepreciationRate = yearWiseDepreciationRate;
 	}
 
-	public Asset fundSource(String fundSource) {
+	public Asset fundSource(Fundsource fundSource) {
 		this.fundSource = fundSource;
 		return this;
 	}
 
 	/**
-	 * The unique code from the Fund master
+	 * only code is mandatory for the FundSource object while asset is created.
 	 * 
 	 * @return fundSource
 	 **/
-	@ApiModelProperty(value = "The unique code from the Fund master")
+	@ApiModelProperty(value = "only code is mandatory for the FundSource object while asset is created.")
 
-	public String getFundSource() {
+	@Valid
+
+	public Fundsource getFundSource() {
 		return fundSource;
 	}
 
-	public void setFundSource(String fundSource) {
+	public void setFundSource(Fundsource fundSource) {
 		this.fundSource = fundSource;
 	}
 
@@ -1260,11 +1239,10 @@ public class Asset {
 				&& Objects.equals(this.locationDetails, asset.locationDetails)
 				&& Objects.equals(this.totalArea, asset.totalArea) && Objects.equals(this.address, asset.address)
 				&& Objects.equals(this.longitude, asset.longitude) && Objects.equals(this.latitude, asset.latitude)
-				&& Objects.equals(this.landSurveyNo, asset.landSurveyNo)
 				&& Objects.equals(this.quantity, asset.quantity) && Objects.equals(this.tenantId, asset.tenantId)
 				&& Objects.equals(this.id, asset.id) && Objects.equals(this.name, asset.name)
 				&& Objects.equals(this.code, asset.code) && Objects.equals(this.oldCode, asset.oldCode)
-				&& Objects.equals(this.departmentCode, asset.departmentCode)
+				&& Objects.equals(this.department, asset.department)
 				&& Objects.equals(this.assetCategory, asset.assetCategory)
 				&& Objects.equals(this.modeOfAcquisition, asset.modeOfAcquisition)
 				&& Objects.equals(this.status, asset.status) && Objects.equals(this.grossValue, asset.grossValue)
@@ -1288,10 +1266,10 @@ public class Asset {
 				warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized,
 				acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount,
 				depreciationExpenseAccount, titleDocumentsAvalable, locationDetails, totalArea, address, longitude,
-				latitude, landSurveyNo, quantity, tenantId, id, name, code, oldCode, departmentCode, assetCategory,
-				modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks,
-				version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate,
-				yearWiseDepreciationRate, fundSource, location, openingDate, landDetails);
+				latitude, quantity, tenantId, id, name, code, oldCode, department, assetCategory, modeOfAcquisition,
+				status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version,
+				assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate,
+				fundSource, location, openingDate, landDetails);
 	}
 
 	@Override
@@ -1322,14 +1300,13 @@ public class Asset {
 		sb.append("    address: ").append(toIndentedString(address)).append("\n");
 		sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
 		sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
-		sb.append("    landSurveyNo: ").append(toIndentedString(landSurveyNo)).append("\n");
 		sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
 		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    name: ").append(toIndentedString(name)).append("\n");
 		sb.append("    code: ").append(toIndentedString(code)).append("\n");
 		sb.append("    oldCode: ").append(toIndentedString(oldCode)).append("\n");
-		sb.append("    departmentCode: ").append(toIndentedString(departmentCode)).append("\n");
+		sb.append("    department: ").append(toIndentedString(department)).append("\n");
 		sb.append("    assetCategory: ").append(toIndentedString(assetCategory)).append("\n");
 		sb.append("    modeOfAcquisition: ").append(toIndentedString(modeOfAcquisition)).append("\n");
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");

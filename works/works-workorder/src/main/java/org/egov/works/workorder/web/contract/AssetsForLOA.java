@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data of Assets or Land assets for LOA
  */
 @ApiModel(description = "An Object that holds the basic data of Assets or Land assets for LOA")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class AssetsForLOA {
 	@JsonProperty("id")

@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object holds the basic data for a Notice Detail
  */
 @ApiModel(description = "An Object holds the basic data for a Notice Detail")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class NoticeDetail {
 	@JsonProperty("id")
@@ -26,7 +26,7 @@ public class NoticeDetail {
 	private String tenantId = null;
 
 	@JsonProperty("notice")
-	private Notice notice = null;
+	private String notice = null;
 
 	@JsonProperty("remarks")
 	private String remarks = null;
@@ -76,26 +76,24 @@ public class NoticeDetail {
 		this.tenantId = tenantId;
 	}
 
-	public NoticeDetail notice(Notice notice) {
+	public NoticeDetail notice(String notice) {
 		this.notice = notice;
 		return this;
 	}
 
 	/**
-	 * Get notice
+	 * Reference of Notice
 	 * 
 	 * @return notice
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@ApiModelProperty(required = true, value = "Reference of Notice")
 	@NotNull
 
-	@Valid
-
-	public Notice getNotice() {
+	public String getNotice() {
 		return notice;
 	}
 
-	public void setNotice(Notice notice) {
+	public void setNotice(String notice) {
 		this.notice = notice;
 	}
 

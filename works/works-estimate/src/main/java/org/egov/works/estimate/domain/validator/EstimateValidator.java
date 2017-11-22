@@ -185,9 +185,9 @@ public class EstimateValidator {
 			Map<String, String> messages, Boolean isNew) {
 
 		Boolean isFinIntReq = false;
-		JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
-				Constants.FINANCIAL_INTEGRATION_KEY, abstractEstimate.getTenantId(), requestInfo,
-				Constants.WORKS_MODULE_CODE);
+		JSONArray responseJSONArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+				CommonConstants.FINANCIAL_INTEGRATION_KEY, abstractEstimate.getTenantId(), requestInfo,
+				CommonConstants.MODULENAME_WORKS);
 		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
 			Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
 			if (jsonMap.get("value").equals("Yes"))
@@ -218,7 +218,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (modeOfAllotment != null && modeOfAllotment.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.MODEOFALLOTMENT_OBJECT, CommonConstants.CODE,
-					modeOfAllotment.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					modeOfAllotment.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_MODEOFALLOTMENT_INVALID, Constants.MESSAGE_MODEOFALLOTMENT_INVALID);
 			}
@@ -231,7 +231,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (referenceType != null && referenceType.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.REFERENCETYPE_OBJECT, CommonConstants.CODE,
-					referenceType.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					referenceType.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_REFERENCETYPE_INVALID, Constants.MESSAGE_REFERENCETYPE_INVALID);
 			}
@@ -280,7 +280,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (scheme != null && scheme.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.SCHEME_OBJECT, CommonConstants.CODE,
-					scheme.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					scheme.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_SCHEME_INVALID, Constants.MESSAGE_SCHEME_INVALID);
 			}
@@ -292,7 +292,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (subScheme != null && subScheme.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.SUBSCHEME_OBJECT, CommonConstants.CODE,
-					subScheme.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					subScheme.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_SUBSCHEME_INVALID, Constants.MESSAGE_SUBSCHEME_INVALID);
 			}
@@ -304,7 +304,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (budgetGroup != null && budgetGroup.getName() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.BUDGETGROUP_OBJECT, CommonConstants.NAME,
-					budgetGroup.getName(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					budgetGroup.getName(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_BUDGETGROUP_INVALID, Constants.MESSAGE_BUDGETGROUP_INVALID);
 			}
@@ -323,7 +323,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (typeOfWork != null && typeOfWork.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT, CommonConstants.CODE,
-					typeOfWork.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					typeOfWork.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_TYPEOFWORK_INVALID, Constants.MESSAGE_TYPEOFWORK_INVALID);
 			}
@@ -336,7 +336,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (subTypeOfWork != null && subTypeOfWork.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.TYPEOFWORK_OBJECT, CommonConstants.CODE,
-					subTypeOfWork.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					subTypeOfWork.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_SUBTYPEOFWORK_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_INVALID);
 			}
@@ -349,7 +349,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (department != null && department.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.DEPARTMENT_OBJECT, CommonConstants.CODE,
-					department.getCode(), tenantId, requestInfo, Constants.COMMON_MASTERS_MODULE_CODE);
+					department.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_DEPARTMENT_INVALID, Constants.MESSAGE_DEPARTMENT_INVALID);
 			}
@@ -361,7 +361,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (ward != null && ward.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.WARD_OBJECT, CommonConstants.CODE, ward.getCode(),
-					tenantId, requestInfo, Constants.COMMON_MASTERS_MODULE_CODE);
+					tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_WARD_INVALID, Constants.MESSAGE_WARD_INVALID);
 			}
@@ -374,7 +374,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (locality != null && locality.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.LOCALITY_OBJECT, CommonConstants.CODE,
-					locality.getCode(), tenantId, requestInfo, Constants.COMMON_MASTERS_MODULE_CODE);
+					locality.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_LOCALITY_INVALID, Constants.MESSAGE_LOCALITY_INVALID);
 			}
@@ -532,7 +532,7 @@ public class EstimateValidator {
 	private void validateEstimateOverHead(Overhead overhead, RequestInfo requestInfo, Map<String, String> messages) {
 		if (overhead != null && StringUtils.isNotBlank(overhead.getCode())) {
 			JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.OVERHEAD_OBJECT, CommonConstants.CODE,
-					overhead.getCode(), overhead.getTenantId(), requestInfo, Constants.WORKS_MODULE_CODE);
+					overhead.getCode(), overhead.getTenantId(), requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_ESTIMATE_OVERHEAD_CODE_INVALID,
 						Constants.MESSAGE_ESTIMATE_OVERHEAD_CODE_INVALID);
@@ -603,7 +603,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (uom != null && uom.getCode() != null) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.UOM_OBJECT, CommonConstants.CODE, uom.getCode(),
-					tenantId, requestInfo, Constants.COMMON_MASTERS_MODULE_CODE);
+					tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_UOM_INVALID, Constants.MESSAGE_UOM_INVALID);
 			}
@@ -613,9 +613,9 @@ public class EstimateValidator {
 	public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
 			Map<String, String> messages) {
 		if (propertiesManager.getLocationRequiredForEstimate().toString().equalsIgnoreCase("Yes")) {
-			JSONArray mdmsArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+			JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
 					Constants.GIS_INTEGRATION_APPCONFIG, detailedEstimate.getTenantId(), requestInfo,
-					Constants.WORKS_MODULE_CODE);
+					CommonConstants.MODULENAME_WORKS);
 			if (mdmsArray != null && !mdmsArray.isEmpty()) {
 				Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
 				if (jsonMap.get("value").equals("Yes") && (StringUtils.isBlank(detailedEstimate.getLocation())
@@ -629,9 +629,9 @@ public class EstimateValidator {
 	public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
 			Map<String, String> messages, AbstractEstimate abstractEstimate) {
 
-		JSONArray mdmsArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
-				Constants.ASSET_DETAILES_REQUIRED_APPCONFIG, detailedEstimate.getTenantId(), requestInfo,
-				Constants.WORKS_MODULE_CODE);
+		JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+				CommonConstants.ASSET_DETAILES_REQUIRED_APPCONFIG, detailedEstimate.getTenantId(), requestInfo,
+				CommonConstants.MODULENAME_WORKS);
 		boolean assetsAdded = false;
 		if (mdmsArray != null && !mdmsArray.isEmpty()) {
 			Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
@@ -654,7 +654,7 @@ public class EstimateValidator {
 					mdmsArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT,
 							CommonConstants.EXPENDITURETYPE,
 							detailedEstimate.getNatureOfWork().getExpenditureType().toString(),
-							detailedEstimate.getTenantId(), requestInfo, Constants.WORKS_MODULE_CODE);
+							detailedEstimate.getTenantId(), requestInfo, CommonConstants.MODULENAME_WORKS);
 					if (mdmsArray != null && !mdmsArray.isEmpty()) {
 						Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
 						if (jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE.toString())
@@ -694,9 +694,9 @@ public class EstimateValidator {
 	public void validateEstimateAssetDetails(final AbstractEstimate abstractEstimate, final RequestInfo requestInfo,
 			Map<String, String> messages) {
 
-		JSONArray mdmsArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
-				Constants.ASSET_DETAILES_REQUIRED_APPCONFIG, abstractEstimate.getTenantId(), requestInfo,
-				Constants.WORKS_MODULE_CODE);
+		JSONArray mdmsArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+				CommonConstants.ASSET_DETAILES_REQUIRED_APPCONFIG, abstractEstimate.getTenantId(), requestInfo,
+				CommonConstants.MODULENAME_WORKS);
 		boolean assetsAdded = false;
 		if (mdmsArray != null && !mdmsArray.isEmpty()) {
 			Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
@@ -719,7 +719,7 @@ public class EstimateValidator {
 					mdmsArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT,
 							CommonConstants.EXPENDITURETYPE,
 							abstractEstimate.getNatureOfWork().getExpenditureType().toString(),
-							abstractEstimate.getTenantId(), requestInfo, Constants.WORKS_MODULE_CODE);
+							abstractEstimate.getTenantId(), requestInfo, CommonConstants.MODULENAME_WORKS);
 					if (mdmsArray != null && !mdmsArray.isEmpty()) {
 						Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
 						if (jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE.toString())
@@ -807,9 +807,9 @@ public class EstimateValidator {
 			Map<String, String> messages) {
 		JSONArray responseJSONArray = null;
 
-		responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
-				Constants.FINANCIAL_INTEGRATION_KEY, detailedEstimate.getTenantId(), requestInfo,
-				Constants.WORKS_MODULE_CODE);
+		responseJSONArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+				CommonConstants.FINANCIAL_INTEGRATION_KEY, detailedEstimate.getTenantId(), requestInfo,
+				CommonConstants.MODULENAME_WORKS);
 		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
 			Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
 			if (jsonMap.get("value").equals("Yes"))
@@ -854,7 +854,7 @@ public class EstimateValidator {
 		JSONArray responseJSONArray;
 		if (natureOfWork != null && StringUtils.isNotBlank(natureOfWork.getCode())) {
 			responseJSONArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT, CommonConstants.CODE,
-					natureOfWork.getCode(), tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+					natureOfWork.getCode(), tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 			if (responseJSONArray != null && responseJSONArray.isEmpty()) {
 				messages.put(Constants.KEY_NATUREOFWORK_INVALID, Constants.MESSAGE_NATUREOFWORK_INVALID);
 			} else {

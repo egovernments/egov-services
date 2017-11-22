@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object holds the basic data of Letter Of Acceptance
  */
 @ApiModel(description = "An Object holds the basic data of Letter Of Acceptance")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class LetterOfAcceptance {
 	@JsonProperty("id")
@@ -74,7 +74,7 @@ public class LetterOfAcceptance {
 	private Long fileDate = null;
 
 	@JsonProperty("parent")
-	private LetterOfAcceptance parent = null;
+	private String parent = null;
 
 	@JsonProperty("stateId")
 	private String stateId = null;
@@ -161,7 +161,7 @@ public class LetterOfAcceptance {
 	@ApiModelProperty(required = true, value = "L1 Tender Finalized Contractor")
 	@NotNull
 
-	@Valid
+//	@Valid
 
 	public Contractor getContractor() {
 		return contractor;
@@ -210,10 +210,8 @@ public class LetterOfAcceptance {
 	 * @return loaNumber
 	 **/
 	@ApiModelProperty(required = true, value = "Unique LOA Number of the Letter Of Acceptance. If the LOA is spillover then the LOA number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover LOA.")
-	@NotNull
 
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(min = 1, max = 50)
+	 @Pattern(regexp="[0-9a-zA-Z-/]+") @Size(max=50)
 	public String getLoaNumber() {
 		return loaNumber;
 	}
@@ -493,7 +491,7 @@ public class LetterOfAcceptance {
 		this.fileDate = fileDate;
 	}
 
-	public LetterOfAcceptance parent(LetterOfAcceptance parent) {
+	public LetterOfAcceptance parent(String parent) {
 		this.parent = parent;
 		return this;
 	}
@@ -506,13 +504,11 @@ public class LetterOfAcceptance {
 	 **/
 	@ApiModelProperty(value = "Parent of Letter Of Acceptance. This is required in case of Revision Work Order")
 
-	@Valid
-
-	public LetterOfAcceptance getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParent(LetterOfAcceptance parent) {
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
 

@@ -3,6 +3,7 @@ package org.egov.works.workorder.persistence.helper;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import org.egov.works.workorder.web.contract.AssetsForLOA;
+import org.egov.works.workorder.web.contract.DetailedEstimate;
 import org.egov.works.workorder.web.contract.LOAActivity;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
 
@@ -35,7 +36,9 @@ public class LetterOfAcceptanceEstimateHelper {
         letterOfAcceptanceEstimate.setId(this.id);
         letterOfAcceptanceEstimate.setTenantId(this.tenantId);
         letterOfAcceptanceEstimate.setLetterOfAcceptance(this.letterOfAcceptance);
-        letterOfAcceptanceEstimate.setDetailedEstimate(this.detailedEstimate);
+        DetailedEstimate detailedEstimate = new DetailedEstimate();
+        detailedEstimate.setId(this.detailedEstimate);
+        letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
         letterOfAcceptanceEstimate.setWorkCompletionDate(this.workCompletionDate);
         letterOfAcceptanceEstimate.setEstimateLOAAmount(this.estimateLOAAmount);
 

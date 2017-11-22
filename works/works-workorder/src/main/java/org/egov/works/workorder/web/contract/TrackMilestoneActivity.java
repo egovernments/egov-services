@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * data should be given to create an Track Milestone
  */
 @ApiModel(description = "An Object that holds Activity for the given Track  Milestone. At least one data should be given to create an Track Milestone")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class TrackMilestoneActivity {
 	@JsonProperty("id")
@@ -28,7 +28,7 @@ public class TrackMilestoneActivity {
 	private String tenantId = null;
 
 	@JsonProperty("trackMilestone")
-	private TrackMilestone trackMilestone = null;
+	private String trackMilestone = null;
 
 	@JsonProperty("milestoneActivity")
 	private MilestoneActivity milestoneActivity = null;
@@ -87,7 +87,7 @@ public class TrackMilestoneActivity {
 		this.tenantId = tenantId;
 	}
 
-	public TrackMilestoneActivity trackMilestone(TrackMilestone trackMilestone) {
+	public TrackMilestoneActivity trackMilestone(String trackMilestone) {
 		this.trackMilestone = trackMilestone;
 		return this;
 	}
@@ -100,13 +100,11 @@ public class TrackMilestoneActivity {
 	@ApiModelProperty(required = true, value = "Track Milestone reference")
 	@NotNull
 
-	@Valid
-
-	public TrackMilestone getTrackMilestone() {
+	public String getTrackMilestone() {
 		return trackMilestone;
 	}
 
-	public void setTrackMilestone(TrackMilestone trackMilestone) {
+	public void setTrackMilestone(String trackMilestone) {
 		this.trackMilestone = trackMilestone;
 	}
 

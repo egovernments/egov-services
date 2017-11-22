@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.works.workorder.domain.repository.EstimateRepository;
-import org.egov.works.workorder.web.contract.DetailedEstimate;
-import org.egov.works.workorder.web.contract.DetailedEstimateResponse;
-import org.egov.works.workorder.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,17 +14,17 @@ public class EstimateService {
 	@Autowired
 	private EstimateRepository estimateRepository;
 
-	public DetailedEstimate getDetailedEstimate(final String detailedEstimate,final String tenantId,final RequestInfo requestInfo) {
+	public DetailedEstimateResponse getDetailedEstimate(final String estimateNumber,final String tenantId,final RequestInfo requestInfo) {
 		DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
-		final List<String> ids = new ArrayList<>();
-		ids.add(detailedEstimate);
-		detailedEstimateSearchContract.setIds(ids);
+		final List<String> estimateNumbers = new ArrayList<>();
+		estimateNumbers.add(estimateNumber);
+		detailedEstimateSearchContract.setDetailedEstimateNumbers(estimateNumbers);
 		List<String> statuses = new ArrayList<>();
-		statuses.add("Technical Sanction");
+		statuses.add(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString());
 		detailedEstimateSearchContract.setStatuses(statuses);
 		detailedEstimateSearchContract.setTenantId(tenantId);
 		final DetailedEstimateResponse detailedEstimateResponse = estimateRepository.getDetailedEstimateById(detailedEstimateSearchContract, 
 				tenantId, requestInfo);
-		return detailedEstimateResponse.getDetailedEstimates().get(0);
+		return detailedEstimateResponse;
 	}
 }

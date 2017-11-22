@@ -21,5 +21,24 @@ public class Constants {
 
     public static final String KEY_FUTUREDATE_FILEDATE = "INVALID_FILEDATE";
     public static final String MESSAGE_FUTUREDATE_FILEDATE = "File Date cannot be future date";
+    
+    public static final String KEY_DETAILEDESTIMATE_STATUS = "INVALID_DETAILEDESTIMATE_STATUS";
+    public static final String MESSAGE_DETAILEDESTIMATE_STATUS = "Detailed Estimate status should be Technical sanctioned";
 
+    public static final String KEY_DETAILEDESTIMATE_OFFLINE_STATUS = "INVALID_DETAILEDESTIMATE_OFFLINE_STATUS";
+    public static final String MESSAGE_DETAILEDESTIMATE_OFFLINE_STATUS = "Offline Status for Detailed Estimate should be L1 TENDER FINALIZED";
+    
+    public static final String KEY_FUTUREDATE_LOADATE_OFFLINESTATUS = "INVALID_LOADATE_OFFLINESTATUS";
+    public static final String MESSAGE_FUTUREDATE_LOADATE_OFFLINESTATUS = "LOA Date cannot greater then L1 TENDER FINALIZED date";
+    
+    public static final String KEY_DETAILEDESTIMATE_EXIST = "INVALID_DETAILEDESTIMATE_EXIST";
+    public static final String MESSAGE_DETAILEDESTIMATE_EXIST = "Please provide valid detailed estimate";
+    
+    public static final String KEY_WORKORDER_ASSET_DETAILS_REQUIRED= "INVALID_WORKORDER_ASSET_DETAILES";
+    public static final String MESSAGE_WORKORDER_ASSET_DETAILS_REQUIRED= "Asset details required for an workorder";
+
+
+
+
+    
 }

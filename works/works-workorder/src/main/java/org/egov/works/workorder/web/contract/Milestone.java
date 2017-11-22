@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object taht holds the basic data for a Milestone
  */
 @ApiModel(description = "An Object taht holds the basic data for a Milestone")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class Milestone {
 	@JsonProperty("id")

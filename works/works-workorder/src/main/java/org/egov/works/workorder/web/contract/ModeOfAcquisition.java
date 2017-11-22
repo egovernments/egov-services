@@ -2,6 +2,8 @@ package org.egov.works.workorder.web.contract;
 
 import java.util.Objects;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
@@ -12,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * Various values can be - purchased, constructed, acquired and so on.
  */
 @ApiModel(description = "This shows the various ways by which an asset can come into the system. The Various values can be - purchased, constructed, acquired and so on.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class ModeOfAcquisition {
 	@JsonProperty("id")
@@ -100,7 +102,8 @@ public class ModeOfAcquisition {
 	 * 
 	 * @return code
 	 **/
-	@ApiModelProperty(value = "Unique code of the modeOfAcquisition")
+	@ApiModelProperty(required = true, value = "Unique code of the modeOfAcquisition")
+	@NotNull
 
 	public String getCode() {
 		return code;

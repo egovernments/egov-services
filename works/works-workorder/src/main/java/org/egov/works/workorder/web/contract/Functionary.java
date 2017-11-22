@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  * only for the internal control of the ULB.
  */
 @ApiModel(description = "Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this. Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only for the internal control of the ULB. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class Functionary {
 	@JsonProperty("id")

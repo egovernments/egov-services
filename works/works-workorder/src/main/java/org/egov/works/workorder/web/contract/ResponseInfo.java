@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * correspond to the same values in respective request&#39;s RequestInfo.
  */
 @ApiModel(description = "ResponseInfo should be used to carry metadata information about the response from the server. apiId, ver and msgId in ResponseInfo should always correspond to the same values in respective request's RequestInfo.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class ResponseInfo {
 	@JsonProperty("apiId")

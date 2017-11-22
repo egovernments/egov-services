@@ -42,25 +42,25 @@ public class EstimateUtils {
 	 * @param tenantId
 	 *            tenantId for which the data to should be retrived
 	 * @param requestInfo
+	 * 
+	 * @param fieldName
+	 *            name of the field in given object
+	 * @param fieldvalue
+	 *            value for given field name
 	 * @return the json map it to your object.
 	 */
 
-	public JSONArray getMDMSData(final String objectName, final String fieldName, final String fieldValue, final String tenantId,
-			final RequestInfo requestInfo,final String moduleName) {
+	public JSONArray getMDMSData(final String objectName, final String fieldName, final String fieldValue,
+			final String tenantId, final RequestInfo requestInfo, final String moduleName) {
 		MasterDetails[] masterDetailsArray;
 		ModuleDetails[] moduleDetailsArray;
 		MdmsRequest mdmsRequest;
 		MdmsResponse mdmsResponse;
-        String filter = "";
+		String filter = "";
 
-        if(StringUtils.isNotBlank(fieldName) && StringUtils.isNotBlank(fieldValue))
-        	filter = "[?(@." + fieldName +" == '" + fieldValue + "')]";
-        	
-//            filter = "[?(@.code == '" + codeFilter + "')]";
-//        else if(StringUtils.isNotBlank(nameFilter))
-//           filter = "[?(@.name == '" + nameFilter + "')]";
+		if (StringUtils.isNotBlank(fieldName) && StringUtils.isNotBlank(fieldValue))
+			filter = "[?(@." + fieldName + " == '" + fieldValue + "')]";
 
-        
 		masterDetailsArray = new MasterDetails[1];
 		masterDetailsArray[0] = MasterDetails.builder().name(objectName).filter(filter).build();
 		moduleDetailsArray = new ModuleDetails[1];
@@ -75,7 +75,7 @@ public class EstimateUtils {
 
 		return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
 	}
-	
+
 	/**
 	 * @param requestInfo
 	 * @return responseInfo
@@ -87,7 +87,7 @@ public class EstimateUtils {
 		responseInfo.setResMsgId(requestInfo.getMsgId());
 		return responseInfo;
 	}
-	
+
 	public AuditDetails setAuditDetails(final RequestInfo requestInfo, final Boolean isUpdate) {
 		AuditDetails auditDetails = new AuditDetails();
 		if (!isUpdate) {
@@ -99,4 +99,5 @@ public class EstimateUtils {
 
 		return auditDetails;
 	}
+
 }

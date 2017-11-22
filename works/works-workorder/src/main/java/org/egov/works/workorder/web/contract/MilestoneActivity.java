@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * should be given to create an Milestone
  */
 @ApiModel(description = "An Object that holds Activity for the given Milestone. At least one data should be given to create an Milestone")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class MilestoneActivity {
 	@JsonProperty("id")
@@ -28,7 +28,7 @@ public class MilestoneActivity {
 	private String tenantId = null;
 
 	@JsonProperty("milestone")
-	private Milestone milestone = null;
+	private String milestone = null;
 
 	@JsonProperty("scheduleStartDate")
 	private Long scheduleStartDate = null;
@@ -90,26 +90,24 @@ public class MilestoneActivity {
 		this.tenantId = tenantId;
 	}
 
-	public MilestoneActivity milestone(Milestone milestone) {
+	public MilestoneActivity milestone(String milestone) {
 		this.milestone = milestone;
 		return this;
 	}
 
 	/**
-	 * Get milestone
+	 * Reference of Milestone
 	 * 
 	 * @return milestone
 	 **/
-	@ApiModelProperty(required = true, value = "")
+	@ApiModelProperty(required = true, value = "Reference of Milestone")
 	@NotNull
 
-	@Valid
-
-	public Milestone getMilestone() {
+	public String getMilestone() {
 		return milestone;
 	}
 
-	public void setMilestone(Milestone milestone) {
+	public void setMilestone(String milestone) {
 		this.milestone = milestone;
 	}
 

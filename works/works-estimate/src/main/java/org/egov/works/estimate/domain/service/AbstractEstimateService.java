@@ -117,7 +117,7 @@ public class AbstractEstimateService {
 						estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
 			}
 			if (estimate.getSpillOverFlag())
-				isSpilloverWFReq = isConfigRequired(Constants.SPILLOVER_WORKFLOW_MANDATORY,
+				isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
 						abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 			if (!isSpilloverWFReq && estimate.getSpillOverFlag())
 				estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
@@ -138,8 +138,8 @@ public class AbstractEstimateService {
 
 	private Boolean isConfigRequired(String keyName, RequestInfo requestInfo, final String tenantId) {
 		Boolean isSpilloverWFReq = false;
-		JSONArray responseJSONArray = estimateUtils.getMDMSData(Constants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
-				keyName, tenantId, requestInfo, Constants.WORKS_MODULE_CODE);
+		JSONArray responseJSONArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+				keyName, tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
 		if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
 			Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
 			if (jsonMap.get("value").equals("Yes"))
@@ -166,7 +166,7 @@ public class AbstractEstimateService {
 			estimate.setStateId(workFlowResponse.get("id"));
 			estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
 
-			Boolean isFinIntReq = isConfigRequired(Constants.FINANCIAL_INTEGRATION_KEY,
+			Boolean isFinIntReq = isConfigRequired(CommonConstants.FINANCIAL_INTEGRATION_KEY,
 					abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
 			if (isFinIntReq && estimate.getStatus().toString()

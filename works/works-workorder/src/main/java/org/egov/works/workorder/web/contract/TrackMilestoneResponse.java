@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * and update
  */
 @ApiModel(description = "Contract class to send response. Array of Track Milestone items are used in case of search results, also multiple  Track Milestone item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class TrackMilestoneResponse {
 	@JsonProperty("ResponseInfo")

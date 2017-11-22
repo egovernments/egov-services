@@ -19,9 +19,7 @@ public class Constants {
     public static final String DEPARTMENT_OBJECT = "Department";
     public static final String WARD_OBJECT = "Ward";
     public static final String LOCALITY_OBJECT = "Locality";
-    public static final String WORKS_MODULE_CODE = "Works";
     public static final String EGF_MODULE_CODE = "egf-master";
-    public static final String COMMON_MASTERS_MODULE_CODE = "common-masters";
     public static final String OVERHEAD_OBJECT = "Overhead";
     public static final String UOM_OBJECT = "Uom";
     public static final String NATUREOFWORK_OBJECT = "NatureOfWork";
@@ -29,11 +27,7 @@ public class Constants {
     public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
-    public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
-    public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
-    public static final String FINANCIAL_INTEGRATION_KEY = "Financial_Integration_Required";
-    public static final String SPILLOVER_WORKFLOW_MANDATORY = "Spillover_Workflow_Mandatory";
     
     public static final String APPROVE = "Approve";
     public static final String SUBMIT = "Submit";

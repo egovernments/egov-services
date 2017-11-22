@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * may also have multiple roles for multiple tenants.
  */
 @ApiModel(description = "User role carries the tenant related role information for the user. A user can have multiple roles per tenant based on the need of the tenant. A user may also have multiple roles for multiple tenants.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class TenantRole {
 	@JsonProperty("tenantId")

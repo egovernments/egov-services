@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data for Letter Of Acceptance Activity
  */
 @ApiModel(description = "An Object that holds the basic data for Letter Of Acceptance Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class LOAActivity {
 	@JsonProperty("id")
@@ -32,10 +32,10 @@ public class LOAActivity {
 	private String letterOfAcceptanceEstimate = null;
 
 	@JsonProperty("estimateActivity")
-	private String estimateActivity = null;
+	private EstimateActivity estimateActivity = null;
 
 	@JsonProperty("parent")
-	private LOAActivity parent = null;
+	private String parent = null;
 
 	@JsonProperty("approvedRate")
 	private BigDecimal approvedRate = null;
@@ -119,7 +119,7 @@ public class LOAActivity {
 		this.letterOfAcceptanceEstimate = letterOfAcceptanceEstimate;
 	}
 
-	public LOAActivity estimateActivity(String estimateActivity) {
+	public LOAActivity estimateActivity(EstimateActivity estimateActivity) {
 		this.estimateActivity = estimateActivity;
 		return this;
 	}
@@ -132,16 +132,17 @@ public class LOAActivity {
 	@ApiModelProperty(required = true, value = "Reference of Estimate Activity, primary key is ref here.")
 	@NotNull
 
-	@Size(min = 1, max = 100)
-	public String getEstimateActivity() {
+	@Valid
+
+	public EstimateActivity getEstimateActivity() {
 		return estimateActivity;
 	}
 
-	public void setEstimateActivity(String estimateActivity) {
+	public void setEstimateActivity(EstimateActivity estimateActivity) {
 		this.estimateActivity = estimateActivity;
 	}
 
-	public LOAActivity parent(LOAActivity parent) {
+	public LOAActivity parent(String parent) {
 		this.parent = parent;
 		return this;
 	}
@@ -154,13 +155,11 @@ public class LOAActivity {
 	 **/
 	@ApiModelProperty(value = "Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.")
 
-	@Valid
-
-	public LOAActivity getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParent(LOAActivity parent) {
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
 

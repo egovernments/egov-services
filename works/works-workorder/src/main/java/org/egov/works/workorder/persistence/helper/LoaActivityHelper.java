@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import org.egov.works.workorder.web.contract.AuditDetails;
+import org.egov.works.workorder.web.contract.EstimateActivity;
 import org.egov.works.workorder.web.contract.LOAActivity;
 import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
 
@@ -54,7 +55,8 @@ public class LoaActivityHelper {
         loaActivity.setId(this.id);
         loaActivity.setTenantId(this.tenantId);
         loaActivity.setLetterOfAcceptanceEstimate(this.letterOfAcceptanceEstimate);
-        loaActivity.setEstimateActivity(this.estimateActivity);
+        EstimateActivity estimateActivity = new EstimateActivity();
+        estimateActivity.setId(this.estimateActivity);
        // loaActivity.setParent(this.parent);
         loaActivity.setApprovedAmount(this.approvedAmount);
         loaActivity.setApprovedRate(this.approvedRate);

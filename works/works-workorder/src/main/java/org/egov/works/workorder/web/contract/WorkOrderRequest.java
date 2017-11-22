@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * update
  */
 @ApiModel(description = "Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class WorkOrderRequest {
 	@JsonProperty("RequestInfo")

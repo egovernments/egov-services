@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data for LOA Measurement Sheet
  */
 @ApiModel(description = "An Object that holds the basic data for LOA Measurement Sheet")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class LOAMeasurementSheet {
 	@JsonProperty("id")
@@ -25,8 +25,8 @@ public class LOAMeasurementSheet {
 	@JsonProperty("tenantId")
 	private String tenantId = null;
 
-	@JsonProperty("number")
-	private BigDecimal number = null;
+	@JsonProperty("no")
+	private BigDecimal no = null;
 
 	@JsonProperty("length")
 	private BigDecimal length = null;
@@ -91,26 +91,26 @@ public class LOAMeasurementSheet {
 		this.tenantId = tenantId;
 	}
 
-	public LOAMeasurementSheet number(BigDecimal number) {
-		this.number = number;
+	public LOAMeasurementSheet no(BigDecimal no) {
+		this.no = no;
 		return this;
 	}
 
 	/**
 	 * No. of the Measurement sheet
 	 * 
-	 * @return number
+	 * @return no
 	 **/
 	@ApiModelProperty(value = "No. of the Measurement sheet")
 
 	@Valid
 
-	public BigDecimal getNumber() {
-		return number;
+	public BigDecimal getNo() {
+		return no;
 	}
 
-	public void setNumber(BigDecimal number) {
-		this.number = number;
+	public void setNo(BigDecimal no) {
+		this.no = no;
 	}
 
 	public LOAMeasurementSheet length(BigDecimal length) {
@@ -277,7 +277,7 @@ public class LOAMeasurementSheet {
 		LOAMeasurementSheet loAMeasurementSheet = (LOAMeasurementSheet) o;
 		return Objects.equals(this.id, loAMeasurementSheet.id)
 				&& Objects.equals(this.tenantId, loAMeasurementSheet.tenantId)
-				&& Objects.equals(this.number, loAMeasurementSheet.number)
+				&& Objects.equals(this.no, loAMeasurementSheet.no)
 				&& Objects.equals(this.length, loAMeasurementSheet.length)
 				&& Objects.equals(this.width, loAMeasurementSheet.width)
 				&& Objects.equals(this.depthOrHeight, loAMeasurementSheet.depthOrHeight)
@@ -289,7 +289,7 @@ public class LOAMeasurementSheet {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, tenantId, number, length, width, depthOrHeight, quantity, loaActivity,
+		return Objects.hash(id, tenantId, no, length, width, depthOrHeight, quantity, loaActivity,
 				estimateMeasurementSheet, auditDetails);
 	}
 
@@ -300,7 +300,7 @@ public class LOAMeasurementSheet {
 
 		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    number: ").append(toIndentedString(number)).append("\n");
+		sb.append("    no: ").append(toIndentedString(no)).append("\n");
 		sb.append("    length: ").append(toIndentedString(length)).append("\n");
 		sb.append("    width: ").append(toIndentedString(width)).append("\n");
 		sb.append("    depthOrHeight: ").append(toIndentedString(depthOrHeight)).append("\n");

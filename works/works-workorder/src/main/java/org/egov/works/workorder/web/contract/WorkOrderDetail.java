@@ -16,7 +16,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data of Work Order Details
  */
 @ApiModel(description = "An Object that holds the basic data of Work Order Details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class WorkOrderDetail {
 	@JsonProperty("id")
@@ -26,7 +26,7 @@ public class WorkOrderDetail {
 	private String tenantId = null;
 
 	@JsonProperty("workOrder")
-	private WorkOrder workOrder = null;
+	private String workOrder = null;
 
 	@JsonProperty("remarks")
 	private String remarks = null;
@@ -76,7 +76,7 @@ public class WorkOrderDetail {
 		this.tenantId = tenantId;
 	}
 
-	public WorkOrderDetail workOrder(WorkOrder workOrder) {
+	public WorkOrderDetail workOrder(String workOrder) {
 		this.workOrder = workOrder;
 		return this;
 	}
@@ -89,13 +89,11 @@ public class WorkOrderDetail {
 	@ApiModelProperty(required = true, value = "Reference of Work Order")
 	@NotNull
 
-	@Valid
-
-	public WorkOrder getWorkOrder() {
+	public String getWorkOrder() {
 		return workOrder;
 	}
 
-	public void setWorkOrder(WorkOrder workOrder) {
+	public void setWorkOrder(String workOrder) {
 		this.workOrder = workOrder;
 	}
 

@@ -18,7 +18,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds the basic data of Letter Of Acceptance Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Letter Of Acceptance Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class LetterOfAcceptanceEstimate {
 	@JsonProperty("id")
@@ -31,7 +31,7 @@ public class LetterOfAcceptanceEstimate {
 	private String letterOfAcceptance = null;
 
 	@JsonProperty("detailedEstimate")
-	private String detailedEstimate = null;
+	private DetailedEstimate detailedEstimate = null;
 
 	@JsonProperty("workCompletionDate")
 	private Long workCompletionDate = null;
@@ -101,7 +101,6 @@ public class LetterOfAcceptanceEstimate {
 	 * @return letterOfAcceptance
 	 **/
 	@ApiModelProperty(required = true, value = "reference of 'LetterOfAcceptance'. Pimary key is reference here.")
-	@NotNull
 
 	public String getLetterOfAcceptance() {
 		return letterOfAcceptance;
@@ -111,24 +110,26 @@ public class LetterOfAcceptanceEstimate {
 		this.letterOfAcceptance = letterOfAcceptance;
 	}
 
-	public LetterOfAcceptanceEstimate detailedEstimate(String detailedEstimate) {
+	public LetterOfAcceptanceEstimate detailedEstimate(DetailedEstimate detailedEstimate) {
 		this.detailedEstimate = detailedEstimate;
 		return this;
 	}
 
 	/**
-	 * Detailed Estimate reference. estimate number is reference here.
+	 * Detailed Estimate reference.
 	 * 
 	 * @return detailedEstimate
 	 **/
-	@ApiModelProperty(required = true, value = "Detailed Estimate reference. estimate number is reference here.")
+	@ApiModelProperty(required = true, value = "Detailed Estimate reference.")
 	@NotNull
 
-	public String getDetailedEstimate() {
+//	@Valid
+
+	public DetailedEstimate getDetailedEstimate() {
 		return detailedEstimate;
 	}
 
-	public void setDetailedEstimate(String detailedEstimate) {
+	public void setDetailedEstimate(DetailedEstimate detailedEstimate) {
 		this.detailedEstimate = detailedEstimate;
 	}
 

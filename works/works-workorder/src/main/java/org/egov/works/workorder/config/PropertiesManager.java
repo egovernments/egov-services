@@ -30,5 +30,11 @@ public class PropertiesManager {
     
     @Value("${works.loanumber}")
     private String worksLOANumber;
+    
+    @Value("${egov.services.works.loa.create.topic}")
+    private String worksLOACreateTopic;
+
+    @Value("${egov.services.works.loa.update.topic}")
+    private String worksLOAUpdateTopic;
 
 }

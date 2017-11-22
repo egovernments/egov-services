@@ -2,6 +2,8 @@ package org.egov.works.workorder.web.contract;
 
 import java.util.Objects;
 
+import javax.validation.constraints.NotNull;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import io.swagger.annotations.ApiModel;
@@ -12,7 +14,7 @@ import io.swagger.annotations.ApiModelProperty;
  * details will be available only for immovable assets.
  */
 @ApiModel(description = "Details of the land asset on which the immovable assets are build. This details will be available only for immovable assets.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class LandDetails {
 	@JsonProperty("surveyNo")
@@ -34,7 +36,8 @@ public class LandDetails {
 	 * 
 	 * @return surveyNo
 	 **/
-	@ApiModelProperty(value = "land survey number of the land asset")
+	@ApiModelProperty(required = true, value = "land survey number of the land asset")
+	@NotNull
 
 	public String getSurveyNo() {
 		return surveyNo;
@@ -54,7 +57,8 @@ public class LandDetails {
 	 * 
 	 * @return area
 	 **/
-	@ApiModelProperty(value = "Area of the land.")
+	@ApiModelProperty(required = true, value = "Area of the land.")
+	@NotNull
 
 	public Double getArea() {
 		return area;
@@ -74,7 +78,8 @@ public class LandDetails {
 	 * 
 	 * @return code
 	 **/
-	@ApiModelProperty(value = "code of the landdetails")
+	@ApiModelProperty(required = true, value = "code of the landdetails")
+	@NotNull
 
 	public String getCode() {
 		return code;

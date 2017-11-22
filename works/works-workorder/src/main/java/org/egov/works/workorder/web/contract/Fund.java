@@ -20,7 +20,7 @@ import io.swagger.annotations.ApiModelProperty;
  * funds may be defined – i.e. each fund can have multiple sub-funds and so on.
  */
 @ApiModel(description = "Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-15T10:30:35.628Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class Fund {
 	@JsonProperty("id")

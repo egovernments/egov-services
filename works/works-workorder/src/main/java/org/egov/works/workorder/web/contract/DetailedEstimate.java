@@ -1,17 +1,14 @@
 package org.egov.works.workorder.web.contract;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import org.egov.works.commons.web.contract.Beneficiary;
-import org.egov.works.commons.web.contract.NatureOfWork;
-import org.egov.works.commons.web.contract.TypeOfWork;
-import org.egov.works.commons.web.contract.WorkCategory;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -22,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-14T10:33:20.569Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
 
 public class DetailedEstimate {
 	@JsonProperty("id")
@@ -64,6 +61,9 @@ public class DetailedEstimate {
 	@JsonProperty("estimateValue")
 	private BigDecimal estimateValue = null;
 
+	@JsonProperty("projectCode")
+	private ProjectCode projectCode = null;
+
 	@JsonProperty("parent")
 	private String parent = null;
 
@@ -81,6 +81,9 @@ public class DetailedEstimate {
 
 	@JsonProperty("beneficiary")
 	private Beneficiary beneficiary = null;
+
+	@JsonProperty("modeOfAllotment")
+	private ModeOfAllotment modeOfAllotment = null;
 
 	@JsonProperty("worksType")
 	private TypeOfWork worksType = null;
@@ -135,6 +138,57 @@ public class DetailedEstimate {
 
 	@JsonProperty("totalIncludingRE")
 	private BigDecimal totalIncludingRE = null;
+
+	@JsonProperty("abstractEstimateDetail")
+	private AbstractEstimateDetails abstractEstimateDetail = null;
+
+	@JsonProperty("estimateActivities")
+	private List<EstimateActivity> estimateActivities = null;
+
+	@JsonProperty("multiYearEstimates")
+	private List<MultiYearEstimate> multiYearEstimates = null;
+
+	@JsonProperty("estimateTechnicalSanctions")
+	private List<EstimateTechnicalSanction> estimateTechnicalSanctions = null;
+
+	@JsonProperty("detailedEstimateDeductions")
+	private List<DetailedEstimateDeduction> detailedEstimateDeductions = null;
+
+	@JsonProperty("documentDetails")
+	private List<DocumentDetail> documentDetails = null;
+
+	@JsonProperty("assets")
+	private List<AssetsForEstimate> assets = null;
+
+	@JsonProperty("estimateOverheads")
+	private List<EstimateOverhead> estimateOverheads = null;
+
+	@JsonProperty("workFlowDetails")
+	private WorkFlowDetails workFlowDetails = null;
+
+	@JsonProperty("stateId")
+	private String stateId = null;
+
+	@JsonProperty("fund")
+	private Fund fund = null;
+
+	@JsonProperty("function")
+	private Function function = null;
+
+	@JsonProperty("functionary")
+	private Functionary functionary = null;
+
+	@JsonProperty("scheme")
+	private Scheme scheme = null;
+
+	@JsonProperty("subScheme")
+	private SubScheme subScheme = null;
+
+	@JsonProperty("budgetGroup")
+	private BudgetGroup budgetGroup = null;
+
+	@JsonProperty("auditDetails")
+	private AuditDetails auditDetails = null;
 
 	public DetailedEstimate id(String id) {
 		this.id = id;
@@ -192,11 +246,10 @@ public class DetailedEstimate {
 	 * @return estimateNumber
 	 **/
 	@ApiModelProperty(required = true, value = "Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover detailed estimates.")
-	// @NotNull
-	// TODO from UI its not mandatory
+	@NotNull
 
-	@Pattern(regexp = "[a-zA-Z0-9-//]+")
-	@Size(max = 50)
+	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
+	@Size(min = 1, max = 50)
 	public String getEstimateNumber() {
 		return estimateNumber;
 	}
@@ -292,7 +345,7 @@ public class DetailedEstimate {
 	@ApiModelProperty(required = true, value = "Department for which Detailed Estimate belongs to")
 	@NotNull
 
-	// @Valid
+	@Valid
 
 	public Department getDepartment() {
 		return department;
@@ -435,6 +488,28 @@ public class DetailedEstimate {
 		this.estimateValue = estimateValue;
 	}
 
+	public DetailedEstimate projectCode(ProjectCode projectCode) {
+		this.projectCode = projectCode;
+		return this;
+	}
+
+	/**
+	 * Project Code of the Detailed Estimate
+	 * 
+	 * @return projectCode
+	 **/
+	@ApiModelProperty(value = "Project Code of the Detailed Estimate")
+
+	@Valid
+
+	public ProjectCode getProjectCode() {
+		return projectCode;
+	}
+
+	public void setProjectCode(ProjectCode projectCode) {
+		this.projectCode = projectCode;
+	}
+
 	public DetailedEstimate parent(String parent) {
 		this.parent = parent;
 		return this;
@@ -561,6 +636,28 @@ public class DetailedEstimate {
 		this.beneficiary = beneficiary;
 	}
 
+	public DetailedEstimate modeOfAllotment(ModeOfAllotment modeOfAllotment) {
+		this.modeOfAllotment = modeOfAllotment;
+		return this;
+	}
+
+	/**
+	 * The Recommended Mode of Allotment of the work
+	 * 
+	 * @return modeOfAllotment
+	 **/
+	@ApiModelProperty(value = "The Recommended Mode of Allotment of the work")
+
+	@Valid
+
+	public ModeOfAllotment getModeOfAllotment() {
+		return modeOfAllotment;
+	}
+
+	public void setModeOfAllotment(ModeOfAllotment modeOfAllotment) {
+		this.modeOfAllotment = modeOfAllotment;
+	}
+
 	public DetailedEstimate worksType(TypeOfWork worksType) {
 		this.worksType = worksType;
 		return this;
@@ -574,8 +671,7 @@ public class DetailedEstimate {
 	@ApiModelProperty(required = true, value = "The Type of work for which this Detailed Estimate belongs to")
 	@NotNull
 
-	// @Valid
-	// TODO Handle only code validation
+	@Valid
 
 	public TypeOfWork getWorksType() {
 		return worksType;
@@ -597,8 +693,7 @@ public class DetailedEstimate {
 	 **/
 	@ApiModelProperty(value = "The Sub Type of work for which this Detailed Estimate belongs to")
 
-	// @Valid
-	// TODO Handle only code validation
+	@Valid
 
 	public TypeOfWork getWorksSubtype() {
 		return worksSubtype;
@@ -621,7 +716,7 @@ public class DetailedEstimate {
 	@ApiModelProperty(required = true, value = "The Nature of work for which this Detailed Estimate belongs to")
 	@NotNull
 
-	// @Valid
+	@Valid
 
 	public NatureOfWork getNatureOfWork() {
 		return natureOfWork;
@@ -644,8 +739,7 @@ public class DetailedEstimate {
 	@ApiModelProperty(required = true, value = "Ward of the Detailed Estimate")
 	@NotNull
 
-	// @Valid
-	// TODO code is required
+	@Valid
 
 	public Boundary getWard() {
 		return ward;
@@ -751,7 +845,7 @@ public class DetailedEstimate {
 	 **/
 	@ApiModelProperty(value = "The Locality in which the Detailed Estimate belongs to")
 
-	// @Valid
+	@Valid
 
 	public Boundary getLocality() {
 		return locality;
@@ -959,6 +1053,436 @@ public class DetailedEstimate {
 		this.totalIncludingRE = totalIncludingRE;
 	}
 
+	public DetailedEstimate abstractEstimateDetail(AbstractEstimateDetails abstractEstimateDetail) {
+		this.abstractEstimateDetail = abstractEstimateDetail;
+		return this;
+	}
+
+	/**
+	 * Get abstractEstimateDetail
+	 * 
+	 * @return abstractEstimateDetail
+	 **/
+	@ApiModelProperty(value = "")
+
+	@Valid
+
+	public AbstractEstimateDetails getAbstractEstimateDetail() {
+		return abstractEstimateDetail;
+	}
+
+	public void setAbstractEstimateDetail(AbstractEstimateDetails abstractEstimateDetail) {
+		this.abstractEstimateDetail = abstractEstimateDetail;
+	}
+
+	public DetailedEstimate estimateActivities(List<EstimateActivity> estimateActivities) {
+		this.estimateActivities = estimateActivities;
+		return this;
+	}
+
+	public DetailedEstimate addEstimateActivitiesItem(EstimateActivity estimateActivitiesItem) {
+		if (this.estimateActivities == null) {
+			this.estimateActivities = new ArrayList<EstimateActivity>();
+		}
+		this.estimateActivities.add(estimateActivitiesItem);
+		return this;
+	}
+
+	/**
+	 * Array of Estimate Activities
+	 * 
+	 * @return estimateActivities
+	 **/
+	@ApiModelProperty(value = "Array of Estimate Activities")
+
+	@Valid
+
+	public List<EstimateActivity> getEstimateActivities() {
+		return estimateActivities;
+	}
+
+	public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
+		this.estimateActivities = estimateActivities;
+	}
+
+	public DetailedEstimate multiYearEstimates(List<MultiYearEstimate> multiYearEstimates) {
+		this.multiYearEstimates = multiYearEstimates;
+		return this;
+	}
+
+	public DetailedEstimate addMultiYearEstimatesItem(MultiYearEstimate multiYearEstimatesItem) {
+		if (this.multiYearEstimates == null) {
+			this.multiYearEstimates = new ArrayList<MultiYearEstimate>();
+		}
+		this.multiYearEstimates.add(multiYearEstimatesItem);
+		return this;
+	}
+
+	/**
+	 * Multiyear Estimate list for the Abstract Estimate
+	 * 
+	 * @return multiYearEstimates
+	 **/
+	@ApiModelProperty(value = "Multiyear Estimate list for the Abstract Estimate")
+
+	@Valid
+
+	public List<MultiYearEstimate> getMultiYearEstimates() {
+		return multiYearEstimates;
+	}
+
+	public void setMultiYearEstimates(List<MultiYearEstimate> multiYearEstimates) {
+		this.multiYearEstimates = multiYearEstimates;
+	}
+
+	public DetailedEstimate estimateTechnicalSanctions(List<EstimateTechnicalSanction> estimateTechnicalSanctions) {
+		this.estimateTechnicalSanctions = estimateTechnicalSanctions;
+		return this;
+	}
+
+	public DetailedEstimate addEstimateTechnicalSanctionsItem(
+			EstimateTechnicalSanction estimateTechnicalSanctionsItem) {
+		if (this.estimateTechnicalSanctions == null) {
+			this.estimateTechnicalSanctions = new ArrayList<EstimateTechnicalSanction>();
+		}
+		this.estimateTechnicalSanctions.add(estimateTechnicalSanctionsItem);
+		return this;
+	}
+
+	/**
+	 * Technical Sanction list for the Abstract Estimate
+	 * 
+	 * @return estimateTechnicalSanctions
+	 **/
+	@ApiModelProperty(value = "Technical Sanction list for the Abstract Estimate")
+
+	@Valid
+
+	public List<EstimateTechnicalSanction> getEstimateTechnicalSanctions() {
+		return estimateTechnicalSanctions;
+	}
+
+	public void setEstimateTechnicalSanctions(List<EstimateTechnicalSanction> estimateTechnicalSanctions) {
+		this.estimateTechnicalSanctions = estimateTechnicalSanctions;
+	}
+
+	public DetailedEstimate detailedEstimateDeductions(List<DetailedEstimateDeduction> detailedEstimateDeductions) {
+		this.detailedEstimateDeductions = detailedEstimateDeductions;
+		return this;
+	}
+
+	public DetailedEstimate addDetailedEstimateDeductionsItem(
+			DetailedEstimateDeduction detailedEstimateDeductionsItem) {
+		if (this.detailedEstimateDeductions == null) {
+			this.detailedEstimateDeductions = new ArrayList<DetailedEstimateDeduction>();
+		}
+		this.detailedEstimateDeductions.add(detailedEstimateDeductionsItem);
+		return this;
+	}
+
+	/**
+	 * Detailed Estimate Deduction list for the Abstract Estimate
+	 * 
+	 * @return detailedEstimateDeductions
+	 **/
+	@ApiModelProperty(value = "Detailed Estimate Deduction list for the Abstract Estimate")
+
+	@Valid
+
+	public List<DetailedEstimateDeduction> getDetailedEstimateDeductions() {
+		return detailedEstimateDeductions;
+	}
+
+	public void setDetailedEstimateDeductions(List<DetailedEstimateDeduction> detailedEstimateDeductions) {
+		this.detailedEstimateDeductions = detailedEstimateDeductions;
+	}
+
+	public DetailedEstimate documentDetails(List<DocumentDetail> documentDetails) {
+		this.documentDetails = documentDetails;
+		return this;
+	}
+
+	public DetailedEstimate addDocumentDetailsItem(DocumentDetail documentDetailsItem) {
+		if (this.documentDetails == null) {
+			this.documentDetails = new ArrayList<DocumentDetail>();
+		}
+		this.documentDetails.add(documentDetailsItem);
+		return this;
+	}
+
+	/**
+	 * Array of document details
+	 * 
+	 * @return documentDetails
+	 **/
+	@ApiModelProperty(value = "Array of document details")
+
+	@Valid
+
+	public List<DocumentDetail> getDocumentDetails() {
+		return documentDetails;
+	}
+
+	public void setDocumentDetails(List<DocumentDetail> documentDetails) {
+		this.documentDetails = documentDetails;
+	}
+
+	public DetailedEstimate assets(List<AssetsForEstimate> assets) {
+		this.assets = assets;
+		return this;
+	}
+
+	public DetailedEstimate addAssetsItem(AssetsForEstimate assetsItem) {
+		if (this.assets == null) {
+			this.assets = new ArrayList<AssetsForEstimate>();
+		}
+		this.assets.add(assetsItem);
+		return this;
+	}
+
+	/**
+	 * Asset Referencs for the Detailed Estimate
+	 * 
+	 * @return assets
+	 **/
+	@ApiModelProperty(value = "Asset Referencs for the Detailed Estimate")
+
+	@Valid
+
+	public List<AssetsForEstimate> getAssets() {
+		return assets;
+	}
+
+	public void setAssets(List<AssetsForEstimate> assets) {
+		this.assets = assets;
+	}
+
+	public DetailedEstimate estimateOverheads(List<EstimateOverhead> estimateOverheads) {
+		this.estimateOverheads = estimateOverheads;
+		return this;
+	}
+
+	public DetailedEstimate addEstimateOverheadsItem(EstimateOverhead estimateOverheadsItem) {
+		if (this.estimateOverheads == null) {
+			this.estimateOverheads = new ArrayList<EstimateOverhead>();
+		}
+		this.estimateOverheads.add(estimateOverheadsItem);
+		return this;
+	}
+
+	/**
+	 * Array of Detaields Estimate Overhead Values
+	 * 
+	 * @return estimateOverheads
+	 **/
+	@ApiModelProperty(value = "Array of Detaields Estimate Overhead Values")
+
+	@Valid
+
+	public List<EstimateOverhead> getEstimateOverheads() {
+		return estimateOverheads;
+	}
+
+	public void setEstimateOverheads(List<EstimateOverhead> estimateOverheads) {
+		this.estimateOverheads = estimateOverheads;
+	}
+
+	public DetailedEstimate workFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+		return this;
+	}
+
+	/**
+	 * Get workFlowDetails
+	 * 
+	 * @return workFlowDetails
+	 **/
+	@ApiModelProperty(value = "")
+
+	@Valid
+
+	public WorkFlowDetails getWorkFlowDetails() {
+		return workFlowDetails;
+	}
+
+	public void setWorkFlowDetails(WorkFlowDetails workFlowDetails) {
+		this.workFlowDetails = workFlowDetails;
+	}
+
+	public DetailedEstimate stateId(String stateId) {
+		this.stateId = stateId;
+		return this;
+	}
+
+	/**
+	 * State id of the workflow
+	 * 
+	 * @return stateId
+	 **/
+	@ApiModelProperty(value = "State id of the workflow")
+
+	public String getStateId() {
+		return stateId;
+	}
+
+	public void setStateId(String stateId) {
+		this.stateId = stateId;
+	}
+
+	public DetailedEstimate fund(Fund fund) {
+		this.fund = fund;
+		return this;
+	}
+
+	/**
+	 * Fund of the Detailed Estimate
+	 * 
+	 * @return fund
+	 **/
+	@ApiModelProperty(value = "Fund of the Detailed Estimate")
+
+	@Valid
+
+	public Fund getFund() {
+		return fund;
+	}
+
+	public void setFund(Fund fund) {
+		this.fund = fund;
+	}
+
+	public DetailedEstimate function(Function function) {
+		this.function = function;
+		return this;
+	}
+
+	/**
+	 * Function of the Detailed Estimate
+	 * 
+	 * @return function
+	 **/
+	@ApiModelProperty(value = "Function of the Detailed Estimate")
+
+	@Valid
+
+	public Function getFunction() {
+		return function;
+	}
+
+	public void setFunction(Function function) {
+		this.function = function;
+	}
+
+	public DetailedEstimate functionary(Functionary functionary) {
+		this.functionary = functionary;
+		return this;
+	}
+
+	/**
+	 * Functionary of the Detailed Estimate
+	 * 
+	 * @return functionary
+	 **/
+	@ApiModelProperty(value = "Functionary of the Detailed Estimate")
+
+	@Valid
+
+	public Functionary getFunctionary() {
+		return functionary;
+	}
+
+	public void setFunctionary(Functionary functionary) {
+		this.functionary = functionary;
+	}
+
+	public DetailedEstimate scheme(Scheme scheme) {
+		this.scheme = scheme;
+		return this;
+	}
+
+	/**
+	 * Scheme of the Detailed Estimate
+	 * 
+	 * @return scheme
+	 **/
+	@ApiModelProperty(value = "Scheme of the Detailed Estimate")
+
+	@Valid
+
+	public Scheme getScheme() {
+		return scheme;
+	}
+
+	public void setScheme(Scheme scheme) {
+		this.scheme = scheme;
+	}
+
+	public DetailedEstimate subScheme(SubScheme subScheme) {
+		this.subScheme = subScheme;
+		return this;
+	}
+
+	/**
+	 * Sub Scheme of the Detailed Estimate
+	 * 
+	 * @return subScheme
+	 **/
+	@ApiModelProperty(value = "Sub Scheme of the Detailed Estimate")
+
+	@Valid
+
+	public SubScheme getSubScheme() {
+		return subScheme;
+	}
+
+	public void setSubScheme(SubScheme subScheme) {
+		this.subScheme = subScheme;
+	}
+
+	public DetailedEstimate budgetGroup(BudgetGroup budgetGroup) {
+		this.budgetGroup = budgetGroup;
+		return this;
+	}
+
+	/**
+	 * Budget Group of the Detailed Estimate
+	 * 
+	 * @return budgetGroup
+	 **/
+	@ApiModelProperty(value = "Budget Group of the Detailed Estimate")
+
+	@Valid
+
+	public BudgetGroup getBudgetGroup() {
+		return budgetGroup;
+	}
+
+	public void setBudgetGroup(BudgetGroup budgetGroup) {
+		this.budgetGroup = budgetGroup;
+	}
+
+	public DetailedEstimate auditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
+		return this;
+	}
+
+	/**
+	 * Get auditDetails
+	 * 
+	 * @return auditDetails
+	 **/
+	@ApiModelProperty(value = "")
+
+	@Valid
+
+	public AuditDetails getAuditDetails() {
+		return auditDetails;
+	}
+
+	public void setAuditDetails(AuditDetails auditDetails) {
+		this.auditDetails = auditDetails;
+	}
+
 	@Override
 	public boolean equals(java.lang.Object o) {
 		if (this == o) {
@@ -980,12 +1504,14 @@ public class DetailedEstimate {
 				&& Objects.equals(this.status, detailedEstimate.status)
 				&& Objects.equals(this.workValue, detailedEstimate.workValue)
 				&& Objects.equals(this.estimateValue, detailedEstimate.estimateValue)
+				&& Objects.equals(this.projectCode, detailedEstimate.projectCode)
 				&& Objects.equals(this.parent, detailedEstimate.parent)
 				&& Objects.equals(this.copiedFrom, detailedEstimate.copiedFrom)
 				&& Objects.equals(this.approvedDate, detailedEstimate.approvedDate)
 				&& Objects.equals(this.approvedBy, detailedEstimate.approvedBy)
 				&& Objects.equals(this.copiedEstimate, detailedEstimate.copiedEstimate)
 				&& Objects.equals(this.beneficiary, detailedEstimate.beneficiary)
+				&& Objects.equals(this.modeOfAllotment, detailedEstimate.modeOfAllotment)
 				&& Objects.equals(this.worksType, detailedEstimate.worksType)
 				&& Objects.equals(this.worksSubtype, detailedEstimate.worksSubtype)
 				&& Objects.equals(this.natureOfWork, detailedEstimate.natureOfWork)
@@ -1003,17 +1529,37 @@ public class DetailedEstimate {
 				&& Objects.equals(this.grossAmountBilled, detailedEstimate.grossAmountBilled)
 				&& Objects.equals(this.cancellationReason, detailedEstimate.cancellationReason)
 				&& Objects.equals(this.cancellationRemarks, detailedEstimate.cancellationRemarks)
-				&& Objects.equals(this.totalIncludingRE, detailedEstimate.totalIncludingRE);
+				&& Objects.equals(this.totalIncludingRE, detailedEstimate.totalIncludingRE)
+				&& Objects.equals(this.abstractEstimateDetail, detailedEstimate.abstractEstimateDetail)
+				&& Objects.equals(this.estimateActivities, detailedEstimate.estimateActivities)
+				&& Objects.equals(this.multiYearEstimates, detailedEstimate.multiYearEstimates)
+				&& Objects.equals(this.estimateTechnicalSanctions, detailedEstimate.estimateTechnicalSanctions)
+				&& Objects.equals(this.detailedEstimateDeductions, detailedEstimate.detailedEstimateDeductions)
+				&& Objects.equals(this.documentDetails, detailedEstimate.documentDetails)
+				&& Objects.equals(this.assets, detailedEstimate.assets)
+				&& Objects.equals(this.estimateOverheads, detailedEstimate.estimateOverheads)
+				&& Objects.equals(this.workFlowDetails, detailedEstimate.workFlowDetails)
+				&& Objects.equals(this.stateId, detailedEstimate.stateId)
+				&& Objects.equals(this.fund, detailedEstimate.fund)
+				&& Objects.equals(this.function, detailedEstimate.function)
+				&& Objects.equals(this.functionary, detailedEstimate.functionary)
+				&& Objects.equals(this.scheme, detailedEstimate.scheme)
+				&& Objects.equals(this.subScheme, detailedEstimate.subScheme)
+				&& Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup)
+				&& Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
 	}
 
 	@Override
 	public int hashCode() {
 		return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department,
-				adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, parent,
-				copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, worksType, worksSubtype,
-				natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber,
-				councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled,
-				cancellationReason, cancellationRemarks, totalIncludingRE);
+				adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode,
+				parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType,
+				worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality,
+				councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag,
+				grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail,
+				estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions,
+				documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary,
+				scheme, subScheme, budgetGroup, auditDetails);
 	}
 
 	@Override
@@ -1034,12 +1580,14 @@ public class DetailedEstimate {
 		sb.append("    status: ").append(toIndentedString(status)).append("\n");
 		sb.append("    workValue: ").append(toIndentedString(workValue)).append("\n");
 		sb.append("    estimateValue: ").append(toIndentedString(estimateValue)).append("\n");
+		sb.append("    projectCode: ").append(toIndentedString(projectCode)).append("\n");
 		sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
 		sb.append("    copiedFrom: ").append(toIndentedString(copiedFrom)).append("\n");
 		sb.append("    approvedDate: ").append(toIndentedString(approvedDate)).append("\n");
 		sb.append("    approvedBy: ").append(toIndentedString(approvedBy)).append("\n");
 		sb.append("    copiedEstimate: ").append(toIndentedString(copiedEstimate)).append("\n");
 		sb.append("    beneficiary: ").append(toIndentedString(beneficiary)).append("\n");
+		sb.append("    modeOfAllotment: ").append(toIndentedString(modeOfAllotment)).append("\n");
 		sb.append("    worksType: ").append(toIndentedString(worksType)).append("\n");
 		sb.append("    worksSubtype: ").append(toIndentedString(worksSubtype)).append("\n");
 		sb.append("    natureOfWork: ").append(toIndentedString(natureOfWork)).append("\n");
@@ -1058,6 +1606,23 @@ public class DetailedEstimate {
 		sb.append("    cancellationReason: ").append(toIndentedString(cancellationReason)).append("\n");
 		sb.append("    cancellationRemarks: ").append(toIndentedString(cancellationRemarks)).append("\n");
 		sb.append("    totalIncludingRE: ").append(toIndentedString(totalIncludingRE)).append("\n");
+		sb.append("    abstractEstimateDetail: ").append(toIndentedString(abstractEstimateDetail)).append("\n");
+		sb.append("    estimateActivities: ").append(toIndentedString(estimateActivities)).append("\n");
+		sb.append("    multiYearEstimates: ").append(toIndentedString(multiYearEstimates)).append("\n");
+		sb.append("    estimateTechnicalSanctions: ").append(toIndentedString(estimateTechnicalSanctions)).append("\n");
+		sb.append("    detailedEstimateDeductions: ").append(toIndentedString(detailedEstimateDeductions)).append("\n");
+		sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
+		sb.append("    assets: ").append(toIndentedString(assets)).append("\n");
+		sb.append("    estimateOverheads: ").append(toIndentedString(estimateOverheads)).append("\n");
+		sb.append("    workFlowDetails: ").append(toIndentedString(workFlowDetails)).append("\n");
+		sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
+		sb.append("    fund: ").append(toIndentedString(fund)).append("\n");
+		sb.append("    function: ").append(toIndentedString(function)).append("\n");
+		sb.append("    functionary: ").append(toIndentedString(functionary)).append("\n");
+		sb.append("    scheme: ").append(toIndentedString(scheme)).append("\n");
+		sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
+		sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
+		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
 		sb.append("}");
 		return sb.toString();
 	}

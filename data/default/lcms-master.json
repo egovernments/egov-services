@@ -236,13 +236,6 @@
       "tenantId": "default"
     },
     {
-      "name": "Civil Application in ARP",
-      "code": "CAARP",
-      "active": true,
-      "sideCode":"CVL",
-      "tenantId": "default"
-    },
-    {
       "name": "Civil Application in AO",
       "code": "CAAO",
       "active": true,

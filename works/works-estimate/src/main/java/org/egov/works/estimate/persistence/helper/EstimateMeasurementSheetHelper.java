@@ -87,7 +87,7 @@ public class EstimateMeasurementSheetHelper {
 		estimateMeasurementSheet.setIdentifier(this.identifier);
 		estimateMeasurementSheet.setLength(this.length);
 		estimateMeasurementSheet.setNumber(this.number);
-		estimateMeasurementSheet.setParent(parent);
+		estimateMeasurementSheet.setParent(this.parent);
 		estimateMeasurementSheet.setQuantity(this.quantity);
 		estimateMeasurementSheet.setRemarks(this.remarks);
 		estimateMeasurementSheet.setSlNo(this.slNo);

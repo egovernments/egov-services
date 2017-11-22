@@ -1,0 +1,212 @@
+serviceMaps:
+ serviceName: Works Work Order
+ mappings:
+ - version: 1.0
+   name: Letter of Acceptance Create
+   description: Persists Letter of Acceptance in egw_letterofacceptance table
+   fromTopic: works-letterofacceptance-create-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_letterofacceptance(id, tenantid, contractor, loadate, loanumber, contractperiod, emdamountdeposited, stamppaperamount,engineerincharge, defectliabilityperiod, loaamount, status, tenderfinalizedpercentage, approveddate, filenumber, filedate,  parent, stateid, cancellationreason, cancellationremarks, createdby, createdtime,councilResolutionNumber,councilResolutionDate,spilloverflag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: $.letterOfAcceptances.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.id
+       
+       - jsonPath: $.letterOfAcceptances.*.tenantId
+         
+       - jsonPath: $.letterOfAcceptances.*.contractor.code
+         
+       - jsonPath: $.letterOfAcceptances.*.loaDate
+         dbType: LONG
+       
+       - jsonPath: $.letterOfAcceptances.*.loaNumber
+       
+       - jsonPath: $.letterOfAcceptances.*.contractPeriod
+       
+       - jsonPath: $.letterOfAcceptances.*.emdAmountDeposited
+       
+       - jsonPath: $.letterOfAcceptances.*.stampPaperAmount
+       
+       - jsonPath: $.letterOfAcceptances.*.engineerIncharge
+       
+       - jsonPath: $.letterOfAcceptances.*.defectLiabilityPeriod
+
+       - jsonPath: $.letterOfAcceptances.*.loaAmount
+       
+       - jsonPath: $.letterOfAcceptances.*.status
+                 
+       - jsonPath: $.letterOfAcceptances.*.tenderFinalizedPercentage
+                 
+       - jsonPath: $.letterOfAcceptances.*.approvedDate
+         dbType: LONG
+         
+       - jsonPath: $.letterOfAcceptances.*.fileNumber
+                  
+       - jsonPath: $.letterOfAcceptances.*.fileDate
+         dbType: LONG
+       
+       - jsonPath: $.letterOfAcceptances.*.parent
+       
+       - jsonPath: $.letterOfAcceptances.*.stateId
+                  
+       - jsonPath: $.letterOfAcceptances.*.cancellationReason
+       
+       - jsonPath: $.letterOfAcceptances.*.cancellationRemarks
+
+       - jsonPath: $.letterOfAcceptances.*.auditDetails.createdBy
+ 
+       - jsonPath: $.letterOfAcceptances.*.auditDetails.createdTime
+
+       - jsonPath: $.letterOfAcceptances.*.councilResolutionNumber
+       
+       - jsonPath: $.letterOfAcceptances.*.councilResolutionDate
+         dbType: LONG
+
+       - jsonPath: $.letterOfAcceptances.*.spillOverFlag
+
+    - query: INSERT INTO egw_letterofacceptanceestimate(id, tenantid, letterofacceptance, detailedestimate, workcompletiondate, estimateloaamount, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.id
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.tenantId
+         
+       - jsonPath: $.letterOfAcceptances.letterOfAcceptanceEstimates.*.letterOfAcceptance
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.detailedEstimate.estimateNumber
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.workCompletionDate
+         dbType: LONG
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.estimateLOAAmount
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.auditDetails.createdBy
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.auditDetails.createdTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_securitydeposit(tenantid, letterofacceptance, collectionmode, percentage, amount, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+      basePath: $.letterOfAcceptances.*.securityDeposits.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.tenantId
+         
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.letterOfAcceptance
+       
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.collectionMode
+       
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.percentage
+
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.amount
+
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.auditDetails.createdBy
+       
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.auditDetails.createdTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_assetsforloa(id, tenantid, asset, letterofacceptanceestimate, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?);
+      basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.id
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.tenantId
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.asset.code
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.letterOfAcceptanceEstimate
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.auditDetails.createdBy
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.auditDetails.createdTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_loaactivity(id, tenantid, letterofacceptanceestimate, estimateactivity, parent,approvedrate, approvedquantity,approvedamount, remarks, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.id
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.tenantId
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.letterOfAcceptanceEstimate
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.estimateActivity.id
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.parent
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.approvedRate
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.approvedQuantity
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.approvedAmount
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.remarks
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.auditDetails.createdBy
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.auditDetails.createdTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_loameasurementsheet(id, tenantid, "number", length, width, depthorheight, quantity, loaactivity, estimatemeasurementsheet, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+      basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.id
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.tenantId
+         
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.number
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.length
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.width
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.depthOrHeight
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.quantity
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.loaActivity
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.estimateMeasurementSheet
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.auditDetails.createdBy
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.auditDetails.createdTime
+         dbType: LONG
+       
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+
+      basePath: $.letterOfAcceptances.*.documentDetails.*
+      jsonMaps:
+         
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.id
+         
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.tenantId
+         
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.objectId
+       
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.objectType
+       
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.documentType
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.fileStore
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.latitude
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.longitude
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.description
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.dateOfCapture
+         dbType: LONG
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.workProgress
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.auditDetails.createdTime
+         dbType: LONG

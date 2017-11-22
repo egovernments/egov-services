@@ -399,7 +399,10 @@ var dat = {
                         }]
                     }*/
                 ]
-            }, {
+            },
+
+
+            {
                 "label": "perfManagement.view.KPIs.groups.viewkpiTargetBlock",
                 "name": "viewkpiTargetBlock",
                 "hide": false,
@@ -407,7 +410,7 @@ var dat = {
                 "fields": [{
                     "name": "viewkpiTarget",
                     //"hide": false,
-                    "jsonPath": "KPIs[0].targetValue",
+                    "jsonPath": "KPIs[0].targetDescription",
                     "label": "",
                     "pattern": "",
                     "type": "text",
@@ -415,6 +418,7 @@ var dat = {
                     "requiredErrMsg": ""
                 }]
             },
+
             {
                 "label": "perfManagement.view.KPIs.groups.viewkpiTargetRadioBlock",
                 "name": "viewkpiTargetRadioBlock",
@@ -433,6 +437,7 @@ var dat = {
                     "patternErrMsg": "",
                 }]
             },
+
             {
                 "label": "perfManagement.view.KPIs.groups.viewKpiInstruc",
                 "name": "viewKpiInstruc",
@@ -451,6 +456,7 @@ var dat = {
                 "label": "perfManagement.view.KPIs.groups.viewkpiDocuments",
                 "name": "viewkpiDocuments",
                 "multiple": true,
+                //"hide": "`${this.props.getVal('KPIs[0].documentsReq.length')==0?true:false}`",
                 "jsonPath": "KPIs[0].documentsReq",
                 "fields": [{
                         "name": "viewkpidoc",

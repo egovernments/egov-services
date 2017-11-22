@@ -13,7 +13,7 @@ var dat = {
               "name": "kpiDepartment",
               "jsonPath": "departmentId",
               "label": "perfManagement.create.KPIs.groups.kpiDepartment",
-              "isRequired": false,
+              "isRequired": true,
               "pattern": "",
               "type": "singleValueList",
               "url": "egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name",
@@ -23,7 +23,7 @@ var dat = {
               "name": "kpiDate",
               "jsonPath": "finYear",
               "label": "perfManagement.create.KPIs.groups.kpiDate",
-              "isRequired": false,
+              "isRequired": true,
               "pattern": "",
               "type": "singleValueList",
               "url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
@@ -80,7 +80,7 @@ var dat = {
         {
               "name": "updateActualKpiDepartment",
               "jsonPath": "kpiValues[0].kpi.code",
-              "label": "KPI Name",
+              "label": "KPI Code",
               "isRequired": false,
               "pattern": "",
               "type": "text",
@@ -140,12 +140,15 @@ var dat = {
           		"patternErrMsg": "",
           		"values": [
                 {
-          			"label": "perfManagement.create.KPIs.groups.kpitype.value",
-          			"value": true
-          		}, {
-          			"label": "perfManagement.create.KPIs.groups.kpitype.objective",
-          			"value": false
-          		}],
+                    "label": "perfManagement.update.KPIs.groups.updatekpitype.text",
+                    "value": "TEXT"
+                      },{
+                      "label": "perfManagement.create.KPIs.groups.kpitype.value",
+                      "value": "VALUE"
+                  }, {
+                      "label": "perfManagement.create.KPIs.groups.kpitype.objective",
+                      "value": 'OBJECTIVE'
+                  }],
           		"defaultValue": true,
           		"showHideFields": [{
                   "ifValue": "OBJECTIVE",
@@ -159,10 +162,25 @@ var dat = {
                       "name": "kpiTargetTextBlock",
                       "isGroup": true,
                       "isField": false
+                  },
+                  {
+                      "name": "kpiActualBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiActualTextBlock",
+                      "isGroup": true,
+                      "isField": false
                   }
                 ],
                   "show": [{
                       "name": "kpiTargetRadioBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiActualRadioBlock",
                       "isGroup": true,
                       "isField": false
                   }]
@@ -178,10 +196,25 @@ var dat = {
                       "name": "kpiTargetTextBlock",
                       "isGroup": true,
                       "isField": false
+                  },
+                  {
+                      "name": "kpiActualRadioBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiActualTextBlock",
+                      "isGroup": true,
+                      "isField": false
                   }
                 ],
                   "show": [{
                       "name": "kpiTargetBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiActualBlock",
                       "isGroup": true,
                       "isField": false
                   }]
@@ -197,10 +230,25 @@ var dat = {
                       "name": "kpiTargetBlock",
                       "isGroup": true,
                       "isField": false
+                  },
+                  {
+                      "name": "kpiActualRadioBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiActualBlock",
+                      "isGroup": true,
+                      "isField": false
                   }
                 ],
                   "show": [{
                       "name": "kpiTargetTextBlock",
+                      "isGroup": true,
+                      "isField": false
+                  },
+                  {
+                      "name": "kpiActualTextBlock",
                       "isGroup": true,
                       "isField": false
                   }]
@@ -211,13 +259,90 @@ var dat = {
             ]
         },
         {
-            "label": "Text",
+            "label": "Target Value",
             "name": "kpiTargetTextBlock",
-            "hide": false,
+            "hide": "`${this.props.getVal('kpiValues[0].kpi.targetType')!='TEXT'?true:false}`",
             "multiple": false,
             "fields": [{
                 "name": "kpiTargetText",
-                "jsonPath": "kpiValues[0].targetDescription",
+                "jsonPath": "kpiValues[0].kpi.targetDescription",
+                "label": "",
+                "pattern": "",
+                "type": "text",
+                "isDisabled": true,
+                "requiredErrMsg": ""
+            }]
+        },
+        {
+        "label": "perfManagement.create.KPIs.groups.kpiTargetBlock",
+        "name": "kpiTargetBlock",
+        "hide": "`${this.props.getVal('kpiValues[0].kpi.targetType')!='VALUE'?true:false}`",
+        "multiple": false,
+        "fields": [{
+          "name": "kpiTarget",
+          //"hide":false,
+          "jsonPath": "kpiValues[0].kpi.targetDescription",
+          "label": "",
+          "pattern": "[0-9]",
+          "type": "text",
+          "isDisabled": true,
+          "patternErrMsg": "Please enter a valid number",
+          "requiredErrMsg": ""
+        }]
+        },
+
+
+        {
+        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
+        "name": "kpiTargetRadioBlock",
+        "hide": "`${this.props.getVal('kpiValues[0].kpi.targetType')!='OBJECTIVE'?true:false}`",
+        "multiple": false,
+        "fields": [{
+          "name": "kpiTargetRadio",
+          //"hide":true,
+          "jsonPath": "kpiValues[0].kpi.targetValue",
+          "label": "",
+          "pattern": "",
+          "type": "radio",
+          "isRequired": false,
+          "isDisabled": true,
+          "requiredErrMsg": "",
+          "patternErrMsg": "",
+          "values": [{
+            "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes",
+            "value": 1
+          }, {
+            "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no",
+            "value": 2
+          }, {
+            "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress",
+            "value": 3
+          }]
+        }]
+        },
+
+        {
+	        "name": "kpiInstructions",
+	        "label": "Instruction to Achieve Target",
+	        fields:[{
+          "name": "updateActualKpiInstruction",
+          "jsonPath": "kpiValues[0].kpi.instructions",
+          "label": "",
+          "pattern": "",
+          "type": "textarea",
+          "fullWidth":true,
+          "isDisabled": true,
+          "requiredErrMsg": "",
+          }]
+        },
+        {
+            "label": "Actual Value",
+            "name": "kpiActualTextBlock",
+            "hide": "`${this.props.getVal('kpiValues[0].kpi.targetType')!='TEXT'?true:false}`",
+            "multiple": false,
+            "fields": [{
+                "name": "kpiActualText",
+                "jsonPath": "kpiValues[0].kpi.actualValue",
                 "label": "",
                 "pattern": "",
                 "type": "text",
@@ -227,11 +352,11 @@ var dat = {
         },
         {
         "label": "perfManagement.create.KPIs.groups.kpiTargetBlock",
-        "name": "kpiTargetBlock",
-        "hide": false,
+        "name": "kpiActualBlock",
+        "hide": "`${this.props.getVal('kpiValues[0].kpi.targetType')!='VALUE'?true:false}`",
         "multiple": false,
         "fields": [{
-          "name": "kpiTarget",
+          "name": "kpiActual",
           //"hide":false,
           "jsonPath": "kpiValues[0].resultValue",
           "label": "",
@@ -246,11 +371,11 @@ var dat = {
 
         {
         "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
-        "name": "kpiTargetRadioBlock",
-        "hide": true,
+        "name": "kpiActualRadioBlock",
+        "hide": "`${this.props.getVal('kpiValues[0].kpi.targetType')!='OBJECTIVE'?true:false}`",
         "multiple": false,
         "fields": [{
-          "name": "kpiTargetRadio",
+          "name": "kpiActualRadio",
           //"hide":true,
           "jsonPath": "kpiValues[0].resultValue",
           "label": "",
@@ -271,23 +396,7 @@ var dat = {
             "value": 3
           }]
         }]
-        },
-
-        {
-	        "name": "",
-	        "label": "",
-	        fields:[{
-          "name": "updateActualKpiInstruction",
-          "jsonPath": "kpiValues[0].kpi.instructions",
-          "label": "Instruction to Achieve Target",
-          "pattern": "",
-          "type": "textarea",
-          "fullWidth":true,
-          "isDisabled": true,
-          "requiredErrMsg": "",
-          }]
-        },
-
+      },
         {
 	        "name": "UploadDocument",
 	        "label": "legal.create.group.title.UploadDocument",
@@ -301,8 +410,10 @@ var dat = {
               // "type": "documentList",
               // "pathToArray": "kpiValues[0].documents",
               // "displayNameJsonPath": "documents",
-              //"url": "/tl-masters/documenttype/v2/_search",
-              "url": "/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}",
+              //"url": "/tl-masters/documenttype/v2/_search?|$..code|$..code",
+              "url": "/perfmanagement/v1/kpimaster/_getDocumentForKpi?kpiCode=CODEEGOV",
+              //$.kpiValues.*.kpi.code
+              //"url": "/perfmanagement/v1/kpimaster/_getDocumentForKpi?|$.kpiValues.*.kpi.code|$.kpiValues.*.kpi.code"
               "autoFillFields": [
                 {
                   "name": "documentTypeId",

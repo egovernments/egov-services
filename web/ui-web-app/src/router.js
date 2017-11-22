@@ -12,35 +12,7 @@ import updateUserRole from './components/contents/administration/userManagement/
 
 //CITIZEN SERVICES
 import VisibleNewServiceRequest from './components/contents/citizenServices/VisibleNewServiceRequest';
-
-//PGR
-import grievanceCreate from './components/contents/pgr/grievanceCreate';
-import grievanceView from './components/contents/pgr/grievanceView';
-import grievanceSearch from './components/contents/pgr/grievanceSearch';
-import ReceivingCenterCreate from './components/contents/pgr/master/receivingCenter/receivingCenterCreate';
-import ViewEditReceivingCenter from './components/contents/pgr/master/receivingCenter/viewEditReceivingCenter';
-import ViewReceivingCenter from './components/contents/pgr/master/receivingCenter/viewReceivingCenter';
-import receivingModeCreate from './components/contents/pgr/master/receivingMode/receivingModeCreate';
-import viewOrUpdateReceivingMode from './components/contents/pgr/master/receivingMode/viewOrUpdateReceivingMode';
-import ServiceGroupCreate from './components/contents/pgr/master/serviceGroup/serviceGroupCreate';
-import ViewEditServiceGroup from './components/contents/pgr/master/serviceGroup/viewEditServiceGroup';
-import viewReceivingMode from './components/contents/pgr/master/receivingMode/viewReceivingMode';
-import createRouter from './components/contents/pgr/master/router/create';
-import searchRouter from './components/contents/pgr/master/router/search';
-import routerGeneration from './components/contents/pgr/master/router/routerGeneration';
-import BulkEscalationGeneration from './components/contents/pgr/master/escalation/bulkEscalationGeneration';
-import serviceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
-import viewOrUpdateServiceType from './components/contents/pgr/master/serviceType/viewOrUpdateServiceType';
-import viewServiceType from './components/contents/pgr/master/serviceType/viewServiceType';
-import ViewServiceGroup from './components/contents/pgr/master/serviceGroup/viewServiceGroup';
-import ViewEscalation from './components/contents/pgr/master/escalation/viewEscalation';
-import DefineEscalation from './components/contents/pgr/master/escalation/defineEscalation';
-import SearchEscalation from './components/contents/pgr/master/escalationTime/searchEscalation';
-import DefineEscalationTime from './components/contents/pgr/master/escalationTime/defineEscalationTime';
-import ServiceTypeCreate from './components/contents/pgr/master/serviceType/serviceTypeCreate';
 import Report from './components/contents/reports/report';
-import PGRDashboard from './components/contents/pgr/dashboards/index';
-import PgrAnalytics from './components/contents/pgr/dashboards/PgrAnalytics';
 
 //WC
 import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';
@@ -149,62 +121,43 @@ import createWc from './components/non-framework/wc/createWc';
 import createVoucher from './components/non-framework/egf/transaction/createVoucher';
 
 import acknowledgementWc from './components/non-framework/wc/acknowledgement';
-import transactionRevaluation from './components/non-framework/asset/transactionRevaluation';
-import transactionTransfer from './components/non-framework/asset/transactionTransfer';
-import transactionGeneral from './components/non-framework/asset/transactionGeneral';
-import acknowledgeDepreciation from './components/non-framework/asset/acknowledgeDepreciation';
 
 //Template parser
 import TemplateParser from './components/framework/templates/templateParser/templateParser';
 
 //LegalTemplate parser
-import LegalTemplateParser  from './components/framework/specs/legal/templateParser/legalTemplateParser';
-
-//Assets
-import assetImmovableCreate from './components/non-framework/asset/master/assetImmovableCreate';
-import assetMovableCreate from './components/non-framework/asset/master/assetMovableCreate';
-import assetImmovableView from './components/non-framework/asset/master/assetImmovableView';
-import assetMovableView from './components/non-framework/asset/master/assetMovableView';
-
-//inventory
-import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
-import MaterialStoreMappingSearch from './components/non-framework/inventory/master/materialstoremapping/MaterialStoreMappingSearch';
-import IndentSearch from './components/non-framework/inventory/transaction/indent/IndentSearch';
-import StoreSearch from './components/non-framework/inventory/master/store/StoreSearch';
-import MaterialSearch from './components/non-framework/inventory/master/material/MaterialSearch';
-import PriceListSearch from './components/non-framework/inventory/transaction/pricelist/PriceListSearch';
+import LegalTemplateParser  from 'legal/templateParser/legalTemplateParser';
 
 import NoMatch from './components/common/NoMatch';
-
-//works
-import abstractEstimate from './components/non-framework/works/transaction/abstractEstimate';
-import viewAbstractEstimate from './components/non-framework/works/transaction/viewAbstractEstimate';
 
 const base = "";
 var fwRoutes;
 var assets;
 var works;
-var perf;
-var lcms;
+var perfManagement;
+var legal;
 var pgr;
 var swm;
+var inventory;
 
 if(process.env.NODE_ENV === "production") {
     fwRoutes = require('ui-react-framework');
     assets = require('assets');
     works = require('works');
-    perf = require('performance');
-    lcms = require('lcms');
+    perfManagement = require('perfManagement');
+    legal = require('legal');
     pgr = require('pgr');
     swm = require('swm');
+    inventory = require('inventory');
 } else {
     fwRoutes = require('./development/ui-react-framework/lib/index');
     assets = require('./development/assets/lib/index');
     works = require('./development/works/lib/index');
-    perf = require('./development/perf/lib/index');
-    lcms = require('./development/lcms/lib/index');
+    perfManagement = require('./development/perfManagement/lib/index');
+    legal = require('./development/legal/lib/index');
     pgr = require('./development/pgr/lib/index');
     swm = require('./development/swm/lib/index');
+    inventory = require('./development/inventory/lib/index');
 }
 
 const Main = () => {
@@ -255,40 +208,7 @@ const Main = () => {
         <Route exact path={base+'/administration/searchUserRole'} component={searchUserRole}/>
         <Route exact path={base+'/administration/updateUserRole/:userId'} component={updateUserRole}/>
         <Route exact path={base+'/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest}/>
-        <Route exact path={base+'/pgr/analytics'} component={PgrAnalytics}/>
-        <Route exact path={base+'/pgr/createGrievance'} component={grievanceCreate}/>
-        <Route exact path={base+'/pgr/viewGrievance/:srn'} component={grievanceView}/>
-        <Route exact path={base+'/pgr/searchGrievance'} component={grievanceSearch}/>
-        <Route exact name="createReceivingCenter" path={base+'/pgr/createReceivingCenter/:id?'} component={ReceivingCenterCreate}/>
-        <Route exact path={base+'/pgr/createReceivingCenter'} component={ReceivingCenterCreate}/>
-        <Route exact path={base+'/pgr/receivingCenter/view'} component={ViewEditReceivingCenter}/>
-        <Route exact path={base+'/pgr/receivingCenter/edit'} component={ViewEditReceivingCenter}/>
-        <Route exact path={base+'/pgr/viewReceivingCenter/:id'} component={ViewReceivingCenter}/>
-        <Route exact path={base+'/pgr/createRouter/:type/:id'} component={createRouter}/>
-        <Route exact path={base+'/pgr/createRouter'} component={createRouter}/>
-        <Route exact path={base+'/pgr/routerGeneration'} component={routerGeneration}/>
-        <Route exact path={base+'/pgr/searchRouter/:type'} component={searchRouter}/>
-        <Route exact path={base+'/pgr/receivingModeCreate'} component={receivingModeCreate}/>
-        <Route exact name='receivingModeCreate' path={base+'/pgr/receivingModeCreate/:type/:id'} component={receivingModeCreate}/>
-        <Route exact path={base+'/pgr/viewOrUpdateReceivingMode/:type'} component={viewOrUpdateReceivingMode}/>
-        <Route exact path={base+'/pgr/viewReceivingMode/:type/:id'} component={viewReceivingMode}/>
-        <Route exact name="createServiceGroup" path={base+'/pgr/updateServiceGroup/:id?'} component={ServiceGroupCreate}/>
-        <Route exact path={base+'/pgr/createServiceGroup'} component={ServiceGroupCreate}/>
-        <Route exact path={base+'/pgr/serviceGroup/view'} component={ViewEditServiceGroup}/>
-        <Route exact path={base+'/pgr/serviceGroup/edit'} component={ViewEditServiceGroup}/>
-        <Route exact path={base+'/pgr/bulkEscalationGeneration'} component={BulkEscalationGeneration}/>
-        <Route exact path={base+'/pgr/serviceTypeCreate'} component={serviceTypeCreate}/>
-        <Route exact name="serviceTypeCreate" path={base+'/pgr/serviceTypeCreate/:type/:id'} component={serviceTypeCreate}/>
-        <Route exact path={base+'/pgr/viewOrUpdateServiceType/:type'} component={viewOrUpdateServiceType}/>
-        <Route exact path={base+'/pgr/viewServiceType/:type/:id'} component={viewServiceType}/>
-        <Route exact path={base+'/pgr/viewServiceGroup/:id'} component={ViewServiceGroup}/>
-        <Route exact path={base+'/pgr/viewEscalation'} component={ViewEscalation}/>
-        <Route exact path={base+'/pgr/defineEscalation'} component={DefineEscalation}/>
-        <Route exact path={base+'/pgr/searchEscalationTime'} component={SearchEscalation}/>
-        <Route exact path={base+'/pgr/defineEscalationTime'} component={DefineEscalationTime}/>
-        <Route exact path={base+'/pgr/createServiceType'} component={ServiceTypeCreate}/>
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
-        <Route exact path={base+'/pgr/dashboard'} component={PGRDashboard}/>
 
         <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
         <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
@@ -402,31 +322,8 @@ const Main = () => {
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
       <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
       <Route exact path= {base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc}/>
-      <Route exact path= {base + '/transactionRevaluation/asset/revaluationAsset'} component={transactionRevaluation}/>
-      <Route exact path= {base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer}/>
-      <Route exact path= {base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral}/>
       <Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
       <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>
-
-      //Assets
-      <Route exact path= {base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate}/>
-      <Route exact path= {base + '/non-framework/asset/master/assetMovableCreate/:id?'} component={assetMovableCreate}/>
-      <Route exact path= {base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView}/>
-      <Route exact path= {base + '/non-framework/asset/master/assetMovableView/:id'} component={assetMovableView}/>
-      <Route exact path= {base + '/non-framework/asset/acknowledgeDepreciation/:id'} component={acknowledgeDepreciation}/>
-
-      {/* inventory */}
-      <Route exact path= {base + '/non-framework/inventory/master/supplier'} component={SupplierSearch}/>
-      <Route exact path = {base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch}/>
-      <Route exact path= {base + '/non-framework/inventory/master/store'} component={StoreSearch}/>
-      <Route exact path= {base + '/non-framework/inventory/master/material'} component={MaterialSearch}/>
-	    <Route exact path= {base + '/non-framework/inventory/indent'} component={IndentSearch}/>
-	    <Route exact path= {base + '/non-framework/inventory/transaction/pricelist'} component={PriceListSearch}/>
-      {/* works */}
-      <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
-      <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>
-
-
       <Route component={NoMatch}/>
 
     </Switch>

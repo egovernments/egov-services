@@ -1768,7 +1768,7 @@ function printValue(object = "", values) {
                     }
                 } else if (key == "bank" && values[key]) {
                     commonApiPost("egf-masters", "bankbranches", "_search", {
-                        pageSize = 500,
+                        "pageSize" : 500,
                         tenantId,
                         "bank": values[key]
                     }, function(err, res) {
@@ -2339,7 +2339,7 @@ function loadUI() {
                     var _this = this;
                     if (_this.id == "bank") {
                         commonApiPost("egf-masters", "bankbranches", "_search", {
-                            pageSize = 500,
+                            "pageSize" : 500,
                             tenantId,
                             "bank": _this.value
                         }, function(err, res) {

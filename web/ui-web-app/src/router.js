@@ -149,7 +149,6 @@ if(process.env.NODE_ENV === "production") {
     inventory = require('inventory');
 } else {
     fwRoutes = require('./development/ui-react-framework/lib/index');
-    console.log(fwRoutes.routes);
     assets = require('./development/asset/lib/index');
     works = require('./development/works/lib/index');
     perfManagement = require('./development/perfManagement/lib/index');

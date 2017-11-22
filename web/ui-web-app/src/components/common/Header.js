@@ -6,7 +6,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import { withRouter } from 'react-router';
-import Api from '../../api/api';
+import {Api} from 'common-utility';
 import {logo, tenantName} from './temp/local';
 import {getTitleCase} from 'ui-react-framework';
 import $ from 'jquery';

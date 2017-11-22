@@ -16,29 +16,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionPointDetailsEntity {
 
-	private String id = null;
+    private String id = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String collectionType = null;
+    private String collectionType = null;
 
-	private String collectionPoint = null;
+    private String collectionPoint = null;
 
-	private Double garbageEstimate = null;
+    private Double garbageEstimate = null;
 
-	private String description = null;
+    private String description = null;
 
-	public CollectionPointDetails toDomain() {
+    public CollectionPointDetails toDomain() {
 
-		CollectionPointDetails collectionPointDetails = new CollectionPointDetails();
-		collectionPointDetails.setId(id);
-		collectionPointDetails.setTenantId(tenantId);
-		collectionPointDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
-		collectionPointDetails.setGarbageEstimate(garbageEstimate);
-		collectionPointDetails.setDescription(description);
+        final CollectionPointDetails collectionPointDetails = new CollectionPointDetails();
+        collectionPointDetails.setId(id);
+        collectionPointDetails.setTenantId(tenantId);
+        collectionPointDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
+        collectionPointDetails.setGarbageEstimate(garbageEstimate);
+        collectionPointDetails.setDescription(description);
 
-		return collectionPointDetails;
+        return collectionPointDetails;
 
-	}
+    }
 
 }

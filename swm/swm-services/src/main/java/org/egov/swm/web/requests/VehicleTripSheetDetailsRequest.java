@@ -14,11 +14,11 @@ import lombok.Data;
 
 public @Data class VehicleTripSheetDetailsRequest {
 
-	@Valid
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo = new RequestInfo();
+    @Valid
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo = new RequestInfo();
 
-	@Valid
-	private List<VehicleTripSheetDetails> vehicleTripSheetDetails = new ArrayList<VehicleTripSheetDetails>();
+    @Valid
+    private List<VehicleTripSheetDetails> vehicleTripSheetDetails = new ArrayList<>();
 
 }

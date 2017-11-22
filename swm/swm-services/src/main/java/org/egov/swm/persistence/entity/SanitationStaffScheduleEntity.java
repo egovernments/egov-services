@@ -18,38 +18,38 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SanitationStaffScheduleEntity {
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String transactionNo = null;
+    private String transactionNo = null;
 
-	private String sanitationStaffTarget = null;
+    private String sanitationStaffTarget = null;
 
-	private String shift = null;
+    private String shift = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public SanitationStaffSchedule toDomain() {
+    public SanitationStaffSchedule toDomain() {
 
-		SanitationStaffSchedule sanitationStaffSchedule = new SanitationStaffSchedule();
-		sanitationStaffSchedule.setTenantId(tenantId);
-		sanitationStaffSchedule.setTransactionNo(transactionNo);
-		sanitationStaffSchedule
-				.setSanitationStaffTarget(SanitationStaffTarget.builder().targetNo(sanitationStaffTarget).build());
-		sanitationStaffSchedule.setShift(Shift.builder().code(shift).build());
-		sanitationStaffSchedule.setAuditDetails(new AuditDetails());
-		sanitationStaffSchedule.getAuditDetails().setCreatedBy(createdBy);
-		sanitationStaffSchedule.getAuditDetails().setCreatedTime(createdTime);
-		sanitationStaffSchedule.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		sanitationStaffSchedule.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final SanitationStaffSchedule sanitationStaffSchedule = new SanitationStaffSchedule();
+        sanitationStaffSchedule.setTenantId(tenantId);
+        sanitationStaffSchedule.setTransactionNo(transactionNo);
+        sanitationStaffSchedule
+                .setSanitationStaffTarget(SanitationStaffTarget.builder().targetNo(sanitationStaffTarget).build());
+        sanitationStaffSchedule.setShift(Shift.builder().code(shift).build());
+        sanitationStaffSchedule.setAuditDetails(new AuditDetails());
+        sanitationStaffSchedule.getAuditDetails().setCreatedBy(createdBy);
+        sanitationStaffSchedule.getAuditDetails().setCreatedTime(createdTime);
+        sanitationStaffSchedule.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        sanitationStaffSchedule.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return sanitationStaffSchedule;
+        return sanitationStaffSchedule;
 
-	}
+    }
 
 }

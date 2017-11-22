@@ -26,178 +26,170 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class VehicleTripSheetDetailsService {
 
-	@Autowired
-	private VehicleTripSheetDetailsRepository vehicleTripSheetDetailsRepository;
+    @Autowired
+    private VehicleTripSheetDetailsRepository vehicleTripSheetDetailsRepository;
 
-	@Autowired
-	private RouteService routeService;
+    @Autowired
+    private RouteService routeService;
 
-	@Autowired
-	private VehicleService vehicleService;
+    @Autowired
+    private VehicleService vehicleService;
 
-	@Autowired
-	private VendorService vendorService;
+    @Autowired
+    private VendorService vendorService;
 
-	@Autowired
-	private IdgenRepository idgenRepository;
+    @Autowired
+    private IdgenRepository idgenRepository;
 
-	@Value("${egov.swm.vehicle.trip.num.idgen.name}")
-	private String idGenNameForVehicleTripNumberPath;
+    @Value("${egov.swm.vehicle.trip.num.idgen.name}")
+    private String idGenNameForVehicleTripNumberPath;
 
-	@Transactional
-	public VehicleTripSheetDetailsRequest create(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    @Transactional
+    public VehicleTripSheetDetailsRequest create(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		validate(vehicleTripSheetDetailsRequest);
+        validate(vehicleTripSheetDetailsRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (vehicleTripSheetDetailsRequest.getRequestInfo() != null
-				&& vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo() != null
-				&& null != vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (vehicleTripSheetDetailsRequest.getRequestInfo() != null
+                && vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo() != null
+                && null != vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId())
+            userId = vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId();
 
-		for (VehicleTripSheetDetails vtsd : vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()) {
+        for (final VehicleTripSheetDetails vtsd : vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()) {
 
-			setAuditDetails(vtsd, userId);
+            setAuditDetails(vtsd, userId);
 
-			vtsd.setTripNo(generateTripNumber(vtsd.getTenantId(), vehicleTripSheetDetailsRequest.getRequestInfo()));
+            vtsd.setTripNo(generateTripNumber(vtsd.getTenantId(), vehicleTripSheetDetailsRequest.getRequestInfo()));
 
-		}
+        }
 
-		return vehicleTripSheetDetailsRepository.save(vehicleTripSheetDetailsRequest);
+        return vehicleTripSheetDetailsRepository.save(vehicleTripSheetDetailsRequest);
 
-	}
+    }
 
-	@Transactional
-	public VehicleTripSheetDetailsRequest update(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    @Transactional
+    public VehicleTripSheetDetailsRequest update(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		Long userId = null;
+        Long userId = null;
 
-		if (vehicleTripSheetDetailsRequest.getRequestInfo() != null
-				&& vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo() != null
-				&& null != vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (vehicleTripSheetDetailsRequest.getRequestInfo() != null
+                && vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo() != null
+                && null != vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId())
+            userId = vehicleTripSheetDetailsRequest.getRequestInfo().getUserInfo().getId();
 
-		for (VehicleTripSheetDetails vtsd : vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()) {
+        for (final VehicleTripSheetDetails vtsd : vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails())
+            setAuditDetails(vtsd, userId);
 
-			setAuditDetails(vtsd, userId);
+        validate(vehicleTripSheetDetailsRequest);
 
-		}
+        return vehicleTripSheetDetailsRepository.update(vehicleTripSheetDetailsRequest);
 
-		validate(vehicleTripSheetDetailsRequest);
+    }
 
-		return vehicleTripSheetDetailsRepository.update(vehicleTripSheetDetailsRequest);
+    public Pagination<VehicleTripSheetDetails> search(final VehicleTripSheetDetailsSearch vehicleTripSheetDetailsSearch) {
 
-	}
+        return vehicleTripSheetDetailsRepository.search(vehicleTripSheetDetailsSearch);
+    }
 
-	public Pagination<VehicleTripSheetDetails> search(VehicleTripSheetDetailsSearch vehicleTripSheetDetailsSearch) {
+    private void validate(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		return vehicleTripSheetDetailsRepository.search(vehicleTripSheetDetailsSearch);
-	}
+        final RouteSearch routeSearch = new RouteSearch();
+        Pagination<Route> routes;
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicleList;
+        VendorSearch vendorSearch;
+        Pagination<Vendor> vendors;
 
-	private void validate(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+        for (final VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsRequest
+                .getVehicleTripSheetDetails()) {
 
-		RouteSearch routeSearch = new RouteSearch();
-		Pagination<Route> routes;
-		VehicleSearch vehicleSearch;
-		Pagination<Vehicle> vehicleList;
-		VendorSearch vendorSearch;
-		Pagination<Vendor> vendors;
+            if (vehicleTripSheetDetails.getRoute() != null && (vehicleTripSheetDetails.getRoute().getCode() == null
+                    || vehicleTripSheetDetails.getRoute().getCode().isEmpty()))
+                throw new CustomException("Route",
+                        "The field Route Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-		for (VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsRequest
-				.getVehicleTripSheetDetails()) {
+            // Validate Route
 
-			if (vehicleTripSheetDetails.getRoute() != null && (vehicleTripSheetDetails.getRoute().getCode() == null
-					|| vehicleTripSheetDetails.getRoute().getCode().isEmpty()))
-				throw new CustomException("Route",
-						"The field Route Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null) {
 
-			// Validate Route
+                routeSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
+                routeSearch.setCode(vehicleTripSheetDetails.getRoute().getCode());
+                routes = routeService.search(routeSearch);
 
-			if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null) {
+                if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty())
+                    throw new CustomException("Route",
+                            "Given Route is invalid: " + vehicleTripSheetDetails.getRoute().getCode());
+                else
+                    vehicleTripSheetDetails.setRoute(routes.getPagedData().get(0));
 
-				routeSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-				routeSearch.setCode(vehicleTripSheetDetails.getRoute().getCode());
-				routes = routeService.search(routeSearch);
+            }
 
-				if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty()) {
-					throw new CustomException("Route",
-							"Given Route is invalid: " + vehicleTripSheetDetails.getRoute().getCode());
-				} else {
-					vehicleTripSheetDetails.setRoute(routes.getPagedData().get(0));
-				}
+            if (vehicleTripSheetDetails.getVehicle() != null
+                    && (vehicleTripSheetDetails.getVehicle().getRegNumber() == null
+                            || vehicleTripSheetDetails.getVehicle().getRegNumber().isEmpty()))
+                throw new CustomException("Vehicle",
+                        "The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			}
+            // Validate Vehicle
 
-			if (vehicleTripSheetDetails.getVehicle() != null
-					&& (vehicleTripSheetDetails.getVehicle().getRegNumber() == null
-							|| vehicleTripSheetDetails.getVehicle().getRegNumber().isEmpty()))
-				throw new CustomException("Vehicle",
-						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (vehicleTripSheetDetails.getVehicle() != null
+                    && vehicleTripSheetDetails.getVehicle().getRegNumber() != null) {
 
-			// Validate Vehicle
+                vehicleSearch = new VehicleSearch();
+                vehicleSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
+                vehicleSearch.setRegNumber(vehicleTripSheetDetails.getVehicle().getRegNumber());
+                vehicleList = vehicleService.search(vehicleSearch);
 
-			if (vehicleTripSheetDetails.getVehicle() != null
-					&& vehicleTripSheetDetails.getVehicle().getRegNumber() != null) {
+                if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
+                    throw new CustomException("Vehicle",
+                            "Given Vehicle is invalid: " + vehicleTripSheetDetails.getVehicle().getRegNumber());
+                else
+                    vehicleTripSheetDetails.setVehicle(vehicleList.getPagedData().get(0));
 
-				vehicleSearch = new VehicleSearch();
-				vehicleSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-				vehicleSearch.setRegNumber(vehicleTripSheetDetails.getVehicle().getRegNumber());
-				vehicleList = vehicleService.search(vehicleSearch);
+            }
+            if (vehicleTripSheetDetails.getVendor() != null
+                    && (vehicleTripSheetDetails.getVendor().getVendorNo() == null
+                            || vehicleTripSheetDetails.getVendor().getVendorNo().isEmpty()))
+                throw new CustomException("VehicleType",
+                        "The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-				if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
-					throw new CustomException("Vehicle",
-							"Given Vehicle is invalid: " + vehicleTripSheetDetails.getVehicle().getRegNumber());
-				else {
-					vehicleTripSheetDetails.setVehicle(vehicleList.getPagedData().get(0));
-				}
+            // Validate vendor
 
-			}
-			if (vehicleTripSheetDetails.getVendor() != null
-					&& (vehicleTripSheetDetails.getVendor().getVendorNo() == null
-							|| vehicleTripSheetDetails.getVendor().getVendorNo().isEmpty()))
-				throw new CustomException("VehicleType",
-						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (vehicleTripSheetDetails.getVendor() != null
+                    && vehicleTripSheetDetails.getVendor().getVendorNo() != null) {
+                vendorSearch = new VendorSearch();
+                vendorSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
+                vendorSearch.setVendorNo(vehicleTripSheetDetails.getVendor().getVendorNo());
+                vendors = vendorService.search(vendorSearch);
+                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
+                    vehicleTripSheetDetails.setVendor(vendors.getPagedData().get(0));
+                else
+                    throw new CustomException("Vendor",
+                            "Given Vendor is invalid: " + vehicleTripSheetDetails.getVendor().getVendorNo());
+            }
 
-			// Validate vendor
+        }
 
-			if (vehicleTripSheetDetails.getVendor() != null
-					&& vehicleTripSheetDetails.getVendor().getVendorNo() != null) {
-				vendorSearch = new VendorSearch();
-				vendorSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-				vendorSearch.setVendorNo(vehicleTripSheetDetails.getVendor().getVendorNo());
-				vendors = vendorService.search(vendorSearch);
-				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
-					vehicleTripSheetDetails.setVendor(vendors.getPagedData().get(0));
-				} else {
-					throw new CustomException("Vendor",
-							"Given Vendor is invalid: " + vehicleTripSheetDetails.getVendor().getVendorNo());
-				}
-			}
+    }
 
-		}
+    private String generateTripNumber(final String tenantId, final RequestInfo requestInfo) {
 
-	}
+        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVehicleTripNumberPath);
+    }
 
-	private String generateTripNumber(String tenantId, RequestInfo requestInfo) {
+    private void setAuditDetails(final VehicleTripSheetDetails contract, final Long userId) {
 
-		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVehicleTripNumberPath);
-	}
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-	private void setAuditDetails(VehicleTripSheetDetails contract, Long userId) {
+        if (null == contract.getTripNo() || contract.getTripNo().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getTripNo() || contract.getTripNo().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

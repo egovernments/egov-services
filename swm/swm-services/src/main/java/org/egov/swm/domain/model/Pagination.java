@@ -51,21 +51,21 @@ import lombok.Data;
 @Data
 public class Pagination<T> {
 
-	public static int DEFAULT_PAGE_SIZE = 500;
-	public static int DEFAULT_PAGE_OFFSET = 0;
+    public static int DEFAULT_PAGE_SIZE = 500;
+    public static int DEFAULT_PAGE_OFFSET = 0;
 
-	private Integer totalResults;
+    private Integer totalResults;
 
-	private Integer totalPages;
+    private Integer totalPages;
 
-	@Max(500l)
-	private Integer pageSize = DEFAULT_PAGE_SIZE;
+    @Max(500l)
+    private Integer pageSize = DEFAULT_PAGE_SIZE;
 
-	private Integer currentPage;
+    private Integer currentPage;
 
-	private Integer offset = DEFAULT_PAGE_OFFSET;
+    private Integer offset = DEFAULT_PAGE_OFFSET;
 
-	@JsonProperty(access = Access.WRITE_ONLY)
-	List<T> pagedData;
+    @JsonProperty(access = Access.WRITE_ONLY)
+    List<T> pagedData;
 
 }

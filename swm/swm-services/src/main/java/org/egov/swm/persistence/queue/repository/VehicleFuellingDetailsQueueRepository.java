@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleFuellingDetailsQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Value("${egov.swm.vehiclefuellingdetails.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.vehiclefuellingdetails.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.vehiclefuellingdetails.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.vehiclefuellingdetails.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.vehiclefuellingdetails.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.vehiclefuellingdetails.indexer.topic}")
+    private String indexerTopic;
 
-	public VehicleFuellingDetailsRequest save(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    public VehicleFuellingDetailsRequest save(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		kafkaTemplate.send(saveTopic, vehicleFuellingDetailsRequest);
+        kafkaTemplate.send(saveTopic, vehicleFuellingDetailsRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
+        kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
 
-		return vehicleFuellingDetailsRequest;
+        return vehicleFuellingDetailsRequest;
 
-	}
+    }
 
-	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    public VehicleFuellingDetailsRequest update(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		kafkaTemplate.send(updateTopic, vehicleFuellingDetailsRequest);
+        kafkaTemplate.send(updateTopic, vehicleFuellingDetailsRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
+        kafkaTemplate.send(indexerTopic, vehicleFuellingDetailsRequest);
 
-		return vehicleFuellingDetailsRequest;
+        return vehicleFuellingDetailsRequest;
 
-	}
+    }
 
 }

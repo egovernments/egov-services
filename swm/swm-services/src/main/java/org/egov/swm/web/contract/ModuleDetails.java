@@ -15,8 +15,8 @@ import lombok.ToString;
 @Builder
 public class ModuleDetails {
 
-	private MasterDetails[] masterDetails;
+    private MasterDetails[] masterDetails;
 
-	private String moduleName;
+    private String moduleName;
 
 }

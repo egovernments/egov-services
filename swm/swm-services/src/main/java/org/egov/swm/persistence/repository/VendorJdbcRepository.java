@@ -27,183 +27,174 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorJdbcRepository extends JdbcRepository {
 
-	private static final Logger LOG = LoggerFactory.getLogger(JdbcRepository.class);
+    private static final Logger LOG = LoggerFactory.getLogger(JdbcRepository.class);
 
-	public static final String TABLE_NAME = "egswm_vendor";
+    public static final String TABLE_NAME = "egswm_vendor";
 
-	@Autowired
-	public SupplierJdbcRepository supplierJdbcRepository;
+    @Autowired
+    public SupplierJdbcRepository supplierJdbcRepository;
 
-	@Autowired
-	public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
+    @Autowired
+    public ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
 
-	@Autowired
-	public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
+    @Autowired
+    public ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
 
-	@Autowired
-	private SwmProcessService swmProcessService;
+    @Autowired
+    private SwmProcessService swmProcessService;
 
-	@Autowired
-	private BoundaryRepository boundaryRepository;
+    @Autowired
+    private BoundaryRepository boundaryRepository;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<Vendor> search(VendorSearch searchRequest) {
+    public Pagination<Vendor> search(final VendorSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), VendorSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), VendorSearch.class);
+        }
 
-		String orderBy = "order by name";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by name";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getVendorNo() != null) {
-			addAnd(params);
-			params.append("vendorNo in (:vendorNo)");
-			paramValues.put("vendorNo", searchRequest.getVendorNo());
-		}
+        if (searchRequest.getVendorNo() != null) {
+            addAnd(params);
+            params.append("vendorNo in (:vendorNo)");
+            paramValues.put("vendorNo", searchRequest.getVendorNo());
+        }
 
-		if (searchRequest.getVendorNos() != null) {
-			addAnd(params);
-			params.append("vendorNo in (:vendorNos)");
-			paramValues.put("vendorNos", new ArrayList<String>(Arrays.asList(searchRequest.getVendorNos().split(","))));
-		}
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getVendorNos() != null) {
+            addAnd(params);
+            params.append("vendorNo in (:vendorNos)");
+            paramValues.put("vendorNos", new ArrayList<>(Arrays.asList(searchRequest.getVendorNos().split(","))));
+        }
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getName() != null) {
-			addAnd(params);
-			params.append("name =:name");
-			paramValues.put("name", searchRequest.getName());
-		}
+        if (searchRequest.getName() != null) {
+            addAnd(params);
+            params.append("name =:name");
+            paramValues.put("name", searchRequest.getName());
+        }
 
-		if (searchRequest.getRegistrationNo() != null) {
-			addAnd(params);
-			params.append("registrationNo =:registrationNo");
-			paramValues.put("registrationNo", searchRequest.getRegistrationNo());
-		}
+        if (searchRequest.getRegistrationNo() != null) {
+            addAnd(params);
+            params.append("registrationNo =:registrationNo");
+            paramValues.put("registrationNo", searchRequest.getRegistrationNo());
+        }
 
-		if (searchRequest.getSupplierNo() != null) {
-			addAnd(params);
-			params.append("supplier =:supplier");
-			paramValues.put("supplier", searchRequest.getSupplierNo());
-		}
+        if (searchRequest.getSupplierNo() != null) {
+            addAnd(params);
+            params.append("supplier =:supplier");
+            paramValues.put("supplier", searchRequest.getSupplierNo());
+        }
 
-		Pagination<Vendor> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<Vendor> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<Vendor>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<Vendor>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<Vendor> vendorList = new ArrayList<>();
+        LOG.info("Vendor search query  " + searchQuery + " and param values" + paramValues.toString());
+        final List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        Vendor v;
+        Supplier cs;
+        ServicedLocations servicedLocations;
+        ServicesOffered servicesOffered;
+        List<Supplier> contractors;
+        List<ServicedLocations> sls;
+        List<ServicesOffered> sos;
+        SwmProcess p;
+        Boundary boundary;
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorEntity.class);
+        for (final VendorEntity vendorEntity : vendorEntities) {
 
-		List<Vendor> vendorList = new ArrayList<>();
-		LOG.info("Vendor search query  " + searchQuery + " and param values" + paramValues.toString());
-		List<VendorEntity> vendorEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-		Vendor v;
-		Supplier cs;
-		ServicedLocations servicedLocations;
-		ServicesOffered servicesOffered;
-		List<Supplier> contractors;
-		List<ServicedLocations> sls;
-		List<ServicesOffered> sos;
-		SwmProcess p;
-		Boundary boundary;
+            v = vendorEntity.toDomain();
+            cs = Supplier.builder().tenantId(v.getTenantId()).supplierNo(vendorEntity.getSupplier()).build();
 
-		for (VendorEntity vendorEntity : vendorEntities) {
+            contractors = supplierJdbcRepository.search(cs);
 
-			v = vendorEntity.toDomain();
-			cs = Supplier.builder().tenantId(v.getTenantId()).supplierNo(vendorEntity.getSupplier()).build();
+            if (contractors != null && !contractors.isEmpty())
+                v.setSupplier(contractors.get(0));
 
-			contractors = supplierJdbcRepository.search(cs);
+            servicedLocations = ServicedLocations.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();
 
-			if (contractors != null && !contractors.isEmpty()) {
-				v.setSupplier(contractors.get(0));
-			}
+            sls = servicedLocationsJdbcRepository.search(servicedLocations);
 
-			servicedLocations = ServicedLocations.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();
+            if (sls != null && !sls.isEmpty()) {
 
-			sls = servicedLocationsJdbcRepository.search(servicedLocations);
+                v.setServicedLocations(new ArrayList<>());
 
-			if (sls != null && !sls.isEmpty()) {
+                for (final ServicedLocations sl : sls)
+                    if (sl.getLocation() != null && !sl.getLocation().isEmpty()) {
 
-				v.setServicedLocations(new ArrayList<>());
+                        boundary = boundaryRepository.fetchBoundaryByCode(sl.getLocation(), sl.getTenantId());
 
-				for (ServicedLocations sl : sls) {
+                        if (boundary != null)
+                            v.getServicedLocations().add(boundary);
 
-					if (sl.getLocation() != null && !sl.getLocation().isEmpty()) {
+                    }
+            }
 
-						boundary = boundaryRepository.fetchBoundaryByCode(sl.getLocation(), sl.getTenantId());
+            servicesOffered = ServicesOffered.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();
 
-						if (boundary != null)
-							v.getServicedLocations().add(boundary);
+            sos = servicesOfferedJdbcRepository.search(servicesOffered);
 
-					}
+            if (sos != null && !sos.isEmpty()) {
 
-				}
-			}
+                v.setServicesOffered(new ArrayList<>());
 
-			servicesOffered = ServicesOffered.builder().tenantId(v.getTenantId()).vendor(v.getVendorNo()).build();
+                for (final ServicesOffered so : sos)
+                    if (so.getService() != null && !so.getService().isEmpty()) {
 
-			sos = servicesOfferedJdbcRepository.search(servicesOffered);
+                        p = swmProcessService.getSwmProcess(so.getTenantId(), so.getService(), new RequestInfo());
+                        if (p != null)
+                            v.getServicesOffered().add(p);
 
-			if (sos != null && !sos.isEmpty()) {
+                    }
+            }
 
-				v.setServicesOffered(new ArrayList<>());
+            vendorList.add(v);
 
-				for (ServicesOffered so : sos) {
-					if (so.getService() != null && !so.getService().isEmpty()) {
+        }
 
-						p = swmProcessService.getSwmProcess(so.getTenantId(), so.getService(), new RequestInfo());
-						if (p != null)
-							v.getServicesOffered().add(p);
+        page.setTotalResults(vendorList.size());
 
-					}
-				}
-			}
+        page.setPagedData(vendorList);
 
-			vendorList.add(v);
-
-		}
-
-		page.setTotalResults(vendorList.size());
-
-		page.setPagedData(vendorList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

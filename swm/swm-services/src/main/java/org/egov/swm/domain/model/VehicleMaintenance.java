@@ -21,42 +21,42 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleMaintenance {
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("code")
-	private String code = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("code")
+    private String code = null;
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("vehicle")
-	private Vehicle vehicle = null;
+    @NotNull
+    @JsonProperty("vehicle")
+    private Vehicle vehicle = null;
 
-	@NotNull
-	@Size(min = 2, max = 5)
-	@JsonProperty("maintenanceUom")
-	private String maintenanceUom = null;
+    @NotNull
+    @Size(min = 2, max = 5)
+    @JsonProperty("maintenanceUom")
+    private String maintenanceUom = null;
 
-	@NotNull
-	@Min(1)
-	@Max(50000)
-	@JsonProperty("maintenanceAfter")
-	private Long maintenanceAfter = null;
+    @NotNull
+    @Min(1)
+    @Max(50000)
+    @JsonProperty("maintenanceAfter")
+    private Long maintenanceAfter = null;
 
-	@NotNull
-	@Size(min = 3, max = 5)
-	@JsonProperty("downtimeforMaintenanceUom")
-	private String downtimeforMaintenanceUom = null;
+    @NotNull
+    @Size(min = 3, max = 5)
+    @JsonProperty("downtimeforMaintenanceUom")
+    private String downtimeforMaintenanceUom = null;
 
-	@NotNull
-	@Min(1)
-	@Max(720)
-	@JsonProperty("downtimeforMaintenance")
-	private Long downtimeforMaintenance = null;
+    @NotNull
+    @Min(1)
+    @Max(720)
+    @JsonProperty("downtimeforMaintenance")
+    private Long downtimeforMaintenance = null;
 
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @Valid
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 }

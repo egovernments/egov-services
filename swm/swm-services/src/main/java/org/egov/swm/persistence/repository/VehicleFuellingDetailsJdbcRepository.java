@@ -24,184 +24,177 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
+    public static final String TABLE_NAME = "egswm_vehiclefuellingdetails";
 
-	@Autowired
-	private FuelTypeService fuelTypeService;
+    @Autowired
+    private FuelTypeService fuelTypeService;
 
-	@Autowired
-	private RefillingPumpStationRepository refillingPumpStationRepository;
+    @Autowired
+    private RefillingPumpStationRepository refillingPumpStationRepository;
 
-	@Autowired
-	private VehicleRepository vehicleRepository;
+    @Autowired
+    private VehicleRepository vehicleRepository;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<VehicleFuellingDetails> search(VehicleFuellingDetailsSearch searchRequest) {
+    public Pagination<VehicleFuellingDetails> search(final VehicleFuellingDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), VehicleFuellingDetailsSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), VehicleFuellingDetailsSearch.class);
+        }
 
-		String orderBy = "order by transactionNo";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by transactionNo";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
-		if (searchRequest.getTransactionNo() != null) {
-			addAnd(params);
-			params.append("transactionNo =:transactionNo");
-			paramValues.put("transactionNo", searchRequest.getTransactionNo());
-		}
-		if (searchRequest.getTransactionDate() != null) {
-			addAnd(params);
-			params.append("transactionDate =:transactionDate");
-			paramValues.put("transactionDate", searchRequest.getTransactionDate());
-		}
-		if (searchRequest.getFuelTypeCode() != null) {
-			addAnd(params);
-			params.append("typeOfFuel =:typeOfFuel");
-			paramValues.put("typeOfFuel", searchRequest.getFuelTypeCode());
-		}
-		if (searchRequest.getRegNumber() != null) {
-			addAnd(params);
-			params.append("vehicle =:vehicle");
-			paramValues.put("vehicle", searchRequest.getRegNumber());
-		}
-		if (searchRequest.getVehicleReadingDuringFuelling() != null) {
-			addAnd(params);
-			params.append("vehicleReadingDuringFuelling =:vehicleReadingDuringFuelling");
-			paramValues.put("vehicleReadingDuringFuelling", searchRequest.getVehicleReadingDuringFuelling());
-		}
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
+        if (searchRequest.getTransactionNo() != null) {
+            addAnd(params);
+            params.append("transactionNo =:transactionNo");
+            paramValues.put("transactionNo", searchRequest.getTransactionNo());
+        }
+        if (searchRequest.getTransactionDate() != null) {
+            addAnd(params);
+            params.append("transactionDate =:transactionDate");
+            paramValues.put("transactionDate", searchRequest.getTransactionDate());
+        }
+        if (searchRequest.getFuelTypeCode() != null) {
+            addAnd(params);
+            params.append("typeOfFuel =:typeOfFuel");
+            paramValues.put("typeOfFuel", searchRequest.getFuelTypeCode());
+        }
+        if (searchRequest.getRegNumber() != null) {
+            addAnd(params);
+            params.append("vehicle =:vehicle");
+            paramValues.put("vehicle", searchRequest.getRegNumber());
+        }
+        if (searchRequest.getVehicleReadingDuringFuelling() != null) {
+            addAnd(params);
+            params.append("vehicleReadingDuringFuelling =:vehicleReadingDuringFuelling");
+            paramValues.put("vehicleReadingDuringFuelling", searchRequest.getVehicleReadingDuringFuelling());
+        }
 
-		if (searchRequest.getRefuellingStationName() != null) {
-			addAnd(params);
-			params.append("refuellingStation =:refuellingStation");
-			paramValues.put("refuellingStation", searchRequest.getRefuellingStationName());
-		}
+        if (searchRequest.getRefuellingStationName() != null) {
+            addAnd(params);
+            params.append("refuellingStation =:refuellingStation");
+            paramValues.put("refuellingStation", searchRequest.getRefuellingStationName());
+        }
 
-		if (searchRequest.getFuelFilled() != null) {
-			addAnd(params);
-			params.append("fuelFilled =:fuelFilled");
-			paramValues.put("fuelFilled", searchRequest.getFuelFilled());
-		}
+        if (searchRequest.getFuelFilled() != null) {
+            addAnd(params);
+            params.append("fuelFilled =:fuelFilled");
+            paramValues.put("fuelFilled", searchRequest.getFuelFilled());
+        }
 
-		if (searchRequest.getTotalCostIncurred() != null) {
-			addAnd(params);
-			params.append("totalCostIncurred =:totalCostIncurred");
-			paramValues.put("totalCostIncurred", searchRequest.getTotalCostIncurred());
-		}
+        if (searchRequest.getTotalCostIncurred() != null) {
+            addAnd(params);
+            params.append("totalCostIncurred =:totalCostIncurred");
+            paramValues.put("totalCostIncurred", searchRequest.getTotalCostIncurred());
+        }
 
-		if (searchRequest.getReceiptNo() != null) {
-			addAnd(params);
-			params.append("receiptNo =:receiptNo");
-			paramValues.put("receiptNo", searchRequest.getReceiptNo());
-		}
+        if (searchRequest.getReceiptNo() != null) {
+            addAnd(params);
+            params.append("receiptNo =:receiptNo");
+            paramValues.put("receiptNo", searchRequest.getReceiptNo());
+        }
 
-		if (searchRequest.getReceiptDate() != null) {
+        if (searchRequest.getReceiptDate() != null) {
 
-			addAnd(params);
-			params.append("receiptDate =:receiptDate");
-			paramValues.put("receiptDate", searchRequest.getReceiptDate());
-		}
+            addAnd(params);
+            params.append("receiptDate =:receiptDate");
+            paramValues.put("receiptDate", searchRequest.getReceiptDate());
+        }
 
-		Pagination<VehicleFuellingDetails> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<VehicleFuellingDetails> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<VehicleFuellingDetails>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<VehicleFuellingDetails>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleFuellingDetailsEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<VehicleFuellingDetails> vehicleFuellingDetailsList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleFuellingDetailsEntity.class);
+        final List<VehicleFuellingDetailsEntity> vehicleFuellingDetailsEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
 
-		List<VehicleFuellingDetails> vehicleFuellingDetailsList = new ArrayList<>();
+        VehicleFuellingDetails vfd;
+        Pagination<RefillingPumpStation> refillingPumpStationList;
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicleList;
+        RefillingPumpStationSearch refillingPumpStationSearch;
 
-		List<VehicleFuellingDetailsEntity> vehicleFuellingDetailsEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+        for (final VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities) {
+            vfd = vehicleFuellingDetailsEntity.toDomain();
 
-		VehicleFuellingDetails vfd;
-		Pagination<RefillingPumpStation> refillingPumpStationList;
-		VehicleSearch vehicleSearch;
-		Pagination<Vehicle> vehicleList;
-		RefillingPumpStationSearch refillingPumpStationSearch;
+            if (vfd.getTypeOfFuel() != null && vfd.getTypeOfFuel().getCode() != null
+                    && !vfd.getTypeOfFuel().getCode().isEmpty())
+                vfd.setTypeOfFuel(fuelTypeService.getFuelType(vfd.getTenantId(), vfd.getTypeOfFuel().getCode(),
+                        new RequestInfo()));
 
-		for (VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities) {
-			vfd = vehicleFuellingDetailsEntity.toDomain();
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
 
-			if (vfd.getTypeOfFuel() != null && vfd.getTypeOfFuel().getCode() != null
-					&& !vfd.getTypeOfFuel().getCode().isEmpty()) {
+                vehicleSearch = new VehicleSearch();
+                vehicleSearch.setTenantId(vfd.getTenantId());
+                vehicleSearch.setRegNumber(vfd.getVehicle().getRegNumber());
+                vehicleList = vehicleRepository.search(vehicleSearch);
 
-				vfd.setTypeOfFuel(fuelTypeService.getFuelType(vfd.getTenantId(), vfd.getTypeOfFuel().getCode(),
-						new RequestInfo()));
+                if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
+                    vfd.setVehicle(vehicleList.getPagedData().get(0));
 
-			}
+            }
 
-			if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-					&& !vfd.getVehicle().getRegNumber().isEmpty()) {
+            if (vfd.getRefuellingStation() != null && vfd.getRefuellingStation().getCode() != null
+                    && vfd.getRefuellingStation().getCode().isEmpty()) {
+                refillingPumpStationSearch = new RefillingPumpStationSearch();
+                refillingPumpStationSearch.setTenantId(vfd.getTenantId());
+                refillingPumpStationSearch.setCode(vfd.getRefuellingStation().getCode());
 
-				vehicleSearch = new VehicleSearch();
-				vehicleSearch.setTenantId(vfd.getTenantId());
-				vehicleSearch.setRegNumber(vfd.getVehicle().getRegNumber());
-				vehicleList = vehicleRepository.search(vehicleSearch);
+                refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
 
-				if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
-					vfd.setVehicle(vehicleList.getPagedData().get(0));
+                if (refillingPumpStationList != null && refillingPumpStationList.getPagedData() != null
+                        && !refillingPumpStationList.getPagedData().isEmpty())
+                    vfd.setRefuellingStation(refillingPumpStationList.getPagedData().get(0));
+            }
 
-			}
+            vehicleFuellingDetailsList.add(vfd);
+        }
 
-			if (vfd.getRefuellingStation() != null && vfd.getRefuellingStation().getCode() != null
-					&& vfd.getRefuellingStation().getCode().isEmpty()) {
-				refillingPumpStationSearch = new RefillingPumpStationSearch();
-				refillingPumpStationSearch.setTenantId(vfd.getTenantId());
-				refillingPumpStationSearch.setCode(vfd.getRefuellingStation().getCode());
+        page.setTotalResults(vehicleFuellingDetailsList.size());
 
-				refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
+        page.setPagedData(vehicleFuellingDetailsList);
 
-				if (refillingPumpStationList != null && refillingPumpStationList.getPagedData() != null
-						&& !refillingPumpStationList.getPagedData().isEmpty())
-					vfd.setRefuellingStation(refillingPumpStationList.getPagedData().get(0));
-			}
-
-			vehicleFuellingDetailsList.add(vfd);
-		}
-
-		page.setTotalResults(vehicleFuellingDetailsList.size());
-
-		page.setPagedData(vehicleFuellingDetailsList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

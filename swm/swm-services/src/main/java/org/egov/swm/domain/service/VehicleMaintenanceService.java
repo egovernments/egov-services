@@ -22,152 +22,138 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class VehicleMaintenanceService {
 
-	@Autowired
-	private VehicleMaintenanceRepository vehicleMaintenanceRepository;
+    @Autowired
+    private VehicleMaintenanceRepository vehicleMaintenanceRepository;
 
-	@Autowired
-	private VehicleService vehicleService;
+    @Autowired
+    private VehicleService vehicleService;
 
-	@Transactional
-	public VehicleMaintenanceRequest create(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+    @Transactional
+    public VehicleMaintenanceRequest create(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		validate(vehicleMaintenanceRequest);
+        validate(vehicleMaintenanceRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (vehicleMaintenanceRequest.getRequestInfo() != null
-				&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
-				&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (vehicleMaintenanceRequest.getRequestInfo() != null
+                && vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
+                && null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId())
+            userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
 
-		for (VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances()) {
+        for (final VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances()) {
 
-			setAuditDetails(vm, userId);
+            setAuditDetails(vm, userId);
 
-			vm.setCode(UUID.randomUUID().toString().replace("-", ""));
+            vm.setCode(UUID.randomUUID().toString().replace("-", ""));
 
-		}
+        }
 
-		return vehicleMaintenanceRepository.save(vehicleMaintenanceRequest);
+        return vehicleMaintenanceRepository.save(vehicleMaintenanceRequest);
 
-	}
+    }
 
-	@Transactional
-	public VehicleMaintenanceRequest update(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+    @Transactional
+    public VehicleMaintenanceRequest update(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
+        Long userId = null;
 
-		Long userId = null;
+        if (vehicleMaintenanceRequest.getRequestInfo() != null
+                && vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
+                && null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId())
+            userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
 
-		if (vehicleMaintenanceRequest.getRequestInfo() != null
-				&& vehicleMaintenanceRequest.getRequestInfo().getUserInfo() != null
-				&& null != vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vehicleMaintenanceRequest.getRequestInfo().getUserInfo().getId();
-		}
+        for (final VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances())
+            setAuditDetails(vm, userId);
 
-		for (VehicleMaintenance vm : vehicleMaintenanceRequest.getVehicleMaintenances()) {
+        validate(vehicleMaintenanceRequest);
 
-			setAuditDetails(vm, userId);
+        return vehicleMaintenanceRepository.update(vehicleMaintenanceRequest);
 
-		}
-		
-		validate(vehicleMaintenanceRequest);
+    }
 
-		return vehicleMaintenanceRepository.update(vehicleMaintenanceRequest);
+    private void validate(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-	}
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicleList;
 
-	private void validate(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+        findDuplicatesInUniqueFields(vehicleMaintenanceRequest);
 
-		VehicleSearch vehicleSearch;
-		Pagination<Vehicle> vehicleList;
+        for (final VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
 
-		findDuplicatesInUniqueFields(vehicleMaintenanceRequest);
+            if (vehicleMaintenance.getVehicle() != null && (vehicleMaintenance.getVehicle().getRegNumber() == null
+                    || vehicleMaintenance.getVehicle().getRegNumber().isEmpty()))
+                throw new CustomException("Vehicle",
+                        "The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-		for (VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
+            // Validate Vehicle
+            if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+                    && vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
 
-			if (vehicleMaintenance.getVehicle() != null && (vehicleMaintenance.getVehicle().getRegNumber() == null
-					|| vehicleMaintenance.getVehicle().getRegNumber().isEmpty()))
-				throw new CustomException("Vehicle",
-						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+                vehicleSearch = new VehicleSearch();
+                vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
+                vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
+                vehicleList = vehicleService.search(vehicleSearch);
 
-			// Validate Vehicle
-			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-					&& vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+                if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
+                    throw new CustomException("Vehicle",
+                            "Given Vehicle is invalid: " + vehicleMaintenance.getVehicle().getRegNumber());
+                else
+                    vehicleMaintenance.setVehicle(vehicleList.getPagedData().get(0));
 
-				vehicleSearch = new VehicleSearch();
-				vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
-				vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
-				vehicleList = vehicleService.search(vehicleSearch);
+            }
 
-				if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
-					throw new CustomException("Vehicle",
-							"Given Vehicle is invalid: " + vehicleMaintenance.getVehicle().getRegNumber());
-				else {
-					vehicleMaintenance.setVehicle(vehicleList.getPagedData().get(0));
-				}
+            validateUniqueFields(vehicleMaintenance);
 
-			}
+        }
+    }
 
-			validateUniqueFields(vehicleMaintenance);
+    private void findDuplicatesInUniqueFields(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		}
-	}
+        final Map<String, String> regNumberMap = new HashMap<>();
 
-	private void findDuplicatesInUniqueFields(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+        for (final VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances())
+            if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+                    && !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
 
-		Map<String, String> regNumberMap = new HashMap<>();
+                if (regNumberMap.get(vehicleMaintenance.getVehicle().getRegNumber()) != null)
+                    throw new CustomException("Name",
+                            "Duplicate vehicle registration numbers in given VehicleMaintenances: "
+                                    + vehicleMaintenance.getVehicle().getRegNumber());
 
-		for (VehicleMaintenance vehicleMaintenance : vehicleMaintenanceRequest.getVehicleMaintenances()) {
+                regNumberMap.put(vehicleMaintenance.getVehicle().getRegNumber(),
+                        vehicleMaintenance.getVehicle().getRegNumber());
+            }
 
-			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-					&& !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+    }
 
-				if (regNumberMap.get(vehicleMaintenance.getVehicle().getRegNumber()) != null)
-					throw new CustomException("Name",
-							"Duplicate vehicle registration numbers in given VehicleMaintenances: "
-									+ vehicleMaintenance.getVehicle().getRegNumber());
+    private void validateUniqueFields(final VehicleMaintenance vehicleMaintenance) {
 
-				regNumberMap.put(vehicleMaintenance.getVehicle().getRegNumber(),
-						vehicleMaintenance.getVehicle().getRegNumber());
-			}
+        if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+                && !vehicleMaintenance.getVehicle().getRegNumber().isEmpty())
+            if (!vehicleMaintenanceRepository.uniqueCheck(vehicleMaintenance.getTenantId(), "vehicle",
+                    vehicleMaintenance.getVehicle().getRegNumber(), "code", vehicleMaintenance.getCode()))
+                throw new CustomException("vehicle",
+                        "The field vehicle registration number must be unique in the system for maintenance");
 
-		}
+    }
 
-	}
+    public Pagination<VehicleMaintenance> search(final VehicleMaintenanceSearch vehicleMaintenanceSearch) {
 
-	private void validateUniqueFields(VehicleMaintenance vehicleMaintenance) {
+        return vehicleMaintenanceRepository.search(vehicleMaintenanceSearch);
+    }
 
-		if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-				&& !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
-			if (!vehicleMaintenanceRepository.uniqueCheck(vehicleMaintenance.getTenantId(), "vehicle",
-					vehicleMaintenance.getVehicle().getRegNumber(), "code", vehicleMaintenance.getCode())) {
+    private void setAuditDetails(final VehicleMaintenance contract, final Long userId) {
 
-				throw new CustomException("vehicle",
-						"The field vehicle registration number must be unique in the system for maintenance");
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-			}
-		}
+        if (null == contract.getCode() || contract.getCode().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-	}
-
-	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch vehicleMaintenanceSearch) {
-
-		return vehicleMaintenanceRepository.search(vehicleMaintenanceSearch);
-	}
-
-	private void setAuditDetails(VehicleMaintenance contract, Long userId) {
-
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getCode() || contract.getCode().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

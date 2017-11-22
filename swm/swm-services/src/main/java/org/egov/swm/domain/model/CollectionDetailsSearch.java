@@ -11,9 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionDetailsSearch extends CollectionDetails {
 
-	private String collectionTypeCode = null;
-	private String sourceSegregationCode = null;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String collectionTypeCode = null;
+    private String sourceSegregationCode = null;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

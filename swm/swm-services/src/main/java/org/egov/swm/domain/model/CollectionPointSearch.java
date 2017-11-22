@@ -10,9 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CollectionPointSearch extends CollectionPoint {
-	private String codes;
-	private String locationCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String codes;
+    private String locationCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

@@ -19,10 +19,10 @@ import lombok.ToString;
 @Builder
 public class MdmsRequest {
 
-	@JsonProperty(value="RequestInfo")
-	private RequestInfo requestInfo;
+    @JsonProperty(value = "RequestInfo")
+    private RequestInfo requestInfo;
 
-	@JsonProperty(value="MdmsCriteria")
-	private MdmsCriteria mdmsCriteria;
+    @JsonProperty(value = "MdmsCriteria")
+    private MdmsCriteria mdmsCriteria;
 
 }

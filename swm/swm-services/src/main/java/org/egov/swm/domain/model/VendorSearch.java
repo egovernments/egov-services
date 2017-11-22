@@ -10,9 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VendorSearch extends Vendor {
-	private String vendorNos;
-	private String supplierNo;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String vendorNos;
+    private String supplierNo;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

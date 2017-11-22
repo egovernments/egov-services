@@ -10,10 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SanitationStaffScheduleSearch extends SanitationStaffSchedule {
-	private String transactionNos;
-	private String targetNo;
-	private String shiftCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String transactionNos;
+    private String targetNo;
+    private String shiftCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

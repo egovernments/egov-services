@@ -1,12 +1,15 @@
 package org.egov.swm.web.requests;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Data;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.RefillingPumpStation;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Data;
 
 public @Data class RefillingPumpStationRequest {
     @Valid

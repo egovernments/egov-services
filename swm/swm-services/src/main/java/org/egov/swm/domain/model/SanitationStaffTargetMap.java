@@ -20,21 +20,21 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SanitationStaffTargetMap {
 
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Length(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("sanitationStaffTarget")
-	private String sanitationStaffTarget = null;
+    @NotNull
+    @JsonProperty("sanitationStaffTarget")
+    private String sanitationStaffTarget = null;
 
-	@NotNull
-	@JsonProperty("collectionPoint")
-	private String collectionPoint = null;
+    @NotNull
+    @JsonProperty("collectionPoint")
+    private String collectionPoint = null;
 
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @Valid
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

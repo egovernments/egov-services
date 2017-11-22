@@ -17,37 +17,37 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SourceSegregationEntity {
 
-	private String code = null;
+    private String code = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String dumpingGround = null;
+    private String dumpingGround = null;
 
-	private Long sourceSegregationDate = null;
+    private Long sourceSegregationDate = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public SourceSegregation toDomain() {
+    public SourceSegregation toDomain() {
 
-		SourceSegregation sourceSegregation = new SourceSegregation();
-		sourceSegregation.setCode(code);
-		sourceSegregation.setTenantId(tenantId);
-		sourceSegregation.setDumpingGround(DumpingGround.builder().code(dumpingGround).build());
-		sourceSegregation.setSourceSegregationDate(sourceSegregationDate);
-		sourceSegregation.setAuditDetails(new AuditDetails());
-		sourceSegregation.getAuditDetails().setCreatedBy(createdBy);
-		sourceSegregation.getAuditDetails().setCreatedTime(createdTime);
-		sourceSegregation.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		sourceSegregation.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final SourceSegregation sourceSegregation = new SourceSegregation();
+        sourceSegregation.setCode(code);
+        sourceSegregation.setTenantId(tenantId);
+        sourceSegregation.setDumpingGround(DumpingGround.builder().code(dumpingGround).build());
+        sourceSegregation.setSourceSegregationDate(sourceSegregationDate);
+        sourceSegregation.setAuditDetails(new AuditDetails());
+        sourceSegregation.getAuditDetails().setCreatedBy(createdBy);
+        sourceSegregation.getAuditDetails().setCreatedTime(createdTime);
+        sourceSegregation.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        sourceSegregation.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return sourceSegregation;
+        return sourceSegregation;
 
-	}
+    }
 
 }

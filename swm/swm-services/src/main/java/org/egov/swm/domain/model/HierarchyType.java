@@ -18,19 +18,18 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class HierarchyType {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@Valid
-	@JsonProperty("name")
-	private LocalDate name = null;
+    @Valid
+    @JsonProperty("name")
+    private LocalDate name = null;
 
-	@Valid
-	@JsonProperty("loalname")
-	private LocalDate loalname = null;
-
+    @Valid
+    @JsonProperty("loalname")
+    private LocalDate loalname = null;
 
 }

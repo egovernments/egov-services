@@ -12,27 +12,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class SanitationStaffTargetRepository {
 
-	@Autowired
-	private SanitationStaffTargetQueueRepository sanitationStaffTargetQueueRepository;
+    @Autowired
+    private SanitationStaffTargetQueueRepository sanitationStaffTargetQueueRepository;
 
-	@Autowired
-	private SanitationStaffTargetJdbcRepository sanitationStaffTargetJdbcRepository;
+    @Autowired
+    private SanitationStaffTargetJdbcRepository sanitationStaffTargetJdbcRepository;
 
-	public SanitationStaffTargetRequest save(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    public SanitationStaffTargetRequest save(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		return sanitationStaffTargetQueueRepository.save(sanitationStaffTargetRequest);
+        return sanitationStaffTargetQueueRepository.save(sanitationStaffTargetRequest);
 
-	}
+    }
 
-	public SanitationStaffTargetRequest update(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    public SanitationStaffTargetRequest update(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		return sanitationStaffTargetQueueRepository.update(sanitationStaffTargetRequest);
+        return sanitationStaffTargetQueueRepository.update(sanitationStaffTargetRequest);
 
-	}
+    }
 
-	public Pagination<SanitationStaffTarget> search(SanitationStaffTargetSearch sanitationStaffTargetSearch) {
-		return sanitationStaffTargetJdbcRepository.search(sanitationStaffTargetSearch);
+    public Pagination<SanitationStaffTarget> search(final SanitationStaffTargetSearch sanitationStaffTargetSearch) {
+        return sanitationStaffTargetJdbcRepository.search(sanitationStaffTargetSearch);
 
-	}
+    }
 
 }

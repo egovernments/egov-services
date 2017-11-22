@@ -19,49 +19,49 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VendorContract {
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("vendor")
-	private Vendor vendor = null;
+    @NotNull
+    @JsonProperty("vendor")
+    private Vendor vendor = null;
 
-	@Size(min = 6, max = 128)
-	@JsonProperty("contractNo")
-	private String contractNo = null;
+    @Size(min = 6, max = 128)
+    @JsonProperty("contractNo")
+    private String contractNo = null;
 
-	@NotNull
-	@JsonProperty("contractDate")
-	private Long contractDate = null;
+    @NotNull
+    @JsonProperty("contractDate")
+    private Long contractDate = null;
 
-	@NotNull
-	@JsonProperty("contractPeriodFrom")
-	private Long contractPeriodFrom = null;
+    @NotNull
+    @JsonProperty("contractPeriodFrom")
+    private Long contractPeriodFrom = null;
 
-	@NotNull
-	@JsonProperty("contractPeriodTo")
-	private Long contractPeriodTo = null;
+    @NotNull
+    @JsonProperty("contractPeriodTo")
+    private Long contractPeriodTo = null;
 
-	@NotNull
-	@JsonProperty("securityDeposit")
-	private Double securityDeposit = null;
-	
-	@NotNull
-	@JsonProperty("paymentAmount")
-	private Double paymentAmount = null;
+    @NotNull
+    @JsonProperty("securityDeposit")
+    private Double securityDeposit = null;
 
-	@NotNull
-	@JsonProperty("paymentTerms")
-	private PaymentTerms paymentTerms = null;
+    @NotNull
+    @JsonProperty("paymentAmount")
+    private Double paymentAmount = null;
 
-	@Size(min = 15, max = 500)
-	@JsonProperty("remarks")
-	private String remarks = null;
+    @NotNull
+    @JsonProperty("paymentTerms")
+    private PaymentTerms paymentTerms = null;
 
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @Size(min = 15, max = 500)
+    @JsonProperty("remarks")
+    private String remarks = null;
+
+    @Valid
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

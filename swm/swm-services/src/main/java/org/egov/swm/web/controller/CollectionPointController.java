@@ -26,46 +26,46 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/collectionpoints")
 public class CollectionPointController {
 
-	@Autowired
-	private CollectionPointService collectionPointService;
+    @Autowired
+    private CollectionPointService collectionPointService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public CollectionPointResponse create(@RequestBody @Valid CollectionPointRequest collectionPointRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CollectionPointResponse create(@RequestBody @Valid CollectionPointRequest collectionPointRequest) {
 
-		collectionPointRequest = collectionPointService.create(collectionPointRequest);
+        collectionPointRequest = collectionPointService.create(collectionPointRequest);
 
-		return CollectionPointResponse.builder().responseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()))
-				.collectionPoints(collectionPointRequest.getCollectionPoints()).build();
-	}
+        return CollectionPointResponse.builder().responseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()))
+                .collectionPoints(collectionPointRequest.getCollectionPoints()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public CollectionPointResponse update(@RequestBody @Valid CollectionPointRequest collectionPointRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public CollectionPointResponse update(@RequestBody @Valid CollectionPointRequest collectionPointRequest) {
 
-		collectionPointRequest = collectionPointService.update(collectionPointRequest);
+        collectionPointRequest = collectionPointService.update(collectionPointRequest);
 
-		return CollectionPointResponse.builder().responseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()))
-				.collectionPoints(collectionPointRequest.getCollectionPoints()).build();
-	}
+        return CollectionPointResponse.builder().responseInfo(getResponseInfo(collectionPointRequest.getRequestInfo()))
+                .collectionPoints(collectionPointRequest.getCollectionPoints()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public CollectionPointResponse search(@ModelAttribute CollectionPointSearch collectionPointSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public CollectionPointResponse search(@ModelAttribute final CollectionPointSearch collectionPointSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<CollectionPoint> collectionPointList = collectionPointService.search(collectionPointSearch);
+        final Pagination<CollectionPoint> collectionPointList = collectionPointService.search(collectionPointSearch);
 
-		return CollectionPointResponse.builder().responseInfo(getResponseInfo(requestInfo))
-				.collectionPoints(collectionPointList.getPagedData()).page(new PaginationContract(collectionPointList))
-				.build();
+        return CollectionPointResponse.builder().responseInfo(getResponseInfo(requestInfo))
+                .collectionPoints(collectionPointList.getPagedData()).page(new PaginationContract(collectionPointList))
+                .build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

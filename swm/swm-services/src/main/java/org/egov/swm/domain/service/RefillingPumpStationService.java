@@ -20,129 +20,121 @@ import org.springframework.stereotype.Service;
 @Service
 public class RefillingPumpStationService {
 
-	@Autowired
-	private RefillingPumpStationRepository refillingPumpStationRepository;
+    @Autowired
+    private RefillingPumpStationRepository refillingPumpStationRepository;
 
-	@Autowired
-	private OilCompanyService oilCompanyService;
+    @Autowired
+    private OilCompanyService oilCompanyService;
 
-	@Autowired
-	private FuelTypeService fuelTypeService;
+    @Autowired
+    private FuelTypeService fuelTypeService;
 
-	@Autowired
-	private BoundaryRepository boundaryRepository;
+    @Autowired
+    private BoundaryRepository boundaryRepository;
 
-	public RefillingPumpStationRequest create(RefillingPumpStationRequest refillingPumpStationRequest) {
+    public RefillingPumpStationRequest create(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		validate(refillingPumpStationRequest);
-		Long userId = null;
-		if (refillingPumpStationRequest.getRequestInfo() != null
-				&& refillingPumpStationRequest.getRequestInfo().getUserInfo() != null
-				&& null != refillingPumpStationRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = refillingPumpStationRequest.getRequestInfo().getUserInfo().getId();
-		}
+        validate(refillingPumpStationRequest);
+        Long userId = null;
+        if (refillingPumpStationRequest.getRequestInfo() != null
+                && refillingPumpStationRequest.getRequestInfo().getUserInfo() != null
+                && null != refillingPumpStationRequest.getRequestInfo().getUserInfo().getId())
+            userId = refillingPumpStationRequest.getRequestInfo().getUserInfo().getId();
 
-		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
-			setAuditDetails(refillingPumpStation, userId);
-			refillingPumpStation.setCode(UUID.randomUUID().toString().replace("-", ""));
-		}
+        for (final RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
+            setAuditDetails(refillingPumpStation, userId);
+            refillingPumpStation.setCode(UUID.randomUUID().toString().replace("-", ""));
+        }
 
-		return refillingPumpStationRepository.save(refillingPumpStationRequest);
-	}
+        return refillingPumpStationRepository.save(refillingPumpStationRequest);
+    }
 
-	public RefillingPumpStationRequest update(RefillingPumpStationRequest refillingPumpStationRequest) {
-		Long userId = null;
-		if (refillingPumpStationRequest.getRequestInfo() != null
-				&& refillingPumpStationRequest.getRequestInfo().getUserInfo() != null
-				&& null != refillingPumpStationRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = refillingPumpStationRequest.getRequestInfo().getUserInfo().getId();
-		}
+    public RefillingPumpStationRequest update(final RefillingPumpStationRequest refillingPumpStationRequest) {
+        Long userId = null;
+        if (refillingPumpStationRequest.getRequestInfo() != null
+                && refillingPumpStationRequest.getRequestInfo().getUserInfo() != null
+                && null != refillingPumpStationRequest.getRequestInfo().getUserInfo().getId())
+            userId = refillingPumpStationRequest.getRequestInfo().getUserInfo().getId();
 
-		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
-			setAuditDetails(refillingPumpStation, userId);
-		}
+        for (final RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations())
+            setAuditDetails(refillingPumpStation, userId);
 
-		validateForUniqueCodesInRequest(refillingPumpStationRequest);
-		validate(refillingPumpStationRequest);
+        validateForUniqueCodesInRequest(refillingPumpStationRequest);
+        validate(refillingPumpStationRequest);
 
-		refillingPumpStationRepository.update(refillingPumpStationRequest);
+        refillingPumpStationRepository.update(refillingPumpStationRequest);
 
-		return refillingPumpStationRequest;
-	}
+        return refillingPumpStationRequest;
+    }
 
-	public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch) {
+    public Pagination<RefillingPumpStation> search(final RefillingPumpStationSearch refillingPumpStationSearch) {
 
-		return refillingPumpStationRepository.search(refillingPumpStationSearch);
-	}
+        return refillingPumpStationRepository.search(refillingPumpStationSearch);
+    }
 
-	private void validateForUniqueCodesInRequest(RefillingPumpStationRequest refillingPumpStationRequest) {
+    private void validateForUniqueCodesInRequest(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		List<String> codesList = refillingPumpStationRequest.getRefillingPumpStations().stream()
-				.map(RefillingPumpStation::getCode).collect(Collectors.toList());
+        final List<String> codesList = refillingPumpStationRequest.getRefillingPumpStations().stream()
+                .map(RefillingPumpStation::getCode).collect(Collectors.toList());
 
-		if (codesList.size() != codesList.stream().distinct().count())
-			throw new CustomException("Code", "Duplicate codes in given Refilling Pump Stations:");
-	}
+        if (codesList.size() != codesList.stream().distinct().count())
+            throw new CustomException("Code", "Duplicate codes in given Refilling Pump Stations:");
+    }
 
-	private void validate(RefillingPumpStationRequest refillingPumpStationRequest) {
+    private void validate(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		for (RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
+        for (final RefillingPumpStation refillingPumpStation : refillingPumpStationRequest.getRefillingPumpStations()) {
 
-			// Validate Fuel Type
-			if (refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null
-					|| refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
-				throw new CustomException("FuelType", "typeOfFuel code is mandatory: ");
+            // Validate Fuel Type
+            if (refillingPumpStation.getTypeOfFuel() != null && (refillingPumpStation.getTypeOfFuel().getCode() == null
+                    || refillingPumpStation.getTypeOfFuel().getCode().isEmpty()))
+                throw new CustomException("FuelType", "typeOfFuel code is mandatory: ");
 
-			if (refillingPumpStation.getTypeOfFuel() != null) {
+            if (refillingPumpStation.getTypeOfFuel() != null)
+                refillingPumpStation.setTypeOfFuel(fuelTypeService.getFuelType(refillingPumpStation.getTenantId(),
+                        refillingPumpStation.getTypeOfFuel().getCode(), refillingPumpStationRequest.getRequestInfo()));
 
-				refillingPumpStation.setTypeOfFuel(fuelTypeService.getFuelType(refillingPumpStation.getTenantId(),
-						refillingPumpStation.getTypeOfFuel().getCode(), refillingPumpStationRequest.getRequestInfo()));
+            // validate Oil Company
+            if (refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null
+                    || refillingPumpStation.getTypeOfPump().getCode().isEmpty()))
+                throw new CustomException("OilCompany", "typeOfPump code is mandatory ");
 
-			}
+            if (refillingPumpStation.getTypeOfPump() != null)
+                refillingPumpStation.setTypeOfPump(oilCompanyService.getOilCompany(refillingPumpStation.getTenantId(),
+                        refillingPumpStation.getTypeOfPump().getCode(), refillingPumpStationRequest.getRequestInfo()));
 
-			// validate Oil Company
-			if (refillingPumpStation.getTypeOfPump() != null && (refillingPumpStation.getTypeOfPump().getCode() == null
-					|| refillingPumpStation.getTypeOfPump().getCode().isEmpty()))
-				throw new CustomException("OilCompany", "typeOfPump code is mandatory ");
+            // Validate Boundary
+            if (refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null
+                    || refillingPumpStation.getLocation().getCode().isEmpty()))
+                throw new CustomException("Boundary", "Boundary code is Mandatory");
 
-			if (refillingPumpStation.getTypeOfPump() != null) {
+            if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
 
-				refillingPumpStation.setTypeOfPump(oilCompanyService.getOilCompany(refillingPumpStation.getTenantId(),
-						refillingPumpStation.getTypeOfPump().getCode(), refillingPumpStationRequest.getRequestInfo()));
-			}
+                final Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
+                        refillingPumpStation.getTenantId());
 
-			// Validate Boundary
-			if (refillingPumpStation.getLocation() != null && (refillingPumpStation.getLocation().getCode() == null
-					|| refillingPumpStation.getLocation().getCode().isEmpty()))
-				throw new CustomException("Boundary", "Boundary code is Mandatory");
+                if (boundary != null)
+                    refillingPumpStation.setLocation(boundary);
+                else
+                    throw new CustomException("Boundary",
+                            "Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
+            }
 
-			if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null) {
+        }
 
-				Boundary boundary = boundaryRepository.fetchBoundaryByCode(refillingPumpStation.getLocation().getCode(),
-						refillingPumpStation.getTenantId());
+    }
 
-				if (boundary != null)
-					refillingPumpStation.setLocation(boundary);
-				else
-					throw new CustomException("Boundary",
-							"Given Boundary is Invalid: " + refillingPumpStation.getLocation().getCode());
-			}
+    private void setAuditDetails(final RefillingPumpStation contract, final Long userId) {
 
-		}
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-	}
+        if (null == contract.getCode() || contract.getCode().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-	private void setAuditDetails(RefillingPumpStation contract, Long userId) {
-
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getCode() || contract.getCode().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 }

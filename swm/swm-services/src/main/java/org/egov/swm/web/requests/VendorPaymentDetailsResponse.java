@@ -20,8 +20,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class VendorPaymentDetailsResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<VendorPaymentDetails> vendorPaymentDetails;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<VendorPaymentDetails> vendorPaymentDetails;
+    private PaginationContract page;
 }

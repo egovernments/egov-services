@@ -12,34 +12,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleMaintenanceRepository {
 
-	@Autowired
-	private VehicleMaintenanceQueueRepository vehicleMaintenanceQueueRepository;
+    @Autowired
+    private VehicleMaintenanceQueueRepository vehicleMaintenanceQueueRepository;
 
-	@Autowired
-	private VehicleMaintenanceJdbcRepository vehicleMaintenanceJdbcRepository;
+    @Autowired
+    private VehicleMaintenanceJdbcRepository vehicleMaintenanceJdbcRepository;
 
-	public VehicleMaintenanceRequest save(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+    public VehicleMaintenanceRequest save(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		return vehicleMaintenanceQueueRepository.save(vehicleMaintenanceRequest);
+        return vehicleMaintenanceQueueRepository.save(vehicleMaintenanceRequest);
 
-	}
+    }
 
-	public VehicleMaintenanceRequest update(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+    public VehicleMaintenanceRequest update(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		return vehicleMaintenanceQueueRepository.update(vehicleMaintenanceRequest);
+        return vehicleMaintenanceQueueRepository.update(vehicleMaintenanceRequest);
 
-	}
+    }
 
-	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch vehicleMaintenanceSearch) {
-		return vehicleMaintenanceJdbcRepository.search(vehicleMaintenanceSearch);
+    public Pagination<VehicleMaintenance> search(final VehicleMaintenanceSearch vehicleMaintenanceSearch) {
+        return vehicleMaintenanceJdbcRepository.search(vehicleMaintenanceSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return vehicleMaintenanceJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
-	}
+        return vehicleMaintenanceJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+                uniqueFieldValue);
+    }
 
 }

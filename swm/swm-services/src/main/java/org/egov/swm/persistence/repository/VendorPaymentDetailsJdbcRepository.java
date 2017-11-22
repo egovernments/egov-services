@@ -23,167 +23,162 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_vendorpaymentdetails";
+    public static final String TABLE_NAME = "egswm_vendorpaymentdetails";
 
-	@Autowired
-	private VendorContractService vendorContractService;
+    @Autowired
+    private VendorContractService vendorContractService;
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<VendorPaymentDetails> search(VendorPaymentDetailsSearch searchRequest) {
+    public Pagination<VendorPaymentDetails> search(final VendorPaymentDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), VendorPaymentDetailsSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), VendorPaymentDetailsSearch.class);
+        }
 
-		String orderBy = "order by paymentNo";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by paymentNo";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getPaymentNo() != null) {
-			addAnd(params);
-			params.append("paymentNo in (:paymentNo)");
-			paramValues.put("paymentNo", searchRequest.getPaymentNo());
-		}
+        if (searchRequest.getPaymentNo() != null) {
+            addAnd(params);
+            params.append("paymentNo in (:paymentNo)");
+            paramValues.put("paymentNo", searchRequest.getPaymentNo());
+        }
 
-		if (searchRequest.getPaymentNos() != null) {
-			addAnd(params);
-			params.append("paymentNo in (:paymentNos)");
-			paramValues.put("paymentNos",
-					new ArrayList<String>(Arrays.asList(searchRequest.getPaymentNos().split(","))));
-		}
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getPaymentNos() != null) {
+            addAnd(params);
+            params.append("paymentNo in (:paymentNos)");
+            paramValues.put("paymentNos",
+                    new ArrayList<>(Arrays.asList(searchRequest.getPaymentNos().split(","))));
+        }
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getContractNo() != null) {
-			addAnd(params);
-			params.append("vendorcontract =:contractNo");
-			paramValues.put("contractNo", searchRequest.getContractNo());
-		}
+        if (searchRequest.getContractNo() != null) {
+            addAnd(params);
+            params.append("vendorcontract =:contractNo");
+            paramValues.put("contractNo", searchRequest.getContractNo());
+        }
 
-		if (searchRequest.getEmployeeCode() != null) {
-			addAnd(params);
-			params.append("employee =:employeeCode");
-			paramValues.put("employeeCode", searchRequest.getEmployeeCode());
-		}
+        if (searchRequest.getEmployeeCode() != null) {
+            addAnd(params);
+            params.append("employee =:employeeCode");
+            paramValues.put("employeeCode", searchRequest.getEmployeeCode());
+        }
 
-		if (searchRequest.getVendorInvoiceAmount() != null) {
-			addAnd(params);
-			params.append("vendorinvoiceamount =:vendorinvoiceamount");
-			paramValues.put("vendorinvoiceamount", searchRequest.getVendorInvoiceAmount());
-		}
+        if (searchRequest.getVendorInvoiceAmount() != null) {
+            addAnd(params);
+            params.append("vendorinvoiceamount =:vendorinvoiceamount");
+            paramValues.put("vendorinvoiceamount", searchRequest.getVendorInvoiceAmount());
+        }
 
-		if (searchRequest.getInvoiceNo() != null) {
-			addAnd(params);
-			params.append("invoiceNo =:invoiceNo");
-			paramValues.put("invoiceNo", searchRequest.getInvoiceNo());
-		}
+        if (searchRequest.getInvoiceNo() != null) {
+            addAnd(params);
+            params.append("invoiceNo =:invoiceNo");
+            paramValues.put("invoiceNo", searchRequest.getInvoiceNo());
+        }
 
-		if (searchRequest.getFromDate() != null) {
-			addAnd(params);
-			params.append("fromDate =:fromDate");
-			paramValues.put("fromDate", searchRequest.getFromDate());
-		}
+        if (searchRequest.getFromDate() != null) {
+            addAnd(params);
+            params.append("fromDate =:fromDate");
+            paramValues.put("fromDate", searchRequest.getFromDate());
+        }
 
-		if (searchRequest.getToDate() != null) {
-			addAnd(params);
-			params.append("toDate =:toDate");
-			paramValues.put("toDate", searchRequest.getToDate());
-		}
+        if (searchRequest.getToDate() != null) {
+            addAnd(params);
+            params.append("toDate =:toDate");
+            paramValues.put("toDate", searchRequest.getToDate());
+        }
 
-		Pagination<VendorPaymentDetails> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<VendorPaymentDetails> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<VendorPaymentDetails>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<VendorPaymentDetails>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorPaymentDetailsEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<VendorPaymentDetails> vendorPaymentDetailsList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VendorPaymentDetailsEntity.class);
+        final List<VendorPaymentDetailsEntity> vendorPaymentDetailsEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
+        VendorPaymentDetails vendorPaymentDetail;
+        Pagination<VendorContract> vendorContractPage;
+        EmployeeResponse employeeResponse;
 
-		List<VendorPaymentDetails> vendorPaymentDetailsList = new ArrayList<>();
+        for (final VendorPaymentDetailsEntity vendorPaymentDetailsEntity : vendorPaymentDetailsEntities) {
 
-		List<VendorPaymentDetailsEntity> vendorPaymentDetailsEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
-		VendorPaymentDetails vendorPaymentDetail;
-		Pagination<VendorContract> vendorContractPage;
-		EmployeeResponse employeeResponse;
+            vendorPaymentDetail = vendorPaymentDetailsEntity.toDomain();
 
-		for (VendorPaymentDetailsEntity vendorPaymentDetailsEntity : vendorPaymentDetailsEntities) {
+            if (vendorPaymentDetail.getVendorContract() != null
+                    && vendorPaymentDetail.getVendorContract().getContractNo() != null) {
 
-			vendorPaymentDetail = vendorPaymentDetailsEntity.toDomain();
+                vendorContractPage = getVendorContracts(vendorPaymentDetail);
 
-			if (vendorPaymentDetail.getVendorContract() != null
-					&& vendorPaymentDetail.getVendorContract().getContractNo() != null) {
+                if (vendorContractPage != null && vendorContractPage.getPagedData() != null
+                        && !vendorContractPage.getPagedData().isEmpty())
+                    vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
+            }
 
-				vendorContractPage = getVendorContracts(vendorPaymentDetail);
+            if (vendorPaymentDetail.getEmployee() != null && vendorPaymentDetail.getEmployee().getCode() != null) {
 
-				if (vendorContractPage != null && vendorContractPage.getPagedData() != null
-						&& !vendorContractPage.getPagedData().isEmpty())
-					vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
-			}
+                employeeResponse = employeeRepository.getEmployeeByCode(vendorPaymentDetail.getEmployee().getCode(),
+                        vendorPaymentDetail.getTenantId(), new RequestInfo());
 
-			if (vendorPaymentDetail.getEmployee() != null && vendorPaymentDetail.getEmployee().getCode() != null) {
+                if (employeeResponse != null && employeeResponse.getEmployees() != null
+                        && !employeeResponse.getEmployees().isEmpty())
+                    vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
+            }
 
-				employeeResponse = employeeRepository.getEmployeeByCode(vendorPaymentDetail.getEmployee().getCode(),
-						vendorPaymentDetail.getTenantId(), new RequestInfo());
+            vendorPaymentDetailsList.add(vendorPaymentDetail);
 
-				if (employeeResponse != null && employeeResponse.getEmployees() != null
-						&& !employeeResponse.getEmployees().isEmpty()) {
-					vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
-				}
-			}
+        }
 
-			vendorPaymentDetailsList.add(vendorPaymentDetail);
+        page.setTotalResults(vendorPaymentDetailsList.size());
 
-		}
+        page.setPagedData(vendorPaymentDetailsList);
 
-		page.setTotalResults(vendorPaymentDetailsList.size());
+        return page;
+    }
 
-		page.setPagedData(vendorPaymentDetailsList);
+    private Pagination<VendorContract> getVendorContracts(final VendorPaymentDetails vendorPaymentDetail) {
+        final VendorContractSearch vendorContractSearch = new VendorContractSearch();
+        vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
+        vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
 
-		return page;
-	}
-
-	private Pagination<VendorContract> getVendorContracts(VendorPaymentDetails vendorPaymentDetail) {
-		VendorContractSearch vendorContractSearch = new VendorContractSearch();
-		vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
-		vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
-
-		return vendorContractService.search(vendorContractSearch);
-	}
+        return vendorContractService.search(vendorContractSearch);
+    }
 
 }

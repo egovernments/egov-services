@@ -21,55 +21,55 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SiteDetails {
 
-	@JsonProperty("code")
-	private String code;
+    @JsonProperty("code")
+    private String code;
 
-	@JsonProperty("name")
-	@Length(min = 1, max = 128)
-	@NotNull
-	private String name;
+    @JsonProperty("name")
+    @Length(min = 1, max = 128)
+    @NotNull
+    private String name;
 
-	@JsonProperty("location")
-	@NotNull
-	private Boundary location;
+    @JsonProperty("location")
+    @NotNull
+    private Boundary location;
 
-	@JsonProperty("area")
-	@NotNull
-	private Double area;
+    @JsonProperty("area")
+    @NotNull
+    private Double area;
 
-	@JsonProperty("capacity")
-	@NotNull
-	private Double capacity;
+    @JsonProperty("capacity")
+    @NotNull
+    private Double capacity;
 
-	@JsonProperty("address")
-	@Length(min = 15, max = 500)
-	@NotNull
-	private String address;
+    @JsonProperty("address")
+    @Length(min = 15, max = 500)
+    @NotNull
+    private String address;
 
-	@JsonProperty("latitude")
-	private Double latitude;
+    @JsonProperty("latitude")
+    private Double latitude;
 
-	@JsonProperty("longitude")
-	private Double longitude;
+    @JsonProperty("longitude")
+    private Double longitude;
 
-	@JsonProperty("wasteTypes")
-	@NotNull
-	private List<WasteType> wasteTypes;
+    @JsonProperty("wasteTypes")
+    @NotNull
+    private List<WasteType> wasteTypes;
 
-	@JsonProperty("mpcbAuthorisation")
-	private Boolean mpcbAuthorisation;
+    @JsonProperty("mpcbAuthorisation")
+    private Boolean mpcbAuthorisation;
 
-	@JsonProperty("bankGuarantee")
-	private Boolean bankGuarantee;
+    @JsonProperty("bankGuarantee")
+    private Boolean bankGuarantee;
 
-	@JsonProperty("bankName")
-	@Length(min = 0, max = 256)
-	private String bankName;
+    @JsonProperty("bankName")
+    @Length(min = 0, max = 256)
+    private String bankName;
 
-	@JsonProperty("bankValidityFrom")
-	private Long bankValidityFrom;
+    @JsonProperty("bankValidityFrom")
+    private Long bankValidityFrom;
 
-	@JsonProperty("bankValidityTo")
-	private Long bankValidityTo;
+    @JsonProperty("bankValidityTo")
+    private Long bankValidityTo;
 
 }

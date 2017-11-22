@@ -50,27 +50,27 @@ import lombok.NoArgsConstructor;
 @Data
 public class PaginationContract {
 
-	public static int DEFAULT_PAGE_SIZE = 500;
-	public static int DEFAULT_PAGE_OFFSET = 0;
+    public static int DEFAULT_PAGE_SIZE = 500;
+    public static int DEFAULT_PAGE_OFFSET = 0;
 
-	private Integer totalResults;
+    private Integer totalResults;
 
-	private Integer totalPages;
+    private Integer totalPages;
 
-	@Max(500l)
-	private Integer pageSize;
+    @Max(500l)
+    private Integer pageSize;
 
-	private Integer currentPage;
+    private Integer currentPage;
 
-	private Integer offset;
+    private Integer offset;
 
-	public PaginationContract(Pagination<?> page) {
-		this.pageSize = page.getPageSize();
-		this.currentPage = page.getCurrentPage();
-		this.offset = page.getOffset();
-		this.totalPages = page.getTotalPages();
-		this.totalResults = page.getTotalResults();
+    public PaginationContract(final Pagination<?> page) {
+        pageSize = page.getPageSize();
+        currentPage = page.getCurrentPage();
+        offset = page.getOffset();
+        totalPages = page.getTotalPages();
+        totalResults = page.getTotalResults();
 
-	}
+    }
 
 }

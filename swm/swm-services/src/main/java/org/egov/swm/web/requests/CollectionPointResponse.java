@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class CollectionPointResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<CollectionPoint> collectionPoints;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<CollectionPoint> collectionPoints;
+    private PaginationContract page;
 }

@@ -17,8 +17,8 @@ import lombok.ToString;
 @NoArgsConstructor
 public class IdGenerationResponse {
 
-	private ResponseInfo responseInfo;
+    private ResponseInfo responseInfo;
 
-	private List<IdResponse> idResponses;
+    private List<IdResponse> idResponses;
 
 }

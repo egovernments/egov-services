@@ -12,34 +12,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class SourceSegregationRepository {
 
-	@Autowired
-	private SourceSegregationJdbcRepository sourceSegregationJdbcRepository;
+    @Autowired
+    private SourceSegregationJdbcRepository sourceSegregationJdbcRepository;
 
-	@Autowired
-	private SourceSegregationQueueRepository sourceSegregationQueueRepository;
+    @Autowired
+    private SourceSegregationQueueRepository sourceSegregationQueueRepository;
 
-	public SourceSegregationRequest save(SourceSegregationRequest sourceSegregationRequest) {
+    public SourceSegregationRequest save(final SourceSegregationRequest sourceSegregationRequest) {
 
-		return sourceSegregationQueueRepository.save(sourceSegregationRequest);
+        return sourceSegregationQueueRepository.save(sourceSegregationRequest);
 
-	}
+    }
 
-	public SourceSegregationRequest update(SourceSegregationRequest sourceSegregationRequest) {
+    public SourceSegregationRequest update(final SourceSegregationRequest sourceSegregationRequest) {
 
-		return sourceSegregationQueueRepository.update(sourceSegregationRequest);
+        return sourceSegregationQueueRepository.update(sourceSegregationRequest);
 
-	}
+    }
 
-	public Pagination<SourceSegregation> search(SourceSegregationSearch sourceSegregationSearch) {
-		return sourceSegregationJdbcRepository.search(sourceSegregationSearch);
+    public Pagination<SourceSegregation> search(final SourceSegregationSearch sourceSegregationSearch) {
+        return sourceSegregationJdbcRepository.search(sourceSegregationSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return sourceSegregationJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
-	}
+        return sourceSegregationJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+                uniqueFieldValue);
+    }
 
 }

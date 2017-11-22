@@ -11,18 +11,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class BinDetailsRepository {
 
-	@Autowired
-	private BinDetailsJdbcRepository binDetailsJdbcRepository;
+    @Autowired
+    private BinDetailsJdbcRepository binDetailsJdbcRepository;
 
-	public List<BinDetails> search(BinDetailsSearch binDetailsSearch) {
-		return binDetailsJdbcRepository.search(binDetailsSearch);
+    public List<BinDetails> search(final BinDetailsSearch binDetailsSearch) {
+        return binDetailsJdbcRepository.search(binDetailsSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return binDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return binDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
 }

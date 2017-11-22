@@ -1,10 +1,10 @@
 package org.egov.swm.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import org.egov.swm.domain.model.*;
-
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.Getter;
 
 @Getter
 public class BoundaryResponse {

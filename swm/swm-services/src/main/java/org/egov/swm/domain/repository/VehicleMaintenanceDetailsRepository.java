@@ -11,27 +11,28 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleMaintenanceDetailsRepository {
 
-    private VehicleMaintenanceDetailsQueueRepository vehicleMaintenanceDetailsQueueRepository;
+    private final VehicleMaintenanceDetailsQueueRepository vehicleMaintenanceDetailsQueueRepository;
 
-    private VehicleMaintenanceDetailsJdbcRepository vehicleMaintenanceDetailsJdbcRepository;
+    private final VehicleMaintenanceDetailsJdbcRepository vehicleMaintenanceDetailsJdbcRepository;
 
-    public VehicleMaintenanceDetailsRepository(VehicleMaintenanceDetailsQueueRepository vehicleMaintenanceDetailsQueueRepository,
-                                               VehicleMaintenanceDetailsJdbcRepository vehicleMaintenanceDetailsJdbcRepository) {
+    public VehicleMaintenanceDetailsRepository(
+            final VehicleMaintenanceDetailsQueueRepository vehicleMaintenanceDetailsQueueRepository,
+            final VehicleMaintenanceDetailsJdbcRepository vehicleMaintenanceDetailsJdbcRepository) {
         this.vehicleMaintenanceDetailsQueueRepository = vehicleMaintenanceDetailsQueueRepository;
         this.vehicleMaintenanceDetailsJdbcRepository = vehicleMaintenanceDetailsJdbcRepository;
     }
 
-    public VehicleMaintenanceDetailsRequest create(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+    public VehicleMaintenanceDetailsRequest create(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
         return vehicleMaintenanceDetailsQueueRepository.save(vehicleMaintenanceDetailsRequest);
     }
 
-    public VehicleMaintenanceDetailsRequest update(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+    public VehicleMaintenanceDetailsRequest update(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
         return vehicleMaintenanceDetailsQueueRepository.update(vehicleMaintenanceDetailsRequest);
     }
 
-    public Pagination<VehicleMaintenanceDetails> search(VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch){
+    public Pagination<VehicleMaintenanceDetails> search(final VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch) {
 
         return vehicleMaintenanceDetailsJdbcRepository.search(vehicleMaintenanceDetailsSearch);
     }

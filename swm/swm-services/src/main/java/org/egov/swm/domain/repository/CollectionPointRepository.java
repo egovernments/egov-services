@@ -12,34 +12,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class CollectionPointRepository {
 
-	@Autowired
-	private CollectionPointJdbcRepository collectionPointJdbcRepository;
+    @Autowired
+    private CollectionPointJdbcRepository collectionPointJdbcRepository;
 
-	@Autowired
-	private CollectionPointQueueRepository collectionPointQueueRepository;
+    @Autowired
+    private CollectionPointQueueRepository collectionPointQueueRepository;
 
-	public CollectionPointRequest save(CollectionPointRequest collectionPointRequest) {
+    public CollectionPointRequest save(final CollectionPointRequest collectionPointRequest) {
 
-		return collectionPointQueueRepository.save(collectionPointRequest);
+        return collectionPointQueueRepository.save(collectionPointRequest);
 
-	}
+    }
 
-	public CollectionPointRequest update(CollectionPointRequest collectionPointRequest) {
+    public CollectionPointRequest update(final CollectionPointRequest collectionPointRequest) {
 
-		return collectionPointQueueRepository.update(collectionPointRequest);
+        return collectionPointQueueRepository.update(collectionPointRequest);
 
-	}
+    }
 
-	public Pagination<CollectionPoint> search(CollectionPointSearch collectionPointSearch) {
-		return collectionPointJdbcRepository.search(collectionPointSearch);
+    public Pagination<CollectionPoint> search(final CollectionPointSearch collectionPointSearch) {
+        return collectionPointJdbcRepository.search(collectionPointSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return collectionPointJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
-	}
+        return collectionPointJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+                uniqueFieldValue);
+    }
 
 }

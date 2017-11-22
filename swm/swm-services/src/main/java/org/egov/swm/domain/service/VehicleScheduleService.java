@@ -24,145 +24,137 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class VehicleScheduleService {
 
-	@Autowired
-	private VehicleScheduleRepository vehicleScheduleRepository;
+    @Autowired
+    private VehicleScheduleRepository vehicleScheduleRepository;
 
-	@Autowired
-	private IdgenRepository idgenRepository;
+    @Autowired
+    private IdgenRepository idgenRepository;
 
-	@Value("${egov.swm.vehicleschedule.transaction.num.idgen.name}")
-	private String idGenNameForVehicleScheduleTNRNumPath;
+    @Value("${egov.swm.vehicleschedule.transaction.num.idgen.name}")
+    private String idGenNameForVehicleScheduleTNRNumPath;
 
-	@Autowired
-	private VehicleService vehicleService;
+    @Autowired
+    private VehicleService vehicleService;
 
-	@Autowired
-	private RouteService routeService;
+    @Autowired
+    private RouteService routeService;
 
-	@Transactional
-	public VehicleScheduleRequest create(VehicleScheduleRequest vehicleScheduleRequest) {
+    @Transactional
+    public VehicleScheduleRequest create(final VehicleScheduleRequest vehicleScheduleRequest) {
 
-		validate(vehicleScheduleRequest);
+        validate(vehicleScheduleRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (vehicleScheduleRequest.getRequestInfo() != null
-				&& vehicleScheduleRequest.getRequestInfo().getUserInfo() != null
-				&& null != vehicleScheduleRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vehicleScheduleRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (vehicleScheduleRequest.getRequestInfo() != null
+                && vehicleScheduleRequest.getRequestInfo().getUserInfo() != null
+                && null != vehicleScheduleRequest.getRequestInfo().getUserInfo().getId())
+            userId = vehicleScheduleRequest.getRequestInfo().getUserInfo().getId();
 
-		for (VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules()) {
+        for (final VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules()) {
 
-			setAuditDetails(v, userId);
+            setAuditDetails(v, userId);
 
-			v.setTransactionNo(generateTransactionNumber(v.getTenantId(), vehicleScheduleRequest.getRequestInfo()));
-		}
+            v.setTransactionNo(generateTransactionNumber(v.getTenantId(), vehicleScheduleRequest.getRequestInfo()));
+        }
 
-		return vehicleScheduleRepository.save(vehicleScheduleRequest);
+        return vehicleScheduleRepository.save(vehicleScheduleRequest);
 
-	}
+    }
 
-	@Transactional
-	public VehicleScheduleRequest update(VehicleScheduleRequest vehicleScheduleRequest) {
+    @Transactional
+    public VehicleScheduleRequest update(final VehicleScheduleRequest vehicleScheduleRequest) {
 
-		Long userId = null;
+        final Long userId = null;
 
-		for (VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules()) {
+        for (final VehicleSchedule v : vehicleScheduleRequest.getVehicleSchedules())
+            setAuditDetails(v, userId);
 
-			setAuditDetails(v, userId);
-		}
+        validate(vehicleScheduleRequest);
 
-		validate(vehicleScheduleRequest);
+        return vehicleScheduleRepository.update(vehicleScheduleRequest);
 
-		return vehicleScheduleRepository.update(vehicleScheduleRequest);
+    }
 
-	}
+    private void validate(final VehicleScheduleRequest vehicleScheduleRequest) {
 
-	private void validate(VehicleScheduleRequest vehicleScheduleRequest) {
+        RouteSearch routeSearch;
+        Pagination<Route> routes;
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicleList;
 
-		RouteSearch routeSearch;
-		Pagination<Route> routes;
-		VehicleSearch vehicleSearch;
-		Pagination<Vehicle> vehicleList;
+        for (final VehicleSchedule vehicleSchedule : vehicleScheduleRequest.getVehicleSchedules()) {
 
-		for (VehicleSchedule vehicleSchedule : vehicleScheduleRequest.getVehicleSchedules()) {
+            if (vehicleSchedule.getVehicle() != null && (vehicleSchedule.getVehicle().getRegNumber() == null
+                    || vehicleSchedule.getVehicle().getRegNumber().isEmpty()))
+                throw new CustomException("Vehicle",
+                        "The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			if (vehicleSchedule.getVehicle() != null && (vehicleSchedule.getVehicle().getRegNumber() == null
-					|| vehicleSchedule.getVehicle().getRegNumber().isEmpty()))
-				throw new CustomException("Vehicle",
-						"The field Vehicle registration number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            // Validate Vehicle
 
-			// Validate Vehicle
+            if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null
+                    && !vehicleSchedule.getVehicle().getRegNumber().isEmpty()) {
 
-			if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null
-					&& !vehicleSchedule.getVehicle().getRegNumber().isEmpty()) {
+                vehicleSearch = new VehicleSearch();
+                vehicleSearch.setTenantId(vehicleSchedule.getTenantId());
+                vehicleSearch.setRegNumber(vehicleSchedule.getVehicle().getRegNumber());
+                vehicleList = vehicleService.search(vehicleSearch);
 
-				vehicleSearch = new VehicleSearch();
-				vehicleSearch.setTenantId(vehicleSchedule.getTenantId());
-				vehicleSearch.setRegNumber(vehicleSchedule.getVehicle().getRegNumber());
-				vehicleList = vehicleService.search(vehicleSearch);
+                if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
+                    throw new CustomException("Vehicle",
+                            "Given Vehicle is invalid: " + vehicleSchedule.getVehicle().getRegNumber());
+                else
+                    vehicleSchedule.setVehicle(vehicleList.getPagedData().get(0));
 
-				if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
-					throw new CustomException("Vehicle",
-							"Given Vehicle is invalid: " + vehicleSchedule.getVehicle().getRegNumber());
-				else {
-					vehicleSchedule.setVehicle(vehicleList.getPagedData().get(0));
-				}
+            }
 
-			}
+            // Validate Route
 
-			// Validate Route
+            if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
+                    && !vehicleSchedule.getRoute().getCode().isEmpty()) {
 
-			if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
-					&& !vehicleSchedule.getRoute().getCode().isEmpty()) {
+                routeSearch = new RouteSearch();
+                routeSearch.setTenantId(vehicleSchedule.getTenantId());
+                routeSearch.setCode(vehicleSchedule.getRoute().getCode());
+                routes = routeService.search(routeSearch);
 
-				routeSearch = new RouteSearch();
-				routeSearch.setTenantId(vehicleSchedule.getTenantId());
-				routeSearch.setCode(vehicleSchedule.getRoute().getCode());
-				routes = routeService.search(routeSearch);
+                if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty())
+                    throw new CustomException("Route",
+                            "Given Route is invalid: " + vehicleSchedule.getRoute().getCode());
+                else
+                    vehicleSchedule.setRoute(routes.getPagedData().get(0));
 
-				if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty()) {
-					throw new CustomException("Route",
-							"Given Route is invalid: " + vehicleSchedule.getRoute().getCode());
-				} else {
-					vehicleSchedule.setRoute(routes.getPagedData().get(0));
-				}
+            }
 
-			}
+            if (vehicleSchedule.getScheduledFrom() != null && vehicleSchedule.getScheduledTo() != null)
+                if (new Date(vehicleSchedule.getScheduledTo()).before(new Date(vehicleSchedule.getScheduledFrom())))
+                    throw new CustomException("ScheduledToDate ",
+                            "Given Scheduled To Date is invalid: " + new Date(vehicleSchedule.getScheduledTo()));
+        }
+    }
 
-			if (vehicleSchedule.getScheduledFrom() != null && vehicleSchedule.getScheduledTo() != null) {
+    private String generateTransactionNumber(final String tenantId, final RequestInfo requestInfo) {
 
-				if (new Date(vehicleSchedule.getScheduledTo()).before(new Date(vehicleSchedule.getScheduledFrom()))) {
-					throw new CustomException("ScheduledToDate ",
-							"Given Scheduled To Date is invalid: " + new Date(vehicleSchedule.getScheduledTo()));
-				}
-			}
-		}
-	}
+        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVehicleScheduleTNRNumPath);
+    }
 
-	private String generateTransactionNumber(String tenantId, RequestInfo requestInfo) {
+    public Pagination<VehicleSchedule> search(final VehicleScheduleSearch vehicleScheduleSearch) {
 
-		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVehicleScheduleTNRNumPath);
-	}
+        return vehicleScheduleRepository.search(vehicleScheduleSearch);
+    }
 
-	public Pagination<VehicleSchedule> search(VehicleScheduleSearch vehicleScheduleSearch) {
+    private void setAuditDetails(final VehicleSchedule contract, final Long userId) {
 
-		return vehicleScheduleRepository.search(vehicleScheduleSearch);
-	}
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-	private void setAuditDetails(VehicleSchedule contract, Long userId) {
+        if (null == contract.getTransactionNo() || contract.getTransactionNo().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getTransactionNo() || contract.getTransactionNo().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

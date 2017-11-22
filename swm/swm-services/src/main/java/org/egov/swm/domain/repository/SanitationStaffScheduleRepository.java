@@ -12,27 +12,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class SanitationStaffScheduleRepository {
 
-	@Autowired
-	private SanitationStaffScheduleJdbcRepository sanitationStaffScheduleJdbcRepository;
+    @Autowired
+    private SanitationStaffScheduleJdbcRepository sanitationStaffScheduleJdbcRepository;
 
-	@Autowired
-	private SanitationStaffScheduleQueueRepository sanitationStaffScheduleQueueRepository;
+    @Autowired
+    private SanitationStaffScheduleQueueRepository sanitationStaffScheduleQueueRepository;
 
-	public SanitationStaffScheduleRequest save(SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
+    public SanitationStaffScheduleRequest save(final SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		return sanitationStaffScheduleQueueRepository.save(sanitationStaffScheduleRequest);
+        return sanitationStaffScheduleQueueRepository.save(sanitationStaffScheduleRequest);
 
-	}
+    }
 
-	public SanitationStaffScheduleRequest update(SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
+    public SanitationStaffScheduleRequest update(final SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		return sanitationStaffScheduleQueueRepository.update(sanitationStaffScheduleRequest);
+        return sanitationStaffScheduleQueueRepository.update(sanitationStaffScheduleRequest);
 
-	}
+    }
 
-	public Pagination<SanitationStaffSchedule> search(SanitationStaffScheduleSearch sanitationStaffScheduleSearch) {
-		return sanitationStaffScheduleJdbcRepository.search(sanitationStaffScheduleSearch);
+    public Pagination<SanitationStaffSchedule> search(final SanitationStaffScheduleSearch sanitationStaffScheduleSearch) {
+        return sanitationStaffScheduleJdbcRepository.search(sanitationStaffScheduleSearch);
 
-	}
+    }
 
 }

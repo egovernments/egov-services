@@ -20,42 +20,42 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RefillingPumpStation {
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("code")
-	private String code = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("code")
+    private String code = null;
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("location")
-	private Boundary location = null;
+    @NotNull
+    @JsonProperty("location")
+    private Boundary location = null;
 
-	@NotNull
-	@Size(min = 1, max = 256)
-	@JsonProperty("name")
-	private String name = null;
+    @NotNull
+    @Size(min = 1, max = 256)
+    @JsonProperty("name")
+    private String name = null;
 
-	@NotNull
-	@JsonProperty("typeOfPump")
-	private OilCompanyName typeOfPump = null;
+    @NotNull
+    @JsonProperty("typeOfPump")
+    private OilCompanyName typeOfPump = null;
 
-	@Size(min = 0, max = 300)
-	@JsonProperty("remarks")
-	private String remarks = null;
+    @Size(min = 0, max = 300)
+    @JsonProperty("remarks")
+    private String remarks = null;
 
-	@NotNull
-	@JsonProperty("typeOfFuel")
-	private FuelType typeOfFuel = null;
+    @NotNull
+    @JsonProperty("typeOfFuel")
+    private FuelType typeOfFuel = null;
 
-	@JsonProperty("quantity")
-	@Min(value = 1)
-	@Max(value = 10000)
-	private Double quantity = null;
+    @JsonProperty("quantity")
+    @Min(value = 1)
+    @Max(value = 10000)
+    private Double quantity = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

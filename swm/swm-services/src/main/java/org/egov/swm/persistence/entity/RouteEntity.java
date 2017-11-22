@@ -19,52 +19,52 @@ import lombok.Setter;
 @NoArgsConstructor
 public class RouteEntity {
 
-	private String code = null;
+    private String code = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String name = null;
+    private String name = null;
 
-	private String collectionType = null;
+    private String collectionType = null;
 
-	private String startingCollectionPoint = null;
+    private String startingCollectionPoint = null;
 
-	private String endingCollectionPoint = null;
+    private String endingCollectionPoint = null;
 
-	private String endingDumpingGroundPoint = null;
+    private String endingDumpingGroundPoint = null;
 
-	private Double distance = null;
+    private Double distance = null;
 
-	private Double garbageEstimate = null;
+    private Double garbageEstimate = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public Route toDomain() {
+    public Route toDomain() {
 
-		Route route = new Route();
-		route.setCode(code);
-		route.setTenantId(tenantId);
-		route.setName(name);
-		route.setCollectionType(CollectionType.builder().code(collectionType).build());
-		route.setStartingCollectionPoint(CollectionPoint.builder().name(startingCollectionPoint).build());
-		route.setEndingCollectionPoint(CollectionPoint.builder().name(endingCollectionPoint).build());
-		route.setEndingDumpingGroundPoint(DumpingGround.builder().code(endingDumpingGroundPoint).build());
-		route.setDistance(distance);
-		route.setGarbageEstimate(garbageEstimate);
-		route.setAuditDetails(new AuditDetails());
-		route.getAuditDetails().setCreatedBy(createdBy);
-		route.getAuditDetails().setCreatedTime(createdTime);
-		route.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		route.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final Route route = new Route();
+        route.setCode(code);
+        route.setTenantId(tenantId);
+        route.setName(name);
+        route.setCollectionType(CollectionType.builder().code(collectionType).build());
+        route.setStartingCollectionPoint(CollectionPoint.builder().name(startingCollectionPoint).build());
+        route.setEndingCollectionPoint(CollectionPoint.builder().name(endingCollectionPoint).build());
+        route.setEndingDumpingGroundPoint(DumpingGround.builder().code(endingDumpingGroundPoint).build());
+        route.setDistance(distance);
+        route.setGarbageEstimate(garbageEstimate);
+        route.setAuditDetails(new AuditDetails());
+        route.getAuditDetails().setCreatedBy(createdBy);
+        route.getAuditDetails().setCreatedTime(createdTime);
+        route.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        route.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return route;
+        return route;
 
-	}
+    }
 
 }

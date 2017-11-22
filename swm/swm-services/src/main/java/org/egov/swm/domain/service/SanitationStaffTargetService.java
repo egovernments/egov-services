@@ -27,214 +27,202 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SanitationStaffTargetService {
 
-	@Autowired
-	private SanitationStaffTargetRepository sanitationStaffTargetRepository;
+    @Autowired
+    private SanitationStaffTargetRepository sanitationStaffTargetRepository;
 
-	@Autowired
-	private IdgenRepository idgenRepository;
+    @Autowired
+    private IdgenRepository idgenRepository;
 
-	@Autowired
-	private EmployeeRepository employeeRepository;
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
-	@Autowired
-	private RouteService routeService;
+    @Autowired
+    private RouteService routeService;
 
-	@Autowired
-	private DumpingGroundService dumpingGroundService;
+    @Autowired
+    private DumpingGroundService dumpingGroundService;
 
-	@Autowired
-	private SwmProcessService swmProcessService;
+    @Autowired
+    private SwmProcessService swmProcessService;
 
-	@Autowired
-	private BoundaryRepository boundaryRepository;
+    @Autowired
+    private BoundaryRepository boundaryRepository;
 
-	@Value("${egov.swm.sanitationstaff.targetnum.idgen.name}")
-	private String idGenNameForTargetNumPath;
+    @Value("${egov.swm.sanitationstaff.targetnum.idgen.name}")
+    private String idGenNameForTargetNumPath;
 
-	@Transactional
-	public SanitationStaffTargetRequest create(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    @Transactional
+    public SanitationStaffTargetRequest create(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		validate(sanitationStaffTargetRequest);
+        validate(sanitationStaffTargetRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (sanitationStaffTargetRequest.getRequestInfo() != null
-				&& sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
-				&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (sanitationStaffTargetRequest.getRequestInfo() != null
+                && sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
+                && null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId())
+            userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
 
-		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
+        for (final SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
-			setAuditDetails(v, userId);
+            setAuditDetails(v, userId);
 
-			v.setTargetNo(generateTargetNumber(v.getTenantId(), sanitationStaffTargetRequest.getRequestInfo()));
+            v.setTargetNo(generateTargetNumber(v.getTenantId(), sanitationStaffTargetRequest.getRequestInfo()));
 
-			if (v.getCollectionPoints() == null) {
-				v.setCollectionPoints(new ArrayList<>());
-			}
-		}
+            if (v.getCollectionPoints() == null)
+                v.setCollectionPoints(new ArrayList<>());
+        }
 
-		return sanitationStaffTargetRepository.save(sanitationStaffTargetRequest);
+        return sanitationStaffTargetRepository.save(sanitationStaffTargetRequest);
 
-	}
+    }
 
-	@Transactional
-	public SanitationStaffTargetRequest update(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    @Transactional
+    public SanitationStaffTargetRequest update(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		Long userId = null;
+        Long userId = null;
 
-		if (sanitationStaffTargetRequest.getRequestInfo() != null
-				&& sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
-				&& null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (sanitationStaffTargetRequest.getRequestInfo() != null
+                && sanitationStaffTargetRequest.getRequestInfo().getUserInfo() != null
+                && null != sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId())
+            userId = sanitationStaffTargetRequest.getRequestInfo().getUserInfo().getId();
 
-		for (SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
+        for (final SanitationStaffTarget v : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
-			setAuditDetails(v, userId);
+            setAuditDetails(v, userId);
 
-			if (v.getCollectionPoints() == null) {
-				v.setCollectionPoints(new ArrayList<>());
-			}
+            if (v.getCollectionPoints() == null)
+                v.setCollectionPoints(new ArrayList<>());
 
-		}
+        }
 
-		validate(sanitationStaffTargetRequest);
+        validate(sanitationStaffTargetRequest);
 
-		return sanitationStaffTargetRepository.update(sanitationStaffTargetRequest);
+        return sanitationStaffTargetRepository.update(sanitationStaffTargetRequest);
 
-	}
+    }
 
-	private void validate(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    private void validate(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		EmployeeResponse employeeResponse = null;
-		RouteSearch routeSearch = new RouteSearch();
-		Pagination<Route> routes;
-		Boundary boundary;
-		for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
+        EmployeeResponse employeeResponse = null;
+        final RouteSearch routeSearch = new RouteSearch();
+        Pagination<Route> routes;
+        Boundary boundary;
+        for (final SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
-			// Validate Boundary
+            // Validate Boundary
 
-			if (sanitationStaffTarget.getLocation() != null && (sanitationStaffTarget.getLocation().getCode() == null
-					|| sanitationStaffTarget.getLocation().getCode().isEmpty()))
-				throw new CustomException("Location",
-						"The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (sanitationStaffTarget.getLocation() != null && (sanitationStaffTarget.getLocation().getCode() == null
+                    || sanitationStaffTarget.getLocation().getCode().isEmpty()))
+                throw new CustomException("Location",
+                        "The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
+            if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null) {
 
-				boundary = boundaryRepository.fetchBoundaryByCode(sanitationStaffTarget.getLocation().getCode(),
-						sanitationStaffTarget.getTenantId());
+                boundary = boundaryRepository.fetchBoundaryByCode(sanitationStaffTarget.getLocation().getCode(),
+                        sanitationStaffTarget.getTenantId());
 
-				if (boundary != null)
-					sanitationStaffTarget.setLocation(boundary);
-				else
-					throw new CustomException("Location",
-							"Given Location is Invalid: " + sanitationStaffTarget.getLocation().getCode());
-			}
+                if (boundary != null)
+                    sanitationStaffTarget.setLocation(boundary);
+                else
+                    throw new CustomException("Location",
+                            "Given Location is Invalid: " + sanitationStaffTarget.getLocation().getCode());
+            }
 
-			if (sanitationStaffTarget.getSwmProcess() != null
-					&& (sanitationStaffTarget.getSwmProcess().getCode() == null
-							|| sanitationStaffTarget.getSwmProcess().getCode().isEmpty()))
-				throw new CustomException("ServicesOffered",
-						"The field ServicesOffered Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (sanitationStaffTarget.getSwmProcess() != null
+                    && (sanitationStaffTarget.getSwmProcess().getCode() == null
+                            || sanitationStaffTarget.getSwmProcess().getCode().isEmpty()))
+                throw new CustomException("ServicesOffered",
+                        "The field ServicesOffered Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			// Validate Swm Process
+            // Validate Swm Process
 
-			if (sanitationStaffTarget.getSwmProcess() != null
-					&& sanitationStaffTarget.getSwmProcess().getCode() != null) {
+            if (sanitationStaffTarget.getSwmProcess() != null
+                    && sanitationStaffTarget.getSwmProcess().getCode() != null)
+                sanitationStaffTarget.setSwmProcess(swmProcessService.getSwmProcess(sanitationStaffTarget.getTenantId(),
+                        sanitationStaffTarget.getSwmProcess().getCode(),
+                        sanitationStaffTargetRequest.getRequestInfo()));
 
-				sanitationStaffTarget.setSwmProcess(swmProcessService.getSwmProcess(sanitationStaffTarget.getTenantId(),
-						sanitationStaffTarget.getSwmProcess().getCode(),
-						sanitationStaffTargetRequest.getRequestInfo()));
+            if (sanitationStaffTarget.getRoute() != null && (sanitationStaffTarget.getRoute().getCode() == null
+                    || sanitationStaffTarget.getRoute().getCode().isEmpty()))
+                throw new CustomException("Route",
+                        "The field Route Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			}
+            // Validate Route
 
-			if (sanitationStaffTarget.getRoute() != null && (sanitationStaffTarget.getRoute().getCode() == null
-					|| sanitationStaffTarget.getRoute().getCode().isEmpty()))
-				throw new CustomException("Route",
-						"The field Route Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null) {
 
-			// Validate Route
+                routeSearch.setTenantId(sanitationStaffTarget.getTenantId());
+                routeSearch.setCode(sanitationStaffTarget.getRoute().getCode());
+                routes = routeService.search(routeSearch);
 
-			if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null) {
+                if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty())
+                    throw new CustomException("Route",
+                            "Given Route is invalid: " + sanitationStaffTarget.getRoute().getCode());
+                else
+                    sanitationStaffTarget.setRoute(routes.getPagedData().get(0));
 
-				routeSearch.setTenantId(sanitationStaffTarget.getTenantId());
-				routeSearch.setCode(sanitationStaffTarget.getRoute().getCode());
-				routes = routeService.search(routeSearch);
+            }
 
-				if (routes == null || routes.getPagedData() == null || routes.getPagedData().isEmpty()) {
-					throw new CustomException("Route",
-							"Given Route is invalid: " + sanitationStaffTarget.getRoute().getCode());
-				} else {
-					sanitationStaffTarget.setRoute(routes.getPagedData().get(0));
-				}
+            if (sanitationStaffTarget.getEmployee() != null && (sanitationStaffTarget.getEmployee().getCode() == null
+                    || sanitationStaffTarget.getEmployee().getCode().isEmpty()))
+                throw new CustomException("Employee",
+                        "The field Employee Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			}
+            // Validate Employee
 
-			if (sanitationStaffTarget.getEmployee() != null && (sanitationStaffTarget.getEmployee().getCode() == null
-					|| sanitationStaffTarget.getEmployee().getCode().isEmpty()))
-				throw new CustomException("Employee",
-						"The field Employee Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null) {
 
-			// Validate Employee
+                employeeResponse = employeeRepository.getEmployeeByCode(sanitationStaffTarget.getEmployee().getCode(),
+                        sanitationStaffTarget.getTenantId(), sanitationStaffTargetRequest.getRequestInfo());
 
-			if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null) {
+                if (employeeResponse == null || employeeResponse.getEmployees() == null
+                        || employeeResponse.getEmployees().isEmpty())
+                    throw new CustomException("Employee",
+                            "Given Employee is invalid: " + sanitationStaffTarget.getEmployee().getCode());
+                else
+                    sanitationStaffTarget.setEmployee(employeeResponse.getEmployees().get(0));
 
-				employeeResponse = employeeRepository.getEmployeeByCode(sanitationStaffTarget.getEmployee().getCode(),
-						sanitationStaffTarget.getTenantId(), sanitationStaffTargetRequest.getRequestInfo());
+            }
 
-				if (employeeResponse == null || employeeResponse.getEmployees() == null
-						|| employeeResponse.getEmployees().isEmpty()) {
-					throw new CustomException("Employee",
-							"Given Employee is invalid: " + sanitationStaffTarget.getEmployee().getCode());
-				} else {
-					sanitationStaffTarget.setEmployee(employeeResponse.getEmployees().get(0));
-				}
+            if (sanitationStaffTarget.getDumpingGround() != null
+                    && (sanitationStaffTarget.getDumpingGround().getCode() == null
+                            || sanitationStaffTarget.getDumpingGround().getCode().isEmpty()))
+                throw new CustomException("DumpingGround",
+                        "The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			}
+            // Validate Ending Dumping ground
+            if (sanitationStaffTarget.getDumpingGround() != null
+                    && sanitationStaffTarget.getDumpingGround().getCode() != null)
+                sanitationStaffTarget.setDumpingGround(dumpingGroundService.getDumpingGround(
+                        sanitationStaffTarget.getTenantId(), sanitationStaffTarget.getDumpingGround().getCode(),
+                        sanitationStaffTargetRequest.getRequestInfo()));
 
-			if (sanitationStaffTarget.getDumpingGround() != null
-					&& (sanitationStaffTarget.getDumpingGround().getCode() == null
-							|| sanitationStaffTarget.getDumpingGround().getCode().isEmpty()))
-				throw new CustomException("DumpingGround",
-						"The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+        }
+    }
 
-			// Validate Ending Dumping ground
-			if (sanitationStaffTarget.getDumpingGround() != null
-					&& sanitationStaffTarget.getDumpingGround().getCode() != null) {
+    private String generateTargetNumber(final String tenantId, final RequestInfo requestInfo) {
 
-				sanitationStaffTarget.setDumpingGround(dumpingGroundService.getDumpingGround(
-						sanitationStaffTarget.getTenantId(), sanitationStaffTarget.getDumpingGround().getCode(),
-						sanitationStaffTargetRequest.getRequestInfo()));
+        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
+    }
 
-			}
+    public Pagination<SanitationStaffTarget> search(final SanitationStaffTargetSearch sanitationStaffTargetSearch) {
 
-		}
-	}
+        return sanitationStaffTargetRepository.search(sanitationStaffTargetSearch);
+    }
 
-	private String generateTargetNumber(String tenantId, RequestInfo requestInfo) {
+    private void setAuditDetails(final SanitationStaffTarget contract, final Long userId) {
 
-		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTargetNumPath);
-	}
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-	public Pagination<SanitationStaffTarget> search(SanitationStaffTargetSearch sanitationStaffTargetSearch) {
+        if (null == contract.getTargetNo() || contract.getTargetNo().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-		return sanitationStaffTargetRepository.search(sanitationStaffTargetSearch);
-	}
-
-	private void setAuditDetails(SanitationStaffTarget contract, Long userId) {
-
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getTargetNo() || contract.getTargetNo().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

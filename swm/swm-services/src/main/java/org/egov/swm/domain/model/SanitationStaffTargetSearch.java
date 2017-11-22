@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SanitationStaffTargetSearch extends SanitationStaffTarget {
-	private String targetNos;
-	private String routeCode;
-	private String swmProcessCode;
-	private String employeeCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String targetNos;
+    private String routeCode;
+    private String swmProcessCode;
+    private String employeeCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

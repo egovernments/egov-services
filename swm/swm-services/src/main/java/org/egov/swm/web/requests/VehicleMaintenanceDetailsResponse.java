@@ -20,10 +20,10 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class VehicleMaintenanceDetailsResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	private List<VehicleMaintenanceDetails> vehicleMaintenanceDetails;
+    private List<VehicleMaintenanceDetails> vehicleMaintenanceDetails;
 
-	private PaginationContract page;
+    private PaginationContract page;
 }

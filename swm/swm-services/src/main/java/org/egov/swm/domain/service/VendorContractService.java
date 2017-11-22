@@ -22,128 +22,119 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class VendorContractService {
 
-	@Autowired
-	private VendorContractRepository vendorContractRepository;
+    @Autowired
+    private VendorContractRepository vendorContractRepository;
 
-	@Autowired
-	private IdgenRepository idgenRepository;
+    @Autowired
+    private IdgenRepository idgenRepository;
 
-	@Autowired
-	private VendorService vendorService;
+    @Autowired
+    private VendorService vendorService;
 
-	@Value("${egov.swm.vendor.contract.num.idgen.name}")
-	private String idGenNameForVendorContractNumPath;
+    @Value("${egov.swm.vendor.contract.num.idgen.name}")
+    private String idGenNameForVendorContractNumPath;
 
-	@Transactional
-	public VendorContractRequest create(VendorContractRequest vendorContractRequest) {
+    @Transactional
+    public VendorContractRequest create(final VendorContractRequest vendorContractRequest) {
 
-		validate(vendorContractRequest);
+        validate(vendorContractRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (vendorContractRequest.getRequestInfo() != null
-				&& vendorContractRequest.getRequestInfo().getUserInfo() != null
-				&& null != vendorContractRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (vendorContractRequest.getRequestInfo() != null
+                && vendorContractRequest.getRequestInfo().getUserInfo() != null
+                && null != vendorContractRequest.getRequestInfo().getUserInfo().getId())
+            userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
 
-		if (vendorContractRequest.getVendorContracts() != null)
-			for (VendorContract vc : vendorContractRequest.getVendorContracts()) {
+        if (vendorContractRequest.getVendorContracts() != null)
+            for (final VendorContract vc : vendorContractRequest.getVendorContracts()) {
 
-				setAuditDetails(vc, userId);
+                setAuditDetails(vc, userId);
 
-				vc.setContractNo(
-						generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
+                vc.setContractNo(
+                        generateVendorContractNumber(vc.getTenantId(), vendorContractRequest.getRequestInfo()));
 
-			}
+            }
 
-		return vendorContractRepository.save(vendorContractRequest);
+        return vendorContractRepository.save(vendorContractRequest);
 
-	}
+    }
 
-	@Transactional
-	public VendorContractRequest update(VendorContractRequest vendorContractRequest) {
+    @Transactional
+    public VendorContractRequest update(final VendorContractRequest vendorContractRequest) {
 
-		Long userId = null;
+        Long userId = null;
 
-		if (vendorContractRequest.getRequestInfo() != null
-				&& vendorContractRequest.getRequestInfo().getUserInfo() != null
-				&& null != vendorContractRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (vendorContractRequest.getRequestInfo() != null
+                && vendorContractRequest.getRequestInfo().getUserInfo() != null
+                && null != vendorContractRequest.getRequestInfo().getUserInfo().getId())
+            userId = vendorContractRequest.getRequestInfo().getUserInfo().getId();
 
-		if (vendorContractRequest.getVendorContracts() != null)
-			for (VendorContract vc : vendorContractRequest.getVendorContracts()) {
+        if (vendorContractRequest.getVendorContracts() != null)
+            for (final VendorContract vc : vendorContractRequest.getVendorContracts())
+                setAuditDetails(vc, userId);
 
-				setAuditDetails(vc, userId);
+        validate(vendorContractRequest);
 
-			}
+        return vendorContractRepository.update(vendorContractRequest);
 
-		validate(vendorContractRequest);
+    }
 
-		return vendorContractRepository.update(vendorContractRequest);
+    private String generateVendorContractNumber(final String tenantId, final RequestInfo requestInfo) {
 
-	}
+        return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVendorContractNumPath);
+    }
 
-	private String generateVendorContractNumber(String tenantId, RequestInfo requestInfo) {
+    private void validate(final VendorContractRequest vendorContractRequest) {
 
-		return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForVendorContractNumPath);
-	}
+        VendorSearch vendorSearch;
+        Pagination<Vendor> vendors;
+        for (final VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
 
-	private void validate(VendorContractRequest vendorContractRequest) {
+            if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null
+                    || vendorContract.getVendor().getVendorNo().isEmpty()))
+                throw new CustomException("FuelType",
+                        "The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-		VendorSearch vendorSearch;
-		Pagination<Vendor> vendors;
-		for (VendorContract vendorContract : vendorContractRequest.getVendorContracts()) {
+            if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null) {
+                vendorSearch = new VendorSearch();
+                vendorSearch.setTenantId(vendorContract.getTenantId());
+                vendorSearch.setVendorNo(vendorContract.getVendor().getVendorNo());
+                vendors = vendorService.search(vendorSearch);
+                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
+                    vendorContract.setVendor(vendors.getPagedData().get(0));
+                else
+                    throw new CustomException("Vendor",
+                            "Given Vendor is invalid: " + vendorContract.getVendor().getVendorNo());
+            }
 
-			if (vendorContract.getVendor() != null && (vendorContract.getVendor().getVendorNo() == null
-					|| vendorContract.getVendor().getVendorNo().isEmpty()))
-				throw new CustomException("FuelType",
-						"The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractPeriodTo() != null)
+                if (new Date(vendorContract.getContractPeriodTo())
+                        .before(new Date(vendorContract.getContractPeriodFrom())))
+                    throw new CustomException("ContractPeriodToDate ", "Given Contract Period To Date is invalid: "
+                            + new Date(vendorContract.getContractPeriodTo()));
 
-			if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null) {
-				vendorSearch = new VendorSearch();
-				vendorSearch.setTenantId(vendorContract.getTenantId());
-				vendorSearch.setVendorNo(vendorContract.getVendor().getVendorNo());
-				vendors = vendorService.search(vendorSearch);
-				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
-					vendorContract.setVendor(vendors.getPagedData().get(0));
-				} else {
-					throw new CustomException("Vendor",
-							"Given Vendor is invalid: " + vendorContract.getVendor().getVendorNo());
-				}
-			}
+        }
 
-			if (vendorContract.getContractPeriodFrom() != null && vendorContract.getContractPeriodTo() != null) {
+    }
 
-				if (new Date(vendorContract.getContractPeriodTo())
-						.before(new Date(vendorContract.getContractPeriodFrom()))) {
-					throw new CustomException("ContractPeriodToDate ", "Given Contract Period To Date is invalid: "
-							+ new Date(vendorContract.getContractPeriodTo()));
-				}
-			}
+    public Pagination<VendorContract> search(final VendorContractSearch vendorContractSearch) {
 
-		}
+        return vendorContractRepository.search(vendorContractSearch);
+    }
 
-	}
+    private void setAuditDetails(final VendorContract vc, final Long userId) {
 
-	public Pagination<VendorContract> search(VendorContractSearch vendorContractSearch) {
+        if (vc.getAuditDetails() == null)
+            vc.setAuditDetails(new AuditDetails());
 
-		return vendorContractRepository.search(vendorContractSearch);
-	}
+        if (null == vc.getContractNo() || vc.getContractNo().isEmpty()) {
+            vc.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            vc.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-	private void setAuditDetails(VendorContract vc, Long userId) {
-
-		if (vc.getAuditDetails() == null)
-			vc.setAuditDetails(new AuditDetails());
-
-		if (null == vc.getContractNo() || vc.getContractNo().isEmpty()) {
-			vc.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			vc.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		vc.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		vc.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        vc.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        vc.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

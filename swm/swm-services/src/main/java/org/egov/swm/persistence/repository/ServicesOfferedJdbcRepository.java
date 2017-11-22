@@ -12,49 +12,47 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ServicesOfferedJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_vendorservicedlocations";
+    public static final String TABLE_NAME = "egswm_vendorservicedlocations";
 
-	@Transactional
-	public void delete(String tenantId, String vendor) {
-		delete(TABLE_NAME, tenantId, "vendor", vendor);
-	}
+    @Transactional
+    public void delete(final String tenantId, final String vendor) {
+        delete(TABLE_NAME, tenantId, "vendor", vendor);
+    }
 
-	public List<ServicesOffered> search(ServicesOffered searchRequest) {
+    public List<ServicesOffered> search(final ServicesOffered searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getService() != null) {
-			addAnd(params);
-			params.append("service =:service");
-			paramValues.put("service", searchRequest.getService());
-		}
+        if (searchRequest.getService() != null) {
+            addAnd(params);
+            params.append("service =:service");
+            paramValues.put("service", searchRequest.getService());
+        }
 
-		if (searchRequest.getVendor() != null) {
-			addAnd(params);
-			params.append("vendor =:vendor");
-			paramValues.put("vendor", searchRequest.getVendor());
-		}
+        if (searchRequest.getVendor() != null) {
+            addAnd(params);
+            params.append("vendor =:vendor");
+            paramValues.put("vendor", searchRequest.getVendor());
+        }
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(ServicesOffered.class);
 
-			searchQuery = searchQuery.replace(":condition", "");
-
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(ServicesOffered.class);
-
-		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-	}
+        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+    }
 
 }

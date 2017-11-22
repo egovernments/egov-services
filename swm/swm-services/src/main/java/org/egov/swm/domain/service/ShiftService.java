@@ -17,22 +17,22 @@ import net.minidev.json.JSONArray;
 @Transactional(readOnly = true)
 public class ShiftService {
 
-	@Autowired
-	private MdmsRepository mdmsRepository;
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
-	public Shift getShift(String tenantId, String code, RequestInfo requestInfo) {
+    public Shift getShift(final String tenantId, final String code, final RequestInfo requestInfo) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
 
-		responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE, Constants.SHIFT_MASTER_NAME,
-				"code", code, requestInfo);
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE, Constants.SHIFT_MASTER_NAME,
+                "code", code, requestInfo);
 
-		if (responseJSONArray != null && responseJSONArray.size() > 0)
-			return mapper.convertValue(responseJSONArray.get(0), Shift.class);
-		else
-			throw new CustomException("Shift", "Given Shift is invalid: " + code);
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), Shift.class);
+        else
+            throw new CustomException("Shift", "Given Shift is invalid: " + code);
 
-	}
+    }
 
 }

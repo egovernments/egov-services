@@ -16,27 +16,27 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionDetailsEntity {
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String id = null;
+    private String id = null;
 
-	private String collectionType = null;
+    private String collectionType = null;
 
-	private Double wetWasteCollected = null;
+    private Double wetWasteCollected = null;
 
-	private Double dryWasteCollected = null;
+    private Double dryWasteCollected = null;
 
-	public CollectionDetails toDomain() {
+    public CollectionDetails toDomain() {
 
-		CollectionDetails collectionDetails = new CollectionDetails();
-		collectionDetails.setTenantId(tenantId);
-		collectionDetails.setId(id);
-		collectionDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
-		collectionDetails.setWetWasteCollected(wetWasteCollected);
-		collectionDetails.setDryWasteCollected(dryWasteCollected);
+        final CollectionDetails collectionDetails = new CollectionDetails();
+        collectionDetails.setTenantId(tenantId);
+        collectionDetails.setId(id);
+        collectionDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
+        collectionDetails.setWetWasteCollected(wetWasteCollected);
+        collectionDetails.setDryWasteCollected(dryWasteCollected);
 
-		return collectionDetails;
+        return collectionDetails;
 
-	}
+    }
 
 }

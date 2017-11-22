@@ -26,51 +26,51 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sanitationstafftargets")
 public class SanitationStaffTargetController {
 
-	@Autowired
-	private SanitationStaffTargetService sanitationStaffTargetService;
+    @Autowired
+    private SanitationStaffTargetService sanitationStaffTargetService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SanitationStaffTargetResponse create(
-			@RequestBody @Valid SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SanitationStaffTargetResponse create(
+            @RequestBody @Valid SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		sanitationStaffTargetRequest = sanitationStaffTargetService.create(sanitationStaffTargetRequest);
+        sanitationStaffTargetRequest = sanitationStaffTargetService.create(sanitationStaffTargetRequest);
 
-		return SanitationStaffTargetResponse.builder()
-				.responseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()))
-				.sanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets()).build();
-	}
+        return SanitationStaffTargetResponse.builder()
+                .responseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()))
+                .sanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SanitationStaffTargetResponse update(
-			@RequestBody @Valid SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SanitationStaffTargetResponse update(
+            @RequestBody @Valid SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		sanitationStaffTargetRequest = sanitationStaffTargetService.update(sanitationStaffTargetRequest);
+        sanitationStaffTargetRequest = sanitationStaffTargetService.update(sanitationStaffTargetRequest);
 
-		return SanitationStaffTargetResponse.builder()
-				.responseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()))
-				.sanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets()).build();
-	}
+        return SanitationStaffTargetResponse.builder()
+                .responseInfo(getResponseInfo(sanitationStaffTargetRequest.getRequestInfo()))
+                .sanitationStaffTargets(sanitationStaffTargetRequest.getSanitationStaffTargets()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public SanitationStaffTargetResponse search(@ModelAttribute SanitationStaffTargetSearch sanitationStaffTargetSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public SanitationStaffTargetResponse search(@ModelAttribute final SanitationStaffTargetSearch sanitationStaffTargetSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<SanitationStaffTarget> sanitationStaffTargetList = sanitationStaffTargetService
-				.search(sanitationStaffTargetSearch);
+        final Pagination<SanitationStaffTarget> sanitationStaffTargetList = sanitationStaffTargetService
+                .search(sanitationStaffTargetSearch);
 
-		return SanitationStaffTargetResponse.builder().responseInfo(getResponseInfo(requestInfo))
-				.sanitationStaffTargets(sanitationStaffTargetList.getPagedData())
-				.page(new PaginationContract(sanitationStaffTargetList)).build();
+        return SanitationStaffTargetResponse.builder().responseInfo(getResponseInfo(requestInfo))
+                .sanitationStaffTargets(sanitationStaffTargetList.getPagedData())
+                .page(new PaginationContract(sanitationStaffTargetList)).build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

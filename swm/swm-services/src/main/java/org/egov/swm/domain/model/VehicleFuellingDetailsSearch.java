@@ -11,11 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleFuellingDetailsSearch extends VehicleFuellingDetails {
 
-	private String regNumber;
-	private String fuelTypeCode;
-	private String refuellingStationName;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String regNumber;
+    private String fuelTypeCode;
+    private String refuellingStationName;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 
 }

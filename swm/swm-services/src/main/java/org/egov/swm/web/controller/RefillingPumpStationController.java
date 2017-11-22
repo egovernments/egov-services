@@ -25,52 +25,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/refillingpumpstations")
 public class RefillingPumpStationController {
 
-	private RefillingPumpStationService refillingPumpStationService;
+    private final RefillingPumpStationService refillingPumpStationService;
 
-	public RefillingPumpStationController(RefillingPumpStationService refillingPumpStationService) {
-		this.refillingPumpStationService = refillingPumpStationService;
-	}
+    public RefillingPumpStationController(final RefillingPumpStationService refillingPumpStationService) {
+        this.refillingPumpStationService = refillingPumpStationService;
+    }
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public RefillingPumpStationResponse create(
-			@RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RefillingPumpStationResponse create(
+            @RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		refillingPumpStationRequest = refillingPumpStationService.create(refillingPumpStationRequest);
+        refillingPumpStationRequest = refillingPumpStationService.create(refillingPumpStationRequest);
 
-		return RefillingPumpStationResponse.builder()
-				.responseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()))
-				.refillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations()).build();
-	}
+        return RefillingPumpStationResponse.builder()
+                .responseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()))
+                .refillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public RefillingPumpStationResponse update(
-			@RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public RefillingPumpStationResponse update(
+            @RequestBody @Valid RefillingPumpStationRequest refillingPumpStationRequest) {
 
-		refillingPumpStationRequest = refillingPumpStationService.update(refillingPumpStationRequest);
+        refillingPumpStationRequest = refillingPumpStationService.update(refillingPumpStationRequest);
 
-		return RefillingPumpStationResponse.builder()
-				.responseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()))
-				.refillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations()).build();
-	}
+        return RefillingPumpStationResponse.builder()
+                .responseInfo(getResponseInfo(refillingPumpStationRequest.getRequestInfo()))
+                .refillingPumpStations(refillingPumpStationRequest.getRefillingPumpStations()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public RefillingPumpStationResponse search(@ModelAttribute RefillingPumpStationSearch refillingPumpStationSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public RefillingPumpStationResponse search(@ModelAttribute final RefillingPumpStationSearch refillingPumpStationSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationService
-				.search(refillingPumpStationSearch);
+        final Pagination<RefillingPumpStation> refillingPumpStationList = refillingPumpStationService
+                .search(refillingPumpStationSearch);
 
-		return RefillingPumpStationResponse.builder().refillingPumpStations(refillingPumpStationList.getPagedData())
-				.responseInfo(getResponseInfo(requestInfo)).page(new PaginationContract(refillingPumpStationList))
-				.build();
-	}
+        return RefillingPumpStationResponse.builder().refillingPumpStations(refillingPumpStationList.getPagedData())
+                .responseInfo(getResponseInfo(requestInfo)).page(new PaginationContract(refillingPumpStationList))
+                .build();
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 }

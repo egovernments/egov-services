@@ -16,8 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class ScheduledMaintenanceDateResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	private Long sceduledDate;
+    private Long sceduledDate;
 }

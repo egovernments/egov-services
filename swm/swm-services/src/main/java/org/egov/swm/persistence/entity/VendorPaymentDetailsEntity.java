@@ -18,49 +18,49 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VendorPaymentDetailsEntity {
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String paymentNo;
+    private String paymentNo;
 
-	private String vendorContract;
+    private String vendorContract;
 
-	private Double vendorInvoiceAmount;
+    private Double vendorInvoiceAmount;
 
-	private String invoiceNo;
+    private String invoiceNo;
 
-	private Long fromDate;
+    private Long fromDate;
 
-	private Long toDate;
+    private Long toDate;
 
-	private String employee;
+    private String employee;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public VendorPaymentDetails toDomain() {
+    public VendorPaymentDetails toDomain() {
 
-		VendorPaymentDetails vendorPaymentDetails = new VendorPaymentDetails();
-		vendorPaymentDetails.setTenantId(tenantId);
-		vendorPaymentDetails.setPaymentNo(paymentNo);
-		vendorPaymentDetails.setVendorContract(VendorContract.builder().contractNo(vendorContract).build());
-		vendorPaymentDetails.setVendorInvoiceAmount(vendorInvoiceAmount);
-		vendorPaymentDetails.setInvoiceNo(invoiceNo);
-		vendorPaymentDetails.setFromDate(fromDate);
-		vendorPaymentDetails.setToDate(toDate);
-		vendorPaymentDetails.setEmployee(Employee.builder().code(employee).build());
-		vendorPaymentDetails.setAuditDetails(new AuditDetails());
-		vendorPaymentDetails.getAuditDetails().setCreatedBy(createdBy);
-		vendorPaymentDetails.getAuditDetails().setCreatedTime(createdTime);
-		vendorPaymentDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		vendorPaymentDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final VendorPaymentDetails vendorPaymentDetails = new VendorPaymentDetails();
+        vendorPaymentDetails.setTenantId(tenantId);
+        vendorPaymentDetails.setPaymentNo(paymentNo);
+        vendorPaymentDetails.setVendorContract(VendorContract.builder().contractNo(vendorContract).build());
+        vendorPaymentDetails.setVendorInvoiceAmount(vendorInvoiceAmount);
+        vendorPaymentDetails.setInvoiceNo(invoiceNo);
+        vendorPaymentDetails.setFromDate(fromDate);
+        vendorPaymentDetails.setToDate(toDate);
+        vendorPaymentDetails.setEmployee(Employee.builder().code(employee).build());
+        vendorPaymentDetails.setAuditDetails(new AuditDetails());
+        vendorPaymentDetails.getAuditDetails().setCreatedBy(createdBy);
+        vendorPaymentDetails.getAuditDetails().setCreatedTime(createdTime);
+        vendorPaymentDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        vendorPaymentDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return vendorPaymentDetails;
+        return vendorPaymentDetails;
 
-	}
+    }
 
 }

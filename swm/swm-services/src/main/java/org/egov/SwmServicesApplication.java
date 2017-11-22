@@ -6,7 +6,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SwmServicesApplication {
 
-	public static void main(String[] args) {
-		SpringApplication.run(SwmServicesApplication.class, args);
-	}
+    public static void main(final String[] args) {
+        SpringApplication.run(SwmServicesApplication.class, args);
+    }
 }

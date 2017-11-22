@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class VendorContractResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<VendorContract> vendorContracts;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<VendorContract> vendorContracts;
+    private PaginationContract page;
 }

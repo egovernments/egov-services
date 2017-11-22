@@ -21,190 +21,179 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_vehicle";
+    public static final String TABLE_NAME = "egswm_vehicle";
 
-	@Autowired
-	public VendorJdbcRepository vendorJdbcRepository;
+    @Autowired
+    public VendorJdbcRepository vendorJdbcRepository;
 
-	@Autowired
-	private VehicleTypeService vehicleTypeService;
+    @Autowired
+    private VehicleTypeService vehicleTypeService;
 
-	@Autowired
-	private FuelTypeService fuelTypeService;
+    @Autowired
+    private FuelTypeService fuelTypeService;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<Vehicle> search(VehicleSearch searchRequest) {
+    public Pagination<Vehicle> search(final VehicleSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), VehicleSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), VehicleSearch.class);
+        }
 
-		String orderBy = "order by regNumber";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by regNumber";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
-		if (searchRequest.getRegNumber() != null) {
-			addAnd(params);
-			params.append("regNumber =:regNumber");
-			paramValues.put("regNumber", searchRequest.getRegNumber());
-		}
-		if (searchRequest.getManufacturingDetails() != null) {
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
+        if (searchRequest.getRegNumber() != null) {
+            addAnd(params);
+            params.append("regNumber =:regNumber");
+            paramValues.put("regNumber", searchRequest.getRegNumber());
+        }
+        if (searchRequest.getManufacturingDetails() != null) {
 
-			if (searchRequest.getManufacturingDetails().getChassisSrNumber() != null) {
-				addAnd(params);
-				params.append("chassisSrNumber =:chassisSrNumber");
-				paramValues.put("chassisSrNumber", searchRequest.getManufacturingDetails().getChassisSrNumber());
-			}
+            if (searchRequest.getManufacturingDetails().getChassisSrNumber() != null) {
+                addAnd(params);
+                params.append("chassisSrNumber =:chassisSrNumber");
+                paramValues.put("chassisSrNumber", searchRequest.getManufacturingDetails().getChassisSrNumber());
+            }
 
-			if (searchRequest.getManufacturingDetails().getEngineSrNumber() != null) {
-				addAnd(params);
-				params.append("engineSrNumber =:engineSrNumber");
-				paramValues.put("engineSrNumber", searchRequest.getManufacturingDetails().getEngineSrNumber());
-			}
+            if (searchRequest.getManufacturingDetails().getEngineSrNumber() != null) {
+                addAnd(params);
+                params.append("engineSrNumber =:engineSrNumber");
+                paramValues.put("engineSrNumber", searchRequest.getManufacturingDetails().getEngineSrNumber());
+            }
 
-			if (searchRequest.getInsuranceDetails().getInsuranceNumber() != null) {
-				addAnd(params);
-				params.append("insuranceNumber =:insuranceNumber");
-				paramValues.put("insuranceNumber", searchRequest.getInsuranceDetails().getInsuranceNumber());
-			}
+            if (searchRequest.getInsuranceDetails().getInsuranceNumber() != null) {
+                addAnd(params);
+                params.append("insuranceNumber =:insuranceNumber");
+                paramValues.put("insuranceNumber", searchRequest.getInsuranceDetails().getInsuranceNumber());
+            }
 
-			if (searchRequest.getManufacturingDetails().getModel() != null) {
-				addAnd(params);
-				params.append("model =:model");
-				paramValues.put("model", searchRequest.getManufacturingDetails().getModel());
-			}
+            if (searchRequest.getManufacturingDetails().getModel() != null) {
+                addAnd(params);
+                params.append("model =:model");
+                paramValues.put("model", searchRequest.getManufacturingDetails().getModel());
+            }
 
-		}
+        }
 
-		if (searchRequest.getInsuranceDetails() != null) {
-			if (searchRequest.getInsuranceDetails().getInsuranceValidityDate() != null) {
-				addAnd(params);
-				params.append("insuranceValidityDate =:insuranceValidityDate");
-				paramValues.put("insuranceValidityDate",
-						searchRequest.getInsuranceDetails().getInsuranceValidityDate());
-			}
-		}
+        if (searchRequest.getInsuranceDetails() != null)
+            if (searchRequest.getInsuranceDetails().getInsuranceValidityDate() != null) {
+                addAnd(params);
+                params.append("insuranceValidityDate =:insuranceValidityDate");
+                paramValues.put("insuranceValidityDate",
+                        searchRequest.getInsuranceDetails().getInsuranceValidityDate());
+            }
 
-		if (searchRequest.getPurchaseInfo() != null) {
+        if (searchRequest.getPurchaseInfo() != null)
+            if (searchRequest.getPurchaseInfo().getPurchaseDate() != null) {
+                addAnd(params);
+                params.append("purchaseDate =:purchaseDate");
+                paramValues.put("purchaseDate", searchRequest.getPurchaseInfo().getPurchaseDate());
+            }
 
-			if (searchRequest.getPurchaseInfo().getPurchaseDate() != null) {
-				addAnd(params);
-				params.append("purchaseDate =:purchaseDate");
-				paramValues.put("purchaseDate", searchRequest.getPurchaseInfo().getPurchaseDate());
-			}
+        if (searchRequest.getVehicleTypeCode() != null) {
+            addAnd(params);
+            params.append("vehicleType =:vehicleType");
+            paramValues.put("vehicleType", searchRequest.getVehicleTypeCode());
+        }
 
-		}
+        if (searchRequest.getFuelTypeCode() != null) {
+            addAnd(params);
+            params.append("fuelType =:fuelType");
+            paramValues.put("fuelType", searchRequest.getFuelTypeCode());
+        }
 
-		if (searchRequest.getVehicleTypeCode() != null) {
-			addAnd(params);
-			params.append("vehicleType =:vehicleType");
-			paramValues.put("vehicleType", searchRequest.getVehicleTypeCode());
-		}
+        if (searchRequest.getPurchaseYear() != null) {
+            addAnd(params);
+            params.append("yearOfPurchase =:yearOfPurchase");
+            paramValues.put("yearOfPurchase", searchRequest.getPurchaseYear());
+        }
 
-		if (searchRequest.getFuelTypeCode() != null) {
-			addAnd(params);
-			params.append("fuelType =:fuelType");
-			paramValues.put("fuelType", searchRequest.getFuelTypeCode());
-		}
+        if (searchRequest.getVendorName() != null) {
+            addAnd(params);
+            params.append("vendor =:vendor");
+            paramValues.put("vendor", searchRequest.getVendorName());
+        }
 
-		if (searchRequest.getPurchaseYear() != null) {
-			addAnd(params);
-			params.append("yearOfPurchase =:yearOfPurchase");
-			paramValues.put("yearOfPurchase", searchRequest.getPurchaseYear());
-		}
+        Pagination<Vehicle> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (searchRequest.getVendorName() != null) {
-			addAnd(params);
-			params.append("vendor =:vendor");
-			paramValues.put("vendor", searchRequest.getVendorName());
-		}
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-		Pagination<Vehicle> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+            searchQuery = searchQuery.replace(":condition", "");
 
-		if (params.length() > 0) {
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        page = (Pagination
 
-		} else
+        <Vehicle>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-			searchQuery = searchQuery.replace(":condition", "");
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleEntity.class);
 
-		page = (Pagination
+        final List<Vehicle> vehicleList = new ArrayList<>();
 
-		<Vehicle>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+                row);
+        Vehicle v;
+        VendorSearch vendorSearch;
+        Pagination<Vendor> vendors;
+        for (final VehicleEntity vehicleEntity : vehicleEntities) {
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+            v = vehicleEntity.toDomain();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleEntity.class);
+            if (v.getVehicleType() != null && v.getVehicleType().getCode() != null)
+                v.setVehicleType(vehicleTypeService.getVehicleType(v.getTenantId(), v.getVehicleType().getCode(),
+                        new RequestInfo()));
 
-		List<Vehicle> vehicleList = new ArrayList<>();
+            if (v.getFuelType() != null && v.getFuelType().getCode() != null)
+                v.setFuelType(
+                        fuelTypeService.getFuelType(v.getTenantId(), v.getFuelType().getCode(), new RequestInfo()));
 
-		List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
-				row);
-		Vehicle v;
-		VendorSearch vendorSearch;
-		Pagination<Vendor> vendors;
-		for (VehicleEntity vehicleEntity : vehicleEntities) {
+            if (v.getVendor() != null && v.getVendor().getVendorNo() != null
+                    && !v.getVendor().getVendorNo().isEmpty()) {
+                vendorSearch = new VendorSearch();
+                vendorSearch.setTenantId(v.getTenantId());
+                vendorSearch.setVendorNo(v.getVendor().getVendorNo());
 
-			v = vehicleEntity.toDomain();
+                vendors = vendorJdbcRepository.search(vendorSearch);
+                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
+                    v.setVendor(vendors.getPagedData().get(0));
+            }
 
-			if (v.getVehicleType() != null && v.getVehicleType().getCode() != null) {
-				v.setVehicleType(vehicleTypeService.getVehicleType(v.getTenantId(), v.getVehicleType().getCode(),
-						new RequestInfo()));
-			}
+            vehicleList.add(v);
+        }
 
-			if (v.getFuelType() != null && v.getFuelType().getCode() != null) {
-				v.setFuelType(
-						fuelTypeService.getFuelType(v.getTenantId(), v.getFuelType().getCode(), new RequestInfo()));
-			}
+        page.setTotalResults(vehicleList.size());
 
-			if (v.getVendor() != null && v.getVendor().getVendorNo() != null
-					&& !v.getVendor().getVendorNo().isEmpty()) {
-				vendorSearch = new VendorSearch();
-				vendorSearch.setTenantId(v.getTenantId());
-				vendorSearch.setVendorNo(v.getVendor().getVendorNo());
+        page.setPagedData(vehicleList);
 
-				vendors = vendorJdbcRepository.search(vendorSearch);
-				if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty()) {
-					v.setVendor(vendors.getPagedData().get(0));
-				}
-			}
-
-			vehicleList.add(v);
-		}
-
-		page.setTotalResults(vehicleList.size());
-
-		page.setPagedData(vehicleList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

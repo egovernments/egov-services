@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class VehicleScheduleResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<VehicleSchedule> vehicleSchedules;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<VehicleSchedule> vehicleSchedules;
+    private PaginationContract page;
 }

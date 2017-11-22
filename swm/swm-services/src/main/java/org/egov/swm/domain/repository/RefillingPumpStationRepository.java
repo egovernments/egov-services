@@ -11,27 +11,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class RefillingPumpStationRepository {
 
-    private RefillingPumpStationQueueRepository refillingPumpStationQueueRepository;
+    private final RefillingPumpStationQueueRepository refillingPumpStationQueueRepository;
 
-    private RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository;
+    private final RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository;
 
-    public RefillingPumpStationRepository(RefillingPumpStationQueueRepository refillingPumpStationQueueRepository,
-                                          RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository) {
+    public RefillingPumpStationRepository(final RefillingPumpStationQueueRepository refillingPumpStationQueueRepository,
+            final RefillingPumpStationJdbcRepository refillingPumpStationJdbcRepository) {
         this.refillingPumpStationQueueRepository = refillingPumpStationQueueRepository;
         this.refillingPumpStationJdbcRepository = refillingPumpStationJdbcRepository;
     }
 
-    public RefillingPumpStationRequest save(RefillingPumpStationRequest refillingPumpStationRequest){
+    public RefillingPumpStationRequest save(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
         return refillingPumpStationQueueRepository.save(refillingPumpStationRequest);
     }
 
-    public RefillingPumpStationRequest update(RefillingPumpStationRequest refillingPumpStationRequest){
+    public RefillingPumpStationRequest update(final RefillingPumpStationRequest refillingPumpStationRequest) {
 
         return refillingPumpStationQueueRepository.update(refillingPumpStationRequest);
     }
 
-    public Pagination<RefillingPumpStation> search(RefillingPumpStationSearch refillingPumpStationSearch){
+    public Pagination<RefillingPumpStation> search(final RefillingPumpStationSearch refillingPumpStationSearch) {
 
         return refillingPumpStationJdbcRepository.search(refillingPumpStationSearch);
     }

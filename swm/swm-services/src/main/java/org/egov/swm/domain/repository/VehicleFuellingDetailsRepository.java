@@ -12,34 +12,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleFuellingDetailsRepository {
 
-	@Autowired
-	private VehicleFuellingDetailsJdbcRepository vehicleFuellingDetailsJdbcRepository;
+    @Autowired
+    private VehicleFuellingDetailsJdbcRepository vehicleFuellingDetailsJdbcRepository;
 
-	@Autowired
-	private VehicleFuellingDetailsQueueRepository vehicleFuellingDetailsQueueRepository;
+    @Autowired
+    private VehicleFuellingDetailsQueueRepository vehicleFuellingDetailsQueueRepository;
 
-	public VehicleFuellingDetailsRequest save(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    public VehicleFuellingDetailsRequest save(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		return vehicleFuellingDetailsQueueRepository.save(vehicleFuellingDetailsRequest);
+        return vehicleFuellingDetailsQueueRepository.save(vehicleFuellingDetailsRequest);
 
-	}
+    }
 
-	public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    public VehicleFuellingDetailsRequest update(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		return vehicleFuellingDetailsQueueRepository.update(vehicleFuellingDetailsRequest);
+        return vehicleFuellingDetailsQueueRepository.update(vehicleFuellingDetailsRequest);
 
-	}
+    }
 
-	public Pagination<VehicleFuellingDetails> search(VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
-		return vehicleFuellingDetailsJdbcRepository.search(vehicleFuellingDetailsSearch);
+    public Pagination<VehicleFuellingDetails> search(final VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
+        return vehicleFuellingDetailsJdbcRepository.search(vehicleFuellingDetailsSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return vehicleFuellingDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
-	}
+        return vehicleFuellingDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+                uniqueFieldValue);
+    }
 
 }

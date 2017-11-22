@@ -12,49 +12,49 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
+    @Autowired
+    private ServicedLocationsJdbcRepository servicedLocationsJdbcRepository;
 
-	@Autowired
-	private ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
+    @Autowired
+    private ServicesOfferedJdbcRepository servicesOfferedJdbcRepository;
 
-	@Value("${egov.swm.vendor.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.vendor.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.vendor.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.vendor.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.vendor.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.vendor.indexer.topic}")
+    private String indexerTopic;
 
-	public VendorRequest save(VendorRequest vendorRequest) {
+    public VendorRequest save(final VendorRequest vendorRequest) {
 
-		kafkaTemplate.send(saveTopic, vendorRequest);
+        kafkaTemplate.send(saveTopic, vendorRequest);
 
-		kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
+        kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
 
-		return vendorRequest;
+        return vendorRequest;
 
-	}
+    }
 
-	public VendorRequest update(VendorRequest vendorRequest) {
+    public VendorRequest update(final VendorRequest vendorRequest) {
 
-		for (Vendor cp : vendorRequest.getVendors()) {
+        for (final Vendor cp : vendorRequest.getVendors()) {
 
-			servicedLocationsJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
+            servicedLocationsJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
 
-			servicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
-		}
+            servicesOfferedJdbcRepository.delete(cp.getTenantId(), cp.getVendorNo());
+        }
 
-		kafkaTemplate.send(updateTopic, vendorRequest);
+        kafkaTemplate.send(updateTopic, vendorRequest);
 
-		kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
+        kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
 
-		return vendorRequest;
+        return vendorRequest;
 
-	}
+    }
 
 }

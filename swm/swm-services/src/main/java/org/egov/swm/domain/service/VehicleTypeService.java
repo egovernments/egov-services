@@ -17,22 +17,22 @@ import net.minidev.json.JSONArray;
 @Transactional(readOnly = true)
 public class VehicleTypeService {
 
-	@Autowired
-	private MdmsRepository mdmsRepository;
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
-	public VehicleType getVehicleType(String tenantId, String code, RequestInfo requestInfo) {
+    public VehicleType getVehicleType(final String tenantId, final String code, final RequestInfo requestInfo) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
 
-		responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
-				Constants.VEHICLETYPE_MASTER_NAME, "code", code, requestInfo);
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
+                Constants.VEHICLETYPE_MASTER_NAME, "code", code, requestInfo);
 
-		if (responseJSONArray != null && responseJSONArray.size() > 0)
-			return mapper.convertValue(responseJSONArray.get(0), VehicleType.class);
-		else
-			throw new CustomException("VehicleType", "Given VehicleType is invalid: " + code);
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), VehicleType.class);
+        else
+            throw new CustomException("VehicleType", "Given VehicleType is invalid: " + code);
 
-	}
+    }
 
 }

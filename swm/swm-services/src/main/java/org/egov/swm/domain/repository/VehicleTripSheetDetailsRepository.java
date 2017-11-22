@@ -12,34 +12,35 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleTripSheetDetailsRepository {
 
-	@Autowired
-	private VehicleTripSheetDetailsQueueRepository vehicleTripSheetDetailsQueueRepository;
+    @Autowired
+    private VehicleTripSheetDetailsQueueRepository vehicleTripSheetDetailsQueueRepository;
 
-	@Autowired
-	private VehicleTripSheetDetailsJdbcRepository vehicleTripSheetDetailsJdbcRepository;
+    @Autowired
+    private VehicleTripSheetDetailsJdbcRepository vehicleTripSheetDetailsJdbcRepository;
 
-	public VehicleTripSheetDetailsRequest save(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    public VehicleTripSheetDetailsRequest save(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		return vehicleTripSheetDetailsQueueRepository.save(vehicleTripSheetDetailsRequest);
+        return vehicleTripSheetDetailsQueueRepository.save(vehicleTripSheetDetailsRequest);
 
-	}
+    }
 
-	public VehicleTripSheetDetailsRequest update(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    public VehicleTripSheetDetailsRequest update(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		return vehicleTripSheetDetailsQueueRepository.update(vehicleTripSheetDetailsRequest);
+        return vehicleTripSheetDetailsQueueRepository.update(vehicleTripSheetDetailsRequest);
 
-	}
+    }
 
-	public Pagination<VehicleTripSheetDetails> search(VehicleTripSheetDetailsSearch vehicleTripSheetDetailsSearch) {
-		return vehicleTripSheetDetailsJdbcRepository.search(vehicleTripSheetDetailsSearch);
+    public Pagination<VehicleTripSheetDetails> search(final VehicleTripSheetDetailsSearch vehicleTripSheetDetailsSearch) {
+        return vehicleTripSheetDetailsJdbcRepository.search(vehicleTripSheetDetailsSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return vehicleTripSheetDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
-				uniqueFieldValue);
-	}
+        return vehicleTripSheetDetailsJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName,
+                uniqueFieldValue);
+    }
 
 }

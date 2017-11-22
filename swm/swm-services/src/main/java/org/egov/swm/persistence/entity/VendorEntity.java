@@ -17,43 +17,43 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VendorEntity {
 
-	private String vendorNo = null;
+    private String vendorNo = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String name = null;
+    private String name = null;
 
-	private String registrationNo = null;
+    private String registrationNo = null;
 
-	private String supplier = null;
+    private String supplier = null;
 
-	private String details = null;
+    private String details = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public Vendor toDomain() {
+    public Vendor toDomain() {
 
-		Vendor vendor = new Vendor();
-		vendor.setVendorNo(vendorNo);
-		vendor.setTenantId(tenantId);
-		vendor.setName(name);
-		vendor.setRegistrationNo(registrationNo);
-		vendor.setSupplier(Supplier.builder().contactNo(supplier).build());
-		vendor.setDetails(details);
-		vendor.setAuditDetails(new AuditDetails());
-		vendor.getAuditDetails().setCreatedBy(createdBy);
-		vendor.getAuditDetails().setCreatedTime(createdTime);
-		vendor.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		vendor.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final Vendor vendor = new Vendor();
+        vendor.setVendorNo(vendorNo);
+        vendor.setTenantId(tenantId);
+        vendor.setName(name);
+        vendor.setRegistrationNo(registrationNo);
+        vendor.setSupplier(Supplier.builder().contactNo(supplier).build());
+        vendor.setDetails(details);
+        vendor.setAuditDetails(new AuditDetails());
+        vendor.getAuditDetails().setCreatedBy(createdBy);
+        vendor.getAuditDetails().setCreatedTime(createdTime);
+        vendor.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        vendor.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return vendor;
+        return vendor;
 
-	}
+    }
 
 }

@@ -20,29 +20,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BinDetails {
 
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @Length(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("assetOrBinId")
-	private String assetOrBinId = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("assetOrBinId")
+    private String assetOrBinId = null;
 
-	@JsonProperty("rfidAssigned")
-	private Boolean rfidAssigned = null;
+    @JsonProperty("rfidAssigned")
+    private Boolean rfidAssigned = null;
 
-	@Size(min = 0, max = 256)
-	@JsonProperty("rfid")
-	private String rfid = null;
+    @Size(min = 0, max = 256)
+    @JsonProperty("rfid")
+    private String rfid = null;
 
-	@JsonProperty("latitude")
-	private Double latitude = null;
+    @JsonProperty("latitude")
+    private Double latitude = null;
 
-	@JsonProperty("longitude")
-	private Double longitude = null;
+    @JsonProperty("longitude")
+    private Double longitude = null;
 
 }

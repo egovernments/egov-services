@@ -26,66 +26,66 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vehiclemaintenancedetails")
 public class VehicleMaintenanceDetailsController {
 
-	VehicleMaintenanceDetailsService vehicleMaintenanceDetailsService;
+    VehicleMaintenanceDetailsService vehicleMaintenanceDetailsService;
 
-	public VehicleMaintenanceDetailsController(VehicleMaintenanceDetailsService vehicleMaintenanceDetailsService) {
-		this.vehicleMaintenanceDetailsService = vehicleMaintenanceDetailsService;
-	}
+    public VehicleMaintenanceDetailsController(final VehicleMaintenanceDetailsService vehicleMaintenanceDetailsService) {
+        this.vehicleMaintenanceDetailsService = vehicleMaintenanceDetailsService;
+    }
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleMaintenanceDetailsResponse create(
-			@RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleMaintenanceDetailsResponse create(
+            @RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
-		vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.create(vehicleMaintenanceDetailsRequest);
+        vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.create(vehicleMaintenanceDetailsRequest);
 
-		return VehicleMaintenanceDetailsResponse.builder()
-				.responseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()))
-				.vehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()).build();
-	}
+        return VehicleMaintenanceDetailsResponse.builder()
+                .responseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()))
+                .vehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleMaintenanceDetailsResponse update(
-			@RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleMaintenanceDetailsResponse update(
+            @RequestBody @Valid VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
-		vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.update(vehicleMaintenanceDetailsRequest);
+        vehicleMaintenanceDetailsRequest = vehicleMaintenanceDetailsService.update(vehicleMaintenanceDetailsRequest);
 
-		return VehicleMaintenanceDetailsResponse.builder()
-				.responseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()))
-				.vehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()).build();
-	}
+        return VehicleMaintenanceDetailsResponse.builder()
+                .responseInfo(getResponseInfo(vehicleMaintenanceDetailsRequest.getRequestInfo()))
+                .vehicleMaintenanceDetails(vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public VehicleMaintenanceDetailsResponse search(
-			@ModelAttribute VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public VehicleMaintenanceDetailsResponse search(
+            @ModelAttribute final VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList = vehicleMaintenanceDetailsService
-				.search(vehicleMaintenanceDetailsSearch);
+        final Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList = vehicleMaintenanceDetailsService
+                .search(vehicleMaintenanceDetailsSearch);
 
-		return VehicleMaintenanceDetailsResponse.builder()
-				.vehicleMaintenanceDetails(vehicleMaintenanceDetailsList.getPagedData())
-				.responseInfo(getResponseInfo(requestInfo)).page(new PaginationContract(vehicleMaintenanceDetailsList))
-				.build();
-	}
+        return VehicleMaintenanceDetailsResponse.builder()
+                .vehicleMaintenanceDetails(vehicleMaintenanceDetailsList.getPagedData())
+                .responseInfo(getResponseInfo(requestInfo)).page(new PaginationContract(vehicleMaintenanceDetailsList))
+                .build();
+    }
 
-	@PostMapping("/_getnextscheduleddate")
-	@ResponseStatus(HttpStatus.OK)
-	public ScheduledMaintenanceDateResponse getScheduledMaintenanceDate(@RequestBody RequestInfo requestInfo,
-			@RequestParam String tenantId, @RequestParam String vehicleRegNumber) {
+    @PostMapping("/_getnextscheduleddate")
+    @ResponseStatus(HttpStatus.OK)
+    public ScheduledMaintenanceDateResponse getScheduledMaintenanceDate(@RequestBody final RequestInfo requestInfo,
+            @RequestParam final String tenantId, @RequestParam final String vehicleRegNumber) {
 
-		Long scheduledDate = vehicleMaintenanceDetailsService.calaculateNextSceduledMaintenanceDate(tenantId,
-		        vehicleRegNumber);
+        final Long scheduledDate = vehicleMaintenanceDetailsService.calaculateNextSceduledMaintenanceDate(tenantId,
+                vehicleRegNumber);
 
-		return ScheduledMaintenanceDateResponse.builder().responseInfo(new ResponseInfo()).sceduledDate(scheduledDate)
-				.build();
-	}
+        return ScheduledMaintenanceDateResponse.builder().responseInfo(new ResponseInfo()).sceduledDate(scheduledDate)
+                .build();
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 }

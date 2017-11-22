@@ -13,17 +13,17 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ServicedLocations {
 
-	private String tenantId;
+    private String tenantId;
 
-	private String vendor;
+    private String vendor;
 
-	private String location;
+    private String location;
 
-	private String createdBy;
+    private String createdBy;
 
-	private String lastModifiedBy;
+    private String lastModifiedBy;
 
-	private Long createdTime;
+    private Long createdTime;
 
-	private Long lastModifiedTime;
+    private Long lastModifiedTime;
 }

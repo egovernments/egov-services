@@ -19,62 +19,62 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleFuellingDetailsEntity {
 
-	private String id = null;
+    private String id = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String transactionNo = null;
+    private String transactionNo = null;
 
-	private Long transactionDate = null;
+    private Long transactionDate = null;
 
-	private String vehicleType = null;
+    private String vehicleType = null;
 
-	private String vehicle = null;
+    private String vehicle = null;
 
-	private Long vehicleReadingDuringFuelling = null;
+    private Long vehicleReadingDuringFuelling = null;
 
-	private String refuellingStation = null;
+    private String refuellingStation = null;
 
-	private Double fuelFilled = null;
+    private Double fuelFilled = null;
 
-	private String typeOfFuel = null;
+    private String typeOfFuel = null;
 
-	private Double totalCostIncurred = null;
+    private Double totalCostIncurred = null;
 
-	private String receiptNo = null;
+    private String receiptNo = null;
 
-	private Long receiptDate = null;
+    private Long receiptDate = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public VehicleFuellingDetails toDomain() {
+    public VehicleFuellingDetails toDomain() {
 
-		VehicleFuellingDetails vehicleFuellingDetails = new VehicleFuellingDetails();
-		vehicleFuellingDetails.setTenantId(tenantId);
-		vehicleFuellingDetails.setTransactionNo(transactionNo);
-		vehicleFuellingDetails.setTransactionDate(transactionDate);
-		vehicleFuellingDetails.setVehicle(Vehicle.builder().regNumber(vehicle).build());
-		vehicleFuellingDetails.setVehicleReadingDuringFuelling(vehicleReadingDuringFuelling);
-		vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().name(refuellingStation).build());
-		vehicleFuellingDetails.setFuelFilled(fuelFilled);
-		vehicleFuellingDetails.setTypeOfFuel(FuelType.builder().code(typeOfFuel).build());
-		vehicleFuellingDetails.setTotalCostIncurred(totalCostIncurred);
-		vehicleFuellingDetails.setReceiptNo(receiptNo);
-		vehicleFuellingDetails.setReceiptDate(receiptDate);
-		vehicleFuellingDetails.setAuditDetails(new AuditDetails());
-		vehicleFuellingDetails.getAuditDetails().setCreatedBy(createdBy);
-		vehicleFuellingDetails.getAuditDetails().setCreatedTime(createdTime);
-		vehicleFuellingDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		vehicleFuellingDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final VehicleFuellingDetails vehicleFuellingDetails = new VehicleFuellingDetails();
+        vehicleFuellingDetails.setTenantId(tenantId);
+        vehicleFuellingDetails.setTransactionNo(transactionNo);
+        vehicleFuellingDetails.setTransactionDate(transactionDate);
+        vehicleFuellingDetails.setVehicle(Vehicle.builder().regNumber(vehicle).build());
+        vehicleFuellingDetails.setVehicleReadingDuringFuelling(vehicleReadingDuringFuelling);
+        vehicleFuellingDetails.setRefuellingStation(RefillingPumpStation.builder().code(refuellingStation).build());
+        vehicleFuellingDetails.setFuelFilled(fuelFilled);
+        vehicleFuellingDetails.setTypeOfFuel(FuelType.builder().code(typeOfFuel).build());
+        vehicleFuellingDetails.setTotalCostIncurred(totalCostIncurred);
+        vehicleFuellingDetails.setReceiptNo(receiptNo);
+        vehicleFuellingDetails.setReceiptDate(receiptDate);
+        vehicleFuellingDetails.setAuditDetails(new AuditDetails());
+        vehicleFuellingDetails.getAuditDetails().setCreatedBy(createdBy);
+        vehicleFuellingDetails.getAuditDetails().setCreatedTime(createdTime);
+        vehicleFuellingDetails.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        vehicleFuellingDetails.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return vehicleFuellingDetails;
+        return vehicleFuellingDetails;
 
-	}
+    }
 
 }

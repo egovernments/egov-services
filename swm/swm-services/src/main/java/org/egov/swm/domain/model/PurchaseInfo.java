@@ -20,16 +20,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PurchaseInfo {
 
-	@JsonProperty("purchaseDate")
-	private Long purchaseDate = null;
+    @JsonProperty("purchaseDate")
+    private Long purchaseDate = null;
 
-	@JsonProperty("price")
-	@Min(value = 0)
-	@Max(value = 10000000)
-	private Double price = null;
+    @JsonProperty("price")
+    @Min(value = 0)
+    @Max(value = 10000000)
+    private Double price = null;
 
-	@Length(min = 0, max = 256)
-	@JsonProperty("sourceOfPurchase")
-	private String sourceOfPurchase = null;
+    @Length(min = 0, max = 256)
+    @JsonProperty("sourceOfPurchase")
+    private String sourceOfPurchase = null;
 
 }

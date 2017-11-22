@@ -22,28 +22,28 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ProcessingSite {
 
-	@JsonProperty("code")
-	private String code;
+    @JsonProperty("code")
+    private String code;
 
-	@JsonProperty("tenantId")
-	@Length(min = 1, max = 128)
-	@NotNull
-	private String tenantId;
+    @JsonProperty("tenantId")
+    @Length(min = 1, max = 128)
+    @NotNull
+    private String tenantId;
 
-	@NotNull
-	@JsonProperty("distanceFromDumpingGround")
-	private Double distanceFromDumpingGround;
+    @NotNull
+    @JsonProperty("distanceFromDumpingGround")
+    private Double distanceFromDumpingGround;
 
-	@NotNull
-	@JsonProperty("siteDetails")
-	private SiteDetails siteDetails;
+    @NotNull
+    @JsonProperty("siteDetails")
+    private SiteDetails siteDetails;
 
-	@NotNull
-	@JsonProperty("dumpingGrounds")
-	private List<DumpingGround> dumpingGrounds;
+    @NotNull
+    @JsonProperty("dumpingGrounds")
+    private List<DumpingGround> dumpingGrounds;
 
-	@JsonProperty("auditDetails")
-	@Valid
-	private AuditDetails auditDetails;
+    @JsonProperty("auditDetails")
+    @Valid
+    private AuditDetails auditDetails;
 
 }

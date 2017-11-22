@@ -20,123 +20,116 @@ import org.springframework.stereotype.Service;
 @Service
 public class SourceSegregationJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_sourcesegregation";
+    public static final String TABLE_NAME = "egswm_sourcesegregation";
 
-	@Autowired
-	public CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
+    @Autowired
+    public CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
 
-	@Autowired
-	private DumpingGroundService dumpingGroundService;
+    @Autowired
+    private DumpingGroundService dumpingGroundService;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<SourceSegregation> search(SourceSegregationSearch searchRequest) {
+    public Pagination<SourceSegregation> search(final SourceSegregationSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), SourceSegregationSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), SourceSegregationSearch.class);
+        }
 
-		String orderBy = "order by code";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by code";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getCode() != null) {
-			addAnd(params);
-			params.append("code in (:code)");
-			paramValues.put("code", searchRequest.getCode());
-		}
+        if (searchRequest.getCode() != null) {
+            addAnd(params);
+            params.append("code in (:code)");
+            paramValues.put("code", searchRequest.getCode());
+        }
 
-		if (searchRequest.getCodes() != null) {
-			addAnd(params);
-			params.append("code in (:codes)");
-			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
-		}
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getCodes() != null) {
+            addAnd(params);
+            params.append("code in (:codes)");
+            paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
+        }
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getSourceSegregationDate() != null) {
-			addAnd(params);
-			params.append("sourceSegregationDate =:sourceSegregationDate");
-			paramValues.put("sourceSegregationDate", searchRequest.getSourceSegregationDate());
-		}
+        if (searchRequest.getSourceSegregationDate() != null) {
+            addAnd(params);
+            params.append("sourceSegregationDate =:sourceSegregationDate");
+            paramValues.put("sourceSegregationDate", searchRequest.getSourceSegregationDate());
+        }
 
-		if (searchRequest.getDumpingGroundCode() != null) {
-			addAnd(params);
-			params.append("dumpingGround =:dumpingGround");
-			paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
-		}
+        if (searchRequest.getDumpingGroundCode() != null) {
+            addAnd(params);
+            params.append("dumpingGround =:dumpingGround");
+            paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
+        }
 
-		Pagination<SourceSegregation> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<SourceSegregation> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<SourceSegregation>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<SourceSegregation>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(SourceSegregationEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<SourceSegregation> sourceSegregationList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SourceSegregationEntity.class);
+        final List<SourceSegregationEntity> sourceSegregationEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
+        SourceSegregation ss;
+        final CollectionDetailsSearch cds = new CollectionDetailsSearch();
 
-		List<SourceSegregation> sourceSegregationList = new ArrayList<>();
+        for (final SourceSegregationEntity sourceSegregationEntity : sourceSegregationEntities) {
 
-		List<SourceSegregationEntity> sourceSegregationEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
-		SourceSegregation ss;
-		CollectionDetailsSearch cds = new CollectionDetailsSearch();
+            ss = sourceSegregationEntity.toDomain();
 
-		for (SourceSegregationEntity sourceSegregationEntity : sourceSegregationEntities) {
+            if (ss.getDumpingGround() != null && ss.getDumpingGround().getCode() != null)
+                ss.setDumpingGround(dumpingGroundService.getDumpingGround(ss.getTenantId(),
+                        ss.getDumpingGround().getCode(), new RequestInfo()));
 
-			ss = sourceSegregationEntity.toDomain();
+            cds.setTenantId(ss.getTenantId());
+            cds.setSourceSegregationCode(ss.getCode());
+            ss.setCollectionDetails(collectionDetailsJdbcRepository.search(cds));
 
-			if (ss.getDumpingGround() != null && ss.getDumpingGround().getCode() != null) {
+            sourceSegregationList.add(ss);
 
-				ss.setDumpingGround(dumpingGroundService.getDumpingGround(ss.getTenantId(),
-						ss.getDumpingGround().getCode(), new RequestInfo()));
+        }
 
-			}
+        page.setTotalResults(sourceSegregationList.size());
 
-			cds.setTenantId(ss.getTenantId());
-			cds.setSourceSegregationCode(ss.getCode());
-			ss.setCollectionDetails(collectionDetailsJdbcRepository.search(cds));
+        page.setPagedData(sourceSegregationList);
 
-			sourceSegregationList.add(ss);
-
-		}
-
-		page.setTotalResults(sourceSegregationList.size());
-
-		page.setPagedData(sourceSegregationList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

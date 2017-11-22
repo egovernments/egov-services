@@ -19,16 +19,16 @@ import lombok.Setter;
 @NoArgsConstructor
 public class InsuranceDetails {
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("insuranceNumber")
-	private String insuranceNumber = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("insuranceNumber")
+    private String insuranceNumber = null;
 
-	@NotNull
-	@JsonProperty("insuranceValidityDate")
-	private Long insuranceValidityDate = null;
+    @NotNull
+    @JsonProperty("insuranceValidityDate")
+    private Long insuranceValidityDate = null;
 
-	@JsonProperty("insuranceDocument")
-	private Document insuranceDocument = null;
+    @JsonProperty("insuranceDocument")
+    private Document insuranceDocument = null;
 
 }

@@ -14,9 +14,9 @@ import lombok.Data;
 
 public @Data class SanitationStaffTargetRequest {
 
-	@Valid
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo = new RequestInfo();
-	@Valid
-	private List<SanitationStaffTarget> sanitationStaffTargets = new ArrayList<SanitationStaffTarget>();
+    @Valid
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo = new RequestInfo();
+    @Valid
+    private List<SanitationStaffTarget> sanitationStaffTargets = new ArrayList<>();
 }

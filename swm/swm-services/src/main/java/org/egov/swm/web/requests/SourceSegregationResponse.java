@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class SourceSegregationResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<SourceSegregation> sourceSegregations;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<SourceSegregation> sourceSegregations;
+    private PaginationContract page;
 }

@@ -18,19 +18,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Employee {
 
-	@JsonProperty("id")
-	private Long id;
+    @JsonProperty("id")
+    private Long id;
 
-	@JsonProperty("name")
-	private String name;
+    @JsonProperty("name")
+    private String name;
 
-	@JsonProperty("code")
-	private String code;
+    @JsonProperty("code")
+    private String code;
 
-	@JsonProperty("userName")
-	private String username;
+    @JsonProperty("userName")
+    private String username;
 
-	@JsonProperty("assignments")
-	private final List<Assignment> assignments = new ArrayList<Assignment>(0);
+    @JsonProperty("assignments")
+    private final List<Assignment> assignments = new ArrayList<>(0);
 
 }

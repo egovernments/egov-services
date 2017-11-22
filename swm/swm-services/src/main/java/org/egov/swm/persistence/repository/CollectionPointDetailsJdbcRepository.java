@@ -19,94 +19,89 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_collectionpointdetails";
+    public static final String TABLE_NAME = "egswm_collectionpointdetails";
 
-	@Autowired
-	private CollectionTypeService collectionTypeService;
+    @Autowired
+    private CollectionTypeService collectionTypeService;
 
-	@Transactional
-	public void delete(String tenantId, String collectionPoint) {
-		delete(TABLE_NAME, tenantId, "collectionPoint", collectionPoint);
-	}
+    @Transactional
+    public void delete(final String tenantId, final String collectionPoint) {
+        delete(TABLE_NAME, tenantId, "collectionPoint", collectionPoint);
+    }
 
-	public List<CollectionPointDetails> search(CollectionPointDetailsSearch searchRequest) {
+    public List<CollectionPointDetails> search(final CollectionPointDetailsSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), CollectionPointDetailsSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), CollectionPointDetailsSearch.class);
+        }
 
-		if (searchRequest.getIds() != null) {
-			addAnd(params);
-			params.append("id in (:ids)");
-			paramValues.put("ids", new ArrayList<String>(Arrays.asList(searchRequest.getIds().split(","))));
-		}
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getIds() != null) {
+            addAnd(params);
+            params.append("id in (:ids)");
+            paramValues.put("ids", new ArrayList<>(Arrays.asList(searchRequest.getIds().split(","))));
+        }
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getId() != null) {
-			addAnd(params);
-			params.append("id =:id");
-			paramValues.put("id", searchRequest.getId());
-		}
+        if (searchRequest.getId() != null) {
+            addAnd(params);
+            params.append("id =:id");
+            paramValues.put("id", searchRequest.getId());
+        }
 
-		if (searchRequest.getCollectionPoint() != null) {
-			addAnd(params);
-			params.append("collectionPoint =:collectionPoint");
-			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
-		}
+        if (searchRequest.getCollectionPoint() != null) {
+            addAnd(params);
+            params.append("collectionPoint =:collectionPoint");
+            paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
+        }
 
-		if (searchRequest.getCollectionTypeCode() != null) {
-			addAnd(params);
-			params.append("collectionType =:collectionType");
-			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
-		}
+        if (searchRequest.getCollectionTypeCode() != null) {
+            addAnd(params);
+            params.append("collectionType =:collectionType");
+            paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
+        }
 
-		if (searchRequest.getGarbageEstimate() != null) {
-			addAnd(params);
-			params.append("garbageEstimate =:garbageEstimate");
-			paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
-		}
+        if (searchRequest.getGarbageEstimate() != null) {
+            addAnd(params);
+            params.append("garbageEstimate =:garbageEstimate");
+            paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
+        }
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointDetailsEntity.class);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        CollectionPointDetails cpd;
+        final List<CollectionPointDetails> collectionPointDetailsList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointDetailsEntity.class);
+        final List<CollectionPointDetailsEntity> collectionPointDetailsEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
 
-		CollectionPointDetails cpd;
-		List<CollectionPointDetails> collectionPointDetailsList = new ArrayList<>();
+        for (final CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {
 
-		List<CollectionPointDetailsEntity> collectionPointDetailsEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+            cpd = collectionPointDetailsEntity.toDomain();
 
-		for (CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {
+            if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null)
+                cpd.setCollectionType(collectionTypeService.getCollectionType(cpd.getTenantId(),
+                        cpd.getCollectionType().getCode(), new RequestInfo()));
 
-			cpd = collectionPointDetailsEntity.toDomain();
+            collectionPointDetailsList.add(cpd);
+        }
 
-			if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null) {
-
-				cpd.setCollectionType(collectionTypeService.getCollectionType(cpd.getTenantId(),
-						cpd.getCollectionType().getCode(), new RequestInfo()));
-
-			}
-
-			collectionPointDetailsList.add(cpd);
-		}
-
-		return collectionPointDetailsList;
-	}
+        return collectionPointDetailsList;
+    }
 
 }

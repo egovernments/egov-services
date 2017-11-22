@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class SanitationStaffScheduleResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<SanitationStaffSchedule> sanitationStaffSchedules;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<SanitationStaffSchedule> sanitationStaffSchedules;
+    private PaginationContract page;
 }

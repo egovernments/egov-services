@@ -11,45 +11,42 @@ import org.springframework.stereotype.Service;
 @Service
 public class SourceSegregationQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
+    @Autowired
+    private CollectionDetailsJdbcRepository collectionDetailsJdbcRepository;
 
-	@Value("${egov.swm.sourcesegregation.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.sourcesegregation.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.sourcesegregation.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.sourcesegregation.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.sourcesegregation.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.sourcesegregation.indexer.topic}")
+    private String indexerTopic;
 
-	public SourceSegregationRequest save(SourceSegregationRequest sourceSegregationRequest) {
+    public SourceSegregationRequest save(final SourceSegregationRequest sourceSegregationRequest) {
 
-		kafkaTemplate.send(saveTopic, sourceSegregationRequest);
+        kafkaTemplate.send(saveTopic, sourceSegregationRequest);
 
-		kafkaTemplate.send(indexerTopic, sourceSegregationRequest.getSourceSegregations());
+        kafkaTemplate.send(indexerTopic, sourceSegregationRequest.getSourceSegregations());
 
-		return sourceSegregationRequest;
+        return sourceSegregationRequest;
 
-	}
+    }
 
-	public SourceSegregationRequest update(SourceSegregationRequest sourceSegregationRequest) {
+    public SourceSegregationRequest update(final SourceSegregationRequest sourceSegregationRequest) {
 
-		for (SourceSegregation ss : sourceSegregationRequest.getSourceSegregations()) {
+        for (final SourceSegregation ss : sourceSegregationRequest.getSourceSegregations())
+            collectionDetailsJdbcRepository.delete(ss.getTenantId(), ss.getCode());
 
-			collectionDetailsJdbcRepository.delete(ss.getTenantId(), ss.getCode());
+        kafkaTemplate.send(updateTopic, sourceSegregationRequest);
 
-		}
+        kafkaTemplate.send(indexerTopic, sourceSegregationRequest.getSourceSegregations());
 
-		kafkaTemplate.send(updateTopic, sourceSegregationRequest);
+        return sourceSegregationRequest;
 
-		kafkaTemplate.send(indexerTopic, sourceSegregationRequest.getSourceSegregations());
-
-		return sourceSegregationRequest;
-
-	}
+    }
 
 }

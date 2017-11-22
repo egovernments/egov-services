@@ -21,131 +21,121 @@ import org.springframework.stereotype.Service;
 @Service
 public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_sanitationstaffschedule";
+    public static final String TABLE_NAME = "egswm_sanitationstaffschedule";
 
-	@Autowired
-	public SanitationStaffTargetJdbcRepository sanitationStaffTargetJdbcRepository;
+    @Autowired
+    public SanitationStaffTargetJdbcRepository sanitationStaffTargetJdbcRepository;
 
-	@Autowired
-	private ShiftService shiftService;
+    @Autowired
+    private ShiftService shiftService;
 
-	public Pagination<SanitationStaffSchedule> search(SanitationStaffScheduleSearch searchRequest) {
+    public Pagination<SanitationStaffSchedule> search(final SanitationStaffScheduleSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), SanitationStaffScheduleSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), SanitationStaffScheduleSearch.class);
+        }
 
-		String orderBy = "order by transactionNo";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by transactionNo";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getTransactionNo() != null) {
-			addAnd(params);
-			params.append("transactionNo in (:transactionNo)");
-			paramValues.put("transactionNo", searchRequest.getTransactionNo());
-		}
+        if (searchRequest.getTransactionNo() != null) {
+            addAnd(params);
+            params.append("transactionNo in (:transactionNo)");
+            paramValues.put("transactionNo", searchRequest.getTransactionNo());
+        }
 
-		if (searchRequest.getTransactionNos() != null) {
-			addAnd(params);
-			params.append("transactionNo in (:transactionNos)");
-			paramValues.put("transactionNos",
-					new ArrayList<String>(Arrays.asList(searchRequest.getTransactionNos().split(","))));
-		}
+        if (searchRequest.getTransactionNos() != null) {
+            addAnd(params);
+            params.append("transactionNo in (:transactionNos)");
+            paramValues.put("transactionNos",
+                    new ArrayList<>(Arrays.asList(searchRequest.getTransactionNos().split(","))));
+        }
 
-		if (searchRequest.getTargetNo() != null) {
-			addAnd(params);
-			params.append("sanitationStaffTarget in (:sanitationStaffTarget)");
-			paramValues.put("sanitationStaffTarget", searchRequest.getTargetNo());
-		}
+        if (searchRequest.getTargetNo() != null) {
+            addAnd(params);
+            params.append("sanitationStaffTarget in (:sanitationStaffTarget)");
+            paramValues.put("sanitationStaffTarget", searchRequest.getTargetNo());
+        }
 
-		if (searchRequest.getShiftCode() != null) {
-			addAnd(params);
-			params.append("shift in (:shift)");
-			paramValues.put("shift", searchRequest.getShiftCode());
-		}
+        if (searchRequest.getShiftCode() != null) {
+            addAnd(params);
+            params.append("shift in (:shift)");
+            paramValues.put("shift", searchRequest.getShiftCode());
+        }
 
-		Pagination<SanitationStaffSchedule> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<SanitationStaffSchedule> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<SanitationStaffSchedule>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<SanitationStaffSchedule>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(SanitationStaffScheduleEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<SanitationStaffSchedule> sanitationStaffScheduleList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SanitationStaffScheduleEntity.class);
+        final List<SanitationStaffScheduleEntity> sanitationStaffScheduleEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
 
-		List<SanitationStaffSchedule> sanitationStaffScheduleList = new ArrayList<>();
+        SanitationStaffSchedule sss;
+        SanitationStaffTargetSearch ssts;
+        Pagination<SanitationStaffTarget> sanitationStaffTargets;
 
-		List<SanitationStaffScheduleEntity> sanitationStaffScheduleEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+        for (final SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities) {
 
-		SanitationStaffSchedule sss;
-		SanitationStaffTargetSearch ssts;
-		Pagination<SanitationStaffTarget> sanitationStaffTargets;
+            sss = sanitationStaffScheduleEntity.toDomain();
 
-		for (SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities) {
+            if (sss.getShift() != null && sss.getShift().getCode() != null)
+                sss.setShift(shiftService.getShift(sss.getTenantId(), sss.getShift().getCode(), new RequestInfo()));
 
-			sss = sanitationStaffScheduleEntity.toDomain();
+            if (sanitationStaffScheduleEntity.getSanitationStaffTarget() != null
+                    && !sanitationStaffScheduleEntity.getSanitationStaffTarget().isEmpty()) {
+                ssts = new SanitationStaffTargetSearch();
+                ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
+                ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
 
-			if (sss.getShift() != null && sss.getShift().getCode() != null) {
+                sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
 
-				sss.setShift(shiftService.getShift(sss.getTenantId(), sss.getShift().getCode(), new RequestInfo()));
-			}
+                if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
+                        && !sanitationStaffTargets.getPagedData().isEmpty())
+                    sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
+            }
 
-			if (sanitationStaffScheduleEntity.getSanitationStaffTarget() != null
-					&& !sanitationStaffScheduleEntity.getSanitationStaffTarget().isEmpty()) {
-				ssts = new SanitationStaffTargetSearch();
-				ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
-				ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
+            sanitationStaffScheduleList.add(sss);
 
-				sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
+        }
 
-				if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
-						&& !sanitationStaffTargets.getPagedData().isEmpty()) {
+        page.setTotalResults(sanitationStaffScheduleList.size());
 
-					sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
+        page.setPagedData(sanitationStaffScheduleList);
 
-				}
-			}
-
-			sanitationStaffScheduleList.add(sss);
-
-		}
-
-		page.setTotalResults(sanitationStaffScheduleList.size());
-
-		page.setPagedData(sanitationStaffScheduleList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

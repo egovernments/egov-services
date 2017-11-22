@@ -12,33 +12,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorRepository {
 
-	@Autowired
-	private VendorJdbcRepository vendorJdbcRepository;
+    @Autowired
+    private VendorJdbcRepository vendorJdbcRepository;
 
-	@Autowired
-	private VendorQueueRepository vendorQueueRepository;
+    @Autowired
+    private VendorQueueRepository vendorQueueRepository;
 
-	public VendorRequest save(VendorRequest vendorRequest) {
+    public VendorRequest save(final VendorRequest vendorRequest) {
 
-		return vendorQueueRepository.save(vendorRequest);
+        return vendorQueueRepository.save(vendorRequest);
 
-	}
+    }
 
-	public VendorRequest update(VendorRequest vendorRequest) {
+    public VendorRequest update(final VendorRequest vendorRequest) {
 
-		return vendorQueueRepository.update(vendorRequest);
+        return vendorQueueRepository.update(vendorRequest);
 
-	}
+    }
 
-	public Pagination<Vendor> search(VendorSearch vendorSearch) {
-		return vendorJdbcRepository.search(vendorSearch);
+    public Pagination<Vendor> search(final VendorSearch vendorSearch) {
+        return vendorJdbcRepository.search(vendorSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return vendorJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return vendorJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
 }

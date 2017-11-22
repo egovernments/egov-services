@@ -8,26 +8,25 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleMaintenanceDetailsQueueRepository {
 
-    private LogAwareKafkaTemplate kafkaTemplate;
+    private final LogAwareKafkaTemplate kafkaTemplate;
 
-    private String createTopic;
+    private final String createTopic;
 
-    private String updateTopic;
+    private final String updateTopic;
 
-    private String indexTopic;
+    private final String indexTopic;
 
-
-    public VehicleMaintenanceDetailsQueueRepository(LogAwareKafkaTemplate kafkaTemplate,
-                                                    @Value("${egov.swm.vehiclemaintenancedetail.save.topic}") final String createTopic,
-                                                    @Value("${egov.swm.vehiclemaintenancedetail.update.topic}") final String updateTopic,
-                                                    @Value("${egov.swm.vehiclemaintenancedetail.indexer.topic}") final String indexTopic) {
+    public VehicleMaintenanceDetailsQueueRepository(final LogAwareKafkaTemplate kafkaTemplate,
+            @Value("${egov.swm.vehiclemaintenancedetail.save.topic}") final String createTopic,
+            @Value("${egov.swm.vehiclemaintenancedetail.update.topic}") final String updateTopic,
+            @Value("${egov.swm.vehiclemaintenancedetail.indexer.topic}") final String indexTopic) {
         this.kafkaTemplate = kafkaTemplate;
         this.createTopic = createTopic;
         this.updateTopic = updateTopic;
         this.indexTopic = indexTopic;
     }
 
-    public VehicleMaintenanceDetailsRequest save(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+    public VehicleMaintenanceDetailsRequest save(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
         kafkaTemplate.send(createTopic, vehicleMaintenanceDetailsRequest);
 
@@ -36,7 +35,7 @@ public class VehicleMaintenanceDetailsQueueRepository {
         return vehicleMaintenanceDetailsRequest;
     }
 
-    public VehicleMaintenanceDetailsRequest update(VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest){
+    public VehicleMaintenanceDetailsRequest update(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
 
         kafkaTemplate.send(updateTopic, vehicleMaintenanceDetailsRequest);
 

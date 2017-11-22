@@ -18,12 +18,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PaymentTerms {
 
-	@JsonProperty("noOfDays")
-	private Long noOfDays = null;
+    @JsonProperty("noOfDays")
+    private Long noOfDays = null;
 
-	@NotNull
-	@Size(min = 1, max = 20)
-	@JsonProperty("label")
-	private String label = null;
+    @NotNull
+    @Size(min = 1, max = 20)
+    @JsonProperty("label")
+    private String label = null;
 
 }

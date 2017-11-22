@@ -11,45 +11,42 @@ import org.springframework.stereotype.Service;
 @Service
 public class SanitationStaffTargetQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private SanitationStaffTargetMapJdbcRepository sanitationStaffTargetMapJdbcRepository;
+    @Autowired
+    private SanitationStaffTargetMapJdbcRepository sanitationStaffTargetMapJdbcRepository;
 
-	@Value("${egov.swm.sanitationstafftarget.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.sanitationstafftarget.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.sanitationstafftarget.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.sanitationstafftarget.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.sanitationstafftarget.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.sanitationstafftarget.indexer.topic}")
+    private String indexerTopic;
 
-	public SanitationStaffTargetRequest save(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    public SanitationStaffTargetRequest save(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		kafkaTemplate.send(saveTopic, sanitationStaffTargetRequest);
+        kafkaTemplate.send(saveTopic, sanitationStaffTargetRequest);
 
-		kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest.getSanitationStaffTargets());
+        kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest.getSanitationStaffTargets());
 
-		return sanitationStaffTargetRequest;
+        return sanitationStaffTargetRequest;
 
-	}
+    }
 
-	public SanitationStaffTargetRequest update(SanitationStaffTargetRequest sanitationStaffTargetRequest) {
+    public SanitationStaffTargetRequest update(final SanitationStaffTargetRequest sanitationStaffTargetRequest) {
 
-		for (SanitationStaffTarget sst : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
+        for (final SanitationStaffTarget sst : sanitationStaffTargetRequest.getSanitationStaffTargets())
+            sanitationStaffTargetMapJdbcRepository.delete(sst.getTenantId(), sst.getTargetNo());
 
-			sanitationStaffTargetMapJdbcRepository.delete(sst.getTenantId(), sst.getTargetNo());
+        kafkaTemplate.send(updateTopic, sanitationStaffTargetRequest);
 
-		}
+        kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest.getSanitationStaffTargets());
 
-		kafkaTemplate.send(updateTopic, sanitationStaffTargetRequest);
+        return sanitationStaffTargetRequest;
 
-		kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest.getSanitationStaffTargets());
-
-		return sanitationStaffTargetRequest;
-
-	}
+    }
 
 }

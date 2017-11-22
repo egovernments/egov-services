@@ -10,10 +10,10 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VendorPaymentDetailsSearch extends VendorPaymentDetails {
-	private String paymentNos;
-	private String contractNo;
-	private String employeeCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String paymentNos;
+    private String contractNo;
+    private String employeeCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

@@ -19,37 +19,37 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleSchedule {
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("transactionNo")
-	private String transactionNo = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("transactionNo")
+    private String transactionNo = null;
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("scheduledFrom")
-	private Long scheduledFrom = null;
+    @NotNull
+    @JsonProperty("scheduledFrom")
+    private Long scheduledFrom = null;
 
-	@NotNull
-	@JsonProperty("scheduledTo")
-	private Long scheduledTo = null;
+    @NotNull
+    @JsonProperty("scheduledTo")
+    private Long scheduledTo = null;
 
-	@NotNull
-	@JsonProperty("route")
-	private Route route = null;
+    @NotNull
+    @JsonProperty("route")
+    private Route route = null;
 
-	@NotNull
-	@JsonProperty("vehicle")
-	private Vehicle vehicle = null;
+    @NotNull
+    @JsonProperty("vehicle")
+    private Vehicle vehicle = null;
 
-	@NotNull
-	@JsonProperty("targetedGarbage")
-	private Double targetedGarbage = null;
+    @NotNull
+    @JsonProperty("targetedGarbage")
+    private Double targetedGarbage = null;
 
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @Valid
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

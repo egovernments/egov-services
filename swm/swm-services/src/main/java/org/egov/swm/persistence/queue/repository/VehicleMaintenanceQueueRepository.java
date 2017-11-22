@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleMaintenanceQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Value("${egov.swm.vehiclemaintenance.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.vehiclemaintenance.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.vehiclemaintenance.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.vehiclemaintenance.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.vehiclemaintenance.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.vehiclemaintenance.indexer.topic}")
+    private String indexerTopic;
 
-	public VehicleMaintenanceRequest save(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+    public VehicleMaintenanceRequest save(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		kafkaTemplate.send(saveTopic, vehicleMaintenanceRequest);
+        kafkaTemplate.send(saveTopic, vehicleMaintenanceRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleMaintenanceRequest.getVehicleMaintenances());
+        kafkaTemplate.send(indexerTopic, vehicleMaintenanceRequest.getVehicleMaintenances());
 
-		return vehicleMaintenanceRequest;
+        return vehicleMaintenanceRequest;
 
-	}
+    }
 
-	public VehicleMaintenanceRequest update(VehicleMaintenanceRequest vehicleMaintenanceRequest) {
+    public VehicleMaintenanceRequest update(final VehicleMaintenanceRequest vehicleMaintenanceRequest) {
 
-		kafkaTemplate.send(updateTopic, vehicleMaintenanceRequest);
+        kafkaTemplate.send(updateTopic, vehicleMaintenanceRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleMaintenanceRequest.getVehicleMaintenances());
+        kafkaTemplate.send(indexerTopic, vehicleMaintenanceRequest.getVehicleMaintenances());
 
-		return vehicleMaintenanceRequest;
+        return vehicleMaintenanceRequest;
 
-	}
+    }
 
 }

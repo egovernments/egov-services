@@ -17,41 +17,41 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionPointEntity {
 
-	private String code = null;
+    private String code = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private String name = null;
+    private String name = null;
 
-	private String location = null;
+    private String location = null;
 
-	private Double latitude = null;
+    private Double latitude = null;
 
-	private Double longitude = null;
+    private Double longitude = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public CollectionPoint toDomain() {
+    public CollectionPoint toDomain() {
 
-		CollectionPoint collectionPoint = new CollectionPoint();
-		collectionPoint.setCode(code);
-		collectionPoint.setTenantId(tenantId);
-		collectionPoint.setName(name);
-		collectionPoint.setLocation(Boundary.builder().code(location).build());
-		collectionPoint.setAuditDetails(new AuditDetails());
-		collectionPoint.getAuditDetails().setCreatedBy(createdBy);
-		collectionPoint.getAuditDetails().setCreatedTime(createdTime);
-		collectionPoint.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		collectionPoint.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final CollectionPoint collectionPoint = new CollectionPoint();
+        collectionPoint.setCode(code);
+        collectionPoint.setTenantId(tenantId);
+        collectionPoint.setName(name);
+        collectionPoint.setLocation(Boundary.builder().code(location).build());
+        collectionPoint.setAuditDetails(new AuditDetails());
+        collectionPoint.getAuditDetails().setCreatedBy(createdBy);
+        collectionPoint.getAuditDetails().setCreatedTime(createdTime);
+        collectionPoint.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        collectionPoint.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return collectionPoint;
+        return collectionPoint;
 
-	}
+    }
 
 }

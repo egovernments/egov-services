@@ -18,24 +18,24 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SanitationStaffSchedule {
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@Size(min = 0, max = 256)
-	@JsonProperty("transactionNo")
-	private String transactionNo = null;
+    @Size(min = 0, max = 256)
+    @JsonProperty("transactionNo")
+    private String transactionNo = null;
 
-	@NotNull
-	@JsonProperty("sanitationStaffTarget")
-	private SanitationStaffTarget sanitationStaffTarget = null;
+    @NotNull
+    @JsonProperty("sanitationStaffTarget")
+    private SanitationStaffTarget sanitationStaffTarget = null;
 
-	@NotNull
-	@JsonProperty("shift")
-	private Shift shift = null;
+    @NotNull
+    @JsonProperty("shift")
+    private Shift shift = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

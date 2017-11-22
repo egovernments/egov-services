@@ -18,19 +18,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ShiftType {
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("name")
-	private String name = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("name")
+    private String name = null;
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("code")
-	private String code = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("code")
+    private String code = null;
 
 }

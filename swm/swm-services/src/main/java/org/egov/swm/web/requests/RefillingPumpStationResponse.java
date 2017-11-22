@@ -19,10 +19,10 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public @Data class RefillingPumpStationResponse {
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
 
-	private List<RefillingPumpStation> refillingPumpStations;
+    private List<RefillingPumpStation> refillingPumpStations;
 
-	private PaginationContract page;
+    private PaginationContract page;
 }

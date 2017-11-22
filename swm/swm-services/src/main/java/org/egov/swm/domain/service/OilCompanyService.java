@@ -17,22 +17,22 @@ import net.minidev.json.JSONArray;
 @Transactional(readOnly = true)
 public class OilCompanyService {
 
-	@Autowired
-	private MdmsRepository mdmsRepository;
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
-	public OilCompanyName getOilCompany(String tenantId, String code, RequestInfo requestInfo) {
+    public OilCompanyName getOilCompany(final String tenantId, final String code, final RequestInfo requestInfo) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
 
-		responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
-				Constants.OILCOMPANY_MASTER_NAME, "code", code, requestInfo);
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
+                Constants.OILCOMPANY_MASTER_NAME, "code", code, requestInfo);
 
-		if (responseJSONArray != null && responseJSONArray.size() > 0)
-			return mapper.convertValue(responseJSONArray.get(0), OilCompanyName.class);
-		else
-			throw new CustomException("OilCompany", "Given OilCompany is invalid: " + code);
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), OilCompanyName.class);
+        else
+            throw new CustomException("OilCompany", "Given OilCompany is invalid: " + code);
 
-	}
+    }
 
 }

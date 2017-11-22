@@ -22,47 +22,47 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Route {
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Length(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("name")
-	private String name = null;
-	
-	@NotNull
-	@JsonProperty("collectionType")
-	private CollectionType collectionType = null;
+    @NotNull
+    @Length(min = 1, max = 128)
+    @JsonProperty("name")
+    private String name = null;
 
-	@NotNull
-	@JsonProperty("startingCollectionPoint")
-	private CollectionPoint startingCollectionPoint = null;
+    @NotNull
+    @JsonProperty("collectionType")
+    private CollectionType collectionType = null;
 
-	@JsonProperty("endingCollectionPoint")
-	private CollectionPoint endingCollectionPoint = null;
+    @NotNull
+    @JsonProperty("startingCollectionPoint")
+    private CollectionPoint startingCollectionPoint = null;
 
-	@JsonProperty("endingDumpingGroundPoint")
-	private DumpingGround endingDumpingGroundPoint = null;
+    @JsonProperty("endingCollectionPoint")
+    private CollectionPoint endingCollectionPoint = null;
 
-	@NotNull
-	@JsonProperty("collectionPoints")
-	private List<CollectionPoint> collectionPoints = null;
+    @JsonProperty("endingDumpingGroundPoint")
+    private DumpingGround endingDumpingGroundPoint = null;
 
-	@NotNull
-	@JsonProperty("distance")
-	private Double distance = null;
+    @NotNull
+    @JsonProperty("collectionPoints")
+    private List<CollectionPoint> collectionPoints = null;
 
-	@NotNull
-	@JsonProperty("garbageEstimate")
-	private Double garbageEstimate = null;
+    @NotNull
+    @JsonProperty("distance")
+    private Double distance = null;
 
-	@Valid
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @NotNull
+    @JsonProperty("garbageEstimate")
+    private Double garbageEstimate = null;
+
+    @Valid
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

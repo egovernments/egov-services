@@ -12,35 +12,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorPaymentDetailsRepository {
 
-	private VendorPaymentDetailsQueueRepository vendorPaymentDetailsQueueRepository;
+    private final VendorPaymentDetailsQueueRepository vendorPaymentDetailsQueueRepository;
 
-	private VendorPaymentDetailsJdbcRepository vendorPaymentDetailsJdbcRepository;
+    private final VendorPaymentDetailsJdbcRepository vendorPaymentDetailsJdbcRepository;
 
-	private DocumentJdbcRepository documentJdbcRepository;
+    private final DocumentJdbcRepository documentJdbcRepository;
 
-	public VendorPaymentDetailsRepository(VendorPaymentDetailsQueueRepository vendorPaymentDetailsQueueRepository,
-			VendorPaymentDetailsJdbcRepository vendorPaymentDetailsJdbcRepository,
-			DocumentJdbcRepository documentJdbcRepository) {
+    public VendorPaymentDetailsRepository(final VendorPaymentDetailsQueueRepository vendorPaymentDetailsQueueRepository,
+            final VendorPaymentDetailsJdbcRepository vendorPaymentDetailsJdbcRepository,
+            final DocumentJdbcRepository documentJdbcRepository) {
 
-		this.vendorPaymentDetailsQueueRepository = vendorPaymentDetailsQueueRepository;
-		this.vendorPaymentDetailsJdbcRepository = vendorPaymentDetailsJdbcRepository;
-		this.documentJdbcRepository = documentJdbcRepository;
-	}
+        this.vendorPaymentDetailsQueueRepository = vendorPaymentDetailsQueueRepository;
+        this.vendorPaymentDetailsJdbcRepository = vendorPaymentDetailsJdbcRepository;
+        this.documentJdbcRepository = documentJdbcRepository;
+    }
 
-	public VendorPaymentDetailsRequest create(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
-		return vendorPaymentDetailsQueueRepository.save(vendorPaymentDetailsRequest);
-	}
+    public VendorPaymentDetailsRequest create(final VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
+        return vendorPaymentDetailsQueueRepository.save(vendorPaymentDetailsRequest);
+    }
 
-	public VendorPaymentDetailsRequest update(VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
+    public VendorPaymentDetailsRequest update(final VendorPaymentDetailsRequest vendorPaymentDetailsRequest) {
 
-		for (VendorPaymentDetails details : vendorPaymentDetailsRequest.getVendorPaymentDetails()) {
-			documentJdbcRepository.delete(details.getTenantId(), details.getPaymentNo());
-		}
-		return vendorPaymentDetailsQueueRepository.update(vendorPaymentDetailsRequest);
-	}
+        for (final VendorPaymentDetails details : vendorPaymentDetailsRequest.getVendorPaymentDetails())
+            documentJdbcRepository.delete(details.getTenantId(), details.getPaymentNo());
+        return vendorPaymentDetailsQueueRepository.update(vendorPaymentDetailsRequest);
+    }
 
-	public Pagination<VendorPaymentDetails> search(VendorPaymentDetailsSearch vendorPaymentDetailsSearch) {
-		return vendorPaymentDetailsJdbcRepository.search(vendorPaymentDetailsSearch);
+    public Pagination<VendorPaymentDetails> search(final VendorPaymentDetailsSearch vendorPaymentDetailsSearch) {
+        return vendorPaymentDetailsJdbcRepository.search(vendorPaymentDetailsSearch);
 
-	}
+    }
 }

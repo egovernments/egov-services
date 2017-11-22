@@ -19,19 +19,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class DumpingGround {
 
-	@JsonProperty("code")
-	private String code;
+    @JsonProperty("code")
+    private String code;
 
-	@JsonProperty("tenantId")
-	@Length(min = 1, max = 128)
-	@NotNull
-	private String tenantId;
+    @JsonProperty("tenantId")
+    @Length(min = 1, max = 128)
+    @NotNull
+    private String tenantId;
 
-	@NotNull
-	@JsonProperty("siteDetails")
-	private SiteDetails siteDetails;
+    @NotNull
+    @JsonProperty("siteDetails")
+    private SiteDetails siteDetails;
 
-	@JsonProperty("isProcessingSite")
-	private Boolean isProcessingSite;
+    @JsonProperty("isProcessingSite")
+    private Boolean isProcessingSite;
 
 }

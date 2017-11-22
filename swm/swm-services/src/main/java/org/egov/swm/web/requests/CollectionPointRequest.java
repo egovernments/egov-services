@@ -13,9 +13,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 public @Data class CollectionPointRequest {
-	@Valid
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo = new RequestInfo();
-	@Valid
-	private List<CollectionPoint> collectionPoints = new ArrayList<CollectionPoint>();
+    @Valid
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo = new RequestInfo();
+    @Valid
+    private List<CollectionPoint> collectionPoints = new ArrayList<>();
 }

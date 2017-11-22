@@ -21,8 +21,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public @Data class VehicleFuellingDetailsResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	private List<VehicleFuellingDetails> vehicleFuellingDetails;
-	private PaginationContract page;
+    @JsonProperty("ResponseInfo")
+    private ResponseInfo responseInfo;
+    private List<VehicleFuellingDetails> vehicleFuellingDetails;
+    private PaginationContract page;
 }

@@ -13,9 +13,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 public @Data class RouteRequest {
-	@Valid
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo = new RequestInfo();
-	@Valid
-	private List<Route> routes = new ArrayList<Route>();
+    @Valid
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo = new RequestInfo();
+    @Valid
+    private List<Route> routes = new ArrayList<>();
 }

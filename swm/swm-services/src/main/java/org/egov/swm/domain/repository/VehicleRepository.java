@@ -12,33 +12,34 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleRepository {
 
-	@Autowired
-	private VehicleQueueRepository vehicleQueueRepository;
+    @Autowired
+    private VehicleQueueRepository vehicleQueueRepository;
 
-	@Autowired
-	private VehicleJdbcRepository vehicleJdbcRepository;
+    @Autowired
+    private VehicleJdbcRepository vehicleJdbcRepository;
 
-	public VehicleRequest save(VehicleRequest vehicleRequest) {
+    public VehicleRequest save(final VehicleRequest vehicleRequest) {
 
-		return vehicleQueueRepository.save(vehicleRequest);
+        return vehicleQueueRepository.save(vehicleRequest);
 
-	}
+    }
 
-	public VehicleRequest update(VehicleRequest vehicleRequest) {
+    public VehicleRequest update(final VehicleRequest vehicleRequest) {
 
-		return vehicleQueueRepository.update(vehicleRequest);
+        return vehicleQueueRepository.update(vehicleRequest);
 
-	}
+    }
 
-	public Pagination<Vehicle> search(VehicleSearch vehicleSearch) {
-		return vehicleJdbcRepository.search(vehicleSearch);
+    public Pagination<Vehicle> search(final VehicleSearch vehicleSearch) {
+        return vehicleJdbcRepository.search(vehicleSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return vehicleJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return vehicleJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
 }

@@ -19,9 +19,9 @@ import lombok.ToString;
 @NoArgsConstructor
 public class IdGenerationRequest {
 
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo;
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo;
 
-	private List<IdRequest> idRequests;
+    private List<IdRequest> idRequests;
 
 }

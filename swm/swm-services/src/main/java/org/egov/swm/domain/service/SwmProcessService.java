@@ -17,22 +17,22 @@ import net.minidev.json.JSONArray;
 @Transactional(readOnly = true)
 public class SwmProcessService {
 
-	@Autowired
-	private MdmsRepository mdmsRepository;
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
-	public SwmProcess getSwmProcess(String tenantId, String code, RequestInfo requestInfo) {
+    public SwmProcess getSwmProcess(final String tenantId, final String code, final RequestInfo requestInfo) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
 
-		responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
-				Constants.SWMPROCESS_MASTER_NAME, "code", code, requestInfo);
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
+                Constants.SWMPROCESS_MASTER_NAME, "code", code, requestInfo);
 
-		if (responseJSONArray != null && responseJSONArray.size() > 0)
-			return mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
-		else
-			throw new CustomException("SwmProcess", "Given SwmProcess is invalid: " + code);
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), SwmProcess.class);
+        else
+            throw new CustomException("SwmProcess", "Given SwmProcess is invalid: " + code);
 
-	}
+    }
 
 }

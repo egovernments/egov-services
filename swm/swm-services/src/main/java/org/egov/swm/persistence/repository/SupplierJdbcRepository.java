@@ -11,38 +11,37 @@ import org.springframework.stereotype.Service;
 @Service
 public class SupplierJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_supplier";
+    public static final String TABLE_NAME = "egswm_supplier";
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public List<Supplier> search(Supplier searchRequest) {
+    public List<Supplier> search(final Supplier searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSupplierNo() != null) {
-			addAnd(params);
-			params.append("supplierNo =:supplierNo");
-			paramValues.put("supplierNo", searchRequest.getSupplierNo());
-		}
+        if (searchRequest.getSupplierNo() != null) {
+            addAnd(params);
+            params.append("supplierNo =:supplierNo");
+            paramValues.put("supplierNo", searchRequest.getSupplierNo());
+        }
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(Supplier.class);
 
-			searchQuery = searchQuery.replace(":condition", "");
-
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(Supplier.class);
-
-		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-	}
+        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+    }
 
 }

@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorContractQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Value("${egov.swm.vendorcontract.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.vendorcontract.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.vendorcontract.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.vendorcontract.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.vendorcontract.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.vendorcontract.indexer.topic}")
+    private String indexerTopic;
 
-	public VendorContractRequest save(VendorContractRequest vendorContractRequest) {
+    public VendorContractRequest save(final VendorContractRequest vendorContractRequest) {
 
-		kafkaTemplate.send(saveTopic, vendorContractRequest);
+        kafkaTemplate.send(saveTopic, vendorContractRequest);
 
-		kafkaTemplate.send(indexerTopic, vendorContractRequest.getVendorContracts());
+        kafkaTemplate.send(indexerTopic, vendorContractRequest.getVendorContracts());
 
-		return vendorContractRequest;
+        return vendorContractRequest;
 
-	}
+    }
 
-	public VendorContractRequest update(VendorContractRequest vendorContractRequest) {
+    public VendorContractRequest update(final VendorContractRequest vendorContractRequest) {
 
-		kafkaTemplate.send(updateTopic, vendorContractRequest);
+        kafkaTemplate.send(updateTopic, vendorContractRequest);
 
-		kafkaTemplate.send(indexerTopic, vendorContractRequest.getVendorContracts());
+        kafkaTemplate.send(indexerTopic, vendorContractRequest.getVendorContracts());
 
-		return vendorContractRequest;
+        return vendorContractRequest;
 
-	}
+    }
 
 }

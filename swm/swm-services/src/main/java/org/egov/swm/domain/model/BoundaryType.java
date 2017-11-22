@@ -19,18 +19,18 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BoundaryType {
 
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("name")
-	private LocalDate name = null;
+    @JsonProperty("name")
+    private LocalDate name = null;
 
-	@Valid
-	@JsonProperty("parent")
-	private BoundaryType parent = null;
+    @Valid
+    @JsonProperty("parent")
+    private BoundaryType parent = null;
 
-	@Valid
-	@JsonProperty("hierarchyType")
-	private HierarchyType hierarchyType = null;
+    @Valid
+    @JsonProperty("hierarchyType")
+    private HierarchyType hierarchyType = null;
 
 }

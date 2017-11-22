@@ -23,57 +23,55 @@ import com.google.gson.GsonBuilder;
 @Repository
 public class IdgenRepository {
 
-	private static final Logger logger = LoggerFactory.getLogger(IdgenRepository.class);
+    private static final Logger logger = LoggerFactory.getLogger(IdgenRepository.class);
 
-	@Value("${egov.services.egov_idgen.hostname}")
-	private String host;
+    @Value("${egov.services.egov_idgen.hostname}")
+    private String host;
 
-	@Value("${egov.services.egov_idgen.createpath}")
-	private String createPath;
+    @Value("${egov.services.egov_idgen.createpath}")
+    private String createPath;
 
-	@Autowired
-	private LogAwareRestTemplate restTemplate;
+    @Autowired
+    private LogAwareRestTemplate restTemplate;
 
-	public String getIdGeneration(String tenantId, RequestInfo requestInfo, String name) {
+    public String getIdGeneration(final String tenantId, final RequestInfo requestInfo, final String name) {
 
-		StringBuffer idGenerationUrl = new StringBuffer();
-		idGenerationUrl.append(host);
-		idGenerationUrl.append(createPath);
+        final StringBuffer idGenerationUrl = new StringBuffer();
+        idGenerationUrl.append(host);
+        idGenerationUrl.append(createPath);
 
-		List<IdRequest> idRequests = new ArrayList<>();
-		IdRequest idrequest = new IdRequest();
-		idrequest.setFormat(null);
-		idrequest.setIdName(name);
-		idrequest.setTenantId(tenantId);
-		IdGenerationRequest idGeneration = new IdGenerationRequest();
-		idRequests.add(idrequest);
-		idGeneration.setIdRequests(idRequests);
-		idGeneration.setRequestInfo(requestInfo);
-		String response = null;
+        final List<IdRequest> idRequests = new ArrayList<>();
+        final IdRequest idrequest = new IdRequest();
+        idrequest.setFormat(null);
+        idrequest.setIdName(name);
+        idrequest.setTenantId(tenantId);
+        final IdGenerationRequest idGeneration = new IdGenerationRequest();
+        idRequests.add(idrequest);
+        idGeneration.setIdRequests(idRequests);
+        idGeneration.setRequestInfo(requestInfo);
+        String response = null;
 
-		try {
-			logger.info("UpicNoGeneration calling id generation service url :" + idGenerationUrl.toString()
-					+ " request is " + requestInfo);
-			response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
-		} catch (Exception ex) {
-			throw new CustomException("InValidUrl", idGenerationUrl.toString());
-		}
+        try {
+            logger.info("UpicNoGeneration calling id generation service url :" + idGenerationUrl.toString()
+                    + " request is " + requestInfo);
+            response = restTemplate.postForObject(idGenerationUrl.toString(), idGeneration, String.class);
+        } catch (final Exception ex) {
+            throw new CustomException("InValidUrl", idGenerationUrl.toString());
+        }
 
-		String responseNumber = null;
-		Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
-		ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
-		IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
+        String responseNumber = null;
+        final Gson gson = new GsonBuilder().setPrettyPrinting().serializeNulls().create();
+        final ErrorRes errorResponse = gson.fromJson(response, ErrorRes.class);
+        final IdGenerationResponse idResponse = gson.fromJson(response, IdGenerationResponse.class);
 
-		if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
-			Error error = errorResponse.getErrors().get(0);
-			throw new CustomException(error.getMessage(), error.getDescription());
-		} else if (idResponse.getResponseInfo() != null) {
-			if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL")) {
-				if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
-					responseNumber = idResponse.getIdResponses().get(0).getId();
-			}
-		}
-		return responseNumber;
-	}
+        if (errorResponse.getErrors() != null && errorResponse.getErrors().size() > 0) {
+            final Error error = errorResponse.getErrors().get(0);
+            throw new CustomException(error.getMessage(), error.getDescription());
+        } else if (idResponse.getResponseInfo() != null)
+            if (idResponse.getResponseInfo().getStatus().toString().equalsIgnoreCase("SUCCESSFUL"))
+                if (idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0)
+                    responseNumber = idResponse.getIdResponses().get(0).getId();
+        return responseNumber;
+    }
 
 }

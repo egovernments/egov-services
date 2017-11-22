@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleTripSheetDetailsQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Value("${egov.swm.vehicletripsheetdetails.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.vehicletripsheetdetails.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.vehicletripsheetdetails.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.vehicletripsheetdetails.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.vehicletripsheetdetails.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.vehicletripsheetdetails.indexer.topic}")
+    private String indexerTopic;
 
-	public VehicleTripSheetDetailsRequest save(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    public VehicleTripSheetDetailsRequest save(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		kafkaTemplate.send(saveTopic, vehicleTripSheetDetailsRequest);
+        kafkaTemplate.send(saveTopic, vehicleTripSheetDetailsRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails());
+        kafkaTemplate.send(indexerTopic, vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails());
 
-		return vehicleTripSheetDetailsRequest;
+        return vehicleTripSheetDetailsRequest;
 
-	}
+    }
 
-	public VehicleTripSheetDetailsRequest update(VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    public VehicleTripSheetDetailsRequest update(final VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		kafkaTemplate.send(updateTopic, vehicleTripSheetDetailsRequest);
+        kafkaTemplate.send(updateTopic, vehicleTripSheetDetailsRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails());
+        kafkaTemplate.send(indexerTopic, vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails());
 
-		return vehicleTripSheetDetailsRequest;
+        return vehicleTripSheetDetailsRequest;
 
-	}
+    }
 
 }

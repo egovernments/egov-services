@@ -22,29 +22,29 @@ import lombok.Setter;
 @NoArgsConstructor
 public class SourceSegregation {
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("code")
-	private String code = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("code")
+    private String code = null;
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("dumpingGround")
-	private DumpingGround dumpingGround = null;
+    @NotNull
+    @JsonProperty("dumpingGround")
+    private DumpingGround dumpingGround = null;
 
-	@NotNull
-	@JsonProperty("sourceSegregationDate")
-	private Long sourceSegregationDate = null;
+    @NotNull
+    @JsonProperty("sourceSegregationDate")
+    private Long sourceSegregationDate = null;
 
-	@NotNull
-	@Valid
-	@JsonProperty("collectionDetails")
-	private List<CollectionDetails> collectionDetails = new ArrayList<CollectionDetails>();
+    @NotNull
+    @Valid
+    @JsonProperty("collectionDetails")
+    private List<CollectionDetails> collectionDetails = new ArrayList<>();
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

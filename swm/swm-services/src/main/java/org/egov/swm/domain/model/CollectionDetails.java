@@ -19,26 +19,26 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionDetails {
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("id")
-	private String id = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("id")
+    private String id = null;
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("collectionType")
-	private CollectionType collectionType = null;
+    @NotNull
+    @JsonProperty("collectionType")
+    private CollectionType collectionType = null;
 
-	@NotNull
-	@DecimalMin("0")
-	@JsonProperty("wetWasteCollected")
-	private Double wetWasteCollected = null;
+    @NotNull
+    @DecimalMin("0")
+    @JsonProperty("wetWasteCollected")
+    private Double wetWasteCollected = null;
 
-	@NotNull
-	@DecimalMin("0")
-	@JsonProperty("dryWasteCollected")
-	private Double dryWasteCollected = null;
+    @NotNull
+    @DecimalMin("0")
+    @JsonProperty("dryWasteCollected")
+    private Double dryWasteCollected = null;
 
 }

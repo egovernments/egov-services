@@ -10,19 +10,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class SupplierRepository {
 
-	@Autowired
-	private SupplierJdbcRepository supplierJdbcRepository;
+    @Autowired
+    private SupplierJdbcRepository supplierJdbcRepository;
 
-	public List<Supplier> search(Supplier supplierSearch) {
+    public List<Supplier> search(final Supplier supplierSearch) {
 
-		return supplierJdbcRepository.search(supplierSearch);
+        return supplierJdbcRepository.search(supplierSearch);
 
-	}
+    }
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return supplierJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return supplierJdbcRepository.uniqueCheck(tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
 }

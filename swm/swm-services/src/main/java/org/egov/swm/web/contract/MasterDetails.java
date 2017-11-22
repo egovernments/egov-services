@@ -15,8 +15,8 @@ import lombok.ToString;
 @Builder
 public class MasterDetails {
 
-	private String name;
+    private String name;
 
-	private String filter;
+    private String filter;
 
 }

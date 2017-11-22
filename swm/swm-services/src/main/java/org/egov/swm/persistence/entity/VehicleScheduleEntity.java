@@ -18,46 +18,46 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleScheduleEntity {
 
-	private String transactionNo = null;
+    private String transactionNo = null;
 
-	private String tenantId = null;
+    private String tenantId = null;
 
-	private Long scheduledFrom = null;
+    private Long scheduledFrom = null;
 
-	private Long scheduledTo = null;
+    private Long scheduledTo = null;
 
-	private String route = null;
+    private String route = null;
 
-	private String vehicle = null;
+    private String vehicle = null;
 
-	private Double targetedGarbage = null;
+    private Double targetedGarbage = null;
 
-	private String createdBy = null;
+    private String createdBy = null;
 
-	private String lastModifiedBy = null;
+    private String lastModifiedBy = null;
 
-	private Long createdTime = null;
+    private Long createdTime = null;
 
-	private Long lastModifiedTime = null;
+    private Long lastModifiedTime = null;
 
-	public VehicleSchedule toDomain() {
+    public VehicleSchedule toDomain() {
 
-		VehicleSchedule vehicleSchedule = new VehicleSchedule();
-		vehicleSchedule.setTransactionNo(transactionNo);
-		vehicleSchedule.setTenantId(tenantId);
-		vehicleSchedule.setScheduledFrom(scheduledFrom);
-		vehicleSchedule.setScheduledTo(scheduledTo);
-		vehicleSchedule.setRoute(Route.builder().code(route).build());
-		vehicleSchedule.setVehicle(Vehicle.builder().regNumber(vehicle).build());
-		vehicleSchedule.setTargetedGarbage(targetedGarbage);
-		vehicleSchedule.setAuditDetails(new AuditDetails());
-		vehicleSchedule.getAuditDetails().setCreatedBy(createdBy);
-		vehicleSchedule.getAuditDetails().setCreatedTime(createdTime);
-		vehicleSchedule.getAuditDetails().setLastModifiedBy(lastModifiedBy);
-		vehicleSchedule.getAuditDetails().setLastModifiedTime(lastModifiedTime);
+        final VehicleSchedule vehicleSchedule = new VehicleSchedule();
+        vehicleSchedule.setTransactionNo(transactionNo);
+        vehicleSchedule.setTenantId(tenantId);
+        vehicleSchedule.setScheduledFrom(scheduledFrom);
+        vehicleSchedule.setScheduledTo(scheduledTo);
+        vehicleSchedule.setRoute(Route.builder().code(route).build());
+        vehicleSchedule.setVehicle(Vehicle.builder().regNumber(vehicle).build());
+        vehicleSchedule.setTargetedGarbage(targetedGarbage);
+        vehicleSchedule.setAuditDetails(new AuditDetails());
+        vehicleSchedule.getAuditDetails().setCreatedBy(createdBy);
+        vehicleSchedule.getAuditDetails().setCreatedTime(createdTime);
+        vehicleSchedule.getAuditDetails().setLastModifiedBy(lastModifiedBy);
+        vehicleSchedule.getAuditDetails().setLastModifiedTime(lastModifiedTime);
 
-		return vehicleSchedule;
+        return vehicleSchedule;
 
-	}
+    }
 
 }

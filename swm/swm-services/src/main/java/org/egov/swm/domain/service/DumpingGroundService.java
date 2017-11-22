@@ -17,22 +17,22 @@ import net.minidev.json.JSONArray;
 @Transactional(readOnly = true)
 public class DumpingGroundService {
 
-	@Autowired
-	private MdmsRepository mdmsRepository;
+    @Autowired
+    private MdmsRepository mdmsRepository;
 
-	public DumpingGround getDumpingGround(String tenantId, String code, RequestInfo requestInfo) {
+    public DumpingGround getDumpingGround(final String tenantId, final String code, final RequestInfo requestInfo) {
 
-		JSONArray responseJSONArray;
-		ObjectMapper mapper = new ObjectMapper();
+        JSONArray responseJSONArray;
+        final ObjectMapper mapper = new ObjectMapper();
 
-		responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
-				Constants.DUMPINGGROUND_MASTER_NAME, "code", code, requestInfo);
+        responseJSONArray = mdmsRepository.getByCriteria(tenantId, Constants.MODULE_CODE,
+                Constants.DUMPINGGROUND_MASTER_NAME, "code", code, requestInfo);
 
-		if (responseJSONArray != null && responseJSONArray.size() > 0)
-			return mapper.convertValue(responseJSONArray.get(0), DumpingGround.class);
-		else
-			throw new CustomException("DumpingGround", "Given DumpingGround is invalid: " + code);
+        if (responseJSONArray != null && responseJSONArray.size() > 0)
+            return mapper.convertValue(responseJSONArray.get(0), DumpingGround.class);
+        else
+            throw new CustomException("DumpingGround", "Given DumpingGround is invalid: " + code);
 
-	}
+    }
 
 }

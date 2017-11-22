@@ -18,47 +18,47 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleTripSheetDetails {
 
-	@NotNull
-	@Size(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Size(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@Size(min = 1, max = 256)
-	@JsonProperty("tripNo")
-	private String tripNo = null;
+    @Size(min = 1, max = 256)
+    @JsonProperty("tripNo")
+    private String tripNo = null;
 
-	@NotNull
-	@JsonProperty("vehicle")
-	private Vehicle vehicle = null;
+    @NotNull
+    @JsonProperty("vehicle")
+    private Vehicle vehicle = null;
 
-	@JsonProperty("vendor")
-	private Vendor vendor = null;
+    @JsonProperty("vendor")
+    private Vendor vendor = null;
 
-	@NotNull
-	@JsonProperty("route")
-	private Route route = null;
+    @NotNull
+    @JsonProperty("route")
+    private Route route = null;
 
-	@NotNull
-	@JsonProperty("tripStartDate")
-	private Long tripStartDate = null;
+    @NotNull
+    @JsonProperty("tripStartDate")
+    private Long tripStartDate = null;
 
-	@NotNull
-	@JsonProperty("tripEndDate")
-	private Long tripEndDate = null;
+    @NotNull
+    @JsonProperty("tripEndDate")
+    private Long tripEndDate = null;
 
-	@JsonProperty("inTime")
-	private Long inTime = null;
+    @JsonProperty("inTime")
+    private Long inTime = null;
 
-	@JsonProperty("outTime")
-	private Long outTime = null;
+    @JsonProperty("outTime")
+    private Long outTime = null;
 
-	@JsonProperty("entryWeight")
-	private Double entryWeight = null;
+    @JsonProperty("entryWeight")
+    private Double entryWeight = null;
 
-	@JsonProperty("exitWeight")
-	private Double exitWeight = null;
+    @JsonProperty("exitWeight")
+    private Double exitWeight = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

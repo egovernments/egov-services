@@ -7,9 +7,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class Utils {
 
-	public Boolean isFutureDate(Date date) {
+    public Boolean isFutureDate(final Date date) {
 
-		return !(date.before(new Date()));
-	}
+        return !date.before(new Date());
+    }
 
 }

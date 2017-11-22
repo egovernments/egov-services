@@ -26,52 +26,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vehicletripsheetdetails")
 public class VehicleTripSheetDetailsController {
 
-	@Autowired
-	private VehicleTripSheetDetailsService vehicleTripSheetDetailsService;
+    @Autowired
+    private VehicleTripSheetDetailsService vehicleTripSheetDetailsService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleTripSheetDetailsResponse create(
-			@RequestBody @Valid VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleTripSheetDetailsResponse create(
+            @RequestBody @Valid VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		vehicleTripSheetDetailsRequest = vehicleTripSheetDetailsService.create(vehicleTripSheetDetailsRequest);
+        vehicleTripSheetDetailsRequest = vehicleTripSheetDetailsService.create(vehicleTripSheetDetailsRequest);
 
-		return VehicleTripSheetDetailsResponse.builder()
-				.responseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()))
-				.vehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()).build();
-	}
+        return VehicleTripSheetDetailsResponse.builder()
+                .responseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()))
+                .vehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleTripSheetDetailsResponse update(
-			@RequestBody @Valid VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleTripSheetDetailsResponse update(
+            @RequestBody @Valid VehicleTripSheetDetailsRequest vehicleTripSheetDetailsRequest) {
 
-		vehicleTripSheetDetailsRequest = vehicleTripSheetDetailsService.update(vehicleTripSheetDetailsRequest);
+        vehicleTripSheetDetailsRequest = vehicleTripSheetDetailsService.update(vehicleTripSheetDetailsRequest);
 
-		return VehicleTripSheetDetailsResponse.builder()
-				.responseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()))
-				.vehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()).build();
-	}
+        return VehicleTripSheetDetailsResponse.builder()
+                .responseInfo(getResponseInfo(vehicleTripSheetDetailsRequest.getRequestInfo()))
+                .vehicleTripSheetDetails(vehicleTripSheetDetailsRequest.getVehicleTripSheetDetails()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public VehicleTripSheetDetailsResponse search(
-			@ModelAttribute VehicleTripSheetDetailsSearch vehicleTripSheetDetailsSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public VehicleTripSheetDetailsResponse search(
+            @ModelAttribute final VehicleTripSheetDetailsSearch vehicleTripSheetDetailsSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<VehicleTripSheetDetails> vehicleTripSheetDetailsList = vehicleTripSheetDetailsService
-				.search(vehicleTripSheetDetailsSearch);
+        final Pagination<VehicleTripSheetDetails> vehicleTripSheetDetailsList = vehicleTripSheetDetailsService
+                .search(vehicleTripSheetDetailsSearch);
 
-		return VehicleTripSheetDetailsResponse.builder().responseInfo(getResponseInfo(requestInfo))
-				.vehicleTripSheetDetails(vehicleTripSheetDetailsList.getPagedData())
-				.page(new PaginationContract(vehicleTripSheetDetailsList)).build();
+        return VehicleTripSheetDetailsResponse.builder().responseInfo(getResponseInfo(requestInfo))
+                .vehicleTripSheetDetails(vehicleTripSheetDetailsList.getPagedData())
+                .page(new PaginationContract(vehicleTripSheetDetailsList)).build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

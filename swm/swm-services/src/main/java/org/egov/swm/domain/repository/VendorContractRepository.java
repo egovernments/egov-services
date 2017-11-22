@@ -12,27 +12,27 @@ import org.springframework.stereotype.Service;
 @Service
 public class VendorContractRepository {
 
-	@Autowired
-	private VendorContractQueueRepository vendorContractQueueRepository;
+    @Autowired
+    private VendorContractQueueRepository vendorContractQueueRepository;
 
-	@Autowired
-	private VendorContractJdbcRepository vendorContractJdbcRepository;
+    @Autowired
+    private VendorContractJdbcRepository vendorContractJdbcRepository;
 
-	public VendorContractRequest save(VendorContractRequest vendorContractRequest) {
+    public VendorContractRequest save(final VendorContractRequest vendorContractRequest) {
 
-		return vendorContractQueueRepository.save(vendorContractRequest);
+        return vendorContractQueueRepository.save(vendorContractRequest);
 
-	}
+    }
 
-	public VendorContractRequest update(VendorContractRequest vendorContractRequest) {
+    public VendorContractRequest update(final VendorContractRequest vendorContractRequest) {
 
-		return vendorContractQueueRepository.update(vendorContractRequest);
+        return vendorContractQueueRepository.update(vendorContractRequest);
 
-	}
+    }
 
-	public Pagination<VendorContract> search(VendorContractSearch vendorContractSearch) {
-		return vendorContractJdbcRepository.search(vendorContractSearch);
+    public Pagination<VendorContract> search(final VendorContractSearch vendorContractSearch) {
+        return vendorContractJdbcRepository.search(vendorContractSearch);
 
-	}
+    }
 
 }

@@ -26,52 +26,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sanitationstaffschedules")
 public class SanitationStaffScheduleController {
 
-	@Autowired
-	private SanitationStaffScheduleService sanitationStaffScheduleService;
+    @Autowired
+    private SanitationStaffScheduleService sanitationStaffScheduleService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SanitationStaffScheduleResponse create(
-			@RequestBody @Valid SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SanitationStaffScheduleResponse create(
+            @RequestBody @Valid SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		sanitationStaffScheduleRequest = sanitationStaffScheduleService.create(sanitationStaffScheduleRequest);
+        sanitationStaffScheduleRequest = sanitationStaffScheduleService.create(sanitationStaffScheduleRequest);
 
-		return SanitationStaffScheduleResponse.builder()
-				.responseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()))
-				.sanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules()).build();
-	}
+        return SanitationStaffScheduleResponse.builder()
+                .responseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()))
+                .sanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SanitationStaffScheduleResponse update(
-			@RequestBody @Valid SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SanitationStaffScheduleResponse update(
+            @RequestBody @Valid SanitationStaffScheduleRequest sanitationStaffScheduleRequest) {
 
-		sanitationStaffScheduleRequest = sanitationStaffScheduleService.update(sanitationStaffScheduleRequest);
+        sanitationStaffScheduleRequest = sanitationStaffScheduleService.update(sanitationStaffScheduleRequest);
 
-		return SanitationStaffScheduleResponse.builder()
-				.responseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()))
-				.sanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules()).build();
-	}
+        return SanitationStaffScheduleResponse.builder()
+                .responseInfo(getResponseInfo(sanitationStaffScheduleRequest.getRequestInfo()))
+                .sanitationStaffSchedules(sanitationStaffScheduleRequest.getSanitationStaffSchedules()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public SanitationStaffScheduleResponse search(
-			@ModelAttribute SanitationStaffScheduleSearch sanitationStaffScheduleSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public SanitationStaffScheduleResponse search(
+            @ModelAttribute final SanitationStaffScheduleSearch sanitationStaffScheduleSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<SanitationStaffSchedule> sanitationStaffScheduleList = sanitationStaffScheduleService
-				.search(sanitationStaffScheduleSearch);
+        final Pagination<SanitationStaffSchedule> sanitationStaffScheduleList = sanitationStaffScheduleService
+                .search(sanitationStaffScheduleSearch);
 
-		return SanitationStaffScheduleResponse.builder().responseInfo(getResponseInfo(requestInfo))
-				.sanitationStaffSchedules(sanitationStaffScheduleList.getPagedData())
-				.page(new PaginationContract(sanitationStaffScheduleList)).build();
+        return SanitationStaffScheduleResponse.builder().responseInfo(getResponseInfo(requestInfo))
+                .sanitationStaffSchedules(sanitationStaffScheduleList.getPagedData())
+                .page(new PaginationContract(sanitationStaffScheduleList)).build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

@@ -15,8 +15,8 @@ import lombok.ToString;
 @Builder
 public class MdmsCriteria {
 
-	private String tenantId;
+    private String tenantId;
 
-	private ModuleDetails[] moduleDetails;
+    private ModuleDetails[] moduleDetails;
 
 }

@@ -26,52 +26,52 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vehiclefuellingdetails")
 public class VehicleFuellingDetailsController {
 
-	@Autowired
-	private VehicleFuellingDetailsService vehicleFuellingDetailsService;
+    @Autowired
+    private VehicleFuellingDetailsService vehicleFuellingDetailsService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleFuellingDetailsResponse create(
-			@RequestBody @Valid VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleFuellingDetailsResponse create(
+            @RequestBody @Valid VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.create(vehicleFuellingDetailsRequest);
+        vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.create(vehicleFuellingDetailsRequest);
 
-		return VehicleFuellingDetailsResponse.builder()
-				.responseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()))
-				.vehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails()).build();
-	}
+        return VehicleFuellingDetailsResponse.builder()
+                .responseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()))
+                .vehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleFuellingDetailsResponse update(
-			@RequestBody @Valid VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleFuellingDetailsResponse update(
+            @RequestBody @Valid VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-		vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.update(vehicleFuellingDetailsRequest);
+        vehicleFuellingDetailsRequest = vehicleFuellingDetailsService.update(vehicleFuellingDetailsRequest);
 
-		return VehicleFuellingDetailsResponse.builder()
-				.responseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()))
-				.vehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails()).build();
-	}
+        return VehicleFuellingDetailsResponse.builder()
+                .responseInfo(getResponseInfo(vehicleFuellingDetailsRequest.getRequestInfo()))
+                .vehicleFuellingDetails(vehicleFuellingDetailsRequest.getVehicleFuellingDetails()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public VehicleFuellingDetailsResponse search(
-			@ModelAttribute VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public VehicleFuellingDetailsResponse search(
+            @ModelAttribute final VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<VehicleFuellingDetails> vehicleFuellingDetailsList = vehicleFuellingDetailsService
-				.search(vehicleFuellingDetailsSearch);
+        final Pagination<VehicleFuellingDetails> vehicleFuellingDetailsList = vehicleFuellingDetailsService
+                .search(vehicleFuellingDetailsSearch);
 
-		return VehicleFuellingDetailsResponse.builder().responseInfo(getResponseInfo(requestInfo))
-				.vehicleFuellingDetails(vehicleFuellingDetailsList.getPagedData())
-				.page(new PaginationContract(vehicleFuellingDetailsList)).build();
+        return VehicleFuellingDetailsResponse.builder().responseInfo(getResponseInfo(requestInfo))
+                .vehicleFuellingDetails(vehicleFuellingDetailsList.getPagedData())
+                .page(new PaginationContract(vehicleFuellingDetailsList)).build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

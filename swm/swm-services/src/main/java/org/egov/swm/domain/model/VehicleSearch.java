@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleSearch extends Vehicle {
-	private String vehicleTypeCode;
-	private String vendorName;
-	private String purchaseYear;
-	private String fuelTypeCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String vehicleTypeCode;
+    private String vendorName;
+    private String purchaseYear;
+    private String fuelTypeCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

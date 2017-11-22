@@ -26,48 +26,48 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/sourcesegregations")
 public class SourceSegregationController {
 
-	@Autowired
-	private SourceSegregationService sourceSegregationService;
+    @Autowired
+    private SourceSegregationService sourceSegregationService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SourceSegregationResponse create(@RequestBody @Valid SourceSegregationRequest sourceSegregationRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SourceSegregationResponse create(@RequestBody @Valid SourceSegregationRequest sourceSegregationRequest) {
 
-		sourceSegregationRequest = sourceSegregationService.create(sourceSegregationRequest);
+        sourceSegregationRequest = sourceSegregationService.create(sourceSegregationRequest);
 
-		return SourceSegregationResponse.builder()
-				.responseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()))
-				.sourceSegregations(sourceSegregationRequest.getSourceSegregations()).build();
-	}
+        return SourceSegregationResponse.builder()
+                .responseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()))
+                .sourceSegregations(sourceSegregationRequest.getSourceSegregations()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public SourceSegregationResponse update(@RequestBody @Valid SourceSegregationRequest sourceSegregationRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public SourceSegregationResponse update(@RequestBody @Valid SourceSegregationRequest sourceSegregationRequest) {
 
-		sourceSegregationRequest = sourceSegregationService.update(sourceSegregationRequest);
+        sourceSegregationRequest = sourceSegregationService.update(sourceSegregationRequest);
 
-		return SourceSegregationResponse.builder()
-				.responseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()))
-				.sourceSegregations(sourceSegregationRequest.getSourceSegregations()).build();
-	}
+        return SourceSegregationResponse.builder()
+                .responseInfo(getResponseInfo(sourceSegregationRequest.getRequestInfo()))
+                .sourceSegregations(sourceSegregationRequest.getSourceSegregations()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public SourceSegregationResponse search(@ModelAttribute SourceSegregationSearch sourceSegregationSearch,
-			@RequestBody RequestInfo requestInfo, @RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public SourceSegregationResponse search(@ModelAttribute final SourceSegregationSearch sourceSegregationSearch,
+            @RequestBody final RequestInfo requestInfo, @RequestParam final String tenantId) {
 
-		Pagination<SourceSegregation> sourceSegregationList = sourceSegregationService.search(sourceSegregationSearch);
+        final Pagination<SourceSegregation> sourceSegregationList = sourceSegregationService.search(sourceSegregationSearch);
 
-		return SourceSegregationResponse.builder().responseInfo(getResponseInfo(requestInfo))
-				.sourceSegregations(sourceSegregationList.getPagedData())
-				.page(new PaginationContract(sourceSegregationList)).build();
+        return SourceSegregationResponse.builder().responseInfo(getResponseInfo(requestInfo))
+                .sourceSegregations(sourceSegregationList.getPagedData())
+                .page(new PaginationContract(sourceSegregationList)).build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

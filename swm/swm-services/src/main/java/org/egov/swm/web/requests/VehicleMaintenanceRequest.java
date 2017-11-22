@@ -13,9 +13,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 public @Data class VehicleMaintenanceRequest {
-	@Valid
-	@JsonProperty("RequestInfo")
-	private RequestInfo requestInfo = new RequestInfo();
-	@Valid
-	private List<VehicleMaintenance> vehicleMaintenances = new ArrayList<VehicleMaintenance>();
+    @Valid
+    @JsonProperty("RequestInfo")
+    private RequestInfo requestInfo = new RequestInfo();
+    @Valid
+    private List<VehicleMaintenance> vehicleMaintenances = new ArrayList<>();
 }

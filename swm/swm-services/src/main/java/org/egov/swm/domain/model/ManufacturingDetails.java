@@ -21,24 +21,24 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ManufacturingDetails {
 
-	@Length(min = 1, max = 256)
-	@JsonProperty("engineSrNumber")
-	private String engineSrNumber = null;
+    @Length(min = 1, max = 256)
+    @JsonProperty("engineSrNumber")
+    private String engineSrNumber = null;
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("chassisSrNumber")
-	private String chassisSrNumber = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("chassisSrNumber")
+    private String chassisSrNumber = null;
 
-	@NotNull
-	@Min(value = 0)
-	@Max(value = 100)
-	@JsonProperty("vehicleCapacity")
-	private Double vehicleCapacity = null;
+    @NotNull
+    @Min(value = 0)
+    @Max(value = 100)
+    @JsonProperty("vehicleCapacity")
+    private Double vehicleCapacity = null;
 
-	@NotNull
-	@Length(min = 0, max = 256)
-	@JsonProperty("model")
-	private String model = null;
+    @NotNull
+    @Length(min = 0, max = 256)
+    @JsonProperty("model")
+    private String model = null;
 
 }

@@ -26,45 +26,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/vehicles")
 public class VehicleController {
 
-	@Autowired
-	private VehicleService vehicleService;
+    @Autowired
+    private VehicleService vehicleService;
 
-	@PostMapping("/_create")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleResponse create(@RequestBody @Valid VehicleRequest vehicleRequest) {
+    @PostMapping("/_create")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleResponse create(@RequestBody @Valid VehicleRequest vehicleRequest) {
 
-		vehicleRequest = vehicleService.create(vehicleRequest);
+        vehicleRequest = vehicleService.create(vehicleRequest);
 
-		return VehicleResponse.builder().responseInfo(getResponseInfo(vehicleRequest.getRequestInfo()))
-				.vehicles(vehicleRequest.getVehicles()).build();
-	}
+        return VehicleResponse.builder().responseInfo(getResponseInfo(vehicleRequest.getRequestInfo()))
+                .vehicles(vehicleRequest.getVehicles()).build();
+    }
 
-	@PostMapping("/_update")
-	@ResponseStatus(HttpStatus.CREATED)
-	public VehicleResponse update(@RequestBody @Valid VehicleRequest vehicleRequest) {
+    @PostMapping("/_update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public VehicleResponse update(@RequestBody @Valid VehicleRequest vehicleRequest) {
 
-		vehicleRequest = vehicleService.update(vehicleRequest);
+        vehicleRequest = vehicleService.update(vehicleRequest);
 
-		return VehicleResponse.builder().responseInfo(getResponseInfo(vehicleRequest.getRequestInfo()))
-				.vehicles(vehicleRequest.getVehicles()).build();
-	}
+        return VehicleResponse.builder().responseInfo(getResponseInfo(vehicleRequest.getRequestInfo()))
+                .vehicles(vehicleRequest.getVehicles()).build();
+    }
 
-	@PostMapping("/_search")
-	@ResponseBody
-	@ResponseStatus(HttpStatus.OK)
-	public VehicleResponse search(@ModelAttribute VehicleSearch vehicleSearch, @RequestBody RequestInfo requestInfo,
-			@RequestParam String tenantId) {
+    @PostMapping("/_search")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    public VehicleResponse search(@ModelAttribute final VehicleSearch vehicleSearch, @RequestBody final RequestInfo requestInfo,
+            @RequestParam final String tenantId) {
 
-		Pagination<Vehicle> vehicleList = vehicleService.search(vehicleSearch);
+        final Pagination<Vehicle> vehicleList = vehicleService.search(vehicleSearch);
 
-		return VehicleResponse.builder().responseInfo(getResponseInfo(requestInfo)).vehicles(vehicleList.getPagedData())
-				.page(new PaginationContract(vehicleList)).build();
+        return VehicleResponse.builder().responseInfo(getResponseInfo(requestInfo)).vehicles(vehicleList.getPagedData())
+                .page(new PaginationContract(vehicleList)).build();
 
-	}
+    }
 
-	private ResponseInfo getResponseInfo(RequestInfo requestInfo) {
-		return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
-				.resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
-	}
+    private ResponseInfo getResponseInfo(final RequestInfo requestInfo) {
+        return ResponseInfo.builder().apiId(requestInfo.getApiId()).ver(requestInfo.getVer())
+                .resMsgId(requestInfo.getMsgId()).resMsgId("placeholder").status("placeholder").build();
+    }
 
 }

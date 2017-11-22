@@ -9,36 +9,36 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleScheduleQueueRepository {
 
-	@Autowired
-	private KafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private KafkaTemplate<String, Object> kafkaTemplate;
 
-	@Value("${egov.swm.vehicleschedule.save.topic}")
-	private String saveTopic;
+    @Value("${egov.swm.vehicleschedule.save.topic}")
+    private String saveTopic;
 
-	@Value("${egov.swm.vehicleschedule.update.topic}")
-	private String updateTopic;
+    @Value("${egov.swm.vehicleschedule.update.topic}")
+    private String updateTopic;
 
-	@Value("${egov.swm.vehicleschedule.indexer.topic}")
-	private String indexerTopic;
+    @Value("${egov.swm.vehicleschedule.indexer.topic}")
+    private String indexerTopic;
 
-	public VehicleScheduleRequest save(VehicleScheduleRequest vehicleScheduleRequest) {
+    public VehicleScheduleRequest save(final VehicleScheduleRequest vehicleScheduleRequest) {
 
-		kafkaTemplate.send(saveTopic, vehicleScheduleRequest);
+        kafkaTemplate.send(saveTopic, vehicleScheduleRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleScheduleRequest.getVehicleSchedules());
+        kafkaTemplate.send(indexerTopic, vehicleScheduleRequest.getVehicleSchedules());
 
-		return vehicleScheduleRequest;
+        return vehicleScheduleRequest;
 
-	}
+    }
 
-	public VehicleScheduleRequest update(VehicleScheduleRequest vehicleScheduleRequest) {
+    public VehicleScheduleRequest update(final VehicleScheduleRequest vehicleScheduleRequest) {
 
-		kafkaTemplate.send(updateTopic, vehicleScheduleRequest);
+        kafkaTemplate.send(updateTopic, vehicleScheduleRequest);
 
-		kafkaTemplate.send(indexerTopic, vehicleScheduleRequest.getVehicleSchedules());
+        kafkaTemplate.send(indexerTopic, vehicleScheduleRequest.getVehicleSchedules());
 
-		return vehicleScheduleRequest;
+        return vehicleScheduleRequest;
 
-	}
+    }
 
 }

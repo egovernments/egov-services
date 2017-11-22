@@ -10,9 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SourceSegregationSearch extends SourceSegregation {
-	private String codes;
-	private String dumpingGroundCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String codes;
+    private String dumpingGroundCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

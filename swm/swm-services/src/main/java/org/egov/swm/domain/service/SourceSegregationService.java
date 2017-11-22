@@ -19,136 +19,130 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class SourceSegregationService {
 
-	@Autowired
-	private SourceSegregationRepository sourceSegregationRepository;
+    @Autowired
+    private SourceSegregationRepository sourceSegregationRepository;
 
-	@Autowired
-	private CollectionTypeService collectionTypeService;
+    @Autowired
+    private CollectionTypeService collectionTypeService;
 
-	@Autowired
-	private DumpingGroundService dumpingGroundService;
+    @Autowired
+    private DumpingGroundService dumpingGroundService;
 
-	@Transactional
-	public SourceSegregationRequest create(SourceSegregationRequest sourceSegregationRequest) {
+    @Transactional
+    public SourceSegregationRequest create(final SourceSegregationRequest sourceSegregationRequest) {
 
-		validate(sourceSegregationRequest);
+        validate(sourceSegregationRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (sourceSegregationRequest.getRequestInfo() != null
-				&& sourceSegregationRequest.getRequestInfo().getUserInfo() != null
-				&& null != sourceSegregationRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = sourceSegregationRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (sourceSegregationRequest.getRequestInfo() != null
+                && sourceSegregationRequest.getRequestInfo().getUserInfo() != null
+                && null != sourceSegregationRequest.getRequestInfo().getUserInfo().getId())
+            userId = sourceSegregationRequest.getRequestInfo().getUserInfo().getId();
 
-		for (SourceSegregation v : sourceSegregationRequest.getSourceSegregations()) {
+        for (final SourceSegregation v : sourceSegregationRequest.getSourceSegregations()) {
 
-			setAuditDetails(v, userId);
+            setAuditDetails(v, userId);
 
-			v.setCode(UUID.randomUUID().toString().replace("-", ""));
+            v.setCode(UUID.randomUUID().toString().replace("-", ""));
 
-			prepareCollectionDetails(v);
+            prepareCollectionDetails(v);
 
-		}
+        }
 
-		return sourceSegregationRepository.save(sourceSegregationRequest);
+        return sourceSegregationRepository.save(sourceSegregationRequest);
 
-	}
+    }
 
-	@Transactional
-	public SourceSegregationRequest update(SourceSegregationRequest sourceSegregationRequest) {
+    @Transactional
+    public SourceSegregationRequest update(final SourceSegregationRequest sourceSegregationRequest) {
 
-		Long userId = null;
+        Long userId = null;
 
-		if (sourceSegregationRequest.getRequestInfo() != null
-				&& sourceSegregationRequest.getRequestInfo().getUserInfo() != null
-				&& null != sourceSegregationRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = sourceSegregationRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (sourceSegregationRequest.getRequestInfo() != null
+                && sourceSegregationRequest.getRequestInfo().getUserInfo() != null
+                && null != sourceSegregationRequest.getRequestInfo().getUserInfo().getId())
+            userId = sourceSegregationRequest.getRequestInfo().getUserInfo().getId();
 
-		for (SourceSegregation v : sourceSegregationRequest.getSourceSegregations()) {
+        for (final SourceSegregation v : sourceSegregationRequest.getSourceSegregations()) {
 
-			setAuditDetails(v, userId);
+            setAuditDetails(v, userId);
 
-			prepareCollectionDetails(v);
+            prepareCollectionDetails(v);
 
-		}
+        }
 
-		validate(sourceSegregationRequest);
+        validate(sourceSegregationRequest);
 
-		return sourceSegregationRepository.update(sourceSegregationRequest);
+        return sourceSegregationRepository.update(sourceSegregationRequest);
 
-	}
+    }
 
-	private void prepareCollectionDetails(SourceSegregation ss) {
+    private void prepareCollectionDetails(final SourceSegregation ss) {
 
-		for (CollectionDetails cd : ss.getCollectionDetails()) {
+        for (final CollectionDetails cd : ss.getCollectionDetails()) {
 
-			cd.setId(UUID.randomUUID().toString().replace("-", ""));
-			cd.setTenantId(ss.getTenantId());
+            cd.setId(UUID.randomUUID().toString().replace("-", ""));
+            cd.setTenantId(ss.getTenantId());
 
-		}
-	}
+        }
+    }
 
-	private void validate(SourceSegregationRequest sourceSegregationRequest) {
+    private void validate(final SourceSegregationRequest sourceSegregationRequest) {
 
-		for (SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
+        for (final SourceSegregation sourceSegregation : sourceSegregationRequest.getSourceSegregations()) {
 
-			if (sourceSegregation.getDumpingGround() != null && (sourceSegregation.getDumpingGround().getCode() == null
-					|| sourceSegregation.getDumpingGround().getCode().isEmpty()))
-				throw new CustomException("DumpingGround",
-						"The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (sourceSegregation.getDumpingGround() != null && (sourceSegregation.getDumpingGround().getCode() == null
+                    || sourceSegregation.getDumpingGround().getCode().isEmpty()))
+                throw new CustomException("DumpingGround",
+                        "The field DumpingGround Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			// Validate Ending Dumping ground
-			if (sourceSegregation.getDumpingGround() != null
-					&& sourceSegregation.getDumpingGround().getCode() != null) {
+            // Validate Ending Dumping ground
+            if (sourceSegregation.getDumpingGround() != null
+                    && sourceSegregation.getDumpingGround().getCode() != null)
+                sourceSegregation.setDumpingGround(dumpingGroundService.getDumpingGround(
+                        sourceSegregation.getTenantId(), sourceSegregation.getDumpingGround().getCode(),
+                        sourceSegregationRequest.getRequestInfo()));
+            else
+                throw new CustomException("DumpingGround", "DumpingGround is required");
 
-				sourceSegregation.setDumpingGround(dumpingGroundService.getDumpingGround(
-						sourceSegregation.getTenantId(), sourceSegregation.getDumpingGround().getCode(),
-						sourceSegregationRequest.getRequestInfo()));
+            for (final CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
 
-			} else
-				throw new CustomException("DumpingGround", "DumpingGround is required");
+                // Validate Collection Type
 
-			for (CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
+                if (cd.getCollectionType() != null
+                        && (cd.getCollectionType().getCode() == null || cd.getCollectionType().getCode().isEmpty()))
+                    throw new CustomException("CollectionType",
+                            "The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-				// Validate Collection Type
+                if (cd.getCollectionType() != null && cd.getCollectionType().getCode() != null)
+                    cd.setCollectionType(collectionTypeService.getCollectionType(sourceSegregation.getTenantId(),
+                            cd.getCollectionType().getCode(), sourceSegregationRequest.getRequestInfo()));
+                else
+                    throw new CustomException("CollectionType", "CollectionType is required");
 
-				if (cd.getCollectionType() != null
-						&& (cd.getCollectionType().getCode() == null || cd.getCollectionType().getCode().isEmpty()))
-					throw new CustomException("CollectionType",
-							"The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            }
 
-				if (cd.getCollectionType() != null && cd.getCollectionType().getCode() != null) {
+        }
+    }
 
-					cd.setCollectionType(collectionTypeService.getCollectionType(sourceSegregation.getTenantId(),
-							cd.getCollectionType().getCode(), sourceSegregationRequest.getRequestInfo()));
+    public Pagination<SourceSegregation> search(final SourceSegregationSearch sourceSegregationSearch) {
 
-				} else
-					throw new CustomException("CollectionType", "CollectionType is required");
+        return sourceSegregationRepository.search(sourceSegregationSearch);
+    }
 
-			}
+    private void setAuditDetails(final SourceSegregation contract, final Long userId) {
 
-		}
-	}
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-	public Pagination<SourceSegregation> search(SourceSegregationSearch sourceSegregationSearch) {
+        if (null == contract.getCode() || contract.getCode().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-		return sourceSegregationRepository.search(sourceSegregationSearch);
-	}
-
-	private void setAuditDetails(SourceSegregation contract, Long userId) {
-
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getCode() || contract.getCode().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

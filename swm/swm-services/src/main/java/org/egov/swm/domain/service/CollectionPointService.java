@@ -25,253 +25,227 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class CollectionPointService {
 
-	@Autowired
-	private CollectionPointRepository collectionPointRepository;
+    @Autowired
+    private CollectionPointRepository collectionPointRepository;
 
-	@Autowired
-	private BinDetailsRepository binDetailsRepository;
+    @Autowired
+    private BinDetailsRepository binDetailsRepository;
 
-	@Autowired
-	private BoundaryRepository boundaryRepository;
+    @Autowired
+    private BoundaryRepository boundaryRepository;
 
-	@Autowired
-	private CollectionTypeService collectionTypeService;
+    @Autowired
+    private CollectionTypeService collectionTypeService;
 
-	@Transactional
-	public CollectionPointRequest create(CollectionPointRequest collectionPointRequest) {
+    @Transactional
+    public CollectionPointRequest create(final CollectionPointRequest collectionPointRequest) {
 
-		validate(collectionPointRequest);
+        validate(collectionPointRequest);
 
-		Long userId = null;
+        Long userId = null;
 
-		if (collectionPointRequest.getRequestInfo() != null
-				&& collectionPointRequest.getRequestInfo().getUserInfo() != null
-				&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (collectionPointRequest.getRequestInfo() != null
+                && collectionPointRequest.getRequestInfo().getUserInfo() != null
+                && null != collectionPointRequest.getRequestInfo().getUserInfo().getId())
+            userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
 
-		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
+        for (final CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
 
-			setAuditDetails(cp, userId);
+            setAuditDetails(cp, userId);
 
-			cp.setCode(UUID.randomUUID().toString().replace("-", ""));
+            cp.setCode(UUID.randomUUID().toString().replace("-", ""));
 
-			populateBinDetailsIds(cp);
+            populateBinDetailsIds(cp);
 
-			populateCollectionPointDetails(cp);
+            populateCollectionPointDetails(cp);
 
-		}
+        }
 
-		return collectionPointRepository.save(collectionPointRequest);
+        return collectionPointRepository.save(collectionPointRequest);
 
-	}
+    }
 
-	@Transactional
-	public CollectionPointRequest update(CollectionPointRequest collectionPointRequest) {
+    @Transactional
+    public CollectionPointRequest update(final CollectionPointRequest collectionPointRequest) {
 
-		Long userId = null;
+        Long userId = null;
 
-		if (collectionPointRequest.getRequestInfo() != null
-				&& collectionPointRequest.getRequestInfo().getUserInfo() != null
-				&& null != collectionPointRequest.getRequestInfo().getUserInfo().getId()) {
-			userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
-		}
+        if (collectionPointRequest.getRequestInfo() != null
+                && collectionPointRequest.getRequestInfo().getUserInfo() != null
+                && null != collectionPointRequest.getRequestInfo().getUserInfo().getId())
+            userId = collectionPointRequest.getRequestInfo().getUserInfo().getId();
 
-		for (CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
+        for (final CollectionPoint cp : collectionPointRequest.getCollectionPoints()) {
 
-			setAuditDetails(cp, userId);
+            setAuditDetails(cp, userId);
 
-			populateBinDetailsIds(cp);
+            populateBinDetailsIds(cp);
 
-			populateCollectionPointDetails(cp);
-		}
+            populateCollectionPointDetails(cp);
+        }
 
-		validate(collectionPointRequest);
+        validate(collectionPointRequest);
 
-		return collectionPointRepository.update(collectionPointRequest);
+        return collectionPointRepository.update(collectionPointRequest);
 
-	}
+    }
 
-	private void populateBinDetailsIds(CollectionPoint cp) {
-		if (cp != null && cp.getBinDetails() != null)
-			for (BinDetails bid : cp.getBinDetails()) {
-				bid.setId(UUID.randomUUID().toString().replace("-", ""));
-				bid.setTenantId(cp.getTenantId());
-			}
-	}
+    private void populateBinDetailsIds(final CollectionPoint cp) {
+        if (cp != null && cp.getBinDetails() != null)
+            for (final BinDetails bid : cp.getBinDetails()) {
+                bid.setId(UUID.randomUUID().toString().replace("-", ""));
+                bid.setTenantId(cp.getTenantId());
+            }
+    }
 
-	private void populateCollectionPointDetails(CollectionPoint cp) {
-		if (cp != null && cp.getCollectionPointDetails() != null)
-			for (CollectionPointDetails cpd : cp.getCollectionPointDetails()) {
-				cpd.setId(UUID.randomUUID().toString().replace("-", ""));
-				cpd.setTenantId(cp.getTenantId());
-			}
-	}
+    private void populateCollectionPointDetails(final CollectionPoint cp) {
+        if (cp != null && cp.getCollectionPointDetails() != null)
+            for (final CollectionPointDetails cpd : cp.getCollectionPointDetails()) {
+                cpd.setId(UUID.randomUUID().toString().replace("-", ""));
+                cpd.setTenantId(cp.getTenantId());
+            }
+    }
 
-	private void validate(CollectionPointRequest collectionPointRequest) {
+    private void validate(final CollectionPointRequest collectionPointRequest) {
 
-		findDuplicatesInUniqueFields(collectionPointRequest);
+        findDuplicatesInUniqueFields(collectionPointRequest);
 
-		for (CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
+        for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
 
-			// Validate Boundary
+            // Validate Boundary
 
-			if (collectionPoint.getLocation() != null && (collectionPoint.getLocation().getCode() == null
-					|| collectionPoint.getLocation().getCode().isEmpty()))
-				throw new CustomException("Location",
-						"The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            if (collectionPoint.getLocation() != null && (collectionPoint.getLocation().getCode() == null
+                    || collectionPoint.getLocation().getCode().isEmpty()))
+                throw new CustomException("Location",
+                        "The field Location Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-			if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
+            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null) {
 
-				Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
-						collectionPoint.getTenantId());
+                final Boundary boundary = boundaryRepository.fetchBoundaryByCode(collectionPoint.getLocation().getCode(),
+                        collectionPoint.getTenantId());
 
-				if (boundary != null)
-					collectionPoint.setLocation(boundary);
-				else
-					throw new CustomException("Location",
-							"Given Location is Invalid: " + collectionPoint.getLocation().getCode());
-			}
+                if (boundary != null)
+                    collectionPoint.setLocation(boundary);
+                else
+                    throw new CustomException("Location",
+                            "Given Location is Invalid: " + collectionPoint.getLocation().getCode());
+            }
 
-			if (collectionPoint.getCollectionPointDetails() != null) {
+            if (collectionPoint.getCollectionPointDetails() != null)
+                for (final CollectionPointDetails cpd : collectionPoint.getCollectionPointDetails()) {
 
-				for (CollectionPointDetails cpd : collectionPoint.getCollectionPointDetails()) {
+                    if (cpd.getCollectionType() != null && (cpd.getCollectionType().getCode() == null
+                            || cpd.getCollectionType().getCode().isEmpty()))
+                        throw new CustomException("CollectionType",
+                                "The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-					if (cpd.getCollectionType() != null && (cpd.getCollectionType().getCode() == null
-							|| cpd.getCollectionType().getCode().isEmpty()))
-						throw new CustomException("CollectionType",
-								"The field CollectionType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+                    // Validate Collection Type
+                    if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null)
+                        cpd.setCollectionType(collectionTypeService.getCollectionType(collectionPoint.getTenantId(),
+                                cpd.getCollectionType().getCode(), collectionPointRequest.getRequestInfo()));
+                    else
+                        throw new CustomException("CollectionType", "CollectionType is required");
+                }
 
-					// Validate Collection Type
-					if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null) {
+            validateUniqueFields(collectionPoint);
 
-						cpd.setCollectionType(collectionTypeService.getCollectionType(collectionPoint.getTenantId(),
-								cpd.getCollectionType().getCode(), collectionPointRequest.getRequestInfo()));
+        }
 
-					} else
-						throw new CustomException("CollectionType", "CollectionType is required");
-				}
-			}
+    }
 
-			validateUniqueFields(collectionPoint);
+    private void findDuplicatesInUniqueFields(final CollectionPointRequest collectionPointRequest) {
 
-		}
+        final Map<String, String> assetOrBinIdsMap = new HashMap<>();
+        final Map<String, String> rfidsMap = new HashMap<>();
+        final Map<String, String> nameMap = new HashMap<>();
 
-	}
+        for (final CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
+            if (collectionPoint.getName() != null) {
 
-	private void findDuplicatesInUniqueFields(CollectionPointRequest collectionPointRequest) {
+                if (nameMap.get(collectionPoint.getName()) != null)
+                    throw new CustomException("Name",
+                            "Duplicate names in given collection Points: " + collectionPoint.getName());
 
-		Map<String, String> assetOrBinIdsMap = new HashMap<>();
-		Map<String, String> rfidsMap = new HashMap<>();
-		Map<String, String> nameMap = new HashMap<>();
+                nameMap.put(collectionPoint.getName(), collectionPoint.getName());
 
-		for (CollectionPoint collectionPoint : collectionPointRequest.getCollectionPoints()) {
-			if (collectionPoint.getName() != null) {
+            }
 
-				if (nameMap.get(collectionPoint.getName()) != null)
-					throw new CustomException("Name",
-							"Duplicate names in given collection Points: " + collectionPoint.getName());
+            for (final BinDetails bd : collectionPoint.getBinDetails()) {
 
-				nameMap.put(collectionPoint.getName(), collectionPoint.getName());
+                if (bd.getAssetOrBinId() != null) {
 
-			}
+                    if (assetOrBinIdsMap.get(bd.getAssetOrBinId()) != null)
+                        throw new CustomException("BinId",
+                                "Duplicate BinIds in given Bin details: " + bd.getAssetOrBinId());
 
-			for (BinDetails bd : collectionPoint.getBinDetails()) {
+                    assetOrBinIdsMap.put(bd.getAssetOrBinId(), bd.getAssetOrBinId());
 
-				if (bd.getAssetOrBinId() != null) {
+                }
 
-					if (assetOrBinIdsMap.get(bd.getAssetOrBinId()) != null)
-						throw new CustomException("BinId",
-								"Duplicate BinIds in given Bin details: " + bd.getAssetOrBinId());
+                if (bd.getRfid() != null) {
+                    if (rfidsMap.get(bd.getRfid()) != null)
+                        throw new CustomException("Rfid", "Duplicate RFIDs in given Bin details: " + bd.getRfid());
 
-					assetOrBinIdsMap.put(bd.getAssetOrBinId(), bd.getAssetOrBinId());
+                    rfidsMap.put(bd.getRfid(), bd.getRfid());
 
-				}
+                }
 
-				if (bd.getRfid() != null) {
-					if (rfidsMap.get(bd.getRfid()) != null)
-						throw new CustomException("Rfid", "Duplicate RFIDs in given Bin details: " + bd.getRfid());
+            }
+        }
 
-					rfidsMap.put(bd.getRfid(), bd.getRfid());
+    }
 
-				}
+    private void validateUniqueFields(final CollectionPoint collectionPoint) {
 
-			}
-		}
+        if (collectionPoint.getName() != null)
+            if (!collectionPointRepository.uniqueCheck(collectionPoint.getTenantId(), "name", collectionPoint.getName(),
+                    "code", collectionPoint.getCode()))
+                throw new CustomException("Name",
+                        "The field name must be unique in the system The  value " + collectionPoint.getName()
+                                + " for the field name already exists in the system. Please provide different value ");
 
-	}
+        for (final BinDetails bd : collectionPoint.getBinDetails()) {
 
-	private void validateUniqueFields(CollectionPoint collectionPoint) {
+            if (bd.getAssetOrBinId() != null)
+                if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
+                        bd.getAssetOrBinId(), "collectionPoint", collectionPoint.getCode()))
+                    throw new CustomException("BinId", "The field BinId must be unique in the system The  value "
+                            + bd.getAssetOrBinId()
+                            + " for the field BinId already exists in the system. Please provide different value ");
 
-		if (collectionPoint.getName() != null) {
-			if (!collectionPointRepository.uniqueCheck(collectionPoint.getTenantId(), "name", collectionPoint.getName(),
-					"code", collectionPoint.getCode())) {
+            if (bd.getRfidAssigned() != null && bd.getRfidAssigned())
+                if (bd.getRfid() == null || bd.getRfid().isEmpty())
+                    throw new CustomException("RFID",
+                            "The field RFID Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
-				throw new CustomException("Name",
-						"The field name must be unique in the system The  value " + collectionPoint.getName()
-								+ " for the field name already exists in the system. Please provide different value ");
+            if (bd.getRfid() != null)
+                if (bd.getRfidAssigned() && bd.getRfidAssigned() != null)
+                    if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid(),
+                            "collectionPoint", collectionPoint.getCode()))
+                        throw new CustomException("RFID", "The field RFID must be unique in the system The  value "
+                                + bd.getRfid()
+                                + " for the field RFID already exists in the system. Please provide different value ");
 
-			}
-		}
+        }
+    }
 
-		for (BinDetails bd : collectionPoint.getBinDetails()) {
+    public Pagination<CollectionPoint> search(final CollectionPointSearch collectionPointSearch) {
 
-			if (bd.getAssetOrBinId() != null) {
-				if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "assetOrBinId",
-						bd.getAssetOrBinId(), "collectionPoint", collectionPoint.getCode())) {
+        return collectionPointRepository.search(collectionPointSearch);
+    }
 
-					throw new CustomException("BinId", "The field BinId must be unique in the system The  value "
-							+ bd.getAssetOrBinId()
-							+ " for the field BinId already exists in the system. Please provide different value ");
+    private void setAuditDetails(final CollectionPoint contract, final Long userId) {
 
-				}
-			}
+        if (contract.getAuditDetails() == null)
+            contract.setAuditDetails(new AuditDetails());
 
-			if (bd.getRfidAssigned() != null && bd.getRfidAssigned()) {
+        if (null == contract.getCode() || contract.getCode().isEmpty()) {
+            contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
+            contract.getAuditDetails().setCreatedTime(new Date().getTime());
+        }
 
-				if (bd.getRfid() == null || bd.getRfid().isEmpty()) {
-
-					throw new CustomException("RFID",
-							"The field RFID Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-				}
-
-			}
-
-			if (bd.getRfid() != null) {
-
-				if (bd.getRfidAssigned() && bd.getRfidAssigned() != null) {
-					if (!binDetailsRepository.uniqueCheck(collectionPoint.getTenantId(), "rfid", bd.getRfid(),
-							"collectionPoint", collectionPoint.getCode())) {
-
-						throw new CustomException("RFID", "The field RFID must be unique in the system The  value "
-								+ bd.getRfid()
-								+ " for the field RFID already exists in the system. Please provide different value ");
-
-					}
-				}
-			}
-
-		}
-	}
-
-	public Pagination<CollectionPoint> search(CollectionPointSearch collectionPointSearch) {
-
-		return collectionPointRepository.search(collectionPointSearch);
-	}
-
-	private void setAuditDetails(CollectionPoint contract, Long userId) {
-
-		if (contract.getAuditDetails() == null)
-			contract.setAuditDetails(new AuditDetails());
-
-		if (null == contract.getCode() || contract.getCode().isEmpty()) {
-			contract.getAuditDetails().setCreatedBy(null != userId ? userId.toString() : null);
-			contract.getAuditDetails().setCreatedTime(new Date().getTime());
-		}
-
-		contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
-		contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
-	}
+        contract.getAuditDetails().setLastModifiedBy(null != userId ? userId.toString() : null);
+        contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
+    }
 
 }

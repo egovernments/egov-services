@@ -12,10 +12,10 @@ import lombok.Getter;
 @Getter
 public class EmployeeResponse {
 
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo = null;
+    @JsonProperty("ResponseInfo")
+    private final ResponseInfo responseInfo = null;
 
-	@JsonProperty("Employee")
-	private List<Employee> employees = new ArrayList<Employee>();
+    @JsonProperty("Employee")
+    private final List<Employee> employees = new ArrayList<>();
 
 }

@@ -23,200 +23,191 @@ import org.springframework.stereotype.Service;
 @Service
 public class RouteJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_route";
+    public static final String TABLE_NAME = "egswm_route";
 
-	@Autowired
-	public RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
+    @Autowired
+    public RouteCollectionPointMapJdbcRepository routeCollectionPointMapJdbcRepository;
 
-	@Autowired
-	public CollectionPointJdbcRepository collectionPointJdbcRepository;
+    @Autowired
+    public CollectionPointJdbcRepository collectionPointJdbcRepository;
 
-	@Autowired
-	private CollectionTypeService collectionTypeService;
+    @Autowired
+    private CollectionTypeService collectionTypeService;
 
-	@Autowired
-	private DumpingGroundService dumpingGroundService;
+    @Autowired
+    private DumpingGroundService dumpingGroundService;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<Route> search(RouteSearch searchRequest) {
+    public Pagination<Route> search(final RouteSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), RouteSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), RouteSearch.class);
+        }
 
-		String orderBy = "order by name";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by name";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getCodes() != null) {
-			addAnd(params);
-			params.append("code in (:codes)");
-			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
-		}
+        if (searchRequest.getCodes() != null) {
+            addAnd(params);
+            params.append("code in (:codes)");
+            paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
+        }
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getCode() != null) {
-			addAnd(params);
-			params.append("code =:code");
-			paramValues.put("code", searchRequest.getCode());
-		}
+        if (searchRequest.getCode() != null) {
+            addAnd(params);
+            params.append("code =:code");
+            paramValues.put("code", searchRequest.getCode());
+        }
 
-		if (searchRequest.getName() != null) {
-			addAnd(params);
-			params.append("name =:name");
-			paramValues.put("name", searchRequest.getName());
-		}
+        if (searchRequest.getName() != null) {
+            addAnd(params);
+            params.append("name =:name");
+            paramValues.put("name", searchRequest.getName());
+        }
 
-		if (searchRequest.getCollectionTypeCode() != null) {
-			addAnd(params);
-			params.append("collectionType =:collectionType");
-			paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
-		}
+        if (searchRequest.getCollectionTypeCode() != null) {
+            addAnd(params);
+            params.append("collectionType =:collectionType");
+            paramValues.put("collectionType", searchRequest.getCollectionTypeCode());
+        }
 
-		if (searchRequest.getEndingCollectionPointCode() != null) {
-			addAnd(params);
-			params.append("endingCollectionPoint =:endingCollectionPoint");
-			paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointCode());
-		}
+        if (searchRequest.getEndingCollectionPointCode() != null) {
+            addAnd(params);
+            params.append("endingCollectionPoint =:endingCollectionPoint");
+            paramValues.put("endingCollectionPoint", searchRequest.getEndingCollectionPointCode());
+        }
 
-		if (searchRequest.getEndingDumpingGroundPointCode() != null) {
-			addAnd(params);
-			params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
-			paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointCode());
-		}
+        if (searchRequest.getEndingDumpingGroundPointCode() != null) {
+            addAnd(params);
+            params.append("endingDumpingGroundPoint =:endingDumpingGroundPoint");
+            paramValues.put("endingDumpingGroundPoint", searchRequest.getEndingDumpingGroundPointCode());
+        }
 
-		if (searchRequest.getDistance() != null) {
-			addAnd(params);
-			params.append("distance =:distance");
-			paramValues.put("distance", searchRequest.getDistance());
-		}
+        if (searchRequest.getDistance() != null) {
+            addAnd(params);
+            params.append("distance =:distance");
+            paramValues.put("distance", searchRequest.getDistance());
+        }
 
-		if (searchRequest.getGarbageEstimate() != null) {
-			addAnd(params);
-			params.append("gabageEstimate =:garbageEstimate");
-			paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
-		}
+        if (searchRequest.getGarbageEstimate() != null) {
+            addAnd(params);
+            params.append("gabageEstimate =:garbageEstimate");
+            paramValues.put("garbageEstimate", searchRequest.getGarbageEstimate());
+        }
 
-		Pagination<Route> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<Route> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<Route>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<Route>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(RouteEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<Route> routeList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(RouteEntity.class);
+        final List<RouteEntity> routeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-		List<Route> routeList = new ArrayList<>();
+        final StringBuffer cpCodes = new StringBuffer();
+        RouteCollectionPointMap sr;
+        List<RouteCollectionPointMap> collectionPoints;
+        Route route;
+        CollectionPointSearch cps;
+        Pagination<CollectionPoint> collectionPointList;
+        for (final RouteEntity routeEntity : routeEntities) {
 
-		List<RouteEntity> routeEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+            route = routeEntity.toDomain();
 
-		StringBuffer cpCodes = new StringBuffer();
-		RouteCollectionPointMap sr;
-		List<RouteCollectionPointMap> collectionPoints;
-		Route route;
-		CollectionPointSearch cps;
-		Pagination<CollectionPoint> collectionPointList;
-		for (RouteEntity routeEntity : routeEntities) {
+            if (route.getCollectionType() != null && route.getCollectionType().getCode() != null)
+                route.setCollectionType(collectionTypeService.getCollectionType(route.getTenantId(),
+                        route.getCollectionType().getCode(), new RequestInfo()));
 
-			route = routeEntity.toDomain();
+            if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null) {
+                cps = new CollectionPointSearch();
+                cps.setTenantId(route.getTenantId());
+                cps.setCode(route.getStartingCollectionPoint().getCode());
 
-			if (route.getCollectionType() != null && route.getCollectionType().getCode() != null) {
+                collectionPointList = collectionPointJdbcRepository.search(cps);
 
-				route.setCollectionType(collectionTypeService.getCollectionType(route.getTenantId(),
-						route.getCollectionType().getCode(), new RequestInfo()));
+                if (collectionPointList != null && collectionPointList.getPagedData() != null
+                        && !collectionPointList.getPagedData().isEmpty())
+                    route.setStartingCollectionPoint(collectionPointList.getPagedData().get(0));
 
-			}
+            }
 
-			if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null) {
-				cps = new CollectionPointSearch();
-				cps.setTenantId(route.getTenantId());
-				cps.setCode(route.getStartingCollectionPoint().getCode());
+            if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null) {
 
-				collectionPointList = collectionPointJdbcRepository.search(cps);
+                cps = new CollectionPointSearch();
+                cps.setTenantId(route.getTenantId());
+                cps.setCode(route.getEndingCollectionPoint().getCode());
 
-				if (collectionPointList != null && collectionPointList.getPagedData() != null
-						&& !collectionPointList.getPagedData().isEmpty())
-					route.setStartingCollectionPoint(collectionPointList.getPagedData().get(0));
+                collectionPointList = collectionPointJdbcRepository.search(cps);
 
-			}
+                if (collectionPointList != null && collectionPointList.getPagedData() != null
+                        && !collectionPointList.getPagedData().isEmpty())
+                    route.setEndingCollectionPoint(collectionPointList.getPagedData().get(0));
 
-			if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null) {
+            }
 
-				cps = new CollectionPointSearch();
-				cps.setTenantId(route.getTenantId());
-				cps.setCode(route.getEndingCollectionPoint().getCode());
+            if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getCode() != null)
+                dumpingGroundService.getDumpingGround(route.getTenantId(),
+                        route.getEndingDumpingGroundPoint().getCode(), new RequestInfo());
 
-				collectionPointList = collectionPointJdbcRepository.search(cps);
+            sr = RouteCollectionPointMap.builder().route(routeEntity.getCode()).build();
+            collectionPoints = routeCollectionPointMapJdbcRepository.search(sr);
 
-				if (collectionPointList != null && collectionPointList.getPagedData() != null
-						&& !collectionPointList.getPagedData().isEmpty())
-					route.setEndingCollectionPoint(collectionPointList.getPagedData().get(0));
+            if (collectionPoints != null)
+                for (final RouteCollectionPointMap map : collectionPoints) {
+                    if (cpCodes.length() > 0)
+                        cpCodes.append(",");
+                    cpCodes.append(map.getCollectionPoint());
+                }
 
-			}
+            cps = new CollectionPointSearch();
+            cps.setCodes(cpCodes.toString());
+            collectionPointList = collectionPointJdbcRepository.search(cps);
 
-			if (route.getEndingDumpingGroundPoint() != null && route.getEndingDumpingGroundPoint().getCode() != null) {
+            route.setCollectionPoints(collectionPointList.getPagedData());
+            routeList.add(route);
+        }
 
-				dumpingGroundService.getDumpingGround(route.getTenantId(),
-						route.getEndingDumpingGroundPoint().getCode(), new RequestInfo());
-			}
+        page.setTotalResults(routeList.size());
 
-			sr = RouteCollectionPointMap.builder().route(routeEntity.getCode()).build();
-			collectionPoints = routeCollectionPointMapJdbcRepository.search(sr);
+        page.setPagedData(routeList);
 
-			if (collectionPoints != null)
-				for (RouteCollectionPointMap map : collectionPoints) {
-					if (cpCodes.length() > 0)
-						cpCodes.append(",");
-					cpCodes.append(map.getCollectionPoint());
-				}
-
-			cps = new CollectionPointSearch();
-			cps.setCodes(cpCodes.toString());
-			collectionPointList = collectionPointJdbcRepository.search(cps);
-
-			route.setCollectionPoints(collectionPointList.getPagedData());
-			routeList.add(route);
-		}
-
-		page.setTotalResults(routeList.size());
-
-		page.setPagedData(routeList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

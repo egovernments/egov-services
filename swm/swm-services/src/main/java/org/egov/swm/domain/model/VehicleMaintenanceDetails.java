@@ -1,11 +1,17 @@
 package org.egov.swm.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
-import org.egov.swm.domain.enums.MaintenanceType;
-
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.egov.swm.domain.enums.MaintenanceType;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @Getter

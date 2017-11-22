@@ -12,50 +12,48 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class SanitationStaffTargetMapJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_sst_collectionpoints";
+    public static final String TABLE_NAME = "egswm_sst_collectionpoints";
 
-	@Transactional
-	public void delete(String tenantId, String sanitationStaffTarget) {
-		delete(TABLE_NAME, tenantId, "sanitationStaffTarget", sanitationStaffTarget);
-	}
+    @Transactional
+    public void delete(final String tenantId, final String sanitationStaffTarget) {
+        delete(TABLE_NAME, tenantId, "sanitationStaffTarget", sanitationStaffTarget);
+    }
 
-	public List<SanitationStaffTargetMap> search(SanitationStaffTargetMap searchRequest) {
+    public List<SanitationStaffTargetMap> search(final SanitationStaffTargetMap searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getSanitationStaffTarget() != null) {
-			addAnd(params);
-			params.append("sanitationStaffTarget =:sanitationStaffTarget");
-			paramValues.put("sanitationStaffTarget", searchRequest.getSanitationStaffTarget());
-		}
+        if (searchRequest.getSanitationStaffTarget() != null) {
+            addAnd(params);
+            params.append("sanitationStaffTarget =:sanitationStaffTarget");
+            paramValues.put("sanitationStaffTarget", searchRequest.getSanitationStaffTarget());
+        }
 
-		if (searchRequest.getCollectionPoint() != null && searchRequest.getCollectionPoint() != null) {
-			addAnd(params);
-			params.append("collectionPoint =:collectionPoint");
-			paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
-		}
+        if (searchRequest.getCollectionPoint() != null && searchRequest.getCollectionPoint() != null) {
+            addAnd(params);
+            params.append("collectionPoint =:collectionPoint");
+            paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
+        }
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(SanitationStaffTargetMap.class);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(SanitationStaffTargetMap.class);
-
-		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-
-	}
+    }
 
 }

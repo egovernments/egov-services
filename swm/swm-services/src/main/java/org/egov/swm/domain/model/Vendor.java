@@ -23,46 +23,46 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Vendor {
 
-	@Length(min = 1, max = 256)
-	@JsonProperty("vendorNo")
-	private String vendorNo = null;
+    @Length(min = 1, max = 256)
+    @JsonProperty("vendorNo")
+    private String vendorNo = null;
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("name")
-	private String name = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("name")
+    private String name = null;
 
-	@NotNull
-	@Size(min = 1)
-	@JsonProperty("servicedLocations")
-	private List<Boundary> servicedLocations = null;
+    @NotNull
+    @Size(min = 1)
+    @JsonProperty("servicedLocations")
+    private List<Boundary> servicedLocations = null;
 
-	@NotNull
-	@JsonProperty("registrationNo")
-	private String registrationNo = null;
+    @NotNull
+    @JsonProperty("registrationNo")
+    private String registrationNo = null;
 
-	@Valid
-	@JsonProperty("supplier")
-	private Supplier supplier = null;
+    @Valid
+    @JsonProperty("supplier")
+    private Supplier supplier = null;
 
-	@JsonProperty("agreementDocument")
-	private Document agreementDocument;
+    @JsonProperty("agreementDocument")
+    private Document agreementDocument;
 
-	@NotNull
-	@Size(min = 1)
-	@JsonProperty("servicesOffered")
-	private List<SwmProcess> servicesOffered = null;
+    @NotNull
+    @Size(min = 1)
+    @JsonProperty("servicesOffered")
+    private List<SwmProcess> servicesOffered = null;
 
-	@Length(min = 10, max = 500)
-	@JsonProperty("details")
-	private String details = null;
+    @Length(min = 10, max = 500)
+    @JsonProperty("details")
+    private String details = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
 }

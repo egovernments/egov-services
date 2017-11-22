@@ -10,11 +10,11 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class VehicleTripSheetDetailsSearch extends VehicleTripSheetDetails {
-	private String tripNos;
-	private String regNumber;
-	private String vendorNo;
-	private String routeCode;
-	private String sortBy;
-	private Integer pageSize;
-	private Integer offset;
+    private String tripNos;
+    private String regNumber;
+    private String vendorNo;
+    private String routeCode;
+    private String sortBy;
+    private Integer pageSize;
+    private Integer offset;
 }

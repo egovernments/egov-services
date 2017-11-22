@@ -1,13 +1,19 @@
 package org.egov.swm.web.requests;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.*;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.validation.Valid;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
 
-import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -16,9 +22,9 @@ import java.util.List;
 public class VehicleMaintenanceDetailsRequest {
 
     @Valid
-    @JsonProperty(value="RequestInfo")
+    @JsonProperty(value = "RequestInfo")
     private RequestInfo requestInfo;
 
     @Valid
-    private List<VehicleMaintenanceDetails>  vehicleMaintenanceDetails = new ArrayList<>();
+    private List<VehicleMaintenanceDetails> vehicleMaintenanceDetails = new ArrayList<>();
 }

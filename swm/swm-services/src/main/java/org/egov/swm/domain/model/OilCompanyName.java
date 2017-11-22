@@ -19,19 +19,19 @@ import lombok.Setter;
 @NoArgsConstructor
 public class OilCompanyName {
 
-	@NotNull
-	@Length(min = 1, max = 256)
-	@JsonProperty("code")
-	private String code = null;
+    @NotNull
+    @Length(min = 1, max = 256)
+    @JsonProperty("code")
+    private String code = null;
 
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @NotNull
+    @Length(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@Length(min = 1, max = 128)
-	@JsonProperty("name")
-	private String name = null;
+    @NotNull
+    @Length(min = 1, max = 128)
+    @JsonProperty("name")
+    private String name = null;
 
 }

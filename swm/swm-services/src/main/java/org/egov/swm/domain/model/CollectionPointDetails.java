@@ -19,23 +19,23 @@ import lombok.Setter;
 @NoArgsConstructor
 public class CollectionPointDetails {
 
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@Length(min = 1, max = 128)
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @Length(min = 1, max = 128)
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@NotNull
-	@JsonProperty("collectionType")
-	private CollectionType collectionType = null;
+    @NotNull
+    @JsonProperty("collectionType")
+    private CollectionType collectionType = null;
 
-	@NotNull
-	@JsonProperty("garbageEstimate")
-	private Double garbageEstimate = null;
+    @NotNull
+    @JsonProperty("garbageEstimate")
+    private Double garbageEstimate = null;
 
-	@Length(min = 0, max = 300)
-	@JsonProperty("description")
-	private String description = null;
+    @Length(min = 0, max = 300)
+    @JsonProperty("description")
+    private String description = null;
 
 }

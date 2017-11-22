@@ -48,13 +48,13 @@ import lombok.Setter;
 @Setter
 public class Assignment {
 
-	@JsonProperty("id")
-	private Long id;
+    @JsonProperty("id")
+    private Long id;
 
-	@JsonProperty("position")
-	private Long position;
+    @JsonProperty("position")
+    private Long position;
 
-	@JsonProperty("department")
-	private Long department;
+    @JsonProperty("department")
+    private Long department;
 
 }

@@ -3,7 +3,6 @@ package org.egov.swm.domain.service;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
@@ -48,7 +47,7 @@ public class VehicleFuellingDetailsService {
     private String idGenNameForTrnNumPath;
 
     @Transactional
-    public VehicleFuellingDetailsRequest create(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    public VehicleFuellingDetailsRequest create(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
         validate(vehicleFuellingDetailsRequest);
 
@@ -56,11 +55,10 @@ public class VehicleFuellingDetailsService {
 
         if (vehicleFuellingDetailsRequest.getRequestInfo() != null
                 && vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
-                && null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+                && null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId())
             userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
-        }
 
-        for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+        for (final VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
             setAuditDetails(vfd, userId);
 
@@ -76,23 +74,17 @@ public class VehicleFuellingDetailsService {
     }
 
     @Transactional
-    public VehicleFuellingDetailsRequest update(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    public VehicleFuellingDetailsRequest update(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
         Long userId = null;
 
         if (vehicleFuellingDetailsRequest.getRequestInfo() != null
                 && vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo() != null
-                && null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId()) {
+                && null != vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId())
             userId = vehicleFuellingDetailsRequest.getRequestInfo().getUserInfo().getId();
-        }
 
-        for (VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
-
+        for (final VehicleFuellingDetails vfd : vehicleFuellingDetailsRequest.getVehicleFuellingDetails())
             setAuditDetails(vfd, userId);
-
-            // prepareReceiptCopy(vfd);
-
-        }
 
         validate(vehicleFuellingDetailsRequest);
 
@@ -100,22 +92,12 @@ public class VehicleFuellingDetailsService {
 
     }
 
-    private void prepareReceiptCopy(VehicleFuellingDetails vfd) {
-
-        if (vfd.getReceiptCopy() != null && vfd.getReceiptCopy().getFileStoreId() != null) {
-            vfd.getReceiptCopy().setId(UUID.randomUUID().toString().replace("-", ""));
-            vfd.getReceiptCopy().setTenantId(vfd.getTenantId());
-            vfd.getReceiptCopy().setRefCode(vfd.getTransactionNo());
-            vfd.getReceiptCopy().setAuditDetails(vfd.getAuditDetails());
-        }
-    }
-
-    public Pagination<VehicleFuellingDetails> search(VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
+    public Pagination<VehicleFuellingDetails> search(final VehicleFuellingDetailsSearch vehicleFuellingDetailsSearch) {
 
         return vehicleFuellingDetailsRepository.search(vehicleFuellingDetailsSearch);
     }
 
-    private void validate(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    private void validate(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
         Pagination<RefillingPumpStation> refillingPumpStationList;
         findDuplicatesInUniqueFields(vehicleFuellingDetailsRequest);
@@ -123,7 +105,7 @@ public class VehicleFuellingDetailsService {
         Pagination<Vehicle> vehicleList;
         RefillingPumpStationSearch refillingPumpStationSearch;
 
-        for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
+        for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
 
             if (details.getTypeOfFuel() != null
                     && (details.getTypeOfFuel().getCode() == null || details.getTypeOfFuel().getCode().isEmpty()))
@@ -131,12 +113,9 @@ public class VehicleFuellingDetailsService {
                         "The field FuelType Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
 
             // Validate Fuel Type
-            if (details.getTypeOfFuel() != null) {
-
+            if (details.getTypeOfFuel() != null)
                 details.setTypeOfFuel(fuelTypeService.getFuelType(details.getTenantId(),
                         details.getTypeOfFuel().getCode(), vehicleFuellingDetailsRequest.getRequestInfo()));
-
-            }
 
             if (details.getVehicle() != null
                     && (details.getVehicle().getRegNumber() == null || details.getVehicle().getRegNumber().isEmpty()))
@@ -154,9 +133,8 @@ public class VehicleFuellingDetailsService {
                 if (vehicleList == null || vehicleList.getPagedData() == null || vehicleList.getPagedData().isEmpty())
                     throw new CustomException("Vehicle",
                             "Given Vehicle is invalid: " + details.getVehicle().getRegNumber());
-                else {
+                else
                     details.setVehicle(vehicleList.getPagedData().get(0));
-                }
 
             }
 
@@ -181,25 +159,21 @@ public class VehicleFuellingDetailsService {
                     details.setRefuellingStation(refillingPumpStationList.getPagedData().get(0));
             }
 
-            if (details.getReceiptDate() != null && details.getTransactionDate() != null) {
-
-                if (new Date(details.getReceiptDate()).compareTo(new Date(details.getTransactionDate())) > 0) {
+            if (details.getReceiptDate() != null && details.getTransactionDate() != null)
+                if (new Date(details.getReceiptDate()).compareTo(new Date(details.getTransactionDate())) > 0)
                     throw new CustomException("ReceiptDate",
                             "Given ReceiptDate is invalid: " + new Date(details.getReceiptDate())
                                     + " Receipt date should not be after transaction Date");
-                }
-            }
 
             validateUniqueFields(details);
         }
     }
 
-    private void findDuplicatesInUniqueFields(VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
+    private void findDuplicatesInUniqueFields(final VehicleFuellingDetailsRequest vehicleFuellingDetailsRequest) {
 
-        Map<String, String> receiptNoMap = new HashMap<>();
+        final Map<String, String> receiptNoMap = new HashMap<>();
 
-        for (VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails()) {
-
+        for (final VehicleFuellingDetails details : vehicleFuellingDetailsRequest.getVehicleFuellingDetails())
             if (details.getReceiptNo() != null) {
                 if (receiptNoMap.get(details.getReceiptNo()) != null)
                     throw new CustomException("name",
@@ -208,26 +182,20 @@ public class VehicleFuellingDetailsService {
                 receiptNoMap.put(details.getReceiptNo(), details.getReceiptNo());
             }
 
-        }
-
     }
 
-    private void validateUniqueFields(VehicleFuellingDetails details) {
+    private void validateUniqueFields(final VehicleFuellingDetails details) {
 
-        if (details.getReceiptNo() != null) {
+        if (details.getReceiptNo() != null)
             if (!vehicleFuellingDetailsRepository.uniqueCheck(details.getTenantId(), "receiptNo",
-                    details.getReceiptNo(), "transactionNo", details.getTransactionNo())) {
-
+                    details.getReceiptNo(), "transactionNo", details.getTransactionNo()))
                 throw new CustomException("receiptNo", "The field receiptNo must be unique in the system The  value "
                         + details.getReceiptNo()
                         + " for the field receiptNo already exists in the system. Please provide different value ");
 
-            }
-        }
-
     }
 
-    private void setAuditDetails(VehicleFuellingDetails contract, Long userId) {
+    private void setAuditDetails(final VehicleFuellingDetails contract, final Long userId) {
 
         if (contract.getAuditDetails() == null)
             contract.setAuditDetails(new AuditDetails());
@@ -241,7 +209,7 @@ public class VehicleFuellingDetailsService {
         contract.getAuditDetails().setLastModifiedTime(new Date().getTime());
     }
 
-    private String generateTransactionNumber(String tenantId, RequestInfo requestInfo) {
+    private String generateTransactionNumber(final String tenantId, final RequestInfo requestInfo) {
 
         return idgenRepository.getIdGeneration(tenantId, requestInfo, idGenNameForTrnNumPath);
     }

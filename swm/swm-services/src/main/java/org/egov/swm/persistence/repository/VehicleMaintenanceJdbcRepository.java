@@ -20,130 +20,126 @@ import org.springframework.stereotype.Service;
 @Service
 public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egswm_vehiclemaintenance";
+    public static final String TABLE_NAME = "egswm_vehiclemaintenance";
 
-	@Autowired
-	private VehicleService vehicleService;
+    @Autowired
+    private VehicleService vehicleService;
 
-	public Boolean uniqueCheck(String tenantId, String fieldName, String fieldValue, String uniqueFieldName,
-			String uniqueFieldValue) {
+    public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
+            final String uniqueFieldName,
+            final String uniqueFieldValue) {
 
-		return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
-	}
+        return uniqueCheck(TABLE_NAME, tenantId, fieldName, fieldValue, uniqueFieldName, uniqueFieldValue);
+    }
 
-	public Pagination<VehicleMaintenance> search(VehicleMaintenanceSearch searchRequest) {
+    public Pagination<VehicleMaintenance> search(final VehicleMaintenanceSearch searchRequest) {
 
-		String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
+        String searchQuery = "select * from " + TABLE_NAME + " :condition  :orderby ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        final Map<String, Object> paramValues = new HashMap<>();
+        final StringBuffer params = new StringBuffer();
 
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			validateSortByOrder(searchRequest.getSortBy());
-			validateEntityFieldName(searchRequest.getSortBy(), VehicleMaintenanceSearch.class);
-		}
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
+            validateSortByOrder(searchRequest.getSortBy());
+            validateEntityFieldName(searchRequest.getSortBy(), VehicleMaintenanceSearch.class);
+        }
 
-		String orderBy = "order by code";
-		if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty()) {
-			orderBy = "order by " + searchRequest.getSortBy();
-		}
+        String orderBy = "order by code";
+        if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
+            orderBy = "order by " + searchRequest.getSortBy();
 
-		if (searchRequest.getRegNumber() != null) {
-			addAnd(params);
-			params.append("vehicle in (:vehicle)");
-			paramValues.put("vehicle", searchRequest.getRegNumber());
-		}
+        if (searchRequest.getRegNumber() != null) {
+            addAnd(params);
+            params.append("vehicle in (:vehicle)");
+            paramValues.put("vehicle", searchRequest.getRegNumber());
+        }
 
-		if (searchRequest.getCode() != null) {
-			addAnd(params);
-			params.append("code in (:code)");
-			paramValues.put("code", searchRequest.getCode());
-		}
+        if (searchRequest.getCode() != null) {
+            addAnd(params);
+            params.append("code in (:code)");
+            paramValues.put("code", searchRequest.getCode());
+        }
 
-		if (searchRequest.getCodes() != null) {
-			addAnd(params);
-			params.append("code in(:codes) ");
-			paramValues.put("codes", new ArrayList<String>(Arrays.asList(searchRequest.getCodes().split(","))));
-		}
+        if (searchRequest.getCodes() != null) {
+            addAnd(params);
+            params.append("code in(:codes) ");
+            paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
+        }
 
-		if (searchRequest.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", searchRequest.getTenantId());
-		}
+        if (searchRequest.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", searchRequest.getTenantId());
+        }
 
-		if (searchRequest.getDowntimeforMaintenance() != null) {
-			addAnd(params);
-			params.append("downtimeforMaintenance =:downtimeforMaintenance");
-			paramValues.put("downtimeforMaintenance", searchRequest.getDowntimeforMaintenance());
-		}
+        if (searchRequest.getDowntimeforMaintenance() != null) {
+            addAnd(params);
+            params.append("downtimeforMaintenance =:downtimeforMaintenance");
+            paramValues.put("downtimeforMaintenance", searchRequest.getDowntimeforMaintenance());
+        }
 
-		if (searchRequest.getMaintenanceAfter() != null) {
-			addAnd(params);
-			params.append("maintenanceAfter =:maintenanceAfter");
-			paramValues.put("maintenanceAfter", searchRequest.getMaintenanceAfter());
-		}
+        if (searchRequest.getMaintenanceAfter() != null) {
+            addAnd(params);
+            params.append("maintenanceAfter =:maintenanceAfter");
+            paramValues.put("maintenanceAfter", searchRequest.getMaintenanceAfter());
+        }
 
-		Pagination<VehicleMaintenance> page = new Pagination<>();
-		if (searchRequest.getOffset() != null) {
-			page.setOffset(searchRequest.getOffset());
-		}
-		if (searchRequest.getPageSize() != null) {
-			page.setPageSize(searchRequest.getPageSize());
-		}
+        Pagination<VehicleMaintenance> page = new Pagination<>();
+        if (searchRequest.getOffset() != null)
+            page.setOffset(searchRequest.getOffset());
+        if (searchRequest.getPageSize() != null)
+            page.setPageSize(searchRequest.getPageSize());
 
-		if (params.length() > 0) {
+        if (params.length() > 0)
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+        else
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", "");
 
-		} else
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-			searchQuery = searchQuery.replace(":condition", "");
+        page = (Pagination<VehicleMaintenance>) getPagination(searchQuery, page, paramValues);
+        searchQuery = searchQuery + " :pagination";
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":pagination",
+                "limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
 
-		page = (Pagination<VehicleMaintenance>) getPagination(searchQuery, page, paramValues);
-		searchQuery = searchQuery + " :pagination";
+        final BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleMaintenanceEntity.class);
 
-		searchQuery = searchQuery.replace(":pagination",
-				"limit " + page.getPageSize() + " offset " + page.getOffset() * page.getPageSize());
+        final List<VehicleMaintenance> vehicleMaintenanceList = new ArrayList<>();
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(VehicleMaintenanceEntity.class);
+        final List<VehicleMaintenanceEntity> vehicleMaintenanceEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
 
-		List<VehicleMaintenance> vehicleMaintenanceList = new ArrayList<>();
+        VehicleMaintenance vehicleMaintenance;
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicleList;
 
-		List<VehicleMaintenanceEntity> vehicleMaintenanceEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+        for (final VehicleMaintenanceEntity vehicleMaintenanceEntity : vehicleMaintenanceEntities) {
 
-		VehicleMaintenance vehicleMaintenance;
-		VehicleSearch vehicleSearch;
-		Pagination<Vehicle> vehicleList;
+            vehicleMaintenance = vehicleMaintenanceEntity.toDomain();
 
-		for (VehicleMaintenanceEntity vehicleMaintenanceEntity : vehicleMaintenanceEntities) {
+            if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
+                    && !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
 
-			vehicleMaintenance = vehicleMaintenanceEntity.toDomain();
+                vehicleSearch = new VehicleSearch();
+                vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
+                vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
+                vehicleList = vehicleService.search(vehicleSearch);
 
-			if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-					&& !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
+                if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
+                    vehicleMaintenance.setVehicle(vehicleList.getPagedData().get(0));
 
-				vehicleSearch = new VehicleSearch();
-				vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
-				vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
-				vehicleList = vehicleService.search(vehicleSearch);
+            }
 
-				if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
-					vehicleMaintenance.setVehicle(vehicleList.getPagedData().get(0));
+            vehicleMaintenanceList.add(vehicleMaintenance);
+        }
 
-			}
+        page.setTotalResults(vehicleMaintenanceList.size());
 
-			vehicleMaintenanceList.add(vehicleMaintenance);
-		}
+        page.setPagedData(vehicleMaintenanceList);
 
-		page.setTotalResults(vehicleMaintenanceList.size());
-
-		page.setPagedData(vehicleMaintenanceList);
-
-		return page;
-	}
+        return page;
+    }
 
 }

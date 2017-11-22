@@ -9,30 +9,30 @@ import org.springframework.web.client.RestTemplate;
 
 @Service
 public class BoundaryRepository {
-	private final String boundaryServiceHost;
-	private RestTemplate restTemplate;
+    private final String boundaryServiceHost;
+    private final RestTemplate restTemplate;
 
-	public BoundaryRepository(RestTemplate restTemplate,
-			@Value("${egov.services.boundary.host}") String boundaryServiceHost,
-			@Value("${egov.services.boundary.searchpath}") String boundaryServicePath) {
-		this.restTemplate = restTemplate;
-		this.boundaryServiceHost = boundaryServiceHost.concat(boundaryServicePath);
-	}
+    public BoundaryRepository(final RestTemplate restTemplate,
+            @Value("${egov.services.boundary.host}") final String boundaryServiceHost,
+            @Value("${egov.services.boundary.searchpath}") final String boundaryServicePath) {
+        this.restTemplate = restTemplate;
+        this.boundaryServiceHost = boundaryServiceHost.concat(boundaryServicePath);
+    }
 
-	public Boundary fetchBoundaryByCode(String code, String tenantId) {
-		try {
-			return getBoundaryServiceResponse(this.boundaryServiceHost, code, tenantId).getBoundaries().get(0);
-		} catch (Exception e) {
-			throw new CustomException("Location", "Given Location is invalid: " + code);
-		}
-	}
+    public Boundary fetchBoundaryByCode(final String code, final String tenantId) {
+        try {
+            return getBoundaryServiceResponse(boundaryServiceHost, code, tenantId).getBoundaries().get(0);
+        } catch (final Exception e) {
+            throw new CustomException("Location", "Given Location is invalid: " + code);
+        }
+    }
 
-	private BoundaryResponse getBoundaryServiceResponse(final String url, String code, String tenantId) {
-		try {
-			return restTemplate.getForObject(url, BoundaryResponse.class, code, tenantId);
-		} catch (Exception e) {
-			throw new CustomException("Location", "Given Location is invalid: " + code);
-		}
-	}
+    private BoundaryResponse getBoundaryServiceResponse(final String url, final String code, final String tenantId) {
+        try {
+            return restTemplate.getForObject(url, BoundaryResponse.class, code, tenantId);
+        } catch (final Exception e) {
+            throw new CustomException("Location", "Given Location is invalid: " + code);
+        }
+    }
 
 }

@@ -3,13 +3,9 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
-
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import {ShowFields,UiButton,fileUpload, getInitiatorPosition} from "ui-react-framework";
+import {translate,Api} from 'common-utility';
 import jp from "jsonpath";
-import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
 import $ from "jquery";
 
 var specifications={};
@@ -281,7 +277,7 @@ class actualKpiCreate extends Component {
         // } else {
         //   specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
         // }
-        specifications = require(`../../../framework/specs/perfManagement/master/actualKpiCreate`).default;
+        specifications = require(`../specifications/master/actualKpiCreate.specs`).default;
 
       } catch(e) {
         console.log(e);

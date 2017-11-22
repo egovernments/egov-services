@@ -175,6 +175,7 @@ ReportDefinitions:
     type: singlevaluelist
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=common-masters&masterName=Department|$..code|$..name
     source: lcms
+    wrapper: true
     isMandatory: false
     searchClause : AND lc.departmentname ->> 'code' = $department
   - name: caseStatus

@@ -9,7 +9,7 @@ ReportDefinitions:
   - entity: $.MdmsRes.lcms.court
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantid
     keyOrder: code,name
-    tableName: tbl_court   
+    tableName: tbl_court 
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -205,6 +205,10 @@ ReportDefinitions:
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=caseStatus&tenantId=$tenantid
     keyOrder: code,name
     tableName: tbl_casestatus
+  - entity: $.MdmsRes.common-masters.Department
+    apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid
+    keyOrder: code,name
+    tableName: tbl_department  
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -266,8 +270,9 @@ ReportDefinitions:
   - name: department
     label: reports.lcms.department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=common-masters&masterName=Department|$..code|$..name
     source: lcms
+    wrapper: true
     isMandatory: false
     searchClause : AND lc.departmentname ->> 'code' = $department
   - name: advocate
@@ -297,7 +302,7 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND lc.defendant = $defendant
-  query: select lc.caseno, dept.name as department, (select name from (VALUES tbl_casetype) as casetype (code,name) where casetype.code=lc.casetype::jsonb ->> 'code') as casetype, lc.plantiffName, lc.defendant, (select name from (VALUES tbl_court) as court (code,name) where court.code=lc.courtname::jsonb ->> 'code') as courtname, la.name as advocate,(select name from (VALUES tbl_casestatus) as casestatus (code,name) where casestatus.code=lhd.casestatus::jsonb ->> 'code') as casestatus from egov_lcms_case as lc LEFT OUTER JOIN egov_lcms_hearing_details as lhd ON lc.code = lhd.casecode LEFT OUTER JOIN eg_department as dept ON lc.departmentname ->> 'code' = dept.code LEFT OUTER JOIN egov_lcms_case_advocate as lca ON lc.code = lca.casecode LEFT OUTER JOIN egov_lcms_advocate as la ON lca.advocate::jsonb ->> 'code' = la.code  WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
+  query: select lc.caseno, (select name from (VALUES tbl_department) as departmentdata (code,name) where departmentdata.code= lc.departmentname->>'code')as department, (select name from (VALUES tbl_casetype) as casetype (code,name) where casetype.code=lc.casetype::jsonb ->> 'code') as casetype, lc.plantiffName, lc.defendant, (select name from (VALUES tbl_court) as court (code,name) where court.code=lc.courtname::jsonb ->> 'code') as courtname, (select string_agg(name, ', ') from egov_lcms_advocate where code in( select advocate->>'code' from egov_lcms_case_advocate where casecode='default000195')) as advocate,(select name from (VALUES tbl_casestatus) as casestatus (code,name) where casestatus.code=lc.casestatus::jsonb ->> 'code') as casestatus from egov_lcms_case as lc    WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
 - reportName: CaseDetailReport
   summary: Case Detail Report
   version: 1.0.0
@@ -431,7 +436,7 @@ ReportDefinitions:
   - name: department
     label: reports.lcms.department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND lc.departmentname ->> 'code' = $department

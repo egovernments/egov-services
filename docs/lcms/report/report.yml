@@ -9,9 +9,7 @@ ReportDefinitions:
   - entity: $.MdmsRes.lcms.court
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=court&tenantId=$tenantid
     keyOrder: code,name
-    tableName: tbl_court
-    
-    
+    tableName: tbl_court 
   sourceColumns:
   - name: caseno
     label: reports.lcms.caseNo
@@ -302,7 +300,7 @@ ReportDefinitions:
     isMandatory: false
     source: lcms
     searchClause : AND lc.defendant = $defendant
-  query: select lc.caseno, (select name from (VALUES tbl_department) as department (code,name) where department.code= lc.departmentname->>'code')as department, (select name from (VALUES tbl_casetype) as casetype (code,name) where casetype.code=lc.casetype::jsonb ->> 'code') as casetype, lc.plantiffName, lc.defendant, (select name from (VALUES tbl_court) as court (code,name) where court.code=lc.courtname::jsonb ->> 'code') as courtname, (select string_agg(name, ', ') from egov_lcms_advocate where code in( select advocate->>'code' from egov_lcms_case_advocate where casecode='default000195')) as advocate,(select name from (VALUES tbl_casestatus) as casestatus (code,name) where casestatus.code=lc.casestatus::jsonb ->> 'code') as casestatus from egov_lcms_case as lc    WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
+  query: select lc.caseno, (select name from (VALUES tbl_department) as departmentdata (code,name) where departmentdata.code= lc.departmentname->>'code')as department, (select name from (VALUES tbl_casetype) as casetype (code,name) where casetype.code=lc.casetype::jsonb ->> 'code') as casetype, lc.plantiffName, lc.defendant, (select name from (VALUES tbl_court) as court (code,name) where court.code=lc.courtname::jsonb ->> 'code') as courtname, (select string_agg(name, ', ') from egov_lcms_advocate where code in( select advocate->>'code' from egov_lcms_case_advocate where casecode='default000195')) as advocate,(select name from (VALUES tbl_casestatus) as casestatus (code,name) where casestatus.code=lc.casestatus::jsonb ->> 'code') as casestatus from egov_lcms_case as lc    WHERE lc.caseregistrationdate>=$fromDate and lc.caseregistrationdate<=$toDate
 - reportName: CaseDetailReport
   summary: Case Detail Report
   version: 1.0.0

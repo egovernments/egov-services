@@ -1,3 +1,4 @@
+var flag = 0;
 class EmployeeReport extends React.Component {
 
   constructor(props) {
@@ -66,13 +67,17 @@ class EmployeeReport extends React.Component {
 
   componentDidUpdate(prevProps, prevState)
   {
-      if (prevState.result.length!=this.state.result.length) {
+      if (flag === 1) {
+          flag = 0;
           $('#employeeTable').DataTable({
             dom: 'Bfrtip',
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             language: {
+               "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -97,12 +102,19 @@ class EmployeeReport extends React.Component {
     $('#employeeTable').DataTable().destroy();
 
     try {
+        flag = 1;
         commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId,pageSize:500}, function(err, res) {
           if(res && res.Employee) {
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
                 result : res.Employee
+            })
+          }else {
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                result : []
             })
           }
         });

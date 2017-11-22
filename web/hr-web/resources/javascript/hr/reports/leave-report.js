@@ -136,9 +136,6 @@ class LeaveReport extends React.Component {
           }
         });
       });
-
-
-
     }
 
     componentDidUpdate(prevProps, prevState) {
@@ -149,7 +146,10 @@ class LeaveReport extends React.Component {
           buttons: [
             'copy', 'csv', 'excel', 'pdf', 'print'
           ],
-          ordering: false
+          ordering: false,
+          language: {
+            "emptyTable": "No Records"
+          }
         });
       }
     }
@@ -167,15 +167,22 @@ class LeaveReport extends React.Component {
       if (!this.state.searchSet.dateFrom && this.state.searchSet.dateTo)
         return showError("Please enter From Date");
       try {
+        flag = 1;
         commonApiPost("hr-leave", "leaveapplications", "_leavereport", { ...this.state.searchSet,
           tenantId
         }, function(err, res) {
 
           if (res && res.LeaveApplication) {
-            flag = 1;
+
             _this.setState({
               ..._this.state,
               result: res.LeaveApplication,
+              isSearchClicked: true
+            })
+          }else {
+            _this.setState({
+              ..._this.state,
+              result: [],
               isSearchClicked: true
             })
           }
@@ -274,7 +281,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
-                                                <option value=""></option>
+                                                <option value="">Select Department</option>
                                                 {renderOptions(departments)}
                                             </select>
                                         </div>
@@ -289,7 +296,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
-                                                <option value=""></option>
+                                                <option value="">Select Designation</option>
                                                 {renderOptions(designations)}
                                             </select>
                                         </div>
@@ -316,7 +323,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                                <option value=""></option>
+                                                <option value="">search Employee Type</option>
                                                 {renderOptions(employeeTypes)}
                                             </select>
                                         </div>
@@ -333,7 +340,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="employeeStatus" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}>
-                                                <option value=""></option>
+                                                <option value="">search Employee Status</option>
                                                 {renderOptions(employeeStatuses)}
                                             </select>
                                         </div>
@@ -348,7 +355,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="leaveType" type="text" value={leaveType} onChange={(e) => {handleChange(e, "leaveType")}}>
-                                                <option value=""></option>
+                                                <option value="">Select Leave Type</option>
                                                 {renderOptions(leaveTypes)}
                                             </select>
                                         </div>
@@ -393,7 +400,7 @@ class LeaveReport extends React.Component {
                                         <div className="col-sm-6">
                                         <div className="styled-select">
                                             <select id="leaveStatus" type="text" value={leaveStatus} onChange={(e) => {handleChange(e, "leaveStatus")}}>
-                                                <option value=""></option>
+                                                <option value="">Select Leave Status</option>
                                                 {renderOptions(leaveStatuses)}
                                             </select>
                                         </div>

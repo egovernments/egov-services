@@ -87,7 +87,7 @@ class UpdateMovement extends React.Component {
       var process;
       var transferWithPromotion;
 
-      var _state = {}, count = 9;
+      var _state = {}, count = 10;
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         count--;
@@ -103,6 +103,9 @@ class UpdateMovement extends React.Component {
       });
       getDropdown("assignments_position", function(res) {
         checkCountAndCall("positionList", res);
+      });
+      getDropdown("assignments_position", function(res) {
+        checkCountAndCall("pNameList", res);
       });
       getDropdown("assignments_fund", function(res) {
         checkCountAndCall("fundList", res);
@@ -204,11 +207,8 @@ class UpdateMovement extends React.Component {
           }
         }
       })
+      
 
-      if(this.state.status && this.state.status != "Rejected"){
-      console.log("Disabled called---",this.state.status);
-      $("input,select,textarea").prop("disabled", true);
-    }
 
 
 
@@ -244,7 +244,9 @@ class UpdateMovement extends React.Component {
           $("input,select,textarea").prop("disabled", true);
         }
 
+
         var _this = this;
+
         $('#enquiryPassedDate').datepicker({
             format: 'dd/mm/yyyy',
             autoclose:true,
@@ -296,6 +298,34 @@ class UpdateMovement extends React.Component {
 
     }
 
+    makeAjaxUpload(file, cb) {
+      if (file.constructor == File) {
+        let formData = new FormData();
+        formData.append("jurisdictionId", "ap.public");
+        formData.append("module", "PGR");
+        formData.append("file", file);
+        $.ajax({
+          url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: 'POST',
+          success: function(res) {
+            cb(null, res);
+          },
+          error: function(jqXHR, exception) {
+            cb(jqXHR.responseText || jqXHR.statusText);
+          }
+        });
+      } else {
+        cb(null, {
+          files: [{
+            fileStoreId: file
+          }]
+        });
+      }
+    }
 
 
     handleChange(e, name) {
@@ -398,12 +428,39 @@ class UpdateMovement extends React.Component {
       })
 
     }else if (name === "documents") {
-      this.setState({
-          movement:{
-              ...this.state.movement,
-              documents:e.target.files
+
+      var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+
+      if (e.currentTarget.files.length != 0) {
+        for (var i = 0; i < e.currentTarget.files.length; i++) {
+          //2097152 = 2mb
+          if (e.currentTarget.files[i].size > 2097152 && fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+            $("#documents").val('');
+            return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+          } else if (e.currentTarget.files[i].size > 2097152) {
+            $("#documents").val('');
+            return showError("Maximum file size allowed is 2 MB.");
+          } else if (fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+            $("#documents").val('');
+            return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
           }
-      })
+        }
+
+        this.setState({
+          movement: {
+            ...this.state.movement,
+            documents: e.currentTarget.files
+          }
+        })
+      } else {
+        this.setState({
+          movement: {
+            ...this.state.movement,
+            documents: e.currentTarget.files
+          }
+        })
+      }
+
 
     } else {
       this.setState({
@@ -438,6 +495,83 @@ class UpdateMovement extends React.Component {
         tempInfo.promotionBasis = {id : ""};
         tempInfo.enquiryPassedDate="";
       }
+
+
+
+      if (tempInfo.documents && tempInfo.documents.constructor == FileList) {
+        let counter = tempInfo.documents.length,
+          breakout = 0,
+          docs = [];
+        for (let i = 0, len = tempInfo.documents.length; i < len; i++) {
+          this.makeAjaxUpload(tempInfo.documents[i], function(err, res) {
+            if (breakout == 1) {
+              console.log("breakout", breakout);
+              return;
+            } else if (err) {
+              showError("Error uploding the files. Please contact Administrator");
+              breakout = 1;
+            } else {
+              counter--;
+              docs.push(res.files[0].fileStoreId);
+              console.log("docs", docs);
+              if (counter == 0 && breakout == 0) {
+                tempInfo.documents = docs;
+
+                var body = {
+                  "RequestInfo": requestInfo,
+                  "Movement": [tempInfo]
+                };
+
+                $.ajax({
+                  url: baseUrl + "/hr-employee-movement/movements/" + _this.state.movement.id + "/" + "_update?tenantId=" + tenantId,
+                  type: 'POST',
+                  dataType: 'json',
+                  data: JSON.stringify(body),
+
+                  contentType: 'application/json',
+                  headers: {
+                    'auth-token': authToken
+                  },
+                  success: function(res) {
+
+                    var employee,designation;
+                    console.log("res",res.Movement[0].workflowDetails.assignee);
+                    commonApiPost("hr-employee","employees","_search",{tenantId,positionId:res.Movement[0].workflowDetails.assignee }, function(err, res2) {
+                        if(res && res2.Employee && res2.Employee[0])
+                          employee = res2.Employee[0];
+
+                        employee.assignments.forEach(function(item) {
+                                                if(item.isPrimary)
+                                                  designation = item.designation;
+                                              });
+                        var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList,designation);
+
+                    if(ID === "Submit")
+                    window.location.href=`app/hr/movements/ack-page.html?type=TransferSubmit&owner=${ownerDetails}`;
+                    if(ID === "Approve")
+                    window.location.href=`app/hr/movements/ack-page.html?type=TransferApprove&owner=${ownerDetails}`;
+                    if(ID === "Cancel")
+                    window.location.href=`app/hr/movements/ack-page.html?type=TransferCancel&owner=${ownerDetails}`;
+                    if(ID === "Reject")
+                    window.location.href=`app/hr/movements/ack-page.html?type=TransferReject&owner=${ownerDetails}`;
+                  });
+                  },
+                  error: function(err) {
+                    showError(err);
+
+                  }
+                });
+
+              }
+            }
+          })
+        }
+        // if (breakout == 1)
+        //     return;
+      } else {
+
+
+
 
 
       var body = {
@@ -484,6 +618,7 @@ class UpdateMovement extends React.Component {
 
         }
       });
+    }
     }else {
       showError("Please fill all required feilds");
     }
@@ -673,6 +808,42 @@ class UpdateMovement extends React.Component {
         }
 
 
+
+    const renderFileTr=function(status) {
+      var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+
+      for(var i=0; i<_this.state.movement.documents.length; i++) {
+          return(<tr>
+              <td>${i+1}</td>
+              <td>Document</td>
+              <td>
+                  <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
+                    Download
+                  </a>
+              </td>
+          </tr>);
+      }
+
+    }
+
+    const renderFile=function(status) {
+      if(_this.state.movement && _this.state.movement.documents) {
+      return(
+        <table className="table table-bordered" id="fileTable" style={{"display": "none"}}>
+            <thead>
+                <tr>
+                    <th>Sr. No.</th>
+                    <th>Name</th>
+                    <th>File</th>
+                </tr>
+            </thead>
+            <tbody>
+              {renderFileTr()}
+            </tbody>
+        </table>
+      );
+      }
+    }
 
     return (
       <div>
@@ -893,7 +1064,7 @@ class UpdateMovement extends React.Component {
                                   <select id="positionAssigned" name="positionAssigned" value={positionAssigned}
                                     onChange={(e)=>{  handleChange(e,"positionAssigned")}}required>
                                   <option value="">Select Position</option>
-                                  {renderOption(this.state.positionList)}
+                                  {renderOption(this.state.pNameList)}
                                  </select>
                             </div>
                           </div>
@@ -955,6 +1126,7 @@ class UpdateMovement extends React.Component {
                               <div className="styled-file">
                               <input id="documents" name="documents" type="file"
                                  onChange={(e)=>{handleChange(e,"documents")}} multiple/>
+                                 {renderFile()}
                              </div>
                           </div>
                       </div>

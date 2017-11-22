@@ -129,7 +129,10 @@ class LeaveSummary extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             language: {
+               "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -153,13 +156,19 @@ class LeaveSummary extends React.Component {
     $('#employeeTable').dataTable().fnDestroy();
     var _this = this;
     try {
-        commonApiPost("hr-employee", "employees", "_search", {...this.state.searchSet, tenantId},function(err, res) {
+        flag = 1;
+        commonApiPost("hr-leave", "leaveapplications", "_leavesummaryreport", {...this.state.searchSet, tenantId},function(err, res) {
           if(res) {
-            flag = 1;
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
                 result : res
+            })
+          }else {
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                result : []
             })
           }
         })
@@ -241,7 +250,7 @@ class LeaveSummary extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
-                                            <option value="" ></option>
+                                            <option value="" >Select Department</option>
                                             {renderOptions(departments)}
                                         </select>
                                     </div>
@@ -256,7 +265,7 @@ class LeaveSummary extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
-                                            <option value="" ></option>
+                                            <option value="" >Select Designation</option>
                                             {renderOptions(designations)}
                                         </select>
                                     </div>
@@ -283,7 +292,7 @@ class LeaveSummary extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                            <option value="" ></option>
+                                            <option value="" >Select Employee Type</option>
                                             {renderOptions(employeeTypes)}
                                         </select>
                                     </div>
@@ -300,7 +309,7 @@ class LeaveSummary extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="employeeStatus" value={employeeStatus} onChange={(e) => {handleChange(e, "employeeStatus")}}>
-                                            <option value="" ></option>
+                                            <option value="" >Select Employee Status</option>
                                             {renderOptions(employeeStatuses)}
                                         </select>
                                     </div>
@@ -315,7 +324,7 @@ class LeaveSummary extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="leaveType" value={leaveType} onChange={(e) => {handleChange(e, "leaveType")}}>
-                                            <option value="" ></option>
+                                            <option value="" >Select Leave Type</option>
                                             {renderOptions(leaveTypes)}
                                         </select>
                                     </div>
@@ -340,9 +349,8 @@ class LeaveSummary extends React.Component {
                         </div>
                         <p className="text-danger">{error}</p>
                         <div className="text-center">
+                            <button type="submit" className="btn btn-submit">Search</button>&nbsp;&nbsp;
                             <button type="button" className="btn btn-submit" onClick={(e)=>{this.closeWindow()}}>Close</button>
-                            &nbsp;&nbsp;
-                            <button type="submit" className="btn btn-submit">Search</button>
                         </div>
                     </fieldset>
             </form>

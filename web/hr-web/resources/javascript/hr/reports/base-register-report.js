@@ -83,7 +83,10 @@ class EmployeeReport extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel'
              ],
-             ordering: false
+             ordering: false,
+             language: {
+               "emptyTable": "No Records"
+             }
           });
       }
   }
@@ -116,13 +119,19 @@ class EmployeeReport extends React.Component {
     var _this = this
     var result;
     try {
+        flag = 1;
         result = commonApiPost("hr-employee", "employees", "_baseregisterreport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
           if(res && res.Employee) {
-            flag = 1;
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
                 result : res.Employee
+            })
+          }else {
+            _this.setState({
+              ..._this.state,
+                isSearchClicked: true,
+                result : []
             })
           }
         });

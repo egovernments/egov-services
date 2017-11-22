@@ -60,10 +60,6 @@ class EmployeeReport extends React.Component {
              }
            });
 
-
-
-
-
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -74,7 +70,10 @@ class EmployeeReport extends React.Component {
             buttons: [
                      'copy', 'csv', 'excel', 'pdf', 'print'
              ],
-             ordering: false
+             ordering: false,
+             language: {
+               "emptyTable": "No Records"
+             }
           });
       }
   }

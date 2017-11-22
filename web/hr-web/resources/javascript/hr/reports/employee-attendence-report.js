@@ -265,7 +265,7 @@ class EmployeeAttendence extends React.Component {
                                 <div className="col-sm-6">
                                 <div className="styled-select">
                                     <select id="month" value={month} onChange={(e) => {handleChange(e, "month")}} required>
-                                        <option value=""></option>
+                                        <option value="">Select Month</option>
                                         {renderOptions(months)}
                                     </select>
                                 </div>
@@ -280,7 +280,7 @@ class EmployeeAttendence extends React.Component {
                                 <div className="col-sm-6">
                                 <div className="styled-select">
                                     <select id="year" value={year} onChange={(e) => {handleChange(e, "year")}} required>
-                                        <option value=""></option>
+                                        <option value="">Select Year</option>
                                         {renderOptions(calenderYears)}
                                     </select>
                                 </div>
@@ -297,7 +297,7 @@ class EmployeeAttendence extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
-                                            <option value=""></option>
+                                            <option value="">Select department</option>
                                             {renderOptions(departments)}
                                         </select>
                                     </div>
@@ -312,7 +312,7 @@ class EmployeeAttendence extends React.Component {
                                     <div className="col-sm-6">
                                     <div className="styled-select">
                                         <select id="designationId" value={designationId} onChange={(e) => {handleChange(e, "designationId")}}>
-                                            <option value=""></option>
+                                            <option value="">Select designation</option>
                                             {renderOptions(designations)}
                                         </select>
                                     </div>
@@ -339,7 +339,7 @@ class EmployeeAttendence extends React.Component {
                                 <div className="col-sm-6">
                                 <div className="styled-select">
                                     <select id="employeeType" value={employeeType} onChange={(e) => {handleChange(e, "employeeType")}}>
-                                        <option value=""></option>
+                                        <option value="">Select Employee Type</option>
                                         {renderOptions(employeeTypes)}
                                     </select>
                                 </div>

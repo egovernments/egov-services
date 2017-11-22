@@ -38,7 +38,7 @@ class UpdateMovement extends React.Component {
           designationId: "",
           positionId: ""
         },
-        positionId:"",
+        positionId: "",
         positionList: [],
         departmentList: [],
         designationList: [],
@@ -52,8 +52,8 @@ class UpdateMovement extends React.Component {
         pNameList: [],
         userList: [],
         buttons: [],
-        owner:"",
-        status:""
+        owner: "",
+        status: ""
       }
 
       this.handleChange = this.handleChange.bind(this);
@@ -85,11 +85,12 @@ class UpdateMovement extends React.Component {
       var process;
       var transferWithPromotion;
 
-      var _state = {}, count = 8;
+      var _state = {},
+        count = 9;
       const checkCountAndCall = function(key, res) {
         _state[key] = res;
         count--;
-        if(count == 0)
+        if (count == 0)
           _this.setInitialState(_state);
       }
 
@@ -101,6 +102,9 @@ class UpdateMovement extends React.Component {
       });
       getDropdown("assignments_position", function(res) {
         checkCountAndCall("positionList", res);
+      });
+      getDropdown("assignments_position", function(res) {
+        checkCountAndCall("pNameList", res);
       });
       getDropdown("assignments_fund", function(res) {
         checkCountAndCall("fundList", res);
@@ -120,78 +124,81 @@ class UpdateMovement extends React.Component {
 
 
       $('#enquiryPassedDate, #effectiveFrom').datepicker({
-          format: 'dd/mm/yyyy',
-          autoclose:true,
-          defaultDate: ""
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        defaultDate: ""
       });
       $('#enquiryPassedDate').val("");
       $('#effectiveFrom').val("");
       $('#enquiryPassedDate,#effectiveFrom ').on('changeDate', function(e) {
 
 
-            _this.setState({
-                  movement: {
-                      ..._this.state.movement,
-                      "enquiryPassedDate":$("#enquiryPassedDate").val(),
-                      "effectiveFrom":$("#effectiveFrom").val()
-                  }
-            });
-            if(_this.state.movement.designationAssigned&&_this.state.movement.departmentAssigned){
-              var _designation = _this.state.movement.designationAssigned;
-              var _department = _this.state.movement.departmentAssigned;
-              var _effectiveFrom = _this.state.movement.effectiveFrom;
-                _this.vacantPositionFun(_department,_designation,_effectiveFrom);
-            }
+        _this.setState({
+          movement: {
+            ..._this.state.movement,
+            "enquiryPassedDate": $("#enquiryPassedDate").val(),
+            "effectiveFrom": $("#effectiveFrom").val()
+          }
+        });
+        if (_this.state.movement.designationAssigned && _this.state.movement.departmentAssigned) {
+          var _designation = _this.state.movement.designationAssigned;
+          var _department = _this.state.movement.departmentAssigned;
+          var _effectiveFrom = _this.state.movement.effectiveFrom;
+          _this.vacantPositionFun(_department, _designation, _effectiveFrom);
+        }
 
       });
 
 
-      commonApiPost("hr-employee-movement", "movements", "_search", {tenantId: tenantId,stateId: stateId}, function(err, res) {
+      commonApiPost("hr-employee-movement", "movements", "_search", {
+        tenantId: tenantId,
+        stateId: stateId
+      }, function(err, res) {
         if (res) {
-          if(res.Movement[0]){
+          if (res.Movement[0]) {
             var Movement = res.Movement[0];
 
-            if(!Movement.enquiryPassedDate)
+            if (!Movement.enquiryPassedDate)
               Movement.enquiryPassedDate = "";
 
-            if(!Movement.workflowDetails){
+            if (!Movement.workflowDetails) {
               Movement.workflowDetails = {
                 assignee: "",
                 department: "",
                 designation: ""
               };
             }
-          getCommonMasterById("hr-employee","employees", res.Movement[0].employeeId, function(err, res) {
-              if(res && res.Employee) {
+            getCommonMasterById("hr-employee", "employees", res.Movement[0].employeeId, function(err, res) {
+              if (res && res.Employee) {
                 var obj = res.Employee[0];
                 var ind = 0;
-                if(obj.length > 0) {
-                  obj.map((item,index)=>{
-                        for(var i=0; i<item.assignments.length; i++) {
-                          if([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
-                            ind = i;
-                            break;
-                          }
-                        }
+                if (obj.length > 0) {
+                  obj.map((item, index) => {
+                    for (var i = 0; i < item.assignments.length; i++) {
+                      if ([true, "true"].indexOf(item.assignments[i].isPrimary) > -1) {
+                        ind = i;
+                        break;
+                      }
+                    }
                   });
                 }
                 _this.setState({
-                    ..._this.state,
-                    transferWithPromotion:transferWithPromotion,
-                    movement: Movement,
-                    employee: {
-                      name: obj.name,
-                      code: obj.code,
-                      departmentId:obj.assignments[ind].department,
-                      designationId:obj.assignments[ind].designation,
-                      positionId:obj.assignments[ind].position
-                    }
+                  ..._this.state,
+                  transferWithPromotion: transferWithPromotion,
+                  movement: Movement,
+                  employee: {
+                    name: obj.name,
+                    code: obj.code,
+                    departmentId: obj.assignments[ind].department,
+                    designationId: obj.assignments[ind].designation,
+                    positionId: obj.assignments[ind].position
+                  }
                 })
               }
             });
-            }
           }
-        });
+        }
+      });
 
 
 
@@ -216,8 +223,8 @@ class UpdateMovement extends React.Component {
             _this.setState({
               ..._this.state,
               buttons: _btns.length ? _btns : [],
-              owner:process.owner.id,
-              status : process.status
+              owner: process.owner.id,
+              status: process.status
             })
           }
         }
@@ -226,95 +233,132 @@ class UpdateMovement extends React.Component {
     }
 
 
-    componentDidUpdate(){
-          if(this.state.status && this.state.status != "Rejected"){
-            console.log("Disabled called",this.state.status);
-          $("input,select,textarea").prop("disabled", true);
-        }
+    componentDidUpdate() {
+      if (this.state.status != "Rejected") {
+        console.log("Disabled called", this.state.status);
+        $("input,select,textarea").prop("disabled", true);
       }
+    }
 
-    getUsersFun(departmentId,designationId){
+    getUsersFun(departmentId, designationId) {
       var _this = this;
-      commonApiPost("hr-employee","employees","_search", {tenantId,departmentId, designationId}, function(err, res) {
-          if(res) {
-            _this.setState({
-                ..._this.state,
-                userList:res.Employee
-            })
-          }
-    })
-  }
+      commonApiPost("hr-employee", "employees", "_search", {
+        tenantId,
+        departmentId,
+        designationId
+      }, function(err, res) {
+        if (res) {
+          _this.setState({
+            ..._this.state,
+            userList: res.Employee
+          })
+        }
+      })
+    }
 
-    vacantPositionFun(departmentId,designationId,effectiveFrom){
+    vacantPositionFun(departmentId, designationId, effectiveFrom) {
       var _this = this;
       commonApiPost("hr-masters", "vacantpositions", "_search", {
-          tenantId,
-          departmentId: departmentId,
-          designationId: designationId,
-          asOnDate: effectiveFrom
+        tenantId,
+        departmentId: departmentId,
+        designationId: designationId,
+        asOnDate: effectiveFrom
       }, function(err, res) {
-          if (res) {
-            _this.setState({
-                movement:{
-                    ..._this.state.movement,
-                },pNameList:res.Position
-            })
-          }
+        if (res) {
+          _this.setState({
+            movement: {
+              ..._this.state.movement,
+            },
+            pNameList: res.Position
+          })
+        }
       });
 
     }
 
-    handleChange(e,name) {
+    makeAjaxUpload(file, cb) {
+      if (file.constructor == File) {
+        let formData = new FormData();
+        formData.append("jurisdictionId", "ap.public");
+        formData.append("module", "PGR");
+        formData.append("file", file);
+        $.ajax({
+          url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: 'POST',
+          success: function(res) {
+            cb(null, res);
+          },
+          error: function(jqXHR, exception) {
+            cb(jqXHR.responseText || jqXHR.statusText);
+          }
+        });
+      } else {
+        cb(null, {
+          files: [{
+            fileStoreId: file
+          }]
+        });
+      }
+    }
+
+
+    handleChange(e, name) {
       var _this = this;
       switch (name) {
         case "designationAssigned":
-          if(this.state.movement.departmentAssigned&&this.state.movement.effectiveFrom){
+          if (this.state.movement.departmentAssigned && this.state.movement.effectiveFrom) {
             var _department = this.state.movement.departmentAssigned;
             var _date = this.state.movement.effectiveFrom;
-            _this.vacantPositionFun(_department,e.target.value,_date);
+            _this.vacantPositionFun(_department, e.target.value, _date);
           }
           break;
-          case "departmentAssigned":
-          if(this.state.movement.designationAssigned&&this.state.movement.effectiveFrom){
+        case "departmentAssigned":
+          if (this.state.movement.designationAssigned && this.state.movement.effectiveFrom) {
             var _designation = this.state.movement.designationAssigned;
             var _date = this.state.movement.effectiveFrom;
-              _this.vacantPositionFun(e.target.value,_designation,_date);
+            _this.vacantPositionFun(e.target.value, _designation, _date);
           }
           break;
-          case "department":
+        case "department":
           _this.state.movement.workflowDetails.assignee = "";
-          if(this.state.movement.workflowDetails.designation){
+          if (this.state.movement.workflowDetails.designation) {
             var _designation = this.state.movement.workflowDetails.designation;
-            _this.getUsersFun(e.target.value,_designation);
+            _this.getUsersFun(e.target.value, _designation);
           }
           break;
-          case "designation":
+        case "designation":
           _this.state.movement.workflowDetails.assignee = "";
-          if(this.state.movement.workflowDetails.department){
+          if (this.state.movement.workflowDetails.department) {
             var _department = this.state.movement.workflowDetails.department;
-            _this.getUsersFun(_department,e.target.value);
+            _this.getUsersFun(_department, e.target.value);
           }
           break;
 
       }
 
-      if(name === "promotionBasis"){
+      if (name === "promotionBasis") {
         this.setState({
-            movement:{
-                ...this.state.movement,
-                promotionBasis:{id:e.target.value}
+          movement: {
+            ...this.state.movement,
+            promotionBasis: {
+              id: e.target.value
             }
+          }
         })
-      }else if (name === "department") {
+      } else if (name === "department") {
 
         this.setState({
-            movement:{
-                ...this.state.movement,
-                workflowDetails:{
-                  ...this.state.movement.workflowDetails,
-                  department : e.target.value
-                }
+          movement: {
+            ...this.state.movement,
+            workflowDetails: {
+              ...this.state.movement.workflowDetails,
+              department: e.target.value
             }
+          }
         })
 
         // getCommonMasterById("hr-employee","employees", e.target.value, function(err, res) {
@@ -328,47 +372,72 @@ class UpdateMovement extends React.Component {
         //           }
         //         })
 
-      }else if (name === "designation") {
+      } else if (name === "designation") {
         this.setState({
-            movement:{
-                ...this.state.movement,
-                workflowDetails:{
-                  ...this.state.movement.workflowDetails,
-                  designation : e.target.value
-                }
+          movement: {
+            ...this.state.movement,
+            workflowDetails: {
+              ...this.state.movement.workflowDetails,
+              designation: e.target.value
             }
+          }
         })
 
-      }else if (name === "assignee") {
+      } else if (name === "assignee") {
         this.setState({
-            movement:{
-                ...this.state.movement,
-                workflowDetails:{
-                  ...this.state.movement.workflowDetails,
-                  assignee : e.target.value
-                }
+          movement: {
+            ...this.state.movement,
+            workflowDetails: {
+              ...this.state.movement.workflowDetails,
+              assignee: e.target.value
             }
+          }
         })
 
-      }else if (name === "documents") {
-        this.setState({
-            movement:{
-                ...this.state.movement,
-                documents:e.target.files
-            }
-        })
+      } else if (name === "documents") {
 
-      }else {
-        this.setState({
-            movement:{
-                ...this.state.movement,
-                [name]:e.target.value
+        var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+
+        if (e.currentTarget.files.length != 0) {
+          for (var i = 0; i < e.currentTarget.files.length; i++) {
+            //2097152 = 2mb
+            if (e.currentTarget.files[i].size > 2097152 && fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+              $("#documents").val('');
+              return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+            } else if (e.currentTarget.files[i].size > 2097152) {
+              $("#documents").val('');
+              return showError("Maximum file size allowed is 2 MB.");
+            } else if (fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+              $("#documents").val('');
+              return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
             }
+          }
+
+          this.setState({
+            movement: {
+              ...this.state.movement,
+              documents: e.currentTarget.files
+            }
+          })
+        } else {
+          this.setState({
+            movement: {
+              ...this.state.movement,
+              documents: e.currentTarget.files
+            }
+          })
+        }
+
+      } else {
+        this.setState({
+          movement: {
+            ...this.state.movement,
+            [name]: e.target.value
+          }
         })
       }
 
     }
-
 
 
     close() {
@@ -378,60 +447,144 @@ class UpdateMovement extends React.Component {
 
     handleProcess(e) {
       e.preventDefault();
-      if($('#update-promotion').valid()){
-      var ID = e.target.id, _this = this;
-      var stateId = getUrlVars()["stateId"];
-      var tempInfo = Object.assign({}, _this.state.movement);
-      tempInfo.workflowDetails = {"action" : ID};
+      if ($('#update-promotion').valid()) {
+        var ID = e.target.id,
+          _this = this;
+        var stateId = getUrlVars()["stateId"];
+        var tempInfo = Object.assign({}, _this.state.movement);
+        tempInfo.workflowDetails = {
+          "action": ID
+        };
 
-      var body = {
-        "RequestInfo": requestInfo,
-        "Movement": [tempInfo]
-      };
+        if (tempInfo.documents && tempInfo.documents.constructor == FileList) {
+          let counter = tempInfo.documents.length,
+            breakout = 0,
+            docs = [];
+          for (let i = 0, len = tempInfo.documents.length; i < len; i++) {
+            this.makeAjaxUpload(tempInfo.documents[i], function(err, res) {
+              if (breakout == 1) {
+                console.log("breakout", breakout);
+                return;
+              } else if (err) {
+                showError("Error uploding the files. Please contact Administrator");
+                breakout = 1;
+              } else {
+                counter--;
+                docs.push(res.files[0].fileStoreId);
+                console.log("docs", docs);
+                if (counter == 0 && breakout == 0) {
+                  tempInfo.documents = docs;
 
-      $.ajax({
-        url: baseUrl + "/hr-employee-movement/movements/" + _this.state.movement.id + "/" + "_update?tenantId=" + tenantId,
-        type: 'POST',
-        dataType: 'json',
-        data: JSON.stringify(body),
 
-        contentType: 'application/json',
-        headers: {
-          'auth-token': authToken
-        },
-        success: function(res) {
-          console.log("res",res.Movement[0].workflowDetails.assignee);
-          var employee,designation;
-          commonApiPost("hr-employee","employees","_search",{tenantId,positionId:res.Movement[0].workflowDetails.assignee }, function(err, res2) {
-              if(res2 && res2.Employee && res2.Employee[0])
-                employee = res2.Employee[0];
+                  var body = {
+                    "RequestInfo": requestInfo,
+                    "Movement": [tempInfo]
+                  };
 
-              employee.assignments.forEach(function(item) {
-                                      if(item.isPrimary)
-                                        designation = item.designation;
-                                    });
-              var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList,designation);
+                  $.ajax({
+                    url: baseUrl + "/hr-employee-movement/movements/" + _this.state.movement.id + "/" + "_update?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(body),
 
-          if(ID === "Submit")
-          window.location.href=`app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}`;
-          if(ID === "Approve")
-          window.location.href=`app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}`;
-          if(ID === "Cancel")
-          window.location.href=`app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}`;
-          if(ID === "Reject")
-          window.location.href=`app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}`;
-        });
-        },
-        error: function(err) {
-          showError(err);
+                    contentType: 'application/json',
+                    headers: {
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+                      console.log("res", res.Movement[0].workflowDetails.assignee);
+                      var employee, designation;
+                      commonApiPost("hr-employee", "employees", "_search", {
+                        tenantId,
+                        positionId: res.Movement[0].workflowDetails.assignee
+                      }, function(err, res2) {
+                        if (res2 && res2.Employee && res2.Employee[0])
+                          employee = res2.Employee[0];
 
+                        employee.assignments.forEach(function(item) {
+                          if (item.isPrimary)
+                            designation = item.designation;
+                        });
+                        var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
+
+                        if (ID === "Submit")
+                          window.location.href = `app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}`;
+                        if (ID === "Approve")
+                          window.location.href = `app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}`;
+                        if (ID === "Cancel")
+                          window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}`;
+                        if (ID === "Reject")
+                          window.location.href = `app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}`;
+                      });
+                    },
+                    error: function(err) {
+                      showError(err);
+
+                    }
+                  });
+
+                }
+              }
+            })
+          }
+          // if (breakout == 1)
+          //     return;
+        } else {
+
+          var body = {
+            "RequestInfo": requestInfo,
+            "Movement": [tempInfo]
+          };
+
+          $.ajax({
+            url: baseUrl + "/hr-employee-movement/movements/" + _this.state.movement.id + "/" + "_update?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(body),
+
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function(res) {
+              console.log("res", res.Movement[0].workflowDetails.assignee);
+              var employee, designation;
+              commonApiPost("hr-employee", "employees", "_search", {
+                tenantId,
+                positionId: res.Movement[0].workflowDetails.assignee
+              }, function(err, res2) {
+                if (res2 && res2.Employee && res2.Employee[0])
+                  employee = res2.Employee[0];
+
+                employee.assignments.forEach(function(item) {
+                  if (item.isPrimary)
+                    designation = item.designation;
+                });
+                var ownerDetails = employee.name + " - " + employee.code + " - " + getNameById(_this.state.designationList, designation);
+
+                if (ID === "Submit")
+                  window.location.href = `app/hr/movements/ack-page.html?type=PromotionSubmit&owner=${ownerDetails}`;
+                if (ID === "Approve")
+                  window.location.href = `app/hr/movements/ack-page.html?type=PromotionApprove&owner=${ownerDetails}`;
+                if (ID === "Cancel")
+                  window.location.href = `app/hr/movements/ack-page.html?type=PromotionCancel&owner=${ownerDetails}`;
+                if (ID === "Reject")
+                  window.location.href = `app/hr/movements/ack-page.html?type=PromotionReject&owner=${ownerDetails}`;
+              });
+            },
+            error: function(err) {
+              showError(err);
+
+            }
+          });
         }
-      });
-    }else {
-      showError("Please fill all required feilds");
-    }
+      } else {
+        showError("Please fill all required feilds");
+      }
 
     }
+
+
     render() {
 
         let {handleChange,handleChangeThreeLevel,handleProcess}=this;
@@ -565,6 +718,45 @@ class UpdateMovement extends React.Component {
 
 
             }
+
+
+            const renderFileTr=function(status) {
+              var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
+
+              for(var i=0; i<_this.state.movement.documents.length; i++) {
+                  return(<tr>
+                      <td>${i+1}</td>
+                      <td>Document</td>
+                      <td>
+                          <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
+                            Download
+                          </a>
+                      </td>
+                  </tr>);
+              }
+
+            }
+
+            const renderFile=function(status) {
+              if(_this.state.movement && _this.state.movement.documents) {
+              return(
+                <table className="table table-bordered" id="fileTable" style={{"display": "none"}}>
+                    <thead>
+                        <tr>
+                            <th>Sr. No.</th>
+                            <th>Name</th>
+                            <th>File</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                      {renderFileTr()}
+                    </tbody>
+                </table>
+              );
+              }
+            }
+
+
 
 
     return (
@@ -818,6 +1010,7 @@ class UpdateMovement extends React.Component {
                             <div className="styled-file">
                             <input id="documents" name="documents" type="file"
                                onChange={(e)=>{handleChange(e,"documents")}} multiple/>
+                               {renderFile()}
                            </div>
                         </div>
                     </div>

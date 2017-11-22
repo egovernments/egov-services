@@ -174,19 +174,35 @@ serviceMaps:
    fromTopic: works-offlinestatus-update-validated
    isTransaction: true
    queryMaps:   
-    - query: UPDATE egw_offlinestatus SET statusdate= ?, remarks=?, lastModifiedBy=?, lastModifiedTime=?  WHERE id = ? AND tenantId = ?;
+    - query: INSERT INTO egw_offlinestatus(
+            id, objecttype, objectnumber, remarks, statusdate, status, createdby, 
+            createdtime, tenantid,referencenumber, lastModifiedBy, lastModifiedTime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET statusdate= EXCLUDED.statusdate, remarks=EXCLUDED.remarks, lastModifiedBy=EXCLUDED.lastModifiedBy, lastModifiedTime=EXCLUDED.lastModifiedTime;
       basePath: $.offlineStatuses.*
       jsonMaps:
          
-       - jsonPath: $.offlineStatuses.*.statusDate
-
+       - jsonPath: $.offlineStatuses.*.id
+       
+       - jsonPath: $.offlineStatuses.*.objectType
+         
+       - jsonPath: $.offlineStatuses.*.objectNumber
+       
        - jsonPath: $.offlineStatuses.*.remarks
+
+       - jsonPath: $.offlineStatuses.*.statusDate
+         dbType: LONG
+         
+       - jsonPath: $.offlineStatuses.*.status
+       
+       - jsonPath: $.offlineStatuses.*.auditDetails.createdBy
+       
+       - jsonPath: $.offlineStatuses.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.offlineStatuses.*.tenantId
+
+       - jsonPath: $.offlineStatuses.*.referenceNumber
 
        - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedBy
        
        - jsonPath: $.offlineStatuses.*.auditDetails.lastModifiedTime
          dbType: LONG
-
-       - jsonPath: $.offlineStatuses.*.id
-       
-       - jsonPath: $.offlineStatuses.*.tenantId

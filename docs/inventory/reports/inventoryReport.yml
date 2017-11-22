@@ -93,12 +93,28 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND mat.name = $materialName
 
-  query:  SELECT matrcpt.financialyear as financialyear,matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,mat.name as materialname,matrcpt.receiptType as materialtypename,matrcptdtl.uomno as uom,
-          matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks FROM materialreceipt matrcpt,(VALUES tbl_material) as mat (code, name, tenantid),
-          materialreceiptdetail matrcptdtl WHERE matrcpt.financialyear = $financialYear AND matrcpt.receivingstore = $storeName AND matrcpt.tenantid= $tenantid AND matrcpt.tenantid=matrcptdtl.tenantid
-          AND matrcpt.mrnnumber = matrcptdtl.mrnnumber And mat.tenantid=matrcpt.tenantid And mat.code = matrcptdtl.material
-
-
+  query:  SELECT matrcpt.financialyear as financialyear,
+          store.name as storeName,
+          matrcptdtl.material as materialcode,
+          mat.name as materialname,
+          matrcpt.receiptType as materialtypename,
+          matrcptdtl.uomno as uom,
+          matrcptdtl.receivedqty as qty,
+          matrcptdtl.unitrate as rate,
+          (matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,
+          matrcptdtl.remarks as remarks 
+          FROM materialreceipt matrcpt,
+          (VALUES tbl_material) as mat (code, name, tenantid),
+          materialreceiptdetail matrcptdtl , store store 
+          WHERE matrcpt.financialyear = $financialYear 
+          AND matrcpt.receivingstore =  store.code
+          AND matrcpt.receivingstore = $storeName 
+          and store.tenantid = matrcpt.tenantid
+          AND matrcpt.tenantid = matrcptdtl.tenantid
+          AND mat.tenantid = matrcpt.tenantid 
+          AND matrcpt.tenantid = $tenantid 
+          AND matrcpt.mrnnumber = matrcptdtl.mrnnumber 
+          AND mat.code = matrcptdtl.material
 
 #  Supplier Report
 - reportName: supplierreport

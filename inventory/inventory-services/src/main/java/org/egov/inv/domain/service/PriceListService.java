@@ -143,7 +143,7 @@ public class PriceListService extends DomainService {
 								PriceListDetailsSearchRequest priceListDetailsSearchRequest = new PriceListDetailsSearchRequest();
 								priceListDetailsSearchRequest.setPriceList(priceList.getId());
 								priceListDetailsSearchRequest.setActive(true);
-								priceListDetailsSearchRequest.setIsDeleted(false);
+								priceListDetailsSearchRequest.setDeleted(false);
 								
 								List<PriceListDetails> oldPriceListDetails = priceListDetailsJdbcRepository.search(priceListDetailsSearchRequest).getPagedData();
 								int actualOldCount = oldPriceListDetails.size();

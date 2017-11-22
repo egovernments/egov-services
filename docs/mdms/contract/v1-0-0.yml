@@ -11,7 +11,7 @@ basePath: '/mdms/v1/[API endpoint]'
 paths:
   /_search:
     post:
-      summary: Get list of masters for a perticulare module and tenantId.
+      summary: Get list of masters for a particular module and tenantId.
       description: Get list of masters for a perticulare module and tenantId.
       parameters:
         - name: MdmsCriteriaReq
@@ -27,6 +27,29 @@ paths:
           description: Designation created sucessfully.
           schema:
             $ref: '#/definitions/MdmsResponse'
+        '400':
+          description: Invalid input.
+          schema:
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+            
+  /_create:
+    post:
+      summary: Creates/Updates master data on github.
+      description: Creates/Updates the module master data json files on the github through UI input.
+      parameters:
+        - name: MDMSCreateRequest
+          in: body
+          description: Details of the masterdata that is to be created/updated on github.
+          required: true
+          schema:
+            $ref: '#/definitions/MDMSCreateRequest'
+      tags:
+        - MDMS
+      responses:
+        '201':
+          description: Designation created sucessfully.
+          schema:
+            $ref: '#/definitions/MdmsCreateResponse'
         '400':
           description: Invalid input.
           schema:
@@ -108,5 +131,55 @@ definitions:
           description: array of masters
           items:
             type: object
+            
+  MDMSCreateRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
 
-    
+      MasterMetaData:
+        $ref: '#/definitions/MasterMetaData'
+        
+  MdmsCreateResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+        
+      Data:
+        type: object
+        description: content written on the file
+       
+  MasterMetaData:
+    type: object
+    properties:
+      tenantId:
+        description: Unique id for for a tenant.
+        type: string
+        minLength: 1
+        maxLength: 100
+        
+      filePath:
+        description: file path on git that is to be created/updated.
+        type: string
+        minLength: 1
+        maxLength: 1000
+        
+      masterName:
+        description: Master name to be created/updated.
+        type: string
+        minLength: 1
+        maxLength: 100
+        
+      masterData:
+        description: content of be written on the file.
+        type: object
+      
+    required:
+      - tenantId
+      - filePath
+      - masterName
+      - masterData
+      
+

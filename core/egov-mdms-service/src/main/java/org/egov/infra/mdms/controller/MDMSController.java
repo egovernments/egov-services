@@ -8,7 +8,10 @@ import javax.validation.Valid;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.mdms.service.MDMSService;
+import org.egov.infra.mdms.utils.ResponseInfoFactory;
+import org.egov.mdms.model.MDMSCreateRequest;
 import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCreateResponse;
 import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
@@ -33,6 +36,9 @@ public class MDMSController {
 
 	@Autowired
 	private MDMSService mdmsService;
+	
+	@Autowired
+	private ResponseInfoFactory responseInfoFactory;
 
 	@PostMapping("_search")
 	@ResponseBody
@@ -46,6 +52,21 @@ public class MDMSController {
 		MdmsResponse mdmsResponse = new MdmsResponse();
 		mdmsResponse.setMdmsRes(response);
 		return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
+
+		
+	}
+	
+	@PostMapping("_create")
+	@ResponseBody
+	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) {
+		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
+		Object response = null;
+		//response = mdmsService.getMaster(mdmsCriteriaReq);
+		MdmsCreateResponse mdmsCreateResponse = new MdmsCreateResponse();
+		mdmsCreateResponse.setData(response);
+		mdmsCreateResponse.setResponseInfo(responseInfoFactory.
+				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
+		return new ResponseEntity<>(mdmsCreateResponse, HttpStatus.OK);
 
 		
 	}

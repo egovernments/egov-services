@@ -41,7 +41,7 @@ var dat = {
           "label": "inventory.financialYear"
         },
         {
-          "label": "inventory.store"
+          "label": "inventory.store.name"
         },
         {
           "label": "inventory.mrnNumber"
@@ -520,29 +520,31 @@ var dat = {
                      ],
                      "values":[
 
-               {
+                {
                 "name":"material",
-                 "pattern":"",
-                 "type":"singleValueList",
-                 "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
-                 "isDisabled":true,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
-                 "depedants":[
-                      {
-                         "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                         "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
-                      }
-                    ]
-               },
-               {
-                  "name":"uom",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
                   "pattern":"",
                   "type":"singleValueList",
-                  "isDisabled":true,
-                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
-               },
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
+                 "isRequired":true,
+                 "isDisabled":false,
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "depedants":[
+                     {
+                         "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
+                          "type":"textField",
+                          "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
+                       }
+                    ]
+                },
+                {
+                   "name":"uom",
+                   "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
+                   "pattern":"",
+                   "type":"singleValueList",
+                   "isRequired":true,
+                   "isDisabled":false,
+                    "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+                },
 
                {
                   "name":"receivedQty",

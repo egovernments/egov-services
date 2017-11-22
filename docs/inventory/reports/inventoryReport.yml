@@ -73,7 +73,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
     wrapper: true
@@ -81,7 +81,7 @@ ReportDefinitions:
   - name: materialTypeName
     label: inventory.material.materialtype
     type: singlevaluelist
-    pattern: 'list://OPENING BALANCE:OPENING BALANCE,MISCELLANEOUS RECEIPT:MISCELLANEOUS RECEIPT,PURCHASE RECEIPT:PURCHASE RECEIPT,INWARD RECEIPT:INWARD RECEIPT'
+    pattern: 'list://OPENING BALANCE:OPENING BALANCE'
     source: materialReceipt
     isMandatory: false
     searchClause: AND matrcpt.receiptType = $materialTypeName

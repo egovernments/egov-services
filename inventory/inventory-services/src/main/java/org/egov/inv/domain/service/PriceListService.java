@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -130,6 +131,7 @@ public class PriceListService extends DomainService {
 
 		try {
 			validate(priceListRequest.getPriceLists(), Constants.ACTION_UPDATE);
+			List<String> ids=new ArrayList<String>();
 			priceListRequest.getPriceLists().stream().forEach(priceList -> {
 								priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
 								priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
@@ -179,16 +181,17 @@ public class PriceListService extends DomainService {
 										}
 										priceListDetailsIdList.remove(0);
 									}
+									ids.add(pldl.getId());
 								}
 								
-								for(PriceListDetails pld:oldPriceListDetails){
-									pld.setIsDeleted(true);
-									priceList.getPriceListDetails().add(pld);
-								}
+//								for(PriceListDetails pld:oldPriceListDetails){
+//									pld.setIsDeleted(true);
+//									priceList.getPriceListDetails().add(pld);
+//								}
 							});
 
 			kafkaQue.send(updateTopic, updateKey, priceListRequest);
-
+			priceListDetailsJdbcRepository.markDeleted(ids,tenantId,"pricelistdetails","pricelist",priceListRequest.getPriceLists().get(0).getId());
 			PriceListResponse response = new PriceListResponse();
 			response.setResponseInfo(getResponseInfo(priceListRequest
 					.getRequestInfo()));

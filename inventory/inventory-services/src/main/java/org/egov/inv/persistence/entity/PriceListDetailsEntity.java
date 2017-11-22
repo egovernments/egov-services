@@ -40,7 +40,7 @@ public class PriceListDetailsEntity {
     
     private Boolean active;
     
-    private Boolean isDeleted;
+    private Boolean deleted;
     
     private String tenantId;
 

@@ -50,8 +50,8 @@ public class PriceListDetails   {
   @JsonProperty("active")
   private Boolean active = null;
 
-  @JsonProperty("isDeleted")
-  private Boolean isDeleted = null;
+  @JsonProperty("deleted")
+  private Boolean deleted = null;
   
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -236,24 +236,24 @@ public class PriceListDetails   {
     this.active = active;
   }
   
-  public PriceListDetails isDeleted(Boolean isDeleted) {
-	    this.isDeleted = isDeleted;
+  public PriceListDetails deleted(Boolean deleted) {
+	    this.deleted = deleted;
 	    return this;
 	  }
 
   /**
    * Delete flag of the material in the system
-   * @return isDeleted
+   * @return deleted
   **/
   @ApiModelProperty(value = "Delete flag of the material in the system")
 
 
-  public Boolean getIsDeleted() {
-    return isDeleted;
+  public Boolean getDeleted() {
+    return deleted;
   }
 
-  public void setIsDeleted(Boolean isDeleted) {
-    this.isDeleted = isDeleted;
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
   }
 
   public PriceListDetails auditDetails(AuditDetails auditDetails) {

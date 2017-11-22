@@ -86,12 +86,12 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
         	paramValues.put("active", priceListDetailsSearchRequest.getActive());
         }
         
-        if (priceListDetailsSearchRequest.getIsDeleted()!=null) {
+        if (priceListDetailsSearchRequest.getDeleted()!=null) {
         	if (params.length() > 0) {
         		params.append(" and ");
         	}
-        	params.append("isDeleted =:isDeleted");
-        	paramValues.put("isDeleted", priceListDetailsSearchRequest.getIsDeleted());
+        	params.append("deleted =:deleted");
+        	paramValues.put("deleted", priceListDetailsSearchRequest.getDeleted());
         }
         
         Pagination<PriceListDetails> page = new Pagination<>();

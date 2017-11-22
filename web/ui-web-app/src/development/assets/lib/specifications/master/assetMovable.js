@@ -118,17 +118,7 @@ var dat = {
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
-					// 		"defaultValue": [  {
-					// 		"key": "ACQUIRED",
-					// 		"value": "ACQUIRED"
-					// 	},  {
-					// 		"key": "CONSTRUCTION",
-					// 		"value": "CONSTRUCTION"
-					// 	},  {
-					// 		"key": "PURCHASE",
-					// 		"value": "PURCHASE"
-					// 	}
-					// ]
+							"isStateLevel":true
 				},
 				{
 					"name": "FromWhomAcquired",
@@ -882,11 +872,12 @@ var dat = {
 							"label": "ac.create.Mode.of.Acquisition",
 							"pattern": "",
 							"type": "singleValueList",
-							"url": "",
+							"url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
+							"isStateLevel":true
 						},
 						{
 							"name": "FromWhomAcquired",
@@ -997,7 +988,8 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"isComma": true
 					},
           {
             "name": "AnticipatedLifeOfAsset",
@@ -1045,7 +1037,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true
           },
           {
             "name": "TitleDocumentsAvailable",
@@ -1081,7 +1074,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true
           },
           {
             "name": "SecurityDepositRealized",
@@ -1093,7 +1087,8 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"isComma": true 
           },
 					{
             "name": "DefectLiabilityPeriod",
@@ -1485,7 +1480,8 @@ var dat = {
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
+							"patternErrMsg": "",
+							"isStateLevel":true
 						},
 						{
 	            "name": "FromWhomAcquired",

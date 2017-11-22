@@ -61,7 +61,7 @@ ReportDefinitions:
   - name: financialYear
     label: inventory.financialYear
     type: singlevaluelist
-    pattern: 'list://2011:2011,2012:2012,2013:2013,2014:2014,2015:2015,2016:2016,2017:2017,2018:2018,2019:2019'
+    pattern: 'list://2011:2011,2012:2012,2013:2013,2014:2014,2015:2015,2016:2016,2017:2017,2018:2018,2019:2019,2020:2020'
     source: materialReceipt
     isMandatory: true
 
@@ -71,11 +71,11 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
-    wrapper: true
-
+    
   - name: materialTypeName
     label: inventory.material.materialtype
-    type: string
+    type: singlevaluelist
+    pattern: 'list://OPENING BALANCE:OPENING BALANCE,MISCELLANEOUS RECEIPT:MISCELLANEOUS RECEIPT,PURCHASE RECEIPT:PURCHASE RECEIPT,INWARD RECEIPT:INWARD RECEIPT'
     source: materialReceipt
     isMandatory: false
     searchClause: AND matrcpt.receiptType = $materialTypeName
@@ -87,10 +87,12 @@ ReportDefinitions:
     isMandatory: false
     searchClause: AND mat.name = $materialName
 
-  query:  SELECT matrcpt.financialyear as financialyear,matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,matrcpt.receiptType as materialtypename,matrcptdtl.uomno as uom,
-          matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks FROM materialreceipt matrcpt,
-          materialreceiptdetail matrcptdtl WHERE matrcpt.financialyear = $financialYear AND matrcpt.receivingstore = $storeName AND matrcpt.receipttype ='OPENING BALANCE' AND matrcpt.tenantid= $tenantid AND matrcpt.tenantid=matrcptdtl.tenantid
-          AND matrcpt.mrnnumber = matrcptdtl.mrnnumber
+  query:  SELECT matrcpt.financialyear as financialyear,matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,mat.name as materialname,matrcpt.receiptType as materialtypename,matrcptdtl.uomno as uom,
+          matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks FROM materialreceipt matrcpt,material mat,
+          materialreceiptdetail matrcptdtl WHERE matrcpt.financialyear = $financialYear AND matrcpt.receivingstore = $storeName AND matrcpt.tenantid= $tenantid AND matrcpt.tenantid=matrcptdtl.tenantid
+          AND matrcpt.mrnnumber = matrcptdtl.mrnnumber And mat.tenantid=matrcpt.tenantid And mat.code = matrcptdtl.material
+
+
 
 #  Supplier Report
 - reportName: supplierreport

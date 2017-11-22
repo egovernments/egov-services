@@ -144,8 +144,8 @@ var dat = {
         "vendor.name"
       ],
       "resultPath": "vehicles",
-      "rowClickUrlUpdate": "/update/vehicles/{regNumber}",
-      "rowClickUrlView": "/view/vehicles/{regNumber}"
+      "rowClickUrlUpdate": "/update/swm/vehicles/{regNumber}",
+      "rowClickUrlView": "/view/swm/vehicles/{regNumber}"
     }
   },
   "swm.create": {

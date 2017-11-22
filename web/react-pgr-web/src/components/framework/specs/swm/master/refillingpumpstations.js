@@ -215,6 +215,7 @@ var dat ={
               "isDisabled":false,
               "maxLength":128,
               "minLength":1,
+              "pattern": "^\\d{1,15}$",
               "patternErrorMsg":""
             }
           ]
@@ -451,6 +452,7 @@ var dat ={
             "type":"number",
             "isRequired":true,
             "isDisabled":false,
+            "pattern": "^\\d{1,15}$",
             "maxLength":128,
             "minLength":1,
             "patternErrorMsg":""

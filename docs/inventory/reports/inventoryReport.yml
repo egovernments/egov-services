@@ -71,7 +71,8 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/stores/_search?tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
-    
+    wrapper: true
+
   - name: materialTypeName
     label: inventory.material.materialtype
     type: singlevaluelist

@@ -64,8 +64,6 @@ public class MaterialReceiptRequest   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
-
   public List<MaterialReceipt> getMaterialReceipt() {
     return materialReceipt;
   }

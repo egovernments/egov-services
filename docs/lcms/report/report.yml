@@ -357,7 +357,7 @@ ReportDefinitions:
     type: string
     source: lcms
     showColumn: true
-  - name: defendent
+  - name: defendant
     label: reports.lcms.defendant
     type: string
     source: lcms

@@ -1,6 +1,7 @@
 package org.egov.inv.domain.service;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -142,7 +143,6 @@ public class PriceListService extends DomainService {
 								priceListDetailsSearchRequest.setIsDeleted(false);
 								List<PriceListDetails> oldPriceListDetails = priceListDetailsJdbcRepository.search(priceListDetailsSearchRequest).getPagedData();
 								int actualOldCount = oldPriceListDetails.size();
-								int countFlagForOld=0;
 								for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
 									if(priceListDetail.getTenantId()==null){
 										priceListDetail.setTenantId(tenantId);
@@ -151,12 +151,13 @@ public class PriceListService extends DomainService {
 									{
 										priceListDetail.setQuantity((priceListDetail.getUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
 									}
-									for(PriceListDetails pld:oldPriceListDetails){
-										if(pld.getId().equals(priceListDetail.getId()))
-											countFlagForOld++;
+									Iterator<PriceListDetails> iter = oldPriceListDetails.iterator();
+									while(iter.hasNext()){
+										if(iter.next().getId().equals(priceListDetail.getId()))
+											iter.remove();
 									}
 								}
-								int removedIdsCount = oldPriceListDetails.size()-countFlagForOld;
+								int removedIdsCount = oldPriceListDetails.size();
 								int newIdsCount = priceList.getPriceListDetails().size() + removedIdsCount - actualOldCount;
 								int newIdStartRange = actualOldCount-removedIdsCount;
 								

@@ -35,7 +35,7 @@ public class PriceListDetailsSearchRequest {
 
     private Boolean active;
     
-    private Boolean isDeleted;
+    private Boolean deleted;
     
     private Integer pageSize;
 

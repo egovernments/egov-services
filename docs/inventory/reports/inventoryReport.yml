@@ -5,6 +5,11 @@ ReportDefinitions:
   summary: Stock Opening Balance Report
   version: 1.0.0
   moduleName: inventory
+  externalService:
+  - entity: $.MdmsRes.inventory.Material
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=inventory&masterName=Material
+    keyOrder: code,name,tenantId
+    tableName: tbl_material
   sourceColumns:
 
   - name: financialYear
@@ -89,7 +94,7 @@ ReportDefinitions:
     searchClause: AND mat.name = $materialName
 
   query:  SELECT matrcpt.financialyear as financialyear,matrcpt.receivingstore as storeName,matrcptdtl.material as materialcode,mat.name as materialname,matrcpt.receiptType as materialtypename,matrcptdtl.uomno as uom,
-          matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks FROM materialreceipt matrcpt,material mat,
+          matrcptdtl.receivedqty as qty,matrcptdtl.unitrate as rate,(matrcptdtl.unitrate * matrcptdtl.receivedqty) as totalamount,matrcptdtl.remarks as remarks FROM materialreceipt matrcpt,(VALUES tbl_material) as mat (code, name, tenantid),
           materialreceiptdetail matrcptdtl WHERE matrcpt.financialyear = $financialYear AND matrcpt.receivingstore = $storeName AND matrcpt.tenantid= $tenantid AND matrcpt.tenantid=matrcptdtl.tenantid
           AND matrcpt.mrnnumber = matrcptdtl.mrnnumber And mat.tenantid=matrcpt.tenantid And mat.code = matrcptdtl.material
 

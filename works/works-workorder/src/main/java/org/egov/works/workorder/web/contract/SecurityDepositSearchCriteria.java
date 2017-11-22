@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class SecurityDepositeSearchCriteria {
+public class SecurityDepositSearchCriteria {
 
     private List<String> ids;
 

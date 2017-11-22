@@ -20,7 +20,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
     private EstimateRepository estimateRepository;
 
     @Autowired
-    private SecurityDepositeJdbcRepository securityDepositeJdbcRepository;
+    private SecurityDepositJdbcRepository securityDepositeJdbcRepository;
 
     @Autowired
     private LetterOfAcceptanceEstimateRepository letterOfAcceptanceEstimateRepository;
@@ -165,7 +165,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             LetterOfAcceptanceEstimateSearchCriteria letterOfAcceptanceEstimateSearchCriteria = LetterOfAcceptanceEstimateSearchCriteria.builder()
                     .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
 
-            SecurityDepositeSearchCriteria securityDepositeSearchCriteria = SecurityDepositeSearchCriteria.builder()
+            SecurityDepositSearchCriteria securityDepositeSearchCriteria = SecurityDepositSearchCriteria.builder()
                     .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
 
             letterOfAcceptance.setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));

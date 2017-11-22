@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 @Data
 @AllArgsConstructor
 @Builder
-public class SecurityDepositeHelper {
+public class SecurityDepositHelper {
 
     @JsonProperty("id")
     private String id = null;

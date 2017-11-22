@@ -56,7 +56,7 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
                 .pageNumber(pageNumber).pageSize(pageSize).department(department).detailedEstimateNumbers(detailedEstimateNumbers)
                 .fileNumber(fileNumber).fromDate(fromDate).ids(ids).loaNumbers(loaNumbers).fromDate(fromDate).toDate(toDate).build();
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService.search(letterOfAcceptanceSearchCriteria,requestInfo);
-		return new ResponseEntity<LetterOfAcceptanceResponse>(HttpStatus.OK);
+		return new ResponseEntity<>(letterOfAcceptanceResponse, HttpStatus.OK);
 	}
 
 	public ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesUpdatePost(

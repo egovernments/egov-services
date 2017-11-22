@@ -1,12 +1,10 @@
 package org.egov.works.workorder.domain.repository;
 
 import org.egov.works.common.persistence.repository.JdbcRepository;
-import org.egov.works.workorder.persistence.helper.LoaActivityHelper;
-import org.egov.works.workorder.persistence.helper.SecurityDepositeHelper;
-import org.egov.works.workorder.web.contract.LOAActivity;
+import org.egov.works.workorder.persistence.helper.SecurityDepositHelper;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.SecurityDeposit;
-import org.egov.works.workorder.web.contract.SecurityDepositeSearchCriteria;
+import org.egov.works.workorder.web.contract.SecurityDepositSearchCriteria;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -16,11 +14,11 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class SecurityDepositeJdbcRepository extends JdbcRepository{
+public class SecurityDepositJdbcRepository extends JdbcRepository{
 
     public static final String TABLE_NAME = "egw_securitydeposit securitydeposite";
 
-    public List<SecurityDeposit> searchSecurityDeposite(final SecurityDepositeSearchCriteria securityDepositeSearchCriteria) {
+    public List<SecurityDeposit> searchSecurityDeposite(final SecurityDepositSearchCriteria securityDepositeSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -73,11 +71,11 @@ public class SecurityDepositeJdbcRepository extends JdbcRepository{
 
         searchQuery = searchQuery.replace(":orderby", orderBy);
 
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(SecurityDepositeHelper.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(SecurityDepositHelper.class);
 
-        List<SecurityDepositeHelper> securityDepositeHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        List<SecurityDepositHelper> securityDepositeHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
         List<SecurityDeposit> securityDeposits = new ArrayList<>();
-        for (SecurityDepositeHelper securityDepositeHelper : securityDepositeHelpers) {
+        for (SecurityDepositHelper securityDepositeHelper : securityDepositeHelpers) {
             SecurityDeposit securityDeposit = securityDepositeHelper.toDomain();
             securityDeposits.add(securityDeposit);
 

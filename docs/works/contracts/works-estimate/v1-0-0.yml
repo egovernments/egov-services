@@ -852,7 +852,7 @@ definitions:
         description: Epoch time of the Date of Proposal. Default the current date for new estimates and do not allow to modify. This field is user entered for spillover works. Allowed to edit during rejected status or drafts for Spillover Estimates. Future date is not allowed to enter.
       abstractEstimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.
         maxLength: 50
       subject:
@@ -869,7 +869,7 @@ definitions:
       referenceNumber:
         type: string
         description: Letter Reference Number of the Abstract Estimate
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         maxLength: 100
         minLength: 1
       description:
@@ -919,7 +919,7 @@ definitions:
         format: singleValueList
       councilResolutionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Council resolution number of the Abstract Estimate
       councilResolutionDate:
         type: integer
@@ -954,7 +954,7 @@ definitions:
         maxLength: 512
       adminSanctionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Unique number of admin sanction for the Abstract Estimate
         maxLength: 50
         minLength: 1
@@ -967,7 +967,7 @@ definitions:
         description: User who admin sanctioned
       financialSanctionNumber: 
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Financial sanction number of the Abstract Estimate
         maxLength: 50   
       financialSanctionDate: 
@@ -1817,7 +1817,7 @@ definitions:
         code:
           type: string
           description: Code of the Project 
-          pattern: '[a-zA-Z0-9-\\]+'
+          pattern: '[a-zA-Z0-9-/]+'
           maxLength: 100
         name:
           type: string

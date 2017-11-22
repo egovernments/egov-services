@@ -122,12 +122,6 @@ import createVoucher from './components/non-framework/egf/transaction/createVouc
 
 import acknowledgementWc from './components/non-framework/wc/acknowledgement';
 
-//Template parser
-//import TemplateParser from './components/framework/templates/templateParser/templateParser';
-
-//LegalTemplate parser
-//import LegalTemplateParser  from 'legal/templateParser/legalTemplateParser';
-
 import NoMatch from './components/common/NoMatch';
 
 const base = "";
@@ -139,6 +133,7 @@ var legal;
 var pgr;
 var swm;
 var inventory;
+var LegalTemplateParser = (process.env.NODE_ENV === "production") ? require('legal/specifications/templateParser/legalTemplateParser') : require('./development/legal/lib/specifications/templateParser/legalTemplateParser');
 
 if(process.env.NODE_ENV === "production") {
     fwRoutes = require('ui-react-framework');
@@ -307,8 +302,7 @@ const Main = () => {
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
       <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
       <Route exact path= {base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc}/>
-      {/*<Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
-      <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>*/}
+      <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>
       <Route component={NoMatch}/>
 
     </Switch>

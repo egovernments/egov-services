@@ -55,7 +55,8 @@
     "pgr": "0.0.1",
     "inventory": "0.0.1",
     "works": "0.0.1",
-    "perfManagement": "0.0.1"
+    "perfManagement": "0.0.1",
+    "legal": "0.0.1"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

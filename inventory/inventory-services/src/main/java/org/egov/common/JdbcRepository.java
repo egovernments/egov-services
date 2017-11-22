@@ -523,7 +523,25 @@ public abstract class JdbcRepository {
         return count >= 1 ? false : true;
 
     }
-
+    /**
+     * 
+     * @param ids
+     * @param tenantId
+     * @param tableName
+     * @param parentPkFieldName
+     * @param parentPkValue
+     */
+    public void markDeleted(List<String> ids,String tenantId,String tableName,String parentPkFieldName,String parentPkValue)
+    {
+    	Map<String, Object> paramValues = new HashMap<>();
+    	String query="update "+tableName+" set deleted=true where id not in (:ids) and tenantId=:tenantId and "
+    	+parentPkFieldName+"=:parentPkValue";
+    	paramValues.put("ids", ids);
+    	paramValues.put("tenantId", tenantId);
+    	paramValues.put("parentPkValue", parentPkValue);
+    	
+        namedParameterJdbcTemplate.update(query.toString(), paramValues);
+    }
     public void delete(Object entity, String reason) {
 
         String backupTable = "egf_deletedtxn";

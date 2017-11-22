@@ -90,30 +90,29 @@ public class IndentService extends DomainService {
 	public IndentResponse update(IndentRequest indentRequest) {
 
 		try {
+			String tenantId="";
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
+			String indentNumber="";
+			List<String> ids=new ArrayList<String>();
 			validate(indents, Constants.ACTION_UPDATE);
-
-			
 			for (Indent b : indents) {
-				 
-				// move to id-gen with format <ULB short code>/<Store
-				// Code>/<fin. Year>/<serial No.>
-			 
-				int j = 0;
-				//TO-DO : when workflow implemented change this to created
-			 
+			 int j=0;
+			 if(!indentNumber.isEmpty())
+				 indentNumber=b.getIndentNumber();
 				b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_UPDATE));
-				List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),
-						indents.size());
 				for (IndentDetail d : b.getIndentDetails()) {
 					if(d.getId()==null)
 						d.setId(indentRepository.getSequence(IndentDetail.class.getSimpleName(),1).get(0));
+					ids.add(d.getId());
 					d.setTenantId(b.getTenantId());
+					if(tenantId.isEmpty())
+						tenantId=b.getTenantId();
 					j++;
 				}
 			}
-			kafkaQue.send(updateTopic, updateKey, indentRequest);
-
+			
+			kafkaQue.send(saveTopic, saveKey, indentRequest);
+            indentDetailJdbcRepository.markDeleted(ids,tenantId,"indentdetail","indentNumber",indentNumber);
 			IndentResponse response = new IndentResponse();
 			response.setIndents(indentRequest.getIndents());
 			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));

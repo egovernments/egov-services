@@ -918,4 +918,70 @@ serviceMaps:
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.description
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.id
             - jsonPath: $.purchaseorder.*.purchaseOrderDetails.*.tenantId
-
+    - version: 1
+      name: Indents create
+      description: create Indents in ulb
+      fromTopic: inv-indents-save-topic
+      queryMaps:
+        - query: >-
+            insert into indent (issueStore, indentStore, indentDate, indentNumber, indentType, indentPurpose, inventoryType, 
+            expectedDeliveryDate, materialHandOverTo, narration, indentStatus,  totalIndentValue, fileStoreId,
+             indentCreatedBy, designation, stateId, createdBy, lastModifiedBy, createdTime, lastModifiedTime, id, tenantId) 
+             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,  ?, ?) on conflict (indentnumber,tenantid) do update set
+             totalIndentValue=EXCLUDED.totalIndentValue,issueStore=EXCLUDED.issueStore,indentStore=EXCLUDED.indentStore,
+             indentDate=EXCLUDED.indentDate,  indentType=EXCLUDED.indentType,indentPurpose=EXCLUDED.indentPurpose,inventoryType=EXCLUDED.inventoryType,
+             expectedDeliveryDate=EXCLUDED.expectedDeliveryDate,materialHandOverTo=EXCLUDED.materialHandOverTo,narration=EXCLUDED.narration,
+             indentStatus=EXCLUDED.indentStatus, fileStoreId=EXCLUDED.fileStoreId,designation=EXCLUDED.designation,
+             stateId=EXCLUDED.stateId,lastModifiedBy=EXCLUDED.lastModifiedBy,lastModifiedTime=EXCLUDED.lastModifiedTime   
+          basePath: $.indents.*
+          jsonMaps:
+            - jsonPath: $.indents.*.issueStore.code 
+            - jsonPath: $.indents.*.indentStore.code
+            - jsonPath: $.indents.*.indentDate 
+            - jsonPath: $.indents.*.indentNumber 
+            - jsonPath: $.indents.*.indentType 
+            - jsonPath: $.indents.*.indentPurpose 
+            - jsonPath: $.indents.*.inventoryType 
+            - jsonPath: $.indents.*.expectedDeliveryDate 
+              dbType: LONG
+            - jsonPath: $.indents.*.materialHandOverTo 
+            - jsonPath: $.indents.*.narration 
+            - jsonPath: $.indents.*.indentStatus 
+            - jsonPath: $.indents.*.totalIndentValue 
+              dbType: DOUBLE
+            - jsonPath: $.indents.*.fileStoreId 
+            - jsonPath: $.indents.*.indentCreatedBy 
+            - jsonPath: $.indents.*.designation 
+            - jsonPath: $.indents.*.stateId 
+            - jsonPath: $.indents.*.createdBy 
+            - jsonPath: $.indents.*.lastModifiedBy 
+            - jsonPath: $.indents.*.createdTime 
+              dbType: LONG
+            - jsonPath: $.indents.*.lastModifiedTime 
+              dbType: LONG
+            - jsonPath: $.indents.*.id 
+            - jsonPath: $.indents.*.tenantId
+        - query: >-
+            insert into indentdetail (material, uom, parentIndentLine, orderNumber, projectCode, indentNumber, asset, indentQuantity, 
+            totalProcessedQuantity, indentIssuedQuantity, poOrderedQuantity, interstoreRequestQuantity, deliveryTerms, remarks, id, tenantId)
+             values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET
+             material=EXCLUDED.material , uom=EXCLUDED.uom ,parentIndentLine=EXCLUDED.parentIndentLine,orderNumber=EXCLUDED.orderNumber,projectCode=EXCLUDED.projectCode ,indentNumber=EXCLUDED.indentNumber,asset=EXCLUDED.asset,
+             indentQuantity=EXCLUDED.indentQuantity;
+          basePath: $.indents.*.indentDetails.*
+          jsonMaps:
+            - jsonPath: $.indents.*.indentDetails.*.material.code
+            - jsonPath: $.indents.*.indentDetails.*.uom.code
+            - jsonPath: $.indents.*.indentDetails.*.parentIndentLine
+            - jsonPath: $.indents.*.indentDetails.*.orderNumber
+            - jsonPath: $.indents.*.indentDetails.*.projectCode.code
+            - jsonPath: $.indents[?({id} in @.indentDetails[*].id)].indentNumber
+            - jsonPath: $.indents.*.indentDetails.*.asset.code
+            - jsonPath: $.indents.*.indentDetails.*.indentQuantity
+            - jsonPath: $.indents.*.indentDetails.*.totalProcessedQuantity
+            - jsonPath: $.indents.*.indentDetails.*.indentIssuedQuantity
+            - jsonPath: $.indents.*.indentDetails.*.poOrderedQuantity
+            - jsonPath: $.indents.*.indentDetails.*.interstoreRequestQuantity
+            - jsonPath: $.indents.*.indentDetails.*.deliveryTerms
+            - jsonPath: $.indents.*.indentDetails.*.remarks
+            - jsonPath: $.indents.*.indentDetails.*.id
+            - jsonPath: $.indents.*.indentDetails.*.tenantId

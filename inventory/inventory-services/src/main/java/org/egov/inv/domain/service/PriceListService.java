@@ -142,6 +142,7 @@ public class PriceListService extends DomainService {
 								priceListDetailsSearchRequest.setIsDeleted(false);
 								List<PriceListDetails> oldPriceListDetails = priceListDetailsJdbcRepository.search(priceListDetailsSearchRequest).getPagedData();
 								int actualOldCount = oldPriceListDetails.size();
+								int countFlagForOld=0;
 								for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
 									if(priceListDetail.getTenantId()==null){
 										priceListDetail.setTenantId(tenantId);
@@ -152,12 +153,12 @@ public class PriceListService extends DomainService {
 									}
 									for(PriceListDetails pld:oldPriceListDetails){
 										if(pld.getId().equals(priceListDetail.getId()))
-											oldPriceListDetails.remove(pld);
+											countFlagForOld++;
 									}
 								}
-								int removedIds = oldPriceListDetails.size();
-								int newIdsCount = priceList.getPriceListDetails().size() + removedIds - actualOldCount;
-								int newIdStartRange = actualOldCount-removedIds;
+								int removedIdsCount = oldPriceListDetails.size()-countFlagForOld;
+								int newIdsCount = priceList.getPriceListDetails().size() + removedIdsCount - actualOldCount;
+								int newIdStartRange = actualOldCount-removedIdsCount;
 								
 								List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), newIdsCount);
 								

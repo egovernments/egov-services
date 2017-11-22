@@ -169,7 +169,7 @@ ReportDefinitions:
          CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision)
          THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype , servicetype_keyword sk
          where ctype.code=cs.servicecode  and cs.status in ($status) and cs.createddate >= $fromDate and cs.createddate <=$toDate
-         and ctype.code = $complainttype and ctype.code=sk.servicecode and sk.keyword ='complaint'
+         and ctype.code = $complainttype and ctype.code=sk.servicecode and upper(sk.keyword) = upper('complaint')
          and sk.tenantid =$tenantid
          and cs.tenantid = $tenantid
          and ctype.tenantid =$tenantid
@@ -240,7 +240,7 @@ ReportDefinitions:
         AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
         AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision)
         AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) and ctype.code=sk.servicecode
-        and sk.keyword='complaint'
+        and upper(sk.keyword) = upper('complaint')
         and cs.tenantid = $tenantid
         and ctype.tenantid =$tenantid
         and sk.tenantid=$tenantid
@@ -309,7 +309,7 @@ ReportDefinitions:
   query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status,(select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs,egpgr_complainttype ctype ,servicetype_keyword sk  where  ctype.code=cs.servicecode and cs.createddate >= $fromDate and cs.createddate <=$toDate and ctype.code = $complainttype
          AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
          AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision)
-         AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) AND ctype.code=sk.servicecode AND sk.keyword='complaint'
+         AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision) AND ctype.code=sk.servicecode AND upper(sk.keyword) = upper('complaint')
          AND sk.tenantid=$tenantid
          AND cs.tenantid = $tenantid
          AND ctype.tenantid =$tenantid
@@ -413,7 +413,7 @@ ReportDefinitions:
     and cs.servicecode = ctype.code
     and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
     and cs.createddate >= $fromDate and cs.createddate <= $toDate
-    and ctype.code=sk.servicecode and sk.keyword='complaint'
+    and ctype.code=sk.servicecode and upper(sk.keyword) = upper('complaint')
     and us.tenantid = ctype.tenantid
     and sk.tenantid = $tenantid
     and us.tenantid = $tenantid
@@ -497,7 +497,7 @@ ReportDefinitions:
          and isprimary=true
          and us.username =$username
          and ctype.code=sk.servicecode
-         and sk.keyword='complaint'
+         and upper(sk.keyword) = upper('complaint')
          and sk.tenantid = $tenantid
          and ctype.tenantid = $tenantid
          and us.tenantid = $tenantid
@@ -582,7 +582,7 @@ ReportDefinitions:
          and isprimary=true and us.username =$username
          AND cs.status::text = ANY (ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
          AND ctype.code=sk.servicecode
-         and sk.keyword='complaint'
+         and upper(sk.keyword) = upper('complaint')
          AND (cs.lastmodifieddate - cs.createddate) < ('01:00:00'::interval * ctype.slahours::double precision)
          AND (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision)
          and cs.tenantid = $tenantid
@@ -670,7 +670,7 @@ ReportDefinitions:
          AND us.username =$username
          AND cs.status::text = ANY(ARRAY['REGISTERED'::character varying::text, 'PROCESSING'::character varying::text, 'COMPLETED'::character varying::text, 'REJECTED'::character varying::text, 'REOPENED'::character varying::text, 'ONHOLD'::character varying::text])
          AND ctype.code=sk.servicecode
-         AND sk.keyword='complaint'
+         AND upper(sk.keyword) = upper('complaint')
          AND (cs.lastmodifieddate - cs.createddate) > ('01:00:00'::interval * ctype.slahours::double precision)
          AND (now() - cs.createddate::timestamp with time zone) > ('01:00:00'::interval * ctype.slahours::double precision)
          AND cs.tenantid = $tenantid
@@ -835,7 +835,7 @@ ReportDefinitions:
     precision) THEN 1 ELSE 0 END) AS beyondsla FROM submission cs,
     egpgr_complainttype ctype,eg_department dept ,servicetype_keyword sk WHERE
     cs.servicecode = ctype.code and cs.department=dept.id and cs.createddate >= $fromDate and cs.createddate
-    <= $toDate and dept.name = $deptname  and ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint')
+    <= $toDate and dept.name = $deptname  and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')
     and cs.tenantid = $tenantid
     and ctype.tenantid = $tenantid
     and dept.tenantid = $tenantid
@@ -1076,7 +1076,7 @@ ReportDefinitions:
     precision) THEN 1 ELSE 0 END) AS beyondsla FROM submission cs,submission_attribute sa,
     eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer
     and cs.servicecode = ctype.code and cs.createddate >= $fromDate and cs.createddate
-    <= $toDate and sa.key = 'systemLocationId'  and  ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint')
+    <= $toDate and sa.key = 'systemLocationId'  and  ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')
     and sk.tenantid = $tenantid
     and ctype.tenantid  = $tenantid
     and boundary.tenantid = $tenantid
@@ -1175,7 +1175,7 @@ ReportDefinitions:
     eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.latitude = boundary.latitude AND cs.longitude
     = boundary.longitude and cs.servicecode = ctype.code and cs.createddate >= $fromDate and cs.createddate
     <= $toDate and boundary.parent = (select id from eg_boundary where name = $parentboundary and tenantid=$tenantid) and  ctype.code = sk.servicecode
-    and sk.keyword in ('complaint', 'Complaint')
+    and upper(sk.keyword) = upper('complaint')
     and sk.tenantid = $tenantid
     and ctype.tenantid  = $tenantid
     and boundary.tenantid = $tenantid
@@ -1265,7 +1265,7 @@ ReportDefinitions:
     <= $toDate and sa.key = 'systemLocationId' and boundary.id = (select id from eg_boundary where name = $parentboundary and boundary.tenantid=$tenantid
      and boundarytype =  (select id from eg_boundary_type where hierarchytype =(select id  from eg_hierarchy_type where code = 'ADMIN' and tenantid = $tenantid)
      and name = 'Ward' and tenantid = $tenantid))
-     and cs.tenantid=$tenantid and  ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint')
+     and cs.tenantid=$tenantid and  ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')
      and sk.tenantid = $tenantid
      and ctype.tenantid  = $tenantid
      and boundary.tenantid = $tenantid
@@ -1361,7 +1361,7 @@ ReportDefinitions:
     <= $toDate and sa.key = 'systemLocationId' and boundary.id = (select id from eg_boundary where name = $parentboundary and cs.tenantid=$tenantid
     and boundarytype =  (select id from eg_boundary_type where hierarchytype =(select id  from eg_hierarchy_type where code = 'ADMIN' and tenantid = $tenantid)
     and name = 'Ward' and tenantid = $tenantid))
-    and cs.tenantid=$tenantid  and  ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint')
+    and cs.tenantid=$tenantid  and  ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')
     and dept.name = $deptname
     and sa.tenantid  = $tenantid
     and cs.tenantid = $tenantid
@@ -1629,7 +1629,7 @@ ReportDefinitions:
     AS lsthn2 FROM egpgr_complainttype ctype, submission cs, eg_department dept,servicetype_keyword sk WHERE
     dept.id = cs.department and cs.servicecode = ctype.code and cs.createddate >=
     $fromDate and cs.createddate <= $toDate and cs.status IN ($grievancestatustype)
-    and cs.tenantid =$tenantid  and ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint')
+    and cs.tenantid =$tenantid  and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')
     and ctype.tenantid = $tenantid
     and sk.tenantid = $tenantid
     and dept.tenantid = $tenantid
@@ -1708,8 +1708,8 @@ ReportDefinitions:
          COALESCE(( SELECT esclvl2pos.name FROM egeis_position esclvl2pos WHERE esclvl2pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.fromposition = r.position AND ph_1.servicecode::text = ct.code::text))))), 'NA'::character varying) AS esclvl2posname,
          COALESCE(( SELECT escalvl3pos.name FROM egeis_position escalvl3pos WHERE escalvl3pos.id = (( SELECT ph.toposition FROM egpgr_escalation_hierarchy ph WHERE ph.servicecode::text = ct.code::text  AND ph.fromposition = (( SELECT ph_1.toposition FROM egpgr_escalation_hierarchy ph_1 WHERE ph_1.servicecode::text = ct.code::text  AND ph_1.fromposition = (( SELECT ph_2.toposition FROM egpgr_escalation_hierarchy ph_2 WHERE ph_2.fromposition = r.position AND ph_2.servicecode::text = ct.code::text ))))))), 'NA'::character varying) AS esclvl3posname
          FROM egpgr_router r LEFT JOIN egpgr_complainttype ct ON r.complainttypeid = ct.id LEFT JOIN egpgr_complainttype_category cc ON ct.category = cc.id
-         LEFT JOIN eg_boundary b ON r.bndryid = b.id LEFT JOIN servicetype_keyword sk ON ct.code=sk.servicecode and sk.keyword='complaint'
-         LEFT JOIN egeis_position p ON r.position = p.id where r.tenantid=$tenantid and cc.keyword='complaint'
+         LEFT JOIN eg_boundary b ON r.bndryid = b.id LEFT JOIN servicetype_keyword sk ON ct.code=sk.servicecode and upper(sk.keyword) = upper('complaint')
+         LEFT JOIN egeis_position p ON r.position = p.id where r.tenantid=$tenantid and upper(cc.keyword) = upper('complaint')
          and ct.tenantid = sk.tenantid
          and sk.tenantid = $tenantid
   groupBy: ORDER BY r.complainttypeid;
@@ -1871,7 +1871,7 @@ ReportDefinitions:
     AS lsthn2 FROM egpgr_complainttype ctype, submission cs,submission_attribute sa,eg_boundary
     boundary ,servicetype_keyword sk where cs.servicecode = ctype.code and cs.crn = sa.crn and sa.key = 'systemLocationId'
     and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate
-    and cs.tenantid = $tenantid AND cs.status IN ($grievancestatustype) and  ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint')
+    and cs.tenantid = $tenantid AND cs.status IN ($grievancestatustype) and  ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint')
     and ctype.tenantid = $tenantid
     and sk.tenantid = $tenantid
     and boundary.tenantid = $tenantid
@@ -1936,7 +1936,7 @@ ReportDefinitions:
     isMandatory: false
     pattern: http://egov-location:8080/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?boundaryTypeName=Ward&hierarchyTypeName=Administration&tenantId=$tenantid|$..id|$..name
     searchClause: and sa.code::bigint in ($electionward)
-  query: SELECT boundary.name, (select name from egpgr_complainttype where code = ctype.code and tenantid = $tenantid) as complainttype, (select name from egpgr_complainttype_category where id = ctype.category and tenantid = $tenantid) as categoryname, count(*) as totalcount, count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text,'REJECTED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text ='PROCESSING'::text THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'REOPENED'::character varying::text, 'REGISTERED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS pending,count(CASE WHEN cs.status::text ='ONHOLD'::text THEN 1 ELSE NULL::integer END) AS onhold FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint') and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
+  query: SELECT boundary.name, (select name from egpgr_complainttype where code = ctype.code and tenantid = $tenantid) as complainttype, (select name from egpgr_complainttype_category where id = ctype.category and tenantid = $tenantid) as categoryname, count(*) as totalcount, count(CASE WHEN cs.status::text = ANY (ARRAY['COMPLETED'::character varying::text,'WITHDRAWN'::character varying::text,'REJECTED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS completed,count(CASE WHEN cs.status::text ='PROCESSING'::text THEN 1 ELSE NULL::integer END) AS inprocess,count(CASE WHEN cs.status::text = ANY (ARRAY['FORWARDED'::character varying::text, 'REOPENED'::character varying::text, 'REGISTERED'::character varying::text]) THEN 1 ELSE NULL::integer END) AS pending,count(CASE WHEN cs.status::text ='ONHOLD'::text THEN 1 ELSE NULL::integer END) AS onhold FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint') and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
   groupBy: GROUP BY boundary.name, ctype.code, ctype.category ORDER By boundary.name;
   
 - reportName: DrillDownComplaintSummaryRegister
@@ -2005,7 +2005,7 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
-  query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn and sa.tenantid = $tenantid) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint') and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
+  query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn and sa.tenantid = $tenantid) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint') and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
     and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and  tenantid = $tenantid and category = (select id from egpgr_complainttype_category where name = $categoryname and tenantid = $tenantid)) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid and boundarytype = (select id from eg_boundary_type where name = 'Ward' and hierarchytype = (select id from eg_hierarchy_type where name = 'ADMINISTRATION' and tenantid = $tenantid) and tenantid = $tenantid));
     
 - reportName: DrillDownComplaintSummaryRegisterStatus
@@ -2074,5 +2074,5 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
-  query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and sk.keyword in ('complaint', 'Complaint') and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
+  query: SELECT cs.crn, cs.createddate,cs.name as complainantname, requesteraddress as address, cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla FROM submission cs,submission_attribute sa, eg_boundary boundary, egpgr_complainttype ctype ,servicetype_keyword sk WHERE cs.crn = sa.crn and boundary.id = sa.code::integer and cs.createddate >= $fromDate and cs.createddate <= $toDate and cs.servicecode = ctype.code and sa.key = 'systemLocationId' and ctype.code = sk.servicecode and upper(sk.keyword) = upper('complaint') and sk.tenantid = $tenantid and ctype.tenantid  = $tenantid and boundary.tenantid = $tenantid and sa.tenantid = $tenantid and cs.tenantid = $tenantid
     and ctype.code = (select code from egpgr_complainttype where name = $complaintcode and tenantid = $tenantid) and sa.code::bigint = (select id from eg_boundary where name = $wardname and tenantid = $tenantid) and cs.status IN ($status);

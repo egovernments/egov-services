@@ -206,7 +206,7 @@ ReportDefinitions:
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=lcms&masterName=caseStatus&tenantId=$tenantid
     keyOrder: code,name
     tableName: tbl_casestatus
-  - entity: $.MdmsRes.lcms.department
+  - entity: $.MdmsRes.common-masters.department
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department&tenantId=$tenantid
     keyOrder: code,name
     tableName: tbl_department  
@@ -436,7 +436,7 @@ ReportDefinitions:
   - name: department
     label: reports.lcms.department
     type: singlevaluelist
-    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
+    pattern: http://egov-common-masters:8080/egov-common-masters/departments/_search?tenantId=$tenantid|$..code|$..name
     source: lcms
     isMandatory: false
     searchClause : AND lc.departmentname ->> 'code' = $department

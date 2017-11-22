@@ -232,8 +232,12 @@ public class DepreciationService {
 	private void getFinancialYearData(DepreciationRequest depreciationRequest) {
 
 		DepreciationCriteria criteria = depreciationRequest.getDepreciationCriteria();
+		String tenantId = criteria.getTenantId();
 		Long todate = criteria.getToDate();
 
+		if(!tenantId.equals("default"))
+			tenantId = tenantId.split("\\.")[0];
+		
 		FinancialYear financialYear = mDService.getFinancialYear(todate, depreciationRequest.getRequestInfo(),
 				criteria.getTenantId());
 		// setting the toDate hours to 23 and mins to 59

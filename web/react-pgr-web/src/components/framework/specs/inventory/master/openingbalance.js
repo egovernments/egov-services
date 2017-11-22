@@ -268,11 +268,7 @@ var dat = {
             "isDisabled": false,
       "defaultValue":[
               {key: null, value: "-- Please Select --"},
-                    {"key":"2017","value":"2017"},
-                       {"key":"2018", "value":"2018"},
-                          {"key":"2019", "value":"2019"},
-                             {"key":"2020", "value":"2020"},
-                                {"key":"2021","value":"2021"}
+                    {"key":"2017-2018","value":"2017-2018"},
                         ],
             "patternErrorMsg": ""
           },
@@ -465,11 +461,7 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": true,
       "defaultValue":[
-                    {"key":"2017","value":"2017"},
-                       {"key":"2018", "value":"2018"},
-                          {"key":"2019", "value":"2019"},
-                             {"key":"2020", "value":"2020"},
-                                {"key":"2021","value":"2021"}
+                    {"key":"2017-2018","value":"2017-2018"},
                         ],
             "patternErrorMsg": ""
           },

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Grid} from 'react-bootstrap';
 import _ from "lodash";
 import {PieChart, Pie, Sector, Tooltip, Cell, Legend} from 'recharts';
-import Api from '../.././../../api/api';
+import {Api} from 'common-utility';
 import {getTenantId, CustomizedLegend, RenderActiveShape, extractManipulateCityAndWardsPath} from './ReportUtils';
 import GisMapView from './GisMapView';
 import CommonGisReportView from './CommonGisReportView';

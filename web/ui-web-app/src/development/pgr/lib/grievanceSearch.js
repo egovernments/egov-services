@@ -13,10 +13,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
 import Snackbar from 'material-ui/Snackbar';
-import ServerSideTable from '../../common/table/ServerSideTable';
-import Api from '../../../api/api';
-import styles from '../../../styles/material-ui';
-import {translate, toLocalTime} from '../../common/common';
+import {Api, translate, toLocalTime, ServerSideTable} from 'common-utility';
+import styles from './styles/material-ui';
 
 const getNameById = function(object, id, property = "") {
   if(!object) return;

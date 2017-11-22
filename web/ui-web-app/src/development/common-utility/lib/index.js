@@ -13,9 +13,12 @@ import constants from './constants';
 import ServerSideTable from './table/ServerSideTable';
 import PdfViewer from './pdf-generation/PdfViewer';
 import PdfConfig from './pdf-genration/PdfConfig';
+import DateTable from './Table';
+import Fields from './Fields';
 
 module.exports = {
 	Api,
+	Fields,
 	dataURItoBlob, 
 	dateToEpoch, 
 	epochToTime, 
@@ -24,8 +27,9 @@ module.exports = {
 	format_lat_long, 
 	validate_fileupload,
 	translate,
-	CONSTANTS,
+	constants,
 	ServerSideTable,
 	PdfConfig,
-	PdfViewer
+	PdfViewer,
+	DateTable
 };

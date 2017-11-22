@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import Api from '../../../../../api/api';
-import styles from '../../../../../styles/material-ui';
-import {translate} from '../../../../common/common';
+import {Api, translate} from 'common-utility';
+import styles from '../../styles/material-ui';
 
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export

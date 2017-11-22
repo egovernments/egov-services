@@ -15,10 +15,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import Fields from '../../common/Fields';
-import Api from '../../../api/api';
-import styles from '../../../styles/material-ui';
-import {translate, validate_fileupload, format_lat_long} from '../../common/common';
+import {Api, Fields, translate, validate_fileupload, format_lat_long} from 'common-utility';
+import styles from './styles/material-ui';
 var axios = require('axios');
 
 var _this;

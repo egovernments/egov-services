@@ -5,10 +5,9 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {ResponsiveContainer, PieChart, Pie, Sector, Cell, Tooltip,
         LineChart, Line, XAxis, YAxis, CartesianGrid, Legend,
         AreaChart, Area }  from 'recharts';
-import Api from '../../../../api/api';
 import RaisedButton from 'material-ui/RaisedButton';
-import styles from '../../../../styles/material-ui';
-import {translate} from '../../../common/common';
+import styles from '../styles/material-ui';
+import {translate, Api} from 'common-utility';
 import moment from 'moment';
 var self;
 

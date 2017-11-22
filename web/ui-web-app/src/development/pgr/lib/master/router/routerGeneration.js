@@ -9,10 +9,8 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Chip from 'material-ui/Chip';
-import Api from '../../../../../api/api';
-import styles from '../../../../../styles/material-ui';
-import DataTable from '../../../../common/Table';
-import {translate} from '../../../../common/common';
+import {Api, DataTable, translate} from 'common-utility';
+import styles from '../../styles/material-ui';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');

@@ -1,11 +1,10 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-bootstrap';
 import _ from "lodash";
-import Api from '../.././../../api/api';
 import {getTenantId, PageLoadingIndicator, extractManipulateCityAndWardsPath} from './ReportUtils';
 import CommonGisReportView from './CommonGisReportView';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {translate} from '../../../common/common';
+import {translate, Api} from 'common-utility';
 
 const TOP_COMPLAINTS_REPORT_LENGTH  = 6;
 

@@ -11,15 +11,12 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import Api from '../../../api/api';
-import {translate, validate_fileupload} from '../../common/common';
-import Fields from '../../common/Fields';
-import ViewSRN from '../../common/PGR/viewSRN';
-import EmployeeDocs from '../../common/PGR/employeeDocs';
-import WorkFlow from '../../common/PGR/workflow';
-import styles from '../../../styles/material-ui';
+import {Api, translate, validate_fileupload, constants, Fields} from 'common-utility';
+import ViewSRN from './PGR/viewSRN';
+import EmployeeDocs from './PGR/employeeDocs';
+import WorkFlow from './PGR/workflow';
+import styles from './styles/material-ui';
 var Rating = require('react-rating');
-const constants = require('../../common/constants');
 
 var currentThis;
 

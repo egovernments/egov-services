@@ -11,9 +11,8 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import Api from '../../../../../api/api';
-import styles from '../../../../../styles/material-ui';
-import {translate} from '../../../../common/common';
+import {Api, translate} from 'common-utility';
+import styles from '../../styles/material-ui';
 
 var _this;
 

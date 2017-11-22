@@ -2,9 +2,8 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader} from 'material-ui/Card';
 import {BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip} from 'recharts';
-import {translate} from '../../../common/common';
+import {translate, Api} from 'common-utility';
 import {PageLoadingIndicator, CustomizedAxisTick, CustomizedYAxisLabel, getTenantId} from './ReportUtils';
-import Api from '../../../../api/api';
 
 export default class PendencyReport extends Component {
 

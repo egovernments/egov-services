@@ -7,10 +7,8 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
-import DataTable from '../../../../common/Table';
-import Api from '../../../../../api/api';
-import styles from '../../../../../styles/material-ui';
-import {translate} from '../../../../common/common';
+import styles from '../../styles/material-ui';
+import {translate, Api, DataTable} from 'common-utility';
 
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export

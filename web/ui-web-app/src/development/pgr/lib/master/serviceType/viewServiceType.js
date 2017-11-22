@@ -3,9 +3,8 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col} from 'react-bootstrap';
 import {List, ListItem} from 'material-ui/List';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import Api from '../../../../../api/api';
-import styles from '../../../../../styles/material-ui';
-import {translate} from '../../../../common/common';
+import {Api, translate} from 'common-utility';
+import styles from '../../styles/material-ui';
 
 var _this;
 

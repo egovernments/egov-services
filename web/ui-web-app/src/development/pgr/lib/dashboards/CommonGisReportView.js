@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import _ from "lodash";
 import GisMapView from './GisMapView';
 import {getTenantId, extractManipulateCityAndWardsPath} from './ReportUtils';
-import Api from '../.././../../api/api';
+import {Api} from 'common-utility';
 import CircularProgress from 'material-ui/CircularProgress';
 
 export default class CommonGisReportView extends Component{

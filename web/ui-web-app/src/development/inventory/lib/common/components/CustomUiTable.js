@@ -1,9 +1,8 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {translate} from '../../../../common/common';
 import {connect} from 'react-redux';
-import Api from '../../../../../api/api';
+import {translate,Api} from 'common-utility';
 import _ from 'lodash';
 import jp from "jsonpath";
 import Checkbox from 'material-ui/Checkbox';

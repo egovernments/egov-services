@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import CustomSearch from '../../common/CustomSearch';
 
-import template from '../../../../framework/specs/inventory/master/materialstoremapping';
+import template from '../../../../specifications/master/materialstoremapping.specs';
 
 class MaterialStoreMappingSearch extends Component {
 

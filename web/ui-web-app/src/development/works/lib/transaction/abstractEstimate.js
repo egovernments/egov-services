@@ -9,7 +9,7 @@ import _ from "lodash";
 import {ShowFields,UiButton,fileUpload, getInitiatorPosition} from "ui-react-framework";
 import {translate,Api} from 'common-utility';
 import jp from "jsonpath";
-import template from './specifications/master/abstractEstimate';
+import template from '../specifications/master/abstractEstimate.specs';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import UploadDocs from '../utility/uploadDocs';
 import WorkFlow from '../workflow/WorkFlow';

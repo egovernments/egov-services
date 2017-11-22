@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import CustomSearch from '../../common/CustomSearch';
 
-import template from '../../../../framework/specs/inventory/master/supplier'
+import template from '../../../../specifications/master/supplier.specs'
 
 class SupplierSearch extends Component {
 

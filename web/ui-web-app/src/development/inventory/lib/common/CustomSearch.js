@@ -1,15 +1,9 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
-
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
-import UiButton from '../../../framework/components/UiButton';
-import UiDynamicTable from '../../../framework/components/UiDynamicTable';
-import {fileUpload} from '../../../framework/utility/utility';
+import {ShowFields,UiButton,fileUpload, getInitiatorPosition,UiDynamicTable} from "ui-react-framework";
+import {translate,Api} from 'common-utility';
 import CustomUiTable from './components/CustomUiTable';
 import jp from "jsonpath";
 

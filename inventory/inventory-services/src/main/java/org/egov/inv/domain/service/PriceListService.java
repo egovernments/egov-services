@@ -161,9 +161,11 @@ public class PriceListService extends DomainService {
 								
 								List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), newIdsCount);
 								
-								for(int i=newIdStartRange; i<priceList.getPriceListDetails().size(); i++){
-									priceList.getPriceListDetails().get(i).setId(priceListDetailsIdList.get(0));
-									priceListDetailsIdList.remove(0);
+								for(PriceListDetails pldl:priceList.getPriceListDetails()){
+									if(pldl.getId()==null){
+										pldl.setId(priceListDetailsIdList.get(0));
+										priceListDetailsIdList.remove(0);
+									}
 								}
 								
 								for(PriceListDetails pld:oldPriceListDetails){

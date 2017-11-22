@@ -137,12 +137,15 @@ public class PriceListService extends DomainService {
 								if(priceList.getTenantId()==null){
 									priceList.setTenantId(tenantId);
 								}
+								
 								PriceListDetailsSearchRequest priceListDetailsSearchRequest = new PriceListDetailsSearchRequest();
 								priceListDetailsSearchRequest.setPriceList(priceList.getId());
 								priceListDetailsSearchRequest.setActive(true);
 								priceListDetailsSearchRequest.setIsDeleted(false);
+								
 								List<PriceListDetails> oldPriceListDetails = priceListDetailsJdbcRepository.search(priceListDetailsSearchRequest).getPagedData();
 								int actualOldCount = oldPriceListDetails.size();
+								
 								for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
 									if(priceListDetail.getTenantId()==null){
 										priceListDetail.setTenantId(tenantId);
@@ -157,6 +160,7 @@ public class PriceListService extends DomainService {
 											iter.remove();
 									}
 								}
+								
 								int removedIdsCount = oldPriceListDetails.size();
 								int newIdsCount = priceList.getPriceListDetails().size() + removedIdsCount - actualOldCount;
 								int newIdStartRange = actualOldCount-removedIdsCount;
@@ -166,6 +170,13 @@ public class PriceListService extends DomainService {
 								for(PriceListDetails pldl:priceList.getPriceListDetails()){
 									if(pldl.getId()==null){
 										pldl.setId(priceListDetailsIdList.get(0));
+										pldl.setAuditDetails(mapAuditDetails(priceListRequest.getRequestInfo()));
+										if(pldl.getFromDate()==null){
+											pldl.setFromDate(priceList.getAgreementStartDate());
+										}
+										if(pldl.getToDate()==null){
+											pldl.setToDate(priceList.getAgreementEndDate());
+										}
 										priceListDetailsIdList.remove(0);
 									}
 								}

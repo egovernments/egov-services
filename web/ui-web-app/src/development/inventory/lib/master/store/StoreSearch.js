@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import CustomSearch from '../../common/CustomSearch';
 
-import template from '../../../../specifications/master/stores.specs'
+import template from '../../specifications/master/stores.specs'
 
 class StoreSearch extends Component {
 

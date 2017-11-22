@@ -3,13 +3,13 @@ import viewAbstractEstimate from './transaction/viewAbstractEstimate';
 
 
 var routes = [{
-  Component: abstractEstimate
+  Component: abstractEstimate,
   route: '/non-framework/works/transaction/abstractEstimate'
 }, {
-  Component: viewAbstractEstimate
+  Component: viewAbstractEstimate,
   route: '/non-framework/works/transaction/viewAbstractEstimate/:id'
 }];
 
-module.exports = {
+export {
   routes
 };

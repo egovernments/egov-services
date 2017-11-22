@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import CustomSearch from '../../common/CustomSearch';
 
-import template from '../../../../specifications/transaction/indent.specs'
+import template from '../../specifications/transaction/indent.specs'
 
 class IndentSearch extends Component {
 

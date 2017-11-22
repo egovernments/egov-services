@@ -12,7 +12,7 @@ import jp from "jsonpath";
 import {
   fileUpload,
   getInitiatorPosition
-} from "../../framework/utility/utility";
+} from "../utility/utility";
 //import $ from "jquery";
 
 var specifications = {};

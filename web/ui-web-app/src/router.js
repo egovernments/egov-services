@@ -41,37 +41,37 @@ import ViewDocumentTypeApplicationType from './components/contents/wc/master/doc
 
 import AddDemandWc from './components/contents/wc/master/addDemand';
 import ViewLegacy from './components/non-framework/wc/viewLegacy';
-import AddDemand from './components/contents/propertyTax/master/addDemand';
-
-//Property tax
-import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
-import Test from './components/contents/propertyTax/master/Test';
-import FloorType from './components/contents/propertyTax/master/FloorType';
-import RoofType from './components/contents/propertyTax/master/RoofType';
-import WallType from './components/contents/propertyTax/master/WallType';
-import WoodType from './components/contents/propertyTax/master/WoodType';
-import UsageType from './components/contents/propertyTax/master/UsageType';
-import PropertyType from './components/contents/propertyTax/master/PropertyType';
+// import AddDemand from './components/contents/propertyTax/master/addDemand';
+//
+// //Property tax
+// import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
+// import Test from './components/contents/propertyTax/master/Test';
+// import FloorType from './components/contents/propertyTax/master/FloorType';
+// import RoofType from './components/contents/propertyTax/master/RoofType';
+// import WallType from './components/contents/propertyTax/master/WallType';
+// import WoodType from './components/contents/propertyTax/master/WoodType';
+// import UsageType from './components/contents/propertyTax/master/UsageType';
+// import PropertyType from './components/contents/propertyTax/master/PropertyType';
 import EditDemands from './components/non-framework/wc/editDemands';
 
 // import Occupancy from './components/contents/propertyTax/master/Occupancy';
-import MutationReason from './components/contents/propertyTax/master/MutationReason';
-import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
-import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
-import DataEntry from './components/contents/propertyTax/master/DataEntry';
-import ViewProperty from './components/contents/propertyTax/master/viewProperty';
-import ViewDCB from './components/non-framework/pt/viewDCB';
-import Workflow from './components/contents/propertyTax/master/workflow';
-import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
-import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
-import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
-import InboxAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_inbox';
-
-
-import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
+// import MutationReason from './components/contents/propertyTax/master/MutationReason';
+// import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
+// import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
+// import DataEntry from './components/contents/propertyTax/master/DataEntry';
+// import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+// import ViewDCB from './components/non-framework/pt/viewDCB';
+// import Workflow from './components/contents/propertyTax/master/workflow';
+// import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+// import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
+// import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
+// import InboxAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_inbox';
+//
+//
+// import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 
 import PayTaxCreate from './components/non-framework/collection/master/paytax/PayTaxCreate';
-//import Transaction from './components/framework/transaction';
+import Transaction from './components/framework/transaction';
 //import Inbox from './components/framework/inbox';
 
 import createPenaltyRates from './components/non-framework/tl/masters/create/createPenaltyRates';
@@ -123,7 +123,7 @@ import createVoucher from './components/non-framework/egf/transaction/createVouc
 import acknowledgementWc from './components/non-framework/wc/acknowledgement';
 
 //Template parser
-// import TemplateParser from './components/framework/templates/templateParser/templateParser';
+//import TemplateParser from './components/framework/templates/templateParser/templateParser';
 
 //LegalTemplate parser
 //import LegalTemplateParser  from 'legal/templateParser/legalTemplateParser';
@@ -142,22 +142,19 @@ var inventory;
 
 if(process.env.NODE_ENV === "production") {
     fwRoutes = require('ui-react-framework');
-    assets = require('assets');
+    assets = require('asset');
     works = require('works');
     perfManagement = require('perfManagement');
-    legal = require('legal');
     pgr = require('pgr');
-    swm = require('swm');
     inventory = require('inventory');
 } else {
-    // fwRoutes = require('./development/ui-react-framework/lib/index');
-    // assets = require('./development/assets/lib/index');
-    // works = require('./development/works/lib/index');
-    // perfManagement = require('./development/perfManagement/lib/index');
-    // legal = require('./development/legal/lib/index');
-    // pgr = require('./development/pgr/lib/index');
-    // swm = require('./development/swm/lib/index');
-    // inventory = require('./development/inventory/lib/index');
+    fwRoutes = require('./development/ui-react-framework/lib/index');
+    console.log(fwRoutes.routes);
+    assets = require('./development/asset/lib/index');
+    works = require('./development/works/lib/index');
+    perfManagement = require('./development/perfManagement/lib/index');
+    pgr = require('./development/pgr/lib/index');
+    inventory = require('./development/inventory/lib/index');
 }
 
 const Main = () => {
@@ -166,39 +163,28 @@ const Main = () => {
     <Switch>
         {
             fwRoutes && fwRoutes.routes && fwRoutes.routes.length && fwRoutes.routes.map(function(r) {
-                <Route exact path= {r.route} component={r.component}/>
+                return (<Route exact path= {r.route} component={r.component}/>)
             })
         }
 
         {
             assets && assets.routes && assets.routes.length && assets.routes.map(function(r) {
-                <Route exact path= {r.route} component={r.component}/>
+                return (<Route exact path= {r.route} component={r.component}/>)
             })
         }
 
         {
             perfManagement && perfManagement.routes && perfManagement.routes.length && perfManagement.routes.map(function(r) {
-                <Route exact path= {r.route} component={r.component}/>
-            })
-        }
-
-        {
-            legal && legal.routes && legal.routes.length && legal.routes.map(function(r) {
-                <Route exact path= {r.route} component={r.component}/>
+                return (<Route exact path= {r.route} component={r.component}/>)
             })
         }
 
         {
             pgr && pgr.routes && pgr.routes.length && pgr.routes.map(function(r) {
-                <Route exact path= {r.route} component={r.component}/>
+                return (<Route exact path= {r.route} component={r.component}/>)
             })
         }
 
-        {
-            swm && swm.routes && swm.routes.length && swm.routes.map(function(r) {
-                <Route exact path= {r.route} component={r.component}/>
-            })
-        }
         <Route exact path= {base + '/:tenantId?'} component={Login}/>
         <Route exact path={base + '/service/request/search'} component={ServiceRequests}/>
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
@@ -250,7 +236,7 @@ const Main = () => {
        <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>
 
 
-          <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
+          {/*<Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
           <Route exact path={base+'/propertyTax/search'} component={PropertyTaxSearch}/>
           <Route exact path={base+'/propertyTax/test'} component={Test}/>
           <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
@@ -270,8 +256,8 @@ const Main = () => {
 		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
 		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
 		  <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
-		  <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>
-          {/*<Route exact path= {base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction}/>*/}
+		  <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>*/}
+          <Route exact path= {base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction}/>
 		  {/*<Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>*/}
 
       <Route exact path= {base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates}/>
@@ -322,8 +308,8 @@ const Main = () => {
       <Route exact path= {base + '/createWc/wc'} component={createWc}/>
       <Route exact path= {base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher}/>
       <Route exact path= {base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc}/>
-      {/*<Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>*/}
-      {/*<Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>*/}
+      {/*<Route exact path= {base + '/print/report/:templatePath'} component={TemplateParser}/>
+      <Route exact path= {base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser}/>*/}
       <Route component={NoMatch}/>
 
     </Switch>

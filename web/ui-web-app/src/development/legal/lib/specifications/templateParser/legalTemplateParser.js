@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import * as Templates from "../../../templates/templates/index";
+import * as Templates from "../templates/index";
 
 export default class legalTemplateParser extends Component {
 	constructor(props) {
@@ -12,7 +12,7 @@ export default class legalTemplateParser extends Component {
 		return(
 			<div>
 				<div id="printTemplate">
-					{ 
+					{
 						localStorage.templateData ? (
 							<div>
 								<Template data={JSON.parse(localStorage.templateData)}/>

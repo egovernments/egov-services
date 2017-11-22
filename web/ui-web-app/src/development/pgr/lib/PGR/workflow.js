@@ -10,7 +10,7 @@ import {
   TableRow,
   TableRowColumn,
 } from 'material-ui/Table';
-import {translate} from '../common';
+import {translate} from 'common-utility';
 
 const workflow = ({workflowdetails}) => {
   const renderWorkflow = () => {

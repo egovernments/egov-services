@@ -1,10 +1,7 @@
 import React, {Component} from 'react';
 import pdfMake from "pdfmake/build/pdfmake";
-import styles from '../../../../../styles/material-ui';
-import Api from '../../../../../api/api';
-import {translate, dataURItoBlob, epochToDate} from '../../../../common/common';
-import {fonts, getBase64FromImageUrl} from '../../../../common/pdf-generation/PdfConfig';
-import PdfViewer from '../../../../common/pdf-generation/PdfViewer';
+import styles from '../../styles/material-ui';
+import {translate, dataURItoBlob, epochToDate, Api, fonts, getBase64FromImageUrl, PdfViewer} from 'common-utility';
 import RaisedButton from 'material-ui/RaisedButton';
 
 
@@ -36,7 +33,7 @@ export default class VakalatnamaTemplate extends Component{
       var cityName = response[2]["details"][this.getTenantId()]['name'];
       this.generatePdf(response[0].image, response[1].image, cityName);
     }).catch(function(err) {
-      
+
     });
 
   }
@@ -82,7 +79,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
       for(var i = 0; i<vit.length; i++){
         witnessObj.ul.push(vit[i]);
       }
-    
+
 
     //document defintion
     var docDefinition = {
@@ -123,7 +120,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
               {text: " No. ", alignment:'left'},
               {text: data.summon.caseNo+".", alignment:'left', decoration: 'underline'},
               {text: " OF ", alignment:'left'}
-              
+
             ],
             margin:[20,0, 0,0]
       },
@@ -157,7 +154,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
       {
         text:[
         {text: "Witness  "},
-        
+
         ],margin:[20, 0, 0, 0]
       },
         {
@@ -221,7 +218,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
         noticeObj['noticeType'] = 'CREATE_VAKALATNAMA';
         noticeObj['fileStoreId'] = response.files[0].fileStoreId;
         Api.commonApiPost("lcms-services/legalcase/notice/_create",{},{notice:noticeObj}, false, true).then(function(response){
-          
+
         });
       });
     })

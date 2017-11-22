@@ -1,8 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {EXIF} from 'exif-js';
-import ImagePreview from '../../common/ImagePreview.js';
-import SimpleMap from '../../common/GoogleMaps.js';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Snackbar from 'material-ui/Snackbar';
@@ -15,7 +13,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {Api, Fields, translate, validate_fileupload, format_lat_long} from 'common-utility';
+import {Api, Fields, translate, validate_fileupload, format_lat_long, ImagePreview, SimpleMap} from 'common-utility';
 import styles from './styles/material-ui';
 var axios = require('axios');
 

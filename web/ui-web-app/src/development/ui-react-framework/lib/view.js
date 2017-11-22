@@ -185,9 +185,9 @@ class Report extends Component {
     try {
       var hash = window.location.hash.split("/");
       if(hash.length == 4) {
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/specifications/${hash[2]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
       } else {
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}`).default : require(`../../${hash[2]}/specifications/master/${hash[3]}`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}`).default;
       }
     } catch(e) {
 

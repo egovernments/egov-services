@@ -3,6 +3,6 @@
 
 var routes = [];
 
-module.exports = {
+export {
   routes
 };

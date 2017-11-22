@@ -81,11 +81,11 @@ class Search extends Component {
     try {
       var hash = window.location.hash.split("/");
       if(hash.length == 4 && hashLocation.split("/")[1]!="transaction") {
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../development/${hash[2]}/specifications/${hash[2]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
       } else if(hashLocation.split("/")[1]!="transaction"){
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../development/${hash[2]}/specifications/master/${hash[3]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}.specs`).default;
       } else {
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/transaction/${hash[3]}.specs`).default : require(`../../development/${hash[2]}/specifications/transaction/${hash[3]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/transaction/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/transaction/${hash[3]}.specs`).default;
       }
     } catch(e) {}
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
@@ -152,7 +152,7 @@ class Search extends Component {
     var specifications=JSON.parse(window.localStorage.getItem("specifications"));
     var currentSpecification=specifications[`${self.props.match.params.moduleName}.${self.props.match.path.split("/")[1]}`];
     let {getVal, getValFromDropdownData} = self;
-    
+
     Api.commonApiPost(currentSpecification.url, formData, {}, null, currentSpecification.useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
       var result = currentSpecification.result;
@@ -175,7 +175,7 @@ class Search extends Component {
             }
             if(typeof valuePath === 'object' && valuePath.isObj){
               var childArray=[];
-                if(valuePath.childArray && valuePath.childArray.length>0){ 
+                if(valuePath.childArray && valuePath.childArray.length>0){
                   for(var k=0;k<valuePath.childArray.length;k++){
                     childArray.push(_.get(values[i],valuePath.childArray[k]));
                   }
@@ -524,7 +524,7 @@ class Search extends Component {
        this.props.setRoute(buttonUrl+selectedRecordId);
       }
      }
-   
+
  }
   rowCheckboxClickHandler=(code)=>{
     this.setState({

@@ -8,7 +8,7 @@ import receivingModeCreate from './master/receivingMode/receivingModeCreate';
 import viewOrUpdateReceivingMode from './master/receivingMode/viewOrUpdateReceivingMode';
 import ServiceGroupCreate from './master/serviceGroup/serviceGroupCreate';
 import ViewEditServiceGroup from './master/serviceGroup/viewEditServiceGroup';
-import viewReceivingMode from './receivingMode/viewReceivingMode';
+import viewReceivingMode from './master/receivingMode/viewReceivingMode';
 import createRouter from './master/router/create';
 import searchRouter from './master/router/search';
 import routerGeneration from './master/router/routerGeneration';
@@ -37,7 +37,7 @@ var routes = [{
 	component: ReceivingCenterCreate,
 	route: '/pgr/createReceivingCenter/:id?'
 }, {
-	component: REceivingCenterCreate,
+	component: ReceivingCenterCreate,
 	route: '/pgr/createReceivingCenter'
 }, {
 	component: ViewEditReceivingCenter,
@@ -84,7 +84,7 @@ var routes = [{
 },{
 	component: routerGeneration,
 	route: '/pgr/routerGeneration'
-}{
+},{
 	component: BulkEscalationGeneration,
 	route: '/pgr/bulkEscalationGeneration'
 },{
@@ -124,3 +124,7 @@ var routes = [{
 	component: PgrAnalytics,
 	route: '/pgr/analytics'
 }];
+
+export {
+	routes
+};

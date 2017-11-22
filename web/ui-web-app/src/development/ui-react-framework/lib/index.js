@@ -26,7 +26,6 @@ import UiPinCode from './components/UiPinCode';
 import UiArrayField from './components/UiArrayField';
 import UiFileTable from './components/UiFileTable';
 import UiMultiFieldTable from './components/UiMultiFieldTable';
-import UiDialogBox from './components/UiDialogBox'
 import UigoogleMaps from './components/UigoogleMaps'
 import UiWorkflow from './components/UiWorkflow';
 import UiTimeField from './components/UiTimeField';
@@ -55,7 +54,7 @@ var routes = [{
 	route: '/print/report/:templatePath'
 }];
 
-module.exports = {
+export {
 	routes,
 	UiTextField,
 	ShowFields,
@@ -82,15 +81,14 @@ module.exports = {
 	UiArrayField,
 	UiFileTable,
 	UiMultiFieldTable,
-	UiDialogBox,
 	UigoogleMaps,
 	UiWorkflow,
 	UiTimeField,
 	UiCalendar,
-	int_to_words, 
-	getFullDate, 
-	fileUpload, 
-	getInitiatorPosition, 
+	int_to_words,
+	getFullDate,
+	fileUpload,
+	getInitiatorPosition,
 	getTitleCase,
 	UiDynamicTable,
 	UiDynamicTable2,

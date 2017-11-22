@@ -5,9 +5,8 @@ import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import _ from "lodash";
-import styles from '../../../../styles/material-ui';
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import styles from '../styles/material-ui';
+import {translate, Api} from 'common-utility';
 
 var self;
 

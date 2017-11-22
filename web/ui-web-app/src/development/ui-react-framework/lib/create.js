@@ -308,9 +308,9 @@ class Report extends Component {
 
       try {
         if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-          specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../development/${hash[2]}/specifications/${hash[2]}.specs`).default;
+          specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
         } else {
-          specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../development/${hash[2]}/specifications/master/${hash[3]}.specs`).default;
+          specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}.specs`).default;
         }
       } catch(e) {
         console.log(e);

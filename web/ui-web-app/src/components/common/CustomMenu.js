@@ -13,7 +13,7 @@ import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import jp from "jsonpath";
 import _ from "lodash";
-import {getTitleCase} from '../framework/utility/utility';
+import {getTitleCase} from 'ui-react-framework';
 
 const menuConvention={
   "Grievance Redressal.Grievance.Create Complaint":"/pgr/createGrievance",

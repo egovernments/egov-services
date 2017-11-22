@@ -9,29 +9,29 @@ import PriceListSearch from './transaction/pricelist/PriceListSearch';
 
 
 var routes = [{
-  Component: MaterialSearch
+  Component: MaterialSearch,
   route: '/non-framework/inventory/master/material'
 }, {
-  Component: MaterialStoreMappingSearch
+  Component: MaterialStoreMappingSearch,
   route: '/non-framework/inventory/master/materialstoremapping'
 },
 {
-  Component: StoreSearch
+  Component: StoreSearch,
   route: '/non-framework/inventory/master/store'
 },
 {
-  Component: SupplierSearch
+  Component: SupplierSearch,
   route: '/non-framework/inventory/master/supplier'
 },
 {
-  Component: IndentSearch
+  Component: IndentSearch,
   route: '/non-framework/inventory/indent'
 },
 {
-  Component: PriceListSearch
+  Component: PriceListSearch,
   route: '/non-framework/inventory/transaction/pricelist'
 }];
 
-module.exports = {
+export {
   routes
 };

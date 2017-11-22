@@ -4,4 +4,4 @@ import MyExampleTemplate from './MyExampleTemplate';
 // import VakalatnamaTemplate from 'lcms/templates/VakalatnamaTemplate';
 // import landRegisterReport from 'asset/templates/landRegisterReport';
 
-export { MyExampleTemplate};
+export { MyExampleTemplate };

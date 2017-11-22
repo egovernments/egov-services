@@ -50,7 +50,12 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "ui-react-framework": "0.0.1"
+    "ui-react-framework": "0.0.1",
+    "asset": "0.0.1",
+    "pgr": "0.0.1",
+    "inventory": "0.0.1",
+    "works": "0.0.1",
+    "perfManagement": "0.0.1"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

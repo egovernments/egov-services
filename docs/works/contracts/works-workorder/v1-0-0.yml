@@ -1133,10 +1133,9 @@ definitions:
         description: Epoch time of LOA Date. Default the current date for new LOA and do not allow to modify. This field is user entered for spillover LOA. Allowed to edit during rejected status or drafts for LOA. Future date is not allowed to enter in this field. LOA date should be on or after the L1 Tender Finalized status date of Detailed Estimate. 
       loaNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[0-9a-zA-Z/]+' 
         description: Unique LOA Number of the Letter Of Acceptance. If the LOA is spillover then the LOA number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover LOA.
         maxLength: 50
-        minLength: 1
       contractPeriod:
         type: number
         pattern: "[0-9]+"
@@ -1301,8 +1300,8 @@ definitions:
         type: string
         description: reference of 'LetterOfAcceptance'. Pimary key is reference here.
       detailedEstimate:
-        type: string
-        description: Detailed Estimate reference. estimate number is reference here.
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/DetailedEstimate'
+        description: Detailed Estimate reference.
       workCompletionDate:
         type: integer
         format: int64
@@ -1327,7 +1326,6 @@ definitions:
     required:
       - tenantId
       - detailedEstimate
-      - letterOfAcceptance
     
   SecurityDeposit:
     type: object
@@ -1361,7 +1359,6 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - letterOfAcceptance
       - collectionMode
       - percentage
       - amount
@@ -1384,10 +1381,8 @@ definitions:
         maxLength: 100
         minLength: 1
       estimateActivity:
-        type: string
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-estimate/v1-0-0.yml#/definitions/EstimateActivity'
         description: Reference of Estimate Activity, primary key is ref here.
-        maxLength: 100
-        minLength: 1
       parent:
         type: string
         description: Parent of the Letter Of Acceptance Activity. This is required for Revision Workrder parent activity.
@@ -1441,7 +1436,7 @@ definitions:
           description: Tenant id of the Measurement Sheet
           maxLength: 128
           minLength: 2
-        number:
+        no:
           type: number
           format: BigDecimal
           description: No. of the Measurement sheet
@@ -1995,8 +1990,3 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
-
-
-
-
-

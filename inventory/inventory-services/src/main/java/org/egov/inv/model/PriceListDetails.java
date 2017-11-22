@@ -3,16 +3,10 @@ package org.egov.inv.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.math.BigDecimal;
-import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
-
-import org.egov.inv.model.Material.InventoryTypeEnum;
-import org.egov.inv.model.Material.MaterialClassEnum;
-import org.egov.inv.model.Material.StatusEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -56,6 +50,9 @@ public class PriceListDetails   {
   @JsonProperty("active")
   private Boolean active = null;
 
+  @JsonProperty("isDeleted")
+  private Boolean isDeleted = null;
+  
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
 
@@ -237,6 +234,26 @@ public class PriceListDetails   {
 
   public void setActive(Boolean active) {
     this.active = active;
+  }
+  
+  public PriceListDetails isDeleted(Boolean isDeleted) {
+	    this.isDeleted = isDeleted;
+	    return this;
+	  }
+
+  /**
+   * Delete flag of the material in the system
+   * @return isDeleted
+  **/
+  @ApiModelProperty(value = "Delete flag of the material in the system")
+
+
+  public Boolean getIsDeleted() {
+    return isDeleted;
+  }
+
+  public void setIsDeleted(Boolean isDeleted) {
+    this.isDeleted = isDeleted;
   }
 
   public PriceListDetails auditDetails(AuditDetails auditDetails) {

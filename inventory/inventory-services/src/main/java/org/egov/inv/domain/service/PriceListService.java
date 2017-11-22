@@ -12,10 +12,12 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
+import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
+import org.egov.inv.persistence.repository.PriceListDetailJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListRepository;
 import org.egov.tracer.model.CustomException;
@@ -23,7 +25,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class PriceListService extends DomainService {
@@ -49,6 +50,9 @@ public class PriceListService extends DomainService {
 
     @Autowired
     private PriceListJdbcRepository priceListJdbcRepository;
+    
+    @Autowired
+    private PriceListDetailJdbcRepository priceListDetailsJdbcRepository;
     
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -99,7 +103,6 @@ public class PriceListService extends DomainService {
                 	}
                 }
                 
-                
                 List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), priceListRequest.getPriceLists().get(i).getPriceListDetails().size());
                 for(int j =0; j <= priceListDetailsIdList.size()-1; j++){
                 	priceListRequest.getPriceLists().get(i)
@@ -125,6 +128,7 @@ public class PriceListService extends DomainService {
 			String tenantId) {
 
 		try {
+			validate(priceListRequest.getPriceLists(), Constants.ACTION_UPDATE);
 			priceListRequest.getPriceLists().stream().forEach(priceList -> {
 								priceList.setAuditDetails(mapAuditDetailsForUpdate(priceListRequest.getRequestInfo()));
 								priceList.setRateContractNumber(priceList.getRateContractNumber().toUpperCase());
@@ -132,6 +136,12 @@ public class PriceListService extends DomainService {
 								if(priceList.getTenantId()==null){
 									priceList.setTenantId(tenantId);
 								}
+								PriceListDetailsSearchRequest priceListDetailsSearchRequest = new PriceListDetailsSearchRequest();
+								priceListDetailsSearchRequest.setPriceList(priceList.getId());
+								priceListDetailsSearchRequest.setActive(true);
+								priceListDetailsSearchRequest.setIsDeleted(false);
+								List<PriceListDetails> oldPriceListDetails = priceListDetailsJdbcRepository.search(priceListDetailsSearchRequest).getPagedData();
+								int actualOldCount = oldPriceListDetails.size();
 								for(PriceListDetails priceListDetail:priceList.getPriceListDetails()){
 									if(priceListDetail.getTenantId()==null){
 										priceListDetail.setTenantId(tenantId);
@@ -140,6 +150,25 @@ public class PriceListService extends DomainService {
 									{
 										priceListDetail.setQuantity((priceListDetail.getUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
 									}
+									for(PriceListDetails pld:oldPriceListDetails){
+										if(pld.getId().equals(priceListDetail.getId()))
+											oldPriceListDetails.remove(pld);
+									}
+								}
+								int removedIds = oldPriceListDetails.size();
+								int newIdsCount = priceList.getPriceListDetails().size() + removedIds - actualOldCount;
+								int newIdStartRange = actualOldCount-removedIds;
+								
+								List<String> priceListDetailsIdList = priceListJdbcRepository.getSequence(PriceListDetails.class.getSimpleName(), newIdsCount);
+								
+								for(int i=newIdStartRange; i<priceList.getPriceListDetails().size(); i++){
+									priceList.getPriceListDetails().get(i).setId(priceListDetailsIdList.get(0));
+									priceListDetailsIdList.remove(0);
+								}
+								
+								for(PriceListDetails pld:oldPriceListDetails){
+									pld.setIsDeleted(true);
+									priceList.getPriceListDetails().add(pld);
 								}
 							});
 
@@ -173,6 +202,13 @@ public class PriceListService extends DomainService {
 			switch (method) {
 
 			case Constants.ACTION_CREATE: {
+				if (priceLists == null) {
+					throw new InvalidDataException("priceLists", ErrorCode.NOT_NULL.getCode(), null);
+				}
+			}
+				break;
+
+			case Constants.ACTION_UPDATE: {
 				if (priceLists == null) {
 					throw new InvalidDataException("priceLists", ErrorCode.NOT_NULL.getCode(), null);
 				}

@@ -40,6 +40,8 @@ public class PriceListDetailsEntity {
     
     private Boolean active;
     
+    private Boolean isDeleted;
+    
     private String tenantId;
 
     private String lastModifiedBy;

@@ -3,7 +3,6 @@ package org.egov.inv.model;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -11,10 +10,6 @@ import java.util.Objects;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.egov.inv.model.Material.InventoryTypeEnum;
-import org.egov.inv.model.Material.MaterialClassEnum;
-import org.egov.inv.model.Material.StatusEnum;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

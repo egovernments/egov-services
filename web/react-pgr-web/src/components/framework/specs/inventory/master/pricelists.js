@@ -871,7 +871,7 @@ var dat = {
                   "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":true,
-                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..description|$..conversionFactor1",
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor",
                   "depedants": [
                     {
                       "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",

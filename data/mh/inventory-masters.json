@@ -102,7 +102,7 @@
     }
   ],
   "Material": [
-    { 
+    {
       "code": "MAT1",
       "tenantId": "mh",
       "materialType": {
@@ -111,7 +111,8 @@
       "name": "SEAL",
       "description": "Seal",
       "baseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "expenseAccount": {
         "glCode": "44001"
@@ -121,10 +122,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "stockingUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       }
     },
     {
@@ -136,7 +139,8 @@
       "name": "FRONT AXLE BOLT",
       "description": "Front Axle Bolt",
       "baseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "expenseAccount": {
         "glCode": "44002"
@@ -146,10 +150,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "stockingUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       }
     },
     {
@@ -161,7 +167,9 @@
       "name": "ENGINE OIL",
       "description": "EngineOil",
       "baseUom": {
-        "code": "LTR"
+        "code": "LTR",
+        "uomCategory": "VOLUME"
+        
       },
       "expenseAccount": {
         "glCode": "44003"
@@ -174,7 +182,9 @@
         "code": ":LTR"
       },
       "stockingUom": {
-        "code": "LTR"
+        "code": "LTR",
+        "uomCategory": "VOLUME"
+        
       }
     },
     {
@@ -186,7 +196,8 @@
       "name": "LAPTOPS",
       "description": "Laptops",
       "baseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "expenseAccount": {
         "glCode": "44004"
@@ -196,10 +207,12 @@
       "reorderLevel": "8",
       "reorderQuantity": "8",
       "purchaseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "stockingUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       }
     },
     {
@@ -211,7 +224,8 @@
       "name": "IRON NAILS",
       "description": "Iron Nails",
       "baseUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44005"
@@ -221,10 +235,12 @@
       "reorderLevel": "1500",
       "reorderQuantity": "1000",
       "purchaseUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       }
     },
     {
@@ -236,7 +252,8 @@
       "name": "SIlk THREAD",
       "description": "Silk Thread",
       "baseUom": {
-        "code": "MTR"
+        "code": "MTR",
+        "uomCategory": "LENGTH"
       },
       "expenseAccount": {
         "glCode": "44006"
@@ -246,10 +263,12 @@
       "reorderLevel": "40",
       "reorderQuantity": "30",
       "purchaseUom": {
-        "code": "MTR"
+        "code": "MTR",
+        "uomCategory": "LENGTH"
       },
       "stockingUom": {
-        "code": "MTR"
+        "code": "MTR",
+        "uomCategory": "LENGTH"
       }
     },
     {
@@ -261,7 +280,8 @@
       "name": "OIL GREASE",
       "description": "Oil Grease",
       "baseUom": {
-        "code": "GMS"
+        "code": "GMS",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44007"
@@ -271,10 +291,12 @@
       "reorderLevel": "800",
       "reorderQuantity": "500",
       "purchaseUom": {
-        "code": "GMS"
+        "code": "GMS",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "GMS"
+        "code": "GMS",
+        "uomCategory": "WEIGHT"
       }
     },
     {
@@ -286,7 +308,9 @@
       "name": "PAINT",
       "description": "paint",
       "baseUom": {
-        "code": "LTR"
+        "code": "LTR",
+        "uomCategory": "VOLUME"
+        
       },
       "expenseAccount": {
         "glCode": "44008"
@@ -296,10 +320,14 @@
       "reorderLevel": "70",
       "reorderQuantity": "30",
       "purchaseUom": {
-        "code": "LTR"
+        "code": "LTR",
+        "uomCategory": "VOLUME"
+        
       },
       "stockingUom": {
-        "code": "LTR"
+        "code": "LTR",
+        "uomCategory": "VOLUME"
+        
       }
     },
     {
@@ -311,7 +339,8 @@
       "name": "SCREWS",
       "description": "Screws",
       "baseUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44009"
@@ -321,10 +350,12 @@
       "reorderLevel": "1500",
       "reorderQuantity": "1000",
       "purchaseUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       }
     },
     {
@@ -336,7 +367,8 @@
       "name": "WATER PUMP",
       "description": "Water Pump",
       "baseUom": {
-        "code": "HP"
+        "code": "HP",
+        "uomCategory": "POWER"
       },
       "expenseAccount": {
         "glCode": "44010"
@@ -346,10 +378,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "HP"
+        "code": "HP",
+        "uomCategory": "POWER"
       },
       "stockingUom": {
-        "code": "HP"
+        "code": "HP",
+        "uomCategory": "POWER"
       }
     },
     {
@@ -361,7 +395,8 @@
       "name": "PROTECTOR OIL SEAL",
       "description": "Protector Oil Seal",
       "baseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "expenseAccount": {
         "glCode": "44011"
@@ -371,10 +406,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       },
       "stockingUom": {
-        "code": "NOS"
+        "code": "NOS",
+        "uomCategory": "QUANTITY"
       }
     },
     {
@@ -386,7 +423,8 @@
       "name": "OFC CABLE",
       "description": "OFC Cable",
       "baseUom": {
-        "code": "MTR"
+        "code": "MTR",
+        "uomCategory": "LENGTH"
       },
       "expenseAccount": {
         "glCode": "44012"
@@ -396,10 +434,13 @@
       "reorderLevel": "300",
       "reorderQuantity": "500",
       "purchaseUom": {
-        "code": "MTRTR"
+        "code": "MTR",
+        "uomCategory": "LENGTH"
+
       },
       "stockingUom": {
-        "code": "MTR"
+        "code": "MTR",
+        "uomCategory": "LENGTH"
       }
     },
     {
@@ -411,7 +452,8 @@
       "name": "AIR COOLER",
       "description": "Air Cooler",
       "baseUom": {
-        "code": "KW"
+        "code": "KW",
+        "uomCategory": "POWER"
       },
       "expenseAccount": {
         "glCode": "44013"
@@ -421,10 +463,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "KW"
+        "code": "KW",
+        "uomCategory": "POWER"
       },
       "stockingUom": {
-        "code": "KW"
+        "code": "KW",
+        "uomCategory": "POWER"
       }
     },
     {
@@ -436,7 +480,8 @@
       "name": "BULB",
       "description": "Bulb",
       "baseUom": {
-        "code": "KVA"
+        "code": "KVA",
+        "uomCategory": "POWER"
       },
       "expenseAccount": {
         "glCode": "44014"
@@ -446,10 +491,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "KVA"
+        "code": "KVA",
+        "uomCategory": "POWER"
       },
       "stockingUom": {
-        "code": "KVA"
+        "code": "KVA",
+        "uomCategory": "POWER"
       }
     },
     {
@@ -461,7 +508,8 @@
       "name": "PAPER",
       "description": "Paper",
       "baseUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44015"
@@ -471,10 +519,12 @@
       "reorderLevel": "50",
       "reorderQuantity": "50",
       "purchaseUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "KGS"
+        "code": "KGS",
+        "uomCategory": "WEIGHT"
       }
     },
     {
@@ -486,7 +536,8 @@
       "name": "TILES",
       "description": "Tiles",
       "baseUom": {
-        "code": "SFT"
+        "code": "SFT",
+        "uomCategory": "AREA"
       },
       "expenseAccount": {
         "glCode": "44016"
@@ -496,10 +547,12 @@
       "reorderLevel": "50",
       "reorderQuantity": "50",
       "purchaseUom": {
-        "code": "SFT"
+        "code": "SFT",
+        "uomCategory": "AREA"
       },
       "stockingUom": {
-        "code": "SFT"
+        "code": "SFT",
+        "uomCategory": "AREA"
       }
     },
     {
@@ -511,7 +564,8 @@
       "name": "METAL SHEAT",
       "description": "Metal Sheat",
       "baseUom": {
-        "code": "SFT"
+        "code": "SFT",
+        "uomCategory": "AREA"
       },
       "expenseAccount": {
         "glCode": "44017"
@@ -521,10 +575,12 @@
       "reorderLevel": "50",
       "reorderQuantity": "50",
       "purchaseUom": {
-        "code": "SFT"
+        "code": "SFT",
+        "uomCategory": "AREA"
       },
       "stockingUom": {
-        "code": "SFT"
+        "code": "SFT",
+        "uomCategory": "AREA"
       }
     },
     {
@@ -536,7 +592,8 @@
       "name": "COTTON",
       "description": "Cotton",
       "baseUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44018"
@@ -546,10 +603,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       }
     },
     {
@@ -561,7 +620,8 @@
       "name": "CEMENT",
       "description": "Cement",
       "baseUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44019"
@@ -571,10 +631,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       }
     },
     {
@@ -586,7 +648,8 @@
       "name": "IRON",
       "description": "Iron",
       "baseUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       },
       "expenseAccount": {
         "glCode": "44020"
@@ -596,10 +659,12 @@
       "reorderLevel": "10",
       "reorderQuantity": "12",
       "purchaseUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       },
       "stockingUom": {
-        "code": "TON"
+        "code": "TON",
+        "uomCategory": "WEIGHT"
       }
     }
   ],

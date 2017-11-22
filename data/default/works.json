@@ -710,140 +710,6 @@
       "lastmodifieddate": null
     }
   ],
-  "Fund": [
-    {
-      "id": "2",
-      "name": "Capital Fund",
-      "code": "02",
-      "identifier": "2",
-      "level": 1,
-      "parentid": null,
-      "active": false,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "3",
-      "name": "Elementary Education Fund",
-      "code": "03",
-      "identifier": "3",
-      "level": 1,
-      "parentid": null,
-      "active": false,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "4",
-      "name": "Earmarked Funds",
-      "code": "04",
-      "identifier": "4",
-      "level": 1,
-      "parentid": null,
-      "active": false,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "1",
-      "name": "Municipal Fund",
-      "code": "01",
-      "identifier": "1",
-      "level": 1,
-      "parentid": null,
-      "active": true,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    }
-  ],
-  "Function": [
-    {
-      "id": "1",
-      "name": "GENERAL ADMINISTRATION",
-      "code": "00",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "2",
-      "name": "PUBLIC WORKS",
-      "code": "20",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "3",
-      "name": "REVENUE",
-      "code": "90",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "4",
-      "name": "PLANNING AND REGULATIONS",
-      "code": "10",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    },
-    {
-      "id": "5",
-      "name": "CIVIC AMENITIES",
-      "code": "50",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantId": "default"
-    }
-  ],
   "BudgetGroup": [
     {
       "id": 363,
@@ -1065,21 +931,21 @@
       "name": "New",
       "expenditureType": "CAPITAL",
       "code": "New",
-      "tenantId": "mh"
+      "tenantId": "default"
     },
     {
       "id": 2,
       "name": "Repairs",
       "expenditureType": "REVENUE",
       "code": "Repairs",
-      "tenantId": "mh"
+      "tenantId": "default"
     },
     {
       "id": 3,
       "name": "Addition",
       "expenditureType": "REVENUE",
       "code": "Addition",
-      "tenantId": "mh"
+      "tenantId": "default"
     }
   ],
   "ModeOfAllotment": [

@@ -49,31 +49,444 @@
   ],
   "TypeOfWork": [
     {
-      "id": 1,
-      "tenantId": "mh",
-      "code": "RoadsFake",
-      "name": "RoadsFake",
-      "description": "Roads - Fake",
-      "active": true,
+      "code": "Buildings",
+      "description": "Buildings",
+      "name": "Buildings",
+      "tenantid": "mh",
+      "active": "true",
       "parent": null
     },
     {
-      "id": 2,
-      "tenantId": "mh",
-      "code": "BuildingsFake",
-      "name": "BuildingsFake",
-      "description": "Buildings - Fake",
-      "active": true,
+      "code": "Water Works",
+      "description": "Water Works",
+      "name": "Water Works",
+      "tenantid": "mh",
+      "active": "true",
       "parent": null
     },
     {
-      "id": 3,
-      "tenantId": "mh",
-      "code": "CCRoadsFake",
-      "name": "CCRoadsFake",
-      "description": "CC - Roads - Fake",
-      "active": true,
-      "parent": "RoadsFake"
+      "code": "RDBF",
+      "description": "Roads, Drains, Bridges and Flyovers",
+      "name": "RDBF",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "LDCW",
+      "description": "Land Development (civil works)",
+      "name": "LDCW",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "SWDANDUGD",
+      "description": "Strom Water Drains and UGD",
+      "name": "SWDANDUGD",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "STREETLIGHTING",
+      "description": "Street Lighting",
+      "name": "STREETLIGHTING",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "SWM",
+      "description": "Solid Waste Management",
+      "name": "SWM",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "VEHICLES",
+      "description": "Vehicles",
+      "name": "VEHICLES",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "FURNITURES",
+      "description": "Furniture and Fixtures",
+      "name": "FURNITURES",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "EQUIPMENT",
+      "description": "Equipment",
+      "name": "EQUIPMENT",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "Supplies",
+      "description": "Supplies",
+      "name": "Supplies",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": null
+    },
+    {
+      "code": "ROADS",
+      "description": "Roads",
+      "name": "ROADS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "ROADSDRAINS",
+      "description": "Road-Drains",
+      "name": "ROADSDRAINS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "OFFICEBUILDINGS",
+      "description": "Office Buildings",
+      "name": "OFFICEBUILDINGS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "COMMUNITYBUILDINGS",
+      "description": "Community Buildings",
+      "name": "COMMUNITYBUILDINGS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "RWC",
+      "description": "Road Widening Compensation",
+      "name": "RWC",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
+    },
+    {
+      "code": "WATERSTORAGE",
+      "description": "Water Storage",
+      "name": "WATERSTORAGE",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Water Works"
+    },
+    {
+      "code": "PARKS",
+      "description": "Parks",
+      "name": "PARKS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
+    },
+    {
+      "code": "PLAYGROUNDS",
+      "description": "Playgrounds",
+      "name": "PLAYGROUNDS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
+    },
+    {
+      "code": "DYANDTS",
+      "description": "Dumping Yards and Transfer Stations",
+      "name": "DYANDTS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
+    },
+    {
+      "code": "BURIALGROUNDS",
+      "description": "Burial Grounds",
+      "name": "BURIALGROUNDS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
+    },
+    {
+      "code": "COMMERCIALCOMPLEX",
+      "description": "Commercial Complex",
+      "name": "COMMERCIALCOMPLEX",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "SCHOOLBUILDINGS",
+      "description": "School Buildings",
+      "name": "SCHOOLBUILDINGS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "HOSPITALS",
+      "description": "Hospitals and Dispensaries",
+      "name": "HOSPITALS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "CREMATORIUM",
+      "description": "Crematorium",
+      "name": "CREMATORIUM",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "SPORTSCOMPLEX",
+      "description": "Sports Complex and Swimming Pools",
+      "name": "SPORTSCOMPLEX",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "OTHERBUILDINGS",
+      "description": "Other Buildings",
+      "name": "OTHERBUILDINGS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Buildings"
+    },
+    {
+      "code": "OTHERBUILDINGS",
+      "description": "Bridges, Culverts",
+      "name": "OTHERBUILDINGS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "RUB",
+      "description": "RUB",
+      "name": "RUB",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "ROB",
+      "description": "ROB",
+      "name": "ROB",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "FLYOVERS",
+      "description": "Flyovers",
+      "name": "FLYOVERS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "SWD",
+      "description": "SWD",
+      "name": "SWD",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "SWDANDUGD"
+    },
+    {
+      "code": "UGD",
+      "description": "UGD",
+      "name": "UGD",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "SWDANDUGD"
+    },
+    {
+      "code": "PURIFICATION",
+      "description": "Purification",
+      "name": "PURIFICATION",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Water Works"
+    },
+    {
+      "code": "PUMPING",
+      "description": "Pumping",
+      "name": "PUMPING",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Water Works"
+    },
+    {
+      "code": "DISTRIBUTION",
+      "description": "Distribution",
+      "name": "DISTRIBUTION",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Water Works"
+    },
+    {
+      "code": "MAJORSTREETS",
+      "description": "Major Streets",
+      "name": "MAJORSTREETS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "STREETLIGHTING"
+    },
+    {
+      "code": "MINORSTREETS",
+      "description": "Minor Streets",
+      "name": "MINORSTREETS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "STREETLIGHTING"
+    },
+    {
+      "code": "STP",
+      "description": "Sewerage Treatment Plant",
+      "name": "STP",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "SWM"
+    },
+    {
+      "code": "DESILTING",
+      "description": "Desilting",
+      "name": "DESILTING",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "SWM"
+    },
+    {
+      "code": "HMV",
+      "description": "Heavy Vehicles",
+      "name": "HMV",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "VEHICLES"
+    },
+    {
+      "code": "LMV",
+      "description": "Light Vehicles",
+      "name": "LMV",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "VEHICLES"
+    },
+    {
+      "code": "TWOAND4WHEELERS",
+      "description": "Two and Four wheelers",
+      "name": "TWOAND4WHEELERS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "VEHICLES"
+    },
+    {
+      "code": "TABLESANDCHAIRS",
+      "description": "Tables and Chairs",
+      "name": "TABLESANDCHAIRS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "FURNITURES"
+    },
+    {
+      "code": "OFFICEFURNITURE",
+      "description": "Office Furniture",
+      "name": "OFFICEFURNITURE",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "FURNITURES"
+    },
+    {
+      "code": "COMPUTERS",
+      "description": "Computers, Laptops, Tabs,  Mobiles",
+      "name": "COMPUTERS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "EQUIPMENT"
+    },
+    {
+      "code": "PRINTERS",
+      "description": "Printers",
+      "name": "PRINTERS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "EQUIPMENT"
+    },
+    {
+      "code": "PHOTOCOPIERS",
+      "description": "Photo Copiers",
+      "name": "PHOTOCOPIERS",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "EQUIPMENT"
+    },
+    {
+      "code": "OTHEREQUIPMENT",
+      "description": "Other Office Equipment",
+      "name": "OTHEREQUIPMENT",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "EQUIPMENT"
+    },
+    {
+      "code": "ManPower",
+      "description": "Man power",
+      "name": "ManPower",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Supplies"
+    },
+    {
+      "code": "Consumables",
+      "description": "Consumables",
+      "name": "Consumables",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "Supplies"
+    },
+    {
+      "code": "FootPath",
+      "description": "Foot Path",
+      "name": "FootPath",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "RoadFurniture",
+      "description": "Road Furniture",
+      "name": "RoadFurniture",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "RDBF"
+    },
+    {
+      "code": "WaterBodies",
+      "description": "Water Bodies",
+      "name": "WaterBodies",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
+    },
+    {
+      "code": "CENTRALMEDIA",
+      "description": "Central Median/Dividers",
+      "name": "CENTRALMEDIA",
+      "tenantid": "mh",
+      "active": "true",
+      "parent": "LDCW"
     }
   ],
   "Overhead": [
@@ -282,140 +695,19 @@
       "lastmodifiedby": null,
       "lastmodifieddate": null,
       "tenantId": "mh"
-    }
-  ],
-  "Fund": [
-    {
-      "id": "2",
-      "name": "Capital Fund",
-      "code": "02",
-      "identifier": "2",
-      "level": 1,
-      "parentid": null,
-      "active": false,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
     },
     {
-      "id": "3",
-      "name": "Elementary Education Fund",
-      "code": "03",
-      "identifier": "3",
-      "level": 1,
-      "parentid": null,
-      "active": false,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    },
-    {
-      "id": "4",
-      "name": "Earmarked Funds",
-      "code": "04",
-      "identifier": "4",
-      "level": 1,
-      "parentid": null,
-      "active": false,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    },
-    {
-      "id": "1",
-      "name": "Municipal Fund",
-      "code": "01",
-      "identifier": "1",
-      "level": 1,
-      "parentid": null,
-      "active": true,
-      "createdby": null,
-      "createddate": "213123456456",
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    }
-  ],
-  "Function": [
-    {
-      "id": "1",
-      "name": "GENERAL ADMINISTRATION",
-      "code": "00",
-      "level": 0,
-      "active": false,
-      "parentid": null,
+      "id": 4,
+      "code": "Spillover_Workflow_Mandatory",
+      "keyName": "Spillover_Workflow_Mandatory",
+      "tenantId": "mh",
+      "description": "Workflow for Spillover required or not for Estimate screen",
+      "value": "Yes",
+      "effectivefrom": "2017-08-22",
       "createdby": null,
       "createddate": null,
       "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    },
-    {
-      "id": "2",
-      "name": "PUBLIC WORKS",
-      "code": "20",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    },
-    {
-      "id": "3",
-      "name": "REVENUE",
-      "code": "90",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    },
-    {
-      "id": "4",
-      "name": "PLANNING AND REGULATIONS",
-      "code": "10",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
-    },
-    {
-      "id": "5",
-      "name": "CIVIC AMENITIES",
-      "code": "50",
-      "level": 0,
-      "active": false,
-      "parentid": null,
-      "createdby": null,
-      "createddate": null,
-      "lastmodifiedby": null,
-      "lastmodifieddate": null,
-      "version": 0,
-      "tenantid": "mh"
+      "lastmodifieddate": null
     }
   ],
   "BudgetGroup": [
@@ -434,7 +726,7 @@
       "lastmodifiedby": 1,
       "lastmodifieddate": "12345678912",
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 365,
@@ -451,7 +743,7 @@
       "lastmodifiedby": 1,
       "lastmodifieddate": "12345678912",
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 367,
@@ -468,7 +760,7 @@
       "lastmodifiedby": 1,
       "lastmodifieddate": "12345678912",
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 369,
@@ -485,7 +777,7 @@
       "lastmodifiedby": 1,
       "lastmodifieddate": "12345678912",
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 371,
@@ -502,7 +794,7 @@
       "lastmodifiedby": 1,
       "lastmodifieddate": "12345678912",
       "version": 0,
-      "tenantid": "mh"
+      "tenantId": "mh"
     }
   ],
   "Scheme": [
@@ -522,7 +814,7 @@
       "lastmodifieddate": null,
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 35,
@@ -540,7 +832,7 @@
       "lastmodifieddate": null,
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 36,
@@ -558,7 +850,7 @@
       "lastmodifieddate": null,
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     }
   ],
   "SubScheme": [
@@ -574,7 +866,7 @@
       "createddate": "123151351",
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 2,
@@ -588,7 +880,7 @@
       "createddate": "2016-08-11T00:00:00",
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 3,
@@ -602,7 +894,7 @@
       "createddate": "2016-08-11T00:00:00",
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 4,
@@ -616,7 +908,7 @@
       "createddate": "2016-08-11T00:00:00",
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     },
     {
       "id": 5,
@@ -630,7 +922,7 @@
       "createddate": "2016-08-11T00:00:00",
       "createdby": 1,
       "lastmodifiedby": null,
-      "tenantid": "mh"
+      "tenantId": "mh"
     }
   ],
   "NatureOfWork": [
@@ -680,26 +972,456 @@
     {
       "id": 1,
       "name": "Breaking Down Fake",
-      "tenantId": "default"
+      "tenantId": "mh"
     }
   ],
   "LandAssetPresentCondition": [
     {
       "id": 1,
       "name": "Damage Fake",
-      "tenantId": "default"
+      "tenantId": "mh"
     }
   ],
   "EstimateSanctionAuthority": [
     {
       "id": 1,
-      "name": "Chief Officer",
-      "tenantId": "default"
+      "name": "Municipal Engineer",
+      "tenantId": "mh"
     },
     {
       "id": 2,
+      "name": "Chief Officer",
+      "tenantId": "mh"
+    },
+    {
+      "id": 3,
       "name": "Commissioner",
-      "tenantId": "default"
+      "tenantId": "mh"
+    },
+    {
+      "id": 4,
+      "name": "Collector",
+      "tenantId": "mh"
+    },
+    {
+      "id": 5,
+      "name": "Regional Commissioner",
+      "tenantId": "mh"
+    },
+    {
+      "id": 6,
+      "name": "PWD- Executive Engineer",
+      "tenantId": "mh"
+    },
+    {
+      "id": 7,
+      "name": "Executive Engineer MJP",
+      "tenantId": "mh"
+    },
+    {
+      "id": 8,
+      "name": "Director Of Municipal Administraction",
+      "tenantId": "mh"
+    },
+    {
+      "id": 9,
+      "name": "Principle Secretary",
+      "tenantId": "mh"
+    },
+    {
+      "id": 10,
+      "name": "Municipal Body",
+      "tenantId": "mh"
+    },
+    {
+      "id": 11,
+      "name": "President",
+      "tenantId": "mh"
+    },
+    {
+      "id": 12,
+      "name": "Chair Person",
+      "tenantId": "mh"
+    }
+  ],
+  "PMCType": [
+    {
+      "id": 1,
+      "name": "Panel",
+      "tenantId": "mh"
+    },
+    {
+      "id": 2,
+      "name": "New Appointment",
+      "tenantId": "mh"
+    }
+  ],
+  "WorksStatus": [
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "DetailedEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "NOTICEINVITINGTENDERRELEASED",
+      "description": "Notice inviting tender released",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "TENDER_DOCUMENT_RELEASED",
+      "description": "Tender document released",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "TENDER_OPENED",
+      "description": "Tender opened",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "TECHNICAL_EVALUATION_DONE",
+      "description": "Technical evaluation done",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "COMMERCIAL_EVALUATION_DONE",
+      "description": "Commercial evaluation done",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "L1_TENDER_FINALIZED",
+      "description": "L1 tender finalized",
+      "moduletype": "AbstractEstimateOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "CONTRACTORADVANCE",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "TECHNICALLY_APPROVED",
+      "description": "Technically Approved",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "BUDGET_SANCTIONED",
+      "description": "Budget Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "ADMINISTRATIVE_SANCTIONED",
+      "description": "Administrative Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "TECHNICAL_SANCTIONED",
+      "description": "Technical Sanctioned",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "AbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "MBHeader",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "Milestone",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "Milestone",
+      "tenantid": "mh"
+    },
+    {
+      "code": "NEW",
+      "description": "New",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "BUDGET_SANCTIONED",
+      "description": "Budget Sanctioned",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "TECH_SANCTIONED",
+      "description": "Technical Sanctioned",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "RevisionAbstractEstimate",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "TrackMilestone",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "TrackMilestone",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CREATED",
+      "description": "Created",
+      "moduletype": "WorkOrder",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CHECKED",
+      "description": "Checked",
+      "moduletype": "WorkOrder",
+      "tenantid": "mh"
+    },
+    {
+      "code": "REJECTED",
+      "description": "Rejected",
+      "moduletype": "WorkOrder",
+      "tenantid": "mh"
+    },
+    {
+      "code": "APPROVED",
+      "description": "Approved",
+      "moduletype": "WorkOrder",
+      "tenantid": "mh"
+    },
+    {
+      "code": "CANCELLED",
+      "description": "Cancelled",
+      "moduletype": "WorkOrder",
+      "tenantid": "mh"
+    },
+    {
+      "code": "ACCEPTANCE_LETTER_ISSUED",
+      "description": "Acceptance letter issued",
+      "moduletype": "LetterOfAcceptanceOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "ACCEPTANCE_LETTER_ACKNOWLEDGED",
+      "description": "Acceptance letter acknowledged",
+      "moduletype": "LetterOfAcceptanceOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "AGREEMENT_ORDER_SIGNED",
+      "description": "Agreement order signed",
+      "moduletype": "LetterOfAcceptanceOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "WORK_ORDER_ACKNOWLEDGED",
+      "description": "Work order acknowledged",
+      "moduletype": "WorkOrderOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "SITE_HANDED_OVER",
+      "description": "Site handed over",
+      "moduletype": "WorkOrderOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "WORK_COMMENCED",
+      "description": "Work commenced",
+      "moduletype": "WorkOrderOffline",
+      "tenantid": "mh"
+    },
+    {
+      "code": "RESUBMITTED",
+      "description": "Re-Submitted",
+      "moduletype": "WorkOrder",
+      "tenantid": "mh"
     }
   ]
 }

@@ -1,0 +1,14 @@
+def build(path, ci_image) {
+    stage("Build") {
+        docker.image("egovio/ci-react:0.0.4").inside {
+            withCredentials([string(credentialsId: "verdaccio-host-url", variable: "NPM_URL")]) {
+              sh "npm set registry ${NPM_URL}";
+              }
+            withCredentials([string(credentialsId: "verdaccio-npm-token", variable: "NPM_TOKEN")]) {
+              sh "cp -a /tmp/node_modules ${path}/ && cd ${path} && export NPM_TOKEN=${NPM_TOKEN}  && npm install && npx babel lib --out-dir dist && cp package.json dist/package.json && cd dist && cp /tmp/.npmrc . && npm publish";
+              }
+        }
+    }
+}
+
+return this;

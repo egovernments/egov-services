@@ -1,1 +1,1 @@
-ALTER TABLE pricelistdetails ADD COLUMN isdeleted SET DEFAULT false;
+ALTER TABLE pricelistdetails ADD COLUMN isdeleted boolean DEFAULT false;

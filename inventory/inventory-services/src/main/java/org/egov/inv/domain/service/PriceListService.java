@@ -184,10 +184,10 @@ public class PriceListService extends DomainService {
 									ids.add(pldl.getId());
 								}
 								
-//								for(PriceListDetails pld:oldPriceListDetails){
-//									pld.setIsDeleted(true);
-//									priceList.getPriceListDetails().add(pld);
-//								}
+								for(PriceListDetails pld:oldPriceListDetails){
+									pld.setDeleted(true);
+									priceList.getPriceListDetails().add(pld);
+								}
 							});
 
 			kafkaQue.send(updateTopic, updateKey, priceListRequest);

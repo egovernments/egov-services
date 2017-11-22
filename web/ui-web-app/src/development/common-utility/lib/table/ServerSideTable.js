@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
 import ReactPaginate from 'react-paginate';
-import styles from './styles/material-ui';
-import {translate} from './common';
+import styles from '../styles/material-ui';
+import {translate} from '../common';
 
 class ServerSideTable extends Component {
   constructor() {

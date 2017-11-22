@@ -12,7 +12,7 @@ import {
 import constants from './constants';
 import ServerSideTable from './table/ServerSideTable';
 import PdfViewer from './pdf-generation/PdfViewer';
-import PdfConfig from './pdf-genration/PdfConfig';
+import PdfConfig from './pdf-generation/PdfConfig';
 import DateTable from './Table';
 import Fields from './Fields';
 

@@ -35,6 +35,7 @@ import UiDynamicTable from './components/UiDynamicTable';
 import UiDynamicTable2 from './components/uiDynamicTable2';
 import UiWindowForm from './components/UiWindowForm';
 import UiBackButton from './components/UiBackButton';
+import templateParser from './templates/templateParser/templateParser';
 import {int_to_words, getFullDate, fileUpload, getInitiatorPosition, getTitleCase} from './utility/utility';
 
 var routes = [{
@@ -49,6 +50,9 @@ var routes = [{
 }, {
 	component: create,
 	route: '/update/:moduleName/:master?/:id?'
+}, {
+	component: templateParser,
+	route: '/print/report/:templatePath'
 }];
 
 module.exports = {

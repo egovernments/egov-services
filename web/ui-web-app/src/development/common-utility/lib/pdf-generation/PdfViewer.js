@@ -1,8 +1,8 @@
 import React, {Component} from 'react';
 import {Grid} from 'react-bootstrap';
-import styles from './styles/material-ui';
+import styles from '../styles/material-ui';
 import {Card, CardTitle, CardText} from 'material-ui/Card';
-import {translate} from './common';
+import {translate} from '../common';
 
 const customStyles = {
   titleStyle: {

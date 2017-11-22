@@ -4,14 +4,10 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import {ShowFields,UiButton,fileUpload, getInitiatorPosition,UiTable} from "ui-react-framework";
+import {translate,Api} from 'common-utility';
 import jp from "jsonpath";
-import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
-import UiTable from '../../../framework/components/UiTable';
-import styles from '../../../../styles/material-ui';
+import styles from '../styles/material-ui';
 
 var specifications={};
 
@@ -182,7 +178,7 @@ class viewAbstractEstimate extends Component {
 
   initData() {
 
-    specifications = require(`../../../framework/specs/works/master/abstractEstimate`).default;
+    specifications = require(`../specifications/master/abstractEstimate.specs`).default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let self = this;

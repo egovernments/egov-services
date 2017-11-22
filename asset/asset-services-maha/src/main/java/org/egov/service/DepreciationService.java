@@ -235,8 +235,6 @@ public class DepreciationService {
 		String tenantId = criteria.getTenantId();
 		Long todate = criteria.getToDate();
 
-		if(!tenantId.equals("default"))
-			tenantId = tenantId.split("\\.")[0];
 		
 		FinancialYear financialYear = mDService.getFinancialYear(todate, depreciationRequest.getRequestInfo(),
 				criteria.getTenantId());

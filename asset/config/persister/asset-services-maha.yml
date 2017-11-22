@@ -534,7 +534,7 @@ serviceMaps:
        
        - jsonPath: $.financialYear
        
-       - jsonPath: $.fromDate
+       - jsonPath: $.DepreciationDetail.*.fromDate
        
        - jsonPath: $.toDate
        

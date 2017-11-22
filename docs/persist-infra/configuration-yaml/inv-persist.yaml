@@ -461,8 +461,8 @@ serviceMaps:
             - jsonPath: $.priceLists.*.id
             - jsonPath: $.priceLists.*.tenantId
 
-        - query: INSERT INTO pricelistdetails(id, pricelist, material, fromDate, toDate, ratePerUnit, quantity, uom, active, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id, tenantid) DO UPDATE SET
-                  material=EXCLUDED.material, uom=EXCLUDED.uom, active=EXCLUDED.active, isDeleted=EXCLUDED.isDeleted, quantity=EXCLUDED.quantity, ratePerUnit=EXCLUDED.ratePerUnit, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime
+        - query: INSERT INTO pricelistdetails(id, pricelist, material, fromDate, toDate, ratePerUnit, quantity, uom, active, isdeleted, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id, tenantid) DO UPDATE SET
+                  material=EXCLUDED.material, uom=EXCLUDED.uom, active=EXCLUDED.active, isdeleted=EXCLUDED.isdeleted, quantity=EXCLUDED.quantity, ratePerUnit=EXCLUDED.ratePerUnit, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime
           basePath: $.priceLists.*.priceListDetails.*
           jsonMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.id
@@ -474,6 +474,8 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.quantity
             - jsonPath: $.priceLists.*.priceListDetails.*.uom.code
             - jsonPath: $.priceLists.*.priceListDetails.*.active
+              dbType: BOOLEAN
+            - jsonPath: $.priceLists.*.priceListDetails.*.isdeleted
               dbType: BOOLEAN
             - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].tenantId
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy

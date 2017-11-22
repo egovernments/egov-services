@@ -6,6 +6,7 @@ import lombok.*;
 import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.EstimateOverhead;
 import org.egov.works.estimate.web.contract.EstimateTechnicalSanction;
+import org.egov.works.estimate.web.contract.User;
 
 /**
  * An Object that holds the basic data of Technical Sanction for Detailed Estimate
@@ -60,7 +61,9 @@ public class EstimateTechnicalSanctionHelper {
         estimateTechnicalSanction.setId(this.id);
         estimateTechnicalSanction.setTenantId(this.tenantId);
         estimateTechnicalSanction.setDetailedEstimate(this.detailedEstimate);
-        estimateTechnicalSanction.setTechnicalSanctionBy(this.technicalSanctionBy);
+        User user = new User();
+        user.setUserName(technicalSanctionBy);
+        estimateTechnicalSanction.setTechnicalSanctionBy(user);
         estimateTechnicalSanction.setTechnicalSanctionDate(this.technicalSanctionDate);
         estimateTechnicalSanction.setTechnicalSanctionNumber(this.technicalSanctionNumber);
         return estimateTechnicalSanction;

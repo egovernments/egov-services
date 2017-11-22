@@ -1263,10 +1263,9 @@ definitions:
         minLength: 2
       estimateNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover detailed estimates.
         maxLength: 50
-        minLength: 1
       estimateDate:
         type: integer
         format: int64
@@ -1490,7 +1489,6 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - estimateNumber
       - nameOfWork
       - estimateDate
       - worksType
@@ -1681,11 +1679,8 @@ definitions:
           type: string
           description: Estimate Activity reference for the Estimate Measurement sheet
         parent:
-          $ref: '#/definitions/EstimateMeasurementSheet'
+          type: string
           description: Parent Estimate Measurement sheet reference for change in quantity of Revision Estimate
-        #parent:
-        #  type: string
-        #  description: Parent of the Measurement sheet
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1739,7 +1734,7 @@ definitions:
           minLength: 2
         technicalSanctionNumber:
           type: string
-          pattern: '[a-zA-Z0-9-\\]+'
+          pattern: '[a-zA-Z0-9-/]+'
           description: Technical Sanction Number of the Detailed Estimate
           maxLength: 50
           minLength: 1
@@ -1960,3 +1955,4 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+

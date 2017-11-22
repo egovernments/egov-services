@@ -17,7 +17,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object holds the basic data of Estimate Measurement Sheet
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Measurement Sheet")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-22T13:44:22.389Z")
 
 public class EstimateMeasurementSheet {
 	@JsonProperty("id")
@@ -54,7 +54,7 @@ public class EstimateMeasurementSheet {
 	private String estimateActivity = null;
 
 	@JsonProperty("parent")
-	private EstimateMeasurementSheet parent = null;
+	private String parent = null;
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
@@ -296,7 +296,7 @@ public class EstimateMeasurementSheet {
 		this.estimateActivity = estimateActivity;
 	}
 
-	public EstimateMeasurementSheet parent(EstimateMeasurementSheet parent) {
+	public EstimateMeasurementSheet parent(String parent) {
 		this.parent = parent;
 		return this;
 	}
@@ -309,13 +309,11 @@ public class EstimateMeasurementSheet {
 	 **/
 	@ApiModelProperty(value = "Parent Estimate Measurement sheet reference for change in quantity of Revision Estimate")
 
-	@Valid
-
-	public EstimateMeasurementSheet getParent() {
+	public String getParent() {
 		return parent;
 	}
 
-	public void setParent(EstimateMeasurementSheet parent) {
+	public void setParent(String parent) {
 		this.parent = parent;
 	}
 

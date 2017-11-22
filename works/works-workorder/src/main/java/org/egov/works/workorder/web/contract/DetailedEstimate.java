@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-22T13:44:22.389Z")
 
 public class DetailedEstimate {
 	@JsonProperty("id")
@@ -245,11 +245,10 @@ public class DetailedEstimate {
 	 * 
 	 * @return estimateNumber
 	 **/
-	@ApiModelProperty(required = true, value = "Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover detailed estimates.")
-	@NotNull
+	@ApiModelProperty(value = "Unique number for the Detailed Estimate. If the detailed estimate is spillover then the Detailed Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover detailed estimates.")
 
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(min = 1, max = 50)
+	@Pattern(regexp = "[a-zA-Z0-9-/]+")
+	@Size(max = 50)
 	public String getEstimateNumber() {
 		return estimateNumber;
 	}

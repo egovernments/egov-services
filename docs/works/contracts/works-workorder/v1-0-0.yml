@@ -1133,7 +1133,7 @@ definitions:
         description: Epoch time of LOA Date. Default the current date for new LOA and do not allow to modify. This field is user entered for spillover LOA. Allowed to edit during rejected status or drafts for LOA. Future date is not allowed to enter in this field. LOA date should be on or after the L1 Tender Finalized status date of Detailed Estimate. 
       loaNumber:
         type: string
-        pattern: '[0-9a-zA-Z/]+' 
+        pattern: '[0-9a-zA-Z-/]+' 
         description: Unique LOA Number of the Letter Of Acceptance. If the LOA is spillover then the LOA number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover LOA.
         maxLength: 50
       contractPeriod:
@@ -1210,7 +1210,7 @@ definitions:
         maxLength: 512
       councilResolutionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[0-9a-zA-Z-/]+' 
         description: Council resolution number of the Letter Of Acceptance. This field is required on final approval of LOA.
         maxLength: 50
       councilResolutionDate:
@@ -1436,7 +1436,7 @@ definitions:
           description: Tenant id of the Measurement Sheet
           maxLength: 128
           minLength: 2
-        no:
+        number:
           type: number
           format: BigDecimal
           description: No. of the Measurement sheet
@@ -1990,3 +1990,4 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+

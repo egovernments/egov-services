@@ -784,7 +784,7 @@ serviceMaps:
  
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdTime
        
-    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, no, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, number, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*
       jsonMaps:
          
@@ -798,7 +798,7 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.remarks
        
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.no
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.number
        
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.length
        
@@ -1109,7 +1109,7 @@ serviceMaps:
 
        - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, no, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET slno=EXCLUDED.slno, identifier=EXCLUDED.identifier, remarks=EXCLUDED.remarks, no=EXCLUDED.no, length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, estimateactivity=EXCLUDED.estimateactivity, parent=EXCLUDED.parent, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, number, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET slno=EXCLUDED.slno, identifier=EXCLUDED.identifier, remarks=EXCLUDED.remarks, number=EXCLUDED.number, length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, estimateactivity=EXCLUDED.estimateactivity, parent=EXCLUDED.parent, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
       basePath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*
       jsonMaps:
          
@@ -1123,7 +1123,7 @@ serviceMaps:
        
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.remarks
        
-       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.no
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.number
        
        - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.length
        

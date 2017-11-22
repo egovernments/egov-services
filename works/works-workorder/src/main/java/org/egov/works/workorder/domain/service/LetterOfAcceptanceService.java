@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.workorder.config.PropertiesManager;
 import org.egov.works.workorder.domain.repository.LetterOfAcceptanceRepository;
@@ -12,6 +13,7 @@ import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository
 import org.egov.works.workorder.domain.validator.LetterOfAcceptanceValidator;
 import org.egov.works.workorder.utils.WorkOrderUtils;
 import org.egov.works.workorder.web.contract.DetailedEstimate;
+import org.egov.works.workorder.web.contract.DocumentDetail;
 import org.egov.works.workorder.web.contract.EstimateActivity;
 import org.egov.works.workorder.web.contract.EstimateMeasurementSheet;
 import org.egov.works.workorder.web.contract.LOAActivity;
@@ -67,20 +69,22 @@ public class LetterOfAcceptanceService {
 			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
 					.getLetterOfAcceptanceEstimates()) {
 				letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
-				letterOfAcceptanceEstimate.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
-				DetailedEstimate detailedEstimate = estimateService.getDetailedEstimate(
-						letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
-						letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo()).getDetailedEstimates().get(0);
+				letterOfAcceptanceEstimate.setAuditDetails(
+						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+				DetailedEstimate detailedEstimate = estimateService
+						.getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+								letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
+						.getDetailedEstimates().get(0);
 
 				List<LOAActivity> loaActivities = new ArrayList<>();
 
 				for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-					prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,letterOfAcceptanceRequest.getRequestInfo(),false);
+					prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
+							letterOfAcceptanceRequest.getRequestInfo(), false);
 				}
 				letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
 				letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
-				
-				
+
 				if (!detailedEstimate.getSpillOverFlag()) {
 					String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
 							letterOfAcceptanceRequest.getRequestInfo());
@@ -91,17 +95,27 @@ public class LetterOfAcceptanceService {
 						letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
 						letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo());
 			}
-			
-			for(SecurityDeposit securityDeposit: letterOfAcceptance.getSecurityDeposits()) {
+
+			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
 				securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
 				securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
-				securityDeposit.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+				securityDeposit.setAuditDetails(
+						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
 			}
-			letterOfAcceptance.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+
+			for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
+				documentDetail.setId(commonUtils.getUUID());
+				documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
+				documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+				documentDetail.setAuditDetails(
+						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+			}
+
+			letterOfAcceptance
+					.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
 
 		}
-
 
 		kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
 		return new LetterOfAcceptanceResponse();
@@ -109,7 +123,7 @@ public class LetterOfAcceptanceService {
 
 	private void prepairLOAActivity(LetterOfAcceptance letterOfAcceptance,
 			LetterOfAcceptanceEstimate letterOfAcceptanceEstimate, List<LOAActivity> loaActivities,
-			EstimateActivity estimateActivity,final RequestInfo requestInfo,final Boolean isUpdate) {
+			EstimateActivity estimateActivity, final RequestInfo requestInfo, final Boolean isUpdate) {
 		LOAActivity activity = new LOAActivity();
 		activity.setEstimateActivity(estimateActivity);
 		activity.setApprovedRate(letterOfAcceptance.getLoaAmount());
@@ -120,7 +134,7 @@ public class LetterOfAcceptanceService {
 		activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
 		activity.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate.getId());
 		activity.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
-		createLOAMSheet(activity, estimateActivity,requestInfo,isUpdate);
+		createLOAMSheet(activity, estimateActivity, requestInfo, isUpdate);
 		loaActivities.add(activity);
 	}
 
@@ -132,13 +146,14 @@ public class LetterOfAcceptanceService {
 		return letterOfAcceptanceResponse;
 	}
 
-	private void createLOAMSheet(final LOAActivity loaActivity, final EstimateActivity estimateActivity,final RequestInfo requestInfo,final Boolean isUpdate) {
+	private void createLOAMSheet(final LOAActivity loaActivity, final EstimateActivity estimateActivity,
+			final RequestInfo requestInfo, final Boolean isUpdate) {
 		final List<LOAMeasurementSheet> loaSheetList = new ArrayList<LOAMeasurementSheet>();
 		LOAMeasurementSheet loaSheet = null;
 		for (final EstimateMeasurementSheet estimatesheet : estimateActivity.getEstimateMeasurementSheets()) {
 			loaSheet = new LOAMeasurementSheet();
 			loaSheet.setId(commonUtils.getUUID());
-			loaSheet.setNo(estimatesheet.getNumber());
+			loaSheet.setNumber(estimatesheet.getNumber());
 			loaSheet.setLength(estimatesheet.getLength());
 			loaSheet.setWidth(estimatesheet.getWidth());
 			loaSheet.setDepthOrHeight(estimatesheet.getDepthOrHeight());

@@ -13,236 +13,229 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
 /**
- * An Object that holds the basic data of Technical Sanction for Detailed
- * Estimate
+ * An Object that holds the basic data of Technical Sanction for Detailed Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Technical Sanction for Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-22T13:44:22.389Z")
 
-public class EstimateTechnicalSanction {
-	@JsonProperty("id")
-	private String id = null;
+public class EstimateTechnicalSanction   {
+  @JsonProperty("id")
+  private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+  @JsonProperty("tenantId")
+  private String tenantId = null;
 
-	@JsonProperty("technicalSanctionNumber")
-	private String technicalSanctionNumber = null;
+  @JsonProperty("technicalSanctionNumber")
+  private String technicalSanctionNumber = null;
 
-	@JsonProperty("detailedEstimate")
-	private String detailedEstimate = null;
+  @JsonProperty("detailedEstimate")
+  private String detailedEstimate = null;
 
-	@JsonProperty("technicalSanctionDate")
-	private Long technicalSanctionDate = null;
+  @JsonProperty("technicalSanctionDate")
+  private Long technicalSanctionDate = null;
 
-	@JsonProperty("technicalSanctionBy")
-	private User technicalSanctionBy = null;
+  @JsonProperty("technicalSanctionBy")
+  private User technicalSanctionBy = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+  @JsonProperty("auditDetails")
+  private AuditDetails auditDetails = null;
 
-	public EstimateTechnicalSanction id(String id) {
-		this.id = id;
-		return this;
-	}
+  public EstimateTechnicalSanction id(String id) {
+    this.id = id;
+    return this;
+  }
 
-	/**
-	 * Unique Identifier of the Estimate Technical Sanction
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Estimate Technical Sanction")
+   /**
+   * Unique Identifier of the Estimate Technical Sanction
+   * @return id
+  **/
+  @ApiModelProperty(value = "Unique Identifier of the Estimate Technical Sanction")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+  public String getId() {
+    return id;
+  }
 
-	public EstimateTechnicalSanction tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	/**
-	 * Tenant id of the Estimate Technical Sanction
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Estimate Technical Sanction")
-	@NotNull
+  public EstimateTechnicalSanction tenantId(String tenantId) {
+    this.tenantId = tenantId;
+    return this;
+  }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+   /**
+   * Tenant id of the Estimate Technical Sanction
+   * @return tenantId
+  **/
+  @ApiModelProperty(required = true, value = "Tenant id of the Estimate Technical Sanction")
+  @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+ @Size(min=2,max=128)
+  public String getTenantId() {
+    return tenantId;
+  }
 
-	public EstimateTechnicalSanction technicalSanctionNumber(String technicalSanctionNumber) {
-		this.technicalSanctionNumber = technicalSanctionNumber;
-		return this;
-	}
+  public void setTenantId(String tenantId) {
+    this.tenantId = tenantId;
+  }
 
-	/**
-	 * Technical Sanction Number of the Detailed Estimate
-	 * 
-	 * @return technicalSanctionNumber
-	 **/
-	@ApiModelProperty(required = true, value = "Technical Sanction Number of the Detailed Estimate")
-	@NotNull
+  public EstimateTechnicalSanction technicalSanctionNumber(String technicalSanctionNumber) {
+    this.technicalSanctionNumber = technicalSanctionNumber;
+    return this;
+  }
 
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(min = 1, max = 50)
-	public String getTechnicalSanctionNumber() {
-		return technicalSanctionNumber;
-	}
+   /**
+   * Technical Sanction Number of the Detailed Estimate
+   * @return technicalSanctionNumber
+  **/
+  @ApiModelProperty(required = true, value = "Technical Sanction Number of the Detailed Estimate")
+  @NotNull
 
-	public void setTechnicalSanctionNumber(String technicalSanctionNumber) {
-		this.technicalSanctionNumber = technicalSanctionNumber;
-	}
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(min=1,max=50)
+  public String getTechnicalSanctionNumber() {
+    return technicalSanctionNumber;
+  }
 
-	public EstimateTechnicalSanction detailedEstimate(String detailedEstimate) {
-		this.detailedEstimate = detailedEstimate;
-		return this;
-	}
+  public void setTechnicalSanctionNumber(String technicalSanctionNumber) {
+    this.technicalSanctionNumber = technicalSanctionNumber;
+  }
 
-	/**
-	 * Reference of the Detailed Estimate for which the Technical sanction
-	 * belongs to
-	 * 
-	 * @return detailedEstimate
-	 **/
-	@ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
-	@NotNull
+  public EstimateTechnicalSanction detailedEstimate(String detailedEstimate) {
+    this.detailedEstimate = detailedEstimate;
+    return this;
+  }
 
-	public String getDetailedEstimate() {
-		return detailedEstimate;
-	}
+   /**
+   * Reference of the Detailed Estimate for which the Technical sanction belongs to
+   * @return detailedEstimate
+  **/
+  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for which the Technical sanction belongs to")
+  @NotNull
 
-	public void setDetailedEstimate(String detailedEstimate) {
-		this.detailedEstimate = detailedEstimate;
-	}
 
-	public EstimateTechnicalSanction technicalSanctionDate(Long technicalSanctionDate) {
-		this.technicalSanctionDate = technicalSanctionDate;
-		return this;
-	}
+  public String getDetailedEstimate() {
+    return detailedEstimate;
+  }
 
-	/**
-	 * Epoch time of the Technical Sanction Date. Technical Sanctioned date
-	 * should be on or after the Detailed Estimate date.
-	 * 
-	 * @return technicalSanctionDate
-	 **/
-	@ApiModelProperty(required = true, value = "Epoch time of the Technical Sanction Date. Technical Sanctioned date should be on or after the Detailed Estimate date.")
-	@NotNull
+  public void setDetailedEstimate(String detailedEstimate) {
+    this.detailedEstimate = detailedEstimate;
+  }
 
-	public Long getTechnicalSanctionDate() {
-		return technicalSanctionDate;
-	}
+  public EstimateTechnicalSanction technicalSanctionDate(Long technicalSanctionDate) {
+    this.technicalSanctionDate = technicalSanctionDate;
+    return this;
+  }
 
-	public void setTechnicalSanctionDate(Long technicalSanctionDate) {
-		this.technicalSanctionDate = technicalSanctionDate;
-	}
+   /**
+   * Epoch time of the Technical Sanction Date. Technical Sanctioned date should be on or after the Detailed Estimate date.
+   * @return technicalSanctionDate
+  **/
+  @ApiModelProperty(required = true, value = "Epoch time of the Technical Sanction Date. Technical Sanctioned date should be on or after the Detailed Estimate date.")
+  @NotNull
 
-	public EstimateTechnicalSanction technicalSanctionBy(User technicalSanctionBy) {
-		this.technicalSanctionBy = technicalSanctionBy;
-		return this;
-	}
 
-	/**
-	 * User who technical sanctioned Detailed Estimate
-	 * 
-	 * @return technicalSanctionBy
-	 **/
-	@ApiModelProperty(required = true, value = "User who technical sanctioned Detailed Estimate")
-	@NotNull
+  public Long getTechnicalSanctionDate() {
+    return technicalSanctionDate;
+  }
 
-	@Valid
+  public void setTechnicalSanctionDate(Long technicalSanctionDate) {
+    this.technicalSanctionDate = technicalSanctionDate;
+  }
 
-	public User getTechnicalSanctionBy() {
-		return technicalSanctionBy;
-	}
+  public EstimateTechnicalSanction technicalSanctionBy(User technicalSanctionBy) {
+    this.technicalSanctionBy = technicalSanctionBy;
+    return this;
+  }
 
-	public void setTechnicalSanctionBy(User technicalSanctionBy) {
-		this.technicalSanctionBy = technicalSanctionBy;
-	}
+   /**
+   * User who technical sanctioned Detailed Estimate
+   * @return technicalSanctionBy
+  **/
+  @ApiModelProperty(required = true, value = "User who technical sanctioned Detailed Estimate")
+  @NotNull
 
-	public EstimateTechnicalSanction auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+  @Valid
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+  public User getTechnicalSanctionBy() {
+    return technicalSanctionBy;
+  }
 
-	@Valid
+  public void setTechnicalSanctionBy(User technicalSanctionBy) {
+    this.technicalSanctionBy = technicalSanctionBy;
+  }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+  public EstimateTechnicalSanction auditDetails(AuditDetails auditDetails) {
+    this.auditDetails = auditDetails;
+    return this;
+  }
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+   /**
+   * Get auditDetails
+   * @return auditDetails
+  **/
+  @ApiModelProperty(value = "")
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		EstimateTechnicalSanction estimateTechnicalSanction = (EstimateTechnicalSanction) o;
-		return Objects.equals(this.id, estimateTechnicalSanction.id)
-				&& Objects.equals(this.tenantId, estimateTechnicalSanction.tenantId)
-				&& Objects.equals(this.technicalSanctionNumber, estimateTechnicalSanction.technicalSanctionNumber)
-				&& Objects.equals(this.detailedEstimate, estimateTechnicalSanction.detailedEstimate)
-				&& Objects.equals(this.technicalSanctionDate, estimateTechnicalSanction.technicalSanctionDate)
-				&& Objects.equals(this.technicalSanctionBy, estimateTechnicalSanction.technicalSanctionBy)
-				&& Objects.equals(this.auditDetails, estimateTechnicalSanction.auditDetails);
-	}
+  @Valid
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, technicalSanctionNumber, detailedEstimate, technicalSanctionDate,
-				technicalSanctionBy, auditDetails);
-	}
+  public AuditDetails getAuditDetails() {
+    return auditDetails;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class EstimateTechnicalSanction {\n");
+  public void setAuditDetails(AuditDetails auditDetails) {
+    this.auditDetails = auditDetails;
+  }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    technicalSanctionNumber: ").append(toIndentedString(technicalSanctionNumber)).append("\n");
-		sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
-		sb.append("    technicalSanctionDate: ").append(toIndentedString(technicalSanctionDate)).append("\n");
-		sb.append("    technicalSanctionBy: ").append(toIndentedString(technicalSanctionBy)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+  @Override
+  public boolean equals(java.lang.Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    EstimateTechnicalSanction estimateTechnicalSanction = (EstimateTechnicalSanction) o;
+    return Objects.equals(this.id, estimateTechnicalSanction.id) &&
+        Objects.equals(this.tenantId, estimateTechnicalSanction.tenantId) &&
+        Objects.equals(this.technicalSanctionNumber, estimateTechnicalSanction.technicalSanctionNumber) &&
+        Objects.equals(this.detailedEstimate, estimateTechnicalSanction.detailedEstimate) &&
+        Objects.equals(this.technicalSanctionDate, estimateTechnicalSanction.technicalSanctionDate) &&
+        Objects.equals(this.technicalSanctionBy, estimateTechnicalSanction.technicalSanctionBy) &&
+        Objects.equals(this.auditDetails, estimateTechnicalSanction.auditDetails);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, tenantId, technicalSanctionNumber, detailedEstimate, technicalSanctionDate, technicalSanctionBy, auditDetails);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class EstimateTechnicalSanction {\n");
+    
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    technicalSanctionNumber: ").append(toIndentedString(technicalSanctionNumber)).append("\n");
+    sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
+    sb.append("    technicalSanctionDate: ").append(toIndentedString(technicalSanctionDate)).append("\n");
+    sb.append("    technicalSanctionBy: ").append(toIndentedString(technicalSanctionBy)).append("\n");
+    sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(java.lang.Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }
+

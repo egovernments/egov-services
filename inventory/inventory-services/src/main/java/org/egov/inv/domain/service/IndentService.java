@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.Constants;
+import java.util.Date;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
@@ -16,7 +17,6 @@ import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
-import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -153,12 +153,26 @@ public class IndentService extends DomainService {
 	private void validate(List<Indent> indents, String method) {
 
 		try {
+			Long currentDate=	new Date().getTime();
 			switch (method) {
-
+			
 			case Constants.ACTION_CREATE: {
 				if (indents == null) {
 					throw new InvalidDataException("indents", ErrorCode.NOT_NULL.getCode(), null);
 				}
+				for(Indent indent: indents)
+				{
+					if(indent.getIndentDate().compareTo(currentDate) > 0)
+					{
+						throw new InvalidDataException("indentDate", ErrorCode.DATE_LE_CURRENTDATE.getCode(), indent.getIndentDate().toString());	
+					}
+					
+					if(indent.getExpectedDeliveryDate().compareTo(currentDate) < 0)
+					{
+						throw new InvalidDataException("indentDate", ErrorCode.DATE_GE_CURRENTDATE.getCode(), indent.getIndentDate().toString());	
+					}
+				}
+				
 			}
 				break;
 

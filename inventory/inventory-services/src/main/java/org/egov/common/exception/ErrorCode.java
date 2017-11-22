@@ -29,7 +29,13 @@ public enum ErrorCode {
 			  "The  value  {1} for the field {0} not allowed in the system. Please provide correct value"),
 	INVALID_REF_VALUE("invalid.ref.value",
 			  "the field {0} should have a valid value which exists in the system. ",
-			  "The  value  {1} for the field {0} does exist in system. Please provide correct value"); 
+			  "The  value  {1} for the field {0} does exist in system. Please provide correct value"), 
+	DATE_LE_CURRENTDATE("invalid.date.value",
+			  "the field {0} should be Less than or Equal to Current Date. ",
+			  "The  value  {1} for the field {0} should be Less than or Equal to Current Date."), 
+	DATE_GE_CURRENTDATE("invalid.date.value",
+					  "the field {0} should be Greater than or Equal to Current Date. ",
+					  "The  value  {1} for the field {0} should be Greater than or Equal to Current Date."); 
 
 	
 	private final String code;

@@ -606,4 +606,10 @@ public class PropertiesManager {
 	
 	@Value("${egov.lcms.agency.status}")
 	private String agencyStatus;
+	
+	@Value("${egov.lcms.module.name}")
+	private String lCMSModuleName;
+	
+	@Value("${egov.common.master.module.name}")
+	private String commonMasterModuleName;
 }

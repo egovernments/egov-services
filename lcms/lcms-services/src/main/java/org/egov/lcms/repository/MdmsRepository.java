@@ -40,7 +40,7 @@ public class MdmsRepository {
 	ObjectMapper objectMapper;
 
 	public MdmsResponse getMasterData(String tenantId, Map<String, String> masterCodeAndValue,
-			RequestInfoWrapper requestInfo) throws Exception {
+			RequestInfoWrapper requestInfo,String moduleName) throws Exception {
 		MdmsResponse mdmsResponse = null;
 
 		// Master Detail
@@ -73,7 +73,7 @@ public class MdmsRepository {
 		}
 
 		ModuleDetail moduleDetail = new ModuleDetail();
-		moduleDetail.setModuleName("lcms");
+		moduleDetail.setModuleName(moduleName);
 
 		moduleDetail.setMasterDetails(masterDetails);
 
@@ -108,5 +108,22 @@ public class MdmsRepository {
 		}
 
 		return mdmsResponse;
+	}
+	
+	public String getCommaSepratedValues(String[] code) {
+
+		if (code.length > 0) {
+			StringBuilder nameBuilder = new StringBuilder();
+
+			for (String n : code) {
+				nameBuilder.append(n).append(",");
+			}
+
+			nameBuilder.deleteCharAt(nameBuilder.length() - 1);
+
+			return nameBuilder.toString();
+		} else {
+			return "";
+		}
 	}
 }

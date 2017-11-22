@@ -27,7 +27,7 @@ import org.egov.lcms.models.CaseSearchCriteria;
 import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.Court;
-import org.egov.lcms.models.DepartmentResponse;
+import org.egov.lcms.models.Department;
 import org.egov.lcms.models.Event;
 import org.egov.lcms.models.EventResponse;
 import org.egov.lcms.models.EventSearchCriteria;
@@ -41,7 +41,6 @@ import org.egov.lcms.models.Side;
 import org.egov.lcms.models.Summon;
 import org.egov.lcms.repository.AdvocateRepository;
 import org.egov.lcms.repository.CaseSearchRepository;
-import org.egov.lcms.repository.DepartmentRepository;
 import org.egov.lcms.repository.MdmsRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.repository.RegisterRepository;
@@ -84,9 +83,6 @@ public class CaseService {
 
 	@Autowired
 	private SummonValidator summonValidator;
-
-	@Autowired
-	DepartmentRepository departmentRepository;
 
 	@Autowired
 	AdvocateRepository advocateRepository;
@@ -202,7 +198,7 @@ public class CaseService {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria, requestInfo);
-		addDepartmentDetails(cases, requestInfo);
+		addDepartmentDetails(cases, cases.get(0).getTenantId(), requestInfo);
 		addMasterDetails(cases, caseSearchCriteria.getSearchResultLevel(), requestInfo);
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
@@ -268,10 +264,10 @@ public class CaseService {
 
 				if (!masterMap.isEmpty()) {
 					MdmsResponse mdmsResponse = mdmsRepository.getMasterData(caseObj.getTenantId(), masterMap,
-							requestInfoWrapper);
+							requestInfoWrapper, propertiesManager.getLcmsModuleName());
 					Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
 
-					Map<String, JSONArray> mastersmap = response.get("lcms");
+					Map<String, JSONArray> mastersmap = response.get(propertiesManager.getLcmsModuleName());
 
 					for (String key : mastersmap.keySet()) {
 
@@ -361,6 +357,24 @@ public class CaseService {
 			break;
 		}
 
+		case "Department": {
+			if (mastersmap.get(masterName) != null) {
+				List<Department> departments = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<Department>>() {
+						});
+				if (departments != null) {
+					List<Department> departmentList = departments.stream()
+							.filter(department -> department.getCode()
+									.equalsIgnoreCase(caseObj.getSummon().getDepartmentName().getCode()))
+							.collect(Collectors.toList());
+					if (departmentList != null && departmentList.size() > 0)
+						caseObj.getSummon().setDepartmentName((departmentList.get(0)));
+				}
+			}
+
+			break;
+		}
+
 		default:
 			break;
 		}
@@ -442,22 +456,34 @@ public class CaseService {
 	 * @param requestInfo
 	 * @throws Exception
 	 */
-	private void addDepartmentDetails(List<Case> cases, RequestInfo requestInfo) throws Exception {
+	private void addDepartmentDetails(List<Case> cases, String tenantId, RequestInfo requestInfo) throws Exception {
 
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
-		for (Case caseObj : cases) {
 
-			if (caseObj.getSummon() != null && caseObj.getSummon().getDepartmentName() != null
-					&& caseObj.getSummon().getDepartmentName().getCode() != null) {
-				DepartmentResponse departmentResponse = departmentRepository.getDepartments(caseObj.getTenantId(),
-						caseObj.getSummon().getDepartmentName().getCode(), requestInfoWrapper);
-				if (departmentResponse.getDepartment() != null && departmentResponse.getDepartment().size() > 0) {
-					caseObj.getSummon().setDepartmentName(departmentResponse.getDepartment().get(0));
+		List<String> departmentCodes = cases.stream()
+				.filter(caseData -> caseData.getSummon() != null && caseData.getSummon().getDepartmentName() != null
+						&& caseData.getSummon().getDepartmentName().getCode() != null)
+				.map(departmentCode -> departmentCode.getSummon().getDepartmentName().getCode())
+				.collect(Collectors.toList());
+
+		Map<String, String> masterCodeAndValue = new HashMap<String, String>();
+		String departmentCode = mdmsRepository
+				.getCommaSepratedValues(departmentCodes.toArray(new String[departmentCodes.size()]));
+
+		if (departmentCode != null && !departmentCode.isEmpty()) {
+			masterCodeAndValue.put("Department", departmentCode);
+			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterCodeAndValue, requestInfoWrapper,
+					propertiesManager.getCommonMasterModuleName());
+			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
+			Map<String, JSONArray> mastersmap = response.get("common-masters");
+
+			for (Case caseObject : cases) {
+				if (caseObject.getSummon().getDepartmentName() != null) {
+					addParticularMastervalues("Department", caseObject, mastersmap);
 				}
 			}
 		}
-
 	}
 
 	/**

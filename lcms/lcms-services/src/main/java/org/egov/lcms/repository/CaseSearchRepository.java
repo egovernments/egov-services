@@ -133,11 +133,11 @@ public class CaseSearchRepository {
 					masterMap.put("caseStatus", casee.getCaseStatus().getCode());
 
 					MdmsResponse mdmsResponse = mdmsRepository.getMasterData(casee.getTenantId(), masterMap,
-							requestInfoWrapper);
+							requestInfoWrapper, propertiesManager.getLcmsModuleName());
 
 					Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
 
-					Map<String, JSONArray> mastersmap = response.get("lcms");
+					Map<String, JSONArray> mastersmap = response.get(propertiesManager.getLcmsModuleName());
 
 					for (String key : mastersmap.keySet()) {
 

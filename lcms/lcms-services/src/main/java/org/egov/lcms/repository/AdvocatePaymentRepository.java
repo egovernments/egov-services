@@ -13,8 +13,6 @@ import org.egov.lcms.models.AdvocateCharge;
 import org.egov.lcms.models.AdvocatePayment;
 import org.egov.lcms.models.AdvocatePaymentSearchCriteria;
 import org.egov.lcms.models.AdvocateSearchCriteria;
-import org.egov.lcms.models.Case;
-import org.egov.lcms.models.CaseDetails;
 import org.egov.lcms.models.CaseStatus;
 import org.egov.lcms.models.CaseType;
 import org.egov.lcms.models.RequestInfoWrapper;
@@ -23,7 +21,6 @@ import org.egov.lcms.repository.builder.OpinionQueryBuilder;
 import org.egov.lcms.repository.rowmapper.AdvocatePaymentRowMapper;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.tracer.model.CustomException;
-import net.minidev.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -32,6 +29,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.extern.slf4j.Slf4j;
+import net.minidev.json.JSONArray;
 
 /**
  * 
@@ -91,7 +89,7 @@ public class AdvocatePaymentRepository {
 	}
 
 	private void getCaseNoFromSummonReferenceNo(List<AdvocatePayment> advocatePayments) {
-		
+
 		for (AdvocatePayment advocatePayment : advocatePayments) {
 
 			if (advocatePayment.getAdvocateCharges() != null) {
@@ -100,16 +98,17 @@ public class AdvocatePaymentRepository {
 					if (advocateCharge.getCaseDetails() != null
 							&& advocateCharge.getCaseDetails().getSummonReferenceNo() != null) {
 						final List<Object> preparedStatementValues = new ArrayList<Object>();
-						String searchQuery = opinionBuilder.getCaseNo(advocateCharge.getCaseDetails().getSummonReferenceNo(),
-								advocatePayment.getTenantId(), preparedStatementValues);
-						
+						String searchQuery = opinionBuilder.getCaseNo(
+								advocateCharge.getCaseDetails().getSummonReferenceNo(), advocatePayment.getTenantId(),
+								preparedStatementValues);
+
 						try {
-							
+
 							String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
 									String.class);
 							advocateCharge.getCaseDetails().setCaseNo(caseNo);
 						} catch (Exception ex) {
-							
+
 							log.info("the exception in opinion :" + ex.getMessage());
 							throw new CustomException(propertiesManager.getCaseNoErrorCode(),
 									propertiesManager.getCaseNoErrorMsg());
@@ -136,8 +135,10 @@ public class AdvocatePaymentRepository {
 				.map(advocateCode -> advocateCode.getCaseStatus().getCode()).collect(Collectors.toList());
 
 		Map<String, String> masterCodeAndValue = new HashMap<String, String>();
-		String caseTypesCode = getCommaSepratedValues(caseTypeCodes.toArray(new String[caseTypeCodes.size()]));
-		String caseStatusesCode = getCommaSepratedValues(caseStatusCodes.toArray(new String[caseStatusCodes.size()]));
+		String caseTypesCode = mdmsRepository
+				.getCommaSepratedValues(caseTypeCodes.toArray(new String[caseTypeCodes.size()]));
+		String caseStatusesCode = mdmsRepository
+				.getCommaSepratedValues(caseStatusCodes.toArray(new String[caseStatusCodes.size()]));
 
 		if (caseTypesCode != null && !caseTypesCode.isEmpty()) {
 			masterCodeAndValue.put("caseType", caseTypesCode);
@@ -148,7 +149,8 @@ public class AdvocatePaymentRepository {
 		}
 		if ((caseTypesCode != null && !caseTypesCode.isEmpty())
 				|| (caseStatusesCode != null && !caseStatusesCode.isEmpty())) {
-			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterCodeAndValue, requestWrapper);
+			MdmsResponse mdmsResponse = mdmsRepository.getMasterData(tenantId, masterCodeAndValue, requestWrapper,
+					propertiesManager.getLcmsModuleName());
 			Map<String, Map<String, JSONArray>> response = mdmsResponse.getMdmsRes();
 			Map<String, JSONArray> mastersmap = response.get("lcms");
 
@@ -182,23 +184,6 @@ public class AdvocatePaymentRepository {
 						.collect(Collectors.toList()).get(0);
 				advocatePayment.setAdvocate(advocate);
 			}
-		}
-	}
-
-	private static String getCommaSepratedValues(String[] code) {
-
-		if (code.length > 0) {
-			StringBuilder nameBuilder = new StringBuilder();
-
-			for (String n : code) {
-				nameBuilder.append(n).append(",");
-			}
-
-			nameBuilder.deleteCharAt(nameBuilder.length() - 1);
-
-			return nameBuilder.toString();
-		} else {
-			return "";
 		}
 	}
 

@@ -115,63 +115,63 @@
         "waitFor":"visibility"
         },
         {
-        "elementName":"remarks",
+        "elementName":"ward",
         "identifier":"id",
-        "value":"licenses[0]-remarks",
+        "value":"collectionPoints[0]-location-ward",
         "waitFor":"presence"
         },
         {
-        "elementName":"update",
+        "elementName":"zone",
         "identifier":"id",
-        "value":"Update",
+        "value":"collectionPoints[0]-location-zone",
         "waitFor":"visibility"
         },
         {
-        "elementName":"licenseValidFromDate",
+        "elementName":"street",
         "identifier":"id",
-        "value":"licenses[0]-licenseValidFromDate",
+        "value":"collectionPoints[0]-location-block",
         "waitFor":"visibility"
         },
         {
-        "elementName":"financialYearAmount",
-        "identifier":"css",
-        "value":"[id^='undefined-undefined-undefined']",
+        "elementName":"colony",
+        "identifier":"id",
+        "value":"collectionPoints[0]-location-code",
         "waitFor":"visibility"
         },
         {
-        "elementName":"searchWithApplicationNumber",
+        "elementName":"stopName",
         "identifier":"id",
-        "value":"applicationNumber",
+        "value":"collectionPoints[0]-name",
         "waitFor":"visibility"
         },
         {
-        "elementName":"searchWithLicenseNumber",
+        "elementName":"collectionType",
         "identifier":"id",
-        "value":"licenseNumber",
+        "value":"collectionPoints[0]-collectionPointDetails[0]-collectionType-code",
         "waitFor":"visibility"
         },
         {
-        "elementName":"searchWithOldLicenseNumber",
+        "elementName":"garbageEstimate",
         "identifier":"id",
-        "value":"oldLicenseNumber",
+        "value":"collectionPoints[0]-collectionPointDetails[0]-garbageEstimate",
         "waitFor":"visibility"
         },
         {
-        "elementName":"searchButton",
+        "elementName":"binID",
         "identifier":"id",
-        "value":"Search",
+        "value":"collectionPoints[0]-binDetails[0]-assetOrBinId",
         "waitFor":"visibility"
         },
         {
-        "elementName":"approverDepartment",
+        "elementName":"Create",
         "identifier":"id",
-        "value":"approverDepartment",
+        "value":"Create",
         "waitFor":"visibility"
         },
         {
-        "elementName":"approverDesignation",
+        "elementName":"regNumber",
         "identifier":"id",
-        "value":"approverDesignation",
+        "value":"vehicleMaintenances[0]-vehicle-regNumber",
         "waitFor":"visibility"
         },
         {

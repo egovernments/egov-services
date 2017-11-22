@@ -6,7 +6,7 @@ Feature: To create master data for Solid Waste Management
     ####### Create collection point #######
     ### On Login Screen ###
     Given user on Login screen verifies signInText has visible value Sign In
-    And user on Login screen types on username value narasappa
+    And user on Login screen types on username value 2506
     And user on Login screen types on password value demo
     And user on Login screen clicks on signIn
 
@@ -14,31 +14,33 @@ Feature: To create master data for Solid Waste Management
     And user on Home screen will wait until the page loads
     And user on Home screen will see the menu
     And user on Home screen clicks on menu
-    And user on Home screen types on menuSearch value Stop Entry Master
+    And user on Home screen types on menuSearch value Create Collection Point
     And user on Home screen clicks on firstMenuItem
 
     ##### Create collection point #####
     ### Enter Location Details ###
-    And user on SWMMaster screen selects on ward value Election Ward 1
-    And user on SWMMaster screen selects on zone value Revenue Ward 1
-    And user on SWMMaster screen selects on street value Anjaneya Street
-    And user on SWMMaster screen selects on colony value NR Colony
+    And user on SWMMaster screen selects on ward value Revenue Ward No 1
+    And user on SWMMaster screen selects on zone value Bheemilipatnam
+    And user on SWMMaster screen selects on street value Bank Road
+    And user on SWMMaster screen selects on colony value Bank Colony
 
     ### Enter Stop details ###
-    And user on SWMMaster screen types on stopName value collection point 1
+    And user on SWMMaster screen types on stopName value "Collection point ", 4 random characters
+    And user on SWMMaster screen selects on collectionType value Fake Collection Type Name 1
+    And user on SWMMaster screen types on garbageEstimate value 1000
     And user on SWMMaster screen copies the stopName to stopNameValue
-    And user on SWMMaster screen types on binID value bin1
-    And user on SWMMaster screen clicks on RFIDAssigned
-    And user on SWMMaster screen types on RFID value RFID1
-    And user on SWMMaster screen types on lattitude value 0.0
-    And user on SWMMaster screen types on longitude value 0.0
-    And user on SWMMaster screen clicks on text value Add
-
-
-    ### Search for above created collection point ###
-    And user on SWMMaster screen clicks on text value Search
-    And user on SWMMaster screen verifies searchResultStopName has visible value stopNameValue
-
+    And user on SWMMaster screen types on binID value "Bin ID ", 4 random characters
+#    And user on SWMMaster screen clicks on RFIDAssigned
+#    And user on SWMMaster screen types on RFID value RFID1
+#    And user on SWMMaster screen types on lattitude value 0.0
+#    And user on SWMMaster screen types on longitude value 0.0
+    And user on SWMMaster screen clicks on Create
+#
+#
+#    ### Search for above created collection point ###
+#    And user on SWMMaster screen clicks on text value Search
+#    And user on SWMMaster screen verifies searchResultStopName has visible value stopNameValue
+#
 
 
     ##### Vehicle Master #####
@@ -141,3 +143,23 @@ Feature: To create master data for Solid Waste Management
     ### Logout ###
     And Intent:LogoutIntentTest
 
+
+    Scenario: Create, search and update vehicle maintenance master
+
+      ### On Login Screen ###
+      Given user on Login screen verifies signInText has visible value Sign In
+      And user on Login screen types on username value 2506
+      And user on Login screen types on password value demo
+      And user on Login screen clicks on signIn
+
+      ### On Homepage Screen ###
+      And user on Home screen will wait until the page loads
+      And user on Home screen will see the menu
+      And user on Home screen clicks on menu
+      And user on Home screen types on menuSearch value Create Vehicle Maintenance
+      And user on Home screen clicks on fifthMenuItem
+
+      ### Create vehicle maintenance ###
+
+     And user on SWMMaster screen types on regNumber value regNumber
+     And user on

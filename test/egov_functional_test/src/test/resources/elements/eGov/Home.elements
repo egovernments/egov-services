@@ -37,6 +37,24 @@
         "waitFor":"visibility"
         },
         {
+        "elementName":"thirdMenuItem",
+        "identifier":"xpath",
+        "value":"(.//*[@class='menuStyle'])[3]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"forthMenuItem",
+        "identifier":"xpath",
+        "value":"(.//*[@class='menuStyle'])[4]",
+        "waitFor":"visibility"
+        },
+        {
+        "elementName":"fifthMenuItem",
+        "identifier":"xpath",
+        "value":"(.//*[@class='menuStyle'])[5]",
+        "waitFor":"visibility"
+         },
+        {
         "elementName":"profile",
         "identifier":"xpath",
         "value":"//i[text()='more_vert']",

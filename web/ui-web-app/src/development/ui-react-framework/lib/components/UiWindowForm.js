@@ -204,7 +204,7 @@ class UiWindowForm extends Component {
 
   initData() {
     var self = this;
-    specifications = (process.end.NODE_ENV == "production") ? require(`${this.props.item.subPath}.specs`).default; : require(`../../${this.props.item.subPath}.specs`).default;
+    specifications = (process.end.NODE_ENV == "production") ? require(`${this.props.item.subPath}.specs`).default : require(`../../${this.props.item.subPath}.specs`).default;
     var result =
       typeof results == "string" ? JSON.parse(specifications) : specifications;
     let obj = specifications[this.props.item.modulepath];

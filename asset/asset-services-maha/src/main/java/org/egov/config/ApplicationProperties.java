@@ -67,6 +67,12 @@ public class ApplicationProperties {
     @Value("${kafka.topics.save.depreciation}")
     private String saveDepreciationTopic;
     
+    @Value("${mdms.service.host}")
+    private String mdmsServiceHost;
+    
+    @Value("${mdms.service.basepath}")
+    private String mdmsServiceBasePath;
+     
     @Autowired
     private Environment environment;
 

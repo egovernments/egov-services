@@ -27,7 +27,6 @@ import org.egov.service.MasterDataService;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -82,7 +81,7 @@ public class AssetValidator implements Validator {
 		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
 			errorMap.put("Asset_DateOfCreation", "DateOfCreation cannot be future Date");
 		
-		if(asset.getOrderDate().compareTo(new Date().getTime()) > 0) 
+		if(asset.getOrderDate()!=null && asset.getOrderDate().compareTo(new Date().getTime()) > 0) 
 			errorMap.put("Asset_OderDate", "OderDate cannot be future Date");
 		
 		if(asset.getOpeningDate().compareTo(new Date().getTime()) > 0) 
@@ -98,11 +97,7 @@ public class AssetValidator implements Validator {
 		
 		if(asset.getGrossValue()!=null && asset.getGrossValue().longValue()<=0)
 			errorMap.put("Asset_GrossValue", "Negative  Amount Cannot Be Accepted for GrossValue");
-		
-		if(asset.getCurrentValue()!=null && asset.getCurrentValue().longValue()<=0)
-			errorMap.put("Asset_CurrentValue", "Negative  Amount Cannot Be Accepted for CurrentValue");
-		
-		
+				
 		if(asset.getAccumulatedDepreciation()!=null && asset.getAccumulatedDepreciation().longValue()<=0)
 			errorMap.put("Asset_AccumulatedDepreciation", "Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
 		

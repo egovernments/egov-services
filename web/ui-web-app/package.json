@@ -52,11 +52,11 @@
     "redux-thunk": "^2.2.0",
     "egov-ui-react-framework": "0.0.3",
     "egov-asset": "0.0.2",
-    "egov-pgr": "0.0.1",
-    "egov-inventory": "0.0.1",
-    "egov-works": "0.0.1",
-    "egov-perfManagement": "0.0.1",
-    "egov-legal": "0.0.1"
+    "egov-pgr": "0.0.2",
+    "egov-inventory": "0.0.2",
+    "egov-works": "0.0.2",
+    "egov-perfManagement": "0.0.2",
+    "egov-legal": "0.0.2"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

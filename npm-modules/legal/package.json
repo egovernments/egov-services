@@ -1,6 +1,6 @@
 {
   "name": "egov-legal",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Common methods",
   "main": "index.js",
   "scripts": {

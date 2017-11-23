@@ -3,15 +3,17 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
 import org.egov.swm.domain.model.VehicleMaintenanceDetailsSearch;
 import org.egov.swm.domain.model.VehicleSearch;
-import org.egov.swm.domain.repository.VehicleRepository;
+import org.egov.swm.domain.service.VehicleService;
 import org.egov.swm.persistence.entity.VehicleMaintenanceDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,7 +25,7 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egswm_vehiclemaintenancedetails";
 
     @Autowired
-    private VehicleRepository vehicleRepository;
+    private VehicleService vehicleService;
 
     public Pagination<VehicleMaintenanceDetails> search(final VehicleMaintenanceDetailsSearch searchRequest) {
 
@@ -146,34 +148,77 @@ public class VehicleMaintenanceDetailsJdbcRepository extends JdbcRepository {
         final List<VehicleMaintenanceDetailsEntity> vehicleMaintenanceDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        VehicleMaintenanceDetails vehicleMaintenanceDetails;
-        VehicleSearch vehicleSearch;
-        Pagination<Vehicle> vehicleList;
-
         for (final VehicleMaintenanceDetailsEntity vehicleMaintenanceDetailsEntity : vehicleMaintenanceDetailsEntities) {
 
-            vehicleMaintenanceDetails = vehicleMaintenanceDetailsEntity.toDomain();
-
-            if (vehicleMaintenanceDetails.getVehicle() != null
-                    && vehicleMaintenanceDetails.getVehicle().getRegNumber() != null) {
-
-                vehicleSearch = new VehicleSearch();
-                vehicleSearch.setTenantId(vehicleMaintenanceDetails.getTenantId());
-                vehicleSearch.setRegNumber(vehicleMaintenanceDetails.getVehicle().getRegNumber());
-                vehicleList = vehicleRepository.search(vehicleSearch);
-
-                if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
-                    vehicleMaintenanceDetails.setVehicle(vehicleList.getPagedData().get(0));
-
-            }
-
-            vehicleMaintenanceDetailsList.add(vehicleMaintenanceDetails);
+            vehicleMaintenanceDetailsList.add(vehicleMaintenanceDetailsEntity.toDomain());
         }
-
+        
+        populateVehicles(vehicleMaintenanceDetailsList);
+        
         page.setTotalResults(vehicleMaintenanceDetailsList.size());
 
         page.setPagedData(vehicleMaintenanceDetailsList);
 
         return page;
+    }
+
+    private void populateVehicles(List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList) {
+
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicles;
+        StringBuffer vehicleNos = new StringBuffer();
+        Set<String> vehicleNoSet = new HashSet<>();
+
+        for (VehicleMaintenanceDetails vfd : vehicleMaintenanceDetailsList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vehicleNoSet.add(vfd.getVehicle().getRegNumber());
+
+            }
+
+        }
+
+        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
+
+        for (String vehicleNo : vehicleNoList) {
+
+            if (vehicleNos.length() >= 1)
+                vehicleNos.append(",");
+
+            vehicleNos.append(vehicleNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vehicle> vehicleMap = new HashMap<>();
+
+        if (vehicleMaintenanceDetailsList != null && !vehicleMaintenanceDetailsList.isEmpty())
+            tenantId = vehicleMaintenanceDetailsList.get(0).getTenantId();
+
+        vehicleSearch = new VehicleSearch();
+        vehicleSearch.setTenantId(tenantId);
+        vehicleSearch.setRegNumbers(vehicleNos.toString());
+
+        vehicles = vehicleService.search(vehicleSearch);
+
+        if (vehicles != null && vehicles.getPagedData() != null)
+            for (Vehicle v : vehicles.getPagedData()) {
+
+                vehicleMap.put(v.getRegNumber(), v);
+
+            }
+
+        for (VehicleMaintenanceDetails vfd : vehicleMaintenanceDetailsList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+            }
+
+        }
+
     }
 }

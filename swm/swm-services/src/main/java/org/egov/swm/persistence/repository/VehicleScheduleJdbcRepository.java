@@ -3,8 +3,10 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
@@ -123,51 +125,139 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
         final List<VehicleScheduleEntity> vehicleScheduleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
-        VehicleSchedule vehicleSchedule;
-        RouteSearch routeSearch;
-        Pagination<Route> routes;
-        VehicleSearch vehicleSearch;
-        Pagination<Vehicle> vehicleList;
-
         for (final VehicleScheduleEntity vehicleScheduleEntity : vehicleScheduleEntities) {
 
-            vehicleSchedule = vehicleScheduleEntity.toDomain();
-
-            if (vehicleSchedule.getVehicle() != null && vehicleSchedule.getVehicle().getRegNumber() != null
-                    && !vehicleSchedule.getVehicle().getRegNumber().isEmpty()) {
-
-                vehicleSearch = new VehicleSearch();
-                vehicleSearch.setTenantId(vehicleSchedule.getTenantId());
-                vehicleSearch.setRegNumber(vehicleSchedule.getVehicle().getRegNumber());
-                vehicleList = vehicleService.search(vehicleSearch);
-
-                if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
-                    vehicleSchedule.setVehicle(vehicleList.getPagedData().get(0));
-
-            }
-
-            if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
-                    && !vehicleSchedule.getRoute().getCode().isEmpty()) {
-
-                routeSearch = new RouteSearch();
-                routeSearch.setTenantId(vehicleSchedule.getTenantId());
-                routeSearch.setCode(vehicleSchedule.getRoute().getCode());
-                routes = routeService.search(routeSearch);
-
-                if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty())
-                    vehicleSchedule.setRoute(routes.getPagedData().get(0));
-
-            }
-
-            vehicleScheduleList.add(vehicleSchedule);
+            vehicleScheduleList.add(vehicleScheduleEntity.toDomain());
 
         }
+
+        populateVehicles(vehicleScheduleList);
+
+        populateRoutes(vehicleScheduleList);
 
         page.setTotalResults(vehicleScheduleList.size());
 
         page.setPagedData(vehicleScheduleList);
 
         return page;
+    }
+
+    private void populateVehicles(List<VehicleSchedule> vehicleScheduleList) {
+
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicles;
+        StringBuffer vehicleNos = new StringBuffer();
+        Set<String> vehicleNoSet = new HashSet<>();
+
+        for (VehicleSchedule vfd : vehicleScheduleList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vehicleNoSet.add(vfd.getVehicle().getRegNumber());
+
+            }
+
+        }
+
+        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
+
+        for (String vehicleNo : vehicleNoList) {
+
+            if (vehicleNos.length() >= 1)
+                vehicleNos.append(",");
+
+            vehicleNos.append(vehicleNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vehicle> vehicleMap = new HashMap<>();
+
+        if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty())
+            tenantId = vehicleScheduleList.get(0).getTenantId();
+
+        vehicleSearch = new VehicleSearch();
+        vehicleSearch.setTenantId(tenantId);
+        vehicleSearch.setRegNumbers(vehicleNos.toString());
+
+        vehicles = vehicleService.search(vehicleSearch);
+
+        if (vehicles != null && vehicles.getPagedData() != null)
+            for (Vehicle v : vehicles.getPagedData()) {
+
+                vehicleMap.put(v.getRegNumber(), v);
+
+            }
+
+        for (VehicleSchedule vfd : vehicleScheduleList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+            }
+
+        }
+
+    }
+
+    private void populateRoutes(List<VehicleSchedule> vehicleScheduleList) {
+
+        StringBuffer routeCodes = new StringBuffer();
+        Set<String> routeCodesSet = new HashSet<>();
+        RouteSearch routeSearch = new RouteSearch();
+        Pagination<Route> routes;
+
+        for (VehicleSchedule sst : vehicleScheduleList) {
+
+            if (sst.getRoute() != null && sst.getRoute().getCode() != null
+                    && !sst.getRoute().getCode().isEmpty()) {
+
+                routeCodesSet.add(sst.getRoute().getCode());
+
+            }
+
+        }
+
+        List<String> routeCodeList = new ArrayList(routeCodesSet);
+
+        for (String code : routeCodeList) {
+
+            if (routeCodes.length() >= 1)
+                routeCodes.append(",");
+
+            routeCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Route> routeMap = new HashMap<>();
+
+        if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty())
+            tenantId = vehicleScheduleList.get(0).getTenantId();
+
+        routeSearch.setTenantId(tenantId);
+        routeSearch.setCodes(routeCodes.toString());
+        routes = routeService.search(routeSearch);
+
+        if (routes != null && routes.getPagedData() != null)
+            for (Route bd : routes.getPagedData()) {
+
+                routeMap.put(bd.getCode(), bd);
+
+            }
+
+        for (VehicleSchedule vehicleSchedule : vehicleScheduleList) {
+
+            if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
+                    && !vehicleSchedule.getRoute().getCode().isEmpty()) {
+
+                vehicleSchedule.setRoute(routeMap.get(vehicleSchedule.getRoute().getCode()));
+            }
+
+        }
+
     }
 
 }

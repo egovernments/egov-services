@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -65,11 +66,19 @@ public class VehicleJdbcRepository extends JdbcRepository {
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", searchRequest.getTenantId());
         }
+
         if (searchRequest.getRegNumber() != null) {
             addAnd(params);
             params.append("regNumber =:regNumber");
             paramValues.put("regNumber", searchRequest.getRegNumber());
         }
+
+        if (searchRequest.getRegNumbers() != null) {
+            addAnd(params);
+            params.append("regNumber in (:regNumbers)");
+            paramValues.put("regNumbers", new ArrayList<>(Arrays.asList(searchRequest.getRegNumbers().split(","))));
+        }
+
         if (searchRequest.getManufacturingDetails() != null) {
 
             if (searchRequest.getManufacturingDetails().getChassisSrNumber() != null) {
@@ -165,7 +174,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
         final List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
                 row);
-        Vehicle v;
+
         for (final VehicleEntity vehicleEntity : vehicleEntities) {
 
             vehicleList.add(vehicleEntity.toDomain());

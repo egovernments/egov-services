@@ -3,8 +3,10 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
@@ -119,51 +121,138 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         final List<VehicleTripSheetDetailsEntity> vehicleTripSheetDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        VehicleTripSheetDetails vehicleTripSheetDetails;
-        final RouteSearch routeSearch = new RouteSearch();
-        Pagination<Route> routes;
-        VehicleSearch vehicleSearch;
-        Pagination<Vehicle> vehicleList;
-
         for (final VehicleTripSheetDetailsEntity vehicleTripSheetDetailsEntity : vehicleTripSheetDetailsEntities) {
 
-            vehicleTripSheetDetails = vehicleTripSheetDetailsEntity.toDomain();
-
-            if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null
-                    && !vehicleTripSheetDetails.getRoute().getCode().isEmpty()) {
-
-                routeSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-                routeSearch.setCode(vehicleTripSheetDetails.getRoute().getCode());
-                routes = routeService.search(routeSearch);
-
-                if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty())
-                    vehicleTripSheetDetails.setRoute(routes.getPagedData().get(0));
-
-            }
-
-            if (vehicleTripSheetDetails.getVehicle() != null
-                    && vehicleTripSheetDetails.getVehicle().getRegNumber() != null
-                    && !vehicleTripSheetDetails.getVehicle().getRegNumber().isEmpty()) {
-
-                vehicleSearch = new VehicleSearch();
-                vehicleSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-                vehicleSearch.setRegNumber(vehicleTripSheetDetails.getVehicle().getRegNumber());
-                vehicleList = vehicleService.search(vehicleSearch);
-
-                if (vehicleList != null && vehicleList.getPagedData() != null
-                        && !vehicleList.getPagedData().isEmpty())
-                    vehicleTripSheetDetails.setVehicle(vehicleList.getPagedData().get(0));
-
-            }
-
-            vehicleTripSheetDetailsList.add(vehicleTripSheetDetails);
+            vehicleTripSheetDetailsList.add(vehicleTripSheetDetailsEntity.toDomain());
         }
+
+        populateRoutes(vehicleTripSheetDetailsList);
+
+        populateVehicles(vehicleTripSheetDetailsList);
 
         page.setTotalResults(vehicleTripSheetDetailsList.size());
 
         page.setPagedData(vehicleTripSheetDetailsList);
 
         return page;
+    }
+
+    private void populateRoutes(List<VehicleTripSheetDetails> vehicleTripSheetDetailsList) {
+
+        StringBuffer routeCodes = new StringBuffer();
+        Set<String> routeCodesSet = new HashSet<>();
+        RouteSearch routeSearch = new RouteSearch();
+        Pagination<Route> routes;
+
+        for (VehicleTripSheetDetails sst : vehicleTripSheetDetailsList) {
+
+            if (sst.getRoute() != null && sst.getRoute().getCode() != null
+                    && !sst.getRoute().getCode().isEmpty()) {
+
+                routeCodesSet.add(sst.getRoute().getCode());
+
+            }
+
+        }
+
+        List<String> routeCodeList = new ArrayList(routeCodesSet);
+
+        for (String code : routeCodeList) {
+
+            if (routeCodes.length() >= 1)
+                routeCodes.append(",");
+
+            routeCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Route> routeMap = new HashMap<>();
+
+        if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
+            tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
+
+        routeSearch.setTenantId(tenantId);
+        routeSearch.setCodes(routeCodes.toString());
+        routes = routeService.search(routeSearch);
+
+        if (routes != null && routes.getPagedData() != null)
+            for (Route bd : routes.getPagedData()) {
+
+                routeMap.put(bd.getCode(), bd);
+
+            }
+
+        for (VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsList) {
+
+            if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null
+                    && !vehicleTripSheetDetails.getRoute().getCode().isEmpty()) {
+
+                vehicleTripSheetDetails.setRoute(routeMap.get(vehicleTripSheetDetails.getRoute().getCode()));
+            }
+
+        }
+
+    }
+
+    private void populateVehicles(List<VehicleTripSheetDetails> vehicleTripSheetDetailsList) {
+
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicles;
+        StringBuffer vehicleNos = new StringBuffer();
+        Set<String> vehicleNoSet = new HashSet<>();
+
+        for (VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vehicleNoSet.add(vfd.getVehicle().getRegNumber());
+
+            }
+
+        }
+
+        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
+
+        for (String vehicleNo : vehicleNoList) {
+
+            if (vehicleNos.length() >= 1)
+                vehicleNos.append(",");
+
+            vehicleNos.append(vehicleNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vehicle> vehicleMap = new HashMap<>();
+
+        if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
+            tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
+
+        vehicleSearch = new VehicleSearch();
+        vehicleSearch.setTenantId(tenantId);
+        vehicleSearch.setRegNumbers(vehicleNos.toString());
+
+        vehicles = vehicleService.search(vehicleSearch);
+
+        if (vehicles != null && vehicles.getPagedData() != null)
+            for (Vehicle v : vehicles.getPagedData()) {
+
+                vehicleMap.put(v.getRegNumber(), v);
+
+            }
+
+        for (VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+            }
+
+        }
+
     }
 
 }

@@ -3,8 +3,10 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
@@ -111,35 +113,78 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
         final List<VehicleMaintenanceEntity> vehicleMaintenanceEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        VehicleMaintenance vehicleMaintenance;
-        VehicleSearch vehicleSearch;
-        Pagination<Vehicle> vehicleList;
-
         for (final VehicleMaintenanceEntity vehicleMaintenanceEntity : vehicleMaintenanceEntities) {
 
-            vehicleMaintenance = vehicleMaintenanceEntity.toDomain();
-
-            if (vehicleMaintenance.getVehicle() != null && vehicleMaintenance.getVehicle().getRegNumber() != null
-                    && !vehicleMaintenance.getVehicle().getRegNumber().isEmpty()) {
-
-                vehicleSearch = new VehicleSearch();
-                vehicleSearch.setTenantId(vehicleMaintenance.getTenantId());
-                vehicleSearch.setRegNumber(vehicleMaintenance.getVehicle().getRegNumber());
-                vehicleList = vehicleService.search(vehicleSearch);
-
-                if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
-                    vehicleMaintenance.setVehicle(vehicleList.getPagedData().get(0));
-
-            }
-
-            vehicleMaintenanceList.add(vehicleMaintenance);
+            vehicleMaintenanceList.add(vehicleMaintenanceEntity.toDomain());
         }
+
+        populateVehicles(vehicleMaintenanceList);
 
         page.setTotalResults(vehicleMaintenanceList.size());
 
         page.setPagedData(vehicleMaintenanceList);
 
         return page;
+    }
+
+    private void populateVehicles(List<VehicleMaintenance> vehicleMaintenanceList) {
+
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicles;
+        StringBuffer vehicleNos = new StringBuffer();
+        Set<String> vehicleNoSet = new HashSet<>();
+
+        for (VehicleMaintenance vfd : vehicleMaintenanceList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vehicleNoSet.add(vfd.getVehicle().getRegNumber());
+
+            }
+
+        }
+
+        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
+
+        for (String vehicleNo : vehicleNoList) {
+
+            if (vehicleNos.length() >= 1)
+                vehicleNos.append(",");
+
+            vehicleNos.append(vehicleNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vehicle> vehicleMap = new HashMap<>();
+
+        if (vehicleMaintenanceList != null && !vehicleMaintenanceList.isEmpty())
+            tenantId = vehicleMaintenanceList.get(0).getTenantId();
+
+        vehicleSearch = new VehicleSearch();
+        vehicleSearch.setTenantId(tenantId);
+        vehicleSearch.setRegNumbers(vehicleNos.toString());
+
+        vehicles = vehicleService.search(vehicleSearch);
+
+        if (vehicles != null && vehicles.getPagedData() != null)
+            for (Vehicle v : vehicles.getPagedData()) {
+
+                vehicleMap.put(v.getRegNumber(), v);
+
+            }
+
+        for (VehicleMaintenance vfd : vehicleMaintenanceList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+            }
+
+        }
+
     }
 
 }

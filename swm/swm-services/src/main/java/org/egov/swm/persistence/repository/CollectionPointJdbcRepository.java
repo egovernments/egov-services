@@ -71,6 +71,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             params.append("code in (:codes)");
             paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
         }
+        
         if (searchRequest.getTenantId() != null) {
             addAnd(params);
             params.append("tenantId =:tenantId");

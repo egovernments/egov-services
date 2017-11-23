@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +33,12 @@ public class SupplierJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("supplierNo =:supplierNo");
             paramValues.put("supplierNo", searchRequest.getSupplierNo());
+        }
+
+        if (searchRequest.getSupplierNos() != null) {
+            addAnd(params);
+            params.append("supplierNo in (:supplierNos)");
+            paramValues.put("supplierNos", new ArrayList<>(Arrays.asList(searchRequest.getSupplierNos().split(","))));
         }
 
         if (params.length() > 0)

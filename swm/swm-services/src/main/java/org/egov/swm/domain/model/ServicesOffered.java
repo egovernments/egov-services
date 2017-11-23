@@ -16,6 +16,8 @@ public class ServicesOffered {
     private String tenantId;
 
     private String vendor;
+    
+    private String vendorNos;
 
     private String service;
 

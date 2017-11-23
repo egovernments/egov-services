@@ -3,8 +3,10 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vendor;
@@ -123,33 +125,78 @@ public class VendorContractJdbcRepository extends JdbcRepository {
         final List<VendorContractEntity> vendorContractEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
 
-        VendorContract vendorContract;
-        VendorSearch vendorSearch;
-        Pagination<Vendor> vendors;
-
         for (final VendorContractEntity entity : vendorContractEntities) {
 
-            vendorContract = entity.toDomain();
-
-            if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null
-                    && !vendorContract.getVendor().getVendorNo().isEmpty()) {
-
-                vendorSearch = new VendorSearch();
-                vendorSearch.setTenantId(vendorContract.getTenantId());
-                vendorSearch.setVendorNo(vendorContract.getVendor().getVendorNo());
-                vendors = vendorService.search(vendorSearch);
-                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
-                    vendorContract.setVendor(vendors.getPagedData().get(0));
-            }
-
-            vendorContractList.add(vendorContract);
+            vendorContractList.add(entity.toDomain());
         }
+
+        populateVendors(vendorContractList);
 
         page.setTotalResults(vendorContractList.size());
 
         page.setPagedData(vendorContractList);
 
         return page;
+    }
+
+    private void populateVendors(List<VendorContract> vendorContractList) {
+
+        VendorSearch vendorSearch;
+        Pagination<Vendor> vendors;
+        StringBuffer vendorNos = new StringBuffer();
+        Set<String> vendorNoSet = new HashSet<>();
+
+        for (VendorContract v : vendorContractList) {
+
+            if (v.getVendor() != null && v.getVendor().getVendorNo() != null
+                    && !v.getVendor().getVendorNo().isEmpty()) {
+
+                vendorNoSet.add(v.getVendor().getVendorNo());
+
+            }
+
+        }
+
+        List<String> vendorNoList = new ArrayList(vendorNoSet);
+
+        for (String vendorNo : vendorNoList) {
+
+            if (vendorNos.length() >= 1)
+                vendorNos.append(",");
+
+            vendorNos.append(vendorNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vendor> vendorMap = new HashMap<>();
+
+        if (vendorContractList != null && !vendorContractList.isEmpty())
+            tenantId = vendorContractList.get(0).getTenantId();
+
+        vendorSearch = new VendorSearch();
+        vendorSearch.setTenantId(tenantId);
+        vendorSearch.setVendorNos(vendorNos.toString());
+
+        vendors = vendorService.search(vendorSearch);
+
+        if (vendors != null && vendors.getPagedData() != null)
+            for (Vendor bd : vendors.getPagedData()) {
+
+                vendorMap.put(bd.getVendorNo(), bd);
+
+            }
+
+        for (VendorContract vendorContract : vendorContractList) {
+
+            if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null
+                    && !vendorContract.getVendor().getVendorNo().isEmpty()) {
+
+                vendorContract.setVendor(vendorMap.get(vendorContract.getVendor().getVendorNo()));
+            }
+
+        }
+
     }
 
 }

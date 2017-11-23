@@ -3,8 +3,10 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
@@ -14,6 +16,7 @@ import org.egov.swm.domain.model.VendorPaymentDetails;
 import org.egov.swm.domain.model.VendorPaymentDetailsSearch;
 import org.egov.swm.domain.service.VendorContractService;
 import org.egov.swm.persistence.entity.VendorPaymentDetailsEntity;
+import org.egov.swm.web.contract.Employee;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -134,37 +137,16 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
 
         final List<VendorPaymentDetailsEntity> vendorPaymentDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
-        VendorPaymentDetails vendorPaymentDetail;
-        Pagination<VendorContract> vendorContractPage;
-        EmployeeResponse employeeResponse;
 
         for (final VendorPaymentDetailsEntity vendorPaymentDetailsEntity : vendorPaymentDetailsEntities) {
 
-            vendorPaymentDetail = vendorPaymentDetailsEntity.toDomain();
-
-            if (vendorPaymentDetail.getVendorContract() != null
-                    && vendorPaymentDetail.getVendorContract().getContractNo() != null) {
-
-                vendorContractPage = getVendorContracts(vendorPaymentDetail);
-
-                if (vendorContractPage != null && vendorContractPage.getPagedData() != null
-                        && !vendorContractPage.getPagedData().isEmpty())
-                    vendorPaymentDetail.setVendorContract(vendorContractPage.getPagedData().get(0));
-            }
-
-            if (vendorPaymentDetail.getEmployee() != null && vendorPaymentDetail.getEmployee().getCode() != null) {
-
-                employeeResponse = employeeRepository.getEmployeeByCode(vendorPaymentDetail.getEmployee().getCode(),
-                        vendorPaymentDetail.getTenantId(), new RequestInfo());
-
-                if (employeeResponse != null && employeeResponse.getEmployees() != null
-                        && !employeeResponse.getEmployees().isEmpty())
-                    vendorPaymentDetail.setEmployee(employeeResponse.getEmployees().get(0));
-            }
-
-            vendorPaymentDetailsList.add(vendorPaymentDetail);
+            vendorPaymentDetailsList.add(vendorPaymentDetailsEntity.toDomain());
 
         }
+
+        populateVendorContracts(vendorPaymentDetailsList);
+
+        populateEmployees(vendorPaymentDetailsList);
 
         page.setTotalResults(vendorPaymentDetailsList.size());
 
@@ -173,12 +155,120 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
         return page;
     }
 
-    private Pagination<VendorContract> getVendorContracts(final VendorPaymentDetails vendorPaymentDetail) {
-        final VendorContractSearch vendorContractSearch = new VendorContractSearch();
-        vendorContractSearch.setTenantId(vendorPaymentDetail.getTenantId());
-        vendorContractSearch.setContractNo(vendorPaymentDetail.getVendorContract().getContractNo());
+    private void populateVendorContracts(List<VendorPaymentDetails> vendorPaymentDetailsList) {
 
-        return vendorContractService.search(vendorContractSearch);
+        VendorContractSearch vendorContractSearch;
+        Pagination<VendorContract> vendorContracts;
+        StringBuffer vendorContractNos = new StringBuffer();
+        Set<String> vendorContractNoSet = new HashSet<>();
+
+        for (VendorPaymentDetails v : vendorPaymentDetailsList) {
+
+            if (v.getVendorContract() != null && v.getVendorContract().getContractNo() != null
+                    && !v.getVendorContract().getContractNo().isEmpty()) {
+
+                vendorContractNoSet.add(v.getVendorContract().getContractNo());
+
+            }
+
+        }
+
+        List<String> vendorContractNoList = new ArrayList(vendorContractNoSet);
+
+        for (String vendorContractNo : vendorContractNoList) {
+
+            if (vendorContractNos.length() >= 1)
+                vendorContractNos.append(",");
+
+            vendorContractNos.append(vendorContractNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, VendorContract> vendorContractMap = new HashMap<>();
+
+        if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
+            tenantId = vendorPaymentDetailsList.get(0).getTenantId();
+
+        vendorContractSearch = new VendorContractSearch();
+        vendorContractSearch.setTenantId(tenantId);
+        vendorContractSearch.setContractNos(vendorContractNos.toString());
+
+        vendorContracts = vendorContractService.search(vendorContractSearch);
+
+        if (vendorContracts != null && vendorContracts.getPagedData() != null)
+            for (VendorContract bd : vendorContracts.getPagedData()) {
+
+                vendorContractMap.put(bd.getContractNo(), bd);
+
+            }
+
+        for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
+
+            if (vendorPaymentDetails.getVendorContract() != null
+                    && vendorPaymentDetails.getVendorContract().getContractNo() != null
+                    && !vendorPaymentDetails.getVendorContract().getContractNo().isEmpty()) {
+
+                vendorPaymentDetails
+                        .setVendorContract(vendorContractMap.get(vendorPaymentDetails.getVendorContract().getContractNo()));
+            }
+
+        }
+
+    }
+
+    private void populateEmployees(List<VendorPaymentDetails> vendorPaymentDetailsList) {
+
+        StringBuffer employeeCodes = new StringBuffer();
+        Set<String> employeeCodesSet = new HashSet<>();
+
+        for (VendorPaymentDetails sst : vendorPaymentDetailsList) {
+
+            if (sst.getEmployee() != null && sst.getEmployee().getCode() != null
+                    && !sst.getEmployee().getCode().isEmpty()) {
+
+                employeeCodesSet.add(sst.getEmployee().getCode());
+
+            }
+
+        }
+
+        List<String> employeeCodeList = new ArrayList(employeeCodesSet);
+
+        for (String code : employeeCodeList) {
+
+            if (employeeCodes.length() >= 1)
+                employeeCodes.append(",");
+
+            employeeCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Employee> employeeMap = new HashMap<>();
+
+        if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
+            tenantId = vendorPaymentDetailsList.get(0).getTenantId();
+
+        EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId, new RequestInfo());
+
+        if (response != null && response.getEmployees() != null)
+            for (Employee e : response.getEmployees()) {
+
+                employeeMap.put(e.getCode(), e);
+
+            }
+
+        for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
+
+            if (vendorPaymentDetails.getEmployee() != null && vendorPaymentDetails.getEmployee().getCode() != null
+                    && !vendorPaymentDetails.getEmployee().getCode().isEmpty()) {
+
+                vendorPaymentDetails.setEmployee(employeeMap.get(vendorPaymentDetails.getEmployee().getCode()));
+            }
+
+        }
+
     }
 
 }

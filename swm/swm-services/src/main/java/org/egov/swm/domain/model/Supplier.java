@@ -26,6 +26,8 @@ public class Supplier {
     @Length(min = 0, max = 128)
     @JsonProperty("supplierNo")
     private String supplierNo = null;
+    
+    private String supplierNos = null;
 
     @Length(min = 0, max = 100)
     @JsonProperty("name")

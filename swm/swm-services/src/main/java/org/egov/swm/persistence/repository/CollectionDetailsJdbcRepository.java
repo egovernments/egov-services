@@ -75,8 +75,6 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 
         final List<CollectionDetails> resultList = new ArrayList<>();
 
-        CollectionDetails collectionDetails;
-
         for (final CollectionDetailsEntity cde : entityList) {
 
             resultList.add(cde.toDomain());

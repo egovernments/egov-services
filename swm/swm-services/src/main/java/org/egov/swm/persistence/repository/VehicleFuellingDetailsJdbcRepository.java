@@ -2,10 +2,13 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -13,9 +16,9 @@ import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleFuellingDetails;
 import org.egov.swm.domain.model.VehicleFuellingDetailsSearch;
 import org.egov.swm.domain.model.VehicleSearch;
-import org.egov.swm.domain.repository.RefillingPumpStationRepository;
-import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.domain.service.FuelTypeService;
+import org.egov.swm.domain.service.RefillingPumpStationService;
+import org.egov.swm.domain.service.VehicleService;
 import org.egov.swm.persistence.entity.VehicleFuellingDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -30,10 +33,10 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
     private FuelTypeService fuelTypeService;
 
     @Autowired
-    private RefillingPumpStationRepository refillingPumpStationRepository;
+    private RefillingPumpStationService refillingPumpStationService;
 
     @Autowired
-    private VehicleRepository vehicleRepository;
+    private VehicleService vehicleService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -147,54 +150,168 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
         final List<VehicleFuellingDetailsEntity> vehicleFuellingDetailsEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        VehicleFuellingDetails vfd;
-        Pagination<RefillingPumpStation> refillingPumpStationList;
-        VehicleSearch vehicleSearch;
-        Pagination<Vehicle> vehicleList;
-        RefillingPumpStationSearch refillingPumpStationSearch;
-
         for (final VehicleFuellingDetailsEntity vehicleFuellingDetailsEntity : vehicleFuellingDetailsEntities) {
-            vfd = vehicleFuellingDetailsEntity.toDomain();
 
-            if (vfd.getTypeOfFuel() != null && vfd.getTypeOfFuel().getCode() != null
-                    && !vfd.getTypeOfFuel().getCode().isEmpty())
-                vfd.setTypeOfFuel(fuelTypeService.getFuelType(vfd.getTenantId(), vfd.getTypeOfFuel().getCode(),
-                        new RequestInfo()));
-
-            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
-                vehicleSearch = new VehicleSearch();
-                vehicleSearch.setTenantId(vfd.getTenantId());
-                vehicleSearch.setRegNumber(vfd.getVehicle().getRegNumber());
-                vehicleList = vehicleRepository.search(vehicleSearch);
-
-                if (vehicleList != null && vehicleList.getPagedData() != null && !vehicleList.getPagedData().isEmpty())
-                    vfd.setVehicle(vehicleList.getPagedData().get(0));
-
-            }
-
-            if (vfd.getRefuellingStation() != null && vfd.getRefuellingStation().getCode() != null
-                    && vfd.getRefuellingStation().getCode().isEmpty()) {
-                refillingPumpStationSearch = new RefillingPumpStationSearch();
-                refillingPumpStationSearch.setTenantId(vfd.getTenantId());
-                refillingPumpStationSearch.setCode(vfd.getRefuellingStation().getCode());
-
-                refillingPumpStationList = refillingPumpStationRepository.search(refillingPumpStationSearch);
-
-                if (refillingPumpStationList != null && refillingPumpStationList.getPagedData() != null
-                        && !refillingPumpStationList.getPagedData().isEmpty())
-                    vfd.setRefuellingStation(refillingPumpStationList.getPagedData().get(0));
-            }
-
-            vehicleFuellingDetailsList.add(vfd);
+            vehicleFuellingDetailsList.add(vehicleFuellingDetailsEntity.toDomain());
         }
+
+        populateFuelTypes(vehicleFuellingDetailsList);
+
+        populateVehicles(vehicleFuellingDetailsList);
+
+        populateRefillingPumpStations(vehicleFuellingDetailsList);
 
         page.setTotalResults(vehicleFuellingDetailsList.size());
 
         page.setPagedData(vehicleFuellingDetailsList);
 
         return page;
+    }
+
+    private void populateFuelTypes(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
+        Map<String, FuelType> fuelTypeMap = new HashMap<>();
+        String tenantId = null;
+
+        if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty())
+            tenantId = vehicleFuellingDetailsList.get(0).getTenantId();
+
+        List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
+
+        for (FuelType ft : fuelTypes) {
+            fuelTypeMap.put(ft.getCode(), ft);
+        }
+
+        for (VehicleFuellingDetails vehicleFuellingDetails : vehicleFuellingDetailsList) {
+
+            if (vehicleFuellingDetails.getTypeOfFuel() != null && vehicleFuellingDetails.getTypeOfFuel().getCode() != null
+                    && !vehicleFuellingDetails.getTypeOfFuel().getCode().isEmpty()) {
+
+                vehicleFuellingDetails.setTypeOfFuel(fuelTypeMap.get(vehicleFuellingDetails.getTypeOfFuel().getCode()));
+            }
+
+        }
+    }
+
+    private void populateVehicles(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
+
+        VehicleSearch vehicleSearch;
+        Pagination<Vehicle> vehicles;
+        StringBuffer vehicleNos = new StringBuffer();
+        Set<String> vehicleNoSet = new HashSet<>();
+
+        for (VehicleFuellingDetails vfd : vehicleFuellingDetailsList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vehicleNoSet.add(vfd.getVehicle().getRegNumber());
+
+            }
+
+        }
+
+        List<String> vehicleNoList = new ArrayList(vehicleNoSet);
+
+        for (String vehicleNo : vehicleNoList) {
+
+            if (vehicleNos.length() >= 1)
+                vehicleNos.append(",");
+
+            vehicleNos.append(vehicleNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vehicle> vehicleMap = new HashMap<>();
+
+        if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty())
+            tenantId = vehicleFuellingDetailsList.get(0).getTenantId();
+
+        vehicleSearch = new VehicleSearch();
+        vehicleSearch.setTenantId(tenantId);
+        vehicleSearch.setRegNumbers(vehicleNos.toString());
+
+        vehicles = vehicleService.search(vehicleSearch);
+
+        if (vehicles != null && vehicles.getPagedData() != null)
+            for (Vehicle v : vehicles.getPagedData()) {
+
+                vehicleMap.put(v.getRegNumber(), v);
+
+            }
+
+        for (VehicleFuellingDetails vfd : vehicleFuellingDetailsList) {
+
+            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+            }
+
+        }
+
+    }
+
+    private void populateRefillingPumpStations(List<VehicleFuellingDetails> vehicleFuellingDetailsList) {
+
+        RefillingPumpStationSearch refillingPumpStationSearch;
+        Pagination<RefillingPumpStation> refillingPumpStations;
+        StringBuffer refillingPumpStationNos = new StringBuffer();
+        Set<String> refillingPumpStationNoSet = new HashSet<>();
+
+        for (VehicleFuellingDetails v : vehicleFuellingDetailsList) {
+
+            if (v.getRefuellingStation() != null && v.getRefuellingStation().getCode() != null
+                    && !v.getRefuellingStation().getCode().isEmpty()) {
+
+                refillingPumpStationNoSet.add(v.getRefuellingStation().getCode());
+
+            }
+
+        }
+
+        List<String> refillingPumpStationNoList = new ArrayList(refillingPumpStationNoSet);
+
+        for (String refillingPumpStationNo : refillingPumpStationNoList) {
+
+            if (refillingPumpStationNos.length() >= 1)
+                refillingPumpStationNos.append(",");
+
+            refillingPumpStationNos.append(refillingPumpStationNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, RefillingPumpStation> refillingPumpStationMap = new HashMap<>();
+
+        if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty())
+            tenantId = vehicleFuellingDetailsList.get(0).getTenantId();
+
+        refillingPumpStationSearch = new RefillingPumpStationSearch();
+        refillingPumpStationSearch.setTenantId(tenantId);
+        refillingPumpStationSearch.setCodes(refillingPumpStationNos.toString());
+
+        refillingPumpStations = refillingPumpStationService.search(refillingPumpStationSearch);
+
+        if (refillingPumpStations != null && refillingPumpStations.getPagedData() != null)
+            for (RefillingPumpStation rps : refillingPumpStations.getPagedData()) {
+
+                refillingPumpStationMap.put(rps.getCode(), rps);
+
+            }
+
+        for (VehicleFuellingDetails vehicleFuellingDetails : vehicleFuellingDetailsList) {
+
+            if (vehicleFuellingDetails.getRefuellingStation() != null
+                    && vehicleFuellingDetails.getRefuellingStation().getCode() != null
+                    && !vehicleFuellingDetails.getRefuellingStation().getCode().isEmpty()) {
+
+                vehicleFuellingDetails.setRefuellingStation(refillingPumpStationMap
+                        .get(vehicleFuellingDetails.getRefuellingStation().getCode()));
+            }
+
+        }
+
     }
 
 }

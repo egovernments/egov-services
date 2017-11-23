@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,12 @@ public class ServicedLocationsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("vendor =:vendor");
             paramValues.put("vendor", searchRequest.getVendor());
+        }
+
+        if (searchRequest.getVendorNos() != null) {
+            addAnd(params);
+            params.append("vendor in (:vendors)");
+            paramValues.put("vendors", new ArrayList<>(Arrays.asList(searchRequest.getVendorNos().split(","))));
         }
 
         if (searchRequest.getLocation() != null) {

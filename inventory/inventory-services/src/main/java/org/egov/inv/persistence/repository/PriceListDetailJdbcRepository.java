@@ -11,6 +11,8 @@ import java.util.stream.Collectors;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.domain.service.UomService;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
@@ -24,6 +26,8 @@ import org.springframework.stereotype.Service;
 public class PriceListDetailJdbcRepository extends JdbcRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
+    
+    UomService uomService;
 
     public PriceListDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
@@ -126,6 +130,11 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
 
         List<PriceListDetails> priceListDetailsList = priceListDetailsEntities.stream().map(PriceListDetailsEntity::toDomain)
                 .collect(Collectors.toList());
+        
+        for(PriceListDetails pld: priceListDetailsList){
+        	pld.setUom(uomService.getUom(pld.getTenantId(), pld.getUom().getCode(), new RequestInfo()));
+        	pld.setQuantity(pld.getQuantity()/pld.getUom().getConversionFactor().doubleValue());
+        }
 
         page.setTotalResults(priceListDetailsList.size());
 

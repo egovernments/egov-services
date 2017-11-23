@@ -18,6 +18,7 @@ import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListDetailsEntity;
 import org.egov.tracer.model.CustomException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Service;
@@ -27,6 +28,7 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     
+    @Autowired
     private UomService uomService;
 
     public PriceListDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {

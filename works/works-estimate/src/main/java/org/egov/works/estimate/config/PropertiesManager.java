@@ -77,7 +77,7 @@ public class PropertiesManager {
 	@Value("${egov.services.works.accountdetailkey.create.topic}")
 	private String createAccountDetailKeyTopic;
 	
-    @Value("${works.projectcode.prefix}")
+    @Value("${projectcode.prefix}")
     private String workIdentificationNumberPrefix;
 
 }

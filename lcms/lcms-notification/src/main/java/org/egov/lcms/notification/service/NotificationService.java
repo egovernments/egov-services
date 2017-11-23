@@ -336,13 +336,15 @@ public class NotificationService {
 				hearingProcessMessage.put("Dated",
 						TimeStampUtil.getDateWithoutTimezone(caseObj.getCaseRegistrationDate()));
 				hearingProcessMessage.put("ULB Name", caseObj.getTenantId());
-				hearingProcessMessage.put("Court", caseObj.getSummon().getCourtName().getName());
+				
 				userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
 
 				for (HearingDetails hearingDetails : caseObj.getHearingDetails()) {
 
 					if (hearingDetails.getNextHearingDate() == null && hearingDetails.getNextHearingTime() == null) {
-
+							
+						hearingProcessMessage.put("Hearing Decision", hearingDetails.getCaseFinalDecision());
+						
 						for (UserDetail userDetail : userDetails) {
 
 							hearingProcessMessage.put("Legal Department/Concerned Department", userDetail.getName());
@@ -363,7 +365,8 @@ public class NotificationService {
 							}
 						}
 					} else {
-
+						
+						hearingProcessMessage.put("Hearing Decision", hearingDetails.getCaseJudgeMent());						
 						hearingProcessMessage.put("Next Hearing Date",
 								TimeStampUtil.getDateWithoutTimezone(hearingDetails.getNextHearingDate()));
 						hearingProcessMessage.put("Next Hearing Time", hearingDetails.getNextHearingTime());

@@ -2,6 +2,7 @@ package org.egov.lcms.notification.model;
 
 import java.util.List;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -58,4 +59,10 @@ public class HearingDetails {
 	
 	@JsonProperty("darkhasthDueDate")
 	private Long darkhasthDueDate = null;
+
+	@JsonProperty("hearingDate")
+	private Long hearingDate = null;
+
+	@JsonProperty("hearingTime")
+	private String hearingTime = null;
 }

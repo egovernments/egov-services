@@ -1,6 +1,6 @@
 Dear {{Legal Department/Concerned Department}}
 
-	Hearing Decision for Case Reference No. {{Reference No}} Date {{Dated}} by Court is {{Court}}.
+	Hearing Decision for Case Reference No. {{Reference No}} Date {{Dated}} by Court is {{Hearing Decision}}.
 	
 Sincerely,
 {{ULB Name}}

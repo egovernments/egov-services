@@ -4993,7 +4993,6 @@ var localization_MR_Data = {
 }
 
 export function translate(locale_text) {
-  debugger;
     if (locale_text && localStorage.getItem("lang_response")) {
         var langresult = JSON.parse(localStorage.getItem("lang_response")).filter(function(obj) {
             return obj.code == locale_text;

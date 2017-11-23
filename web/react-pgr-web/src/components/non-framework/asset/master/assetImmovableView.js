@@ -97,6 +97,9 @@ let reqRequired = [];
 class assetImmovableView extends Component {
   constructor(props) {
     super(props);
+    this.state = {
+      responseHolder: ""
+    }
   }
 
   setLabelAndReturnRequired(configObject) {
@@ -388,12 +391,63 @@ printer = () => {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
+    let self = this;
 
-
+    const renderGrid = function() {
+      if(formData && formData.Assets){
+        Api.commonApiPost("/asset-services-maha/assets/currentvalues/_search",{"assetIds":formData.Assets[0].id}).then(function(response)
+        {
+            console.log(response);
+            if(response && response.hasOwnProperty("AssetCurrentValues")){
+              self.setState({
+                responseHolder: response.AssetCurrentValues
+              })
+            }
+        },function(err) {
+          console.log(err);
+        });
+        return (
+          <div>
+            <Card className="uiCard">
+              <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("")}</div>}/>
+                <CardText>
+                  <Table bordered responsive className="table-striped">
+                    <thead>
+                      <tr>
+                        <th>{translate("S.No.")}</th>
+                        <th>{translate("Transaction Date")}</th>
+                        <th>{translate("WDV before transaction (Rs.)")}</th>
+                        <th>{translate("Transaction Type")}</th>
+                        <th>{translate("Transaction Amount(Rs.)")}</th>
+                        <th>{translate("Closing WDV(Rs.)")}</th>
+                      </tr>
+                    </thead>
+                  <tbody>
+                  {self.state.responseHolder && self.state.responseHolder.map(function(item, index) {
+                    let date = new Date(item.transactionDate);
+              			let finDate = ('0' + date.getDate()).slice(-2) + '/'
+                           + ('0' + (date.getMonth()+1)).slice(-2) + '/'
+                           + date.getFullYear();
+                    return (
+                      <tr key={index}>
+                        <td>{index + 1}</td>
+                        <td>{finDate}</td>
+                        <td>{item.currentAmount}</td>
+                        <td>{item.assetTranType}</td>
+                        <td>{item.currentAmount}</td>
+                        <td>{item.currentAmount - item.currentAmount}</td>
+                      </tr>
+                    )
+                  })}
+                </tbody>
+              </Table>
+            </CardText>
+          </Card>
+        </div>
+      )
+    }
+    }
           const renderBody = function() {
-
-
-              // console.log(formData.feeMatrices);
               if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
                 // console.log(formData.Assets[0].assetAttributes);
                   var createCustomObject = formData.Assets[0].assetAttributes;
@@ -453,7 +507,10 @@ printer = () => {
         <form id="printable">
         {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
 
-            {renderBody()}
+        <div>
+          {renderGrid()}
+          {renderBody()}
+        </div>
 
             <Card className="uiCard">
                 <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}></div>}/>

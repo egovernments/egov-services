@@ -6,19 +6,23 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
+import org.egov.common.Constants;
 import org.egov.common.DomainService;
-import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
+import org.egov.common.exception.ErrorCode;
+import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
+import org.egov.inv.model.MaterialReceiptDetail;
+import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -51,6 +55,7 @@ public class OpeningBalanceService extends DomainService {
 
     public List<MaterialReceipt> create(OpeningBalanceRequest openBalReq, String tenantId) {
     	try {
+            validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE);
             openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
             materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
             materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
@@ -132,6 +137,53 @@ public class OpeningBalanceService extends DomainService {
         String idgen = String.format("%05d", id);
         String mrnNumber = code + idgen + "/" + year;
         return mrnNumber;
+    }
+    
+    private void validate(List<MaterialReceipt> receipt, String method) {
+
+		try {
+			switch (method) {
+
+			case Constants.ACTION_CREATE: {
+				if (receipt == null) {
+					throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
+				}
+			}
+				break;
+
+			case Constants.ACTION_UPDATE: {
+				if (receipt == null) {
+					throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
+				}
+			}
+				break;
+
+			}
+			Long currentMilllis = System.currentTimeMillis();
+			
+			for(MaterialReceipt  rcpt : receipt){
+				{
+					for( MaterialReceiptDetail detail : rcpt.getReceiptDetails())
+					{
+						for( MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo())
+						{
+							if(Long.valueOf(addInfo.getReceivedDate()) > currentMilllis){
+								throw new CustomException("ReceiptDate", "ReceiptDate Date must be less than or equal to Today's date");
+							
+							
+						}
+					
+					}
+				}
+				
+			}
+			
+		} 
+
+	}
+		catch (IllegalArgumentException e) {
+
+		}
     }
 
 

@@ -1,18 +1,19 @@
 package org.egov.inv.model;
 
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
 import java.math.BigDecimal;
 import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Size;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * Unit of Measurement 
@@ -38,8 +39,8 @@ public class Uom   {
   @JsonProperty("description")
   private String description = null;
   
-  @JsonProperty("baseuom")
-  private Boolean baseuom = false;
+  @JsonProperty("baseUom")
+  private Boolean baseUom = false;
   
   @JsonProperty("uomCategory")
   private String uomCategory = null;
@@ -152,17 +153,17 @@ public class Uom   {
 		this.description = description;
 	}
 	
-	  public Uom baseuom(Boolean baseuom) {
-		    this.baseuom = baseuom;
+	  public Uom baseUom(Boolean baseUom) {
+		    this.baseUom = baseUom;
 		    return this;
 		  }
 
-	public Boolean getBaseuom() {
-		return baseuom;
+	public Boolean getBaseUom() {
+		return baseUom;
 	}
 
-	public void setBaseuom(Boolean baseuom) {
-		this.baseuom = baseuom;
+	public void setBaseUom(Boolean baseuom) {
+		this.baseUom = baseUom;
 	}
 
 	  public Uom uomCategory(String uomCategory) {
@@ -282,7 +283,7 @@ public class Uom   {
         Objects.equals(this.code, uom.code) &&
         Objects.equals(this.description, uom.description) &&
         Objects.equals(this.uomCategory, uom.uomCategory) &&
-        Objects.equals(this.baseuom, uom.baseuom) &&
+        Objects.equals(this.baseUom, uom.baseUom) &&
         Objects.equals(this.fromDate, uom.fromDate) &&
         Objects.equals(this.toDate, uom.toDate) &&
         Objects.equals(this.conversionFactor, uom.conversionFactor) &&
@@ -292,7 +293,7 @@ public class Uom   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, code,description, uomCategory, baseuom, fromDate, toDate, conversionFactor, active, auditDetails);
+    return Objects.hash(id, tenantId, name, code,description, uomCategory, baseUom, fromDate, toDate, conversionFactor, active, auditDetails);
   }
 
   @Override
@@ -306,7 +307,7 @@ public class Uom   {
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    uomCategory: ").append(toIndentedString(uomCategory)).append("\n");
-    sb.append("    baseuom: ").append(toIndentedString(baseuom)).append("\n");
+    sb.append("    baseUom: ").append(toIndentedString(baseUom)).append("\n");
     sb.append("    fromDate: ").append(toIndentedString(fromDate)).append("\n");
     sb.append("    toDate: ").append(toIndentedString(toDate)).append("\n");
     sb.append("    conversionFactor: ").append(toIndentedString(conversionFactor)).append("\n");

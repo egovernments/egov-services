@@ -1,6 +1,6 @@
 {
   "name": "egov-legal",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Common methods",
   "main": "index.js",
   "scripts": {
@@ -55,8 +55,8 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "egov-common-utility": "0.0.1",
-    "egov-ui-react-framework": "0.0.4"
+    "egov-common-utility": "0.0.2",
+    "egov-ui-react-framework": "0.0.5"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

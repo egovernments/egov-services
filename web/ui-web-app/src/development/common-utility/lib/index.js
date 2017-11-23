@@ -13,15 +13,15 @@ import constants from './constants';
 import ServerSideTable from './table/ServerSideTable';
 import PdfViewer from './pdf-generation/PdfViewer';
 import {fonts, writeMultiLanguageText, getBase64FromImageUrl} from './pdf-generation/PdfConfig';
-import DateTable from './Table';
+import DataTable from './Table';
 import Fields from './Fields';
-import renderImage from './ImagePreview';
+import ImagePreview from './ImagePreview';
 import SimpleMap from './GoogleMaps';
 
 export {
 	Api,
 	Fields,
-	renderImage,
+	ImagePreview,
 	dataURItoBlob,
 	SimpleMap,
 	dateToEpoch,
@@ -37,5 +37,5 @@ export {
 	writeMultiLanguageText,
 	getBase64FromImageUrl,
 	PdfViewer,
-	DateTable
+	DataTable
 };

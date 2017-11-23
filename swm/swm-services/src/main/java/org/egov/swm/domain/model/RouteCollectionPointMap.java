@@ -33,6 +33,9 @@ public class RouteCollectionPointMap {
     @JsonProperty("collectionPoint")
     private String collectionPoint = null;
 
+    @JsonProperty("routes")
+    private String routes = null;
+
     @Valid
     @JsonProperty("auditDetails")
     private AuditDetails auditDetails = null;

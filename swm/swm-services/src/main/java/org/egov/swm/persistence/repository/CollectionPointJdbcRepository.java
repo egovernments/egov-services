@@ -2,16 +2,24 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.BinDetails;
 import org.egov.swm.domain.model.BinDetailsSearch;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
 import org.egov.swm.domain.model.CollectionPointSearch;
+import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.model.Pagination;
+import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointEntity;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +39,9 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
     @Autowired
     public CollectionPointDetailsJdbcRepository collectionPointDetailsJdbcRepository;
+
+    @Autowired
+    private CollectionTypeService collectionTypeService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -110,40 +121,173 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
 
         final List<CollectionPointEntity> collectionPointEntities = namedParameterJdbcTemplate.query(searchQuery.toString(),
                 paramValues, row);
-        CollectionPoint cp;
-        BinDetailsSearch bds;
-        CollectionPointDetailsSearch cpds;
+
         for (final CollectionPointEntity collectionPointEntity : collectionPointEntities) {
 
-            cp = collectionPointEntity.toDomain();
+            collectionPointList.add(collectionPointEntity.toDomain());
+        }
 
-            if (cp.getLocation() != null && cp.getLocation().getCode() != null) {
+        StringBuffer collectionPointCodes = new StringBuffer();
+        StringBuffer boundaryCodes = new StringBuffer();
+        Set<String> boundaryCodesSet = new HashSet<>();
 
-                final Boundary boundary = boundaryRepository.fetchBoundaryByCode(cp.getLocation().getCode(),
-                        cp.getTenantId());
+        for (CollectionPoint collectionPoint : collectionPointList) {
 
-                if (boundary != null)
-                    cp.setLocation(boundary);
+            if (collectionPointCodes.length() >= 1)
+                collectionPointCodes.append(",");
+
+            collectionPointCodes.append(collectionPoint.getCode());
+
+            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
+                    && !collectionPoint.getLocation().getCode().isEmpty()) {
+
+                boundaryCodesSet.add(collectionPoint.getLocation().getCode());
+
             }
 
-            bds = new BinDetailsSearch();
-            bds.setCollectionPoint(cp.getCode());
-            bds.setTenantId(cp.getTenantId());
-            cp.setBinDetails(binIdDetailsJdbcRepository.search(bds));
-
-            cpds = new CollectionPointDetailsSearch();
-            cpds.setTenantId(cp.getTenantId());
-            cpds.setCollectionPoint(cp.getCode());
-            cp.setCollectionPointDetails(collectionPointDetailsJdbcRepository.search(cpds));
-
-            collectionPointList.add(cp);
         }
+
+        List<String> locationCodes = new ArrayList(boundaryCodesSet);
+
+        for (String code : locationCodes) {
+
+            if (boundaryCodes.length() >= 1)
+                boundaryCodes.append(",");
+
+            boundaryCodes.append(code);
+
+        }
+
+        populateBoundarys(collectionPointList, boundaryCodes.toString());
+
+        populateBinDetails(collectionPointList, collectionPointCodes.toString());
+
+        populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
 
         page.setTotalResults(collectionPointList.size());
 
         page.setPagedData(collectionPointList);
 
         return page;
+    }
+
+    private void populateBoundarys(List<CollectionPoint> collectionPointList, String boundaryCodes) {
+        String tenantId = null;
+        Map<String, Boundary> boundaryMap = new HashMap<>();
+
+        if (collectionPointList != null && !collectionPointList.isEmpty())
+            tenantId = collectionPointList.get(0).getTenantId();
+
+        List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes,
+                tenantId);
+
+        for (Boundary bd : boundarys) {
+
+            boundaryMap.put(bd.getCode(), bd);
+
+        }
+
+        for (CollectionPoint collectionPoint : collectionPointList) {
+
+            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
+                    && !collectionPoint.getLocation().getCode().isEmpty()) {
+
+                collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
+            }
+
+        }
+
+    }
+
+    private void populateBinDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {
+        Map<String, List<BinDetails>> binDetailsMap = new HashMap<>();
+        String tenantId = null;
+        BinDetailsSearch bds;
+        bds = new BinDetailsSearch();
+
+        if (collectionPointList != null && !collectionPointList.isEmpty())
+            tenantId = collectionPointList.get(0).getTenantId();
+
+        bds.setCollectionPoints(collectionPointCodes);
+        bds.setTenantId(tenantId);
+
+        List<BinDetails> binDetails = binIdDetailsJdbcRepository.search(bds);
+
+        for (BinDetails bd : binDetails) {
+
+            if (binDetailsMap.get(bd.getCollectionPoint()) == null) {
+
+                binDetailsMap.put(bd.getCollectionPoint(), Collections.singletonList(bd));
+
+            } else {
+
+                List<BinDetails> bdList = new ArrayList<>(binDetailsMap.get(bd.getCollectionPoint()));
+
+                bdList.add(bd);
+
+                binDetailsMap.put(bd.getCollectionPoint(), bdList);
+
+            }
+        }
+
+        for (CollectionPoint collectionPoint : collectionPointList) {
+
+            collectionPoint.setBinDetails(binDetailsMap.get(collectionPoint.getCode()));
+
+        }
+
+    }
+
+    private void populateCollectionPointDetails(List<CollectionPoint> collectionPointList, String collectionPointCodes) {
+        Map<String, List<CollectionPointDetails>> collectionPointDetailsMap = new HashMap<>();
+        Map<String, CollectionType> collectionTypeMap = new HashMap<>();
+        String tenantId = null;
+        CollectionPointDetailsSearch cpds;
+        cpds = new CollectionPointDetailsSearch();
+
+        if (collectionPointList != null && !collectionPointList.isEmpty())
+            tenantId = collectionPointList.get(0).getTenantId();
+
+        cpds.setCollectionPoints(collectionPointCodes);
+        cpds.setTenantId(tenantId);
+
+        List<CollectionPointDetails> collectionPointDetails = collectionPointDetailsJdbcRepository.search(cpds);
+
+        List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+
+        for (CollectionType ct : collectionTypes) {
+            collectionTypeMap.put(ct.getCode(), ct);
+        }
+
+        for (CollectionPointDetails cpd : collectionPointDetails) {
+
+            if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null
+                    && !cpd.getCollectionType().getCode().isEmpty()) {
+
+                cpd.setCollectionType(collectionTypeMap.get(cpd.getCollectionType().getCode()));
+            }
+
+            if (collectionPointDetailsMap.get(cpd.getCollectionPoint()) == null) {
+
+                collectionPointDetailsMap.put(cpd.getCollectionPoint(), Collections.singletonList(cpd));
+
+            } else {
+
+                List<CollectionPointDetails> cpdList = new ArrayList<>(collectionPointDetailsMap.get(cpd.getCollectionPoint()));
+
+                cpdList.add(cpd);
+
+                collectionPointDetailsMap.put(cpd.getCollectionPoint(), cpdList);
+
+            }
+        }
+
+        for (CollectionPoint collectionPoint : collectionPointList) {
+
+            collectionPoint.setCollectionPointDetails(collectionPointDetailsMap.get(collectionPoint.getCode()));
+
+        }
+
     }
 
 }

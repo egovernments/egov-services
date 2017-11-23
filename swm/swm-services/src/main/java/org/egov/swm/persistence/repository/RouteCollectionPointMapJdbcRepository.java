@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,12 @@ public class RouteCollectionPointMapJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("route =:route");
             paramValues.put("route", searchRequest.getRoute());
+        }
+
+        if (searchRequest.getRoutes() != null) {
+            addAnd(params);
+            params.append("route in (:routes)");
+            paramValues.put("routes", new ArrayList<>(Arrays.asList(searchRequest.getRoutes().split(","))));
         }
 
         if (searchRequest.getCollectionPoint() != null && searchRequest.getCollectionPoint() != null) {

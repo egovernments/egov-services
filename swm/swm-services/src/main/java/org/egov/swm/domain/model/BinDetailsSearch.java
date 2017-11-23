@@ -11,6 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class BinDetailsSearch extends BinDetails {
     private String collectionPoint;
+    private String collectionPoints;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

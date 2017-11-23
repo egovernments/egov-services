@@ -36,6 +36,7 @@ public class CollectionPointDetailsEntity {
         collectionPointDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
         collectionPointDetails.setGarbageEstimate(garbageEstimate);
         collectionPointDetails.setDescription(description);
+        collectionPointDetails.setCollectionPoint(collectionPoint);
 
         return collectionPointDetails;
 

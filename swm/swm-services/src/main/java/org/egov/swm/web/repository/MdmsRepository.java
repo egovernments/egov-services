@@ -79,8 +79,9 @@ public class MdmsRepository {
         masterDetails = new MasterDetails[1];
         moduleDetails = new ModuleDetails[1];
 
-        masterDetails[0] = MasterDetails.builder().name(masterName)
-                .filter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]").build();
+        masterDetails[0] = MasterDetails.builder().name(masterName).build();
+        if (filterFieldName != null && filterFieldValue != null && !filterFieldName.isEmpty() && !filterFieldValue.isEmpty())
+            masterDetails[0].setFilter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]");
         moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
 
         request = MdmsRequest.builder()

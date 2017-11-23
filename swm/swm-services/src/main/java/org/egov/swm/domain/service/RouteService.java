@@ -195,7 +195,7 @@ public class RouteService {
         for (final Route route : routeRequest.getRoutes())
             if (route.getName() != null) {
                 if (nameMap.get(route.getName()) != null)
-                    throw new CustomException("name", "Duplicate names in given vendors : " + route.getName());
+                    throw new CustomException("name", "Duplicate names in given routes : " + route.getName());
 
                 nameMap.put(route.getName(), route.getName());
             }

@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -62,6 +64,12 @@ public class BinDetailsJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("collectionPoint =:collectionPoint");
             paramValues.put("collectionPoint", searchRequest.getCollectionPoint());
+        }
+
+        if (searchRequest.getCollectionPoints() != null) {
+            addAnd(params);
+            params.append("collectionPoint in (:collectionPoints)");
+            paramValues.put("collectionPoints", new ArrayList<>(Arrays.asList(searchRequest.getCollectionPoints().split(","))));
         }
 
         if (searchRequest.getLongitude() != null) {

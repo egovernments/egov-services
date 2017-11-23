@@ -13,6 +13,7 @@ public class CollectionPointDetailsSearch extends CollectionPointDetails {
     private String ids;
     private String collectionTypeCode;
     private String collectionPoint;
+    private String collectionPoints;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

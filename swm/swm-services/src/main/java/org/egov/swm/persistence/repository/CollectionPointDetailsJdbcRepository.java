@@ -6,12 +6,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.CollectionPointDetails;
 import org.egov.swm.domain.model.CollectionPointDetailsSearch;
-import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionPointDetailsEntity;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,9 +17,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egswm_collectionpointdetails";
-
-    @Autowired
-    private CollectionTypeService collectionTypeService;
 
     @Transactional
     public void delete(final String tenantId, final String collectionPoint) {
@@ -84,7 +78,6 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
         final BeanPropertyRowMapper row = new BeanPropertyRowMapper(CollectionPointDetailsEntity.class);
 
-        CollectionPointDetails cpd;
         final List<CollectionPointDetails> collectionPointDetailsList = new ArrayList<>();
 
         final List<CollectionPointDetailsEntity> collectionPointDetailsEntities = namedParameterJdbcTemplate
@@ -92,13 +85,7 @@ public class CollectionPointDetailsJdbcRepository extends JdbcRepository {
 
         for (final CollectionPointDetailsEntity collectionPointDetailsEntity : collectionPointDetailsEntities) {
 
-            cpd = collectionPointDetailsEntity.toDomain();
-
-            if (cpd.getCollectionType() != null && cpd.getCollectionType().getCode() != null)
-                cpd.setCollectionType(collectionTypeService.getCollectionType(cpd.getTenantId(),
-                        cpd.getCollectionType().getCode(), new RequestInfo()));
-
-            collectionPointDetailsList.add(cpd);
+            collectionPointDetailsList.add(collectionPointDetailsEntity.toDomain());
         }
 
         return collectionPointDetailsList;

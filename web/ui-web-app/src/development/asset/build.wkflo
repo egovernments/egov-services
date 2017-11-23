@@ -1,4 +1,6 @@
-def build() {
+def service_name = "${env.JOB_BASE_NAME}";
+
+def build(path) {
     stage("Build") {
         docker.image("egovio/ci-react:0.0.4").inside {
             withCredentials([string(credentialsId: "verdaccio-host-url", variable: "NPM_URL")]) {
@@ -15,7 +17,8 @@ try {
     node("slave"){
         checkout scm
         notifier = load("jenkins/notifier.groovy")
-        build()
+        path = "web/ui-web-app/src/development/${service_name}"
+        build(path)
         }
 } catch (e) {
     node{

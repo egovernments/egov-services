@@ -65,18 +65,24 @@ public class OpeningBalanceService extends DomainService {
             materialReceipt.setReceiptType(ReceiptTypeEnum.valueOf("OPENING_BALANCE"));
             String mrnNumber = appendString(materialReceipt);
             materialReceipt.setMrnNumber(mrnNumber);
+            if(null != materialReceipt.getReceiptDetails())
+            {
             materialReceipt.getReceiptDetails().stream().forEach(detail -> {
                 detail.setId(jdbcRepository.getSequence("seq_materialreceiptdetail"));
                 if (isEmpty(detail.getTenantId())) {
                     detail.setTenantId(tenantId);
                 }
+                if(null != detail.getReceiptDetailsAddnInfo())
+                {
                 detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
                     addinfo.setId(jdbcRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
                     if (isEmpty(addinfo.getTenantId())) {
                         addinfo.setTenantId(tenantId);
                     }
                 });
+                }
             });
+            }
         });
         for (MaterialReceipt material : openBalReq.getMaterialReceipt()) {
             material.setAuditDetails(
@@ -172,7 +178,7 @@ public class OpeningBalanceService extends DomainService {
 						throw new CustomException("receivingStore", "storeName Is Required");
 					}
 
-					if(!rcpt.getReceiptDetails().isEmpty())
+					if(null != rcpt.getReceiptDetails())
 					{
 		   for( MaterialReceiptDetail detail : rcpt.getReceiptDetails())
 				{
@@ -192,7 +198,7 @@ public class OpeningBalanceService extends DomainService {
 						{
 							throw new CustomException("unitRate", "UnitRate Is Required");
 						}
-						if(detail.getReceiptDetailsAddnInfo() != null )
+						if( null != detail.getReceiptDetailsAddnInfo())
 						{
 						for( MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo())
 						{
@@ -206,7 +212,7 @@ public class OpeningBalanceService extends DomainService {
 					}
 				}
 					else
-					throw new CustomException("receipt", "please enter receipt detail");
+					throw new CustomException("receipt", "please enter required fields");
 
 			}
 			

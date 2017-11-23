@@ -31,6 +31,8 @@ public class CollectionDetails {
     @JsonProperty("collectionType")
     private CollectionType collectionType = null;
 
+    private String sourceSegregation;
+    
     @NotNull
     @DecimalMin("0")
     @JsonProperty("wetWasteCollected")

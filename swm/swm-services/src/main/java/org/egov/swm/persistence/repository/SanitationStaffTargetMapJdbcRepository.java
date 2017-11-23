@@ -1,5 +1,7 @@
 package org.egov.swm.persistence.repository;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,6 +38,12 @@ public class SanitationStaffTargetMapJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("sanitationStaffTarget =:sanitationStaffTarget");
             paramValues.put("sanitationStaffTarget", searchRequest.getSanitationStaffTarget());
+        }
+
+        if (searchRequest.getTargetNos() != null) {
+            addAnd(params);
+            params.append("sanitationStaffTarget in (:sanitationStaffTargets)");
+            paramValues.put("sanitationStaffTargets", new ArrayList<>(Arrays.asList(searchRequest.getTargetNos().split(","))));
         }
 
         if (searchRequest.getCollectionPoint() != null && searchRequest.getCollectionPoint() != null) {

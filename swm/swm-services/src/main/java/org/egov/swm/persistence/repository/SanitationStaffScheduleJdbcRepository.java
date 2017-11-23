@@ -3,8 +3,10 @@ package org.egov.swm.persistence.repository;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Pagination;
@@ -12,6 +14,7 @@ import org.egov.swm.domain.model.SanitationStaffSchedule;
 import org.egov.swm.domain.model.SanitationStaffScheduleSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
+import org.egov.swm.domain.model.Shift;
 import org.egov.swm.domain.service.ShiftService;
 import org.egov.swm.persistence.entity.SanitationStaffScheduleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -103,39 +106,107 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
         final List<SanitationStaffScheduleEntity> sanitationStaffScheduleEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        SanitationStaffSchedule sss;
-        SanitationStaffTargetSearch ssts;
-        Pagination<SanitationStaffTarget> sanitationStaffTargets;
-
         for (final SanitationStaffScheduleEntity sanitationStaffScheduleEntity : sanitationStaffScheduleEntities) {
 
-            sss = sanitationStaffScheduleEntity.toDomain();
-
-            if (sss.getShift() != null && sss.getShift().getCode() != null)
-                sss.setShift(shiftService.getShift(sss.getTenantId(), sss.getShift().getCode(), new RequestInfo()));
-
-            if (sanitationStaffScheduleEntity.getSanitationStaffTarget() != null
-                    && !sanitationStaffScheduleEntity.getSanitationStaffTarget().isEmpty()) {
-                ssts = new SanitationStaffTargetSearch();
-                ssts.setTenantId(sanitationStaffScheduleEntity.getTenantId());
-                ssts.setTargetNo(sanitationStaffScheduleEntity.getSanitationStaffTarget());
-
-                sanitationStaffTargets = sanitationStaffTargetJdbcRepository.search(ssts);
-
-                if (sanitationStaffTargets != null && sanitationStaffTargets.getPagedData() != null
-                        && !sanitationStaffTargets.getPagedData().isEmpty())
-                    sss.setSanitationStaffTarget(sanitationStaffTargets.getPagedData().get(0));
-            }
-
-            sanitationStaffScheduleList.add(sss);
+            sanitationStaffScheduleList.add(sanitationStaffScheduleEntity.toDomain());
 
         }
+
+        populateShifts(sanitationStaffScheduleList);
+
+        populateSanitationStaffTargets(sanitationStaffScheduleList);
 
         page.setTotalResults(sanitationStaffScheduleList.size());
 
         page.setPagedData(sanitationStaffScheduleList);
 
         return page;
+    }
+
+    private void populateShifts(List<SanitationStaffSchedule> sanitationStaffScheduleList) {
+
+        Map<String, Shift> shiftMap = new HashMap<>();
+        String tenantId = null;
+
+        if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty())
+            tenantId = sanitationStaffScheduleList.get(0).getTenantId();
+
+        List<Shift> shifts = shiftService.getAll(tenantId, new RequestInfo());
+
+        for (Shift s : shifts) {
+            shiftMap.put(s.getCode(), s);
+        }
+
+        for (SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList) {
+
+            if (sanitationStaffSchedule.getShift() != null && sanitationStaffSchedule.getShift().getCode() != null
+                    && !sanitationStaffSchedule.getShift().getCode().isEmpty()) {
+
+                sanitationStaffSchedule.setShift(shiftMap.get(sanitationStaffSchedule.getShift().getCode()));
+            }
+
+        }
+    }
+
+    private void populateSanitationStaffTargets(List<SanitationStaffSchedule> sanitationStaffScheduleList) {
+
+        StringBuffer targetNos = new StringBuffer();
+        Set<String> targetNosSet = new HashSet<>();
+        SanitationStaffTargetSearch targetSearch = new SanitationStaffTargetSearch();
+        Pagination<SanitationStaffTarget> targets;
+
+        for (SanitationStaffSchedule sst : sanitationStaffScheduleList) {
+
+            if (sst.getSanitationStaffTarget() != null && sst.getSanitationStaffTarget().getTargetNo() != null
+                    && !sst.getSanitationStaffTarget().getTargetNo().isEmpty()) {
+
+                targetNosSet.add(sst.getSanitationStaffTarget().getTargetNo());
+
+            }
+
+        }
+
+        List<String> targetNoList = new ArrayList(targetNosSet);
+
+        for (String target : targetNoList) {
+
+            if (targetNos.length() >= 1)
+                targetNos.append(",");
+
+            targetNos.append(target);
+
+        }
+
+        String tenantId = null;
+        Map<String, SanitationStaffTarget> targetMap = new HashMap<>();
+
+        if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty())
+            tenantId = sanitationStaffScheduleList.get(0).getTenantId();
+
+        targetSearch.setTenantId(tenantId);
+        targetSearch.setTargetNos(targetNos.toString());
+        targets = sanitationStaffTargetJdbcRepository.search(targetSearch);
+
+        if (targets != null && targets.getPagedData() != null)
+            for (SanitationStaffTarget bd : targets.getPagedData()) {
+
+                targetMap.put(bd.getTargetNo(), bd);
+
+            }
+
+        for (SanitationStaffSchedule sanitationStaffSchedule : sanitationStaffScheduleList) {
+
+            if (sanitationStaffSchedule.getSanitationStaffTarget() != null
+                    && sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo() != null
+                    && !sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo().isEmpty()) {
+
+                sanitationStaffSchedule
+                        .setSanitationStaffTarget(
+                                targetMap.get(sanitationStaffSchedule.getSanitationStaffTarget().getTargetNo()));
+            }
+
+        }
+
     }
 
 }

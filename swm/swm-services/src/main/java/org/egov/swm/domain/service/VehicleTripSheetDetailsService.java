@@ -36,9 +36,6 @@ public class VehicleTripSheetDetailsService {
     private VehicleService vehicleService;
 
     @Autowired
-    private VendorService vendorService;
-
-    @Autowired
     private IdgenRepository idgenRepository;
 
     @Value("${egov.swm.vehicle.trip.num.idgen.name}")
@@ -147,26 +144,6 @@ public class VehicleTripSheetDetailsService {
                 else
                     vehicleTripSheetDetails.setVehicle(vehicleList.getPagedData().get(0));
 
-            }
-            if (vehicleTripSheetDetails.getVendor() != null
-                    && (vehicleTripSheetDetails.getVendor().getVendorNo() == null
-                            || vehicleTripSheetDetails.getVendor().getVendorNo().isEmpty()))
-                throw new CustomException("VehicleType",
-                        "The field Vendor number is Mandatory . It cannot be not be null or empty.Please provide correct value ");
-
-            // Validate vendor
-
-            if (vehicleTripSheetDetails.getVendor() != null
-                    && vehicleTripSheetDetails.getVendor().getVendorNo() != null) {
-                vendorSearch = new VendorSearch();
-                vendorSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-                vendorSearch.setVendorNo(vehicleTripSheetDetails.getVendor().getVendorNo());
-                vendors = vendorService.search(vendorSearch);
-                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
-                    vehicleTripSheetDetails.setVendor(vendors.getPagedData().get(0));
-                else
-                    throw new CustomException("Vendor",
-                            "Given Vendor is invalid: " + vehicleTripSheetDetails.getVendor().getVendorNo());
             }
 
         }

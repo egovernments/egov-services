@@ -2,17 +2,22 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.FuelType;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
+import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.VehicleTypeService;
+import org.egov.swm.domain.service.VendorService;
 import org.egov.swm.persistence.entity.VehicleEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -24,7 +29,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egswm_vehicle";
 
     @Autowired
-    public VendorJdbcRepository vendorJdbcRepository;
+    public VendorService vendorService;
 
     @Autowired
     private VehicleTypeService vehicleTypeService;
@@ -161,39 +166,130 @@ public class VehicleJdbcRepository extends JdbcRepository {
         final List<VehicleEntity> vehicleEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
                 row);
         Vehicle v;
-        VendorSearch vendorSearch;
-        Pagination<Vendor> vendors;
         for (final VehicleEntity vehicleEntity : vehicleEntities) {
 
-            v = vehicleEntity.toDomain();
-
-            if (v.getVehicleType() != null && v.getVehicleType().getCode() != null)
-                v.setVehicleType(vehicleTypeService.getVehicleType(v.getTenantId(), v.getVehicleType().getCode(),
-                        new RequestInfo()));
-
-            if (v.getFuelType() != null && v.getFuelType().getCode() != null)
-                v.setFuelType(
-                        fuelTypeService.getFuelType(v.getTenantId(), v.getFuelType().getCode(), new RequestInfo()));
-
-            if (v.getVendor() != null && v.getVendor().getVendorNo() != null
-                    && !v.getVendor().getVendorNo().isEmpty()) {
-                vendorSearch = new VendorSearch();
-                vendorSearch.setTenantId(v.getTenantId());
-                vendorSearch.setVendorNo(v.getVendor().getVendorNo());
-
-                vendors = vendorJdbcRepository.search(vendorSearch);
-                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
-                    v.setVendor(vendors.getPagedData().get(0));
-            }
-
-            vehicleList.add(v);
+            vehicleList.add(vehicleEntity.toDomain());
         }
+
+        populateFuelTypes(vehicleList);
+
+        populateVehicleTypes(vehicleList);
+
+        populateVendors(vehicleList);
 
         page.setTotalResults(vehicleList.size());
 
         page.setPagedData(vehicleList);
 
         return page;
+    }
+
+    private void populateFuelTypes(List<Vehicle> vehicleList) {
+        Map<String, FuelType> fuelTypeMap = new HashMap<>();
+        String tenantId = null;
+
+        if (vehicleList != null && !vehicleList.isEmpty())
+            tenantId = vehicleList.get(0).getTenantId();
+
+        List<FuelType> fuelTypes = fuelTypeService.getAll(tenantId, new RequestInfo());
+
+        for (FuelType ft : fuelTypes) {
+            fuelTypeMap.put(ft.getCode(), ft);
+        }
+
+        for (Vehicle vehicle : vehicleList) {
+
+            if (vehicle.getFuelType() != null && vehicle.getFuelType().getCode() != null
+                    && !vehicle.getFuelType().getCode().isEmpty()) {
+
+                vehicle.setFuelType(fuelTypeMap.get(vehicle.getFuelType().getCode()));
+            }
+
+        }
+    }
+
+    private void populateVehicleTypes(List<Vehicle> vehicleList) {
+        Map<String, VehicleType> vehicleTypeMap = new HashMap<>();
+        String tenantId = null;
+
+        if (vehicleList != null && !vehicleList.isEmpty())
+            tenantId = vehicleList.get(0).getTenantId();
+
+        List<VehicleType> vehicleTypes = vehicleTypeService.getAll(tenantId, new RequestInfo());
+
+        for (VehicleType vt : vehicleTypes) {
+            vehicleTypeMap.put(vt.getCode(), vt);
+        }
+
+        for (Vehicle vehicle : vehicleList) {
+
+            if (vehicle.getVehicleType() != null && vehicle.getVehicleType().getCode() != null
+                    && !vehicle.getVehicleType().getCode().isEmpty()) {
+
+                vehicle.setVehicleType(vehicleTypeMap.get(vehicle.getVehicleType().getCode()));
+            }
+
+        }
+    }
+
+    private void populateVendors(List<Vehicle> vehicleList) {
+
+        VendorSearch vendorSearch;
+        Pagination<Vendor> vendors;
+        StringBuffer vendorNos = new StringBuffer();
+        Set<String> vendorNoSet = new HashSet<>();
+
+        for (Vehicle v : vehicleList) {
+
+            if (v.getVendor() != null && v.getVendor().getVendorNo() != null
+                    && !v.getVendor().getVendorNo().isEmpty()) {
+
+                vendorNoSet.add(v.getVendor().getVendorNo());
+
+            }
+
+        }
+
+        List<String> vendorNoList = new ArrayList(vendorNoSet);
+
+        for (String vendorNo : vendorNoList) {
+
+            if (vendorNos.length() >= 1)
+                vendorNos.append(",");
+
+            vendorNos.append(vendorNo);
+
+        }
+
+        String tenantId = null;
+        Map<String, Vendor> vendorMap = new HashMap<>();
+
+        if (vehicleList != null && !vehicleList.isEmpty())
+            tenantId = vehicleList.get(0).getTenantId();
+
+        vendorSearch = new VendorSearch();
+        vendorSearch.setTenantId(tenantId);
+        vendorSearch.setVendorNos(vendorNos.toString());
+
+        vendors = vendorService.search(vendorSearch);
+
+        if (vendors != null && vendors.getPagedData() != null)
+            for (Vendor bd : vendors.getPagedData()) {
+
+                vendorMap.put(bd.getVendorNo(), bd);
+
+            }
+
+        for (Vehicle vehicle : vehicleList) {
+
+            if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null
+                    && !vehicle.getVendor().getVendorNo().isEmpty()) {
+
+                vehicle.setVendor(vendorMap.get(vehicle.getVendor().getVendorNo()));
+            }
+
+        }
+
     }
 
 }

@@ -2,12 +2,15 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.swm.domain.model.CollectionDetails;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
+import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SourceSegregation;
 import org.egov.swm.domain.model.SourceSegregationSearch;
@@ -62,6 +65,7 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
             params.append("code in (:codes)");
             paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
         }
+
         if (searchRequest.getTenantId() != null) {
             addAnd(params);
             params.append("tenantId =:tenantId");
@@ -106,30 +110,98 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
         final List<SourceSegregationEntity> sourceSegregationEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
+
         SourceSegregation ss;
-        final CollectionDetailsSearch cds = new CollectionDetailsSearch();
+
+        StringBuffer sourceSegregationCodes = new StringBuffer();
 
         for (final SourceSegregationEntity sourceSegregationEntity : sourceSegregationEntities) {
 
             ss = sourceSegregationEntity.toDomain();
 
-            if (ss.getDumpingGround() != null && ss.getDumpingGround().getCode() != null)
-                ss.setDumpingGround(dumpingGroundService.getDumpingGround(ss.getTenantId(),
-                        ss.getDumpingGround().getCode(), new RequestInfo()));
+            if (sourceSegregationCodes.length() >= 1)
+                sourceSegregationCodes.append(",");
 
-            cds.setTenantId(ss.getTenantId());
-            cds.setSourceSegregationCode(ss.getCode());
-            ss.setCollectionDetails(collectionDetailsJdbcRepository.search(cds));
+            sourceSegregationCodes.append(ss.getCode());
 
             sourceSegregationList.add(ss);
 
         }
+
+        populateDumpingGrounds(sourceSegregationList);
+
+        populateCollectionDetails(sourceSegregationList, sourceSegregationCodes.toString());
 
         page.setTotalResults(sourceSegregationList.size());
 
         page.setPagedData(sourceSegregationList);
 
         return page;
+    }
+
+    private void populateCollectionDetails(List<SourceSegregation> sourceSegregationList, String sourceSegregationCodes) {
+
+        Map<String, List<CollectionDetails>> collectionDetailsMap = new HashMap<>();
+        String tenantId = null;
+        CollectionDetailsSearch cds;
+        cds = new CollectionDetailsSearch();
+
+        if (sourceSegregationList != null && !sourceSegregationList.isEmpty())
+            tenantId = sourceSegregationList.get(0).getTenantId();
+
+        cds.setSourceSegregationCodes(sourceSegregationCodes);
+        cds.setTenantId(tenantId);
+
+        List<CollectionDetails> collectionDetailss = collectionDetailsJdbcRepository.search(cds);
+
+        for (CollectionDetails bd : collectionDetailss) {
+
+            if (collectionDetailsMap.get(bd.getSourceSegregation()) == null) {
+
+                collectionDetailsMap.put(bd.getSourceSegregation(), Collections.singletonList(bd));
+
+            } else {
+
+                List<CollectionDetails> bdList = new ArrayList<>(collectionDetailsMap.get(bd.getSourceSegregation()));
+
+                bdList.add(bd);
+
+                collectionDetailsMap.put(bd.getSourceSegregation(), bdList);
+
+            }
+        }
+
+        for (SourceSegregation sourceSegregation : sourceSegregationList) {
+
+            sourceSegregation.setCollectionDetails(collectionDetailsMap.get(sourceSegregation.getCode()));
+
+        }
+
+    }
+
+    private void populateDumpingGrounds(List<SourceSegregation> sourceSegregationList) {
+
+        Map<String, DumpingGround> dumpingGroundMap = new HashMap<>();
+        String tenantId = null;
+
+        if (sourceSegregationList != null && !sourceSegregationList.isEmpty())
+            tenantId = sourceSegregationList.get(0).getTenantId();
+
+        List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
+
+        for (DumpingGround dg : dumpingGrounds) {
+            dumpingGroundMap.put(dg.getCode(), dg);
+        }
+
+        for (SourceSegregation sourceSegregation : sourceSegregationList) {
+
+            if (sourceSegregation.getDumpingGround() != null && sourceSegregation.getDumpingGround().getCode() != null
+                    && !sourceSegregation.getDumpingGround().getCode().isEmpty()) {
+
+                sourceSegregation.setDumpingGround(dumpingGroundMap.get(sourceSegregation.getDumpingGround().getCode()));
+            }
+
+        }
     }
 
 }

@@ -2,24 +2,30 @@ package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.CollectionPoint;
 import org.egov.swm.domain.model.CollectionPointSearch;
+import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
 import org.egov.swm.domain.model.SanitationStaffTarget;
 import org.egov.swm.domain.model.SanitationStaffTargetMap;
 import org.egov.swm.domain.model.SanitationStaffTargetSearch;
+import org.egov.swm.domain.model.SwmProcess;
 import org.egov.swm.domain.service.DumpingGroundService;
 import org.egov.swm.domain.service.RouteService;
 import org.egov.swm.domain.service.SwmProcessService;
 import org.egov.swm.persistence.entity.SanitationStaffTargetEntity;
+import org.egov.swm.web.contract.Employee;
 import org.egov.swm.web.contract.EmployeeResponse;
 import org.egov.swm.web.repository.BoundaryRepository;
 import org.egov.swm.web.repository.EmployeeRepository;
@@ -131,85 +137,350 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
         final List<SanitationStaffTargetEntity> sanitationStaffTargetEntities = namedParameterJdbcTemplate
                 .query(searchQuery.toString(), paramValues, row);
 
-        SanitationStaffTarget sst;
-        final StringBuffer cpCodes = new StringBuffer();
-        SanitationStaffTargetMap sstm;
-        List<SanitationStaffTargetMap> collectionPoints;
-        CollectionPointSearch cps;
-        Pagination<CollectionPoint> collectionPointList;
-        Boundary boundary;
-        final RouteSearch routeSearch = new RouteSearch();
-        Pagination<Route> routes;
-        EmployeeResponse employeeResponse = null;
-
         for (final SanitationStaffTargetEntity sanitationStaffTargetEntity : sanitationStaffTargetEntities) {
 
-            sst = sanitationStaffTargetEntity.toDomain();
-
-            if (sst.getLocation() != null && sst.getLocation().getCode() != null) {
-
-                boundary = boundaryRepository.fetchBoundaryByCode(sst.getLocation().getCode(), sst.getTenantId());
-
-                if (boundary != null)
-                    sst.setLocation(boundary);
-            }
-
-            if (sst.getSwmProcess() != null && sst.getSwmProcess().getCode() != null)
-                sst.setSwmProcess(swmProcessService.getSwmProcess(sst.getTenantId(), sst.getSwmProcess().getCode(),
-                        new RequestInfo()));
-
-            if (sst.getRoute() != null && sst.getRoute().getCode() != null) {
-
-                routeSearch.setTenantId(sst.getTenantId());
-                routeSearch.setCode(sst.getRoute().getCode());
-                routes = routeService.search(routeSearch);
-
-                if (routes != null && routes.getPagedData() != null && !routes.getPagedData().isEmpty())
-                    sst.setRoute(routes.getPagedData().get(0));
-
-            }
-
-            if (sst.getEmployee() != null && sst.getEmployee().getCode() != null) {
-
-                employeeResponse = employeeRepository.getEmployeeByCode(sst.getEmployee().getCode(), sst.getTenantId(),
-                        new RequestInfo());
-
-                if (employeeResponse != null && employeeResponse.getEmployees() != null
-                        && !employeeResponse.getEmployees().isEmpty())
-                    sst.setEmployee(employeeResponse.getEmployees().get(0));
-
-            }
-
-            if (sst.getDumpingGround() != null && sst.getDumpingGround().getCode() != null)
-                sst.setDumpingGround(dumpingGroundService.getDumpingGround(sst.getTenantId(),
-                        sst.getDumpingGround().getCode(), new RequestInfo()));
-            if (sanitationStaffTargetEntity.getTargetNo() != null
-                    && !sanitationStaffTargetEntity.getTargetNo().isEmpty()) {
-                sstm = SanitationStaffTargetMap.builder()
-                        .sanitationStaffTarget(sanitationStaffTargetEntity.getTargetNo()).build();
-                sstm.setTenantId(sanitationStaffTargetEntity.getTenantId());
-                collectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
-                if (collectionPoints != null)
-                    for (final SanitationStaffTargetMap map : collectionPoints) {
-                        if (cpCodes.length() > 0)
-                            cpCodes.append(",");
-                        cpCodes.append(map.getCollectionPoint());
-                    }
-                cps = new CollectionPointSearch();
-                cps.setCodes(cpCodes.toString());
-                collectionPointList = collectionPointJdbcRepository.search(cps);
-
-                sst.setCollectionPoints(collectionPointList.getPagedData());
-            }
-            sanitationStaffTargetList.add(sst);
+            sanitationStaffTargetList.add(sanitationStaffTargetEntity.toDomain());
 
         }
+
+        populateCollectionPoints(sanitationStaffTargetList);
+
+        populateDumpingGrounds(sanitationStaffTargetList);
+
+        populateSwmProcesses(sanitationStaffTargetList);
+
+        populateBoundarys(sanitationStaffTargetList);
+
+        populateEmployees(sanitationStaffTargetList);
+
+        populateRoutes(sanitationStaffTargetList);
 
         page.setTotalResults(sanitationStaffTargetList.size());
 
         page.setPagedData(sanitationStaffTargetList);
 
         return page;
+    }
+
+    private void populateRoutes(List<SanitationStaffTarget> sanitationStaffTargetList) {
+
+        StringBuffer routeCodes = new StringBuffer();
+        Set<String> routeCodesSet = new HashSet<>();
+        RouteSearch routeSearch = new RouteSearch();
+        Pagination<Route> routes;
+
+        for (SanitationStaffTarget sst : sanitationStaffTargetList) {
+
+            if (sst.getRoute() != null && sst.getRoute().getCode() != null
+                    && !sst.getRoute().getCode().isEmpty()) {
+
+                routeCodesSet.add(sst.getRoute().getCode());
+
+            }
+
+        }
+
+        List<String> routeCodeList = new ArrayList(routeCodesSet);
+
+        for (String code : routeCodeList) {
+
+            if (routeCodes.length() >= 1)
+                routeCodes.append(",");
+
+            routeCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Route> routeMap = new HashMap<>();
+
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+
+        routeSearch.setTenantId(tenantId);
+        routeSearch.setCodes(routeCodes.toString());
+        routes = routeService.search(routeSearch);
+
+        if (routes != null && routes.getPagedData() != null)
+            for (Route bd : routes.getPagedData()) {
+
+                routeMap.put(bd.getCode(), bd);
+
+            }
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            if (sanitationStaffTarget.getRoute() != null && sanitationStaffTarget.getRoute().getCode() != null
+                    && !sanitationStaffTarget.getRoute().getCode().isEmpty()) {
+
+                sanitationStaffTarget.setRoute(routeMap.get(sanitationStaffTarget.getRoute().getCode()));
+            }
+
+        }
+
+    }
+
+    private void populateCollectionPoints(List<SanitationStaffTarget> sanitationStaffTargetList) {
+
+        SanitationStaffTargetMap sstm;
+        CollectionPointSearch cps;
+        Pagination<CollectionPoint> collectionPointList;
+        Map<String, CollectionPoint> collectionPointMap = new HashMap<>();
+        Map<String, List<SanitationStaffTargetMap>> sanitationStaffTargetMap = new HashMap<>();
+        Map<String, List<CollectionPoint>> collectionPointsMap = new HashMap<>();
+        StringBuffer targetNos = new StringBuffer();
+        StringBuffer collectionPointCodes = new StringBuffer();
+        Set<String> collectionPointCodeSet = new HashSet<>();
+        List<SanitationStaffTargetMap> targetCollectionPoints;
+        String tenantId = null;
+
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            if (targetNos.length() > 0)
+                targetNos.append(",");
+
+            targetNos.append(sanitationStaffTarget.getTargetNo());
+
+        }
+
+        sstm = new SanitationStaffTargetMap();
+
+        sstm.setTenantId(tenantId);
+        sstm.setTargetNos(targetNos.toString());
+
+        targetCollectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
+
+        for (SanitationStaffTargetMap map : targetCollectionPoints) {
+
+            if (map.getCollectionPoint() != null && !map.getCollectionPoint().isEmpty()) {
+
+                collectionPointCodeSet.add(map.getCollectionPoint());
+            }
+
+            if (sanitationStaffTargetMap.get(map.getSanitationStaffTarget()) == null) {
+
+                sanitationStaffTargetMap.put(map.getSanitationStaffTarget(), Collections.singletonList(map));
+
+            } else {
+
+                List<SanitationStaffTargetMap> mapList = new ArrayList<>(
+                        sanitationStaffTargetMap.get(map.getSanitationStaffTarget()));
+
+                mapList.add(map);
+
+                sanitationStaffTargetMap.put(map.getSanitationStaffTarget(), mapList);
+
+            }
+        }
+
+        List<String> cpcs = new ArrayList(collectionPointCodeSet);
+
+        for (String code : cpcs) {
+
+            if (collectionPointCodes.length() > 0)
+                collectionPointCodes.append(",");
+
+            collectionPointCodes.append(code);
+
+        }
+
+        cps = new CollectionPointSearch();
+        cps.setTenantId(tenantId);
+        cps.setCodes(collectionPointCodes.toString());
+
+        collectionPointList = collectionPointJdbcRepository.search(cps);
+
+        if (collectionPointList != null && collectionPointList.getPagedData() != null
+                && !collectionPointList.getPagedData().isEmpty()) {
+
+            for (CollectionPoint cp : collectionPointList.getPagedData()) {
+                collectionPointMap.put(cp.getCode(), cp);
+            }
+        }
+
+        for (SanitationStaffTargetMap map : targetCollectionPoints) {
+
+            if (collectionPointsMap.get(map.getSanitationStaffTarget()) == null) {
+
+                collectionPointsMap.put(map.getSanitationStaffTarget(),
+                        Collections.singletonList(collectionPointMap.get(map.getCollectionPoint())));
+
+            } else {
+
+                List<CollectionPoint> cpList = new ArrayList<>(collectionPointsMap.get(map.getSanitationStaffTarget()));
+
+                cpList.add(collectionPointMap.get(map.getCollectionPoint()));
+
+                collectionPointsMap.put(map.getSanitationStaffTarget(), cpList);
+
+            }
+        }
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            sanitationStaffTarget.setCollectionPoints(collectionPointsMap.get(sanitationStaffTarget.getTargetNo()));
+
+        }
+
+    }
+
+    private void populateBoundarys(List<SanitationStaffTarget> sanitationStaffTargetList) {
+
+        StringBuffer boundaryCodes = new StringBuffer();
+        Set<String> boundaryCodesSet = new HashSet<>();
+
+        for (SanitationStaffTarget sst : sanitationStaffTargetList) {
+
+            if (sst.getLocation() != null && sst.getLocation().getCode() != null
+                    && !sst.getLocation().getCode().isEmpty()) {
+
+                boundaryCodesSet.add(sst.getLocation().getCode());
+
+            }
+
+        }
+
+        List<String> locationCodes = new ArrayList(boundaryCodesSet);
+
+        for (String code : locationCodes) {
+
+            if (boundaryCodes.length() >= 1)
+                boundaryCodes.append(",");
+
+            boundaryCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Boundary> boundaryMap = new HashMap<>();
+
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+
+        List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
+
+        for (Boundary bd : boundarys) {
+
+            boundaryMap.put(bd.getCode(), bd);
+
+        }
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null
+                    && !sanitationStaffTarget.getLocation().getCode().isEmpty()) {
+
+                sanitationStaffTarget.setLocation(boundaryMap.get(sanitationStaffTarget.getLocation().getCode()));
+            }
+
+        }
+
+    }
+
+    private void populateEmployees(List<SanitationStaffTarget> sanitationStaffTargetList) {
+
+        StringBuffer employeeCodes = new StringBuffer();
+        Set<String> employeeCodesSet = new HashSet<>();
+
+        for (SanitationStaffTarget sst : sanitationStaffTargetList) {
+
+            if (sst.getEmployee() != null && sst.getEmployee().getCode() != null
+                    && !sst.getEmployee().getCode().isEmpty()) {
+
+                employeeCodesSet.add(sst.getEmployee().getCode());
+
+            }
+
+        }
+
+        List<String> employeeCodeList = new ArrayList(employeeCodesSet);
+
+        for (String code : employeeCodeList) {
+
+            if (employeeCodes.length() >= 1)
+                employeeCodes.append(",");
+
+            employeeCodes.append(code);
+
+        }
+
+        String tenantId = null;
+        Map<String, Employee> employeeMap = new HashMap<>();
+
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+
+        EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId, new RequestInfo());
+
+        if (response != null && response.getEmployees() != null)
+            for (Employee e : response.getEmployees()) {
+
+                employeeMap.put(e.getCode(), e);
+
+            }
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null
+                    && !sanitationStaffTarget.getEmployee().getCode().isEmpty()) {
+
+                sanitationStaffTarget.setEmployee(employeeMap.get(sanitationStaffTarget.getEmployee().getCode()));
+            }
+
+        }
+
+    }
+
+    private void populateSwmProcesses(List<SanitationStaffTarget> sanitationStaffTargetList) {
+        Map<String, SwmProcess> swmProcessMap = new HashMap<>();
+        String tenantId = null;
+
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+
+        List<SwmProcess> swmProcesses = swmProcessService.getAll(tenantId, new RequestInfo());
+
+        for (SwmProcess sp : swmProcesses) {
+            swmProcessMap.put(sp.getCode(), sp);
+        }
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            if (sanitationStaffTarget.getSwmProcess() != null && sanitationStaffTarget.getSwmProcess().getCode() != null
+                    && !sanitationStaffTarget.getSwmProcess().getCode().isEmpty()) {
+
+                sanitationStaffTarget.setSwmProcess(swmProcessMap.get(sanitationStaffTarget.getSwmProcess().getCode()));
+            }
+
+        }
+    }
+
+    private void populateDumpingGrounds(List<SanitationStaffTarget> sanitationStaffTargetList) {
+
+        Map<String, DumpingGround> dumpingGroundMap = new HashMap<>();
+        String tenantId = null;
+
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+
+        List<DumpingGround> dumpingGrounds = dumpingGroundService.getAll(tenantId, new RequestInfo());
+
+        for (DumpingGround dg : dumpingGrounds) {
+            dumpingGroundMap.put(dg.getCode(), dg);
+        }
+
+        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+            if (sanitationStaffTarget.getDumpingGround() != null && sanitationStaffTarget.getDumpingGround().getCode() != null
+                    && !sanitationStaffTarget.getDumpingGround().getCode().isEmpty()) {
+
+                sanitationStaffTarget.setDumpingGround(dumpingGroundMap.get(sanitationStaffTarget.getDumpingGround().getCode()));
+            }
+
+        }
     }
 
 }

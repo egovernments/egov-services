@@ -4,7 +4,6 @@ import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleTripSheetDetails;
-import org.egov.swm.domain.model.Vendor;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -24,8 +23,6 @@ public class VehicleTripSheetDetailsEntity {
     private String tripNo = null;
 
     private String vehicle = null;
-
-    private String vendor = null;
 
     private String route = null;
 
@@ -55,7 +52,6 @@ public class VehicleTripSheetDetailsEntity {
         vehicleTripSheetDetails.setTenantId(tenantId);
         vehicleTripSheetDetails.setTripNo(tripNo);
         vehicleTripSheetDetails.setVehicle(Vehicle.builder().regNumber(vehicle).build());
-        vehicleTripSheetDetails.setVendor(Vendor.builder().vendorNo(vendor).build());
         vehicleTripSheetDetails.setRoute(Route.builder().code(route).build());
         vehicleTripSheetDetails.setTripStartDate(tripStartDate);
         vehicleTripSheetDetails.setTripEndDate(tripEndDate);

@@ -2,7 +2,6 @@ Create table egswm_vehicletripsheetdetails(
   tenantId varchar(128) NOT NULL,
   tripNo varchar(256) NOT NULL,
   vehicle varchar(256) NOT NULL,
-  vendor varchar(256),
   route varchar(256) NOT NULL,
   tripStartDate bigint NOT NULL,
   tripEndDate bigint NOT NULL,

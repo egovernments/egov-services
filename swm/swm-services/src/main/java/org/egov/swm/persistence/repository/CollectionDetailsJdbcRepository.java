@@ -1,6 +1,7 @@
 package org.egov.swm.persistence.repository;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -8,6 +9,7 @@ import java.util.Map;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.CollectionDetails;
 import org.egov.swm.domain.model.CollectionDetailsSearch;
+import org.egov.swm.domain.model.CollectionType;
 import org.egov.swm.domain.service.CollectionTypeService;
 import org.egov.swm.persistence.entity.CollectionDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,6 +49,13 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("sourceSegregation", searchRequest.getSourceSegregationCode());
         }
 
+        if (searchRequest.getSourceSegregationCodes() != null) {
+            addAnd(params);
+            params.append("sourceSegregation in (:sourceSegregations)");
+            paramValues.put("sourceSegregations",
+                    new ArrayList<>(Arrays.asList(searchRequest.getSourceSegregationCodes().split(","))));
+        }
+
         if (searchRequest.getCollectionTypeCode() != null) {
             addAnd(params);
             params.append("collectionType =:collectionType");
@@ -70,17 +79,37 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
 
         for (final CollectionDetailsEntity cde : entityList) {
 
-            collectionDetails = cde.toDomain();
-
-            if (collectionDetails.getCollectionType() != null
-                    && collectionDetails.getCollectionType().getCode() != null)
-                collectionDetails
-                        .setCollectionType(collectionTypeService.getCollectionType(collectionDetails.getTenantId(),
-                                collectionDetails.getCollectionType().getCode(), new RequestInfo()));
-            resultList.add(collectionDetails);
+            resultList.add(cde.toDomain());
         }
 
+        populateCollectionTypes(resultList);
+
         return resultList;
+    }
+
+    private void populateCollectionTypes(List<CollectionDetails> collectionDetailsList) {
+
+        Map<String, CollectionType> collectionTypeMap = new HashMap<>();
+        String tenantId = null;
+
+        if (collectionDetailsList != null && !collectionDetailsList.isEmpty())
+            tenantId = collectionDetailsList.get(0).getTenantId();
+
+        List<CollectionType> collectionTypes = collectionTypeService.getAll(tenantId, new RequestInfo());
+
+        for (CollectionType ct : collectionTypes) {
+            collectionTypeMap.put(ct.getCode(), ct);
+        }
+
+        for (CollectionDetails collectionDetails : collectionDetailsList) {
+
+            if (collectionDetails.getCollectionType() != null && collectionDetails.getCollectionType().getCode() != null
+                    && !collectionDetails.getCollectionType().getCode().isEmpty()) {
+
+                collectionDetails.setCollectionType(collectionTypeMap.get(collectionDetails.getCollectionType().getCode()));
+            }
+
+        }
     }
 
 }

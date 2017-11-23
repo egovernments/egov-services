@@ -31,9 +31,6 @@ public class VehicleTripSheetDetails {
     @JsonProperty("vehicle")
     private Vehicle vehicle = null;
 
-    @JsonProperty("vendor")
-    private Vendor vendor = null;
-
     @NotNull
     @JsonProperty("route")
     private Route route = null;

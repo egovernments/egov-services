@@ -26,6 +26,8 @@ public class CollectionDetailsEntity {
 
     private Double dryWasteCollected = null;
 
+    private String sourceSegregation = null;
+
     public CollectionDetails toDomain() {
 
         final CollectionDetails collectionDetails = new CollectionDetails();
@@ -34,6 +36,7 @@ public class CollectionDetailsEntity {
         collectionDetails.setCollectionType(CollectionType.builder().code(collectionType).build());
         collectionDetails.setWetWasteCollected(wetWasteCollected);
         collectionDetails.setDryWasteCollected(dryWasteCollected);
+        collectionDetails.setSourceSegregation(sourceSegregation);
 
         return collectionDetails;
 

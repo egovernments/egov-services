@@ -3195,9 +3195,6 @@ definitions:
         vehicle:
           $ref: '#/definitions/Vehicle'
           description: List of vehicles that are assigned against selected route under "routeTaken"
-        vendor:
-          $ref: "#/definitions/Vendor"
-          description: auto fill this field, if applicable, from vehicle registration number
         tripStartDate:
           type: integer
           format: int64
@@ -3455,6 +3452,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

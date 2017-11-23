@@ -1184,7 +1184,7 @@ serviceMaps:
    description: create vehicletripsheetdetails in egswm_vehicletripsheetdetails
    fromTopic: swm-vehicletripsheetdetails-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicletripsheetdetails(tripNo, tenantid, vehicle, vendor, route, tripStartDate, tripEndDate, inTime, outTime, entryWeight, exitWeight, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicletripsheetdetails(tripNo, tenantid, vehicle, route, tripStartDate, tripEndDate, inTime, outTime, entryWeight, exitWeight, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicleTripSheetDetails.*
       jsonMaps:
        
@@ -1195,9 +1195,6 @@ serviceMaps:
        - jsonPath: $.vehicleTripSheetDetails.*.vehicle.regNumber
          dbType: LONG
          
-       - jsonPath: $.vehicleTripSheetDetails.*.vendor.vendorNo
-         dbType: LONG
-
        - jsonPath: $.vehicleTripSheetDetails.*.route.code
 
        - jsonPath: $.vehicleTripSheetDetails.*.tripStartDate
@@ -1233,16 +1230,13 @@ serviceMaps:
    description: update vehicletripsheetdetails in egswm_vehicletripsheetdetails
    fromTopic: swm-vehicletripsheetdetails-update-topic
    queryMaps: 
-    - query: update egswm_vehicletripsheetdetails set vehicle=?, vendor=?, route=?, tripStartDate=?, tripEndDate=?, inTime=?, outTime=?, entryWeight=?, exitWeight=?, lastmodifiedby=?, lastmodifiedtime=? where tripNo=? and tenantId=?;
+    - query: update egswm_vehicletripsheetdetails set vehicle=?, route=?, tripStartDate=?, tripEndDate=?, inTime=?, outTime=?, entryWeight=?, exitWeight=?, lastmodifiedby=?, lastmodifiedtime=? where tripNo=? and tenantId=?;
       basePath: $.vehicleTripSheetDetails.*
       jsonMaps:
        
        - jsonPath: $.vehicleTripSheetDetails.*.vehicle.regNumber
          dbType: LONG
          
-       - jsonPath: $.vehicleTripSheetDetails.*.vendor.vendorNo
-         dbType: LONG
-
        - jsonPath: $.vehicleTripSheetDetails.*.route.code
 
        - jsonPath: $.vehicleTripSheetDetails.*.tripStartDate

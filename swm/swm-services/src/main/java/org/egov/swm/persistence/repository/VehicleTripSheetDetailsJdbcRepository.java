@@ -13,11 +13,8 @@ import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
 import org.egov.swm.domain.model.VehicleTripSheetDetails;
 import org.egov.swm.domain.model.VehicleTripSheetDetailsSearch;
-import org.egov.swm.domain.model.Vendor;
-import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.service.RouteService;
 import org.egov.swm.domain.service.VehicleService;
-import org.egov.swm.domain.service.VendorService;
 import org.egov.swm.persistence.entity.VehicleTripSheetDetailsEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -33,9 +30,6 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 
     @Autowired
     private VehicleService vehicleService;
-
-    @Autowired
-    private VendorService vendorService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -84,14 +78,6 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             paramValues.put("route", searchRequest.getRouteCode());
         }
 
-        if (searchRequest.getVendorNo() != null) {
-
-            addAnd(params);
-            params.append("vendor =:vendor");
-            paramValues.put("vendor", searchRequest.getVendorNo());
-
-        }
-
         if (searchRequest.getTripStartDate() != null) {
             addAnd(params);
             params.append("tripStartDate =:tripStartDate");
@@ -138,8 +124,6 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         Pagination<Route> routes;
         VehicleSearch vehicleSearch;
         Pagination<Vehicle> vehicleList;
-        VendorSearch vendorSearch;
-        Pagination<Vendor> vendors;
 
         for (final VehicleTripSheetDetailsEntity vehicleTripSheetDetailsEntity : vehicleTripSheetDetailsEntities) {
 
@@ -170,17 +154,6 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
                         && !vehicleList.getPagedData().isEmpty())
                     vehicleTripSheetDetails.setVehicle(vehicleList.getPagedData().get(0));
 
-            }
-
-            if (vehicleTripSheetDetails.getVendor() != null && vehicleTripSheetDetails.getVendor().getVendorNo() != null
-                    && !vehicleTripSheetDetails.getVendor().getVendorNo().isEmpty()) {
-
-                vendorSearch = new VendorSearch();
-                vendorSearch.setTenantId(vehicleTripSheetDetails.getTenantId());
-                vendorSearch.setVendorNo(vehicleTripSheetDetails.getVendor().getVendorNo());
-                vendors = vendorService.search(vendorSearch);
-                if (vendors != null && vendors.getPagedData() != null && !vendors.getPagedData().isEmpty())
-                    vehicleTripSheetDetails.setVendor(vendors.getPagedData().get(0));
             }
 
             vehicleTripSheetDetailsList.add(vehicleTripSheetDetails);

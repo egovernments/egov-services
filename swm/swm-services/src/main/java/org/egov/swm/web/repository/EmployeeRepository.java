@@ -59,15 +59,19 @@ public class EmployeeRepository {
 
     private final String employeeByCodeUrl;
 
+    private final String employeeByCodesUrl;
+
     @Autowired
     public EmployeeRepository(final RestTemplate restTemplate,
             @Value("${egov.services.hr_employee.hostname}") final String hrMasterServiceHostname,
             @Value("${egov.services.hr_employee.employees.by.desg.id.and.code}") final String employeeByDesgAndCodeUrl,
-            @Value("${egov.services.hr_employee.employees.by.code}") final String employeeByCodeUrl) {
+            @Value("${egov.services.hr_employee.employees.by.code}") final String employeeByCodeUrl,
+            @Value("${egov.services.hr_employee.employees.by.codes}") final String employeeByCodesUrl) {
 
         this.restTemplate = restTemplate;
         this.employeeByDesgAndCodeUrl = hrMasterServiceHostname + employeeByDesgAndCodeUrl;
         this.employeeByCodeUrl = hrMasterServiceHostname + employeeByCodeUrl;
+        this.employeeByCodesUrl = hrMasterServiceHostname + employeeByCodesUrl;
     }
 
     public EmployeeResponse getEmployeeByDesgIdAndCode(final String designationId, final String code,
@@ -91,6 +95,18 @@ public class EmployeeRepository {
         wrapper.setRequestInfo(requestInfo);
 
         return restTemplate.postForObject(employeeByCodeUrl, wrapper, EmployeeResponse.class, tenantId, code,
+                sdf.format(new Date()));
+
+    }
+
+    public EmployeeResponse getEmployeeByCodes(final String codes, final String tenantId, final RequestInfo requestInfo) {
+
+        final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        final RequestInfoWrapper wrapper = new RequestInfoWrapper();
+        wrapper.setRequestInfo(requestInfo);
+
+        return restTemplate.postForObject(employeeByCodesUrl, wrapper, EmployeeResponse.class, tenantId, codes,
                 sdf.format(new Date()));
 
     }

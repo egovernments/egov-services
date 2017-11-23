@@ -28,57 +28,47 @@ class LeaveReport extends React.Component {
       this.handleChange = this.handleChange.bind(this);
       this.searchEmployee = this.searchEmployee.bind(this);
       this.closeWindow = this.closeWindow.bind(this);
+      this.setInitialState = this.setInitialState.bind(this);
+
     }
+
+    setInitialState(initState) {
+      this.setState(initState);
+    }
+
 
     componentWillMount() {
 
-      try {
-        var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-      } catch (e) {
-        console.log(e);
-        var assignments_designation = [];
+      var _state = {},
+        _this = this,
+        count = 6;
+      const checkCountAndCall = function(key, res) {
+        _state[key] = res;
+        count--;
+        if (count == 0)
+          _this.setInitialState(_state);
       }
 
-      try {
-        var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-      } catch (e) {
-        console.log(e);
-        var assignments_department = [];
-      }
-
-      try {
-        var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
-      } catch (e) {
-        console.log(e);
-        var employeeType = [];
-      }
-
-      var employeeStatusList;
-      var leaveTypes;
-      var leaveStatuses;
-
-      getDropdown("employeeStatus", function(res) {
-        employeeStatusList = res;
+      getDropdown("assignments_designation", function(res) {
+        checkCountAndCall("designations", res);
+      });
+      getDropdown("assignments_department", function(res) {
+        checkCountAndCall("departments", res);
+      });
+      getDropdown("employeeType", function(res) {
+        checkCountAndCall("employeeTypes", res);
       });
       getDropdown("leaveTypes", function(res) {
-        leaveTypes = res;
+        checkCountAndCall("leaveTypes", res);
+      });
+      getDropdown("employeeStatus", function(res) {
+        checkCountAndCall("employeeStatuses", res);
       });
       getDropdown("leaveStatus", function(res) {
-        leaveStatuses = res;
+        checkCountAndCall("leaveStatuses", res);
       });
 
 
-      this.setState({
-        ...this.state,
-        departments: Object.assign([], assignments_department),
-        designations: Object.assign([], assignments_designation),
-        employeeTypes: Object.assign([], employeeType),
-        employeeStatuses: Object.assign([], employeeStatusList),
-        leaveTypes: Object.assign([], leaveTypes),
-        leaveStatuses: Object.assign([], leaveStatuses)
-      });
-
-      var _this = this;
 
       commonApiPost("hr-employee", "employees", "_search", {
         tenantId,

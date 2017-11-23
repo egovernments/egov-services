@@ -70,11 +70,11 @@ class WithoutAssignment extends React.Component {
     try {
         flag = 1;
         commonApiPost("hr-employee", "employees", "_employeewithoutassignmentreport", {...this.state.searchSet, tenantId},function(err,res){
-          if(res && res.EmployeeInfo){
+          if(res && res.Employee){
           _this.setState({
             ..._this.state,
             isSearchClicked: true,
-            result : res.EmployeeInfo
+            result : res.Employee
           });
          }else {
            _this.setState({

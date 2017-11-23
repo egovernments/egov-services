@@ -163,13 +163,38 @@ public class OpeningBalanceService extends DomainService {
 			
 			for(MaterialReceipt  rcpt : receipt){
 				{
-					for( MaterialReceiptDetail detail : rcpt.getReceiptDetails())
+					if(isEmpty(rcpt.getFinancialYear()))
 					{
+						throw new CustomException("financialYear", "financialYear Is Required");
+					}
+					if(isEmpty(rcpt.getReceivingStore().getCode()))
+					{
+						throw new CustomException("receivingStore", "storeName Is Required");
+					}
+
+		   for( MaterialReceiptDetail detail : rcpt.getReceiptDetails())
+				{
+						if(isEmpty(detail.getMaterial().getCode()))
+						{
+						throw new CustomException("materialCode", "MaterialName Is Required");
+						}
+						if(isEmpty(detail.getUom().getCode()))
+						{
+							throw new CustomException("uomCode", "UOM Is Required");
+						}
+						if(isEmpty(detail.getAcceptedQty()))
+						{
+							throw new CustomException("receivedQty", "Quantity Is Required");
+						}
+						if(isEmpty(detail.getUnitRate()))
+						{
+							throw new CustomException("unitRate", "UnitRate Is Required");
+						}
+						
 						for( MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo())
 						{
 							if(Long.valueOf(addInfo.getReceivedDate()) > currentMilllis){
-								throw new CustomException("ReceiptDate", "ReceiptDate Date must be less than or equal to Today's date");
-							
+								throw new CustomException("ReceiptDate", "ReceiptDate  must be less than or equal to Today's date");
 							
 						}
 					

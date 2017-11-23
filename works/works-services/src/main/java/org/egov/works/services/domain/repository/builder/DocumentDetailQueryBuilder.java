@@ -39,11 +39,11 @@ public class DocumentDetailQueryBuilder {
             preparedStatementValues.addValue("tenantId",documentDetailSearchCriteria.getTenantId());
         }
         if(documentDetailSearchCriteria.getIds() != null && !documentDetailSearchCriteria.getIds().isEmpty()) {
-            queryString.append(" id IN " + getIdQuery(documentDetailSearchCriteria.getIds()));
+            queryString.append("and id IN " + getIdQuery(documentDetailSearchCriteria.getIds()));
         }
 
         if(documentDetailSearchCriteria.getObjectIds() != null && !documentDetailSearchCriteria.getObjectIds().isEmpty()) {
-            queryString.append(" objectid IN " + getIdQuery(documentDetailSearchCriteria.getObjectIds()));
+            queryString.append("and objectid IN " + getIdQuery(documentDetailSearchCriteria.getObjectIds()));
         }
     }
 

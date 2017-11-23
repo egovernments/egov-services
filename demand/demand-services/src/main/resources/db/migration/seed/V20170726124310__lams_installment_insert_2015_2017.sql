@@ -1,6 +1,6 @@
 --Installment
 --MONTH 2015-16
-Insert into eg_installment_master (id, installment_num, installment_year, start_date, end_date, module, lastupdatedtimestamp, description, installment_type, financial_year, tenantid) values (nextval('SEQ_EG_INSTALLMENT_MASTER'),042015,'2015-04-01 00:00:00', '2015-04-01 00:00:00', '2015-04-30 23:59:59','Leases And Agreements',current_timestamp,'LAMS_MI-I/15-16','MONTH', '2015-16', 'default');
+Insert into eg_installment_master (id, installment_num, installment_year, start_date, end_date, module, lastupdatedtimestamp, description, installment_type, financial_year, tenantid) values (nextval('SEQ_EG_INSTALLMENT_MASTER'),042015,'2015-04-01 00:00:00', '2015-04-01 00:00:00', '2015-04-30 23:59:59','Leases And Agreements',current_timestamp,'LAMS_MI-I/15-16','MONTH', '2-16', 'default');
 
 Insert into eg_installment_master (id, installment_num, installment_year, start_date, end_date, module, lastupdatedtimestamp, description, installment_type, financial_year, tenantid) values (nextval('SEQ_EG_INSTALLMENT_MASTER'),052015,'2015-05-01 00:00:00', '2015-05-01 00:00:00', '2015-05-31 23:59:59','Leases And Agreements',current_timestamp,'LAMS_MI-II/15-16','MONTH', '2015-16', 'default');
 

@@ -43,7 +43,7 @@ public class DocumentDetailQueryBuilder {
         }
 
         if(documentDetailSearchCriteria.getObjectIds() != null && !documentDetailSearchCriteria.getObjectIds().isEmpty()) {
-            queryString.append(" objectid IN " + getIdQuery(documentDetailSearchCriteria.getIds()));
+            queryString.append(" objectid IN " + getIdQuery(documentDetailSearchCriteria.getObjectIds()));
         }
     }
 

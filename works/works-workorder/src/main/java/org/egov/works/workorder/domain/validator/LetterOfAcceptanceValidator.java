@@ -3,27 +3,19 @@ package org.egov.works.workorder.domain.validator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
-import org.egov.works.commons.utils.CommonConstants;
-import org.egov.works.workorder.web.contract.DetailedEstimateStatus;
 import org.egov.works.workorder.config.Constants;
 import org.egov.works.workorder.domain.service.EstimateService;
 import org.egov.works.workorder.domain.service.OfflineStatusService;
-import org.egov.works.workorder.utils.WorkOrderUtils;
-import org.egov.works.workorder.web.contract.AssetsForLOA;
 import org.egov.works.workorder.web.contract.DetailedEstimate;
+import org.egov.works.workorder.web.contract.DetailedEstimateStatus;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
 import org.egov.works.workorder.web.contract.OfflineStatus;
-import org.egov.works.workorder.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import net.minidev.json.JSONArray;
 
 /**
  * Created by ramki on 11/11/17.
@@ -36,9 +28,6 @@ public class LetterOfAcceptanceValidator {
 
     @Autowired
     private OfflineStatusService offlineStatusService;
-
-    @Autowired
-    private WorkOrderUtils workOrderUtils;
 
 
     public void validateLetterOfAcceptance(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
@@ -54,15 +43,22 @@ public class LetterOfAcceptanceValidator {
 
                 if (!detailedEstimates.isEmpty())
                     detailedEstimate = detailedEstimates.get(0);
-
+                
+                validateDetailedEstimate(detailedEstimate, messages);
+                
+                if (messages != null && !messages.isEmpty())
+                    throw new CustomException(messages);
+                
                 List<OfflineStatus> offlineStatuses = offlineStatusService.getOfflineStatus(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(), letterOfAcceptance.getTenantId(), letterOfAcceptanceRequest.getRequestInfo()).getOfflineStatuses();
                 if (!offlineStatuses.isEmpty())
                     offlineStatus = offlineStatuses.get(0);
-                validateDetailedEstimate(detailedEstimate, offlineStatus, messages);
+                
+                validateOfflineStatus(offlineStatus, messages);
+                
+                if (messages != null && !messages.isEmpty())
+                    throw new CustomException(messages);
             }
 
-            if (detailedEstimate == null)
-                messages.put(Constants.KEY_DETAILEDESTIMATE_EXIST, Constants.MESSAGE_DETAILEDESTIMATE_EXIST);
             validateLOA(offlineStatus, messages, letterOfAcceptance);
 
             if (messages != null && !messages.isEmpty())
@@ -88,14 +84,22 @@ public class LetterOfAcceptanceValidator {
     }
 
 
-    private void validateDetailedEstimate(DetailedEstimate detailedEstimate, OfflineStatus offlineStatus,
+    private void validateDetailedEstimate(DetailedEstimate detailedEstimate,
                                           HashMap<String, String> messages) {
-        if (!detailedEstimate.getStatus().toString().equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
+    	
+        if (detailedEstimate == null)
+            messages.put(Constants.KEY_DETAILEDESTIMATE_EXIST, Constants.MESSAGE_DETAILEDESTIMATE_EXIST);
+        
+        if (detailedEstimate != null && !detailedEstimate.getStatus().toString().equalsIgnoreCase(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString())) {
             messages.put(Constants.KEY_DETAILEDESTIMATE_STATUS, Constants.MESSAGE_DETAILEDESTIMATE_STATUS);
         }
-        if (offlineStatus == null) {
+    }
+
+
+	private void validateOfflineStatus(OfflineStatus offlineStatus, HashMap<String, String> messages) {
+		if (offlineStatus == null) {
             messages.put(Constants.KEY_DETAILEDESTIMATE_OFFLINE_STATUS, Constants.MESSAGE_DETAILEDESTIMATE_OFFLINE_STATUS);
         }
-    }
+	}
 
 }

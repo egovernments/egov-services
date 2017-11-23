@@ -502,7 +502,7 @@ public class EstimateValidator {
 
 	private void validateEstimateNumberUnique(DetailedEstimate detailedEstimate, Map<String, String> messages) {
 		DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
-				.tenantId(detailedEstimate.getTenantId()).estimateAmount(detailedEstimate.getEstimateNumber()).build();
+				.tenantId(detailedEstimate.getTenantId()).detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
 		if (detailedEstimate.getId() != null)
 			detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
 		List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);

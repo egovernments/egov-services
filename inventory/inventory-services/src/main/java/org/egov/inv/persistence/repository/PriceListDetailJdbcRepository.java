@@ -27,7 +27,7 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
 
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
     
-    UomService uomService;
+    private UomService uomService;
 
     public PriceListDetailJdbcRepository(NamedParameterJdbcTemplate namedParameterJdbcTemplate) {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;

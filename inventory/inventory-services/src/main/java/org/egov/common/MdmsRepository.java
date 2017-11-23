@@ -42,6 +42,8 @@ package org.egov.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minidev.json.JSONArray;
+
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteria;
@@ -52,8 +54,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
-import net.minidev.json.JSONArray;
 
 @Service
 public class MdmsRepository {

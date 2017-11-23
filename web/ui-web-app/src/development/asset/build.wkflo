@@ -15,5 +15,5 @@ try {
     node("slave"){
         checkout scm
         build()
-
+        }
 }

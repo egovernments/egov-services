@@ -82,7 +82,15 @@ public class AssetValidator implements Validator {
 		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
 			errorMap.put("Asset_DateOfCreation", "DateOfCreation cannot be future Date");
 		
-		if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
+		if(asset.getOrderDate().compareTo(new Date().getTime()) > 0) 
+			errorMap.put("Asset_OderDate", "OderDate cannot be future Date");
+		
+		if(asset.getOpeningDate().compareTo(new Date().getTime()) > 0) 
+			errorMap.put("Asset_OpeningDate", "OpeningDate cannot be future Date");
+		
+		if((asset.getAcquisitionDate().compareTo(new Date().getTime()) > 0))
+			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be futureDate");
+		else if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
 			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be less than Dateofcreation");
 			
 		if(asset.getOriginalValue()!=null && asset.getOriginalValue().longValue()<=0)

@@ -283,7 +283,7 @@ public class BoundaryService {
 						boundaryRequest.getBoundary().getCode()));
 			} else if (boundaryRequest.getBoundary().getCodes() != null && !boundaryRequest.getBoundary().getCodes().isEmpty()) {
                             boundaries.addAll(findByTenantIdAndCodes(boundaryRequest.getBoundary().getTenantId(),
-                                    new ArrayList<>(Arrays.asList( boundaryRequest.getBoundary().getCode().split(",")))));
+                                    new ArrayList<>(Arrays.asList( boundaryRequest.getBoundary().getCodes().split(",")))));
 			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {

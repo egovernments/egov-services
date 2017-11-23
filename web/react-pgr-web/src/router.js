@@ -183,6 +183,7 @@ import NoMatch from './components/common/NoMatch';
 //works
 import abstractEstimate from './components/non-framework/works/transaction/abstractEstimate';
 import viewAbstractEstimate from './components/non-framework/works/transaction/viewAbstractEstimate';
+import detailedEstimate from './components/non-framework/works/transaction/detailedEstimate';
 
 const base = "";
 
@@ -376,7 +377,8 @@ const Main = () => {
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>
-      
+      <Route exact path= {base + '/non-framework/works/transaction/detailedEstimate'} component={detailedEstimate}/>
+
 
       <Route component={NoMatch}/>
 

@@ -119,11 +119,12 @@ class UpdateCancellation extends React.Component {
       positionList:[],
       departmentList:[],
       designationList:[],
-      userList:[]
+      userList:[],
+      buttons:[]
 
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
-    this.addOrUpdate=this.addOrUpdate.bind(this);
+    this.handleProcess=this.handleProcess.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
   }
@@ -233,15 +234,37 @@ class UpdateCancellation extends React.Component {
 
       },agreementType);
 
-
+      var stateId = getUrlVars()["stateId"];
       var agreement = commonApiPost("lams-services",
                                 "agreements",
                                 "_search",
                                 {
-                                  id: getUrlVars()["agreementNumber"],
+                                  stateId: stateId,
                                   tenantId
                                 }).responseJSON["Agreements"][0] || {};
-      console.log(agreement);
+      console.log("agreement", agreement);
+
+
+      var process = commonApiPost("egov-common-workflows", "process", "_search", {
+        tenantId: tenantId,
+        id: stateId
+      }).responseJSON["processInstance"]||{};
+
+        if (process) {
+          if (process && process.attributes && process.attributes.validActions && process.attributes.validActions.values && process.attributes.validActions.values.length) {
+            var _btns = [];
+            for (var i = 0; i < process.attributes.validActions.values.length; i++) {
+              if (process.attributes.validActions.values[i].key) {
+                _btns.push({
+                  key: process.attributes.validActions.values[i].key,
+                  name: process.attributes.validActions.values[i].name
+                });
+              }
+            }
+          }
+        }
+
+
 
       if(!agreement.cancellation){
         agreement.cancellation={};
@@ -254,7 +277,10 @@ class UpdateCancellation extends React.Component {
       this.setState({
         ...this.state,
         agreement : agreement,
-        departmentList : departmentList
+        departmentList : departmentList,
+        //owner:process.owner.id,
+        //status : process.status,
+        buttons: _btns ? _btns : []
       });
 
 
@@ -333,19 +359,27 @@ class UpdateCancellation extends React.Component {
     }
 
     handleProcess(e) {
-  
+
     }
 
 
     render() {
+        var _this = this;
+        let {handleChange, handleChangeTwoLevel, addOrUpdate} = this;
+        let {agreement, cancelReasons, buttons} = this.state;
+        let {allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
+              renewal, eviction, objection, judgement, remission} = this.state.agreement;
+        let {assetCategory, locationDetails} = this.state.agreement.asset;
 
-        let {handleChange,handleChangeThreeLevel,handleProcess}=this;
-        let _this = this;
-
-        let {employeeId, typeOfMovement, currentAssignment, transferType, promotionBasis, remarks, reason, effectiveFrom, enquiryPassedDate, transferedLocation,
-              departmentAssigned, designationAssigned, positionAssigned, fundAssigned, functionAssigned, employeeAcceptance, workflowDetails, tenantId} = this.state.movement
-        let {isSearchClicked,employee,transferWithPromotion, buttons}=this.state;
-        let mode = getUrlVars()["type"];
+        const renderOption = function(data) {
+            if (data) {
+              return data.map((item, ind) => {
+                  return (<option key = {ind} value = {typeof item == "object" ? item.id : item}>
+                              {typeof item == "object" ? item.name : item}
+                          </option>)
+                  })
+              }
+            }
 
         const renderProcesedBtns = function() {
           if (buttons.length) {
@@ -357,103 +391,414 @@ class UpdateCancellation extends React.Component {
           }
         }
 
-        const renderOptionForDesc=function(list) {
-            if(list)
-            {
-                return list.map((item, ind)=>
-                {
-                    return (<option key={ind} value={typeof item == "object" ? item.id : item}>
-                            {typeof item == "object" ? item.description : item}
-                      </option>)
-                })
-            }
-        }
+        const renderAssetDetails=function(){
+           return(
+           <div className="form-section" id="assetDetailsBlock">
+               <h3>Asset Details </h3>
+               <div className="form-section-inner">
+                     <div className="row">
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="aName">Asset Name :</label>
+                               </div>
+                               <div className="col-sm-6 label-view-text">
+                                  <label id="code" name="code">
+                                    {asset.name? asset.name:"N/A"}
+                                  </label>
+                               </div>
+                           </div>
+                       </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="code">Asset Code:</label>
+                               </div>
+                               <div className="col-sm-6 label-view-text">
+                                   <label id="code" name="code">
+                                   {asset.code?asset.code:"N/A"}
+                                   </label>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div className="row">
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="categoryType">Asset Category Type :</label>
+                               </div>
+                                 <div className="col-sm-6 label-view-text">
+                                     <label id="assetCategoryType" name="assetCategoryType">
+                                        {assetCategory.name?assetCategory.name:"N/A"}
+                                     </label>
+                                 </div>
+                           </div>
+                       </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="assetArea">Asset Area :</label>
+                               </div>
+                              <div className="col-sm-6 label-view-text">
+                                  <label id="assetArea" name="assetArea" >
+                                    {asset.totalArea?asset.totalArea:"N/A"}
+                                  </label>
+                              </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div className="row">
+                         <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="locationDetails.locality">Locality :</label>
+                               </div>
+                              <div className="col-sm-6 label-view-text">
+                                  <label id="locationDetails.locality" name="locationDetails.locality">
+                                    {locationDetails.locality?locationDetails.locality:"N/A"}
+                                  </label>
+                              </div>
+                           </div>
+                       </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="locationDetails.revenueWard">Revenue Ward :</label>
+                               </div>
+                               <div className="col-sm-6 label-view-text">
+                                   <label id="locationDetails.revenueWard" name="locationDetails.revenueWard">
+                                    {locationDetails.revenueWard?locationDetails.revenueWard:"N/A"}
+                                   </label>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div className="row">
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="block">Block :</label>
+                               </div>
+                               <div className="col-sm-6 label-view-text">
+                                   <label id="Block" name="Block">
+                                   {locationDetails.block?locationDetails.block:"N/A"}
+                                   </label>
+                               </div>
 
-        const renderOptionForDistrict=function(list) {
-            if(list)
-            {
-                return list.map((item, ind)=>
-                {
-                    return (<option key={ind} value={typeof item == "object" ? item.id : item}>
-                            {typeof item == "object" ? item.city.name : item}
-                      </option>)
-                })
-            }
-        }
+                           </div>
+                       </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="locationDetails.zone">Revenue Zone :</label>
+                               </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="locationDetails.zone" name="locationDetails.zone">
+                                      {locationDetails.zone?locationDetails.zone:"N/A"}
+                                    </label>
+                                </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>);
+         }
 
-        const renderOption = function(list) {
-            if (list) {
-              return list.map((item, ind) => {
-                  return ( <option key={ind} value = {item.id}> {item.name} </option>)
-                  })
-              }
-            }
+        const renderOptionForUser=function(list) {
+             if(list)
+             {
+                 return list.map((item, ind)=>
+                 {
+                   var positionId;
+                   item.assignments.forEach(function(item) {
+                                       if(item.isPrimary)
+                                       {
+                                         positionId = item.position;
+                                       }
+                                   });
 
-            const promotionFunc=function() {
-              if(transferWithPromotion=="true"||transferWithPromotion==true){
-                return(<div className="row">
-                  <div className="col-sm-6">
+                     return (<option key={ind} value={positionId}>
+                             {item.name}
+                       </option>)
+                 })
+             }
+         }
+
+        const renderAllottee = function(){
+          return(
+            <div className="form-section" id="allotteeDetailsBlock">
+                <h3>Allottee Details </h3>
+                <div className="form-section-inner">
                       <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">Enquiry passed Date</label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="text-no-ui">
-                              <span><i className="glyphicon glyphicon-calendar"></i></span>
-                              <input type="text" id="enquiryPassedDate" name="enquiryPassedDate" value="enquiryPassedDate" value={enquiryPassedDate}
-                                      onChange={(e)=>{handleChange(e,"enquiryPassedDate")}} />
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="allotteeName"> Name :</label>
+                                </div>
+                                 <div className="col-sm-6 label-view-text">
+                                 <label id="allotteeName" name="allotteeName">
+                                    {allottee.name?allottee.name:"N/A"}
+                                 </label>
+                                 </div>
                             </div>
-                          </div>
-                      </div>
-                </div>
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor="">Promotion Basis<span>*</span></label>
                         </div>
                         <div className="col-sm-6">
-                          <div className="styled-select">
-                            <select id="promotionBasis" name="promotionBasis" value={promotionBasis.id}
-                            onChange={(e)=>{handleChange(e,"promotionBasis")}} required>
-                              <option value="">Select Promotion Basis</option>
-                              {renderOptionForDesc(_this.state.promotionList)}
-                           </select>
-                           </div>
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="mobileNumber">Mobile Number:</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="mobileNumber" name="mobileNumber">
+                                        {allottee.mobileNumber?allottee.mobileNumber:"N/A"}
+                                    </label>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                  </div>
-              </div>);
-              }
-            };
+                    <div className="row">
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="aadhaarNumber">AadhaarNumber :</label>
+                                </div>
+                                  <div className="col-sm-6 label-view-text">
+                                      <label id="aadhaarNumber" name="aadhaarNumber">
+                                          {allottee.aadhaarNumber?allottee.aadhaarNumber:"N/A"}
+                                      </label>
+                                  </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="panNo">PAN No:</label>
+                                </div>
+                               <div className="col-sm-6 label-view-text">
+                                   <label id="panNo" name="panNo" >
+                                      {allottee.panNo?allottee.panNo:"N/A"}   </label>
+                               </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                          <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="emailId">EmailId :</label>
+                                </div>
+                               <div className="col-sm-6 label-view-text">
+                                   <label id="emailId" name="emailId">
+                                      {allottee.emailId?allottee.emailId:"N/A"}
+                                   </label>
+                               </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="address">Address :</label>
+                                </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="address" name="address">
+                                        {allottee.address?allottee.address:"N/A"}
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+          );
+        }
 
-            const renderOptionForUser=function(list) {
-                if(list)
-                {
-                    return list.map((item, ind)=>
-                    {
-                      var positionId;
-                      item.assignments.forEach(function(item) {
-                                          if(item.isPrimary)
-                                          {
-                                            positionId = item.position;
-                                          }
-                                      });
+        const renderAgreementDetails = function(){
+           return(
+             <div className="form-section" id="agreementDetailsBlock">
+                 <h3>Agreement Details </h3>
+                 <div className="form-section-inner">
+                       <div className="row">
+                         <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                     <label htmlFor="agreementNumber"> Agreement Number :</label>
+                                 </div>
+                                  <div className="col-sm-6 label-view-text">
+                                    <label id="agreementNumber" name="agreementNumber">
+                                      {agreement.agreementNumber?agreement.agreementNumber:"N/A"}
+                                    </label>
+                                  </div>
+                             </div>
+                         </div>
+                         <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                     <label htmlFor="agreementDate">Agreement Date:</label>
+                                 </div>
+                                 <div className="col-sm-6 label-view-text">
+                                     <label id="agreementDate" name="agreementDate">
+                                        {agreement.agreementDate?agreement.agreementDate:"N/A"}
+                                     </label>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div className="row">
+                         <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                     <label htmlFor="rent">Rent :</label>
+                                 </div>
+                                   <div className="col-sm-6 label-view-text">
+                                       <label id="rent" name="rent">
+                                          {agreement.rent?agreement.rent:"N/A"}
+                                       </label>
+                                   </div>
+                             </div>
+                         </div>
+                         <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                     <label htmlFor="securityDeposit">Advace Collection:</label>
+                                 </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="securityDeposit" name="securityDeposit">
+                                        {agreement.securityDeposit?agreement.securityDeposit:"N/A"}
+                                    </label>
+                                </div>
+                             </div>
+                         </div>
+                     </div>
+                     <div className="row">
+                           <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                     <label htmlFor="paymentCycle">PaymentCycle :</label>
+                                 </div>
+                                <div className="col-sm-6 label-view-text">
+                                    <label id="paymentCycle" name="paymentCycle">
+                                      {agreement.paymentCycle?agreement.paymentCycle:"N/A"}
+                                    </label>
+                                </div>
+                             </div>
+                         </div>
+                         <div className="col-sm-6">
+                             <div className="row">
+                                 <div className="col-sm-6 label-text">
+                                     <label htmlFor="natureOfAllotment">Allotment Type :</label>
+                                 </div>
+                                 <div className="col-sm-6 label-view-text">
+                                     <label id="natureOfAllotment" name="natureOfAllotment">
+                                        {agreement.natureOfAllotment?agreement.natureOfAllotment:"N/A"}
+                                     </label>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                 </div>
+             </div>
+           );
 
-                        return (<option key={ind} value={positionId}>
-                                {item.name}
-                          </option>)
-                    })
-                }
-            }
+         }
 
+        const renederCancelDetails = function(){
+         return(
+           <div className="form-section hide-sec" id="agreementCancelDetails">
+               <h3 className="categoryType">Cancellation Details </h3>
+               <div className="form-section-inner">
+                   <div className="row">
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="orderNumber"> Order Number<span>*</span> </label>
+                               </div>
+                               <div className="col-sm-6">
+                                   <input type="text" name="orderNumber" id="orderNumber" value= {cancellation.orderNumber}
+                                       onChange={(e)=>{handleChangeTwoLevel(e, "cancellation", "orderNumber")}} required/>
+                               </div>
+                           </div>
+                       </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="orderDate">Order Date<span>*</span> </label>
+                               </div>
+                               <div className="col-sm-6">
+                                 <div className="text-no-ui">
+                                     <span className="glyphicon glyphicon-calendar"></span>
+                                        <input type="text" id="orderDate" name="orderDate" value="orderDate" value={cancellation.orderDate}
+                                        onChange={(e)=>{handleChangeTwoLevel(e, "cancellation", "orderDate")}} required/>
+                                 </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div className="row">
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="terminationDate">Termination Date<span>*</span> </label>
+                               </div>
+                               <div className="col-sm-6">
+                                 <div className="text-no-ui">
+                                     <span className="glyphicon glyphicon-calendar"></span>
+                                        <input type="text" id="terminationDate" name="terminationDate" value="terminationDate" value={cancellation.terminationDate}
+                                        onChange={(e)=>{handleChangeTwoLevel(e, "cancellation", "terminationDate")}} required/>
+                                 </div>
+                               </div>
+                           </div>
+                       </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="reasonForCancellation">Reason For Cancellation
+                                    <span>*</span>
+                                   </label>
+                               </div>
+                               <div className="col-sm-6">
+                                   <div className="styled-select">
+                                     <select name="reasonForCancellation" id="reasonForCancellation" value={cancellation.reasonForCancellation}
+                                       onChange={(e)=>{handleChangeTwoLevel(e, "cancellation", "reasonForCancellation")}} required>
+                                       <option value="">Select Reason</option>
+                                          {renderOption(cancelReasons)}
+                                     </select>
+                                  </div>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+                   <div className="row">
+                     <div className="col-sm-6">
+                         <div className="row">
+                             <div className="col-sm-6 label-text">
+                                 <label>Attach Document </label>
+                             </div>
+                             <div className="col-sm-6">
+                                 <div className="styled-file">
+                                     <input id="documents" name="documents" type="file" multiple/>
+                                 </div>
+                             </div>
+                         </div>
+                     </div>
+                       <div className="col-sm-6">
+                           <div className="row">
+                               <div className="col-sm-6 label-text">
+                                   <label htmlFor="remarks">Remarks </label>
+                               </div>
+                               <div className="col-sm-6">
+                               <textarea rows="4" cols="50" id="remarks" name="remarks" value={cancellation.remarks}
+                               onChange={(e)=>{handleChangeTwoLevel(e, "cancellation", "remarks")}} ></textarea>
+                               </div>
+                           </div>
+                       </div>
+                   </div>
+               </div>
+           </div>
+         );
+        }
 
-
-        const renderWorkflowDetails=function(status) {
-
-          if(status === "Rejected"){
-        return(
-          <div>
-          <br/>
+        const renderWorkFlowDetails = function(){
+          return(
           <div className="form-section">
               <div className="row">
                 <div className="col-md-8 col-sm-8">
@@ -469,7 +814,7 @@ class UpdateCancellation extends React.Component {
                     <div className="col-sm-6">
                       <div className="styled-select">
                           <select id="department" name="department" value={workflowDetails.department}
-                               onChange={(e)=>{  handleChange(e,"department") }} required >
+                               onChange={(e)=>{handleChangeTwoLevel(e, "workflowDetails", "department") }} required >
                                <option value="">Select Department</option>
                                {renderOption(_this.state.departmentList)}
                           </select>
@@ -485,9 +830,9 @@ class UpdateCancellation extends React.Component {
                       <div className="col-sm-6">
                         <div className="styled-select">
                             <select id="designation" name="designation" value={workflowDetails.designation}
-                                onChange={(e)=>{  handleChange(e,"designation") }} required >
+                                onChange={(e)=>{handleChangeTwoLevel(e, "workflowDetails", "designation") }} required >
                                 <option value="">Select Designation</option>
-                                {renderOption(_this.state.designationList)}//TODO: get designation based on departments
+                                {renderOption(_this.state.designationList)}
                            </select>
                       </div>
                     </div>
@@ -503,7 +848,7 @@ class UpdateCancellation extends React.Component {
                         <div className="col-sm-6">
                           <div className="styled-select">
                             <select id="assignee" name="assignee" value={workflowDetails.assignee}
-                              onChange={(e)=>{  handleChange(e,"assignee") }}required>
+                              onChange={(e)=>{handleChangeTwoLevel(e, "workflowDetails", "assignee") }}required>
                               <option value="">Select User</option>
                               {renderOptionForUser(_this.state.userList)}
                            </select>
@@ -513,379 +858,34 @@ class UpdateCancellation extends React.Component {
                   </div>
               </div>
             </div>
-            </div>
-        );
+          );
 
         }
 
 
-        }
-
-
-
-    const renderFileTr=function(status) {
-      var CONST_API_GET_FILE = "/filestore/v1/files/id?tenantId=" + tenantId + "&fileStoreId=";
-
-      for(var i=0; i<_this.state.movement.documents.length; i++) {
-          return(<tr>
-              <td>${i+1}</td>
-              <td>Document</td>
-              <td>
-                  <a href={window.location.origin + CONST_API_GET_FILE + _this.state.movement.documents[i]} target="_blank">
-                    Download
-                  </a>
-              </td>
-          </tr>);
-      }
-
-    }
-
-    const renderFile=function(status) {
-      if(_this.state.movement && _this.state.movement.documents) {
-      return(
-        <table className="table table-bordered" id="fileTable" style={{"display": "none"}}>
-            <thead>
-                <tr>
-                    <th>Sr. No.</th>
-                    <th>Name</th>
-                    <th>File</th>
-                </tr>
-            </thead>
-            <tbody>
-              {renderFileTr()}
-            </tbody>
-        </table>
-      );
-      }
-    }
-
-    return (
+    return(
       <div>
-        <form id = "update-transfer">
-        <div className="form-section">
-            <div className="row">
-              <div className="col-md-8 col-sm-8">
-                <h3 className="categoryType">Employee Details </h3>
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-sm-6">
-                  <div className="row">
-                      <div className="col-sm-6 label-text">
-                        <label htmlFor="code">Employee Code  </label>
-                      </div>
-                      <div className="col-sm-6">
-                          <input type="text" name="code" id="code" value={employee.code}
-                          onChange={(e)=>{handleChange(e,"employee","code")}} disabled />
-                      </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor=""> Employee Name  </label>
-                        </div>
-                        <div className="col-sm-6">
-                            <input type="text" name="name" id="name" value= {employee.name}
-                                onChange={(e)=>{handleChangeTwoLevel(e,"employee","name")}} disabled/>
-                        </div>
-                    </div>
-                  </div>
-            </div>
-          <div className="row">
-            <div className="col-sm-6">
-                <div className="row">
-                    <div className="col-sm-6 label-text">
-                      <label htmlFor="">Department  </label>
-                    </div>
-                    <div className="col-sm-6">
-                      <div className="styled-select">
-                        <select name="departmentId" value={employee.departmentId}
-                          onChange={(e)=>{  handleChangeTwoLevel(e,"employee","departmentId")}} disabled>
-                          <option value="">Select department</option>
-                          {renderOption(this.state.departmentList)}
-                       </select>
-                       </div>
-                    </div>
-                </div>
-              </div>
-              <div className="col-sm-6">
-                  <div className="row">
-                      <div className="col-sm-6 label-text">
-                        <label htmlFor="">Designation  </label>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="styled-select">
-                            <select name="designationId" value={employee.designationId}
-                              onChange={(e)=>{ handleChange(e,"employee","designationId")}} disabled>
-                            <option value="">Select Designation</option>
-                            {renderOption(this.state.designationList)}
-                           </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div className="row">
-              <div className="col-sm-6">
-                  <div className="row">
-                      <div className="col-sm-6 label-text">
-                        <label htmlFor="">Position  </label>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="styled-select">
-                            <select name="positionId" value={employee.positionId}
-                              onChange={(e)=>{ handleChange(e,"employee","positionId")}} disabled >
-                            <option value="">Select Position</option>
-                            {renderOption(this.state.positionList)}
-                           </select>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <br/>
-            <div className="form-section">
-                <div className="row">
-                  <div className="col-md-8 col-sm-8">
-                    <h3 className="categoryType">Transfer Details </h3>
-                  </div>
-                </div>
-            <div className="row">
-              <div className="col-sm-6">
-                  <div className="row">
-                      <div className="col-sm-6 label-text">
-                        <label htmlFor="">Transfer Type <span>*</span></label>
-                      </div>
-                      <div className="col-sm-6">
-                        <div className="styled-select">
-                          <select id="transferType" name="transferType" value={transferType}
-                          onChange={(e)=>{handleChange(e,"transferType")}}required>
-                            <option value="">Select Transfer Type</option>
-                            {renderOption(this.state.transferList)}
-                         </select>
-                         </div>
-                      </div>
-                  </div>
-                </div>
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor="">Reason for Transfer <span>*</span></label>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="styled-select">
-                              <select id="reason" name="reason" value={reason.id}
-                                onChange={(e)=>{  handleChange(e,"reason")}}required>
-                              <option value="">Select Reason</option>
-                              {renderOptionForDesc(this.state.reasonList)}
-                             </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div className="row">
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">District-ULB <span>*</span></label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="styled-select">
-                              <select id="transferedLocation" name="transferedLocation" value={transferedLocation}
-                                onChange={(e)=>{  handleChange(e,"transferedLocation") }}required>
-                                <option value="">Select District-ULB</option>
-                                {renderOptionForDistrict(this.state.districtList)}
-                             </select>
-                             </div>
-                          </div>
-                      </div>
-                    </div>
-                <div className="col-sm-6">
-                    <div className="row">
-                      <div className="col-sm-6 label-text">
-                          <label htmlFor="transferWithPromotion">Transfer with Promotion</label>
-                      </div>
-                          <div className="col-sm-6">
-                                <label className="radioUi">
-                                  <input type="checkbox" name="transferWithPromotion" value="transferWithPromotion" checked={transferWithPromotion == "true" || transferWithPromotion  ==  true}
-                                   onChange={(e)=>{ handleChange(e,"transferWithPromotion")}}/>
-                                </label>
-                          </div>
-                      </div>
-                    </div>
-                </div>
-                {promotionFunc()}
-                <div className="row">
-                  <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor="">Department <span>*</span></label>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="styled-select">
-                            <select id="departmentAssigned" name="departmentAssigned" value={departmentAssigned}
-                              onChange={(e)=>{  handleChange(e,"departmentAssigned")}}required>
-                              <option value="">Select department</option>
-                              {renderOption(this.state.departmentList)}
-                           </select>
-                           </div>
-                        </div>
-                    </div>
-                  </div>
+      <h3>Cancellation Of Agreement </h3>
+      <form  onSubmit={(e)=> {addOrUpdate(e)}} >
+      <fieldset>
+              {renderAssetDetails()}
+              {renderAllottee()}
+              {renderAgreementDetails()}
+              {renederCancelDetails()}
+              {renderWorkFlowDetails()}
 
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">Designation <span>*</span></label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="styled-select">
-                                <select id="designationAssigned" name="designationAssigned" value={designationAssigned}
-                                    onChange={(e)=>{handleChange(e,"designationAssigned")}}required>
-                                <option value="">Select Designation</option>
-                                {renderOption(this.state.designationList)}
-                               </select>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                    </div>
-                  <div className="row">
-                    <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                            <label htmlFor="">Transfer/Promotion effective from <span>*</span></label>
-                          </div>
-                          <div className="col-sm-6">
-                            <div className="text-no-ui">
-                              <span><i className="glyphicon glyphicon-calendar"></i></span>
-                              <input type="text" id="effectiveFrom" name="effectiveFrom" value="effectiveFrom" value={effectiveFrom}
-                              onChange={(e)=>{handleChange(e,"effectiveFrom")}} required/>
-                          </div>
-                      </div>
-                  </div>
-                </div>
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label htmlFor="">Position <span>*</span></label>
-                            </div>
-                            <div className="col-sm-6">
-                              <div className="styled-select">
-                                  <select id="positionAssigned" name="positionAssigned" value={positionAssigned}
-                                    onChange={(e)=>{  handleChange(e,"positionAssigned")}}required>
-                                  <option value="">Select Position</option>
-                                  {renderOption(this.state.pNameList)}
-                                 </select>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                  </div>
-                  <div className="row">
-                    <div className="col-sm-6">
-                        <div className="row">
-                            <div className="col-sm-6 label-text">
-                              <label htmlFor="">Fund</label>
-                            </div>
-                            <div className="col-sm-6">
-                              <div className="styled-select">
-                                <select id="fundAssigned" name="fundAssigned" value={fundAssigned}
-                                    onChange={(e)=>{handleChange(e,"fundAssigned")}}>
-                                  <option value="">Select Fund</option>
-                                  {renderOption(this.state.fundList)}
-                               </select>
-                               </div>
-                            </div>
-                        </div>
-                      </div>
-                      <div className="col-sm-6">
-                          <div className="row">
-                              <div className="col-sm-6 label-text">
-                                <label htmlFor="">Function</label>
-                              </div>
-                              <div className="col-sm-6">
-                                <div className="styled-select">
-                                    <select id="functionAssigned" name="functionAssigned" value={functionAssigned}
-                                      onChange={(e)=>{  handleChange(e,"functionAssigned") }}>
-                                    <option value="">Select functionary</option>
-                                    {renderOption(this.state.functionaryList)}
-                                   </select>
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    <div className="row">
-                      <div className="col-sm-6">
-                          <div className="row">
-                              <div className="col-sm-6 label-text">
-                                  <label htmlFor="remark">Remark <span>*</span></label>
-                              </div>
-                              <div className="col-sm-6">
-                              <textarea rows="4" cols="50" id="remarks" name="remarks" value={remarks}
-                              onChange={(e)=>{handleChange(e,"remarks")}} required></textarea>
-                              </div>
-                          </div>
-                      </div>
-                  <div className="col-sm-6">
-                      <div className="row">
-                          <div className="col-sm-6 label-text">
-                              <label htmlFor="documents">Attachments docs</label>
-                          </div>
-                          <div className="col-sm-6">
-                              <div className="styled-file">
-                              <input id="documents" name="documents" type="file"
-                                 onChange={(e)=>{handleChange(e,"documents")}} multiple/>
-                                 {renderFile()}
-                             </div>
-                          </div>
-                      </div>
-                  </div>
+              <br/>
+              <div className="text-center">
+                {renderProcesedBtns()}
+                <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
               </div>
-              <div className="row">
-                <div className="col-sm-6">
-                    <div className="row">
-                        <div className="col-sm-6 label-text">
-                          <label htmlFor="">Transfer Accepted by Employee Y/N</label>
-                        </div>
-                        <div className="col-sm-6">
-                          <div className="styled-select">
-                              <select id="employeeAcceptance" name="employeeAcceptance" value={employeeAcceptance}
-                                onChange={(e)=>{  handleChange(e,"employeeAcceptance") }}>
-                              <option value="">Select Promotion</option>
-                              <option value="true">Yes</option>
-                              <option value="false">No</option>
-                             </select>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-              </div>
-            </div>
 
-
-            {renderWorkflowDetails(this.state.status)}
-
-
-          <br/>
-          <div className="text-center">
-            {renderProcesedBtns()}
-            <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
-          </div>
-          </form>
+      </fieldset>
+      </form>
       </div>
     );
   }
 }
-
-
-
-
-
 
 
 ReactDOM.render(

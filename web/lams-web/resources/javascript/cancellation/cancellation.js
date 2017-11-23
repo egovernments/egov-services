@@ -115,15 +115,15 @@ class CancellationAgreement extends React.Component {
           isAdvancePaid: "",
           adjustmentStartDate: ""
         },
-        cancelReasons:["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
-        positionList:[],
-        departmentList:[],
-        designationList:[],
-        userList:[]
+        cancelReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
+        positionList: [],
+        departmentList: [],
+        designationList: [],
+        userList: []
 
       }
       this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
-      this.addOrUpdate=this.addOrUpdate.bind(this);
+      this.addOrUpdate = this.addOrUpdate.bind(this);
       this.setInitialState = this.setInitialState.bind(this);
       this.getUsersFun = this.getUsersFun.bind(this);
     }
@@ -132,24 +132,85 @@ class CancellationAgreement extends React.Component {
       this.setState(initState);
     }
 
-    addOrUpdate(e){
+    addOrUpdate(e) {
 
       e.preventDefault();
-      var _this=this;
-      var agreement =Object.assign({}, _this.state.agreement);
+      var _this = this;
+      var agreement = Object.assign({}, _this.state.agreement);
 
-      var body = {
-          "RequestInfo":requestInfo,
-          "Agreement":agreement
-      };
 
-      $.ajax({
-          url:baseUrl+"/lams-services/agreements/_cancel?tenantId=" + tenantId,
+
+      agreement.action = "cancellation";
+
+console.log("Documents",agreement);
+
+      if (agreement.documents && agreement.documents.constructor == FileList) {
+        let counter = agreement.documents.length,
+          breakout = 0,
+          docs = [];
+        for (let i = 0, len = agreement.documents.length; i < len; i++) {
+          this.makeAjaxUpload(agreement.documents[i], function(err, res) {
+            if (breakout == 1) {
+              console.log("breakout", breakout);
+              return;
+            } else if (err) {
+              showError("Error uploding the files. Please contact Administrator");
+              breakout = 1;
+            } else {
+              counter--;
+              docs.push({fileStore:res.files[0].fileStoreId});
+              console.log("docs", docs);
+              if (counter == 0 && breakout == 0) {
+                agreement.documents = docs;
+
+                var body = {
+                  "RequestInfo": requestInfo,
+                  "Agreement": agreement
+                };
+
+                $.ajax({
+                  url: baseUrl + "/lams-services/agreements/_cancel?tenantId=" + tenantId,
+                  type: 'POST',
+                  dataType: 'json',
+                  data: JSON.stringify(body),
+                  contentType: 'application/json',
+                  headers: {
+                    'auth-token': authToken
+                  },
+                  success: function(res) {
+
+                    showSuccess("Forwarded successfully");
+
+                  },
+                  error: function(err) {
+                    if(err.responseJSON.Error && err.responseJSON.Error.message)
+                      showError(err.responseJSON.Error.message);
+                    else
+                      showError("Something went wrong. Please contact Administrator");
+                  }
+
+                })
+
+              }
+            }
+          })
+        }
+        // if (breakout == 1)
+        //     return;
+      } else {
+
+        var body = {
+          "RequestInfo": requestInfo,
+          "Agreement": agreement
+        };
+
+        $.ajax({
+          url: baseUrl + "/lams-services/agreements/_cancel?tenantId=" + tenantId,
           type: 'POST',
           dataType: 'json',
-          data:JSON.stringify(body),
+          data: JSON.stringify(body),
           contentType: 'application/json',
-          headers:{
+          headers: {
             'auth-token': authToken
           },
           success: function(res) {
@@ -158,74 +219,146 @@ class CancellationAgreement extends React.Component {
 
           },
           error: function(err) {
-            showError("Failed successfully :)");
+            if(err.responseJSON.Error && err.responseJSON.Error.message)
+              showError(err.responseJSON.Error.message);
+            else
+              showError("Something went wrong. Please contact Administrator");
           }
 
-      })
+        })
 
-
+      }
 
     }
 
-    handleChangeTwoLevel(e,pName,name) {
+    handleChangeTwoLevel(e, pName, name) {
 
       var _this = this;
 
       switch (name) {
-          case "department":
+        case "department":
           _this.state.agreement.workflowDetails.assignee = "";
-          if(this.state.agreement.workflowDetails.designation){
+          if (this.state.agreement.workflowDetails.designation) {
             var _designation = this.state.agreement.workflowDetails.designation;
-            _this.getUsersFun(e.target.value,_designation);
+            _this.getUsersFun(e.target.value, _designation);
           }
           break;
-          case "designation":
+        case "designation":
           _this.state.agreement.workflowDetails.assignee = "";
-          if(this.state.agreement.workflowDetails.department){
+          if (this.state.agreement.workflowDetails.department) {
             var _department = this.state.agreement.workflowDetails.department;
-            _this.getUsersFun(_department,e.target.value);
+            _this.getUsersFun(_department, e.target.value);
           }
           break;
 
       }
 
+      if(name === "documents"){
+
+        var fileTypes = ["application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", "application/pdf", "image/png", "image/jpeg"];
+
+        if (e.currentTarget.files.length != 0) {
+          for (var i = 0; i < e.currentTarget.files.length; i++) {
+            //2097152 = 2mb
+            if (e.currentTarget.files[i].size > 2097152 && fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+              $("#documents").val('');
+              return showError("Maximum file size allowed is 2 MB.\n Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+            } else if (e.currentTarget.files[i].size > 2097152) {
+              $("#documents").val('');
+              return showError("Maximum file size allowed is 2 MB.");
+            } else if (fileTypes.indexOf(e.currentTarget.files[i].type) == -1) {
+              $("#documents").val('');
+              return showError("Please upload only DOC, PDF, xls, xlsx, png, jpeg file.");
+            }
+          }
+
+          this.setState({
+            agreement: {
+              ...this.state.agreement,
+              documents: e.currentTarget.files
+            }
+          })
+        } else {
+          this.setState({
+            agreement: {
+              ...this.state.agreement,
+              documents: e.currentTarget.files
+            }
+          })
+        }
+
+
+      }else {
       _this.setState({
         ..._this.state,
-        agreement:{
+        agreement: {
           ..._this.state.agreement,
-          [pName]:{
-              ..._this.state.agreement[pName],
-              [name]:e.target.value
+          [pName]: {
+            ..._this.state.agreement[pName],
+            [name]: e.target.value
           }
         }
       })
     }
+    }
 
-    getUsersFun(departmentId,designationId){
-      var _this=this;
+    getUsersFun(departmentId, designationId) {
+      var _this = this;
       $.ajax({
-          url:baseUrl+"/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId="+ designationId,
-          type: 'POST',
-          dataType: 'json',
-          data:JSON.stringify({ RequestInfo: requestInfo }),
-          contentType: 'application/json',
-          headers:{
-            'auth-token': authToken
-          },
-          success: function(res) {
+        url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId + "&departmentId=" + departmentId + "&designationId=" + designationId,
+        type: 'POST',
+        dataType: 'json',
+        data: JSON.stringify({
+          RequestInfo: requestInfo
+        }),
+        contentType: 'application/json',
+        headers: {
+          'auth-token': authToken
+        },
+        success: function(res) {
 
-            _this.setState({
-              ..._this.state,
-              userList:res.Employee
-            })
+          _this.setState({
+            ..._this.state,
+            userList: res.Employee
+          })
 
-          },
-          error: function(err) {
-          }
+        },
+        error: function(err) {}
 
       })
 
+    }
+
+
+    makeAjaxUpload(file, cb) {
+      if (file.constructor == File) {
+        let formData = new FormData();
+        formData.append("jurisdictionId", "ap.public");
+        formData.append("module", "PGR");
+        formData.append("file", file);
+        $.ajax({
+          url: baseUrl + "/filestore/v1/files?tenantId=" + tenantId,
+          data: formData,
+          cache: false,
+          contentType: false,
+          processData: false,
+          type: 'POST',
+          success: function(res) {
+            cb(null, res);
+          },
+          error: function(jqXHR, exception) {
+            cb(jqXHR.responseText || jqXHR.statusText);
+          }
+        });
+      } else {
+        cb(null, {
+          files: [{
+            fileStoreId: file
+          }]
+        });
       }
+    }
+
 
 
     componentDidMount() {
@@ -242,8 +375,8 @@ class CancellationAgreement extends React.Component {
       try {
         var departmentList = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
       } catch (e) {
-          console.log(e);
-          var department = [];
+        console.log(e);
+        var department = [];
       }
 
 
@@ -254,86 +387,85 @@ class CancellationAgreement extends React.Component {
       // }
 
       getDesignations(null, function(designations) {
-          for (let variable in designations) {
-              if (!designations[variable]["id"]) {
-                  var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
-                  designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
-              }
+        for (let variable in designations) {
+          if (!designations[variable]["id"]) {
+            var _res = commonApiPost("hr-masters", "designations", "_search", {
+              tenantId,
+              name: designations[variable]["name"]
+            });
+            designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
           }
+        }
 
-          _this.setState({
-            ..._this.state,
-            designationList : designations
-          });
+        _this.setState({
+          ..._this.state,
+          designationList: designations
+        });
 
-      },agreementType);
+      }, agreementType);
 
 
       var agreement = commonApiPost("lams-services",
-                                "agreements",
-                                "_search",
-                                {
-                                  id: getUrlVars()["agreementNumber"],
-                                  tenantId
-                                }).responseJSON["Agreements"][0] || {};
+        "agreements",
+        "_search", {
+          id: getUrlVars()["agreementNumber"],
+          tenantId
+        }).responseJSON["Agreements"][0] || {};
       console.log(agreement);
 
-      if(!agreement.cancellation){
-        agreement.cancellation={};
+      if (!agreement.cancellation) {
+        agreement.cancellation = {};
       }
-      if(!agreement.workflowDetails){
-        agreement.workflowDetails={};
+      if (!agreement.workflowDetails) {
+        agreement.workflowDetails = {};
       }
 
 
       this.setState({
         ...this.state,
-        agreement : agreement,
-        departmentList : departmentList
+        agreement: agreement,
+        departmentList: departmentList
       });
 
 
       $('#orderDate').datepicker({
-          format: 'dd/mm/yyyy',
-          autoclose:true,
-          defaultDate: ""
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        defaultDate: ""
       });
 
       $('#orderDate').on('changeDate', function(e) {
-            _this.setState({
-                  agreement: {
-                      ..._this.state.agreement,
-                      cancellation:{
-                        ..._this.state.agreement.cancellation,
-                        "orderDate":$("#orderDate").val()
-                      }
-                  }
-            });
+        _this.setState({
+          agreement: {
+            ..._this.state.agreement,
+            cancellation: {
+              ..._this.state.agreement.cancellation,
+              "orderDate": $("#orderDate").val()
+            }
+          }
+        });
       });
 
 
       $('#terminationDate').datepicker({
-          format: 'dd/mm/yyyy',
-          autoclose:true,
-          defaultDate: ""
+        format: 'dd/mm/yyyy',
+        autoclose: true,
+        defaultDate: ""
       });
 
       $('#terminationDate').on('changeDate', function(e) {
-            _this.setState({
-                  agreement: {
-                      ..._this.state.agreement,
-                      cancellation:{
-                        ..._this.state.agreement.cancellation,
-                        "terminationDate":$("#terminationDate").val()
-                      }
-                  }
-            });
+        _this.setState({
+          agreement: {
+            ..._this.state.agreement,
+            cancellation: {
+              ..._this.state.agreement.cancellation,
+              "terminationDate": $("#terminationDate").val()
+            }
+          }
+        });
       });
 
-
-
     }
-
     render() {
         var _this = this;
         let {handleChange, handleChangeTwoLevel, addOrUpdate} = this;
@@ -736,7 +868,7 @@ class CancellationAgreement extends React.Component {
                              </div>
                              <div className="col-sm-6">
                                  <div className="styled-file">
-                                     <input id="documents" name="documents" type="file" multiple/>
+                                     <input id="documents" name="documents" type="file" onChange={(e)=>{handleChangeTwoLevel(e, "cancellation", "documents")}} multiple/>
                                  </div>
                              </div>
                          </div>

@@ -37,7 +37,8 @@ class assetImmovableCreate extends Component {
     this.state = {
       customFieldsGen:{},
       hide: true,
-      customArr: []
+      customArr: [],
+      layerData: []
     }
   }
 
@@ -487,7 +488,7 @@ class assetImmovableCreate extends Component {
               //
               // }
               if(customTemp.type == 'singleValueList'){
-                if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
+                if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values != null && response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
                     var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
                     var dropdownSplit = handleDropdown.split(",");
                     var valueHolder = [];
@@ -498,13 +499,51 @@ class assetImmovableCreate extends Component {
                       valueHolder.push(holder);
                   }
 
-                }
-                else{
-                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;
-                }
-                customTemp.defaultValue = valueHolder;
+                  customTemp.defaultValue = valueHolder;
+                }  else {
+                  let dropDownValue=[];
+                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url ;
+                  let _value = customTemp.url.split("?");
+                  let _splitUrl = _value[1].split("&");
+                  let query = {};
+                  for (let  i = 0; i < _splitUrl.length; i++) {
+                    if (_splitUrl[i].split("=")[0] == "tenantId") {
+                      continue ;
+                    }
+                    query[_splitUrl[i].split("=")[0]] = _splitUrl[i].split("=")[1];
+                  }
+                  let temp = Object.assign({}, customTemp);
+                  let cId = catId;
+                  Api.commonApiPost(_value[0],query,{}, false, false, false, "", "", true).then(function(resp) {
+                    if (resp) {
+                      let keys = jp.query(resp, "$.MdmsRes.ASSET.LayerType.*.id");
+                      let values = jp.query(resp, "$.MdmsRes.ASSET.LayerType.*.name");
+                      let others = jp.query(resp, "$.MdmsRes.ASSET.LayerType.*");
+                      var valueHolder = [];
+                      var layerData = {};
+                      for (var l = 0; l < keys.length; l++) {
+                        var holder = {};
+                        holder.key = keys[l];
+                        holder.value = values[l];
+                        valueHolder.push(holder);
+                        layerData[keys[l]] = others[l];
+                      }
 
+                      for(var m=0; m<customSpecs[cId].length; m++) {
 
+                        if(customSpecs[cId][m].jsonPath == temp.jsonPath) {
+
+                          customSpecs[cId][m].defaultValue = valueHolder;
+                          self.setState({
+                              customFieldsGen: customSpecs,
+                              layerData
+                          })
+                          break;
+                        }
+                      }
+                    }
+                  });
+                }
               }
               customFieldsArray.push(customTemp);
 
@@ -513,6 +552,7 @@ class assetImmovableCreate extends Component {
         }
         depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
         cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
+
         self.setState({
             customFieldsGen: customSpecs,
             depericiationValue,
@@ -627,7 +667,7 @@ class assetImmovableCreate extends Component {
     var formData = JSON.parse(JSON.stringify(this.props.formData));
 
     if (formData.Asset.titleDocumentsAvalable) {
-      console.log(formData.Asset.titleDocumentsAvalable);
+
       formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");
     } else {
       formData.Asset.titleDocumentsAvalable = [];
@@ -1209,6 +1249,14 @@ delete formData.Asset.assetAttributesCheck;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.create`];
+
+
+      if (property== "Asset.assetAttributesCheck.Layer Type.Select") {
+
+        self.props.handleChange({target:{value: this.state.layerData[e.target.value].description}},"Asset.assetAttributesCheck.Layer description.Text",false,"","","");
+        self.props.handleChange({target:{value: this.state.layerData[e.target.value].numberOfLayers}},"Asset.assetAttributesCheck.No. Of Layers.Number",false,"","","");
+        self.props.handleChange({target:{value: this.state.layerData[e.target.value].layerSize}},"Asset.assetAttributesCheck.Layer Size.Number",false,"","","");
+      }
 
       if(property=="Asset.assetCategory.id"){
         if (self.state.depericiationValue[e.target.value]) {

@@ -1,6 +1,6 @@
 {
   "name": "egov-asset",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Common methods",
   "main": "index.js",
   "scripts": {

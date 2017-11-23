@@ -1,4 +1,4 @@
-def build(path, ci_image) {
+def build() {
     stage("Build") {
         docker.image("egovio/ci-react:0.0.4").inside {
             withCredentials([string(credentialsId: "verdaccio-host-url", variable: "NPM_URL")]) {
@@ -11,4 +11,9 @@ def build(path, ci_image) {
     }
 }
 
-return this;
+try {
+    node("slave"){
+        checkout scm
+        build()
+
+}

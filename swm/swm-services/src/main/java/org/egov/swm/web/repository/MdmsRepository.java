@@ -39,12 +39,15 @@
  */
 package org.egov.swm.web.repository;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.swm.web.contract.MasterDetails;
-import org.egov.swm.web.contract.MdmsCriteria;
-import org.egov.swm.web.contract.MdmsRequest;
-import org.egov.swm.web.contract.MdmsResponse;
-import org.egov.swm.web.contract.ModuleDetails;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.MdmsResponse;
+import org.egov.mdms.model.ModuleDetail;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -72,19 +75,19 @@ public class MdmsRepository {
             final String filterFieldName,
             final String filterFieldValue, final RequestInfo requestInfo) {
 
-        MasterDetails[] masterDetails;
-        ModuleDetails[] moduleDetails;
-        MdmsRequest request = null;
+        List<MasterDetail> masterDetails;
+        List<ModuleDetail> moduleDetails;
+        MdmsCriteriaReq request = null;
         MdmsResponse response = null;
-        masterDetails = new MasterDetails[1];
-        moduleDetails = new ModuleDetails[1];
+        masterDetails = new ArrayList<>();
+        moduleDetails = new ArrayList<>();
 
-        masterDetails[0] = MasterDetails.builder().name(masterName).build();
+        masterDetails.add(MasterDetail.builder().name(masterName).build());
         if (filterFieldName != null && filterFieldValue != null && !filterFieldName.isEmpty() && !filterFieldValue.isEmpty())
-            masterDetails[0].setFilter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]");
-        moduleDetails[0] = ModuleDetails.builder().moduleName(moduleName).masterDetails(masterDetails).build();
+            masterDetails.get(0).setFilter("[?(@." + filterFieldName + " == '" + filterFieldValue + "')]");
+        moduleDetails.add(ModuleDetail.builder().moduleName(moduleName).masterDetails(masterDetails).build());
 
-        request = MdmsRequest.builder()
+        request = MdmsCriteriaReq.builder()
                 .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
                 .requestInfo(requestInfo).build();
         response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);

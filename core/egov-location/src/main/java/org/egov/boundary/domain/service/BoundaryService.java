@@ -43,6 +43,7 @@ package org.egov.boundary.domain.service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -280,6 +281,9 @@ public class BoundaryService {
 			} else if (boundaryRequest.getBoundary().getCode() != null) {
 				boundaries.add(findByTenantIdAndCode(boundaryRequest.getBoundary().getTenantId(),
 						boundaryRequest.getBoundary().getCode()));
+			} else if (boundaryRequest.getBoundary().getCodes() != null && !boundaryRequest.getBoundary().getCodes().isEmpty()) {
+                            boundaries.addAll(findByTenantIdAndCodes(boundaryRequest.getBoundary().getTenantId(),
+                                    new ArrayList<>(Arrays.asList( boundaryRequest.getBoundary().getCode().split(",")))));
 			} else {
 				if (!StringUtils.isEmpty(boundaryRequest.getBoundary().getLatitude())
 						&& !StringUtils.isEmpty(boundaryRequest.getBoundary().getLongitude())) {
@@ -291,8 +295,7 @@ public class BoundaryService {
 					else
 						boundaries = new ArrayList<Boundary>();
 				} else {
-					boundaries
-							.addAll(boundaryRepository.findAllByTenantId(boundaryRequest.getBoundary().getTenantId()));
+					boundaries.addAll(boundaryRepository.findAllByTenantId(boundaryRequest.getBoundary().getTenantId()));
 				}
 			}
 		}

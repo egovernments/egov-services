@@ -129,11 +129,14 @@ public class MDMSService {
 		
 		//push the contents
 		logger.info("Step 5: Pushing the Contents to git......");
-		String pushResponse = pushTheContents(newCommitSHA);
+		pushTheContents(newCommitSHA);
 		logger.info("Step 5 COMPLETED SUCCESSFULLY!");
 		
-		logger.info("Find your changes at: "+mDMSCreateRequest.getMasterMetaData().getFilePath());
-		return pushResponse;
+		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + mDMSCreateRequest.getMasterMetaData().getFilePath());
+    	DocumentContext documentContext = JsonPath.parse(MDMSConstants.SUCCESS_RES);
+    	documentContext.put("$", "file", MDMSConstants.FINAL_FILE_PATH_APPEND + mDMSCreateRequest.getMasterMetaData().getFilePath());
+
+		return documentContext.jsonString().toString();
 		
 	}
 	
@@ -225,12 +228,12 @@ public class MDMSService {
     	String body = documentContext.jsonString().toString();
     	logger.info("Body: "+body);
 
-		Object createCommitResponse = mDMSCreateRepository.
+		Object pushResponse = mDMSCreateRepository.
 				post(getPushUri.toString(), body, userName, password);
 		
-		logger.info("pushResponse: "+createCommitResponse.toString());
+		logger.info("pushResponse: "+pushResponse.toString());
 		
-		return createCommitResponse.toString();
+		return pushResponse.toString();
 	}
 
 }

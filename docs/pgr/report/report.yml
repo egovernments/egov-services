@@ -939,7 +939,7 @@ ReportDefinitions:
     egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass,eg_user us WHERE
     cs.positionid = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.department=dept.id and cs.positionid = pos.id
     and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true and cs.createddate >= $fromDate and cs.createddate
-    <= $toDate and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid) and ctype.category = $categoryid
+    <= $toDate and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid and category = $categoryid) 
      and cs.tenantid = $tenantid
      and ctype.tenantid = $tenantid
      and dept.tenantid = $tenantid
@@ -1493,8 +1493,7 @@ ReportDefinitions:
       and name = 'Ward' and tenantid = $tenantid))
       and dept.name = $deptname
       and cs.positionid = ass.positionid and ass.employeeid=us.id and cs.createddate >= ass.fromdate and cs.createddate <= ass.todate and isprimary=true
-      and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid)
-      and ctype.category = $categoryid
+      and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid and category = $categoryid)
       and sa.tenantid  = $tenantid and cs.tenantid = $tenantid  and ctype.tenantid = $tenantid
       and us.tenantid = $tenantid   and pos.tenantid = $tenantid   and boundary.tenantid = $tenantid    GROUP BY us.username,pos.name;
 

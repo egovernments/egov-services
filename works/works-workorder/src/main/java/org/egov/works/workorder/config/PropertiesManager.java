@@ -36,5 +36,8 @@ public class PropertiesManager {
 
     @Value("${egov.services.works.loa.update.topic.validated}")
     private String worksLOAUpdateTopic;
+    
+    @Value("${loanumber.prefix}")
+    private String loaNumberPrefix;
 
 }

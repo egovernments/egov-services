@@ -58,7 +58,8 @@ public class ProjectCodeService {
 			if (projectCode.getCode() == null || projectCode.getCode().isEmpty()) {
 				workIdentificationNumber = idGenerationRepository.generateWorkIdentificationNumber(
 						projectCode.getTenantId(), projectCodeRequest.getRequestInfo());
-				projectCode.setCode(workIdentificationNumber);
+				
+				projectCode.setCode(propertiesManager.getWorkIdentificationNumberPrefix() + "/" +  workIdentificationNumber);
 			}
 
 		}

@@ -1,7 +1,6 @@
 package org.egov.works.estimate.domain.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,8 +9,8 @@ import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.utils.CommonUtils;
-import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.config.Constants;
+import org.egov.works.estimate.config.PropertiesManager;
 import org.egov.works.estimate.domain.repository.AbstractEstimateRepository;
 import org.egov.works.estimate.domain.validator.EstimateValidator;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
@@ -24,7 +23,6 @@ import org.egov.works.estimate.web.contract.AbstractEstimateResponse;
 import org.egov.works.estimate.web.contract.AbstractEstimateSanctionDetail;
 import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
 import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.AuditDetails;
 import org.egov.works.estimate.web.contract.DocumentDetail;
 import org.egov.works.estimate.web.contract.EstimateAppropriation;
 import org.egov.works.estimate.web.contract.EstimateAppropriationRequest;
@@ -248,8 +246,6 @@ public class AbstractEstimateService {
 
 		projectCode.setName(abstractEstimateDetails.getNameOfWork());
 		projectCode.setDescription(abstractEstimateDetails.getNameOfWork());
-		projectCode.setActive(true);
-		projectCode.setStatus(ProjectCodeStatus.CREATED);
 		projectCode.setTenantId(abstractEstimateDetails.getTenantId());
 
 		ProjectCodeRequest projectCodeRequest = new ProjectCodeRequest();

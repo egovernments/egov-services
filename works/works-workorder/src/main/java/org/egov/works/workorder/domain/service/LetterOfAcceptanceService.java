@@ -89,7 +89,8 @@ public class LetterOfAcceptanceService {
 					String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
 							letterOfAcceptanceRequest.getRequestInfo());
 					// TODO: check idgen to accept values to generate
-					letterOfAcceptance.setLoaNumber(loaNumber);
+					letterOfAcceptance.setLoaNumber(propertiesManager.getLoaNumberPrefix() + "/"
+							+ detailedEstimate.getDepartment().getCode() + loaNumber);
 				}
 				estimateService.getDetailedEstimate(
 						letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),

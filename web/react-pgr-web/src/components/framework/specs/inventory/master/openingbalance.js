@@ -297,7 +297,7 @@ var dat = {
             "fields":[
                {
                   "type":"tableList",
-                  "jsonPath":"",
+                  "jsonPath":"materialReceipt[0].receiptDetails",
                   "tableList":{
                      "header":[
                         {
@@ -489,7 +489,7 @@ var dat = {
             "fields":[
                {
                   "type":"tableList",
-                  "jsonPath":"",
+                  "jsonPath":"materialReceipt[0].receiptDetails",
                   "tableList":{
                    actionsNotRequired:true,
                      "header":[

@@ -57,8 +57,6 @@ public class RouterSearchRequest {
 
     private List<Long> serviceId;
 
-    private Long position;
-
     @NotNull
     private String tenantId;
 

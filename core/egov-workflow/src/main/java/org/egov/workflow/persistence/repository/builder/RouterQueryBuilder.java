@@ -76,7 +76,7 @@ public class RouterQueryBuilder {
 
         if (null == routerSearchRequest.getId() && null == routerSearchRequest.getBoundaryId()
             && null == routerSearchRequest.getServiceId() && null == routerSearchRequest.getTenantId()
-            && null == routerSearchRequest.getPosition() && null == routerSearchRequest.getHierarchyType()
+            && null == routerSearchRequest.getHierarchyType()
             && null == routerSearchRequest.getBoundaryTypeId())
             return;
 
@@ -102,12 +102,6 @@ public class RouterQueryBuilder {
         if (null != routerSearchRequest.getBoundaryId()) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" router.bndryid IN " + getIdQuery(routerSearchRequest.getBoundaryId()));
-        }
-
-        if (null != routerSearchRequest.getPosition()) {
-            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-            selectQuery.append(" router.position = ?");
-            preparedStatementValues.add(routerSearchRequest.getPosition());
         }
 
         if (null != routerSearchRequest.getComplaintTypeCategory()) {

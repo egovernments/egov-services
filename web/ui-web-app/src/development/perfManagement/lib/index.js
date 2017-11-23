@@ -1,8 +1,0 @@
-
-
-
-var routes = [];
-
-export {
-  routes
-};

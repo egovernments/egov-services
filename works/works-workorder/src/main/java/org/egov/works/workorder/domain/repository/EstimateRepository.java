@@ -28,6 +28,7 @@ public class EstimateRepository {
 
 		this.restTemplate = restTemplate;
 		this.detailedEstimateUrl = worksEstimateHostname + detailedEstimateUrl;
+        this.detailedEstimateByDepartmentUrl = worksEstimateHostname + detailedEstimateByDepartmentUrl;
 	}
 
 	public DetailedEstimateResponse getDetailedEstimateById(

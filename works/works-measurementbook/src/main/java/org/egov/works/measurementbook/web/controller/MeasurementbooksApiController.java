@@ -59,7 +59,7 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 				.tenantId(tenantId).pageSize(pageSize).pageNumber(pageNumber).sortProperty(sortBy).ids(ids)
 				.statuses(statuses).workOrderNumbers(workOrderNumbers).mbRefNumbers(mbRefNumbers).loaNumbers(loaNumbers)
 				.detailedEstimateNumbers(detailedEstimateNumbers).workIdentificationNumbers(workIdentificationNumbers)
-				.fromDate(fromDate).toDate(toDate).departmentCodes(department).createdBy(createdBy)
+				.fromDate(fromDate).toDate(toDate).department(department).createdBy(createdBy)
 				.contractorNames(contractorNames).contractorCodes(contractorCodes).build();
 		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.search(measurementBookSearchContract, requestInfo),
 				HttpStatus.OK);

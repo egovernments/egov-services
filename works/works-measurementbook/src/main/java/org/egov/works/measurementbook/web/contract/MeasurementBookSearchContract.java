@@ -29,15 +29,15 @@ public class MeasurementBookSearchContract {
 	
 	private List<String> ids;
 	
-	private List<String> workOrderNumbers;
+	private List<String> workOrderNumbers; //autocomplete
 	
-	private List<String> mbRefNumbers;
+	private List<String> mbRefNumbers;//autocomplete
 	
-	private List<String> loaNumbers;
+	private List<String> loaNumbers;//autocomplete
 	
-	private List<String> detailedEstimateNumbers;
-	
-	private List<String> departmentCodes;
+	private List<String> detailedEstimateNumbers; //autocomplete
+
+	private List<String> department;
 
 	private Long fromDate;
 
@@ -45,11 +45,11 @@ public class MeasurementBookSearchContract {
 
 	private String createdBy;
 	
-	private List<String> contractorNames;
+	private List<String> contractorNames;//autocomplete
 	
-	private List<String> contractorCodes;
+	private List<String> contractorCodes;//autocomplete
 
-	private List<String> workIdentificationNumbers;
+	private List<String> workIdentificationNumbers;//autocomplete
 	
 	private List<String> statuses;
 }

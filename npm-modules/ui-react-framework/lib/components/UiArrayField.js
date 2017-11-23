@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 import _ from 'lodash';
 
 export default class UiArrayField extends Component {

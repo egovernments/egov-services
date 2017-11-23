@@ -8,9 +8,9 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
-import {ShowFields, fileUpload, getInitiatorPosition, UiButton, UiTable} from "ui-react-framework";
+import {ShowFields, fileUpload, getInitiatorPosition, UiButton, UiTable} from "egov-ui-react-framework";
 
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import jp from "jsonpath";
 import $ from "jquery";
 import FloatingActionButton from 'material-ui/FloatingActionButton';

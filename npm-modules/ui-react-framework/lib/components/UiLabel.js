@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
-import {Api, translate} from 'common-utility';
+import {Api, translate} from 'egov-common-utility';
 import jp from "jsonpath";
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";

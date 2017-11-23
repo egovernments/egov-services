@@ -8,11 +8,11 @@ import TextField from 'material-ui/TextField';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import _ from "lodash";
-import {ShowFields, UiButton, fileUpload, getInitiatorPosition, UiBackButton} from "ui-react-framework";
+import {ShowFields, UiButton, fileUpload, getInitiatorPosition, UiBackButton} from "egov-ui-react-framework";
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import jp from "jsonpath";
 import $ from "jquery";
 import FloatingActionButton from 'material-ui/FloatingActionButton';

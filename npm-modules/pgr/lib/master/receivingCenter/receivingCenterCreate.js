@@ -8,7 +8,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import styles from '../../styles/material-ui';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 
 var _this;
 

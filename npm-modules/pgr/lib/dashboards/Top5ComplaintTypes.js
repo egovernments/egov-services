@@ -3,7 +3,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader} from 'material-ui/Card';
 import {LineChart, Line, AreaChart, Area, ResponsiveContainer, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 import {PageLoadingIndicator, CustomizedAxisTick, CustomizedLineChartLegend, CustomizedYAxisLabel, CustomTooltip, getTenantId} from './ReportUtils';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import _ from "lodash";
 import moment from 'moment';
 

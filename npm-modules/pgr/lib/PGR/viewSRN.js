@@ -6,7 +6,7 @@ import FileDownload from 'material-ui/svg-icons/action/get-app';
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
 import Divider from 'material-ui/Divider';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 import styles from '../styles/material-ui';
 var axios = require('axios');
 

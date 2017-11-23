@@ -2,8 +2,8 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 import _ from "lodash";
-import {ShowFields,UiButton,fileUpload, getInitiatorPosition,UiDynamicTable} from "ui-react-framework";
-import {translate,Api} from 'common-utility';
+import {ShowFields,UiButton,fileUpload, getInitiatorPosition,UiDynamicTable} from "egov-ui-react-framework";
+import {translate,Api} from 'egov-common-utility';
 import CustomUiTable from './components/CustomUiTable';
 import jp from "jsonpath";
 

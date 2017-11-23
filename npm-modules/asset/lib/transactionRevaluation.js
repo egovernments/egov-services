@@ -3,8 +3,8 @@ import {connect} from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
 
 import _ from "lodash";
-import {ShowFields, UiButton, fileUpload, getInitiatorPosition, UiDynamicTable2} from "ui-react-framework";
-import {translate, Api} from 'common-utility';
+import {ShowFields, UiButton, fileUpload, getInitiatorPosition, UiDynamicTable2} from "egov-ui-react-framework";
+import {translate, Api} from 'egov-common-utility';
 
 import jp from "jsonpath";
 import $ from "jquery";

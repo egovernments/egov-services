@@ -13,7 +13,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import ReactPaginate from 'react-paginate';
 import Snackbar from 'material-ui/Snackbar';
-import {Api, translate, toLocalTime, ServerSideTable} from 'common-utility';
+import {Api, translate, toLocalTime, ServerSideTable} from 'egov-common-utility';
 import styles from './styles/material-ui';
 
 const getNameById = function(object, id, property = "") {

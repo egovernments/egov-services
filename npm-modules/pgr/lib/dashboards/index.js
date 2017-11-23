@@ -7,7 +7,7 @@ import {ResponsiveContainer, PieChart, Pie, Sector, Cell, Tooltip,
         AreaChart, Area }  from 'recharts';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from '../styles/material-ui';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import moment from 'moment';
 var self;
 

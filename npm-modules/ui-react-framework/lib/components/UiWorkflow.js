@@ -4,7 +4,7 @@ import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 
 export default class UiWorkflow extends Component {
 	constructor(props) {

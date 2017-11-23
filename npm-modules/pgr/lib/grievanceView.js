@@ -11,7 +11,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {Api, translate, validate_fileupload, constants, Fields} from 'common-utility';
+import {Api, translate, validate_fileupload, constants, Fields} from 'egov-common-utility';
 import ViewSRN from './PGR/viewSRN';
 import EmployeeDocs from './PGR/employeeDocs';
 import WorkFlow from './PGR/workflow';

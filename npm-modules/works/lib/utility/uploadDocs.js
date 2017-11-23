@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import _ from "lodash";
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Row, Col} from 'react-bootstrap';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 import styles from '../styles/material-ui';
 
 export default class UploadDocs extends Component {

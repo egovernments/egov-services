@@ -1,4 +1,4 @@
-import {Api} from 'common-utility';
+import {Api} from 'egov-common-utility';
 
 export function int_to_words(int) {
   if (int === 0) return 'zero';

@@ -4,8 +4,8 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import _ from "lodash";
-import {ShowFields,UiButton,fileUpload, getInitiatorPosition,UiTable} from "ui-react-framework";
-import {translate,Api} from 'common-utility';
+import {ShowFields,UiButton,fileUpload, getInitiatorPosition,UiTable} from "egov-ui-react-framework";
+import {translate,Api} from 'egov-common-utility';
 import jp from "jsonpath";
 import styles from '../styles/material-ui';
 

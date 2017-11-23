@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import SelectField from 'material-ui/SelectField';
 import MenuItem from 'material-ui/MenuItem';
-import {Api} from 'common-utility';
+import {Api} from 'egov-common-utility';
 import jp from "jsonpath";
 import _ from 'lodash';
 

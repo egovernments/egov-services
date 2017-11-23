@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 import RaisedButton from 'material-ui/RaisedButton';
 import {connect} from 'react-redux';
 import _ from 'lodash';

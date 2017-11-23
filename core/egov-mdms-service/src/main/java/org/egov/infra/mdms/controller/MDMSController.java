@@ -1,7 +1,7 @@
 package org.egov.infra.mdms.controller;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -25,6 +25,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minidev.json.JSONArray;
@@ -58,15 +61,23 @@ public class MDMSController {
 	
 	@PostMapping("_create")
 	@ResponseBody
-	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) {
+	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		Object response = null;
-		//response = mdmsService.getMaster(mdmsCriteriaReq);
-		MdmsCreateResponse mdmsCreateResponse = new MdmsCreateResponse();
-		mdmsCreateResponse.setData(response);
-		mdmsCreateResponse.setResponseInfo(responseInfoFactory.
-				createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
-		return new ResponseEntity<>(mdmsCreateResponse, HttpStatus.OK);
+		try{
+			response = mdmsService.gitPush(mDMSCreateRequest);
+		    Type type = new TypeToken<Map<String, Object>>() {}.getType();
+			Gson gson = new Gson();
+			Map<String, Object> data = gson.fromJson(response.toString(), type);
+			MdmsCreateResponse mdmsCreateResponse = new MdmsCreateResponse();
+			mdmsCreateResponse.setData(data);
+			mdmsCreateResponse.setResponseInfo(responseInfoFactory.
+					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
+			return new ResponseEntity<>(mdmsCreateResponse, HttpStatus.OK);
+		}catch(Exception e){
+			log.error("Error: ",e);
+			throw e;
+		}
 
 		
 	}

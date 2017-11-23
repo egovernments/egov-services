@@ -1,19 +1,28 @@
 package org.egov.infra.mdms.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.egov.MDMSApplicationRunnerImpl;
+import org.egov.infra.mdms.repository.MDMSCreateRepository;
+import org.egov.infra.mdms.utils.MDMSConstants;
+import org.egov.mdms.model.MDMSCreateRequest;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.ModuleDetail;
 import org.egov.tracer.model.CustomException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +31,18 @@ import net.minidev.json.JSONArray;
 @Service
 @Slf4j
 public class MDMSService {
+	
+	public static final Logger logger = LoggerFactory.getLogger(MDMSService.class);
+	
+	@Value("${egov.github.user}")
+	private String userName;
+	
+	@Value("${egov.github.pass}")
+	private String password;
+	
+	@Autowired
+	private MDMSCreateRepository mDMSCreateRepository;
+
 
 	public Map<String, Map<String, JSONArray>> getMaster(MdmsCriteriaReq mdmsCriteriaReq) {
 		Map<String, List<Object>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
@@ -80,6 +101,136 @@ public class MDMSService {
 		JSONArray filteredMasters = JsonPath.read(masters, filterExp);
 		System.out.println("filteredMasters: "+filteredMasters);
 		return filteredMasters;
+	}
+	
+	public String gitPush(MDMSCreateRequest mDMSCreateRequest) throws JsonProcessingException{		
+		ObjectMapper mapper = new ObjectMapper();
+		//get the head of the branch
+		logger.info("Step 1: Getting branch head......");
+		String branchHeadSHA = getBranchHead();
+		logger.info("Step 1 COMPLETED SUCCESSFULLY!");
+		
+		//get the latest commit to that branch and save its sha
+		logger.info("Step 2: Getting Base Tree......");
+		String baseTreeSHA = getBaseTree(branchHeadSHA);
+		logger.info("Step 2 COMPLETED SUCCESSFULLY!");
+		
+		//create a tree with base_tree as last commit and contents to be written
+		logger.info("Step 3: Creating a New Tree......");
+		String content = mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData());
+		String newTreeSHA = createTree(baseTreeSHA, mDMSCreateRequest.getMasterMetaData().getFilePath(), content);
+		logger.info("Step 3 COMPLETED SUCCESSFULLY!");
+		
+		//create a commit for this tree
+		logger.info("Step 4: Creating a New Commit......");
+		String commitMessage = "commit by "+userName+" at epoch time: "+new Date().getTime();
+		String newCommitSHA = createCommit(branchHeadSHA, newTreeSHA, commitMessage);
+		logger.info("Step 4 COMPLETED SUCCESSFULLY!");
+		
+		//push the contents
+		logger.info("Step 5: Pushing the Contents to git......");
+		String pushResponse = pushTheContents(newCommitSHA);
+		logger.info("Step 5 COMPLETED SUCCESSFULLY!");
+		
+		logger.info("Find your changes at: "+mDMSCreateRequest.getMasterMetaData().getFilePath());
+		return pushResponse;
+		
+	}
+	
+	public String getBranchHead(){
+		StringBuilder getBranchHeadUri = new StringBuilder();
+		getBranchHeadUri.append(MDMSConstants.GITHUB_HOST).append(MDMSConstants.EGOV_REPO_PATH)
+		                .append(MDMSConstants.EGOV_REF_PATH);
+		logger.info("URI: "+getBranchHeadUri.toString());
+		Object branchHeadResponse = mDMSCreateRepository.
+				get(getBranchHeadUri.toString(), userName, password);
+		
+		String branchHeadSHA = JsonPath.read(branchHeadResponse.toString(), MDMSConstants.BRANCHHEADSHA_JSONPATH);
+		logger.info("branchHeadSHA: "+branchHeadSHA);
+		
+		return branchHeadSHA;
+		
+	}
+	
+	public String getBaseTree(String branchHeadSHA){
+		StringBuilder getBaseTreeUri = new StringBuilder();
+		getBaseTreeUri.append(MDMSConstants.GITHUB_HOST).append(MDMSConstants.EGOV_REPO_PATH)
+		                .append(MDMSConstants.EGOV_TREE_PATH).append(branchHeadSHA);
+		logger.info("URI: "+getBaseTreeUri.toString());
+		Object baseTreeResponse = mDMSCreateRepository.
+				get(getBaseTreeUri.toString(), userName, password);
+		
+		String baseTreeSHA = JsonPath.read(baseTreeResponse.toString(), MDMSConstants.BASETREESHA_JSONPATH);
+		logger.info("baseTreeSHA: "+branchHeadSHA);
+		
+		return baseTreeSHA;
+		
+	}
+	
+	public String createTree(String baseTreeSHA, String filePath, String contents){
+		StringBuilder getCreateTreeUri = new StringBuilder();
+		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(MDMSConstants.EGOV_REPO_PATH)
+		                .append(MDMSConstants.EGOV_CREATE_TREE_PATH);
+		logger.info("URI: "+getCreateTreeUri.toString());
+    	DocumentContext documentContext = JsonPath.parse(MDMSConstants.CREATE_TREE_REQ);
+    	documentContext.put("$", "base_tree", baseTreeSHA);
+    	documentContext.put("$.tree.*", "path", filePath);
+    	documentContext.put("$.tree.*", "mode", MDMSConstants.GIT_BLOB_MODE);
+    	documentContext.put("$.tree.*", "content", contents);
+
+    	String body = documentContext.jsonString().toString();
+    	logger.info("Body: "+body);
+
+		Object createTreeResponse = mDMSCreateRepository.
+				post(getCreateTreeUri.toString(), body, userName, password);
+		
+		String newTreeSHA = JsonPath.read(createTreeResponse.toString(), MDMSConstants.CREATETREESHA_JSONPATH);
+		logger.info("newTreeSHA: "+newTreeSHA);
+		
+		return newTreeSHA;
+		
+	}
+	
+	public String createCommit(String branchHeadSHA, String newTreeSHA, String message) throws JsonProcessingException{
+		StringBuilder getCreateTreeUri = new StringBuilder();
+		ObjectMapper mapper = new ObjectMapper();
+		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(MDMSConstants.EGOV_REPO_PATH)
+		                .append(MDMSConstants.EGOV_CREATE_COMMIT_PATH);
+		logger.info("URI: "+getCreateTreeUri.toString());
+    	DocumentContext documentContext = JsonPath.parse(MDMSConstants.CREATE_COMMIT_REQ);
+    	String[] parents = new String[1];
+    	parents[0] = branchHeadSHA;
+    	documentContext.put("$", "message", message);
+    	documentContext.put("$", "tree", newTreeSHA);
+    	String body = documentContext.jsonString().toString().replace(":sha", branchHeadSHA);
+    	logger.info("Body: "+body);
+
+		Object createCommitResponse = mDMSCreateRepository.
+				post(getCreateTreeUri.toString(), body, userName, password);
+		
+		String newCommitSHA = JsonPath.read(createCommitResponse.toString(), MDMSConstants.CREATECOMMITSHA_JSONPATH);
+		logger.info("newCommitSHA: "+newCommitSHA);
+		
+		return newCommitSHA;
+		
+	}
+	
+	public String pushTheContents(String newCommitSHA){
+		StringBuilder getPushUri = new StringBuilder();
+		getPushUri.append(MDMSConstants.GITHUB_HOST).append(MDMSConstants.EGOV_REPO_PATH)
+		                .append(MDMSConstants.EGOV_REF_PATH);
+		logger.info("URI: "+getPushUri.toString());
+    	DocumentContext documentContext = JsonPath.parse(MDMSConstants.PUSH_CONTENT_REQ);
+    	documentContext.put("$", "sha", newCommitSHA);
+    	String body = documentContext.jsonString().toString();
+    	logger.info("Body: "+body);
+
+		Object createCommitResponse = mDMSCreateRepository.
+				post(getPushUri.toString(), body, userName, password);
+		
+		logger.info("pushResponse: "+createCommitResponse.toString());
+		
+		return createCommitResponse.toString();
 	}
 
 }

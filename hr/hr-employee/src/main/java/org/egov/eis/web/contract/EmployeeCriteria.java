@@ -72,6 +72,8 @@ public class EmployeeCriteria implements Cloneable {
 
 	@Size(min=1, max=256)
 	private String code;
+	
+        private String codes;
 
 	@DateTimeFormat(pattern = "dd/MM/yyyy")
 	private Date asOnDate;

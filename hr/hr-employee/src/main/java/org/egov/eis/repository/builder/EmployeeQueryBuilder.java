@@ -47,6 +47,8 @@ import org.egov.eis.web.contract.EmployeeCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -201,6 +203,11 @@ public class EmployeeQueryBuilder {
         if (!isEmpty(employeeCriteria.getCode())) {
             selectQuery.append(" AND e.code = :code");
             namedParameters.put("code", employeeCriteria.getCode());
+        }
+        
+        if (!isEmpty(employeeCriteria.getCodes())) {
+            selectQuery.append(" AND e.code IN (:codes) ");
+            namedParameters.put("codes", new ArrayList<>(Arrays.asList(employeeCriteria.getCodes().split(","))) );
         }
 
         if (!isEmpty(employeeCriteria.getDepartmentId())) {

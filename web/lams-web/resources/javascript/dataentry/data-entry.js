@@ -205,7 +205,8 @@ var commomFieldsRules = {
         required: decodeURIComponent(getUrlVars()["type"]) != "land" ? true : false
     },
     registrationFee: {
-        required: true
+        required: true,
+        integerOnly:true
     },
     councilNumber: {
         required: true
@@ -268,13 +269,16 @@ var commomFieldsRules = {
         required: true
     },
     collectedGoodWillAmount: {
-      required: false
+      required: false,
+      integerOnly:true
     },
     collectedSecurityDeposit: {
-      required: true
+      required: true,
+      integerOnly:true
     },
     goodWillAmount: {
-      required: false
+      required: false,
+      integerOnly:true
     }
 
 };

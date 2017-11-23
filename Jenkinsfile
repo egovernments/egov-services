@@ -20,7 +20,7 @@ try {
         currentBuild.displayName = "${BUILD_ID}-${commit_id}"
 
         if (!docker_file_exists) {
-          code_builder.build(path, ci_image, module_name, service_name)
+          code_builder.build(path, ci_image)
         }
         else {
           archiver = load("jenkins/archiver.groovy")

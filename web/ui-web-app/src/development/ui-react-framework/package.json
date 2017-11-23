@@ -1,6 +1,6 @@
 {
   "name": "egov-ui-react-framework",
-  "version": "0.0.5",
+  "version": "0.0.6",
   "description": "Common methods",
   "main": "index.js",
   "scripts": {
@@ -55,7 +55,7 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "egov-common-utility": "0.0.2"
+    "egov-common-utility": "0.0.3"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

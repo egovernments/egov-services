@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.1",
-    "egov-common-utility": "0.0.2",
+    "egov-common-utility": "0.0.3",
     "create-react-class": "^15.5.3",
     "datatables-buttons": "^1.0.3",
     "datatables.net": "^1.10.15",
@@ -50,14 +50,14 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "egov-ui-react-framework": "0.0.5",
-    "egov-asset": "0.0.5",
-    "egov-pgr": "0.0.4",
-    "egov-inventory": "0.0.4",
-    "egov-works": "0.0.4",
-    "egov-perfManagement": "0.0.4",
-    "egov-legal": "0.0.4",
-    "egov-swm": "0.0.4"
+    "egov-ui-react-framework": "0.0.6",
+    "egov-asset": "0.0.6",
+    "egov-pgr": "0.0.5",
+    "egov-inventory": "0.0.5",
+    "egov-works": "0.0.5",
+    "egov-perfManagement": "0.0.5",
+    "egov-legal": "0.0.5",
+    "egov-swm": "0.0.5"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

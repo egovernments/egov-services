@@ -1014,7 +1014,12 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
-  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass,eg_user us WHERE cs.positionid = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.department=dept.id and cs.positionid = pos.id and cs.createddate >= $fromDate and cs.createddate <= $toDate and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid) and us.username = $username
+  - name: categoryid
+    label: reports.pgr.category.name
+    type: number
+    source: seva
+    isMandatory: true    
+  query: select cs.crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS withinsla from submission cs, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass,eg_user us WHERE cs.positionid = ass.positionid and ass.employeeid=us.id and cs.servicecode = ctype.code and cs.department=dept.id and cs.positionid = pos.id and cs.createddate >= $fromDate and cs.createddate <= $toDate and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid and category = $categoryid) and us.username = $username
          and cs.tenantid = $tenantid
          and ctype.tenantid = $tenantid
          and dept.tenantid = $tenantid
@@ -1569,6 +1574,11 @@ ReportDefinitions:
     type: string
     source: seva
     isMandatory: true
+  - name: categoryid
+    label: reports.pgr.category.name
+    type: number
+    source: seva
+    isMandatory: true    
   query: SELECT cs.crn as crn,cs.createddate,cs.name as complainantname,requesteraddress as address,cs.details,cs.status, (select code from submission_attribute sa where sa.key='feedback' and sa.crn=cs.crn) as feedback, CASE WHEN (now() - cs.createddate::timestamp with time zone) < ('01:00:00'::interval * ctype.slahours::double precision) THEN 'Yes'::text ELSE 'No'::text END AS issla
          FROM submission cs,submission_attribute sa,
           eg_boundary boundary, egpgr_complainttype ctype,eg_department dept,egeis_position pos,egeis_assignment ass, eg_user us WHERE
@@ -1579,7 +1589,7 @@ ReportDefinitions:
           and boundarytype =  (select id from eg_boundary_type where hierarchytype =(select id  from eg_hierarchy_type where code = 'ADMIN' and tenantid = $tenantid)
           and name = 'Ward' and tenantid = $tenantid))
           and cs.tenantid=$tenantid
-          and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid)
+          and dept.name = $deptname and ctype.code = (select code from egpgr_complainttype where name=$complainttype and tenantid=$tenantid and category = $categoryid)
           and ctype.tenantid=$tenantid
           and cs.tenantid =$tenantid
           and sa.tenantid =$tenantid

@@ -107,7 +107,7 @@ var dat = {
             "fields":[
                {
                   "type":"tableList",
-                  "jsonPath":"",
+                  "jsonPath":"materialReceipt[0].receiptDetails",
                   "tableList":{
                      "header":[
                         {
@@ -212,6 +212,7 @@ var dat = {
             "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate",
              "pattern": "",
             "type": "datePicker",
+            "maxDate":"today",
             "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
@@ -393,7 +394,7 @@ var dat = {
                   "jsonPath":"materialReceipt[0].mrnNumber",
                   "pattern":"",
                   "type":"text",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":true,
                   "defaultValue":"0",
                   "maxLength":100,
@@ -521,29 +522,42 @@ var dat = {
                      "values":[
 
                 {
-                "name":"material",
-                  "pattern":"",
-                  "type":"autoCompelete",
-                  "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
-                 "isRequired":true,
-                 "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
-                 "depedants":[
-                     {
-                         "jsonPath":"materialReceipt[0].receiptDetails[0].material.description",
-                          "type":"textField",
-                          "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')"
-                       }
-                    ]
+                  "name": "material",
+                  "pattern": "",
+                  "type":"singleValueList",
+                  "jsonPath": "materialReceipt[0].receiptDetails[0].material.code",
+                  "displayJsonPath":"materialReceipt[0].receiptDetails[0].material.name",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
+                  "depedants": [
+                    {
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.code",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].material.code', getVal('materialReceipt[0].receiptDetails[*].material.code'), 'others[0]')"
+                    },
+                    {
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
                 },
                 {
-                   "name":"uom",
-                   "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
-                   "pattern":"",
-                   "type":"textField",
-                   "isRequired":true,
-                   "isDisabled":false,
-                    "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"
+                  "name": "uom",
+                  "jsonPath": "materialReceipt[0].receiptDetails[0].uom.code",
+                  "pattern": "",
+                  "type": "singleValueList",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor",
+                  "depedants": [
+                    {
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.conversionFactor",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('receiptDetails[0].receiptDetails[*].uom.code'), 'others[0]')"
+                    }
+                  ]
                 },
 
                {

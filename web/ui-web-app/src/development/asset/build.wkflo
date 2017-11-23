@@ -14,6 +14,13 @@ def build() {
 try {
     node("slave"){
         checkout scm
+        notifier = load("jenkins/notifier.groovy")
         build()
         }
+} catch (e) {
+    node{
+        echo
+        notifier.notifyBuild("FAILED")
+        throw e
+    }
 }

@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import Api from '../../../../../api/api';
+import {Api} from 'egov-common-utility';
 
 
 var value= "" ;

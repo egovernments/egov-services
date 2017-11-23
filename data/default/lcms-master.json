@@ -535,7 +535,7 @@
     },
     {
       "name": "Criminal Confirmation Case",
-      "code": "CA",
+      "code": "CRCA",
       "active": true,
       "sideCode":"CRMNL",
       "tenantId": "default"
@@ -598,7 +598,7 @@
     },
     {
       "name": "Cr. Anticipatory PIL ",
-      "code": "CAPIL",
+      "code": "CRCAPIL",
       "active": true,
       "sideCode":"CRMNL",
       "tenantId": "default"
@@ -843,7 +843,7 @@
     },
     {
       "name": "Chamber summons",
-      "code": "CS",
+      "code": "CHS",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
@@ -1072,7 +1072,7 @@
     },
     {
       "name": "Contempt petition (writ petition)",
-      "code": "CP",
+      "code": "ORCP",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
@@ -1352,7 +1352,7 @@
     },
     {
       "name": "Income tax application",
-      "code": "ITAP",
+      "code": "ITAPN",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
@@ -1777,7 +1777,7 @@
     },
     {
       "name": "Parsi petition",
-      "code": "PP",
+      "code": "PARP",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
@@ -1896,7 +1896,7 @@
     },
     {
       "name": "Review petition (writ petition)",
-      "code": "RPWP",
+      "code": "ORRPWP",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
@@ -2001,7 +2001,7 @@
     },
     {
       "name": "Show cause notice in cptp",
-      "code": "SCNC",
+      "code": "SCNIC",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
@@ -2253,28 +2253,28 @@
     },
     {
       "name": "Sur tax appeal",
-      "code": "STAL",
+      "code": "SURTAL",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
     },
     {
       "name": "Sur tax application",
-      "code": "STAN",
+      "code": "SURSTAN",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
     },
     {
       "name": "Sur tax reference",
-      "code": "STR",
+      "code": "SURSTR",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"
     },
     {
       "name": "Testamentary petition",
-      "code": "TP",
+      "code": "TAP",
       "active": true,
       "sideCode":"ORGNL",
       "tenantId": "default"

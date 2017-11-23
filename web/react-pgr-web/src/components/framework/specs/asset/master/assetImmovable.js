@@ -1177,7 +1177,7 @@ var dat = {
             "jsonPath": "Assets[0].location",
             "label": "ac.create.Location",
             "pattern": "",
-            "type": "text",
+            "type": "textarea",
             "url": "",
             "isRequired": false,
             "isDisabled": false,

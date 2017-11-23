@@ -718,57 +718,64 @@ class Transaction extends Component {
     var amountValidation=true;
     var amountValidationMsg="";
 
-
-      formData.Depreciation.toDate = toDateCheck;
-      var mainAssetIds = [];
-      for (var i = 0; i < formData.Depreciation.Assets.length; i++) {
-        if (formData.Depreciation.Assets[i].isChecked && formData.Depreciation.Assets[i].isChecked==true) {
-          var collectAssetId = {};
-            collectAssetId = formData.Depreciation.Assets[i].id;
-            mainAssetIds += collectAssetId+",";
-        }
-
-
+    formData.Depreciation.toDate = toDateCheck;
+    var mainAssetIds = [];
+    for (var i = 0; i < formData.Depreciation.Assets.length; i++) {
+      if (formData.Depreciation.Assets[i].isChecked && formData.Depreciation.Assets[i].isChecked==true) {
+        var collectAssetId = {};
+        collectAssetId = formData.Depreciation.Assets[i].id;
+        mainAssetIds += collectAssetId+",";
       }
+    }
+    console.log(mainAssetIds=="");
+    if(mainAssetIds != ""){
       var mainAssetIdssplice = mainAssetIds.slice(0, -1);
-      if(formData.Depreciation.assetIds){
-        formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
-      }
+      formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
+    }
     delete formData.Depreciation.Assets;
 
-              Api.commonApiPost("/asset-services-maha/assets/depreciations/_create", "", formData, "", true).then(function(response){
-                self.props.setLoadingStatus('hide');
-                self.initData();
-                self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
-
-                self.props.setFormData(response);
-              }, function(err) {
-                self.props.setLoadingStatus('hide');
-                self.props.toggleSnackbarAndSetText(true, err.message);
-              })
-              Api.commonApiPost((_url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
-                self.props.setLoadingStatus('hide');
-                self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "wc.create.message.success"), true);
-                setTimeout(function() {
-                  if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-                    if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
-                        var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-                    } else {
-                      if(self.props.actionName == "transaction") {
-                        var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-                      } else {
-                        var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-                      }
-                    }
-
-                    self.props.setRoute(hash);
-                  }
-                }, 1500);
-              }, function(err) {
-                self.props.setLoadingStatus('hide');
-                self.props.toggleSnackbarAndSetText(true, err.message);
-              })
-     }
+    Api.commonApiPost("/asset-services-maha/assets/depreciations/_create", "", formData, "", true).then(function(response){
+      self.props.setLoadingStatus('hide');
+      self.initData();
+      console.log(response.Depreciation.DepreciationDetail=="");
+      if(response.Depreciation.DepreciationDetail == "" || response.Depreciation.DepreciationDetail == null || formData.Depreciation.DepreciationDetail == "undefined"){
+        self.props.toggleSnackbarAndSetText(true, "Depreciation has not been generated for any Asset", false, true);
+        console.log("null");
+      }else if(response.Depreciation.DepreciationDetail!=""){
+        console.log("Not null");
+        self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      }
+      self.props.setFormData(response);
+    }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
+    if(formData.Depreciation.DepreciationDetail == null || formData.Depreciation.DepreciationDetail == "" || formData.Depreciation.DepreciationDetail == "undefined"){
+      console.log("DepreciationDetail is null");
+    }else{
+      Api.commonApiPost((_url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+        self.props.setLoadingStatus('hide');
+        self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "wc.create.message.success"), true);
+        setTimeout(function() {
+        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+            var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+          } else {
+            if(self.props.actionName == "transaction") {
+              var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+            } else {
+              var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+            }
+          }
+          self.props.setRoute(hash);
+        }
+      }, 1500);
+    }, function(err) {
+    self.props.setLoadingStatus('hide');
+    self.props.toggleSnackbarAndSetText(true, err.message);
+  })
+  }
+}
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,isFormValid,match} = this.props;

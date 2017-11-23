@@ -236,7 +236,7 @@ var dat = {
           },
 					{
             "name": "depreciationRate",
-            "jsonPath": "depreciationRate",
+            "jsonPath": "assetCategory.depreciationRate",
             "label": "ac.create.depreciationRate",
             "pattern": "",
             "type": "label",

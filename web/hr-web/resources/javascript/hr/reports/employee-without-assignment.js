@@ -98,11 +98,12 @@ class WithoutAssignment extends React.Component {
     let {asOnDate} = this.state.searchSet;
 
     const renderTr = () => {
+      console.log(result);
         return result.map((item, ind) => {
             return (
                 <tr key={ind}>
-                    <td>item.code </td>
-                    <td>item.name</td>
+                    <td>{item.code}</td>
+                    <td>{item.name}</td>
                 </tr>
             )
         })

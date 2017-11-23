@@ -8,12 +8,12 @@ class LeaveSummary extends React.Component {
         "result": [],
         "searchSet": {
             "employeeCode": "",
-            "department": "",
-            "designation": "",
+            "departmentId": "",
+            "designationId": "",
             "employeeType": "",
             "employeeStatus": "",
             "leaveType": "",
-            "asOnDate": ""
+            "toDate": ""
         },
         "employeeTypes": [],
         "departments": [],
@@ -26,54 +26,39 @@ class LeaveSummary extends React.Component {
     this.handleChange = this.handleChange.bind(this);
     this.searchEmployee = this.searchEmployee.bind(this);
     this.closeWindow = this.closeWindow.bind(this);
-  }
+    this.setInitialState = this.setInitialState.bind(this);
+ }
 
-  componentWillMount() {
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
+ setInitialState(initState) {
+   this.setState(initState);
+ }
 
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    try {
-      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
-      }
-      catch (e) {
-        console.log(e);
-      var employeeType = [];
-    }
+ componentWillMount() {
 
 
+   var _state = {}, _this = this, count = 5;
+   const checkCountAndCall = function(key, res) {
+     _state[key] = res;
+     count--;
+     if(count == 0)
+       _this.setInitialState(_state);
+   }
 
-    var employeeStatusList;
-    var leaveTypes;
-
-    getDropdown("employeeStatus", function(res) {
-      employeeStatusList = res;
-    });
-    getDropdown("leaveTypes", function(res) {
-      leaveTypes = res;
-    });
-
-     this.setState({
-         ...this.state,
-         departments: Object.assign([], assignments_department),
-         designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType),
-         employeeStatuses: Object.assign([], employeeStatusList),
-         leaveTypes: Object.assign([], leaveTypes),
-     });
-
-
-     var _this = this;
+   getDropdown("employeeType", function(res) {
+     checkCountAndCall("employeeTypes", res);
+   });
+   getDropdown("assignments_department", function(res) {
+     checkCountAndCall("departments", res);
+   });
+   getDropdown("assignments_designation", function(res) {
+     checkCountAndCall("designations", res);
+   });
+   getDropdown("leaveTypes", function(res) {
+     checkCountAndCall("leaveTypes", res);
+   });
+   getDropdown("employeeStatus", function(res) {
+     checkCountAndCall("employeeStatuses", res);
+   });
 
      commonApiPost("hr-employee", "employees", "_search", {
        tenantId,
@@ -105,17 +90,17 @@ class LeaveSummary extends React.Component {
 
     var _this = this;
 
-    $('#asOnDate').datepicker({
+    $('#toDate').datepicker({
       format: 'dd/mm/yyyy',
       autoclose: true,
       defaultDate: ""
     });
 
-    $('#asOnDate').on('changeDate', function(e) {
+    $('#toDate').on('changeDate', function(e) {
       _this.setState({
         searchSet: {
           ..._this.state.searchSet,
-          "asOnDate": $("#asOnDate").val(),
+          "toDate": $("#toDate").val(),
         }
       });
     });
@@ -157,12 +142,12 @@ class LeaveSummary extends React.Component {
     var _this = this;
     try {
         flag = 1;
-        commonApiPost("hr-leave", "leaveapplications", "_leavesummaryreport", {...this.state.searchSet, tenantId},function(err, res) {
-          if(res) {
+        commonApiPost("hr-leave", "leaveapplications", "_leavesummaryreport", {...this.state.searchSet, tenantId,pageSize:500},function(err, res) {
+          if(res && res.LeaveApplication) {
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
-                result : res
+                result : res.LeaveApplication
             })
           }else {
             _this.setState({
@@ -180,7 +165,7 @@ class LeaveSummary extends React.Component {
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
     let {result, employeeTypes, departments, designations, employeeStatuses, leaveTypes, employeeList, error} = this.state;
-    let {employeeCode, department, designation, employeeType, employeeStatus, asOnDate, leaveType} = this.state.searchSet;
+    let {employeeCode, departmentId, designationId, employeeType, employeeStatus, toDate, leaveType} = this.state.searchSet;
 
     const renderOptions = function(list)
     {
@@ -249,7 +234,7 @@ class LeaveSummary extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                     <div className="styled-select">
-                                        <select id="department" value={department} onChange={(e) => {handleChange(e, "department")}}>
+                                        <select id="departmentId" value={departmentId} onChange={(e) => {handleChange(e, "departmentId")}}>
                                             <option value="" >Select Department</option>
                                             {renderOptions(departments)}
                                         </select>
@@ -264,7 +249,7 @@ class LeaveSummary extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                     <div className="styled-select">
-                                        <select id="designation" value={designation} onChange={(e) => {handleChange(e, "designation")}}>
+                                        <select id="designationId" value={designationId} onChange={(e) => {handleChange(e, "designationId")}}>
                                             <option value="" >Select Designation</option>
                                             {renderOptions(designations)}
                                         </select>
@@ -336,12 +321,12 @@ class LeaveSummary extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="">As On Date </label>
+                                        <label htmlFor="">As On Date <span>*</span></label>
                                     </div>
                                     <div className="col-sm-6">
                                         <div className="text-no-ui">
                                                 <span><i className="glyphicon glyphicon-calendar"></i></span>
-                                                <input type="text" id="asOnDate" value={asOnDate} onChange={(e) => {handleChange(e, "asOnDate")}}/>
+                                                <input type="text" id="toDate" value={toDate} onChange={(e) => {handleChange(e, "toDate")}} required/>
                                             </div>
                                     </div>
                                 </div>

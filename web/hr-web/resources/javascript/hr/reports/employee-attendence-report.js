@@ -31,7 +31,7 @@ class EmployeeAttendence extends React.Component {
             {name: "September", id: "9"},
             {name: "October", id: "10"},
             {name: "November", id: "11"},
-            {name: "Necember", id: "12"}
+            {name: "December", id: "12"}
         ],
         "calenderYears": [],
         "employeeList" : [],
@@ -73,7 +73,6 @@ class EmployeeAttendence extends React.Component {
    });
 
 
-   var _this = this;
 
    commonApiPost("hr-employee", "employees", "_search", {
      tenantId,
@@ -137,12 +136,13 @@ class EmployeeAttendence extends React.Component {
    try {
         flag = 1;
         commonApiPost("hr-attendance", "attendances", "_attendancereport", {..._this.state.searchSet, tenantId,pageSize:500},function(err, res) {
-          if(res && res.Attendance) {
+          if(res) {
+            console.log(res);
             _this.setState({
               ..._this.state,
                 isSearchClicked: true,
-                noOfDaysInMonth:res.noOfDaysInMonth,
-                noOfWorkingDays:res.noOfWorkingDays,
+                noOfDaysInMonth:res.NoOfDaysInMonth,
+                noOfWorkingDays:res.NoOfWorkingDays,
                 result : res.Attendance
             })
           }else {
@@ -172,6 +172,19 @@ class EmployeeAttendence extends React.Component {
             return list.map((item)=>
             {
                 return (<option key={item.id} value={item.id}>
+                        {item.name}
+                    </option>)
+            })
+        }
+    }
+
+    const renderOptionsYear = function(list)
+    {
+        if(list)
+        {
+            return list.map((item)=>
+            {
+                return (<option key={item.id} value={item.name}>
                         {item.name}
                     </option>)
             })
@@ -281,7 +294,7 @@ class EmployeeAttendence extends React.Component {
                                 <div className="styled-select">
                                     <select id="year" value={year} onChange={(e) => {handleChange(e, "year")}} required>
                                         <option value="">Select Year</option>
-                                        {renderOptions(calenderYears)}
+                                        {renderOptionsYear(calenderYears)}
                                     </select>
                                 </div>
                                 </div>

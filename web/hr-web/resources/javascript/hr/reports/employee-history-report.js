@@ -11,34 +11,31 @@ class EmployeeReport extends React.Component {
     };
 
     this.closeWindow = this.closeWindow.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
+
+  }
+
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
   componentWillMount() {
 
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
-    }
-
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
+    var _state = {}, _this = this, count = 2;
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
     }
 
 
-     this.setState({
-         ...this.state,
-         departments: Object.assign([], assignments_department),
-         designations: Object.assign([], assignments_designation),
-         assignments_department,
-         assignments_designation
-
-     });
-
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("departments", res);
+    });
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("designations", res);
+    });
 
        var _this = this;
        var id = getUrlVars()["id"];
@@ -86,7 +83,7 @@ class EmployeeReport extends React.Component {
 
   render() {
     let { closeWindow} = this;
-    let {result, employeeTypes, departments, designations,assignments_designation,assignments_department} = this.state;
+    let {result, employeeTypes, departments, designations} = this.state;
     let {employeeCode,employeeName, employeeDepartment, employeeDesignation} = this.state;
 
 
@@ -96,8 +93,8 @@ class EmployeeReport extends React.Component {
                 <tr key={ind}>
                     <td>{employeeCode}</td>
                     <td>{employeeName}</td>
-                    <td data-label="designation">{getNameById(assignments_designation,item.designation)}</td>
-                    <td data-label="department">{getNameById(assignments_department,item.department)}</td>
+                    <td data-label="designation">{getNameById(designations,item.designation)}</td>
+                    <td data-label="department">{getNameById(departments,item.department)}</td>
                     <td>{item.fromDate}</td>
                     <td>{item.toDate}</td>
                 </tr>

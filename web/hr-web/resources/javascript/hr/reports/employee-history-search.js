@@ -20,49 +20,39 @@ class EmployeeReport extends React.Component {
     };
     this.handleChange = this.handleChange.bind(this);
     this.searchEmployee = this.searchEmployee.bind(this);
+    this.setInitialState = this.setInitialState.bind(this);
     this.closeWindow = this.closeWindow.bind(this);
+  }
+  
+  setInitialState(initState) {
+    this.setState(initState);
   }
 
   componentWillMount() {
 
-    try {
-      var assignments_designation = !localStorage.getItem("assignments_designation") || localStorage.getItem("assignments_designation") == "undefined" ? (localStorage.setItem("assignments_designation", JSON.stringify(getCommonMaster("hr-masters", "designations", "Designation").responseJSON["Designation"] || [])), JSON.parse(localStorage.getItem("assignments_designation"))) : JSON.parse(localStorage.getItem("assignments_designation"));
-    } catch (e) {
-        console.log(e);
-         var assignments_designation = [];
+
+    var _state = {}, _this = this, count = 4;
+    const checkCountAndCall = function(key, res) {
+      _state[key] = res;
+      count--;
+      if(count == 0)
+        _this.setInitialState(_state);
     }
 
-    try {
-      var assignments_department = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-    } catch (e) {
-        console.log(e);
-      var  assignments_department = [];
-    }
-
-    try {
-      var employeeType = !localStorage.getItem("employeeType") || localStorage.getItem("employeeType") == "undefined" ? (localStorage.setItem("employeeType", JSON.stringify(getCommonMaster("hr-masters", "employeetypes", "EmployeeType").responseJSON["EmployeeType"] || [])), JSON.parse(localStorage.getItem("employeeType"))) : JSON.parse(localStorage.getItem("employeeType"));
-      }
-      catch (e) {
-        console.log(e);
-      var employeeType = [];
-    }
-
-    var employeeStatusList;
-
+    getDropdown("employeeType", function(res) {
+      checkCountAndCall("employeeTypes", res);
+    });
+    getDropdown("assignments_department", function(res) {
+      checkCountAndCall("departments", res);
+    });
+    getDropdown("assignments_designation", function(res) {
+      checkCountAndCall("designations", res);
+    });
     getDropdown("employeeStatus", function(res) {
-      employeeStatusList = res;
+      checkCountAndCall("status", res);
     });
 
-     this.setState({
-         ...this.state,
-         departments: Object.assign([], assignments_department),
-         designations: Object.assign([], assignments_designation),
-         employeeTypes: Object.assign([], employeeType),
-         status: Object.assign([], employeeStatusList),
-         assignments_department,
-         assignments_designation
 
-     });
   }
 
   componentDidUpdate(prevProps, prevState)
@@ -126,7 +116,7 @@ class EmployeeReport extends React.Component {
 
   render() {
     let {handleChange, searchEmployee, closeWindow} = this;
-    let {result, employeeTypes, departments, status, employeeStatusList, designations,assignments_designation,assignments_department} = this.state;
+    let {result, employeeTypes, departments, status, employeeStatusList, designations} = this.state;
     let {code, departmentId, designationId, employeeType, employeeStatus} = this.state.searchSet;
 
     const renderOptions = function(list)
@@ -148,8 +138,8 @@ class EmployeeReport extends React.Component {
                 <tr key={ind}>
                     <td>{item.code}</td>
                     <td>{item.name}</td>
-                    <td data-label="designation">{getNameById(assignments_designation,item.assignments[0].designation)}</td>
-                    <td data-label="department">{getNameById(assignments_department,item.assignments[0].department)}</td>
+                    <td data-label="designation">{getNameById(designations,item.assignments[0].designation)}</td>
+                    <td data-label="department">{getNameById(departments,item.assignments[0].department)}</td>
                     <td><a href={"app/hr/reports/employee-history-report.html?id=" + item.id} >Employee History </a></td>
                 </tr>
             )

@@ -182,7 +182,7 @@ public class OpeningBalanceService extends DomainService {
 						{
 							throw new CustomException("uomCode", "UOM Is Required");
 						}
-						if(isEmpty(detail.getAcceptedQty()))
+						if(isEmpty(detail.getReceivedQty()))
 						{
 							throw new CustomException("receivedQty", "Quantity Is Required");
 						}

@@ -34,7 +34,22 @@ public class Uom   {
 
   @JsonProperty("code")
   private String code = null;
-
+  
+  @JsonProperty("description")
+  private String description = null;
+  
+  @JsonProperty("baseuom")
+  private Boolean baseuom = false;
+  
+  @JsonProperty("uomCategory")
+  private String uomCategory = null;
+  
+  @JsonProperty("fromDate")
+  private Long fromDate;
+    
+  @JsonProperty("toDate")
+  private Long toDate;
+  
   @JsonProperty("conversionFactor")
   private BigDecimal conversionFactor = null;
 
@@ -123,6 +138,71 @@ public class Uom   {
   public void setCode(String code) {
     this.code = code;
   }
+  
+  public Uom description(String description) {
+	    this.description = description;
+	    return this;
+	  }
+  
+  public String getDescription() {
+		return description;
+	}
+
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	  public Uom baseuom(Boolean baseuom) {
+		    this.baseuom = baseuom;
+		    return this;
+		  }
+
+	public Boolean getBaseuom() {
+		return baseuom;
+	}
+
+	public void setBaseuom(Boolean baseuom) {
+		this.baseuom = baseuom;
+	}
+
+	  public Uom uomCategory(String uomCategory) {
+		    this.uomCategory = uomCategory;
+		    return this;
+		  }
+	
+	public String getUomCategory() {
+		return uomCategory;
+	}
+
+	public void setUomCategory(String uomCategory) {
+		this.uomCategory = uomCategory;
+	}
+
+	  public Uom fromDate(Long fromDate) {
+		    this.fromDate = fromDate;
+		    return this;
+		  }
+	
+	public Long getFromDate() {
+		return fromDate;
+	}
+	
+	public void setFromDate(Long fromDate) {
+		this.fromDate = fromDate;
+	}
+	
+	  public Uom toDate(Long toDate) {
+		    this.toDate = toDate;
+		    return this;
+		  }
+
+	public Long getToDate() {
+		return toDate;
+	}
+
+	public void setToDate(Long toDate) {
+		this.toDate = toDate;
+	}
 
   public Uom conversionFactor(BigDecimal conversionFactor) {
     this.conversionFactor = conversionFactor;
@@ -200,6 +280,11 @@ public class Uom   {
         Objects.equals(this.tenantId, uom.tenantId) &&
         Objects.equals(this.name, uom.name) &&
         Objects.equals(this.code, uom.code) &&
+        Objects.equals(this.description, uom.description) &&
+        Objects.equals(this.uomCategory, uom.uomCategory) &&
+        Objects.equals(this.baseuom, uom.baseuom) &&
+        Objects.equals(this.fromDate, uom.fromDate) &&
+        Objects.equals(this.toDate, uom.toDate) &&
         Objects.equals(this.conversionFactor, uom.conversionFactor) &&
         Objects.equals(this.active, uom.active) &&
         Objects.equals(this.auditDetails, uom.auditDetails);
@@ -207,7 +292,7 @@ public class Uom   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, name, code, conversionFactor, active, auditDetails);
+    return Objects.hash(id, tenantId, name, code,description, uomCategory, baseuom, fromDate, toDate, conversionFactor, active, auditDetails);
   }
 
   @Override
@@ -219,6 +304,11 @@ public class Uom   {
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
+    sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    uomCategory: ").append(toIndentedString(uomCategory)).append("\n");
+    sb.append("    baseuom: ").append(toIndentedString(baseuom)).append("\n");
+    sb.append("    fromDate: ").append(toIndentedString(fromDate)).append("\n");
+    sb.append("    toDate: ").append(toIndentedString(toDate)).append("\n");
     sb.append("    conversionFactor: ").append(toIndentedString(conversionFactor)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

@@ -142,27 +142,27 @@ var dat = {
                   "name": "material",
                   "pattern": "",
                   "type":"autoCompelete",
-                  "jsonPath": "priceLists[0].priceListDetails[0].material.code",
-                  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+                  "jsonPath": "materialReceipt[0].receiptDetails[0].material.code",
+                  "displayJsonPath":"materialReceipt[0].receiptDetails[0].material.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
                   "depedants": [
                     {
-                      "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.code",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')"
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].material.code', getVal('materialReceipt[0].receiptDetails[*].material.code'), 'others[0]')"
                     },
                     {
-                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.conversionFactor",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')"
                     }
                   ]
                 },
                 {
                   "name": "uom",
-                  "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                  "jsonPath": "materialReceipt[0].receiptDetails[0].uom.code",
                   "pattern": "",
                   "type": "singleValueList",
                   "isRequired": true,
@@ -170,9 +170,9 @@ var dat = {
                   "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor",
                   "depedants": [
                     {
-                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.conversionFactor",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')"
                     }
                   ]
                 },
@@ -331,28 +331,28 @@ var dat = {
                {
                   "name": "material",
                   "pattern": "",
-                  "type":"autoCompelete",
-                  "jsonPath": "priceLists[0].priceListDetails[0].material.code",
-                  "displayJsonPath":"priceLists[0].priceListDetails[0].material.name",
+                  "type":"singleValueList",
+                  "jsonPath": "materialReceipt[0].receiptDetails[0].material.code",
+                  "displayJsonPath":"materialReceipt[0].receiptDetails[0].material.name",
                   "isRequired": true,
                   "isDisabled": false,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
                   "depedants": [
                     {
-                      "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.code",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')"
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].material.code', getVal('materialReceipt[0].receiptDetails[*].material.code'), 'others[0]')"
                     },
                     {
-                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.conversionFactor",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')"
                     }
                   ]
                 },
                 {
                   "name": "uom",
-                  "jsonPath": "priceLists[0].priceListDetails[0].uom.code",
+                  "jsonPath": "materialReceipt[0].receiptDetails[0].uom.code",
                   "pattern": "",
                   "type": "singleValueList",
                   "isRequired": true,
@@ -360,9 +360,9 @@ var dat = {
                   "url": "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor",
                   "depedants": [
                     {
-                      "jsonPath": "priceLists[0].priceListDetails[0].uom.conversionFactor",
+                      "jsonPath": "materialReceipt[0].receiptDetails[0].uom.conversionFactor",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')"
+                      "valExp": "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('receiptDetails[0].receiptDetails[*].uom.code'), 'others[0]')"
                     }
                   ]
                 },
@@ -523,7 +523,7 @@ var dat = {
                 {
                 "name":"material",
                   "pattern":"",
-                  "type":"singleValueList",
+                  "type":"autoCompelete",
                   "jsonPath":"materialReceipt[0].receiptDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
@@ -540,7 +540,7 @@ var dat = {
                    "name":"uom",
                    "jsonPath":"materialReceipt[0].receiptDetails[0].uom.code",
                    "pattern":"",
-                   "type":"singleValueList",
+                   "type":"textField",
                    "isRequired":true,
                    "isDisabled":false,
                     "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description"

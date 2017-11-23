@@ -7,7 +7,7 @@ var dat = {
     "groups": [
       {
         "name": "search",
-        "label": "purchaseorder.search.title",
+        "label": "nventory.purchaseorder.search.group.title",
         "fields": [
           {
             "name": "ids",
@@ -20,7 +20,7 @@ var dat = {
           {
             "name": "store",
             "jsonPath": "store",
-            "label": "purchaseorder.create.store",
+            "label": "inventory.store.name",
             "type": "number",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.store"
@@ -28,7 +28,7 @@ var dat = {
           {
             "name": "purchaseOrderNumber",
             "jsonPath": "purchaseOrderNumber",
-            "label": "purchaseorder.create.purchaseOrderNumber",
+            "label":  "inventory.purchaseorder.number",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.purchaseOrderNumber"
@@ -36,7 +36,7 @@ var dat = {
           {
             "name": "purchaseOrderDate",
             "jsonPath": "purchaseOrderDate",
-            "label": "purchaseorder.create.purchaseOrderDate",
+            "label":  "inventory.purchaseorder.date",
             "type": "number",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.purchaseOrderDate"
@@ -44,7 +44,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "rateType",
-            "label": "purchaseorder.create.rateType",
+            "label": "inventory.rateType", 
             "type": "singleValueList",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.rateType"
@@ -52,7 +52,7 @@ var dat = {
           {
             "name": "supplierCode",
             "jsonPath": "supplierCode",
-            "label": "purchaseorder.create.supplierCode",
+            "label": "inventory.supplier.name",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.supplierCode"
@@ -60,19 +60,10 @@ var dat = {
           {
             "name": "status",
             "jsonPath": "status",
-            "label": "purchaseorder.create.status",
+            "label": "inventory.purchaseorder.status",
             "type": "text",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.status"
-          },
-          {
-            "name": "sortBy",
-            "jsonPath": "sortBy",
-            "label": "purchaseorder.create.sortBy",
-            "type": "text",
-            "isDisabled": false,
-            "defaultValue": "id",
-            "patternErrorMsg": "purchaseorder.create.field.message.sortBy"
           }
         ]
       }
@@ -80,13 +71,13 @@ var dat = {
     "result": {
       "header": [
         {
-          "label": "purchaseorder.search.result.purchaseOrderNumber"
+          "label": "inventory.purchaseorder.number"
         },
         {
-          "label": "purchaseorder.search.result.purchaseOrderDate"
+          "label": "inventory.purchaseorder.date"
         },
         {
-          "label": "purchaseorder.search.result.store"
+          "label": "inventory.store.name"
         }
       ],
       "values": [
@@ -106,15 +97,15 @@ var dat = {
     "groups": [
       {
         "name": "Group1",
-        "label": "purchaseorder.create.group.title.Group1",
+        "label": "inventory.purchaseorder.create.group.title",
         "fields": [
           {
             "name": "code",
             "jsonPath": "purchaseOrders[0].store.code",
-            "label": "purchaseorder.create.store.code",
+            "label": "inventory.store.name",
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 50,
@@ -125,32 +116,22 @@ var dat = {
           {
             "name": "purchaseOrderNumber",
             "jsonPath": "purchaseOrders[0].purchaseOrderNumber",
-            "label": "purchaseorder.create.purchaseOrderNumber",
+            "label": "inventory.purchaseorder.number",
             "pattern": "",
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
             "defaultValue": "",
-            "patternErrorMsg": ""
+            "patternErrorMsg": "",
+            "isHidden":true
           },
           {
             "name": "purchaseOrderDate",
             "jsonPath": "purchaseOrders[0].purchaseOrderDate",
-            "label": "purchaseorder.create.purchaseOrderDate",
+            "label": "inventory.purchaseorder.date",
             "pattern": "",
-            "type": "number",
+            "type": "datePicker",
             "isRequired": true,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
-            "name": "purchaseType",
-            "jsonPath": "purchaseOrders[0].purchaseType",
-            "label": "purchaseorder.create.purchaseType",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
@@ -158,21 +139,39 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "purchaseOrders[0].rateType",
-            "label": "purchaseorder.create.rateType",
+            "label": "inventory.rateType", 
             "pattern": "",
             "type": "singleValueList",
+            "defaultValue":[
+              {key: null, value: "-- Please Select --"},
+              {
+                 "key":"DGSC Rate Contract",
+                 "value":"DGSC Rate Contract"
+              },
+              {
+                 "key":"ULB Rate Contract",
+                 "value":"ULB Rate Contract"
+              },
+              {
+                 "key":"One Time Tender",
+                 "value":"One Time Tender"
+              },
+              {
+                 "key":"Quotation",
+                 "value":"Quotation"
+              }
+            ],
             "isRequired": true,
             "isDisabled": false,
-            "defaultValue": "",
             "patternErrorMsg": ""
           },
           {
             "name": "code",
             "jsonPath": "purchaseOrders[0].supplier.code",
-            "label": "purchaseorder.create.supplier.code",
+            "label":  "inventory.supplier.name",
             "pattern": "^[a-zA-Z0-9]+$",
-            "type": "text",
-            "isRequired": false,
+            "type": "singleValueList",
+            "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 50,
@@ -183,31 +182,33 @@ var dat = {
           {
             "name": "advanceAmount",
             "jsonPath": "purchaseOrders[0].advanceAmount",
-            "label": "purchaseorder.create.advanceAmount",
+            "label": "inventory.advanceAmount",
             "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
+            "maxLength": 10,
             "patternErrorMsg": ""
           },
           {
             "name": "advancePercentage",
             "jsonPath": "purchaseOrders[0].advancePercentage",
-            "label": "purchaseorder.create.advancePercentage",
+            "label":  "inventory.advancePercentage",
             "pattern": "",
             "type": "number",
             "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
+            "maxLength": 3,
             "patternErrorMsg": ""
           },
           {
             "name": "expectedDeliveryDate",
             "jsonPath": "purchaseOrders[0].expectedDeliveryDate",
-            "label": "purchaseorder.create.expectedDeliveryDate",
+            "label":"inventory.expectedDeliveryDate",
             "pattern": "",
-            "type": "number",
+            "type": "datePicker",
             "isRequired": false,
             "isDisabled": false,
             "defaultValue": "",
@@ -216,7 +217,7 @@ var dat = {
           {
             "name": "deliveryTerms",
             "jsonPath": "purchaseOrders[0].deliveryTerms",
-            "label": "purchaseorder.create.deliveryTerms",
+             "label":"inventory.deliveryTerms",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -228,7 +229,7 @@ var dat = {
           {
             "name": "paymentTerms",
             "jsonPath": "purchaseOrders[0].paymentTerms",
-            "label": "purchaseorder.create.paymentTerms",
+            "label":"inventory.paymentTerms",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -240,7 +241,7 @@ var dat = {
           {
             "name": "remarks",
             "jsonPath": "purchaseOrders[0].remarks",
-            "label": "purchaseorder.create.remarks",
+            "label":  "inventory.remarks",
             "pattern": "",
             "type": "textarea",
             "isRequired": false,
@@ -250,24 +251,13 @@ var dat = {
             "patternErrorMsg": ""
           },
           {
-            "name": "stateId",
-            "jsonPath": "purchaseOrders[0].stateId",
-            "label": "purchaseorder.create.stateId",
-            "pattern": "",
-            "type": "number",
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": ""
-          },
-          {
             "name": "designation",
             "jsonPath": "purchaseOrders[0].designation",
-            "label": "purchaseorder.create.designation",
+            "label": "inventory.designation",
             "pattern": "",
             "type": "text",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "maxLength": 128,
             "patternErrorMsg": ""
@@ -278,52 +268,87 @@ var dat = {
             "tableList": {
               "header": [
                 {
-                  "label": "purchaseorder.create.material"
+                  "label": "inventory.materialName"
                 },
                 {
-                  "label": "purchaseorder.create.material description"
+                  "label": "inventory.indent.number"
                 },
                 {
-                  "label": "purchaseorder.create.uom"
+                  "label": "inventory.materialDesc"
                 },
                 {
-                  "label": "purchaseorder.create.Rate contract"
+                  "label": "inventory.totalindent.quantity"
                 },
                 {
-                  "label": "purchaseorder.create.quantity"
+                  "label": "inventory.Uom" 
                 },
                 {
-                  "label": "purchaseorder.create.unit price"
+                  "label": "inventory.ratecontract"
                 },
                 {
-                  "label": "purchaseorder.create.total value"
+                  "label": "inventory.orderqty"
                 },
                 {
-                  "label": "purchaseorder.create.Tender Quantity"
+                  "label": "inventory.unitRate"
                 },
                 {
-                  "label": "purchaseorder.create.Used Quantity"
+                  "label": "reports.inventory.openbal.TotalAmount"
+                },
+                {
+                  "label": "inventory.TenderQuantity"
+                },
+                {
+                  "label": "inventory.usedQuantity"
                 }
               ],
               "values": [
                 {
-                  "name": "code",
+                  "name": "material",
                   "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].material.code",
-                  "label": "purchaseorder.create.material.code",
+                  "label": "",
                   "pattern": "",
-                  "type": "text",
-                  "isRequired": false,
+                  "type": "autoCompelete",
+                  "isRequired": true,
                   "isDisabled": false,
                   "defaultValue": "",
                   "maxLength": 50,
-                  "minLength": 5,
                   "patternErrorMsg": "",
-                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name"
+                  "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name|$..description|$..purchaseUom.code",
+                  "depedants": [
+                    {
+                      "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].material.description",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].material.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].material.code'), 'others[0]')"
+                    },
+                    {
+                      "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].uom.code",
+                      "type": "textField",
+                      "valExp": "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].material.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].material.code'), 'others[1]')"	
+                    }
+                    // {
+                    //   "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].uom.conversionFactor",
+                    //   "type": "textField",
+                    //   "valExp": "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].uom.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].uom.code'), 'others[0]')"
+                    // }
+                  ]
                 },
                 {
-                  "name": "name",
-                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].material.name",
-                  "label": "purchaseorder.create.material.name",
+                  "name": "indentNumber",
+                  "jsonPath": "purchaseOrders[0].purchaseIndentDetails[0].purchaseIndentDetails[0].indentDetail[0].indentNumber",
+                  "label": "",
+                  "pattern": "",
+                  "type": "text",
+                  "isRequired": false,
+                  "isDisabled": true,
+                  "defaultValue": "",
+                  "maxLength": 50,
+                  "minLength": 5,
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "materialDescription",
+                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].material.description",
+                  "label": "",
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
@@ -334,11 +359,22 @@ var dat = {
                   "patternErrorMsg": ""
                 },
                 {
-                  "name": "code",
-                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].uom.code",
-                  "label": "purchaseorder.create.uom.code",
+                  "name": "totalIndentQuantity",
+                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].purchaseIndentDetails[0].quantity",
+                  "label": "",
                   "pattern": "",
-                  "type": "text",
+                  "type": "number",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "uom",
+                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].uom.code",
+                  "label":"",
+                  "pattern": "",
+                  "type": "singleValueList",
                   "isRequired": false,
                   "isDisabled": false,
                   "defaultValue": "",
@@ -348,9 +384,9 @@ var dat = {
                 {
                   "name": "rateContractNumber",
                   "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber",
-                  "label": "purchaseorder.create.priceList.rateContractNumber",
+                  "label": "",
                   "pattern": "",
-                  "type": "text",
+                  "type": "singleValueList",
                   "isRequired": false,
                   "isDisabled": false,
                   "defaultValue": "",
@@ -359,7 +395,7 @@ var dat = {
                 {
                   "name": "orderQuantity",
                   "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].orderQuantity",
-                  "label": "purchaseorder.create.purchaseOrderDetails[0].orderQuantity",
+                  "label": "",
                   "pattern": "",
                   "type": "number",
                   "isRequired": false,
@@ -370,7 +406,40 @@ var dat = {
                 {
                   "name": "unitPrice",
                   "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].unitPrice",
-                  "label": "purchaseorder.create.purchaseOrderDetails[0].unitPrice",
+                  "label": "",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "TotalAmount",
+                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].totalAmount",
+                  "label": "",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "tenderQuantity",
+                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].tenderQuantity",
+                  "label": "",
+                  "pattern": "",
+                  "type": "number",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+                  "patternErrorMsg": ""
+                },
+                {
+                  "name": "usedQuantity",
+                  "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].usedQuantity",
+                  "label": "",
                   "pattern": "",
                   "type": "number",
                   "isRequired": false,

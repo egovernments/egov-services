@@ -299,6 +299,7 @@ public class LeaveApplicationQueryBuilder {
         if (leaveSearchRequest.getLeaveStatus() != null) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" la.status = ?");
+            preparedStatementValues.add(leaveSearchRequest.getLeaveStatus());
         }
 
         if (leaveSearchRequest.getEmployeeIds() != null && !leaveSearchRequest.getEmployeeIds().isEmpty()) {

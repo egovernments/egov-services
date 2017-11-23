@@ -1059,6 +1059,7 @@ if (assetDetails && Object.keys(assetDetails).length) {
 
 $('#commencementDate').datepicker({
                     format: 'dd/mm/yyyy',
+                    endDate : new Date(),
                     autoclose:true
 
                 });

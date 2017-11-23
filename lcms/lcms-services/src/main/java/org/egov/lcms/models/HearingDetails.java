@@ -30,7 +30,7 @@ public class HearingDetails {
 
 	@JsonProperty("nextHearingDate")
 	private Long nextHearingDate = null;
-	
+
 	@JsonProperty("nextHearingTime")
 	private String nextHearingTime = null;
 
@@ -46,16 +46,22 @@ public class HearingDetails {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
-	
+
 	@JsonProperty("judgeMentDate")
 	private Long judgeMentDate = null;
-	
+
 	@JsonProperty("advocateOpinion")
 	private String advocateOpinion = null;
-	
+
 	@JsonProperty("furtherProcesssDetails")
 	private String furtherProcesssDetails = null;
-	
+
 	@JsonProperty("darkhasthDueDate")
 	private Long darkhasthDueDate = null;
+
+	@JsonProperty("currentHearingDate")
+	private Long currentHearingDate = null;
+
+	@JsonProperty("currentHearingTime")
+	private String currentHearingTime = null;
 }

@@ -241,4 +241,21 @@ public class CaseBuilder {
 		return eventSearchQuery.toString();
 	}
 
+	public String searchHearingDetails(String code, String tenantId, String tableName,
+			List<Object> preparedStatementValues) {
+		StringBuilder searchQuery = new StringBuilder();
+		searchQuery.append("SELECT nexthearingtime, nexthearingdate FROM " + tableName);
+		searchQuery.append(" WHERE casecode=?");
+		preparedStatementValues.add(code);
+		
+		if(tenantId != null && !tenantId.isEmpty()){
+			searchQuery.append(" AND tenantId=?");
+			preparedStatementValues.add(tenantId);
+		}
+		
+		searchQuery.append(" ORDER BY createdtime DESC LIMIT 1");
+		
+		return searchQuery.toString();
+	}
+
 }

@@ -46,7 +46,7 @@ public class UniqueCodeGeneration {
 		try {
 
 			String response = tenantRepository.getTenantRepository(tenantId, requestInfo);
-			String SequenceNo = "";
+			String sequenceNo = "";
 
 			SearchTenantResponse searchTenantResponse = null;
 			String ulbCode = "";
@@ -58,13 +58,11 @@ public class UniqueCodeGeneration {
 
 			ulbCode = searchTenantResponse.getTenant().get(0).getCode();
 			if (ulbCode != null && !ulbCode.isEmpty()) {
-				IdGenerationResponse idResponse;
 
-				idResponse = idGenerationRepository.getIdGeneration(tenantId, requestInfo, ulbFormat, ulbName);
+				IdGenerationResponse idResponse = idGenerationRepository.getIdGeneration(tenantId, requestInfo, ulbFormat, ulbName);
 				if (idResponse != null && idResponse.getIdResponses() != null
 						&& idResponse.getIdResponses().size() > 0) {
-					idResponse.getIdResponses().get(0).getId();
-					SequenceNo = idResponse.getIdResponses().get(0).getId();
+					sequenceNo = idResponse.getIdResponses().get(0).getId();
 				}
 
 			} else {
@@ -74,13 +72,13 @@ public class UniqueCodeGeneration {
 			}
 
 			if (isCaseRef) {
-				uniqueCode = caseCode + SequenceNo;
+				uniqueCode = caseCode + sequenceNo;
 			} 
-			else if ( isSummon ){
-				uniqueCode =  SequenceNo;
+			else if (isSummon){
+				uniqueCode =  sequenceNo;
 			}
 			else {
-				uniqueCode = ulbCode + SequenceNo;
+				uniqueCode = ulbCode + sequenceNo;
 			}
 
 		} catch (Exception e) {

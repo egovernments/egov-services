@@ -6,11 +6,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
+import org.egov.lcms.models.IdGenerationResponse;
 import org.egov.lcms.models.Opinion;
 import org.egov.lcms.models.OpinionRequest;
 import org.egov.lcms.models.OpinionResponse;
 import org.egov.lcms.models.OpinionSearchCriteria;
 import org.egov.lcms.models.RequestInfoWrapper;
+import org.egov.lcms.repository.IdGenerationRepository;
 import org.egov.lcms.repository.OpinionRepository;
 import org.egov.lcms.util.UniqueCodeGeneration;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
@@ -36,17 +38,26 @@ public class OpinionService {
 	ResponseFactory responseFactory;
 
 	@Autowired
+	OpinionRepository opinionRepository;
+
+	@Autowired
 	UniqueCodeGeneration uniqueCodeGeneration;
 
 	@Autowired
-	OpinionRepository opinionRepository;
+	IdGenerationRepository idGenerationRepository;
 
 	public OpinionResponse createOpinion(OpinionRequest opinionRequest) throws Exception {
 		List<Opinion> opinions = opinionRequest.getOpinions();
 		RequestInfo requestInfo = opinionRequest.getRequestInfo();
 		for (Opinion opinion : opinions) {
-			String code = uniqueCodeGeneration.getUniqueCode(opinion.getTenantId(), requestInfo,
-					propertiesManager.getOpinionUlbFormat(), propertiesManager.getOpinionUlbName(),Boolean.FALSE,null,Boolean.FALSE);
+			String sequenceNo = "";
+			IdGenerationResponse idResponse = idGenerationRepository.getIdGeneration(opinion.getTenantId(), requestInfo,
+					propertiesManager.getOpinionUlbFormat(), propertiesManager.getOpinionUlbName());
+			if (idResponse != null && idResponse.getIdResponses() != null && idResponse.getIdResponses().size() > 0) {
+				sequenceNo = idResponse.getIdResponses().get(0).getId();
+			}
+
+			String code = opinion.getDepartmentName().getCode() + sequenceNo;
 			opinion.setCode(code);
 		}
 		kafkaTemplate.send(propertiesManager.getOpinionCreateValidated(), opinionRequest);
@@ -58,11 +69,12 @@ public class OpinionService {
 		return getResponseInfo(opinionRequest);
 	}
 
-	public OpinionResponse searchOpinion(RequestInfoWrapper requestInfoWrapper, OpinionSearchCriteria opinionRequest) throws Exception {
+	public OpinionResponse searchOpinion(RequestInfoWrapper requestInfoWrapper, OpinionSearchCriteria opinionRequest)
+			throws Exception {
 		List<Opinion> opinions = opinionRepository.search(opinionRequest, requestInfoWrapper);
 		ResponseInfo responseInfo = responseFactory.getResponseInfo(requestInfoWrapper.getRequestInfo(),
 				HttpStatus.CREATED);
-		OpinionResponse response = new OpinionResponse(responseInfo,opinions);		
+		OpinionResponse response = new OpinionResponse(responseInfo, opinions);
 		return response;
 	}
 

@@ -411,7 +411,7 @@ public class CaseService {
 	private String getString(Object object) {
 		return object == null ? null : object.toString();
 	}
-	
+
 	/**
 	 * This will filter the Hearing detail
 	 * 
@@ -591,6 +591,18 @@ public class CaseService {
 							propertiesManager.getHearingDetailsUlbFormat(),
 							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 					hearingDetails.setCode(code);
+
+					List<Object> hearingDateValues = caseSearchRepository.searchHearingDetailsQuery(casee.getCode(),
+							casee.getTenantId());
+					if (hearingDateValues != null && hearingDateValues.size() > 0) {
+						if (hearingDateValues.get(0) != null)
+							hearingDetails.setCurrentHearingTime(hearingDateValues.get(0).toString());
+						if (hearingDateValues.get(1) != null)
+							hearingDetails.setCurrentHearingDate(Long.valueOf(hearingDateValues.get(1).toString()));
+					} else {
+						hearingDetails.setCurrentHearingDate(casee.getSummon().getHearingDate());
+						hearingDetails.setCurrentHearingTime(casee.getSummon().getHearingTime());
+					}
 
 					if (hearingDetails.getNextHearingDate() != null) {
 						createEvents(casee, hearingDetails, requestInfo);

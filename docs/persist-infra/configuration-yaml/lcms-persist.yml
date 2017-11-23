@@ -1078,7 +1078,7 @@ serviceMaps:
     description: create hearingdetails in lcms
     fromTopic: lcms-hearingdetails-create
     queryMaps:
-    - query: INSERT INTO egov_lcms_hearing_details (code,caseJudgeMent,caseFinalDecision,caseStatus,nextHearingDate,nextHearingTime,attendees,judges,tenantId,casecode,judgeMentDate,advocateOpinion,furtherProcesssDetails,darkhasthDueDate,createdBy,lastModifiedBy,createdTime,lastModifiedTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_hearing_details (code,caseJudgeMent,caseFinalDecision,caseStatus,nextHearingDate,nextHearingTime,attendees,judges,tenantId,casecode,judgeMentDate,advocateOpinion,furtherProcesssDetails,darkhasthDueDate,createdBy,lastModifiedBy,createdTime,lastModifiedTime, currentHearingDate, currentHearingTime) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.cases.*.hearingDetails.*
       jsonMaps:
       - jsonPath: $.hearingDetails.*.code
@@ -1130,6 +1130,11 @@ serviceMaps:
         type: CURRENTDATE
         dbType: LONG
         
+      - jsonPath: $.hearingDetails.*.currentHearingDate
+        type: LONG
+      
+      - jsonPath: $.hearingDetails.*.currentHearingTime
+
     - query: UPDATE egov_lcms_case SET casestatus=? WHERE code=? AND tenantId=?;
       basePath: $.cases.*
       jsonMaps:

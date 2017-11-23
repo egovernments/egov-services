@@ -121,13 +121,13 @@ public class CaseSearchRepository {
 				casee.setHearingDetails(searchHearingDetails(casee));
 				casee.setReferenceEvidences(searchRefernceEvidence(casee));
 			} else {
-				
+
 				Map<String, String> masterMap = new HashMap<>();
 				RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 				requestInfoWrapper.setRequestInfo(requestInfo);
-				
+
 				List<CaseStatus> caseStatusList = new ArrayList<CaseStatus>();
-				
+
 				if (casee.getCaseStatus() != null && casee.getCaseStatus().getCode() != null) {
 
 					masterMap.put("caseStatus", casee.getCaseStatus().getCode());
@@ -149,7 +149,7 @@ public class CaseSearchRepository {
 									});
 						}
 					}
-					
+
 					if (caseStatusList != null && caseStatusList.size() > 0)
 						casee.setCaseStatus(caseStatusList.get(0));
 				}
@@ -304,5 +304,31 @@ public class CaseSearchRepository {
 			return events;
 
 		return null;
+	}
+
+	public List<Object> searchHearingDetailsQuery(String code, String tenantId) {
+
+		List<Object> hearingValues = new ArrayList<Object>();
+		final List<Object> preparedStatementValues = new ArrayList<Object>();
+		final String queryStr = caseBuilder.searchHearingDetails(code, tenantId,
+				ConstantUtility.HEARING_DETAILS_TABLE_NAME, preparedStatementValues);
+
+		try {
+
+			List<Map<String, Object>> hearingDetailsValues = jdbcTemplate.queryForList(queryStr,
+					preparedStatementValues.toArray());
+			for (Map<String, Object> maps : hearingDetailsValues) {
+				if (maps.get("nexthearingtime") != null)
+					hearingValues.add(maps.get("nexthearingtime"));
+				if (maps.get("nexthearingdate") != null)
+					hearingValues.add(maps.get("nexthearingdate"));
+			}
+
+		} catch (Exception ex) {
+			log.info("the exception is :" + ex.getMessage());
+			throw new CustomException(propertiesManager.getCaseDetailsResponseErrorCode(),
+					propertiesManager.getCaseDetailsResponseErrorMsg());
+		}
+		return hearingValues != null ? hearingValues : null;
 	}
 }

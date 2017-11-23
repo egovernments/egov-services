@@ -172,6 +172,8 @@ public class OpeningBalanceService extends DomainService {
 						throw new CustomException("receivingStore", "storeName Is Required");
 					}
 
+					if(!rcpt.getReceiptDetails().isEmpty())
+					{
 		   for( MaterialReceiptDetail detail : rcpt.getReceiptDetails())
 				{
 						if(isEmpty(detail.getMaterial().getCode()))
@@ -190,17 +192,22 @@ public class OpeningBalanceService extends DomainService {
 						{
 							throw new CustomException("unitRate", "UnitRate Is Required");
 						}
-						
+						if(detail.getReceiptDetailsAddnInfo() != null )
+						{
 						for( MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo())
 						{
-							if(Long.valueOf(addInfo.getReceivedDate()) > currentMilllis){
+							if(null != addInfo.getReceivedDate() && Long.valueOf(addInfo.getReceivedDate()) > currentMilllis){
 								throw new CustomException("ReceiptDate", "ReceiptDate  must be less than or equal to Today's date");
 							
+						}
+						}
 						}
 					
 					}
 				}
-				
+					else
+					throw new CustomException("receipt", "please enter receipt detail");
+
 			}
 			
 		} 

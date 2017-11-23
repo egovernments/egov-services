@@ -1365,7 +1365,9 @@ definitions:
         type: string
         description: order of the table column.
       columns:
-        $ref: '#/definitions/AttributeDefinition'
+        type: array
+        items:
+          $ref: '#/definitions/AttributeDefinition'
     required:
       - name
       - type

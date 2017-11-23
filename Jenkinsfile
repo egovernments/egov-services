@@ -2,12 +2,7 @@ def app = "";
 def commit_id="";
 def module_name = "${env.JOB_NAME}".split("/")[-2];
 def service_name = "${env.JOB_BASE_NAME}";
-if( module_name == "npm-modules" ) {
-  def path = "web/ui-web-app/src/development/${service_name}"
-}
-else {
-  def path = "${module_name}/${service_name}"
-}
+def path = "${module_name}/${service_name}"
 def build_wkflo;
 def ci_image = "egovio/ci:0.0.1"
 def notifier = "";
@@ -25,7 +20,7 @@ try {
         currentBuild.displayName = "${BUILD_ID}-${commit_id}"
 
         if (!docker_file_exists) {
-          code_builder.build(path, ci_image)
+          code_builder.build(path, ci_image, module_name, service_name)
         }
         else {
           archiver = load("jenkins/archiver.groovy")

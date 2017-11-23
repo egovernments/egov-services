@@ -5,7 +5,7 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import _ from "lodash";
 import ShowFields from "./showFields";
 
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import jp from "jsonpath";
 import UiButton from './components/UiButton';
 import {fileUpload, getInitiatorPosition} from './utility/utility';
@@ -308,9 +308,9 @@ class Report extends Component {
 
       try {
         if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
-          specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
+          specifications = (process.env.NODE_ENV === "production") ? require(`egov-${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
         } else {
-          specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}.specs`).default;
+          specifications = (process.env.NODE_ENV === "production") ? require(`egov-${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}.specs`).default;
         }
       } catch(e) {
         console.log(e);

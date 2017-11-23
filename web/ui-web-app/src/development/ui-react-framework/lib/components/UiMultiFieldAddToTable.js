@@ -27,7 +27,7 @@ import UiDate from './UiDate';
 import UiPinCode from './UiPinCode';
 import UiArrayField from './UiArrayField';
 import UiFileTable from './UiFileTable';
-import { translate } from 'common-utility';
+import { translate } from 'egov-common-utility';
 import _ from 'lodash';
 
 export default class multiFieldAddToTable extends Component {

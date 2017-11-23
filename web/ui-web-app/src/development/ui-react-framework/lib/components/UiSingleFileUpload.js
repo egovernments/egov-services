@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 
 export default class UiSingleFileUpload extends Component {
   constructor(props) {

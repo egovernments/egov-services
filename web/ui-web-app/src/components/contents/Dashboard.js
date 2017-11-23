@@ -7,7 +7,7 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import {Tabs, Tab} from 'material-ui/Tabs';
-import {translate, DataTable, Api, constants} from 'common-utility';
+import {translate, DataTable, Api, constants} from 'egov-common-utility';
 import SwipeableViews from 'react-swipeable-views';
 import {ListItem} from 'material-ui/List';
 import IconButton from 'material-ui/IconButton';

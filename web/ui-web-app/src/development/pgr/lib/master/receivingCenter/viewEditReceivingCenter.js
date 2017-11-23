@@ -3,7 +3,7 @@ import {connect} from 'react-redux';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import styles from '../../styles/material-ui';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export

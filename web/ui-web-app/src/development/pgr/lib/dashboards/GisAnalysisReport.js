@@ -4,7 +4,7 @@ import _ from "lodash";
 import {getTenantId, PageLoadingIndicator, extractManipulateCityAndWardsPath} from './ReportUtils';
 import CommonGisReportView from './CommonGisReportView';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 
 const TOP_COMPLAINTS_REPORT_LENGTH  = 6;
 

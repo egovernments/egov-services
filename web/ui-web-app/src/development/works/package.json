@@ -1,5 +1,5 @@
 {
-  "name": "works",
+  "name": "egov-works",
   "version": "0.0.1",
   "description": "Common methods",
   "main": "index.js",
@@ -55,8 +55,8 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "common-utility": "0.0.1",
-    "ui-react-framework": "0.0.1"
+    "egov-common-utility": "0.0.1",
+    "egov-ui-react-framework": "0.0.1"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

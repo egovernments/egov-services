@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import pdfMake from "pdfmake/build/pdfmake";
 import styles from '../../styles/material-ui';
-import {translate, dataURItoBlob, epochToDate, Api, fonts, getBase64FromImageUrl, PdfViewer} from 'common-utility';
+import {translate, dataURItoBlob, epochToDate, Api, fonts, getBase64FromImageUrl, PdfViewer} from 'egov-common-utility';
 import RaisedButton from 'material-ui/RaisedButton';
 
 

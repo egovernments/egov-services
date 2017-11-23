@@ -8,7 +8,7 @@ import MenuItem from 'material-ui/MenuItem';
 import AutoComplete from 'material-ui/AutoComplete';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from '../../styles/material-ui';
-import {translate, Api, DataTable} from 'common-utility';
+import {translate, Api, DataTable} from 'egov-common-utility';
 
 const $ = require('jquery');
 $.DataTable = require('datatables.net');

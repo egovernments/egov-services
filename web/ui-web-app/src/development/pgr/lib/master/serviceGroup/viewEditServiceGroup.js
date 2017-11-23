@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {Grid, Row, Col, Table} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {Api, translate} from 'common-utility';
+import {Api, translate} from 'egov-common-utility';
 import styles from '../../styles/material-ui';
 
 import $ from 'jquery';

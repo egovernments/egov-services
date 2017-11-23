@@ -4,7 +4,7 @@ import TextField from "material-ui/TextField";
 import FloatingActionButton from "material-ui/FloatingActionButton";
 import Dialog from "material-ui/Dialog";
 import FlatButton from "material-ui/FlatButton";
-import { translate, Api } from "common-utility";
+import { translate, Api } from "egov-common-utility";
 import _ from "lodash";
 import ShowFields from "../showFields";
 import { connect } from "react-redux";

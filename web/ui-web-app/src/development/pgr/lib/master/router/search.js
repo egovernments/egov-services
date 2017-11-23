@@ -7,7 +7,7 @@ import AutoComplete from 'material-ui/AutoComplete';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 import styles from '../../styles/material-ui';
-import {Api, translate, DataTable} from 'common-utility';
+import {Api, translate, DataTable} from 'egov-common-utility';
 
 import $ from 'jquery';
 import 'datatables.net-buttons/js/buttons.html5.js';// HTML 5 file export

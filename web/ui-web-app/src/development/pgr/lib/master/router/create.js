@@ -9,7 +9,7 @@ import MenuItem from 'material-ui/MenuItem';
 import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
-import {Api, translate} from 'common-utility';
+import {Api, translate} from 'egov-common-utility';
 import styles from '../../styles/material-ui';
 
 var _this;

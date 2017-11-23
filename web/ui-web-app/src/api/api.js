@@ -1,6 +1,6 @@
 // var store=require('../store');
 
-var common = require('common-utility');
+var common = require('egov-common-utility');
 var axios = require('axios');
 
 // console.log(store.getState);

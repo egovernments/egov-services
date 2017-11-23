@@ -1,5 +1,5 @@
 import _ from 'lodash';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 
 const defaultState = {
     form: {},

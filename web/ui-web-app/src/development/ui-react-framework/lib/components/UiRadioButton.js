@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 
 export default class UiAadharCard extends Component {
 	constructor(props) {

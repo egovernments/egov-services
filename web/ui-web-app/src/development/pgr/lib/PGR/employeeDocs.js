@@ -4,7 +4,7 @@ import {Card, CardHeader, CardText} from 'material-ui/Card';
 import RaisedButton from 'material-ui/RaisedButton';
 import FileDownload from 'material-ui/svg-icons/action/get-app';
 import styles from '../styles/material-ui';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 
 class employeeDocs extends Component{
   constructor(props){

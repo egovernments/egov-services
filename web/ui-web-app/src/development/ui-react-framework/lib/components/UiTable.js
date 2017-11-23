@@ -1,7 +1,7 @@
 import React, {Component} from 'react';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import {connect} from 'react-redux';
 import _ from 'lodash';
 import jp from "jsonpath";

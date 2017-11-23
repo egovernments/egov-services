@@ -5,7 +5,7 @@ import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import _ from "lodash";
 import ShowFields from "./showFields";
 
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import UiButton from './components/UiButton';
 import UiDynamicTable from './components/UiDynamicTable';
 import {fileUpload} from './utility/utility';
@@ -81,11 +81,11 @@ class Search extends Component {
     try {
       var hash = window.location.hash.split("/");
       if(hash.length == 4 && hashLocation.split("/")[1]!="transaction") {
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`egov-${hash[2]}/specifications/${hash[2]}.specs`).default : require(`../../${hash[2]}/lib/specifications/${hash[2]}.specs`).default;
       } else if(hashLocation.split("/")[1]!="transaction"){
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`egov-${hash[2]}/specifications/master/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/master/${hash[3]}.specs`).default;
       } else {
-        specifications = (process.env.NODE_ENV === "production") ? require(`${hash[2]}/specifications/transaction/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/transaction/${hash[3]}.specs`).default;
+        specifications = (process.env.NODE_ENV === "production") ? require(`egov-${hash[2]}/specifications/transaction/${hash[3]}.specs`).default : require(`../../${hash[2]}/lib/specifications/transaction/${hash[3]}.specs`).default;
       }
     } catch(e) {}
     let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;

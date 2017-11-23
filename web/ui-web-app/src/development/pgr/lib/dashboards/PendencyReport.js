@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader} from 'material-ui/Card';
 import {BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip} from 'recharts';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import {PageLoadingIndicator, CustomizedAxisTick, CustomizedYAxisLabel, getTenantId} from './ReportUtils';
 
 export default class PendencyReport extends Component {

@@ -4,7 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.16.1",
-    "common-utility": "0.0.1",
+    "egov-common-utility": "0.0.1",
     "create-react-class": "^15.5.3",
     "datatables-buttons": "^1.0.3",
     "datatables.net": "^1.10.15",

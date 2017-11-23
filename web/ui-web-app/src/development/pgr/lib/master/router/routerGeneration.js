@@ -9,7 +9,7 @@ import Dialog from 'material-ui/Dialog';
 import RaisedButton from 'material-ui/RaisedButton';
 import FlatButton from 'material-ui/FlatButton';
 import Chip from 'material-ui/Chip';
-import {Api, DataTable, translate} from 'common-utility';
+import {Api, DataTable, translate} from 'egov-common-utility';
 import styles from '../../styles/material-ui';
 
 const $ = require('jquery');

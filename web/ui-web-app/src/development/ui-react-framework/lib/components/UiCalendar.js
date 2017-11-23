@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { translate } from 'common-utility';
+import { translate } from 'egov-common-utility';
 import BigCalendar from 'react-big-calendar';
 import moment from 'moment';
 import { connect } from "react-redux";

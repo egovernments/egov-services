@@ -4,7 +4,7 @@ import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {List, ListItem} from 'material-ui/List';
 import styles from '../../styles/material-ui';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 
 var _this;
 

@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import TextField from 'material-ui/TextField';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 var DateTime = require('react-datetime');
 var moment = require('moment');
 

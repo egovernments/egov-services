@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import UiTextField from './UiTextField'

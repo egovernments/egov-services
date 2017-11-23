@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 // import TimePicker from 'material-ui/TimePicker';
-import {translate} from 'common-utility';
+import {translate} from 'egov-common-utility';
 var DateTimeField = require('react-bootstrap-datetimepicker');
 var moment = require('moment');
 

@@ -133,15 +133,15 @@ var legal;
 var pgr;
 var swm;
 var inventory;
-var LegalTemplateParser = (process.env.NODE_ENV === "production") ? require('legal/specifications/templateParser/legalTemplateParser') : require('./development/legal/lib/specifications/templateParser/legalTemplateParser');
+var LegalTemplateParser = (process.env.NODE_ENV === "production") ? require('egov-legal/specifications/templateParser/legalTemplateParser') : require('./development/legal/lib/specifications/templateParser/legalTemplateParser');
 
 if(process.env.NODE_ENV === "production") {
-    fwRoutes = require('ui-react-framework');
-    assets = require('asset');
-    works = require('works');
-    perfManagement = require('perfManagement');
-    pgr = require('pgr');
-    inventory = require('inventory');
+    fwRoutes = require('egov-ui-react-framework');
+    assets = require('egov-asset');
+    works = require('egov-works');
+    perfManagement = require('egov-perfManagement');
+    pgr = require('egov-pgr');
+    inventory = require('egov-inventory');
 } else {
     fwRoutes = require('./development/ui-react-framework/lib/index');
     assets = require('./development/asset/lib/index');

@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {Grid, Row, Col} from 'react-bootstrap';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import Snackbar from 'material-ui/Snackbar';
-import {translate, Api} from 'common-utility';
+import {translate, Api} from 'egov-common-utility';
 import {Tabs, Tab} from 'material-ui/Tabs';
 import ActionFlightTakeoff from 'material-ui/svg-icons/action/flight-takeoff';
 import {BarChart, AreaChart, Area, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';

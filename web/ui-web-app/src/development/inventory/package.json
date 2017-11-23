@@ -1,6 +1,6 @@
 {
   "name": "egov-inventory",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Common methods",
   "main": "index.js",
   "scripts": {
@@ -56,7 +56,7 @@
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
     "egov-common-utility": "0.0.1",
-    "egov-ui-react-framework": "0.0.3"
+    "egov-ui-react-framework": "0.0.4"
   },
   "devDependencies": {
     "babel-cli": "^6.26.0",

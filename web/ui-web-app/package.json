@@ -50,13 +50,13 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "egov-ui-react-framework": "0.0.3",
-    "egov-asset": "0.0.2",
-    "egov-pgr": "0.0.2",
-    "egov-inventory": "0.0.2",
-    "egov-works": "0.0.2",
-    "egov-perfManagement": "0.0.2",
-    "egov-legal": "0.0.2"
+    "egov-ui-react-framework": "0.0.4",
+    "egov-asset": "0.0.4",
+    "egov-pgr": "0.0.3",
+    "egov-inventory": "0.0.3",
+    "egov-works": "0.0.3",
+    "egov-perfManagement": "0.0.3",
+    "egov-legal": "0.0.3"
   },
   "devDependencies": {
     "react-scripts": "1.0.7"

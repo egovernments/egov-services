@@ -172,6 +172,10 @@ public class LeaveApplicationQueryBuilder {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(leaveSearchRequest.getToDate());
         int year = calendar.get(Calendar.YEAR);
+        calendar.set(Calendar.DAY_OF_YEAR, 1);
+        calendar.set(Calendar.MONTH, 1);
+        calendar.set(Calendar.YEAR, year);
+        Date fromDate = calendar.getTime();
         SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 
         String summaryReportQuery = "select la.id AS la_id, la.employeeid AS la_employeeId, lt.id AS lt_id, lt.name AS lt_name, COALESCE(opb.noofdays,0) AS opb_noofdays,"
@@ -186,14 +190,12 @@ public class LeaveApplicationQueryBuilder {
                 + " group by employeeid,status,leavetypeid,tenantid"
                 + " )leaveappl ON leaveappl.employeeid = la.employeeid and leaveappl.leavetypeid=la.leavetypeid and leaveappl.tenantid=la.tenantid  where lt.id=la.leavetypeid ";
 
-        Map<String, Object> paramValues = new HashMap<>();
-        StringBuffer params = new StringBuffer();
 
         Long statusId = hrStatusService.getHRStatuses("APPROVED", leaveSearchRequest.getTenantId(),
                 requestInfo).get(0).getId();
 
         summaryReportQuery = summaryReportQuery.replace(":todate", sdf.format(leaveSearchRequest.getToDate()));
-        summaryReportQuery = summaryReportQuery.replace(":fromdate", sdf.format(leaveSearchRequest.getFromDate()));
+        summaryReportQuery = summaryReportQuery.replace(":fromdate", sdf.format(fromDate));
         summaryReportQuery = summaryReportQuery.replace(":statusid", statusId.toString());
         summaryReportQuery = summaryReportQuery.replace(":year", String.valueOf(year));
 
@@ -351,7 +353,7 @@ public class LeaveApplicationQueryBuilder {
             preparedStatementValues.add(leaveSearchRequest.getDesignationId());
         }
 
-        if (leaveSearchRequest.getEmployeeIds() != null) {
+        if (leaveSearchRequest.getEmployeeIds() != null && leaveSearchRequest.getEmployeeIds().size() > 0) {
             selectQuery.append(" and la.employeeid in  " + getIdQuery(leaveSearchRequest.getEmployeeIds()));
         }
 

@@ -8,9 +8,9 @@ if(process.env.NODE_ENV == "production") {
   assetMovableReport = require('egov-asset/specifictions/templates/assetMovableReport');
   landRegisterReport = require('egov-asset/specifictions/templates/landRegisterReport');
 } else {
-  assetImmovableReport = require('../../../../asset/lib/specifications/templates/assetImmovableReport');
+  /*assetImmovableReport = require('../../../../asset/lib/specifications/templates/assetImmovableReport');
   assetMovableReport = require('../../../../asset/lib/specifications/templates/assetMovableReport');
-  landRegisterReport = require('../../../../asset/lib/specifications/templates/landRegisterReport');
+  landRegisterReport = require('../../../../asset/lib/specifications/templates/landRegisterReport');*/
 }
 
-export { MyExampleTemplate, landRegisterReport, assetImmovableReport, assetMovableReport};
+export { MyExampleTemplate /*landRegisterReport, assetImmovableReport, assetMovableReport*/};

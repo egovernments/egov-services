@@ -50,8 +50,8 @@
     "redux": "^3.6.0",
     "redux-persist": "^4.8.0",
     "redux-thunk": "^2.2.0",
-    "egov-ui-react-framework": "0.0.2",
-    "egov-assets": "0.0.1",
+    "egov-ui-react-framework": "0.0.3",
+    "egov-asset": "0.0.2",
     "egov-pgr": "0.0.1",
     "egov-inventory": "0.0.1",
     "egov-works": "0.0.1",
@@ -62,7 +62,7 @@
     "react-scripts": "1.0.7"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start": "set PORT=3006 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

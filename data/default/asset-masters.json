@@ -163,13 +163,13 @@
         },
         {
           "name": "Layer Type",
-          "type": "Text",
+          "type": "Select",
           "isActive": true,
           "isMandatory": false,
           "values": null,
           "localText": null,
           "regExFormate": null,
-          "url": null,
+          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
           "order": null,
           "columns": []
         },
@@ -2110,6 +2110,27 @@
       "isActive": true
     }
   ],
+
+
+"LayerType": [
+    {
+      "id": 1,
+      "tenantId": "default",
+      "name": "FAKE LAYER 1",
+      "description": "image location",
+      "numberoflayers":2
+      "isActive": true
+    },
+   {
+      "id": 2,
+      "tenantId": "default",
+      "name": "FAKE LAYER 2",
+      "description": "image location",
+      "numberoflayers":3
+      "isActive": true
+    }
+  ],
+
   "Assetconfiguration": [
     {
       "id": 1,

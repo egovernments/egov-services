@@ -1,0 +1,74 @@
+{
+	"id": "7b7f8e3d-c436-299f-0003-952ea4c67106",
+	"name": "LOA",
+	"description": "",
+	"order": [
+		"5f2465f1-007d-3c7f-db5e-ab9b1e529ecb",
+		"1be2b96e-36e8-e1e7-e3f8-921cb958d778"
+	],
+	"folders": [],
+	"folders_order": [],
+	"timestamp": 1511438801630,
+	"owner": "1594421",
+	"public": false,
+	"requests": [
+		{
+			"id": "1be2b96e-36e8-e1e7-e3f8-921cb958d778",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-workorder/v1/letterofacceptances/_update",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1511507113763,
+			"name": "Upldate LOA",
+			"description": "",
+			"collectionId": "7b7f8e3d-c436-299f-0003-952ea4c67106",
+			"responses": [],
+			"rawModeData": "{\n  \"letterofacceptances\": [\n    {\n      \"id\": \"c3726635d6b144ae98b4920e616622d3\",\n      \"tenantId\": \"default\",\n      \"contractor\": {\n        \"code\": \"priya\",\n        \"tenantId\": \"default\"\n      },\n      \"loaDate\": 1511436672,\n      \"loaNumber\": \"LOA/123\",\n      \"contractPeriod\": \"5\",\n      \"emdAmountDeposited\": \"200\",\n      \"stampPaperAmount\": \"100\",\n      \"engineerIncharge\": \"ritesh\",\n      \"defectLiabilityPeriod\": \"10\",\n      \"loaAmount\": \"300\",\n      \"status\": \"APPROVED\",\n      \"tenderFinalizedPercentage\": \"2\",\n      \"approvedDate\": 1511436672,\n      \"fileNumber\": 1235,\n      \"fileDate\": 1511436672,\n      \"spillOverFlag\": false,\n      \"letterOfAcceptanceEstimates\": [{\n        \"id\": \"c3726635d6b144ae98b4920e616622d3\",\n        \"tenantId\": \"default\",\n        \"detailedEstimate\": {\n          \"estimateNumber\": \"ENG/123\"\n        },\n        \"workCompletionDate\": 1511436672,\n        \"estimateLOAAmount\": \"300\"\n      }],\n      \"securityDeposits\": [\n        {\n        \t\"id\": \"1\",\n    \t\"letterOfAcceptance\": \"c3726635d6b144ae98b4920e616622d3\",\n        \"tenantId\": \"default\",\n        \"collectionMode\":\"CASH\",\n        \"percentage\":\"100\",\n        \"amount\":\"1000\"\n        \n        },\n        {\n        \t\"id\": \"2\",\n    \t\"letterOfAcceptance\": \"c3726635d6b144ae98b4920e616622d3\",\n        \"tenantId\": \"default\",\n        \"collectionMode\":\"CASH\",\n        \"percentage\":\"101\",\n        \"amount\":\"1001\"\n        \n        },\n        {\n        \t\"id\": \"\",\n    \t\"letterOfAcceptance\": \"c3726635d6b144ae98b4920e616622d3\",\n        \"tenantId\": \"default\",\n        \"collectionMode\":\"CASH\",\n        \"percentage\":\"101\",\n        \"amount\":\"1001\"\n        \n        }\n      ]\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"b872bd89-6d92-4fac-b93d-bf47caff1a95\",\n    \"userInfo\": {\n      \"userName\": \"narasappa\",\n      \"tenantId\": \"default\"\n    }\n  }\n}"
+		},
+		{
+			"id": "5f2465f1-007d-3c7f-db5e-ab9b1e529ecb",
+			"headers": "Content-Type: application/json\n",
+			"headerData": [
+				{
+					"key": "Content-Type",
+					"value": "application/json",
+					"description": "",
+					"enabled": true
+				}
+			],
+			"url": "http://egov-micro-dev.egovernments.org/works-workorder/v1/letterofacceptances/_create",
+			"queryParams": [],
+			"preRequestScript": null,
+			"pathVariables": {},
+			"pathVariableData": [],
+			"method": "POST",
+			"data": [],
+			"dataMode": "raw",
+			"tests": null,
+			"currentHelper": "normal",
+			"helperAttributes": {},
+			"time": 1511507115896,
+			"name": "Create LOA",
+			"description": "",
+			"collectionId": "7b7f8e3d-c436-299f-0003-952ea4c67106",
+			"responses": [],
+			"rawModeData": "{\n  \"letterofacceptances\": [\n    {\n      \"id\": \"\",\n      \"tenantId\": \"default\",\n      \"contractor\": {\n        \"code\": \"priya\",\n        \"tenantId\": \"default\"\n      },\n      \"loaDate\": 1511436672,\n      \"loaNumber\": \"123/\",\n      \"contractPeriod\": \"5\",\n      \"emdAmountDeposited\": \"200\",\n      \"stampPaperAmount\": \"100\",\n      \"engineerIncharge\": \"ritesh\",\n      \"defectLiabilityPeriod\": \"10\",\n      \"loaAmount\": \"300\",\n      \"status\": \"APPROVED\",\n      \"tenderFinalizedPercentage\": \"2\",\n      \"approvedDate\": 1511436672,\n      \"fileNumber\": 1235,\n      \"fileDate\": 1511436672,\n      \"spillOverFlag\": false,\n      \"letterOfAcceptanceEstimates\": [{\n        \"id\": \"\",\n        \"tenantId\": \"default\",\n        \"detailedEstimate\": {\n          \"estimateNumber\": \"DE/AS/000023/11/2017-18\"\n        },\n        \"workCompletionDate\": 1511436672,\n        \"estimateLOAAmount\": \"300\"\n      }],\n      \"securityDeposits\": [\n        {\n        \"id\": \"\",\n        \"tenantId\": \"default\",\n        \"collectionMode\":\"CASH\",\n        \"percentage\":\"10\",\n        \"amount\":\"100\"\n        \n        }\n      ]\n    }\n  ],\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pt\",\n    \"ver\": \"1.0\",\n    \"ts\": 1511171897140,\n    \"action\": \"asd\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"eed97c99-a75b-4531-8b34-3a1739d457e1\",\n    \"userInfo\": {\n      \"userName\": \"narasappa\",\n      \"tenantId\": \"default\"\n    }\n  }\n}"
+		}
+	]
+}

@@ -198,8 +198,10 @@ public class CaseService {
 		RequestInfoWrapper requestInfoWrapper = new RequestInfoWrapper();
 		requestInfoWrapper.setRequestInfo(requestInfo);
 		List<Case> cases = caseSearchRepository.searchCases(caseSearchCriteria, requestInfo);
-		addDepartmentDetails(cases, cases.get(0).getTenantId(), requestInfo);
-		addMasterDetails(cases, caseSearchCriteria.getSearchResultLevel(), requestInfo);
+		if (cases != null && cases.size() > 0) {
+			addDepartmentDetails(cases, cases.get(0).getTenantId(), requestInfo);
+			addMasterDetails(cases, caseSearchCriteria.getSearchResultLevel(), requestInfo);
+		}
 
 		return new CaseResponse(responseFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), cases);
 
@@ -598,12 +600,13 @@ public class CaseService {
 
 					if (hearingDateValues != null && hearingDateValues.size() > 0) {
 						for (Map<String, Object> mapValues : hearingDateValues) {
-							
+
 							if (mapValues.get("nexthearingtime") != null)
 								hearingDetails.setCurrentHearingTime(mapValues.get("nexthearingtime").toString());
-							
-							if(mapValues.get("nexthearingdate") != null)
-								hearingDetails.setCurrentHearingDate(Long.valueOf(mapValues.get("nexthearingdate").toString()));
+
+							if (mapValues.get("nexthearingdate") != null)
+								hearingDetails.setCurrentHearingDate(
+										Long.valueOf(mapValues.get("nexthearingdate").toString()));
 						}
 					} else {
 						hearingDetails.setCurrentHearingDate(casee.getSummon().getHearingDate());

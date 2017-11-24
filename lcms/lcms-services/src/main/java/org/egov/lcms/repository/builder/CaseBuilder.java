@@ -125,6 +125,14 @@ public class CaseBuilder {
 			preparedStatementValues.add(caseSearchCriteria.getCaseNo());
 		}
 
+		if (caseSearchCriteria.getIsSummon() == null) {
+			caseSearchCriteria.setIsSummon(true);
+		}
+
+		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+		selectQuery.append(" issummon=? ");
+		preparedStatementValues.add(caseSearchCriteria.getIsSummon());
+
 	}
 
 	/**
@@ -247,14 +255,14 @@ public class CaseBuilder {
 		searchQuery.append("SELECT nexthearingtime, nexthearingdate FROM " + tableName);
 		searchQuery.append(" WHERE casecode=?");
 		preparedStatementValues.add(code);
-		
-		if(tenantId != null && !tenantId.isEmpty()){
+
+		if (tenantId != null && !tenantId.isEmpty()) {
 			searchQuery.append(" AND tenantId=?");
 			preparedStatementValues.add(tenantId);
 		}
-		
+
 		searchQuery.append(" ORDER BY createdtime DESC LIMIT 1");
-		
+
 		return searchQuery.toString();
 	}
 

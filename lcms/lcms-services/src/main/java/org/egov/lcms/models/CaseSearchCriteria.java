@@ -53,5 +53,7 @@ public class CaseSearchCriteria {
 	private String caseNo;
 
 	private String searchResultLevel;
+	
+	private Boolean isSummon;
 
 }

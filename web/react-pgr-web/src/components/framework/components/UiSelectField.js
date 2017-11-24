@@ -155,7 +155,7 @@ class UiSelectField extends Component {
                      errorText={this.props.fieldErrors[item.jsonPath]}
                      maxHeight={200}>
                            {dropDownData && dropDownData.map((dd, index) => (
-                               <MenuItem value={dd.key && dd.key.toString()} key={index} primaryText={dd.value} />
+                               <MenuItem value={dd.key} key={index} primaryText={dd.value} />
                            ))}
                      </SelectField>
 

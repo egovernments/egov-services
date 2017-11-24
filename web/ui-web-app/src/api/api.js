@@ -8,7 +8,8 @@ var axios = require('axios');
 // var store = require('configureStore').configure();
 
 var instance = axios.create({
-    baseURL: window.location.origin,
+   // baseURL: window.location.origin,
+    baseURL : "http://egov-micro-dev.egovernments.org",
     // timeout: 5000,
     headers: {
         "Content-Type": "application/json"

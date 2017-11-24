@@ -281,38 +281,6 @@ var dat ={
             ]
           },
           {
-            "name": "aadharNumber",
-            "jsonPath": "agencies[0].personDetails[0].aadhar",
-            "label": "advocates.create.aadharNumber",
-            "pattern": "",
-            "type": "aadhar",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "gender",
-            "jsonPath": "agencies[0].personDetails[0].gender",
-            "label": "advocates.create.gender",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": [
-              {
-                "key": "Male",
-                "value": "Male"
-              },
-              {
-                "key": "Female",
-                "value": "Female"
-              }
-            ]
-          },
-          {
             "name": "firstName",
             "jsonPath": "agencies[0].personDetails[0].firstName",
             "label": "advocates.create.firstName",
@@ -344,6 +312,38 @@ var dat ={
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "aadharNumber",
+            "jsonPath": "agencies[0].personDetails[0].aadhar",
+            "label": "advocates.create.aadharNumber",
+            "pattern": "",
+            "type": "aadhar",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "gender",
+            "jsonPath": "agencies[0].personDetails[0].gender",
+            "label": "advocates.create.gender",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue": [
+              {
+                "key": "Male",
+                "value": "Male"
+              },
+              {
+                "key": "Female",
+                "value": "Female"
+              }
+            ]
           },
           {
             "name": "age",
@@ -467,38 +467,6 @@ var dat ={
             ]
           },
           {
-            "name": "aadharNumber",
-            "jsonPath": "agencies[0].advocates[0].aadhar",
-            "label": "advocates.create.aadharNumber",
-            "pattern": "",
-            "type": "aadhar",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "gender",
-            "jsonPath": "agencies[0].advocates[0].gender",
-            "label": "advocates.create.gender",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": [
-              {
-                "key": "Male",
-                "value": "Male"
-              },
-              {
-                "key": "Female",
-                "value": "Female"
-              }
-            ]
-          },
-          {
             "name": "firstName",
             "jsonPath": "agencies[0].advocates[0].firstName",
             "label": "advocates.create.firstName",
@@ -530,6 +498,38 @@ var dat ={
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "aadharNumber",
+            "jsonPath": "agencies[0].advocates[0].aadhar",
+            "label": "advocates.create.aadharNumber",
+            "pattern": "",
+            "type": "aadhar",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "gender",
+            "jsonPath": "agencies[0].advocates[0].gender",
+            "label": "advocates.create.gender",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue": [
+              {
+                "key": "Male",
+                "value": "Male"
+              },
+              {
+                "key": "Female",
+                "value": "Female"
+              }
+            ]
           },
           {
             "name": "age",
@@ -1271,38 +1271,6 @@ var dat ={
             ]
           },
           {
-            "name": "aadharNumber",
-            "jsonPath": "agencies[0].personDetails[0].aadhar",
-            "label": "advocates.create.aadharNumber",
-            "pattern": "",
-            "type": "aadhar",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "gender",
-            "jsonPath": "agencies[0].personDetails[0].gender",
-            "label": "advocates.create.gender",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": [
-              {
-                "key": "Male",
-                "value": "Male"
-              },
-              {
-                "key": "Female",
-                "value": "Female"
-              }
-            ]
-          },
-          {
             "name": "firstName",
             "jsonPath": "agencies[0].personDetails[0].firstName",
             "label": "advocates.create.firstName",
@@ -1334,6 +1302,38 @@ var dat ={
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "aadharNumber",
+            "jsonPath": "agencies[0].personDetails[0].aadhar",
+            "label": "advocates.create.aadharNumber",
+            "pattern": "",
+            "type": "aadhar",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "gender",
+            "jsonPath": "agencies[0].personDetails[0].gender",
+            "label": "advocates.create.gender",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue": [
+              {
+                "key": "Male",
+                "value": "Male"
+              },
+              {
+                "key": "Female",
+                "value": "Female"
+              }
+            ]
           },
           {
             "name": "age",
@@ -1457,38 +1457,6 @@ var dat ={
             ]
           },
           {
-            "name": "aadharNumber",
-            "jsonPath": "agencies[0].advocates[0].aadhar",
-            "label": "advocates.create.aadharNumber",
-            "pattern": "",
-            "type": "aadhar",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
-          },
-          {
-            "name": "gender",
-            "jsonPath": "agencies[0].advocates[0].gender",
-            "label": "advocates.create.gender",
-            "pattern": "",
-            "type": "singleValueList",
-            "isRequired": true,
-            "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": "",
-            "defaultValue": [
-              {
-                "key": "Male",
-                "value": "Male"
-              },
-              {
-                "key": "Female",
-                "value": "Female"
-              }
-            ]
-          },
-          {
             "name": "firstName",
             "jsonPath": "agencies[0].advocates[0].firstName",
             "label": "advocates.create.firstName",
@@ -1520,6 +1488,38 @@ var dat ={
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
+          },
+          {
+            "name": "aadharNumber",
+            "jsonPath": "agencies[0].advocates[0].aadhar",
+            "label": "advocates.create.aadharNumber",
+            "pattern": "",
+            "type": "aadhar",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": ""
+          },
+          {
+            "name": "gender",
+            "jsonPath": "agencies[0].advocates[0].gender",
+            "label": "advocates.create.gender",
+            "pattern": "",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "requiredErrMsg": "",
+            "patternErrMsg": "",
+            "defaultValue": [
+              {
+                "key": "Male",
+                "value": "Male"
+              },
+              {
+                "key": "Female",
+                "value": "Female"
+              }
+            ]
           },
           {
             "name": "age",
@@ -1797,7 +1797,7 @@ var dat ={
       },
       {
         "name": "action",
-        "label": "advocates.create.group.title.action22",
+        "label": "advocates.create.group.title.action",
         "fields": [
           {
             "name": "actionType",
@@ -1825,11 +1825,11 @@ var dat ={
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                 "enable": [],
-                "disable": [
-                  "terminationDate",
+                 "enable": [
+                   "terminationDate",
                   "inActivationDate"
-                ]
+                 ],
+                "disable": []
               },
               {
                 "ifValue": "inactive",
@@ -1858,7 +1858,7 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1869,7 +1869,7 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1947,7 +1947,7 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1958,7 +1958,7 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },

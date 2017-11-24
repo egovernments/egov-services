@@ -239,7 +239,7 @@ var dat = {
                                     label: "legal.create.advocateAssignDate"
                                 },
                                 {
-                                    label: "legal.create.advocateFee"
+                                    label: "legal.create.advocateStatus"
                                 }
                             ],
                             values: [
@@ -252,7 +252,19 @@ var dat = {
                                     isRequired: true,
                                     isDisabled: false,
                                     url:
-                                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name"
+                                    "/lcms-services/legalcase/advocate/_search?|$..code|$..name",
+                                      depedants: [
+                                            {
+                                              jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                                              type: "autoFill",
+                                            //  pattern:
+                                             //   "/lcms-services/legalcase/advocate/_search?code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status",
+                                             pattern:"/lcms-services/legalcase/advocate/_search?tenantId=default&code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status",
+                                              autoFillFields:
+                                              {
+                                                "cases[0].advocateDetails[0].advocatestaus": "advocates[0].status"
+                                              }
+                                            }]
                                 },
                                 {
                                     name: "advocateAssignDate",
@@ -263,12 +275,12 @@ var dat = {
                                     isDisabled: false
                                 },
                                 {
-                                    name: "advocateFee",
-                                    pattern: "",
-                                    type: "text",
-                                    jsonPath: "cases[0].advocateDetails[0].fee",
-                                    isRequired: true,
-                                    isDisabled: false
+                                  name: "advocatestaus",
+                                  pattern: "",
+                                  type: "text",
+                                  jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                                  isRequired: false,
+                                  isDisabled: true
                                 }
                             ]
                         }
@@ -853,6 +865,7 @@ var dat = {
                         type: "tableList",
                         jsonPath: "cases[0].advocateDetails",
                         tableList: {
+                            actionsNotRequired: true,
                             header: [
                                 {
                                     label: "legal.create.advocateName"
@@ -861,7 +874,7 @@ var dat = {
                                     label: "legal.create.advocateAssignDate"
                                 },
                                 {
-                                    label: "legal.create.advocateFee"
+                                    label: "legal.create.advocateStatus"
                                 }
                             ],
                             values: [
@@ -883,14 +896,15 @@ var dat = {
                                     isRequired: true,
                                     isDisabled: true
                                 },
-                                {
-                                    name: "advocateFee",
-                                    pattern: "",
-                                    type: "text",
-                                    jsonPath: "cases[0].advocateDetails[0].fee",
-                                    isRequired: true,
-                                    isDisabled: true
-                                }
+                                 {
+                                      name: "advocatestaus",
+                                      pattern: "",
+                                      type: "text",
+                                      jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                                      isRequired: false,
+                                      isDisabled: true,
+                                      url: "/lcms-services/legalcase/advocate/_search?$..status"
+                                 }
                             ]
                         }
                     }
@@ -933,7 +947,7 @@ var dat = {
             },
             {
                 name: "UploadDocument",
-                label: "legal.create.group.title.UploadDocument",
+                label: "legal.create.group.title.DownloadDocument",
                 fields: [
                     {
                         "name": "UploadDocument",
@@ -1048,6 +1062,7 @@ var dat = {
                         type: "tableList",
                         jsonPath: "cases[0].hearingDetails",
                         tableList: {
+                            actionsNotRequired: true,
                             header: [
                                 {
                                     label: "legal.create.caseStatus"
@@ -1112,6 +1127,7 @@ var dat = {
                         type: "tableList",
                         jsonPath: "cases[0].parawiseComments",
                         tableList: {
+                            actionsNotRequired: true,
                             header: [
                                 {
                                     label: "legal.parawisecomments.create.dateOfCommentsAsked"
@@ -1195,6 +1211,7 @@ var dat = {
                         type: "tableList",
                         jsonPath: "cases[0].referenceEvidences",
                         tableList: {
+                            actionsNotRequired: true,
                             header: [
                                 {
                                     label: "referenceEvidence.create.typeOfReference"

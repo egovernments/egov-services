@@ -20,29 +20,6 @@ var dat = {
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
           },
           {
-            name: "aadharNumber",
-            jsonPath: "aadhar",
-            label: "advocates.create.aadharNumber",
-            pattern: "",
-            type: "aadhar",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "gender",
-            jsonPath: "gender",
-            label: "advocates.create.gender",
-            pattern: "",
-            type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: "",
-            defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
-          },
-          {
             name: "firstName",
             jsonPath: "firstName",
             label: "advocates.create.firstName",
@@ -74,6 +51,29 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
+          },
+          {
+            name: "aadharNumber",
+            jsonPath: "aadhar",
+            label: "advocates.create.aadharNumber",
+            pattern: "",
+            type: "aadhar",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "gender",
+            jsonPath: "gender",
+            label: "advocates.create.gender",
+            pattern: "",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: "",
+            defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
           },
           {
             name: "age",

@@ -1,5 +1,4 @@
 var dat = {
-  
    "legal.update": {
     numCols: 4,
     title:"advocates.update.document.title",
@@ -83,29 +82,6 @@ var dat = {
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
           },
           {
-            name: "aadharNumber",
-            jsonPath: "advocates[0].aadhar",
-            label: "advocates.create.aadharNumber",
-            pattern: "",
-            type: "aadhar",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "gender",
-            jsonPath: "advocates[0].gender",
-            label: "advocates.create.gender",
-            pattern: "",
-            type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: "",
-             defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
-          },
-          {
             name: "firstName",
             jsonPath: "advocates[0].firstName",
             label: "advocates.create.firstName",
@@ -137,6 +113,29 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
+          },
+          {
+            name: "aadharNumber",
+            jsonPath: "advocates[0].aadhar",
+            label: "advocates.create.aadharNumber",
+            pattern: "",
+            type: "aadhar",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "gender",
+            jsonPath: "advocates[0].gender",
+            label: "advocates.create.gender",
+            pattern: "",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: "",
+             defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
           },
           {
             name: "age",
@@ -242,30 +241,7 @@ var dat = {
             patternErrorMsg: "",
             defaultValue:[{ key:"Mr",value:"Mr"},{ key:"Mrs",value:"Mrs"},{ key:"Ms",value:"Ms"},{ key:"Miss",value:"Miss"}]
           },
-          {
-            name: "aadharNumber",
-            jsonPath: "advocates[0].aadhar",
-            label: "advocates.create.aadharNumber",
-            pattern: "",
-            type: "aadhar",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
-          {
-            name: "gender",
-            jsonPath: "advocates[0].gender",
-            label: "advocates.create.gender",
-            pattern: "",
-            type: "singleValueList",
-            isRequired: true,
-            isDisabled: false,
-            requiredErrMsg: "",
-            patternErrMsg: "",
-            defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
-          },
-          {
+           {
             name: "firstName",
             jsonPath: "advocates[0].firstName",
             label: "advocates.create.firstName",
@@ -297,6 +273,29 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: ""
+          },
+          {
+            name: "aadharNumber",
+            jsonPath: "advocates[0].aadhar",
+            label: "advocates.create.aadharNumber",
+            pattern: "",
+            type: "aadhar",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: ""
+          },
+          {
+            name: "gender",
+            jsonPath: "advocates[0].gender",
+            label: "advocates.create.gender",
+            pattern: "",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: false,
+            requiredErrMsg: "",
+            patternErrMsg: "",
+            defaultValue:[{ key:"Male",value:"Male"},{ key:"Female",value:"Female"}]
           },
           {
             name: "age",

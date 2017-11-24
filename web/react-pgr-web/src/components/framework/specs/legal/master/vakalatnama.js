@@ -19,7 +19,7 @@ var dat = {
         fields: [
           {
             name: "caseNumber",
-            jsonPath: "cases[0].code",
+            jsonPath: "cases[0].caseNo",
             label: "legal.vakalatnama.create.caseNumber",
             pattern: "",
             type: "text",
@@ -133,17 +133,18 @@ var dat = {
             isDisabled: true,
             requiredErrMsg: "",
             patternErrMsg: ""
-          },{
-            name: "additionalAdvocate",
-            jsonPath: "cases[0].advocateDetails[1].advocate.name",
-            label: "legal.vakalatnama.create.additionalAdvocate",
-            pattern: "",
-            type: "text",
-            isRequired: false,
-            isDisabled: true,
-            requiredErrMsg: "",
-            patternErrMsg: ""
-          },
+            },
+          //{
+          //   name: "additionalAdvocate",
+          //   jsonPath: "cases[0].advocateDetails[1].advocate.name",
+          //   label: "legal.vakalatnama.create.additionalAdvocate",
+          //   pattern: "",
+          //   type: "text",
+          //   isRequired: false,
+          //   isDisabled: true,
+          //   requiredErrMsg: "",
+          //   patternErrMsg: ""
+          // },
           {
             name: "GenerateVakalatnama",
             jsonPath: "cases[0].isVakalatnamaGenerated",
@@ -157,6 +158,34 @@ var dat = {
           }
         ]
       }, {
+        name: "additionalAdvocate",
+        label: "legal.create.additionalAdvocate",
+        fields: [
+          {
+            type: "tableList",
+            jsonPath: "cases[0].advocateDetails",
+            tableList: {
+              header: [
+                {
+                  label: "legal.create.additionalAdvocate"
+                }
+              ],
+              values: [
+                {
+                  name: "additionalAdvocate",
+                  jsonPath: "cases[0].advocateDetails[1].advocate.name",
+                  pattern: "",
+                  type: "text",
+                  isRequired: false,
+                  isDisabled: true,
+                  requiredErrMsg: "",
+                  patternErrMsg: ""
+                }
+              ]
+            }
+          }
+        ]
+      },{
         name: "assignAdvocate",
         label: "legal.create.group.title.assignAdvocate",
         fields: [

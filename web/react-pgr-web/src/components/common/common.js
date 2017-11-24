@@ -2324,7 +2324,8 @@ var localization_EN_Data = {
 "legal.create.Summon":"Summon",
 "legal.create.Warrant":"Warrant",
 "legal.create.departmentName":"Department Name",
-"legal.create.group.title.UploadDocument": "Upload/Download Document",
+"legal.create.group.title.UploadDocument": "Upload Document",
+"legal.create.group.title.DownloadDocument": "View/Download Document",
 "legal.create.ULBIntiated": "ULB Intiated",
 "legal.create.caseCategory": "Case Category",
 
@@ -2595,7 +2596,7 @@ var localization_EN_Data = {
 "summon.create.document.title":"Create Summon/Warrant",
 "summon.search.document.title":"Search Case",
 "summon.update.document.title":"Update Summon/Warrant",
-"vakalatnama.create.document.title":"Create Vakalatnama ",
+"vakalatnama.create.document.title":"Vakalatnama Generation",
 "reports.print.details": "Print Details",
 "caseRegistration.create.caseNo":"Case No",
 "opinion.create.opinionFromDate":"Opinion From Date",
@@ -4564,7 +4565,8 @@ var localization_MR_Data = {
 "legal.create.Summon":"Summon-Marathi",
 "legal.create.Warrant":"Warrant-Marathi",
 "legal.create.departmentName":"Department Name-Marathi",
-"legal.create.group.title.UploadDocument": "Upload/Download Document-Marathi",
+"legal.create.group.title.UploadDocument": "Upload Document-Marathi",
+"legal.create.group.title.DownloadDocument": "View/Download Document-Marathi",
 "legal.create.ULBIntiated": "ULB Intiated-Marathi",
 "legal.create.caseCategory": "Case Category-marathi",
 

@@ -6,6 +6,32 @@ var dat = {
     objectName: "cases",
     url: "/lcms-services/legalcase/case/_search",
     groups: [
+        {
+        name: "CaseType",
+        label: "legal.create.group.title.CaseType",
+        fields: [
+          {
+            name: "isSummon",
+            jsonPath: "isSummon",
+            label: "legal.create.isSummon",
+            type: "radio",
+            styleObj:{"display": "-webkit-box"},
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: "",
+            values: [
+              {
+                label: "legal.create.Summon",
+                value: true
+              },
+              {
+                label: "legal.create.Warrant",
+                value: false
+              }
+            ]
+          }
+        ]
+      },
       {
         name: "search",
         label: "legal.search.case.title",
@@ -123,10 +149,11 @@ var dat = {
               label: "Ref Evidence",
               url:"/update/legal/referenceevidence/"
             },
-            // {
-            //   label: "Update",
-            //   url:"/update/legal/casedetails/"
-            // },
+            {
+              label: "Update",
+              url:"/update/legal/casedetails/"
+            }
+            //,
             // {
             //   label: "View",
             //   url:"/view/legal/casedetails/"

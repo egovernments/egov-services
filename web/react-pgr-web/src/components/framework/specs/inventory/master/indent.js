@@ -25,7 +25,9 @@ var dat = {
             "label": "inventory.indent.date",
             "type": "datePicker",
             "isDisabled": false,
-            "patternErrorMsg": "inventory.create.field.message.indentDate"
+            "patternErrorMsg": "inventory.create.field.message.indentDate",
+						"maxDate":"today",
+						"minDate":"today-365" 
           },
          
           {
@@ -155,7 +157,7 @@ var dat = {
             "label": "inventory.indent.number",
             "pattern": "",
             "type": "text",
-						"isHidden":true
+						"isHidden":true,
             "isRequired": false,
             "isDisabled": true,
             "defaultValue": "",
@@ -196,7 +198,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
-						"isHidden":true
+						"isHidden":true,
             "defaultValue":"Indent",
             "patternErrorMsg": ""
           },
@@ -311,7 +313,7 @@ var dat = {
                  "jsonPath":"indents[0].indentDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory",
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory",
                  "depedants":[
                       {
                          "jsonPath":"indents[0].indentDetails[0].material.description",
@@ -320,7 +322,7 @@ var dat = {
                       },
 											
 											{
-                         "jsonPath":"indents[0].indentDetails[0].material.baseUom.code",
+                         "jsonPath":"indents[0].indentDetails[0].material.baseUom.uomCategory",
                          "type":"textField",
                          "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')"
                       },
@@ -862,8 +864,8 @@ var dat = {
             "pattern": "",
             "type": "text",
             "isRequired": false,
-						"isHidden":true
-            "defaultValue":"Indent",
+						"isHidden":true,
+            "defaultValue":"",
             "patternErrorMsg": ""
           },
                {

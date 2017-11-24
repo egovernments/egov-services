@@ -99,12 +99,6 @@ public class AbstractEstimateService {
 				// TODO: check idgen to accept values to generate
 				estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() + "/"
 						+ estimate.getDepartment().getCode() + abstractEstimateNumber);
-				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
-					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
-							abstractEstimateRequest.getRequestInfo()));
-					abstractEstimateDetails.setProjectCode(projectCode);
-
-				}
 			}
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
 				documentDetail.setId(commonUtils.getUUID());
@@ -112,6 +106,14 @@ public class AbstractEstimateService {
 				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
 				documentDetail.setAuditDetails(
 						estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
+			}
+			if(estimate.getSpillOverFlag()) {
+				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
+					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+							abstractEstimateRequest.getRequestInfo()));
+					abstractEstimateDetails.setProjectCode(projectCode);
+
+				}
 			}
 			if (estimate.getSpillOverFlag())
 				isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
@@ -125,6 +127,7 @@ public class AbstractEstimateService {
 				estimate.setStateId(workFlowResponse.get("id"));
 				estimate.setStatus(AbstractEstimateStatus.valueOf(workFlowResponse.get("status")));
 			}
+
 		}
 		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();

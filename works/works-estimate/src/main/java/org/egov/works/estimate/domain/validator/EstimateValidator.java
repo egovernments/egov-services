@@ -175,8 +175,23 @@ public class EstimateValidator {
 		if (estimate.getAbstractEstimateDetails().isEmpty())
 			messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_REQUIRED,
 					Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_REQUIRED);
-		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails())
+		for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails()) {
 			estimateAmount = estimateAmount.add(aed.getEstimateAmount());
+			if(estimate.getBillsCreated() && aed.getGrossAmountBilled() <= 0) {
+				messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED,
+						Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED);
+			}
+			
+		}
+		
+		if(estimate.getBillsCreated() && !(estimate.getDetailedEstimateCreated() && estimate.getWorkOrderCreated())) {
+			messages.put(Constants.KEY_INVALID_BILLSCREATED_FLAG, Constants.MESSAGE_INVALID_BILLSCREATED_FLAG);
+		}
+		
+		if(estimate.getWorkOrderCreated() && !estimate.getDetailedEstimateCreated()) {
+			messages.put(Constants.KEY_INVALID_WORKORDER_FLAG, Constants.MESSAGE_INVALID_WORKORDER_FLAG);
+		}
+			
 		if (estimateAmount.compareTo(BigDecimal.ZERO) == -1)
 			messages.put(Constants.KEY_INVALID_ESTIMATEAMOUNT, Constants.MESSAGE_INVALID_ESTIMATEAMOUNT);
 	}

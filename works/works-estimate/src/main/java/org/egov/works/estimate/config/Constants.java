@@ -304,7 +304,15 @@ public class Constants {
     public static final String ESTIMATE_NAMEOFWORK_NEW= "New";
     public static final String ESTIMATE_NAMEOFWORK_REPAIRS= "Repairs";
     public static final String ESTIMATE_NAMEOFWORK_ADDITION= "Addition";
+    
+    public static final String KEY_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED = "ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED";
+    public static final String MESSAGE_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED = "Gross bill amount for Abstract Estimate Details is required";
 
+    public static final String KEY_INVALID_BILLSCREATED_FLAG = "KEY_INVALID_BILLSCREATED_FLAG";
+    public static final String MESSAGE_INVALID_BILLSCREATED_FLAG = "When bills creates checked workorder created and detailed estimate created flag is required";
 
+    public static final String KEY_INVALID_WORKORDER_FLAG = "KEY_INVALID_BILLSCREATED_FLAG";
+    public static final String MESSAGE_INVALID_WORKORDER_FLAG = "When workorder creates checked detailed estimate created flag is required";
 
+    
 }

@@ -18,8 +18,8 @@ public class MasterMetaData {
 	@JsonProperty("tenantId")
 	public String tenantId;
 	
-	@JsonProperty("filePath")
-	public String filePath;
+	@JsonProperty("moduleName")
+	public String moduleName;
 	
 	@JsonProperty("masterName")
 	public String masterName;

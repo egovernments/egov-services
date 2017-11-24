@@ -103,8 +103,16 @@ public class MDMSService {
 		return filteredMasters;
 	}
 	
-	public String gitPush(MDMSCreateRequest mDMSCreateRequest) throws JsonProcessingException{		
-		ObjectMapper mapper = new ObjectMapper();
+	public String gitPush(MDMSCreateRequest mDMSCreateRequest) throws JsonProcessingException{
+		Map<String, List<Object>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
+		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
+		List<Object> tenantSpecificModuleData = tenantIdMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId());
+		if(null == tenantSpecificModuleData) 
+			throw new CustomException("500","Invalid Tenant Id");
+		Integer index = 0;
+		String content = preProcessor(tenantSpecificModuleData, mDMSCreateRequest, tenantIdMap, index);
+    	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
+    	
 		//get the head of the branch
 		logger.info("Step 1: Getting branch head......");
 		String branchHeadSHA = getBranchHead();
@@ -117,8 +125,7 @@ public class MDMSService {
 		
 		//create a tree with base_tree as last commit and contents to be written
 		logger.info("Step 3: Creating a New Tree......");
-		String content = mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData());
-		String newTreeSHA = createTree(baseTreeSHA, mDMSCreateRequest.getMasterMetaData().getFilePath(), content);
+		String newTreeSHA = createTree(baseTreeSHA, filePath, content);
 		logger.info("Step 3 COMPLETED SUCCESSFULLY!");
 		
 		//create a commit for this tree
@@ -129,14 +136,65 @@ public class MDMSService {
 		
 		//push the contents
 		logger.info("Step 5: Pushing the Contents to git......");
-		pushTheContents(newCommitSHA);
+		//pushTheContents(newCommitSHA);
 		logger.info("Step 5 COMPLETED SUCCESSFULLY!");
 		
-		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + mDMSCreateRequest.getMasterMetaData().getFilePath());
+		logger.info("Updating cache......");
+		updateCache(tenantSpecificModuleData, content, index, tenantIdMap, mDMSCreateRequest.getMasterMetaData().getTenantId());
+		logger.info("Cache Update COMPLETE!");
+
+		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
     	DocumentContext documentContext = JsonPath.parse(MDMSConstants.SUCCESS_RES);
-    	documentContext.put("$", "file", MDMSConstants.FINAL_FILE_PATH_APPEND + mDMSCreateRequest.getMasterMetaData().getFilePath());
+    	documentContext.put("$", "file", MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
 
 		return documentContext.jsonString().toString();
+		
+	}
+	
+	public String preProcessor(List<Object> tenantSpecificModuleData, 
+			MDMSCreateRequest mDMSCreateRequest, Map<String, List<Object>> tenantIdMap, Integer index) throws JsonProcessingException{
+		ObjectMapper mapper = new ObjectMapper();
+		Object moduleContent = null;
+		for(Object moduleData: tenantSpecificModuleData){
+			if(moduleData.toString().contains("moduleName="+mDMSCreateRequest.getMasterMetaData().getModuleName())){
+				moduleContent = moduleData;
+				break;
+			}
+			index++;
+		}
+		logger.info("Module content: "+moduleContent);
+		String moduleContentJson = mapper.writeValueAsString(moduleContent);
+    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
+    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
+    			mDMSCreateRequest.getMasterMetaData().getMasterData());
+    	moduleContentJson = documentContext.jsonString().toString();
+    	logger.info("Updated contents: "+moduleContentJson);
+    	
+    	return moduleContentJson;
+	}
+	
+	public void updateCache(List<Object> tenantSpecificModuleData, String moduleContentJson
+			,Integer index, Map<String, List<Object>> tenantIdMap, String tenantId){
+    	logger.info("index: "+index);
+    	tenantSpecificModuleData.add(index, moduleContentJson);
+    	tenantIdMap.put(tenantId, tenantSpecificModuleData);
+    	
+    	MDMSApplicationRunnerImpl.setTenantMap(tenantIdMap);
+	}
+	
+	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest){
+		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() +"-"+ mDMSCreateRequest.getMasterMetaData().getModuleName());
+		StringBuilder filePath = new StringBuilder();
+		filePath.append(MDMSConstants.DATA_ROOT_FOLDER);
+		String[] tenantArray = mDMSCreateRequest.getMasterMetaData().getTenantId().split("[.]");
+		StringBuilder folderPath = new StringBuilder();
+		for(int i = 0; i < tenantArray.length; i++){
+			folderPath.append(tenantArray[i]).append("/");
+		}
+		filePath.append("/").append(folderPath.toString()).append(fileName);
+		logger.info("filePath: "+filePath.toString());
+		
+		return filePath.toString();
 		
 	}
 	
@@ -196,7 +254,6 @@ public class MDMSService {
 	
 	public String createCommit(String branchHeadSHA, String newTreeSHA, String message) throws JsonProcessingException{
 		StringBuilder getCreateTreeUri = new StringBuilder();
-		ObjectMapper mapper = new ObjectMapper();
 		getCreateTreeUri.append(MDMSConstants.GITHUB_HOST).append(MDMSConstants.EGOV_REPO_PATH)
 		                .append(MDMSConstants.EGOV_CREATE_COMMIT_PATH);
 		logger.info("URI: "+getCreateTreeUri.toString());

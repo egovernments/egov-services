@@ -35,6 +35,7 @@ public class MDMSApplicationRunnerImpl {
 	public String mdmsFileDirectory;
 	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
+	private static Map<String, String> filePathMap = new HashMap<>();
 
 	@PostConstruct
 	public void run() {
@@ -68,6 +69,7 @@ public class MDMSApplicationRunnerImpl {
 					try {
 						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
 						filterMaster(obj);
+						buildFilePathMap(obj, file.getName());
 						System.out.println("yaml obj:" + obj);
 
 					} catch (Exception e) {
@@ -79,6 +81,7 @@ public class MDMSApplicationRunnerImpl {
 					try {
 						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
 						filterMaster(jsonStr);
+						buildFilePathMap(jsonStr, file.getName());
 						System.out.println(jsonStr);
 					} catch (JsonGenerationException e) {
 						// TODO Auto-generated catch block
@@ -101,6 +104,9 @@ public class MDMSApplicationRunnerImpl {
 				readDirectory(listOfFiles[i].getAbsolutePath());
 			}
 		}
+		
+		log.info("filePathMap: "+filePathMap);
+
 
 	}
 
@@ -145,9 +151,25 @@ public class MDMSApplicationRunnerImpl {
 		}
 
 	}
+	
+	private void buildFilePathMap(Map<String, Object> map, String filePath){
+		StringBuilder key = new StringBuilder();
+		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
+		
+		filePathMap.put(key.toString(), filePath);
+	}
 
 	public static Map<String, List<Object>> getTenantMap(){
 		return tenantMap;
+	}
+	
+	public static void setTenantMap(Map<String, List<Object>> tenantIdMap){
+		tenantMap = tenantIdMap;
+	}
+	
+	public static Map<String, String> getFilePathMap(){
+		return filePathMap;
+	
 	}
 	
 }

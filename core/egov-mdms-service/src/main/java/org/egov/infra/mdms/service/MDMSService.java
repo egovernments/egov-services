@@ -136,7 +136,7 @@ public class MDMSService {
 		
 		//push the contents
 		logger.info("Step 5: Pushing the Contents to git......");
-		//pushTheContents(newCommitSHA);
+		pushTheContents(newCommitSHA);
 		logger.info("Step 5 COMPLETED SUCCESSFULLY!");
 		
 		logger.info("Updating cache......");

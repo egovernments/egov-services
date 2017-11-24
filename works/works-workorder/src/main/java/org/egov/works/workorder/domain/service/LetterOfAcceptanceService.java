@@ -99,6 +99,7 @@ public class LetterOfAcceptanceService {
 
 			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
+				securityDeposit.setId(commonUtils.getUUID());
 				securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
 				securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
 				securityDeposit.setAuditDetails(

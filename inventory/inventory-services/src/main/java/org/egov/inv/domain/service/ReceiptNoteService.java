@@ -2,10 +2,7 @@ package org.egov.inv.domain.service;
 
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.inv.model.MaterialReceipt;
-import org.egov.inv.model.MaterialReceiptRequest;
-import org.egov.inv.model.MaterialReceiptResponse;
-import org.egov.inv.model.MaterialReceiptSearch;
+import org.egov.inv.model.*;
 import org.egov.inv.persistence.repository.ReceiptNoteRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +10,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -57,19 +55,7 @@ public class ReceiptNoteService extends DomainService {
             }
 
             materialReceipt.getReceiptDetails().forEach(materialReceiptDetail -> {
-                materialReceiptDetail.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetail"));
-                if (isEmpty(materialReceiptDetail.getTenantId())) {
-                    materialReceiptDetail.setTenantId(tenantId);
-                }
-
-                materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
-                        materialReceiptDetailAddnlInfo -> {
-                            materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
-                            if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
-                                materialReceiptDetailAddnlInfo.setTenantId(tenantId);
-                            }
-                        }
-                );
+                setMaterialDetails(tenantId, materialReceiptDetail);
             });
         });
 
@@ -81,10 +67,10 @@ public class ReceiptNoteService extends DomainService {
                 .materialReceipt(materialReceipts);
     }
 
-
     public MaterialReceiptResponse update(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
-
+        List<String> materialReceiptDetailIds = new ArrayList<>();
+        List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
         materialReceipts.forEach(materialReceipt ->
         {
             if (StringUtils.isEmpty(materialReceipt.getTenantId())) {
@@ -96,13 +82,25 @@ public class ReceiptNoteService extends DomainService {
                     materialReceiptDetail.setTenantId(tenantId);
                 }
 
+                if (isEmpty(materialReceiptDetail.getId())) {
+                    setMaterialDetails(tenantId, materialReceiptDetail);
+                }
+
+                materialReceiptDetailIds.add(materialReceiptDetail.getId());
+
                 materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
                         materialReceiptDetailAddnlInfo -> {
+                            materialReceiptDetailAddlnInfoIds.add(materialReceiptDetailAddnlInfo.getId());
+
                             if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
                                 materialReceiptDetailAddnlInfo.setTenantId(tenantId);
                             }
                         }
                 );
+                receiptNoteRepository.markDeleted(materialReceiptDetailAddlnInfoIds, tenantId, "materialreceiptdetailaddnlinfo", "receiptdetailid", materialReceiptDetail.getId());
+
+                receiptNoteRepository.markDeleted(materialReceiptDetailIds, tenantId, "materialreceiptdetail", "mrnNumber", materialReceipt.getMrnNumber());
+
             });
         });
 
@@ -121,6 +119,22 @@ public class ReceiptNoteService extends DomainService {
         return response
                 .responseInfo(null)
                 .materialReceipt(materialReceiptPagination.getPagedData().size() > 0 ? materialReceiptPagination.getPagedData() : Collections.EMPTY_LIST);
+    }
+
+    private void setMaterialDetails(String tenantId, MaterialReceiptDetail materialReceiptDetail) {
+        materialReceiptDetail.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetail"));
+        if (isEmpty(materialReceiptDetail.getTenantId())) {
+            materialReceiptDetail.setTenantId(tenantId);
+        }
+
+        materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
+                materialReceiptDetailAddnlInfo -> {
+                    materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
+                    if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
+                        materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+                    }
+                }
+        );
     }
 
     private String appendString(MaterialReceipt materialReceipt) {

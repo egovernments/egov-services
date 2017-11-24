@@ -126,6 +126,7 @@ class UpdateCancellation extends React.Component {
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
     this.handleProcess=this.handleProcess.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.setState = this.setState.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
   }
 
@@ -220,13 +221,7 @@ class UpdateCancellation extends React.Component {
       // }
 
       getDesignations(null, function(designations) {
-          for (let variable in designations) {
-              if (!designations[variable]["id"]) {
-                  var _res = commonApiPost("hr-masters", "designations", "_search", { tenantId, name: designations[variable]["name"] });
-                  designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
-              }
-          }
-
+        console.log(designations);
           _this.setState({
             ..._this.state,
             designationList : designations
@@ -242,8 +237,6 @@ class UpdateCancellation extends React.Component {
                                   stateId: stateId,
                                   tenantId
                                 }).responseJSON["Agreements"][0] || {};
-      console.log("agreement", agreement);
-
 
       var process = commonApiPost("egov-common-workflows", "process", "_search", {
         tenantId: tenantId,
@@ -263,8 +256,6 @@ class UpdateCancellation extends React.Component {
             }
           }
         }
-
-
 
       if(!agreement.cancellation){
         agreement.cancellation={};
@@ -305,6 +296,7 @@ class UpdateCancellation extends React.Component {
 
       $('#terminationDate').datepicker({
           format: 'dd/mm/yyyy',
+          startDate: new Date(),
           autoclose:true,
           defaultDate: ""
       });

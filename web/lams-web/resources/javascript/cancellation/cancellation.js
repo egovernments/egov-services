@@ -387,16 +387,6 @@ console.log("Documents",agreement);
       // }
 
       getDesignations(null, function(designations) {
-        for (let variable in designations) {
-          if (!designations[variable]["id"]) {
-            var _res = commonApiPost("hr-masters", "designations", "_search", {
-              tenantId,
-              name: designations[variable]["name"]
-            });
-            designations[variable]["id"] = _res && _res.responseJSON && _res.responseJSON["Designation"] && _res.responseJSON["Designation"][0] ? _res.responseJSON["Designation"][0].id : "";
-          }
-        }
-
         _this.setState({
           ..._this.state,
           designationList: designations
@@ -449,6 +439,7 @@ console.log("Documents",agreement);
 
       $('#terminationDate').datepicker({
         format: 'dd/mm/yyyy',
+        startDate: new Date(),
         autoclose: true,
         defaultDate: ""
       });

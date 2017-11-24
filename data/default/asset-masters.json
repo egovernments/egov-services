@@ -89,6 +89,18 @@
           "order": null,
           "columns": []
         },
+	{
+          "name": "Area",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
         {
           "name": "Length",
           "type": "Number",
@@ -137,15 +149,15 @@
           "order": null,
           "columns": []
         },
-        {
-          "name": "Layer description",
-          "type": "image",
+	{
+          "name": "Layer Type",
+          "type": "Select",
           "isActive": true,
           "isMandatory": false,
           "values": null,
           "localText": null,
           "regExFormate": null,
-          "url": null,
+          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
           "order": null,
           "columns": []
         },
@@ -162,18 +174,6 @@
           "columns": []
         },
         {
-          "name": "Layer Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
-          "order": null,
-          "columns": []
-        },
-        {
           "name": "Layer Size",
           "type": "Number",
           "isActive": true,
@@ -185,9 +185,9 @@
           "order": null,
           "columns": []
         },
-        {
-          "name": "Area",
-          "type": "Number",
+	{
+          "name": "Layer description",
+          "type": "image",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -197,6 +197,7 @@
           "order": null,
           "columns": []
         }
+        
       ]
     },
     {

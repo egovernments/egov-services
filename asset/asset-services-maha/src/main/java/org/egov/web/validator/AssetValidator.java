@@ -198,7 +198,7 @@ public class AssetValidator implements Validator {
 		if (asset != null) {
 			BigDecimal positiveTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
 			BigDecimal negativeTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
-
+			revaluation.setCurrentCapitalizedValue(asset.getCurrentValue());
 			if (revaluation.getTypeOfChange().equals(TypeOfChange.DECREASED))
 				if (!(asset.getCurrentValue().subtract(revaluation.getRevaluationAmount()).doubleValue()
 						- (revaluation.getValueAfterRevaluation().doubleValue()) == 0))

@@ -49,6 +49,8 @@ public class AssetCriteria {
 	private List<String> sort=null;
 	private TransactionType transaction;
 	
+	private  Boolean isTransactionHistoryRequired;
+	
 	
 	private Long size;
 	private Long offset;

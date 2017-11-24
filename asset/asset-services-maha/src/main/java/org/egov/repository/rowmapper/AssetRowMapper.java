@@ -20,6 +20,7 @@ import org.egov.model.FundSource;
 import org.egov.model.LandDetail;
 import org.egov.model.Location;
 import org.egov.model.ModeOfAcquisition;
+import org.egov.model.TransactionHistory;
 import org.egov.model.enums.AssetCategoryType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
@@ -46,7 +47,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
         while (rs.next()) {
             final Long assetId = rs.getLong("id");
 
-            log.debug("agreementid in row mapper" + assetId);
+            log.debug("asset in row mapper" + assetId);
 
             Asset asset = map.get(assetId);
             if (asset == null) {
@@ -95,7 +96,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 asset.setLocation(rs.getString("location"));
                 asset.setCurrentValue(rs.getBigDecimal("currentamount"));
                 
-                final String tittleDocs = rs.getString("titledocumentsavalable");
+                final String tittleDocs = rs.getString("titledocumentsavailable");
                 List<String> tda = null;
                 try {
                 	tda = objectMapper.readValue(tittleDocs, List.class);
@@ -154,7 +155,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
                 auditDetails.setLastModifiedBy(rs.getString("lastmodifiedby"));
                 auditDetails.setLastModifiedDate(rs.getLong("lastmodifieddate"));
                 asset.setAuditDetails(auditDetails);
-
+               
                 log.debug("AssetRowMapper asset:: " + asset);
                 map.put(assetId, asset);
             }
@@ -171,6 +172,7 @@ public class AssetRowMapper implements ResultSetExtractor<List<Asset>> {
 				}
 			}	
           }
+      
         return new ArrayList<Asset>(map.values());
         
 }

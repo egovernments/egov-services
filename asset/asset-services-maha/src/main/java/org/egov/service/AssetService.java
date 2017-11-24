@@ -7,6 +7,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.config.ApplicationProperties;
@@ -20,6 +23,7 @@ import org.egov.model.CurrentValue;
 import org.egov.model.Department;
 import org.egov.model.FundSource;
 import org.egov.model.ModeOfAcquisition;
+import org.egov.model.TransactionHistory;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.criteria.RevaluationCriteria;
 import org.egov.model.enums.KafkaTopicName;
@@ -151,40 +155,20 @@ public class AssetService {
 	}
 
 	public AssetResponse getAssets(final AssetCriteria searchAsset, final RequestInfo requestInfo) {
-		log.info("AssetService getAssets");
-
-		if ((searchAsset.getAssetSubCategory() == null || CollectionUtils.isEmpty(searchAsset.getAssetSubCategory())) &&
-
-				(searchAsset.getAssetCategory() != null || !CollectionUtils.isEmpty(searchAsset.getAssetCategory()))) {
-
-			System.err.println("the set : " + CollectionUtils.isEmpty(searchAsset.getAssetCategory()));
-			Map<String, String> paramsMap = new HashMap<>();
-			Map<String, Map<String, String>> masterMap = new HashMap<>();
-			Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
-			System.err.println("searchAsset.getAssetCategory()" + searchAsset.getAssetCategory());
-			paramsMap.put("parent", assetCommonService.getIdQuery(searchAsset.getAssetCategory()));
-			masterMap.put("AssetCategory", paramsMap);
-			moduleMap.put("ASSET", masterMap);
-
-			String tenantId = searchAsset.getTenantId();
-			if (!tenantId.equals("default"))
-				tenantId = tenantId.split("\\.")[0];
-
-			JSONArray jsonArray = mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET")
-					.get("AssetCategory");
-			Map<Long, AssetCategory> asCatMap = mDService.getAssetCategoryMapFromJSONArray(jsonArray);
-			if (searchAsset.getAssetSubCategory() == null)
-				searchAsset.setAssetSubCategory(asCatMap.keySet());
-			else
-				searchAsset.getAssetSubCategory().addAll(asCatMap.keySet());
-		}
-
+		
+		enrichParentCategory(searchAsset,requestInfo);
 		final List<Asset> assets = assetRepository.findForCriteria(searchAsset);
+		if(searchAsset.getIsTransactionHistoryRequired()==null)
+			searchAsset.setIsTransactionHistoryRequired(false);
+		else if (searchAsset.getIsTransactionHistoryRequired().equals(true) && !assets.isEmpty()) 
+			enrichTransactionHistory(assets);
+		
 
 		if (!assets.isEmpty())
 			mapMasters(assets, requestInfo, searchAsset.getTenantId());
 		return getAssetResponse(assets, requestInfo);
 	}
+
 
 	private AssetResponse getAssetResponse(final List<Asset> assets, final RequestInfo requestInfo) {
 		final AssetResponse assetResponse = new AssetResponse();
@@ -203,7 +187,7 @@ public class AssetService {
 		else
 			return null;
 	}
-
+	
 	private void mapMasters(List<Asset> assets, RequestInfo requestInfo, String tenantId) {
 
 		Map<String, Map<String, JSONArray>> rsMasterMap = mDService.getStateWideMastersByListParams(assets, requestInfo,
@@ -234,5 +218,37 @@ public class AssetService {
 			if (modeOfAquisitionMap.get(mOAKey) != null)
 				asset.setModeOfAcquisition(modeOfAquisitionMap.get(mOAKey));
 		});
+	}
+
+	private void enrichParentCategory(AssetCriteria searchAsset, RequestInfo requestInfo) {
+
+		if ((searchAsset.getAssetSubCategory() == null || CollectionUtils.isEmpty(searchAsset.getAssetSubCategory())) &&
+				(searchAsset.getAssetCategory() != null || !CollectionUtils.isEmpty(searchAsset.getAssetCategory()))) {
+
+			Map<String, String> paramsMap = new HashMap<>();
+			Map<String, Map<String, String>> masterMap = new HashMap<>();
+			Map<String, Map<String, Map<String, String>>> moduleMap = new HashMap<>();
+			paramsMap.put("parent", assetCommonService.getIdQuery(searchAsset.getAssetCategory()));
+			masterMap.put("AssetCategory", paramsMap);
+			moduleMap.put("ASSET", masterMap);
+
+			String tenantId = searchAsset.getTenantId();
+			if (!tenantId.equals("default"))
+				tenantId = tenantId.split("\\.")[0];
+
+			JSONArray jsonArray = mDRepo.getMastersByListParams(moduleMap, requestInfo, tenantId).get("ASSET")
+					.get("AssetCategory");
+			Map<Long, AssetCategory> asCatMap = mDService.getAssetCategoryMapFromJSONArray(jsonArray);
+			if (searchAsset.getAssetSubCategory() == null)
+				searchAsset.setAssetSubCategory(asCatMap.keySet());
+			else
+				searchAsset.getAssetSubCategory().addAll(asCatMap.keySet());
+		}
+	}
+
+	private void enrichTransactionHistory(List<Asset> assets) {
+       Set<Long> assetIds=assets.stream().map(a -> a.getId()).collect(Collectors.toSet());
+		Map<Long, List<TransactionHistory>> transactionhistoryMap = assetRepository.getTransactionHistory(assetIds,assets.get(0).getTenantId());
+		assets.forEach( a -> a.setTransactionHistory(transactionhistoryMap.get(a.getId())));
 	}
 }

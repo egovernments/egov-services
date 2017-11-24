@@ -183,4 +183,9 @@ public class Asset {
 
 	@JsonProperty("currentValue")
 	private BigDecimal currentValue;
+	
+	@JsonProperty("transactionHistory")
+	private List<TransactionHistory> transactionHistory;
+	
+	
 }

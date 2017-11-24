@@ -6,6 +6,8 @@ import java.util.Set;
 import org.egov.model.criteria.AssetCriteria;
 import org.egov.model.enums.AssetCategoryType;
 import org.egov.model.enums.TransactionType;
+import org.egov.service.AssetCommonService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import lombok.extern.slf4j.Slf4j;
@@ -13,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 @Component
 @Slf4j
 public class AssetQueryBuilder {
+	
+	@Autowired
+	private AssetCommonService assetCommonService;
 
 	public final static String FINDBYNAMEQUERY = "SELECT asset.name FROM egasset_asset asset WHERE asset.name=? AND asset.tenantid=?";
 
@@ -47,6 +52,21 @@ public class AssetQueryBuilder {
 		addPagingClause(selectQuery, preparedStatementValues, searchAsset);
 		log.debug("Query from asset querybuilder for search : " + selectQuery);
 		return selectQuery.toString();
+	}
+	
+	@SuppressWarnings({ "rawtypes", "unchecked" })
+	public String getHistoryQuery(Set<Long> assetIds ,String tenantid) {
+
+		String assetIdString = null;
+		if (assetIds != null && !assetIds.isEmpty())
+			assetIdString = "AND cv.assetid IN (" + assetCommonService.getIdQuery(assetIds) + ") ";
+		
+		return "select  * "
+		+ "from egasset_current_value cv  " 
+		+ "left outer join egasset_revaluation  rv on rv.assetid=cv.assetid and rv.valueafterrevaluation=cv.currentamount "  
+		+ "left outer join egasset_depreciation  dv on dv.assetid=cv.assetid and dv.valueafterdepreciation=cv.currentamount "
+		+ "where  cv.assettrantype !='CREATE' AND cv.tenantid='" + tenantid + "' " +assetIdString+ " order by cv.assetid,cv.id,cv.transactiondate,cv.createdtime; ";
+
 	}
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
@@ -215,4 +235,5 @@ public class AssetQueryBuilder {
 			query.append("," + "'" + arr[i].toString() + "'");
 		return query.toString();
 	}
+
 }

@@ -42,8 +42,7 @@ class assetImmovableCreate extends Component {
       customFieldsGen:{},
       hide: true,
       customArr: [],
-       layerData: [],
-       imageDes: ""
+       layerData: []
     }
   }
 
@@ -331,7 +330,7 @@ console.log(self.props.formData);
 
     Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET","masterName":"Assetconfiguration"},{}, false, false, false, "", "", true).then(function(response) {
 
-          if (response && response.MdmsRes && response.MdmsRes.ASSET && response.MdmsRes.ASSET.Assetconfiguration[0].keyname == "EnableVoucherGeneration") {
+          if (response && response.MdmsRes && response.MdmsRes.ASSET && response.MdmsRes.ASSET.Assetconfiguration && response.MdmsRes.ASSET.Assetconfiguration[0] && response.MdmsRes.ASSET.Assetconfiguration[0].keyname == "EnableVoucherGeneration") {
             if ( response.MdmsRes.ASSET.Assetconfiguration[0].values[0].value == "true") {
               self.props.addRequiredFields(["Asset.assetAccount"]);
               self.props.addRequiredFields(["Asset.accumulatedDepreciationAccount"]);
@@ -1266,9 +1265,12 @@ delete formData.Asset.assetAttributesCheck;
 
        if (property== "Asset.assetAttributesCheck.Layer Type.Select") {
          for (var i = 0; i < groups[0].fields.length; i++) {
-           if (property == groups[0].fields[i].jsonPath) {
+           if ("Asset.assetAttributesCheck.Layer description.image" == groups[0].fields[i].jsonPath ) {
              groups[0].fields[i].imagePath = this.state.layerData[e.target.value].description ;
-            //  console.log(groups[0].fields[i].imagePath);
+
+              self.setState({
+                hide:false
+              })
            }
          }
 
@@ -1524,7 +1526,6 @@ delete formData.Asset.assetAttributesCheck;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
     // })}
 
-    console.log(self.props.formData);
     return (
       <div className="Report">
       {actionName == "update" && <UiBackButton/>}

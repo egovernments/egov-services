@@ -1,17 +1,17 @@
 {
-  "tenantId": "mh",
+  "tenantId": "mh.abc",
   "moduleName": "lams-maha",
   "Register": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "mh.abc",
       "code": "REGNAME_REGISTER1",
       "name": "Fake Register Name1",
       "isActive": true
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "mh.abc",
       "code": "REGNAME_REGISTER2",
       "name": "Fake Register Name2",
       "isActive": true

@@ -128,8 +128,8 @@ public class AgreementValidator {
 		for (String string : assetCategoryNames) {
 			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
 
-				errors.rejectValue("Agreement.asset.assetCategory", "",
-						"eviction is valid only for shop asset category");
+				errors.reject("Agreement not allowed for Evicition",
+						"Eviction is valid only for Shop types.");
 			}
 		}
 	}
@@ -138,7 +138,6 @@ public class AgreementValidator {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-
 		if(agreement.getIsUnderWorkflow()){
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 			}
@@ -172,20 +171,18 @@ public class AgreementValidator {
 
 		if (!(today.compareTo(beforeExpiry) >= 0 && today.compareTo(afterExpiry) <= 0)) {
 			if (today.compareTo(beforeExpiry) < 0)
-				errors.rejectValue(ERROR_FIELD_AGREEMENT_NO, "",
+				errors.reject(ERROR_FIELD_AGREEMENT_NO,
 						"agreement can be renewed only in the period of " + 3 + " months before expiry date");
 			else if (today.compareTo(afterExpiry) > 0)
-				errors.rejectValue(ERROR_FIELD_AGREEMENT_NO, "",
+				errors.reject(ERROR_FIELD_AGREEMENT_NO,
 						"agreement can be renewed only in the period of " + 3 + " months after expiry date");
 		}
 	}
 
 	public void validateCancel(AgreementRequest agreementRequest, Errors errors) {
-
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-
-		if(agreement.getIsUnderWorkflow()){
+		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
@@ -197,7 +194,7 @@ public class AgreementValidator {
 		if (!"ACTIVE".equals(renewalStatus)) {
 			errors.reject("Can't do objection", "Renewal status is not active");
 		}
-		if(agreement.getIsUnderWorkflow()){
+		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
 
@@ -227,13 +224,13 @@ public class AgreementValidator {
 		for (String string : assetCategoryNames) {
 			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
 
-				errors.rejectValue("Agreement.asset.assetCategory", "",
+				errors.reject("Agreement",
 						"remission is valid only for market asset category");
 			}
 		}
 
 		if (isRentCollected) {
-			errors.rejectValue("Agreement.remission.fromDate", "",
+			errors.reject("Agreement",
 					"Rent can not be modified for already collected installment!");
 		}
 
@@ -285,14 +282,14 @@ public class AgreementValidator {
 		demandSearchCriteria.setDemandId(Long.valueOf(demandId));
 		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
 		if (demand == null)
-			errors.rejectValue("Agreement.demands", "", "No Demands found for the given agreement");
+			errors.reject("No demands", "No Demands found for the given agreement");
 		else {
 			Date today = new Date();
 			for (DemandDetails demandDetails : demand.getDemandDetails()) {
 				if (today.compareTo(demandDetails.getPeriodStartDate()) >= 0
 						&& (!demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount()).equals(0)))
-					errors.rejectValue("Demands unpaid", "",
-							"all due must be paid till current month to initiate " + processName);
+					errors.reject("Rent due",
+							"All the dues must be paid till current installment to initiate " + processName);
 			}
 		}
 		}
@@ -355,10 +352,8 @@ public class AgreementValidator {
 
 	}
 
-	public void validateAgreementForWorkFLow(Agreement agreement, Errors errors, String action) {
+	public void validateAgreementForWorkFLow(AgreementRequest agreementRequest, Errors errors, String action) {
 
-		AgreementRequest agreementRequest = new AgreementRequest();
-		agreementRequest.setAgreement(agreement);
 		if (Action.RENEWAL.toString().equals(action)) {
 			validateRenewal(agreementRequest, errors);
 		} else if (Action.CANCELLATION.toString().equals(action)) {

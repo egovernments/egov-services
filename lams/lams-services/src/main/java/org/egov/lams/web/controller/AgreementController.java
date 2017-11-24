@@ -80,13 +80,16 @@ public class AgreementController {
 			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 		}
 		List<Agreement> agreements = null;
+		AgreementRequest agreementRequest = new AgreementRequest();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
 			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria.getAgreementNumber(),
 					agreementCriteria.getTenantId());
 		}
 		if (agreements != null && !agreements.isEmpty()) {
-			agreementValidator.validateAgreementForWorkFLow(agreements.get(0), bindingResult,
+			agreementRequest.setRequestInfo(requestInfo);
+			agreementRequest.setAgreement(agreements.get(0));
+			agreementValidator.validateAgreementForWorkFLow(agreementRequest, bindingResult,
 					agreementCriteria.getAction());
 
 			if (bindingResult.hasErrors()) {

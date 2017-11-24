@@ -31,6 +31,7 @@ public class MaterialReceiptDetailService extends DomainService {
             for (MaterialReceiptDetail materialReceiptDetail : receiptDetails) {
                 MaterialReceiptAddInfoSearch materialReceiptAddInfoSearch = MaterialReceiptAddInfoSearch.builder()
                         .receiptDetailId(Arrays.asList(materialReceiptDetail.getId()))
+                        .tenantId(materialReceiptDetailSearch.getTenantId())
                         .build();
                 Pagination<MaterialReceiptDetailAddnlinfo> detailAddnlinfoPagination = materialReceiptDetailAddInfoService.search(materialReceiptAddInfoSearch);
                 materialReceiptDetail.setReceiptDetailsAddnInfo(detailAddnlinfoPagination.getPagedData());

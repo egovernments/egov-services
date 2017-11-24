@@ -306,29 +306,22 @@ public class CaseSearchRepository {
 		return null;
 	}
 
-	public List<Object> searchHearingDetailsQuery(String code, String tenantId) {
+	public List<Map<String, Object>> searchHearingDetailsQuery(String code, String tenantId) {
 
-		List<Object> hearingValues = new ArrayList<Object>();
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		final String queryStr = caseBuilder.searchHearingDetails(code, tenantId,
 				ConstantUtility.HEARING_DETAILS_TABLE_NAME, preparedStatementValues);
+		
+		List<Map<String, Object>> hearingDateValues = new ArrayList<>();
 
 		try {
-
-			List<Map<String, Object>> hearingDetailsValues = jdbcTemplate.queryForList(queryStr,
-					preparedStatementValues.toArray());
-			for (Map<String, Object> maps : hearingDetailsValues) {
-				if (maps.get("nexthearingtime") != null)
-					hearingValues.add(maps.get("nexthearingtime"));
-				if (maps.get("nexthearingdate") != null)
-					hearingValues.add(maps.get("nexthearingdate"));
-			}
-
+			
+			hearingDateValues = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray());
 		} catch (Exception ex) {
 			log.info("the exception is :" + ex.getMessage());
 			throw new CustomException(propertiesManager.getCaseDetailsResponseErrorCode(),
 					propertiesManager.getCaseDetailsResponseErrorMsg());
 		}
-		return hearingValues != null ? hearingValues : null;
+		return hearingDateValues != null ? hearingDateValues : null;
 	}
 }

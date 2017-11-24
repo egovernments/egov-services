@@ -592,15 +592,19 @@ public class CaseService {
 							propertiesManager.getHearingDetailsUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 					hearingDetails.setCode(code);
 
-					List<Object> hearingDateValues = caseSearchRepository.searchHearingDetailsQuery(casee.getCode(),
-							casee.getTenantId());
+					List<Map<String, Object>> hearingDateValues = caseSearchRepository
+							.searchHearingDetailsQuery(casee.getCode(), casee.getTenantId());
 					log.info("hearing details current date and time values are : " + hearingDateValues);
-					
+
 					if (hearingDateValues != null && hearingDateValues.size() > 0) {
-						if (hearingDateValues.get(0) != null)
-							hearingDetails.setCurrentHearingTime(hearingDateValues.get(0).toString());
-						if (hearingDateValues.get(1) != null)
-							hearingDetails.setCurrentHearingDate(Long.valueOf(hearingDateValues.get(1).toString()));
+						for (Map<String, Object> mapValues : hearingDateValues) {
+							
+							if (mapValues.get("nexthearingtime") != null)
+								hearingDetails.setCurrentHearingTime(mapValues.get("nexthearingtime").toString());
+							
+							if(mapValues.get("nexthearingdate") != null)
+								hearingDetails.setCurrentHearingDate(Long.valueOf(mapValues.get("nexthearingdate").toString()));
+						}
 					} else {
 						hearingDetails.setCurrentHearingDate(casee.getSummon().getHearingDate());
 						hearingDetails.setCurrentHearingTime(casee.getSummon().getHearingTime());

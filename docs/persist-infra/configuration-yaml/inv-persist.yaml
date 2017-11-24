@@ -343,7 +343,7 @@ serviceMaps:
               type: LONG
             - type: CURRENTDATE
               dbType: LONG  
-        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId,tenantId,receivedDate, lotNo,expiryDate,serialno )VALUES ( ?, ?, ?, ?, ?, ?,?);
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId,tenantId,receivedDate, lotNo,oldReceiptNumber,expiryDate,serialno )VALUES ( ?,?, ?, ?, ?, ?, ?,?);
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
@@ -351,6 +351,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.tenantId
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.receivedDate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
@@ -374,10 +375,11 @@ serviceMaps:
               dbType: LONG  
             - jsonPath: $.materialReceipt.*.receiptDetails.*.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
-        - query: UPDATE materialreceiptdetailaddnlinfo SET   lotNo =?,expiryDate =? where id=? AND tenantId= ?;
+        - query: UPDATE materialreceiptdetailaddnlinfo SET   lotNo =?,oldReceiptNumber =? ,expiryDate =? where id=? AND tenantId= ?;
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:      
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id

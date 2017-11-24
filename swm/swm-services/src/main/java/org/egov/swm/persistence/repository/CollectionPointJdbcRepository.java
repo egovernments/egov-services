@@ -128,43 +128,45 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             collectionPointList.add(collectionPointEntity.toDomain());
         }
 
-        StringBuffer collectionPointCodes = new StringBuffer();
-        StringBuffer boundaryCodes = new StringBuffer();
-        Set<String> boundaryCodesSet = new HashSet<>();
+        if (collectionPointList != null && !collectionPointList.isEmpty()) {
 
-        for (CollectionPoint collectionPoint : collectionPointList) {
+            StringBuffer collectionPointCodes = new StringBuffer();
+            StringBuffer boundaryCodes = new StringBuffer();
+            Set<String> boundaryCodesSet = new HashSet<>();
 
-            if (collectionPointCodes.length() >= 1)
-                collectionPointCodes.append(",");
+            for (CollectionPoint collectionPoint : collectionPointList) {
 
-            collectionPointCodes.append(collectionPoint.getCode());
+                if (collectionPointCodes.length() >= 1)
+                    collectionPointCodes.append(",");
 
-            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
-                    && !collectionPoint.getLocation().getCode().isEmpty()) {
+                collectionPointCodes.append(collectionPoint.getCode());
 
-                boundaryCodesSet.add(collectionPoint.getLocation().getCode());
+                if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
+                        && !collectionPoint.getLocation().getCode().isEmpty()) {
+
+                    boundaryCodesSet.add(collectionPoint.getLocation().getCode());
+
+                }
 
             }
 
+            List<String> locationCodes = new ArrayList(boundaryCodesSet);
+
+            for (String code : locationCodes) {
+
+                if (boundaryCodes.length() >= 1)
+                    boundaryCodes.append(",");
+
+                boundaryCodes.append(code);
+
+            }
+
+            populateBoundarys(collectionPointList, boundaryCodes.toString());
+
+            populateBinDetails(collectionPointList, collectionPointCodes.toString());
+
+            populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
         }
-
-        List<String> locationCodes = new ArrayList(boundaryCodesSet);
-
-        for (String code : locationCodes) {
-
-            if (boundaryCodes.length() >= 1)
-                boundaryCodes.append(",");
-
-            boundaryCodes.append(code);
-
-        }
-
-        populateBoundarys(collectionPointList, boundaryCodes.toString());
-
-        populateBinDetails(collectionPointList, collectionPointCodes.toString());
-
-        populateCollectionPointDetails(collectionPointList, collectionPointCodes.toString());
-
         page.setTotalResults(collectionPointList.size());
 
         page.setPagedData(collectionPointList);

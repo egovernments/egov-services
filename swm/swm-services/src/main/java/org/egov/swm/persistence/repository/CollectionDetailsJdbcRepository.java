@@ -74,13 +74,16 @@ public class CollectionDetailsJdbcRepository extends JdbcRepository {
                 row);
 
         final List<CollectionDetails> resultList = new ArrayList<>();
+        
+        if (entityList != null && !entityList.isEmpty()) {
+            
+            for (final CollectionDetailsEntity cde : entityList) {
 
-        for (final CollectionDetailsEntity cde : entityList) {
+                resultList.add(cde.toDomain());
+            }
 
-            resultList.add(cde.toDomain());
+            populateCollectionTypes(resultList);
         }
-
-        populateCollectionTypes(resultList);
 
         return resultList;
     }

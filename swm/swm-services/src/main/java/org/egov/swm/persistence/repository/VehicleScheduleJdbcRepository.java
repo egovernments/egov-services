@@ -130,10 +130,12 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             vehicleScheduleList.add(vehicleScheduleEntity.toDomain());
 
         }
+        if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty()) {
 
-        populateVehicles(vehicleScheduleList);
+            populateVehicles(vehicleScheduleList);
 
-        populateRoutes(vehicleScheduleList);
+            populateRoutes(vehicleScheduleList);
+        }
 
         page.setTotalResults(vehicleScheduleList.size());
 

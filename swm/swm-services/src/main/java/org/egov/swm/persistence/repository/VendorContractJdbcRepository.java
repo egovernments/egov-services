@@ -130,8 +130,10 @@ public class VendorContractJdbcRepository extends JdbcRepository {
             vendorContractList.add(entity.toDomain());
         }
 
-        populateVendors(vendorContractList);
+        if (vendorContractList != null && !vendorContractList.isEmpty()) {
 
+            populateVendors(vendorContractList);
+        }
         page.setTotalResults(vendorContractList.size());
 
         page.setPagedData(vendorContractList);

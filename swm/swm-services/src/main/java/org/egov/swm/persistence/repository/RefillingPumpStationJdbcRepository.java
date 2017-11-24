@@ -139,12 +139,15 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
             refillingPumpStationList.add(refillingPumpStationEntity.toDomain());
         }
 
-        populateBoundarys(refillingPumpStationList);
+        if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty()) {
+         
+            populateBoundarys(refillingPumpStationList);
 
-        populateFuelTypes(refillingPumpStationList);
+            populateFuelTypes(refillingPumpStationList);
 
-        populateTypeOfPumps(refillingPumpStationList);
+            populateTypeOfPumps(refillingPumpStationList);
 
+        }
         page.setTotalResults(refillingPumpStationList.size());
 
         page.setPagedData(refillingPumpStationList);

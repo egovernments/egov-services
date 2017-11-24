@@ -143,18 +143,19 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
         }
 
-        populateCollectionPoints(sanitationStaffTargetList);
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty()) {
+            populateCollectionPoints(sanitationStaffTargetList);
 
-        populateDumpingGrounds(sanitationStaffTargetList);
+            populateDumpingGrounds(sanitationStaffTargetList);
 
-        populateSwmProcesses(sanitationStaffTargetList);
+            populateSwmProcesses(sanitationStaffTargetList);
 
-        populateBoundarys(sanitationStaffTargetList);
+            populateBoundarys(sanitationStaffTargetList);
 
-        populateEmployees(sanitationStaffTargetList);
+            populateEmployees(sanitationStaffTargetList);
 
-        populateRoutes(sanitationStaffTargetList);
-
+            populateRoutes(sanitationStaffTargetList);
+        }
         page.setTotalResults(sanitationStaffTargetList.size());
 
         page.setPagedData(sanitationStaffTargetList);

@@ -147,12 +147,14 @@ public class VendorJdbcRepository extends JdbcRepository {
 
         }
 
-        populateSuppliers(vendorList);
+        if (vendorList != null && !vendorList.isEmpty()) {
 
-        populateServicedLocations(vendorList, vendorCodes.toString());
+            populateSuppliers(vendorList);
 
-        populateServicesOffered(vendorList, vendorCodes.toString());
+            populateServicedLocations(vendorList, vendorCodes.toString());
 
+            populateServicesOffered(vendorList, vendorCodes.toString());
+        }
         page.setTotalResults(vendorList.size());
 
         page.setPagedData(vendorList);

@@ -126,9 +126,11 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             vehicleTripSheetDetailsList.add(vehicleTripSheetDetailsEntity.toDomain());
         }
 
-        populateRoutes(vehicleTripSheetDetailsList);
+        if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty()) {
+            populateRoutes(vehicleTripSheetDetailsList);
 
-        populateVehicles(vehicleTripSheetDetailsList);
+            populateVehicles(vehicleTripSheetDetailsList);
+        }
 
         page.setTotalResults(vehicleTripSheetDetailsList.size());
 

@@ -127,11 +127,11 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
             sourceSegregationList.add(ss);
 
         }
+        if (sourceSegregationList != null && !sourceSegregationList.isEmpty()) {
+            populateDumpingGrounds(sourceSegregationList);
 
-        populateDumpingGrounds(sourceSegregationList);
-
-        populateCollectionDetails(sourceSegregationList, sourceSegregationCodes.toString());
-
+            populateCollectionDetails(sourceSegregationList, sourceSegregationCodes.toString());
+        }
         page.setTotalResults(sourceSegregationList.size());
 
         page.setPagedData(sourceSegregationList);

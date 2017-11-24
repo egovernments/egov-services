@@ -154,13 +154,13 @@ public class VehicleFuellingDetailsJdbcRepository extends JdbcRepository {
 
             vehicleFuellingDetailsList.add(vehicleFuellingDetailsEntity.toDomain());
         }
+        if (vehicleFuellingDetailsList != null && !vehicleFuellingDetailsList.isEmpty()) {
+            populateFuelTypes(vehicleFuellingDetailsList);
 
-        populateFuelTypes(vehicleFuellingDetailsList);
+            populateVehicles(vehicleFuellingDetailsList);
 
-        populateVehicles(vehicleFuellingDetailsList);
-
-        populateRefillingPumpStations(vehicleFuellingDetailsList);
-
+            populateRefillingPumpStations(vehicleFuellingDetailsList);
+        }
         page.setTotalResults(vehicleFuellingDetailsList.size());
 
         page.setPagedData(vehicleFuellingDetailsList);

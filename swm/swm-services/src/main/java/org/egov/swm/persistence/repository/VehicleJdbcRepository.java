@@ -180,12 +180,14 @@ public class VehicleJdbcRepository extends JdbcRepository {
             vehicleList.add(vehicleEntity.toDomain());
         }
 
-        populateFuelTypes(vehicleList);
+        if (vehicleList != null && !vehicleList.isEmpty()) {
 
-        populateVehicleTypes(vehicleList);
+            populateFuelTypes(vehicleList);
 
-        populateVendors(vehicleList);
+            populateVehicleTypes(vehicleList);
 
+            populateVendors(vehicleList);
+        }
         page.setTotalResults(vehicleList.size());
 
         page.setPagedData(vehicleList);

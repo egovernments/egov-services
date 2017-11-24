@@ -112,10 +112,11 @@ public class SanitationStaffScheduleJdbcRepository extends JdbcRepository {
 
         }
 
-        populateShifts(sanitationStaffScheduleList);
+        if (sanitationStaffScheduleList != null && !sanitationStaffScheduleList.isEmpty()) {
+            populateShifts(sanitationStaffScheduleList);
 
-        populateSanitationStaffTargets(sanitationStaffScheduleList);
-
+            populateSanitationStaffTargets(sanitationStaffScheduleList);
+        }
         page.setTotalResults(sanitationStaffScheduleList.size());
 
         page.setPagedData(sanitationStaffScheduleList);

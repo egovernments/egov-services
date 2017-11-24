@@ -150,11 +150,14 @@ public class RouteJdbcRepository extends JdbcRepository {
             routeList.add(routeEntity.toDomain());
         }
 
-        populateCollectionPoints(routeList);
+        if (routeList != null && !routeList.isEmpty()) {
 
-        populateCollectionTypes(routeList);
+            populateCollectionPoints(routeList);
 
-        populateDumpingGrounds(routeList);
+            populateCollectionTypes(routeList);
+
+            populateDumpingGrounds(routeList);
+        }
 
         page.setTotalResults(routeList.size());
 

@@ -118,7 +118,9 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
             vehicleMaintenanceList.add(vehicleMaintenanceEntity.toDomain());
         }
 
-        populateVehicles(vehicleMaintenanceList);
+        if (vehicleMaintenanceList != null && !vehicleMaintenanceList.isEmpty()) {
+            populateVehicles(vehicleMaintenanceList);
+        }
 
         page.setTotalResults(vehicleMaintenanceList.size());
 

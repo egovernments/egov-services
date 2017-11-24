@@ -3,7 +3,6 @@ package org.egov;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -19,7 +18,6 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
@@ -38,6 +36,7 @@ public class MDMSApplicationRunnerImpl {
 	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
 
+	@PostConstruct
 	public void run() {
 		try {
 			log.info("Reading yaml files from: "+mdmsFileDirectory);

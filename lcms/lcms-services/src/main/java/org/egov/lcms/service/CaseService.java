@@ -594,6 +594,8 @@ public class CaseService {
 
 					List<Object> hearingDateValues = caseSearchRepository.searchHearingDetailsQuery(casee.getCode(),
 							casee.getTenantId());
+					log.info("hearing details current date and time values are : " + hearingDateValues);
+					
 					if (hearingDateValues != null && hearingDateValues.size() > 0) {
 						if (hearingDateValues.get(0) != null)
 							hearingDetails.setCurrentHearingTime(hearingDateValues.get(0).toString());

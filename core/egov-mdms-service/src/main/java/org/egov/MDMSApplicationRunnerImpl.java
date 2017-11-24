@@ -38,7 +38,6 @@ public class MDMSApplicationRunnerImpl {
 	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
 
-	@PostConstruct
 	public void run() {
 		try {
 			log.info("Reading yaml files from: "+mdmsFileDirectory);

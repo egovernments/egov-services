@@ -194,14 +194,7 @@ var dat = {
             "defaultValue":"",
             "maxLength":12,
             "minLength":6,
-            "patternErrorMsg":"",
-            "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenances[0].vehicle.regNumber}",
-              "autoFillFields": {
-                "vehicleMaintenances[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name"
-              }
-            }
+            "patternErrorMsg":""
           },
           {
              "name":"name",

@@ -1,0 +1,37 @@
+UIInfo:
+- referencePath: "/vendorcontracts"
+  searchUrl: "/vendorcontracts/_search?contractNo={contractNo}"
+  groups:
+    VendorContractDetails:
+      fields:
+      - vendorContracts[0].contractNo
+      - vendorContracts[0].contractDate
+      - vendorContracts[0].contractPeriodFrom
+      - vendorContracts[0].contractPeriodTo
+      - vendorContracts[0].securityDeposit
+      - vendorContracts[0].paymentAmount
+      - vendorContracts[0].remarks
+  searchResult:
+    rowClickUrlUpdate: "/update/vendorContracts/{contractNo}"
+    rowClickUrlView: "/view/vendorContracts/{contractNo}"
+    columns:
+    - contractNo
+    - contractDate
+    - contractPeriodFrom
+    - contractPeriodTo
+    - chaildDropDown
+    - securityDeposit
+    - paymentAmount
+    - paymentTerms
+    - remarks
+    values:
+    - contractNo
+    - contractDate
+    - contractPeriodFrom
+    - contractPeriodTo
+    - chaildDropDown
+    - securityDeposit
+    - paymentAmount
+    - paymentTerms
+    - remarks
+    resultObjectName: vendorContracts

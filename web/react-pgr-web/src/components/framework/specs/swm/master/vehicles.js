@@ -435,15 +435,14 @@ var dat = {
         "fields": [
           {
             "name": "code",
-            "jsonPath": "vehicles[0].vehicleType.code",
+            "jsonPath": "vehicles[0].vehicleType.name",
             "label": "swm.vehicles.create.vehicleType",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..name"
+            "patternErrorMsg": ""
           },
           {
             "name": "regNumber",
@@ -509,15 +508,14 @@ var dat = {
           },
           {
             "name": "code",
-            "jsonPath": "vehicles[0].fuelType.code",
+            "jsonPath": "vehicles[0].fuelType.name",
             "label": "swm.vehicles.create.fuelType",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "maxLength": 128,
             "minLength": 1,
-            "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
+            "patternErrorMsg": ""
           }
         ]
       },
@@ -598,14 +596,13 @@ var dat = {
             "name": "vendorname",
             "jsonPath": "vehicles[0].vendor.name",
             "label": "swm.vehicles.create.vendor",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "hide": true,
             "maxLength": 256,
             "minLength": 1,
-            "patternErrorMsg": "",
-            "url": "swm-services/vendors/_search?|$.vendors.*.name|$.vendors.*.name"
+            "patternErrorMsg": ""
           }
         ]
       },
@@ -870,7 +867,7 @@ var dat = {
           },
           {
             "name": "vendorname",
-            "jsonPath": "vehicles[0].vendor.name",
+            "jsonPath": "vehicles[0].vendor.vendorNo",
             "label": "swm.vehicles.create.vendor",
             "type": "singleValueList",
             "isRequired": true,
@@ -879,7 +876,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..vendorNo|$..name"
           }
         ]
       },

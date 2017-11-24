@@ -1,0 +1,56 @@
+- referencePath: "/collectionpoints"
+  searchUrl: "/collectionpoints/_search?code={code}"
+  
+  groups:
+    LocationSelection:
+      fields:
+      - collectionPoints[0].location.ward
+      - collectionPoints[0].location.zone
+      - collectionPoints[0].location.block
+      - collectionPoints[0].location.code
+    CollectionPointDetails:
+      fields:
+      - collectionPoints[0].name
+    CollectionPoints:
+      fields:
+      - collectionPoints[0].collectionPointDetails[0].collectionType
+      - collectionPoints[0].collectionPointDetails[0].garbageEstimate
+      - collectionPoints[0].collectionPointDetails[0].description
+    BinDetails:
+      fields:
+      - collectionPoints[0].binDetails[0].assetOrBinId
+      - collectionPoints[0].binDetails[0].rfidAssigned
+      - collectionPoints[0].binDetails[0].rfid
+      - collectionPoints[0].binDetails[0].latitude
+      - collectionPoints[0].binDetails[0].longitude
+  dependents:
+  - onChangeField: collectionPoints[0].location.ward
+    affectedFields:
+      collectionPoints[0].location.zone:
+        pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Zone&hierarchyTypeName=REVENUE|$..id|$..name
+        type: dropDown
+  - onChangeField: collectionPoints[0].location.zone
+    affectedFields:
+      collectionPoints[0].location.block:
+        pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Block&hierarchyTypeName=REVENUE|$..id|$..name
+        type: dropDown
+  - onChangeField: collectionPoints[0].location.block
+    affectedFields:
+      collectionPoints[0].location.code:
+        pattern: /egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Circle&hierarchyTypeName=REVENUE|$..id|$..name
+        type: dropDown
+  externalData:
+  - fieldName: collectionPoints[0].location.ward
+    url: "/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?tenantId=default&boundaryTypeName=Ward&hierarchyTypeName=REVENUE"
+    keyPath: "$..id"
+    valPath: "$..name"
+  searchResult:
+    rowClickUrlUpdate: /update/collectionpoints/{code}
+    rowClickUrlView: /view/collectionpoints/{code}
+    columns:
+    - code
+    - name
+    values:
+    - code
+    - name
+    resultObjectName: collectionpoints

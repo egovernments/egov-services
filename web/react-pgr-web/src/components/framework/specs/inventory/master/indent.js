@@ -155,6 +155,7 @@ var dat = {
             "label": "inventory.indent.number",
             "pattern": "",
             "type": "text",
+						"isHidden":true
             "isRequired": false,
             "isDisabled": true,
             "defaultValue": "",
@@ -195,6 +196,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": true,
+						"isHidden":true
             "defaultValue":"Indent",
             "patternErrorMsg": ""
           },
@@ -305,17 +307,30 @@ var dat = {
                {
           			"name":"material",
                  "pattern":"",
-                 "type":"singleValueList",
+                 "type":"autoCompelete",
                  "jsonPath":"indents[0].indentDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory",
                  "depedants":[
                       {
                          "jsonPath":"indents[0].indentDetails[0].material.description",
                          "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others')"
+                         "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[0]')"
+                      },
+											
+											{
+                         "jsonPath":"indents[0].indentDetails[0].material.baseUom.code",
+                         "type":"textField",
+                         "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')"
+                      },
+
+											{
+                         "jsonPath":"indents[0].indentDetails[0].uom.code",
+                         "type":"dropDown",
+                         "pattern":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom&filter=+%5B%3F%28%40.uomCategory%3D%3D%27{indents[0].indentDetails[0].material.baseUom.uomCategory}%27%29%5D|$..code|$..description"
                       }
+
                     ]
                },
                {
@@ -342,21 +357,23 @@ var dat = {
                   "name":"asset",
                   "jsonPath":"indents[0].indentDetails[0].asset.code",
                   "pattern":"",
-                  "type":"text",
+                  "type":"autoCompelete",
                   "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
-                  "patternErrorMsg":""
+                  "patternErrorMsg":"",
+									"url":"/asset-services-maha/assets/_search?&|$..code|$..name"
                }, {
                   "name":"projectcode",
                   "jsonPath":"indents[0].indentDetails[0].projectCode.code",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
-                  "type":"text",
+                  "type":"autoCompelete",
                   "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":"",
                   "maxLength":100,
-                  "patternErrorMsg":"inventory.create.field.message.code"
+                  "patternErrorMsg":"inventory.create.field.message.code",
+									"url":"/works-estimate/v1/projectcodes/_search?&|$..code|$..name"
                },
                {
                   "name":"indentQuantity",
@@ -838,6 +855,17 @@ var dat = {
                   "defaultValue":"",
                   "patternErrorMsg":""
                },
+ 					{
+            "name": "id",
+            "jsonPath": "indents[0].indentDetails[0].id",
+            "label": "inventory.indent.type",
+            "pattern": "",
+            "type": "text",
+            "isRequired": false,
+						"isHidden":true
+            "defaultValue":"Indent",
+            "patternErrorMsg": ""
+          },
                {
                   "name":"uom",
                   "jsonPath":"indents[0].indentDetails[0].uom.code",
@@ -857,7 +885,8 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":""
-               }, {
+               },
+							 {
                   "name":"projectcode",
                   "jsonPath":"indents[0].indentDetails[0].projectCode.code",
                   "pattern":"[a-zA-Z0-9-\\\\]+",

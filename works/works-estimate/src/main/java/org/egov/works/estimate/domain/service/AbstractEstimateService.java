@@ -152,7 +152,7 @@ public class AbstractEstimateService {
 		validator.validateEstimates(abstractEstimateRequest, false);
 		for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-				if (documentDetail.getId() != null && documentDetail.getId().isEmpty())
+				if (documentDetail.getId() == null)
 					documentDetail.setId(commonUtils.getUUID());
 				documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
 				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);

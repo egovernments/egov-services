@@ -105,13 +105,14 @@ public class LetterOfAcceptanceService {
 						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
 			}
 
-			for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
-				documentDetail.setId(commonUtils.getUUID());
-				documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
-				documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
-				documentDetail.setAuditDetails(
-						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
-			}
+			if (letterOfAcceptance.getDocumentDetails() != null)
+				for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
+					documentDetail.setId(commonUtils.getUUID());
+					documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
+					documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+					documentDetail.setAuditDetails(
+							workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+				}
 
 			letterOfAcceptance
 					.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
@@ -136,7 +137,7 @@ public class LetterOfAcceptanceService {
 		activity.setApprovedQuantity(new BigDecimal(estimateActivity.getQuantity()));
 		activity.setApprovedAmount(
 				BigDecimal.valueOf(estimateActivity.getEstimateRate().doubleValue() * estimateActivity.getQuantity()));
-		if (activity.getId() != null && activity.getId().isEmpty())
+		if (activity.getId() == null)
 			activity.setId(commonUtils.getUUID());
 		activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
 		activity.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate.getId());
@@ -159,7 +160,7 @@ public class LetterOfAcceptanceService {
 		LOAMeasurementSheet loaSheet = null;
 		for (final EstimateMeasurementSheet estimatesheet : estimateActivity.getEstimateMeasurementSheets()) {
 			loaSheet = new LOAMeasurementSheet();
-			if (loaSheet.getId() != null && loaSheet.getId().isEmpty())
+			if (loaSheet.getId()  == null)
 				loaSheet.setId(commonUtils.getUUID());
 			loaSheet.setNumber(estimatesheet.getNumber());
 			loaSheet.setLength(estimatesheet.getLength());
@@ -180,12 +181,12 @@ public class LetterOfAcceptanceService {
 		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest);
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
-			if (letterOfAcceptance.getId() != null && letterOfAcceptance.getId().isEmpty())
+			if (letterOfAcceptance.getId() == null)
 				letterOfAcceptance.setId(commonUtils.getUUID());
 
 			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
 					.getLetterOfAcceptanceEstimates()) {
-				if (letterOfAcceptanceEstimate.getId() != null && letterOfAcceptanceEstimate.getId().isEmpty())
+				if (letterOfAcceptanceEstimate.getId() == null)
 					letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
 				letterOfAcceptanceEstimate.setAuditDetails(
 						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
@@ -210,7 +211,7 @@ public class LetterOfAcceptanceService {
 
 			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
-				if (securityDeposit.getId() != null && securityDeposit.getId().isEmpty())
+				if (securityDeposit.getId() == null)
 					securityDeposit.setId(commonUtils.getUUID());
 				securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
 				securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
@@ -220,7 +221,7 @@ public class LetterOfAcceptanceService {
 
 			if (letterOfAcceptance.getDocumentDetails() != null && !letterOfAcceptance.getDocumentDetails().isEmpty())
 				for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
-					if (documentDetail.getId() != null && documentDetail.getId().isEmpty())
+					if (documentDetail.getId() == null)
 						documentDetail.setId(commonUtils.getUUID());
 					documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
 					documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);

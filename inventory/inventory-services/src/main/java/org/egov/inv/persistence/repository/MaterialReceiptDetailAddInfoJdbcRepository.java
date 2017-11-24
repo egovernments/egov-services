@@ -149,7 +149,7 @@ public class MaterialReceiptDetailAddInfoJdbcRepository extends JdbcRepository {
         if (materialReceiptAddInfoSearch.getOffset() != null)
             page.setOffset(materialReceiptAddInfoSearch.getOffset());
         if (params.length() > 0)
-            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where deleted is not true and " + params.toString());
         else
             searchQuery = searchQuery.replace(":condition", "");
 

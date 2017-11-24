@@ -28,7 +28,7 @@ public class MaterialReceiptService extends DomainService {
 
         if (materialReceiptPagination.getPagedData().size() > 0) {
             for (MaterialReceipt materialReceipt : materialReceiptPagination.getPagedData()) {
-                List<MaterialReceiptDetail> materialReceiptDetail = getMaterialReceiptDetail(materialReceipt.getMrnNumber());
+                List<MaterialReceiptDetail> materialReceiptDetail = getMaterialReceiptDetail(materialReceipt.getMrnNumber(),materialReceiptSearch.getTenantId());
                 materialReceipt.setReceiptDetails(materialReceiptDetail);
             }
         }
@@ -36,7 +36,7 @@ public class MaterialReceiptService extends DomainService {
         return materialReceiptPagination;
     }
 
-    private List<MaterialReceiptDetail> getMaterialReceiptDetail(String mrnNumber) {
+    private List<MaterialReceiptDetail> getMaterialReceiptDetail(String mrnNumber,String tenantId) {
         MaterialReceiptDetailSearch materialReceiptDetailSearch = MaterialReceiptDetailSearch.builder()
                 .mrnNumber(Arrays.asList(mrnNumber))
                 .build();

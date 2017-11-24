@@ -198,7 +198,7 @@ ReportDefinitions:
           bank.name as bankName, supplier.bankbranch as bankBranch, supplier.bankacctno as bankAcctNo,
           supplier.bankifsc as ifsc, supplier.contactperson as contactPerson,
           supplier.contactpersonno as contactPersonNo
-          from supplier as supplier, egov_master.egf_bank bank
+          from supplier as supplier, egf_bank bank
           where
           bank.code = supplier.bankcode
           and bank.tenantid = supplier.tenantid

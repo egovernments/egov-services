@@ -295,7 +295,7 @@ var dat = {
             "type":"text",
             "isRequired":false,
             "isDisabled":true,
-            "defaultValue":"0",
+            "defaultValue":"",
             "maxLength":100,
             "patternErrorMsg":"inventory.create.field.message.code"
                },
@@ -490,7 +490,19 @@ var dat = {
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
             "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
-          }
+          },
+          {
+            "name":"mrnNumber",
+            "label": "inventory.mrnNumber",
+            "jsonPath":"materialReceipt[0].mrnNumber",
+            "pattern":"",
+            "type":"text",
+            "isRequired":false,
+            "isDisabled":true,
+            "defaultValue":"NA",
+            "maxLength":100,
+            "patternErrorMsg":"inventory.create.field.message.code"
+               },
         ]
       },
 
@@ -593,11 +605,12 @@ var dat = {
                },
                {
                   "name":"receiptNumber",
-                  "jsonPath":"materialReceipt[0].mrnNumber",
+                  "jsonPath":"materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber",
                   "pattern":"",
                   "type":"text",
-                  "isDisabled":true,
-                  "defaultValue":"",
+                  "isRequired":false,
+                  "isDisabled":false,
+                  "defaultValue":"0",
                   "maxLength":100,
                   "patternErrorMsg":"inventory.create.field.message.code"
                },

@@ -200,7 +200,6 @@ class assetMovableCreate extends Component {
     let {setMockData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    console.log("hit");
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
 
       if(specs[moduleName + "." + actionName].groups[i].multiple) {

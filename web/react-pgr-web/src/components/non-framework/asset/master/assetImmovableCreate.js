@@ -244,8 +244,11 @@ class assetImmovableCreate extends Component {
 
         response.Assets[0].titleDocumentsAvalable = response.Assets[0].titleDocumentsAvalable.join(",");
       }
+
       response.Assets[0].assetAttributesCheck = assetCheck;
       self.props.setFormData({Asset: response.Assets[0]});
+      console.log(self.props.formData.Asset.assetCategory.id);
+      console.log(self.props.formData.Asset.assetCategory.name);
       self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications["asset.update"].objectName);
       self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
       self.warrantyFunction(response.Assets[0].warrantyAvailable);
@@ -322,8 +325,115 @@ class assetImmovableCreate extends Component {
       let cateoryObject = [];
     //  var customFieldsArray = [];
     //  var customArr;
+console.log(self.props.formData);
+    Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
+   {
+
+     if(response) {
+       let keys=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.id");
+       let values=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.name");
+       let dropDownData=[];
+       for (var k = 0; k < keys.length; k++) {
+           let obj={};
+           obj["key"]=keys[k];
+           obj["value"]=values[k];
+           dropDownData.push(obj);
+       }
+
+       dropDownData.sort(function(s1, s2) {
+         return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+       });
+       dropDownData.unshift({key: null, value: "-- Please Select --"});
+       self.props.setDropDownData("Asset.assetCategory.id", dropDownData);
+     }
+
+    for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
+      catId = response.MdmsRes.ASSET.AssetCategory[i].id;
+      if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
+        var  customFieldsArray = [];
+        for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
+          var customTemp = {};
+           customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+           customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
+           customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+           customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type ;
+           customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
+           customTemp.isDisabled = !(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive);
+           switch(customTemp.type) {
+                 case 'Text':
+                    customTemp.type = 'text';
+                    break;
+
+                 case 'Number':
+                      customTemp.type = 'number';
+                      break;
+
+                  case 'Select':
+                      customTemp.type = 'singleValueList';
+                      break;
+
+                  case null:
+                        customTemp.type = 'text';
+                        break;
+
+                  case 'table':
+                        customTemp.type = 'table';
+                        break;
+            }
+            // if (customTemp.type == 'table') {
+            //   if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
+            //
+            //   }
+            //
+            // }
+            if(customTemp.type == 'singleValueList'){
+              if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values && response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
+                  var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
+                  var dropdownSplit = handleDropdown.split(",");
+                  var valueHolder = [];
+                  for(var y= 0; y<dropdownSplit.length; y++){
+                    var holder = {};
+                    holder.key = dropdownSplit[y];
+                    holder.value = dropdownSplit[y];
+                    valueHolder.push(holder);
+                }
+
+              }
+              else{
+                customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;
+              }
+              customTemp.defaultValue = valueHolder;
 
 
+            }
+            customFieldsArray.push(customTemp);
+
+        }
+        customSpecs[catId] = customFieldsArray;
+      }
+      depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
+      cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
+      self.setState({
+          customFieldsGen: customSpecs,
+          depericiationValue,
+          cateoryObject
+        }, () => {
+          if(self.props.match.params.id) {
+            self.modifyData(self.props.match.params.id);
+          }
+        })
+    }
+
+
+
+
+
+    },function(err) {
+          console.log(err);
+          if(self.props.match.params.id) {
+            self.modifyData(self.props.match.params.id);
+          }
+      });
     Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET","masterName":"Assetconfiguration"},{}, false, false, false, "", "", true).then(function(response) {
 
           if (response && response.MdmsRes && response.MdmsRes.ASSET && response.MdmsRes.ASSET.Assetconfiguration[0].keyname == "EnableVoucherGeneration") {
@@ -429,116 +539,6 @@ class assetImmovableCreate extends Component {
     });
 
 
-
-      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
-     {
-
-       if(response) {
-         let keys=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.id");
-         let values=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.name");
-         let dropDownData=[];
-         for (var k = 0; k < keys.length; k++) {
-             let obj={};
-             obj["key"]=keys[k];
-             obj["value"]=values[k];
-             dropDownData.push(obj);
-         }
-
-         dropDownData.sort(function(s1, s2) {
-           return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
-         });
-         dropDownData.unshift({key: null, value: "-- Please Select --"});
-         self.props.setDropDownData("Asset.assetCategory.id", dropDownData);
-       }
-
-      for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
-        catId = response.MdmsRes.ASSET.AssetCategory[i].id;
-        if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
-          var  customFieldsArray = [];
-          for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
-            var customTemp = {};
-             customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
-             customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
-             customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
-             customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type ;
-             customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
-             customTemp.isDisabled = !(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive);
-             switch(customTemp.type) {
-                   case 'Text':
-                      customTemp.type = 'text';
-                      break;
-
-                   case 'Number':
-                        customTemp.type = 'number';
-                        break;
-
-                    case 'Select':
-                        customTemp.type = 'singleValueList';
-                        break;
-
-                    case null:
-                          customTemp.type = 'text';
-                          break;
-
-                    case 'table':
-                          customTemp.type = 'table';
-                          break;
-              }
-              // if (customTemp.type == 'table') {
-              //   if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
-              //
-              //   }
-              //
-              // }
-              if(customTemp.type == 'singleValueList'){
-                if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
-                    var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
-                    var dropdownSplit = handleDropdown.split(",");
-                    var valueHolder = [];
-                    for(var y= 0; y<dropdownSplit.length; y++){
-                      var holder = {};
-                      holder.key = dropdownSplit[y];
-                      holder.value = dropdownSplit[y];
-                      valueHolder.push(holder);
-                  }
-
-                }
-                else{
-                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;
-                }
-                customTemp.defaultValue = valueHolder;
-
-
-              }
-              customFieldsArray.push(customTemp);
-
-          }
-          customSpecs[catId] = customFieldsArray;
-        }
-        depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
-        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
-        self.setState({
-            customFieldsGen: customSpecs,
-            depericiationValue,
-            cateoryObject
-          }, () => {
-            if(self.props.match.params.id) {
-              self.modifyData(self.props.match.params.id);
-            }
-          })
-      }
-
-
-
-
-
-      },function(err) {
-            console.log(err);
-            if(self.props.match.params.id) {
-              self.modifyData(self.props.match.params.id);
-            }
-        });
-
   }
 
   componentWillReceiveProps(nextProps) {
@@ -631,7 +631,6 @@ class assetImmovableCreate extends Component {
     var formData = JSON.parse(JSON.stringify(this.props.formData));
 
     if (formData.Asset.titleDocumentsAvalable) {
-      console.log(formData.Asset.titleDocumentsAvalable);
       formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");
     } else {
       formData.Asset.titleDocumentsAvalable = [];
@@ -1215,6 +1214,7 @@ delete formData.Asset.assetAttributesCheck;
       let obj = specifications[`asset.create`];
 
       if(property=="Asset.assetCategory.id"){
+        console.log(e.target.value);
         if (self.state.depericiationValue[e.target.value]) {
 
           var newVal = Math.round(100/self.state.depericiationValue[e.target.value]);
@@ -1473,7 +1473,7 @@ delete formData.Asset.assetAttributesCheck;
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
     // })}
 
-
+    console.log(self.props.formData);
     return (
       <div className="Report">
       {actionName == "update" && <UiBackButton/>}
@@ -1596,6 +1596,7 @@ delete formData.Asset.assetAttributesCheck;
                               <MenuItem value={dd.key} key={index} primaryText={dd.value} />
                           ))}
                   </SelectField>
+
 
               					</Grid>
               				</CardText>

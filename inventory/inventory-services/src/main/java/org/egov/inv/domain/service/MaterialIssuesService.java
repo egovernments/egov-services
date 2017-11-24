@@ -111,17 +111,28 @@ public class MaterialIssuesService extends DomainService {
 	}
 
 	public void update(final MaterialIssueRequest materialIssueRequest) {
-		List<String> searchFields = new ArrayList<>();
-		searchFields.add(materialIssueRequest.getMaterialIssues().get(0).getTenantId());
+		
+		
 		List<MaterialIssue> materialIssues = materialIssueRequest.getMaterialIssues();
 		List<String> materialIssueNumbers = materialIssues.stream().map(materialIssue -> materialIssue.getIssueNumber())
 				.collect(Collectors.toList());
-		// searchFields.add(materialIssueNoteNumbers);
-		JdbcRepository.getByIdQuery("materialissuedetails", searchFields);
+		List<MaterialIssueDetail> matyerialIssueDetails = materialIssueJdbcRepository.getMaterialIssueDetailsByIssueNumber(materialIssueRequest.getMaterialIssues().get(0).getTenantId(),
+				materialIssueNumbers);
+		materialIssueJdbcRepository.compareAndGenerateObjects(materialIssueRequest.getMaterialIssues(),
+				matyerialIssueDetails);
+		
+		
+
 	}
 
 	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract) {
 		Pagination<MaterialIssue> materialIssues = materialIssueJdbcRepository.search(searchContract);
+		if(materialIssues.getPagedData().size() >0)
+		for(MaterialIssue materialIssue : materialIssues.getPagedData())
+		{
+			Pagination<MaterialIssueDetail> materialIssueDetails =	materialIssueDetailsJdbcRepository.search(materialIssue.getIssueNumber(), materialIssue.getTenantId());
+			materialIssue.setMaterialIssueDetails(materialIssueDetails.getPagedData());
+		}
 		MaterialIssueResponse materialIssueResponse = new MaterialIssueResponse();
 		materialIssueResponse.setMaterialIssues(materialIssues.getPagedData());
 		return materialIssueResponse;

@@ -41,7 +41,9 @@ class assetImmovableCreate extends Component {
     this.state = {
       customFieldsGen:{},
       hide: true,
-      customArr: []
+      customArr: [],
+       layerData: [],
+       imageDes: ""
     }
   }
 
@@ -538,6 +540,155 @@ console.log(self.props.formData);
          console.log(err);
     });
 
+
+
+      Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET", "masterName":"AssetCategory", "filter": "%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D%0A"}, {}, false, false, false, "", "", true).then(function(response)
+     {
+
+       if(response) {
+         let keys=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.id");
+         let values=jp.query(response, "$.MdmsRes.ASSET.AssetCategory.*.name");
+         let dropDownData=[];
+         for (var k = 0; k < keys.length; k++) {
+             let obj={};
+             obj["key"]=keys[k];
+             obj["value"]=values[k];
+             dropDownData.push(obj);
+         }
+
+         dropDownData.sort(function(s1, s2) {
+           return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+         });
+         dropDownData.unshift({key: null, value: "-- Please Select --"});
+         self.props.setDropDownData("Asset.assetCategory.id", dropDownData);
+       }
+
+      for(var i=0; i < response.MdmsRes.ASSET.AssetCategory.length; i++ ){
+        catId = response.MdmsRes.ASSET.AssetCategory[i].id;
+        if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null){
+          var  customFieldsArray = [];
+          for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
+            var customTemp = {};
+             customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+             customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
+             customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+             customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type ;
+             customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
+             customTemp.isDisabled = !(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive);
+             switch(customTemp.type) {
+                   case 'Text':
+                      customTemp.type = 'text';
+                      break;
+
+                   case 'Number':
+                        customTemp.type = 'number';
+                        break;
+
+                    case 'Select':
+                        customTemp.type = 'singleValueList';
+                        break;
+
+                    case null:
+                          customTemp.type = 'text';
+                          break;
+
+                    case 'table':
+                          customTemp.type = 'table';
+                          break;
+
+                    case 'image':
+                          customTemp.type = 'image';
+                          break;
+              }
+
+
+
+              if(customTemp.type == 'singleValueList'){
+                if(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values != null && response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length){
+                    var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
+                    var dropdownSplit = handleDropdown.split(",");
+                    var valueHolder = [];
+                    for(var y= 0; y<dropdownSplit.length; y++){
+                      var holder = {};
+                      holder.key = dropdownSplit[y];
+                      holder.value = dropdownSplit[y];
+                      valueHolder.push(holder);
+                  }
+
+                  customTemp.defaultValue = valueHolder;
+                }  else {
+                  let dropDownValue=[];
+                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url ;
+                  let _value = customTemp.url.split("?");
+                  let _splitUrl = _value[1].split("&");
+                  let query = {};
+                  for (let  i = 0; i < _splitUrl.length; i++) {
+                    if (_splitUrl[i].split("=")[0] == "tenantId") {
+                      continue ;
+                    }
+                    query[_splitUrl[i].split("=")[0]] = _splitUrl[i].split("=")[1];
+                  }
+                  let temp = Object.assign({}, customTemp);
+                  let cId = catId;
+                  Api.commonApiPost(_value[0],query,{}, false, false, false, "", "", true).then(function(resp) {
+                    if (resp) {
+                      let keys = jp.query(resp, "$.MdmsRes.ASSET.LayerType.*.id");
+                      let values = jp.query(resp, "$.MdmsRes.ASSET.LayerType.*.name");
+                      let others = jp.query(resp, "$.MdmsRes.ASSET.LayerType.*");
+                      var valueHolder = [];
+                      var layerData = {};
+                      for (var l = 0; l < keys.length; l++) {
+                        var holder = {};
+                        holder.key = keys[l];
+                        holder.value = values[l];
+                        valueHolder.push(holder);
+                        layerData[keys[l]] = others[l];
+                      }
+
+                      for(var m=0; m<customSpecs[cId].length; m++) {
+
+                        if(customSpecs[cId][m].jsonPath == temp.jsonPath) {
+
+                          customSpecs[cId][m].defaultValue = valueHolder;
+                          self.setState({
+                              customFieldsGen: customSpecs,
+                              layerData
+                          })
+                          break;
+                        }
+                      }
+                    }
+                  });
+                }
+              }
+              customFieldsArray.push(customTemp);
+
+          }
+          customSpecs[catId] = customFieldsArray;
+        }
+        depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
+        cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
+        self.setState({
+            customFieldsGen: customSpecs,
+            depericiationValue,
+            cateoryObject
+          }, () => {
+            if(self.props.match.params.id) {
+              self.modifyData(self.props.match.params.id);
+            }
+          })
+      }
+
+
+
+
+
+      },function(err) {
+            console.log(err);
+            if(self.props.match.params.id) {
+              self.modifyData(self.props.match.params.id);
+            }
+        });
 
   }
 
@@ -1222,9 +1373,20 @@ delete formData.Asset.assetAttributesCheck;
         }
 
         self.customFieldDataFun(self.state.customFieldsGen[e.target.value]);
+      }
 
+       if (property== "Asset.assetAttributesCheck.Layer Type.Select") {
+         for (var i = 0; i < groups[0].fields.length; i++) {
+           if (property == groups[0].fields[i].jsonPath) {
+             groups[0].fields[i].imagePath = this.state.layerData[e.target.value].description ;
+            //  console.log(groups[0].fields[i].imagePath);
+           }
+         }
 
-       }
+        self.props.handleChange({target:{value: this.state.layerData[e.target.value].description}},"Asset.assetAttributesCheck.Layer description.Text",false,"","","");
+        self.props.handleChange({target:{value: this.state.layerData[e.target.value].numberOfLayers}},"Asset.assetAttributesCheck.No. Of Layers.Number",false,"","","");
+        self.props.handleChange({target:{value: this.state.layerData[e.target.value].layerSize}},"Asset.assetAttributesCheck.Layer Size.Number",false,"","","");
+      }
 
        if (/Asset\.landDetails\[\d{1,2}\]\.code/.test(property)) {
          let SubProperty = property.split(".");

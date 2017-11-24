@@ -281,7 +281,7 @@ ReportDefinitions:
     pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
     source: lcms
     isMandatory: false
-    searchClause : group by lc.code having (select name from egov_lcms_advocate  where code=lca.advocate->>'code')=ANY(select string_agg(name, ', ') from egov_lcms_advocate where code in( select advocate->>'code' from egov_lcms_case_advocate where casecode=lc.code));
+    searchClause : group by lc.code having (select name from egov_lcms_advocate  where code=$advocate)=ANY(select string_agg(name, ', ') from egov_lcms_advocate where code in( select advocate->>'code' from egov_lcms_case_advocate where casecode=lc.code));
   - name: courtName
     label: reports.lcms.courtName
     type: singlevaluelist

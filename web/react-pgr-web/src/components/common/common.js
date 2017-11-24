@@ -2873,6 +2873,12 @@ var localization_EN_Data = {
  "inventory.create.approverdesignation":"Approver Designation",
  "inventory.create.approvalStatus":"Approval Status",
  "inventory.create.approvalRemarks":"Approval Remarks",
+ "inventory.materialissue.note":"Indent Material Issue Note",
+ "inventory.create.group.title.MaterialIssues1":"Create Indent Material Issue",
+ "inventory.create.group.title.MaterialIssues2":"Material Transfer Indent Details",
+ "inventory.create.group.title.MaterialIssues3":"Approval Information",
+ "inventory.update.group.title.MaterialIssues1":"Update Indent Material Issue",
+ "inventory.view.group.title.MaterialIssues1":"View Indent Material Issue",
 
  //Inventory Common Lables
  "inventory.common.contactNo":"Contact No",
@@ -2896,9 +2902,8 @@ var localization_EN_Data = {
  "inventory.common.status":"Status",
  "inventory.report.email":"Email",
  "inventory.common.searchcriteria":"Search Criteria",
- "inventory.create.group.title.MaterialIssues1":"Indent Material Issue",
- "inventory.create.group.title.MaterialIssues2":"Material Transfer Indent Details",
- "inventory.create.group.title.MaterialIssues3":"Approval Information",
+
+
 
 // Opening Balance Report Labels
  "reports.inventory.openbal.Uom":"UOM",

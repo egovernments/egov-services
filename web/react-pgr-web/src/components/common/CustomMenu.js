@@ -351,6 +351,11 @@ const menuConvention={
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Create" : "/create/inventory/openingbalance",
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Update" : "/search/inventory/openingbalance/update",
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Search" : "/search/inventory/openingbalance/view",
+
+"Inventory.Inventory Transactions.Material Issue.Material Issue Create" : "/create/inventory/materialissues",
+"Inventory.Inventory Transactions.Material Issue.Material Issue Update" : "/search/inventory/materialissues/update",
+"Inventory.Inventory Transactions.Material Issue.Material Issue Search" : "/search/inventory/materialissues/view",
+
 //Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",

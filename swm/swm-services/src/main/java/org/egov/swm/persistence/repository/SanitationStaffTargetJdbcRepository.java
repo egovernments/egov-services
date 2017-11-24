@@ -359,23 +359,24 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
 
         if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
             tenantId = sanitationStaffTargetList.get(0).getTenantId();
+        if (boundaryCodes != null && boundaryCodes.length() > 0) {
+            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
 
-        List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
+            for (Boundary bd : boundarys) {
 
-        for (Boundary bd : boundarys) {
+                boundaryMap.put(bd.getCode(), bd);
 
-            boundaryMap.put(bd.getCode(), bd);
-
-        }
-
-        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
-
-            if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null
-                    && !sanitationStaffTarget.getLocation().getCode().isEmpty()) {
-
-                sanitationStaffTarget.setLocation(boundaryMap.get(sanitationStaffTarget.getLocation().getCode()));
             }
 
+            for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+                if (sanitationStaffTarget.getLocation() != null && sanitationStaffTarget.getLocation().getCode() != null
+                        && !sanitationStaffTarget.getLocation().getCode().isEmpty()) {
+
+                    sanitationStaffTarget.setLocation(boundaryMap.get(sanitationStaffTarget.getLocation().getCode()));
+                }
+
+            }
         }
 
     }

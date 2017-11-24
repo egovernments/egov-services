@@ -233,20 +233,24 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
-        List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
+        if (boundaryCodes != null && boundaryCodes.length() > 0) {
 
-        for (Boundary bd : boundarys) {
+            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
 
-            boundaryMap.put(bd.getCode(), bd);
+            for (Boundary bd : boundarys) {
 
-        }
+                boundaryMap.put(bd.getCode(), bd);
 
-        for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
+            }
 
-            if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null
-                    && !refillingPumpStation.getLocation().getCode().isEmpty()) {
+            for (RefillingPumpStation refillingPumpStation : refillingPumpStationList) {
 
-                refillingPumpStation.setLocation(boundaryMap.get(refillingPumpStation.getLocation().getCode()));
+                if (refillingPumpStation.getLocation() != null && refillingPumpStation.getLocation().getCode() != null
+                        && !refillingPumpStation.getLocation().getCode().isEmpty()) {
+
+                    refillingPumpStation.setLocation(boundaryMap.get(refillingPumpStation.getLocation().getCode()));
+                }
+
             }
 
         }

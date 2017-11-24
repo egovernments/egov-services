@@ -71,7 +71,7 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
             params.append("code in (:codes)");
             paramValues.put("codes", new ArrayList<>(Arrays.asList(searchRequest.getCodes().split(","))));
         }
-        
+
         if (searchRequest.getTenantId() != null) {
             addAnd(params);
             params.append("tenantId =:tenantId");
@@ -173,27 +173,31 @@ public class CollectionPointJdbcRepository extends JdbcRepository {
     }
 
     private void populateBoundarys(List<CollectionPoint> collectionPointList, String boundaryCodes) {
-        String tenantId = null;
-        Map<String, Boundary> boundaryMap = new HashMap<>();
 
-        if (collectionPointList != null && !collectionPointList.isEmpty())
-            tenantId = collectionPointList.get(0).getTenantId();
+        if (boundaryCodes != null && !boundaryCodes.isEmpty()) {
+            String tenantId = null;
+            Map<String, Boundary> boundaryMap = new HashMap<>();
 
-        List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes,
-                tenantId);
+            if (collectionPointList != null && !collectionPointList.isEmpty())
+                tenantId = collectionPointList.get(0).getTenantId();
 
-        for (Boundary bd : boundarys) {
+            List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes,
+                    tenantId);
 
-            boundaryMap.put(bd.getCode(), bd);
+            for (Boundary bd : boundarys) {
 
-        }
+                boundaryMap.put(bd.getCode(), bd);
 
-        for (CollectionPoint collectionPoint : collectionPointList) {
+            }
 
-            if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
-                    && !collectionPoint.getLocation().getCode().isEmpty()) {
+            for (CollectionPoint collectionPoint : collectionPointList) {
 
-                collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
+                if (collectionPoint.getLocation() != null && collectionPoint.getLocation().getCode() != null
+                        && !collectionPoint.getLocation().getCode().isEmpty()) {
+
+                    collectionPoint.setLocation(boundaryMap.get(collectionPoint.getLocation().getCode()));
+                }
+
             }
 
         }

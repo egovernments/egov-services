@@ -7,7 +7,7 @@ serviceMaps:
    fromTopic: works-letterofacceptance-create-validated
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_letterofacceptance(id, tenantid, contractor, loadate, loanumber, contractperiod, emdamountdeposited, stamppaperamount,engineerincharge, defectliabilityperiod, loaamount, status, tenderfinalizedpercentage, approveddate, filenumber, filedate,  parent, stateid, cancellationreason, cancellationremarks, createdby, createdtime,councilResolutionNumber,councilResolutionDate,spilloverflag) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_letterofacceptance(id, tenantid, contractor, loadate, loanumber, contractperiod, emdamountdeposited, stamppaperamount,engineerincharge, defectliabilityperiod, loaamount, status, tenderfinalizedpercentage, approveddate, filenumber, filedate,  parent, stateid, cancellationreason, cancellationremarks, createdby, createdtime,councilResolutionNumber,councilResolutionDate,spilloverflag,lastmodifiedby,lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET contractor=EXCLUDED.contractor, loadate=EXCLUDED.loadate, loanumber=EXCLUDED.loanumber, contractperiod=EXCLUDED.contractperiod, emdamountdeposited=EXCLUDED.emdamountdeposited, stamppaperamount=EXCLUDED.stamppaperamount, engineerincharge=EXCLUDED.engineerincharge, defectliabilityperiod=EXCLUDED.defectliabilityperiod, loaamount=EXCLUDED.loaamount, status=EXCLUDED.status, tenderfinalizedpercentage=EXCLUDED.tenderfinalizedpercentage, approveddate=EXCLUDED.approveddate, filenumber=EXCLUDED.filenumber, filedate=EXCLUDED.filedate, stateid=EXCLUDED.stateid, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
 
       basePath: $.letterOfAcceptances.*
       jsonMaps:
@@ -66,7 +66,11 @@ serviceMaps:
 
        - jsonPath: $.letterOfAcceptances.*.spillOverFlag
 
-    - query: INSERT INTO egw_letterofacceptanceestimate(id, tenantid, letterofacceptance, detailedestimate, workcompletiondate, estimateloaamount, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+       - jsonPath: $.letterOfAcceptances.*.auditDetails.lastModifiedBy
+ 
+       - jsonPath: $.letterOfAcceptances.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_letterofacceptanceestimate(id, tenantid, letterofacceptance, detailedestimate, workcompletiondate, estimateloaamount, createdby, createdtime,lastmodifiedby,lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET workcompletiondate=EXCLUDED.workcompletiondate, estimateloaamount=EXCLUDED.estimateloaamount, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*
       jsonMaps:
          
@@ -88,10 +92,16 @@ serviceMaps:
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.auditDetails.createdTime
          dbType: LONG
 
-    - query: INSERT INTO egw_securitydeposit(tenantid, letterofacceptance, collectionmode, percentage, amount, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?);
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.auditDetails.lastModifiedBy
+ 
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_securitydeposit(id, tenantid, letterofacceptance, collectionmode, percentage, amount, createdby, createdtime,lastmodifiedby,lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET collectionmode=EXCLUDED.collectionmode, percentage=EXCLUDED.percentage, amount=EXCLUDED.amount, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
       basePath: $.letterOfAcceptances.*.securityDeposits.*
       jsonMaps:
          
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.id
+       
        - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.tenantId
          
        - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.letterOfAcceptance
@@ -107,7 +117,12 @@ serviceMaps:
        - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.auditDetails.createdTime
          dbType: LONG
 
-    - query: INSERT INTO egw_assetsforloa(id, tenantid, asset, letterofacceptanceestimate, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?);
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.letterOfAcceptances.*.securityDeposits.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_assetsforloa(id, tenantid, asset, letterofacceptanceestimate, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET asset=EXCLUDED.asset, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*
       jsonMaps:
          
@@ -124,7 +139,12 @@ serviceMaps:
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.auditDetails.createdTime
          dbType: LONG
 
-    - query: INSERT INTO egw_loaactivity(id, tenantid, letterofacceptanceestimate, estimateactivity, parent,approvedrate, approvedquantity,approvedamount, remarks, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.assetForLOAs.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_loaactivity(id, tenantid, letterofacceptanceestimate, estimateactivity, parent,approvedrate, approvedquantity,approvedamount, remarks, createdby, createdtime,lastmodifiedby,lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET estimateactivity=EXCLUDED.estimateactivity, parent=EXCLUDED.parent, approvedrate=EXCLUDED.approvedrate, approvedquantity=EXCLUDED.approvedquantity, approvedamount=EXCLUDED.approvedamount, remarks=EXCLUDED.remarks, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*
       jsonMaps:
          
@@ -151,7 +171,12 @@ serviceMaps:
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.auditDetails.createdTime
          dbType: LONG
 
-    - query: INSERT INTO egw_loameasurementsheet(id, tenantid, "number", length, width, depthorheight, quantity, loaactivity, estimatemeasurementsheet, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_loameasurementsheet(id, tenantid, "number", length, width, depthorheight, quantity, loaactivity, estimatemeasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on CONFLICT (id,tenantid) DO UPDATE SET "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, loaactivity=EXCLUDED.loaactivity, estimatemeasurementsheet=EXCLUDED.estimatemeasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
       basePath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*
       jsonMaps:
          
@@ -177,8 +202,13 @@ serviceMaps:
 
        - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.auditDetails.createdTime
          dbType: LONG
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.letterOfAcceptances.*.letterOfAcceptanceEstimates.*.loaActivities.*.loaMeasurements.*.auditDetails.lastModifiedTime
+         dbType: LONG
        
-    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
 
       basePath: $.letterOfAcceptances.*.documentDetails.*
       jsonMaps:
@@ -210,3 +240,9 @@ serviceMaps:
 
        - jsonPath: $.letterOfAcceptances.*.documentDetails.*.auditDetails.createdTime
          dbType: LONG
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.letterOfAcceptances.*.documentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+

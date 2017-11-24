@@ -49,10 +49,8 @@ public class WorkOrderUtils {
 
 	public AuditDetails setAuditDetails(final RequestInfo requestInfo, final Boolean isUpdate) {
 		AuditDetails auditDetails = new AuditDetails();
-		if (!isUpdate) {
-			auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
-			auditDetails.setCreatedTime(new Date().getTime());
-		}
+		auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
+		auditDetails.setCreatedTime(new Date().getTime());
 		auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
 		auditDetails.setLastModifiedTime(new Date().getTime());
 
@@ -97,6 +95,14 @@ public class WorkOrderUtils {
 		mdmsResponse = restTemplate.postForObject(mdmsBySearchCriteriaUrl, mdmsRequest, MdmsResponse.class);
 
 		return mdmsResponse.getMdmsRes().get(moduleName).get(objectName);
+	}
+	
+	public ResponseInfo getResponseInfo(RequestInfo requestInfo) {
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setApiId(requestInfo.getApiId());
+		responseInfo.setVer(requestInfo.getVer());
+		responseInfo.setResMsgId(requestInfo.getMsgId());
+		return responseInfo;
 	}
 
 

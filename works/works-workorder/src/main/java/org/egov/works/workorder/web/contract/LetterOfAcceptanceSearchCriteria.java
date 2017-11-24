@@ -7,6 +7,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @Builder
+@NoArgsConstructor
 public class LetterOfAcceptanceSearchCriteria {
 
     private String tenantId;

@@ -16,9 +16,12 @@ import io.swagger.annotations.ApiModelProperty;
  * An Object that holds Security deposit collection Details for the given LOA.
  */
 @ApiModel(description = "An Object that holds Security deposit collection Details for the given LOA.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-24T06:27:19.470Z")
 
 public class SecurityDeposit {
+	@JsonProperty("id")
+	private String id = null;
+
 	@JsonProperty("letterOfAcceptance")
 	private String letterOfAcceptance = null;
 
@@ -37,6 +40,27 @@ public class SecurityDeposit {
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
 
+	public SecurityDeposit id(String id) {
+		this.id = id;
+		return this;
+	}
+
+	/**
+	 * Unique Identifier of the Security Deposit.
+	 * 
+	 * @return id
+	 **/
+	@ApiModelProperty(required = true, value = "Unique Identifier of the Security Deposit.")
+	@NotNull
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
+
 	public SecurityDeposit letterOfAcceptance(String letterOfAcceptance) {
 		this.letterOfAcceptance = letterOfAcceptance;
 		return this;
@@ -47,7 +71,7 @@ public class SecurityDeposit {
 	 * 
 	 * @return letterOfAcceptance
 	 **/
-	@ApiModelProperty(required = true, value = "reference of 'LetterOfAcceptance'. Pimary key is reference here.")
+	@ApiModelProperty(value = "reference of 'LetterOfAcceptance'. Pimary key is reference here.")
 
 	public String getLetterOfAcceptance() {
 		return letterOfAcceptance;
@@ -176,7 +200,8 @@ public class SecurityDeposit {
 			return false;
 		}
 		SecurityDeposit securityDeposit = (SecurityDeposit) o;
-		return Objects.equals(this.letterOfAcceptance, securityDeposit.letterOfAcceptance)
+		return Objects.equals(this.id, securityDeposit.id)
+				&& Objects.equals(this.letterOfAcceptance, securityDeposit.letterOfAcceptance)
 				&& Objects.equals(this.tenantId, securityDeposit.tenantId)
 				&& Objects.equals(this.collectionMode, securityDeposit.collectionMode)
 				&& Objects.equals(this.percentage, securityDeposit.percentage)
@@ -186,7 +211,7 @@ public class SecurityDeposit {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(letterOfAcceptance, tenantId, collectionMode, percentage, amount, auditDetails);
+		return Objects.hash(id, letterOfAcceptance, tenantId, collectionMode, percentage, amount, auditDetails);
 	}
 
 	@Override
@@ -194,6 +219,7 @@ public class SecurityDeposit {
 		StringBuilder sb = new StringBuilder();
 		sb.append("class SecurityDeposit {\n");
 
+		sb.append("    id: ").append(toIndentedString(id)).append("\n");
 		sb.append("    letterOfAcceptance: ").append(toIndentedString(letterOfAcceptance)).append("\n");
 		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
 		sb.append("    collectionMode: ").append(toIndentedString(collectionMode)).append("\n");

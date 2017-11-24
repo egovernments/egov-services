@@ -61,8 +61,9 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
 
 	public ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesUpdatePost(
 			@ApiParam(value = "Details of Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
-		// do some magic!
-		return new ResponseEntity<LetterOfAcceptanceResponse>(HttpStatus.OK);
+		LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService
+				.update(letterOfAcceptanceRequest);
+		return new ResponseEntity(letterOfAcceptanceResponse, HttpStatus.OK);
 	}
 
 }

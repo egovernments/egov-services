@@ -119,7 +119,12 @@ public class LetterOfAcceptanceService {
 		}
 
 		kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
-		return new LetterOfAcceptanceResponse();
+
+		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
+		letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
+		letterOfAcceptanceResponse
+				.setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
+		return letterOfAcceptanceResponse;
 	}
 
 	private void prepairLOAActivity(LetterOfAcceptance letterOfAcceptance,
@@ -131,7 +136,8 @@ public class LetterOfAcceptanceService {
 		activity.setApprovedQuantity(new BigDecimal(estimateActivity.getQuantity()));
 		activity.setApprovedAmount(
 				BigDecimal.valueOf(estimateActivity.getEstimateRate().doubleValue() * estimateActivity.getQuantity()));
-		activity.setId(commonUtils.getUUID());
+		if (activity.getId().isEmpty())
+			activity.setId(commonUtils.getUUID());
 		activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
 		activity.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate.getId());
 		activity.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
@@ -153,7 +159,8 @@ public class LetterOfAcceptanceService {
 		LOAMeasurementSheet loaSheet = null;
 		for (final EstimateMeasurementSheet estimatesheet : estimateActivity.getEstimateMeasurementSheets()) {
 			loaSheet = new LOAMeasurementSheet();
-			loaSheet.setId(commonUtils.getUUID());
+			if (loaSheet.getId().isEmpty())
+				loaSheet.setId(commonUtils.getUUID());
 			loaSheet.setNumber(estimatesheet.getNumber());
 			loaSheet.setLength(estimatesheet.getLength());
 			loaSheet.setWidth(estimatesheet.getWidth());
@@ -168,16 +175,18 @@ public class LetterOfAcceptanceService {
 		}
 		loaActivity.setLoaMeasurements(loaSheetList);
 	}
-	
+
 	public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
 		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest);
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
-			letterOfAcceptance.setId(commonUtils.getUUID());
+			if (letterOfAcceptance.getId().isEmpty())
+				letterOfAcceptance.setId(commonUtils.getUUID());
 
 			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
 					.getLetterOfAcceptanceEstimates()) {
-				letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
+				if (letterOfAcceptanceEstimate.getId().isEmpty())
+					letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
 				letterOfAcceptanceEstimate.setAuditDetails(
 						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
 				DetailedEstimate detailedEstimate = estimateService
@@ -201,27 +210,35 @@ public class LetterOfAcceptanceService {
 
 			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
+				if (securityDeposit.getId().isEmpty())
+					securityDeposit.setId(commonUtils.getUUID());
 				securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
 				securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
 				securityDeposit.setAuditDetails(
 						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
 			}
 
-			for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
-				documentDetail.setId(commonUtils.getUUID());
-				documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
-				documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
-				documentDetail.setAuditDetails(
-						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
-			}
+			if (letterOfAcceptance.getDocumentDetails() != null && !letterOfAcceptance.getDocumentDetails().isEmpty())
+				for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
+					if (documentDetail.getId().isEmpty())
+						documentDetail.setId(commonUtils.getUUID());
+					documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
+					documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+					documentDetail.setAuditDetails(
+							workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
+				}
 
 			letterOfAcceptance
 					.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
 
 		}
 
-		kafkaTemplate.send(propertiesManager.getWorksLOAUpdateTopic(), letterOfAcceptanceRequest);
-		return new LetterOfAcceptanceResponse();
+		kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
+		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
+		letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
+		letterOfAcceptanceResponse
+				.setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
+		return letterOfAcceptanceResponse;
 	}
-	
+
 }

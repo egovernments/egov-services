@@ -78,6 +78,10 @@ public class AssetValidator implements Validator {
 				errorMap.put("Asset_warranty", "warrantyExpiryDate should be greater than asset date");
 		}
 		
+	    if(!asset.getAssetCategory().getIsAssetAllow().equals(true)) 
+		   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
+           
+		  
 		if(asset.getDateOfCreation().compareTo(new Date().getTime()) > 0) 
 			errorMap.put("Asset_DateOfCreation", "DateOfCreation cannot be future Date");
 		
@@ -124,9 +128,11 @@ public class AssetValidator implements Validator {
 		AssetCategory masterAssetCat = assetCatMap.get(asset.getAssetCategory().getId());
 		if (masterAssetCat == null)
 			errorMap.put("EGASSET_INVALID_ASSETCATEGORY", "the given AssetCategory Id is Invalid");
-		else
+		else {
+			 if(!asset.getAssetCategory().getIsAssetAllow().equals(true)) 
+				   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
-
+		}
 		Department department = departmentMap.get(asset.getDepartment().getCode());
 		if (department == null)
 			errorMap.put("EGASSET_INVALID_DEPARTMENT", "the  given Department code is Invalid");

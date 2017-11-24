@@ -1,10 +1,10 @@
 package org.egov.inv.domain.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.egov.common.Constants;
-import java.util.Date;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
@@ -53,7 +53,7 @@ public class IndentService extends DomainService {
 
 		try {
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
-			validate(indents, Constants.ACTION_CREATE);
+		//	validate(indents, Constants.ACTION_CREATE);
 			List<String> sequenceNos = indentRepository.getSequence(Indent.class.getSimpleName(), indents.size());
 			int i = 0;
 			for (Indent b : indents) {
@@ -164,12 +164,12 @@ public class IndentService extends DomainService {
 				{
 					if(indent.getIndentDate().compareTo(currentDate) > 0)
 					{
-						throw new InvalidDataException("indentDate", ErrorCode.DATE_LE_CURRENTDATE.getCode(), indent.getIndentDate().toString());	
+						//throw new CustomException( "" "the IndentDate should be Less than or Equal to Current Date.");	
 					}
 					
 					if(indent.getExpectedDeliveryDate().compareTo(currentDate) < 0)
 					{
-						throw new InvalidDataException("indentDate", ErrorCode.DATE_GE_CURRENTDATE.getCode(), indent.getIndentDate().toString());	
+						//throw new CustomException(ErrorCode.DATE_GE_CURRENTDATE.getCode(), indent.getIndentDate().toString());	
 					}
 				}
 				

@@ -1331,6 +1331,9 @@ definitions:
     type: object
     description: An Object that holds Security deposit collection Details for the given LOA.
     properties:
+      id:
+        type: string
+        description: Unique Identifier of the Security Deposit.
       letterOfAcceptance:
         type: string
         description: reference of 'LetterOfAcceptance'. Pimary key is reference here.
@@ -1358,6 +1361,7 @@ definitions:
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
+      - id
       - tenantId
       - collectionMode
       - percentage
@@ -1990,4 +1994,5 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 

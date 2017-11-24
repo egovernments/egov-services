@@ -2842,6 +2842,37 @@ var localization_EN_Data = {
 "inventory.create.group.title.indentdetails":"Indent Details",
 "inventory.indent.status":"Status",
 "inventory.indenting.store":"Indenting Store",
+"inventory.balanceQuantity":"Bal Qty.",
+"inventory.quantityIssued":"Qty Issued",
+"inventory.uom":"Uom Name",
+"inventory.unitrate":"Unit Rate",
+"inventory.balanceQuantityAfterIssue":"Bal Qty. After Issue",
+"inventory.totalValue":"Total Value",
+"inventory.assetCode":"Asset Code",
+"inventory.projectCode":"Project Code",
+
+
+// Material Issue Lables
+ "inventory.search.issueStore":"Issuing Store",
+ "inventory.create.indentDateFrom":"Indent Date From",
+ "inventory.create.indentDateTo":"Indent Date To",
+ "inventory.create.indentRaisedBy":"Indent Raised By",
+ "inventory.search.materialIssue.title":"Indent Material Issue",
+ "inventory.search.result.raisedBy":"Raised By",
+ "inventory.search.result.indentStatus":"Indent Status",
+ "inventory.create.fromStore.name":"Issuing Store Name",
+ "inventory.create.issueDate":"Issue Date",
+ "inventory.create.department.name":"Indenting Department Name",
+ "inventory.create.issuedToEmployee":"Issued To Employee",
+ "inventory.create.designation":"Designation",
+ "inventory.create.description":"Remarks",
+ "inventory.create.issuedBy":"Issued By",
+ "inventory.totalIndentQtyRequired":"Total Indent Qty. Required",
+ "inventory.create.approvalDate":"Approval Date",
+ "inventory.create.approverName":"Approver Name",
+ "inventory.create.approverdesignation":"Approver Designation",
+ "inventory.create.approvalStatus":"Approval Status",
+ "inventory.create.approvalRemarks":"Approval Remarks",
 
  //Inventory Common Lables
  "inventory.common.contactNo":"Contact No",
@@ -2865,6 +2896,10 @@ var localization_EN_Data = {
  "inventory.common.status":"Status",
  "inventory.report.email":"Email",
  "inventory.common.searchcriteria":"Search Criteria",
+ "inventory.create.group.title.MaterialIssues1":"Indent Material Issue",
+ "inventory.create.group.title.MaterialIssues2":"Material Transfer Indent Details",
+ "inventory.create.group.title.MaterialIssues3":"Approval Information",
+
 // Opening Balance Report Labels
  "reports.inventory.openbal.Uom":"UOM",
  "reports.inventory.openbal.Qty.":"Qty.",
@@ -2923,6 +2958,7 @@ var localization_EN_Data = {
     "inventory.usedQuantity":"Used Quantity",
     "inventory.orderqty":"Order Quantity",
    "inventory.totalindent.quantity": "total indent quantity",
+
 
  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",

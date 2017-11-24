@@ -8,11 +8,12 @@ var dat =
       "numCols": 4,
       "useTimestamp": true,
       "objectName": "",
+      "title":"inventory.common.searchcriteria",
       "url": "/inventory-services/indents/_search",
       "groups": [
          {
             "name": "search",
-            "label": "inventory.search.title",
+            "label": "inventory.search.materialIssue.title",
             "fields": [
                {
                   "name": "issuingStore",
@@ -71,10 +72,11 @@ var dat =
                {
                   "name": "indentRaisedBy",
                   "jsonPath": "indents[0].indentCreatedBy",
-                  "label": "inventory.create.indentCreatedBy",
+                  "label": "inventory.create.indentRaisedBy",
                   "type": "singleValueList",
                   "isDisabled": false,
-                  "patternErrorMsg": "inventory.create.field.message.indentCreatedBy"
+                  "patternErrorMsg": "inventory.create.field.message.indentCreatedBy",
+                  "url":"/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation"
                }
             ]
          }
@@ -82,16 +84,16 @@ var dat =
       "result": {
          "header": [
             {
-               "label": "inventory.search.result.indentNumber"
+               "label": "inventory.indent.number"
             },
             {
-               "label": "inventory.search.result.indentDate"
+               "label": "inventory.indent.date"
             },
             {
-               "label": "inventory.search.result.storeName"
+               "label": "inventory.store.name"
             },
             {
-               "label": "inventory.search.result.indentPurpose"
+               "label": "inventory.indent.purpose"
             },
             {
                "label": "inventory.search.result.raisedBy"
@@ -151,7 +153,7 @@ var dat =
                {
                   "name": "indentstorename",
                   "jsonPath": "materialIssues[0].indent.indentStore.name",
-                  "label": "inventory.create.indentStore.name",
+                  "label": "inventory.indenting.store",
                   "pattern": "^[a-zA-Z ]+$",
                   "type": "autoCompelete",
                   "isRequired": false,
@@ -179,7 +181,7 @@ var dat =
                {
                   "name": "indentNumber",
                   "jsonPath": "materialIssues[0].indent.indentNumber",
-                  "label": "inventory.create.indent.indentNumber",
+                  "label": "inventory.indent.number",
                   "pattern": "",
                   "type": "autoCompelete",
                   "isRequired": false,
@@ -232,7 +234,7 @@ var dat =
                {
                   "name": "issuedToDesignation",
                   "jsonPath": "materialIssues[0].issuedToDesignation",
-                  "label": "inventory.create.issuedToDesignation",
+                  "label": "inventory.create.designation",
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,
@@ -278,7 +280,7 @@ var dat =
                {
                   "name": "materialIssueStatus",
                   "jsonPath": "materialIssues[0].materialIssueStatus",
-                  "label": "inventory.create.materialIssueStatus",
+                  "label": "inventory.common.status",
                   "pattern": "",
                   "type": "text",
                   "isRequired": true,
@@ -300,7 +302,7 @@ var dat =
             "tableList": {
               "header": [
                 {
-                  "label": "inventory.material.name"
+                  "label": "inventory.materialName"
                 },
                 {
                   "label": "inventory.totalIndentQtyRequired"
@@ -330,7 +332,7 @@ var dat =
                   "label": "inventory.projectCode"
                 },
                 {
-                  "label": "inventory.description"
+                  "label": "inventory.create.description"
                 }
               ],
               "values": [
@@ -469,7 +471,7 @@ var dat =
               {
                   "name": "approverDesignation",
                   "label": "inventory.create.designation",
-                  "jsonPath": "materialIssues[0].workFlowDetails.designation",
+                  "jsonPath": "materialIssues[0].workFlowDetails.approverdesignation",
                   "pattern": "",
                   "type": "text",
                   "isRequired": false,

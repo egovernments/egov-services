@@ -281,6 +281,7 @@ ReportDefinitions:
     pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/_search?tenantId=$tenantid&pageSize=500|$..code|$..name
     source: lcms
     isMandatory: false
+    defaultValue: null 
   - name: courtName
     label: reports.lcms.courtName
     type: singlevaluelist
@@ -545,6 +546,7 @@ ReportDefinitions:
     pattern: http://lcms-services:8080/lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid&pageSize=500|$.agencies[*].name|$.agencies[*].name
     source: lcms
     isMandatory: false
+    wrapper: true    
     
   - name: advocatename
     label: reports.lcms.advocate

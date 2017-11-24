@@ -233,66 +233,71 @@ public class VendorJdbcRepository extends JdbcRepository {
         sls.setTenantId(tenantId);
 
         List<ServicedLocations> servicedLocations = servicedLocationsJdbcRepository.search(sls);
+        if (servicedLocations != null && !servicedLocations.isEmpty()) {
+            StringBuffer boundaryCodes = new StringBuffer();
+            Set<String> boundaryCodesSet = new HashSet<>();
 
-        StringBuffer boundaryCodes = new StringBuffer();
-        Set<String> boundaryCodesSet = new HashSet<>();
+            for (ServicedLocations sl : servicedLocations) {
 
-        for (ServicedLocations sl : servicedLocations) {
+                if (sl.getLocation() != null && sl.getLocation() != null
+                        && !sl.getLocation().isEmpty()) {
 
-            if (sl.getLocation() != null && sl.getLocation() != null
-                    && !sl.getLocation().isEmpty()) {
+                    boundaryCodesSet.add(sl.getLocation());
 
-                boundaryCodesSet.add(sl.getLocation());
+                }
+
+            }
+
+            List<String> locationCodes = new ArrayList(boundaryCodesSet);
+
+            for (String code : locationCodes) {
+
+                if (boundaryCodes.length() >= 1)
+                    boundaryCodes.append(",");
+
+                boundaryCodes.append(code);
 
             }
 
-        }
+            if (boundaryCodes != null && boundaryCodes.length() > 0) {
 
-        List<String> locationCodes = new ArrayList(boundaryCodesSet);
+                List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
 
-        for (String code : locationCodes) {
+                for (Boundary b : boundarys) {
+                    boundaryMap.put(b.getCode(), b);
+                }
+            }
 
-            if (boundaryCodes.length() >= 1)
-                boundaryCodes.append(",");
+            for (ServicedLocations sl : servicedLocations) {
 
-            boundaryCodes.append(code);
+                if (servicedLocationsMap.get(sl.getVendor()) == null) {
 
-        }
-        List<Boundary> boundarys = boundaryRepository.fetchBoundaryByCodes(boundaryCodes.toString(), tenantId);
+                    boundaryListMap.put(sl.getVendor(), Collections.singletonList(boundaryMap.get(sl.getLocation())));
 
-        for (Boundary b : boundarys) {
-            boundaryMap.put(b.getCode(), b);
-        }
+                    servicedLocationsMap.put(sl.getVendor(), Collections.singletonList(sl));
 
-        for (ServicedLocations sl : servicedLocations) {
+                } else {
 
-            if (servicedLocationsMap.get(sl.getVendor()) == null) {
+                    List<Boundary> bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
 
-                boundaryListMap.put(sl.getVendor(), Collections.singletonList(boundaryMap.get(sl.getLocation())));
+                    bList.add(boundaryMap.get(sl.getLocation()));
 
-                servicedLocationsMap.put(sl.getVendor(), Collections.singletonList(sl));
+                    boundaryListMap.put(sl.getVendor(), bList);
 
-            } else {
+                    List<ServicedLocations> cpdList = new ArrayList<>(servicedLocationsMap.get(sl.getVendor()));
 
-                List<Boundary> bList = new ArrayList<>(boundaryListMap.get(sl.getVendor()));
+                    cpdList.add(sl);
 
-                bList.add(boundaryMap.get(sl.getLocation()));
+                    servicedLocationsMap.put(sl.getVendor(), cpdList);
 
-                boundaryListMap.put(sl.getVendor(), bList);
+                }
+            }
 
-                List<ServicedLocations> cpdList = new ArrayList<>(servicedLocationsMap.get(sl.getVendor()));
+            for (Vendor vendor : vendorList) {
 
-                cpdList.add(sl);
-
-                servicedLocationsMap.put(sl.getVendor(), cpdList);
+                vendor.setServicedLocations(boundaryListMap.get(vendor.getVendorNo()));
 
             }
-        }
-
-        for (Vendor vendor : vendorList) {
-
-            vendor.setServicedLocations(boundaryListMap.get(vendor.getVendorNo()));
-
         }
 
     }
@@ -308,48 +313,54 @@ public class VendorJdbcRepository extends JdbcRepository {
         if (vendorList != null && !vendorList.isEmpty())
             tenantId = vendorList.get(0).getTenantId();
 
-        cpds.setVendorNos(vendorCodes);
-        cpds.setTenantId(tenantId);
+        if (tenantId != null && !tenantId.isEmpty()) {
 
-        List<ServicesOffered> servicesOffered = servicesOfferedJdbcRepository.search(cpds);
+            cpds.setVendorNos(vendorCodes);
+            cpds.setTenantId(tenantId);
 
-        List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
+            List<ServicesOffered> servicesOffered = servicesOfferedJdbcRepository.search(cpds);
 
-        for (SwmProcess sp : swmProcessList) {
-            swmProcessMap.put(sp.getCode(), sp);
-        }
+            if (servicesOffered != null && !servicesOffered.isEmpty()) {
 
-        for (ServicesOffered cpd : servicesOffered) {
+                List<SwmProcess> swmProcessList = swmProcessService.getAll(tenantId, new RequestInfo());
 
-            if (servicesOfferedMap.get(cpd.getVendor()) == null) {
+                for (SwmProcess sp : swmProcessList) {
+                    swmProcessMap.put(sp.getCode(), sp);
+                }
 
-                swmProcessListMap.put(cpd.getVendor(), Collections.singletonList(swmProcessMap.get(cpd.getService())));
+                for (ServicesOffered cpd : servicesOffered) {
 
-                servicesOfferedMap.put(cpd.getVendor(), Collections.singletonList(cpd));
+                    if (servicesOfferedMap.get(cpd.getVendor()) == null) {
 
-            } else {
+                        swmProcessListMap.put(cpd.getVendor(), Collections.singletonList(swmProcessMap.get(cpd.getService())));
 
-                List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendor()));
+                        servicesOfferedMap.put(cpd.getVendor(), Collections.singletonList(cpd));
 
-                bList.add(swmProcessMap.get(cpd.getService()));
+                    } else {
 
-                swmProcessListMap.put(cpd.getVendor(), bList);
+                        List<SwmProcess> bList = new ArrayList<>(swmProcessListMap.get(cpd.getVendor()));
 
-                List<ServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendor()));
+                        bList.add(swmProcessMap.get(cpd.getService()));
 
-                cpdList.add(cpd);
+                        swmProcessListMap.put(cpd.getVendor(), bList);
 
-                servicesOfferedMap.put(cpd.getVendor(), cpdList);
+                        List<ServicesOffered> cpdList = new ArrayList<>(servicesOfferedMap.get(cpd.getVendor()));
+
+                        cpdList.add(cpd);
+
+                        servicesOfferedMap.put(cpd.getVendor(), cpdList);
+
+                    }
+                }
+
+                for (Vendor vendor : vendorList) {
+
+                    vendor.setServicesOffered(swmProcessListMap.get(vendor.getVendorNo()));
+
+                }
 
             }
         }
-
-        for (Vendor vendor : vendorList) {
-
-            vendor.setServicesOffered(swmProcessListMap.get(vendor.getVendorNo()));
-
-        }
-
     }
 
 }

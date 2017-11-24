@@ -499,7 +499,7 @@ var dat = {
             "type":"text",
             "isRequired":false,
             "isDisabled":true,
-            "defaultValue":"NA",
+            "defaultValue":"",
             "maxLength":100,
             "patternErrorMsg":"inventory.create.field.message.code"
                },

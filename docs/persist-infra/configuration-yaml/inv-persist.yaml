@@ -357,33 +357,51 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
               type: LONG
 
-   
     - version: 1.0
       name: opening Balance
       description: update opening Balance
       fromTopic: inv-openbalance-update-topic
       queryMaps: 
-        - query: UPDATE  materialreceiptdetail SET receivedQty =?,acceptedQty =?, unitRate =?,lastmodifiedby=?,lastModifiedTime=? WHERE id=? AND tenantId=? ;
+        - query: INSERT INTO materialreceiptdetail(id, tenantId, material, mrnNumber, uomNo,receivedQty, acceptedQty, unitRate, remarks, createdby,createdTime,lastmodifiedby,lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 receivedQty = EXCLUDED.receivedQty,acceptedQty = EXCLUDED.receivedQty, unitRate = EXCLUDED.unitRate,
+                  lastmodifiedby = EXCLUDED.lastmodifiedby,lastModifiedTime = EXCLUDED.lastmodifiedtime ;
           basePath: $.materialReceipt.*.receiptDetails.*
           jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
+            - jsonPath: $.materialReceipt[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.remarks
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+              type: LONG
+            - type: CURRENTDATE
+              dbType: LONG
             - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
               type: LONG
             - type: CURRENTDATE
               dbType: LONG  
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
-        - query: UPDATE materialreceiptdetailaddnlinfo SET   lotNo =?,oldReceiptNumber =? ,expiryDate =? where id=? AND tenantId= ?;
+            
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo,oldReceiptNumber, expiryDate, serialno)
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 lotNo = EXCLUDED.lotNo, oldReceiptNumber = EXCLUDED.oldReceiptNumber,
+                 expiryDate = EXCLUDED.expiryDate ;
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:      
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.receivedDate
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.oldReceiptNumber
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
               type: LONG
-            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
-            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialno
+              type: LONG
+
 
     - version: 1.0
       name: priceLists create
@@ -438,7 +456,6 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
               dbType: LONG
 
-
     - version: 1.0
       name: priceLists update
       description: update pricelist in inventory
@@ -484,7 +501,6 @@ serviceMaps:
               dbType: LONG
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedTime
               dbType: LONG
-
 
     - version: 1
       name: Material Issue create
@@ -629,7 +645,6 @@ serviceMaps:
               type: LONG
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
               type: LONG
-
 
     - version: 1.0
       name: Material Reciept Note

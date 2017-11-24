@@ -2,6 +2,7 @@ package org.egov.inv.domain.service;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
+import org.egov.inv.persistence.repository.OpeningBalanceRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +33,7 @@ public class OpeningBalanceService extends DomainService {
 
     @Autowired
     private IdgenRepository idgenRepository;
-
+    
 
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -98,6 +100,8 @@ public class OpeningBalanceService extends DomainService {
 
     public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
     	try {
+    		 List<String> materialReceiptDetailIds = new ArrayList<>();
+    		 List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
         openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
             if (isEmpty(materialReceipt.getTenantId())) {
                 materialReceipt.setTenantId(tenantId);
@@ -106,9 +110,16 @@ public class OpeningBalanceService extends DomainService {
                 if (isEmpty(detail.getTenantId())) {
                     detail.setTenantId(tenantId);
                 }
+                if (isEmpty(detail.getId())) {
+                    setMaterialDetails(tenantId, detail);
+                }
+                materialReceiptDetailIds.add(detail.getId());
+
                 detail.getReceiptDetailsAddnInfo().stream().forEach(addinfo -> {
                     if (isEmpty(addinfo.getTenantId())) {
                         addinfo.setTenantId(tenantId);
+                        materialReceiptDetailAddlnInfoIds.add(addinfo.getId());
+
                     }
                 });
             });
@@ -223,6 +234,19 @@ public class OpeningBalanceService extends DomainService {
 
 		}
     }
+    private void setMaterialDetails(String tenantId, MaterialReceiptDetail materialReceiptDetail) {
+        materialReceiptDetail.setId(jdbcRepository.getSequence("seq_materialreceiptdetail"));
+        if (isEmpty(materialReceiptDetail.getTenantId())) {
+            materialReceiptDetail.setTenantId(tenantId);
+        }
 
-
+        materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
+                materialReceiptDetailAddnlInfo -> {
+                    materialReceiptDetailAddnlInfo.setId(jdbcRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
+                    if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
+                        materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+                    }
+                }
+        );
+    }
 }

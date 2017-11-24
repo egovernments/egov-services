@@ -4,17 +4,25 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueSearchContract;
+import org.egov.inv.persistence.entity.MaterialIssueDetailEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
 @Service
 public class MaterialIssueJdbcRepository extends JdbcRepository {
+	
+	  @Autowired
+	    public JdbcTemplate jdbcTemplate;
 
 	public Pagination<MaterialIssue> search(final MaterialIssueSearchContract searchContract) {
 		String searchQuery = "select * from materialissue :condition :orderby";
@@ -117,5 +125,35 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 
 		return page;
 	}
+	
+	public List<MaterialIssueDetail> getMaterialIssueDetailsByIssueNumber(String tenantId, List<String> materialIssueNumbers) {
+		BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialIssueDetailEntity.class);
+		List<MaterialIssueDetail> materialIssueDetails = new ArrayList<>();
+		Map<String,Object> paramValues = new HashMap<>();
+		paramValues.put("tenantId", tenantId);
+		paramValues.put("materialissuenumber", materialIssueNumbers);	
+		List<MaterialIssueDetailEntity> materialIssueDetailEntities = namedParameterJdbcTemplate.
+				query(getDetailQuery(), paramValues, row);
+		for(MaterialIssueDetailEntity materialIssueDetailEntity : materialIssueDetailEntities ){
+			materialIssueDetails.add(materialIssueDetailEntity.toDomain());
+		}
+		return materialIssueDetails;
+}
 
+	private String getDetailQuery() {
+       return "select * from materialissuedetail where tenantId = :tenantId and materialissuenumber in (:materialissuenumber)";		
+	}
+
+	public void compareAndGenerateObjects(List<MaterialIssue> materialIssues,
+			List<MaterialIssueDetail> materialIssueDetails) {
+		List<MaterialIssueDetail> materialIssueDetail = new ArrayList<>();
+		for(MaterialIssue materialIssue :materialIssues ){
+			materialIssueDetail.addAll(materialIssue.getMaterialIssueDetails());
+		}
+		
+		
+		
+	
+		
+	}
 }

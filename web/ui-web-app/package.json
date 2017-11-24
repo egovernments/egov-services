@@ -43,7 +43,6 @@
     "react-rating": "^0.8.0",
     "react-redux": "^5.0.4",
     "react-router-dom": "^4.1.1",
-    "react-scripts": "^1.0.7",
     "react-swipeable-views": "^0.12.3",
     "react-tap-event-plugin": "^2.0.1",
     "recharts": "^1.0.0-alpha.6",

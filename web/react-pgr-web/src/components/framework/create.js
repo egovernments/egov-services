@@ -990,7 +990,7 @@ class Report extends Component {
                         console.log("replacing!!!", queryStringObject[i].split("=")[1], queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value))
                           id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value) || "";
                       } else {
-                        id[queryStringObject[i].split("=")[0]]=getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]);
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/,getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0])) || "";
                       }
                      } else {
                       id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];

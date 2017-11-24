@@ -1231,7 +1231,13 @@ class Report extends Component {
       }
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
-      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+      try{
+          handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+			}
+			catch(e){	
+				console.log('error in autocomplete . It is version issue');
+			console.log(e);
+			}
       this.affectDependants(obj, e, property);
 
   }

@@ -130,6 +130,25 @@
 				},
 				{
 					"name": "Asset_MDMS",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"type": "text/javascript",
+								"exec": [
+									"// var jsonData = JSON.parse(responseBody);",
+									"// console.log(jsonData.MdmsRes.ASSET.AssetCategory.length);",
+									"",
+									"// for(var i=0; i<=jsonData.MdmsRes.ASSET.AssetCategory.length; i++){",
+									"",
+									"//     if(jsonData.MdmsRes.ASSET.AssetCategory[i].isAssetAllow === true){",
+									"//         pm.environment.set(\"assetCategory\", )",
+									"//     }",
+									"// }"
+								]
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -185,6 +204,7 @@
 											"});",
 											"",
 											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
 											"",
 											"postman.setNextRequest(\"Asset_Search\");"
 										]
@@ -195,17 +215,20 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"var num1 = Math.floor((Math.random() * 10000) + 1);",
-											"var num2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
+											"var num3 = Math.floor((Math.random() * 100000) + 1);",
 											"var d = 15;",
 											"var a = Math.round(100/d);",
-											"",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
 											"pm.environment.set(\"dateOfCreation\", epoch1);",
 											"pm.environment.set(\"acquisitionDate\", epoch1);",
 											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
 											"pm.environment.set(\"orderDate\", epoch1);",
-											"pm.environment.set(\"originalValue\", num2);",
 											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
 											"",
 											"var reqBody = JSON.parse(request.data);",
@@ -213,11 +236,10 @@
 											"if(reqBody.Asset.warrantyAvailable === true){",
 											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
 											"}",
-											"",
 											"pm.environment.set(\"openingDate\", epoch1);",
 											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
-											"pm.environment.set(\"depreciationRate\", d);",
-											"pm.environment.set(\"anticipatedLife\", a);"
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
 										]
 									}
 								}
@@ -232,7 +254,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"accumulatedDepreciationAccount\": null,\n    \"revaluationReserveAccount\": null,\n    \"depreciationExpenseAccount\": null,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"{{name}}\",\n    \"code\": \"{{assetCode}}\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n\t\t\n    \"assetCategory\": \"{{assetCategory}}\",\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": null,\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": 15,\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n    \t\"tenantId\": \"default\",\n        \"id\": 2,\n        \"name\": \"Infrastructure assets\",\n        \"code\": \"002\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"depreciationRate\": \"{{depreciationRate}}\",\n        \"unitOfMeasurement\": \"NOS\"\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -1398,16 +1420,29 @@
 					"description": "1. Depreciation\n2. Revalution\n3. Transfer/Disposal",
 					"item": [
 						{
-							"name": "Asset_Revaluation_Create",
+							"name": "Asset_Search",
 							"event": [
 								{
-									"listen": "prerequest",
+									"listen": "test",
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"var epoch1 = Math.round(new Date().getTime()/1000);",
-											"pm.environment.set(\"orderDate\", epoch1);",
-											"pm.environment.set(\"revaluationDate\", epoch1);"
+											"pm.test(\"Status code is 200\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"var jsonData = JSON.parse(responseBody);",
+											"pm.environment.set(\"grossValue\", jsonData.Assets[0].grossValue);",
+											"pm.environment.set(\"accumulatedDepreciation\", jsonData.Assets[0].accumulatedDepreciation);",
+											"pm.environment.set(\"originalValue\", jsonData.Assets[0].originalValue);",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"// for (var i=0; i<=jsonData.Assets.length; i++){",
+											"//     if(jsonData.Assets[i].assetCategory.assetCategoryType == \"MOVABLE\"){",
+											"//         pm.environment.set(\"assetCategoryType\", jsonData.Assets[i].assetCategory.assetCategoryType);",
+											"//     }else{",
+											"//         pm.environment.set(\"assetCategoryType\", jsonData.Assets[i].assetCategory.assetCategoryType);",
+											"//         }    ",
+											"// }"
 										]
 									}
 								}
@@ -1422,7 +1457,100 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": 105,\n    \"currentCapitalizedValue\": 12000,\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": 10,\n    \"valueAfterRevaluation\": null,\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"{{revaluatedBy}}\",\n    \"reasonForRevaluation\": \"reasonForRevaluation\",\n    \"voucherReference\": null,\n    \"fixedAssetsWrittenOffAccount\": null,\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
+									"raw": "{\n\t\"RequestInfo\":\n\t{\n    \t\"action\":\"search\",\n    \t\"did\":\"did\",\n    \t\"msgId\": \"msgId\",\n    \t\"requesterId\":\"reuesterId\",\n    \t\"authToken\":\"{{access_token}}\",\n    \t\"apiId\": \"123456789\",\n    \t\"ver\": \"159\",\n    \t\"ts\": null,\n    \t\"key\": \"key\"\n    }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_search?tenantId={{tenantId}}&code={{assetCode}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true
+										},
+										{
+											"key": "code",
+											"value": "{{assetCode}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Revaluation_Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Revaluation Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"var jsonData = JSON.parse(responseBody);",
+											"tests[\"Asset Revaluation ID\"] = jsonData.Revaluations[0].id;",
+											"tests[\"Asset ID Matches\"]= environment.assetId.has(jsonData.Revaluations[0].assetId);",
+											"tests[\"Asset Current Value Matches\"] = jsonData.Revaluations[0].currentCapitalizedValue;",
+											"tests[\"Revaluation Type of Change\"] = jsonData.Revaluations[0].typeOfChange;",
+											"tests[\"Revaluaion Amount Matches\"] = jsonData.Revaluations[0].revaluationAmount;",
+											"tests[\"Value after Revaluation Matches \"] = jsonData.Revaluations[0].valueAfterRevaluation;",
+											"tests[\"Revaluated on date\"] = jsonData.Revaluations[0].revaluationDate;"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"var num1 = Math.floor((Math.random() * 1000) + 1);",
+											"var valueAfterRevaluation;",
+											"var currentValue =pm.environment.get(\"currentCapitalizedValue\");",
+											"",
+											"",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"revaluationDate\", epoch1);",
+											"pm.environment.set(\"revaluationAmount\", num1);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"if(reqBody.Revaluation.typeOfChange == \"INCREASED\")",
+											"{",
+											"\tvalueAfterRevaluation = (+currentValue) + (+num1);",
+											"\tconsole.log(valueAfterRevaluation);",
+											"\tpm.environment.set(\"valueAfterRevaluation\", valueAfterRevaluation);",
+											"\tpm.environment.set(\"currentCapitalizedValue\", valueAfterRevaluation);",
+											"\t",
+											"}else{",
+											"    valueAfterRevaluation = currentValue - num1;",
+											"    pm.environment.set(\"valueAfterRevaluation\", valueAfterRevaluation);",
+											"    pm.environment.set(\"currentCapitalizedValue\", valueAfterRevaluation);",
+											"}"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Revaluation Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"currentCapitalizedValue\": \"{{currentCapitalizedValue}}\",\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": \"{{revaluationAmount}}\",\n    \"valueAfterRevaluation\": \"{{valueAfterRevaluation}}\",\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"Clerk\",\n    \"reasonForRevaluation\": \"Revaluation of Asset by value\",\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/revaluation/_create",
@@ -1441,7 +1569,29 @@
 							"response": []
 						},
 						{
-							"name": "Asset_Revaluation_Search",
+							"name": "Revaluation_Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"tests[\"Asset Revaluation ID matches\"] = jsonData.Revaluations[0].id;",
+											"tests[\"Asset ID matches\"]= environment.assetId.has(jsonData.Revaluations[0].assetId);",
+											"tests[\"Asset Current Value matches\"] = jsonData.Revaluations[0].currentCapitalizedValue;",
+											"tests[\"Revaluation Type of Change matches\"] = jsonData.Revaluations[0].typeOfChange;",
+											"tests[\"Revaluaion Amount matches\"] = jsonData.Revaluations[0].revaluationAmount;",
+											"tests[\"Value after Revaluation matches \"] = jsonData.Revaluations[0].valueAfterRevaluation;",
+											"tests[\"Revaluated date matches\"] = jsonData.Revaluations[0].revaluationDate;",
+											"",
+											"pm.test(\"Search Revaluation Success\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});"
+										]
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -1455,7 +1605,7 @@
 									"raw": "{\n\"RequestInfo\":{\n    \"action\":\"search\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
 								},
 								"url": {
-									"raw": "{{url}}/asset-services-maha/assets/revaluation/_search?tenantId={{tenantId}}",
+									"raw": "{{url}}/asset-services-maha/assets/revaluation/_search?tenantId={{tenantId}}&assetId={{assetId}}",
 									"host": [
 										"{{url}}"
 									],
@@ -1469,6 +1619,11 @@
 										{
 											"key": "tenantId",
 											"value": "{{tenantId}}",
+											"equals": true
+										},
+										{
+											"key": "assetId",
+											"value": "{{assetId}}",
 											"equals": true
 										}
 									]
@@ -1501,6 +1656,66 @@
 										"assets",
 										"revaluation",
 										"_update"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Depreciation_Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Depreciation\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"financialYear\": \"2017-18\",\n    \"fromDate\": 1485239110,\n    \"toDate\": 1511524931000,\n    \"assetIds\": [\n    \t217\n    ]\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/depreciations/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"depreciations",
+										"_create"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Disposal_Create",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\":\"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"Disposal\": {\n    \"remarks\": \"remarks\",\n    \"orderNumber\": \"Order123\",\n    \"orderDate\": 1511530450,\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"buyerName\": \"Buyer1\",\n    \"buyerAddress\": \"Buyer1 Address: Roha, MH\",\n    \"disposalReason\": \"Not usefull\",\n    \"disposalDate\": 1511530450,\n    \"panCardNumber\": \"ABCDE1234F\",\n    \"aadharCardNumber\": \"123456789012\",\n    \"assetcurrentvalue\": 8974730,\n    \"saleValue\": 8975730,\n    \"transactionType\": \"SALE\",\n    \"status\": \"DISPOSED\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/dispose/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"dispose",
+										"_create"
 									]
 								},
 								"description": ""
@@ -1859,7 +2074,7 @@
 											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
 											"",
 											"tests[\"Status code is 200\"] = responseCode.code === 200;",
-											"postman.setNextRequest(\"Asset_Search\");"
+											"postman.setNextRequest(\"Create_Asset\");"
 										]
 									}
 								}
@@ -1922,6 +2137,98 @@
 							"response": []
 						},
 						{
+							"name": "Create_Asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"jsonData = JSON.parse(responseBody);",
+											"pm.test(\"Asset Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"var gv = pm.environment.get(\"grossValue\");",
+											"var av = pm.environment.get(\"accumulatedDepreciation\");",
+											"var ov = pm.environment.get(\"originalValue\");",
+											"var currentValue;",
+											"if(gv !== null && av !== null) {",
+											"    currentValue = gv - av;",
+											"}else if(gv !== null){",
+											"    currentValue = gv;",
+											"}else",
+											"    currentValue = ov;",
+											"    ",
+											"pm.environment.set(\"currentCapitalizedValue\", currentValue);",
+											"postman.setNextRequest(\"Asset_Search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor(Math.random() * 10000000);",
+											"var num3 = Math.floor((Math.random() * 1000) + 1);",
+											"var d = 6.66;",
+											"var a = Math.round(100/d);",
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
+											"pm.environment.set(\"dateOfCreation\", epoch1);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
+											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"if(reqBody.Asset.warrantyAvailable === true){",
+											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+											"}",
+											"pm.environment.set(\"openingDate\", epoch1);",
+											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n    \t\"tenantId\": \"default\",\n        \"id\": 12,\n        \"name\": \"Roads and Bridges\",\n        \"code\": \"012\",\n        \"parent\": 2,\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"depreciationRate\": 6.66,\n        \"unitOfMeasurement\": \"NOS\"\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Asset Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_create"
+									]
+								},
+								"description": "if (grossValue != null && accumulatedDepreciation != null)\r\n{\r\n\r\n\tcurrentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));\r\n\r\n}"
+							},
+							"response": []
+						},
+						{
 							"name": "Asset_Search",
 							"event": [
 								{
@@ -1932,22 +2239,19 @@
 											"pm.test(\"Status code is 200\", function () {",
 											"    pm.response.to.have.status(200);",
 											"});",
-											"jsonData = JSON.parse(responseBody);",
-											"for (var i=0; i<=jsonData.Assets.length; i++){",
-											"    if(jsonData.Assets[i].assetCategory.assetCategoryType == \"MOVABLE\"){",
-											"        pm.environment.set(\"assetCategoryType\", jsonData.Assets[i].assetCategory.assetCategoryType);",
-											"    }else{",
-											"        pm.environment.set(\"assetCategoryType\", jsonData.Assets[i].assetCategory.assetCategoryType);",
-											"        }    ",
+											"var jsonData = JSON.parse(responseBody);",
+											"pm.environment.set(\"grossValue\", jsonData.Assets[0].grossValue);",
+											"",
+											"console.log(jsonData.Assets.length);",
+											"for (var i=0; i<jsonData.Assets.length; i++){",
+											"    pm.environment.set(\"assetIds\", jsonData.Assets[i].id);",
 											"}",
-											"if (grossValue != null && accumulatedDepreciation != null){",
-											"currentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));",
-											"}",
-											"else if (grossValue != null){",
-											"currentValue.setCurrentAmount(grossValue);",
-											"}",
-											"else",
-											"currentValue.setCurrentAmount(asset.getOriginalValue());"
+											"",
+											"pm.environment.set(\"accumulatedDepreciation\", jsonData.Assets[0].accumulatedDepreciation);",
+											"pm.environment.set(\"originalValue\", jsonData.Assets[0].originalValue);",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"postman.setNextRequest(\"Revaluation_Create\");"
 										]
 									}
 								}
@@ -1993,6 +2297,60 @@
 						},
 						{
 							"name": "Revaluation_Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Revaluation Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"var jsonData = JSON.parse(responseBody);",
+											"pm.environment.set(\"revaluationId\", jsonData.Revaluations[0].id);",
+											"tests[\"Asset Revaluation ID\"] = jsonData.Revaluations[0].id;",
+											"tests[\"Asset ID Matches\"]= jsonData.Revaluations[0].assetId;",
+											"tests[\"Asset Current Value Matches\"] = jsonData.Revaluations[0].currentCapitalizedValue;",
+											"tests[\"Revaluation Type of Change\"] = jsonData.Revaluations[0].typeOfChange;",
+											"tests[\"Revaluaion Amount Matches\"] = jsonData.Revaluations[0].revaluationAmount;",
+											"tests[\"Value after Revaluation Matches \"] = jsonData.Revaluations[0].valueAfterRevaluation;",
+											"tests[\"Revaluated on date\"] = jsonData.Revaluations[0].revaluationDate;",
+											"postman.setNextRequest(\"Revaluation_Search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"var num1 = Math.floor((Math.random() * 1000) + 1);",
+											"var valueAfterRevaluation;",
+											"var currentValue =pm.environment.get(\"currentCapitalizedValue\");",
+											"",
+											"",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"revaluationDate\", epoch1);",
+											"pm.environment.set(\"revaluationAmount\", num1);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"if(reqBody.Revaluation.typeOfChange == \"INCREASED\")",
+											"{",
+											"\tvalueAfterRevaluation = (+currentValue) + (+num1);",
+											"\tconsole.log(valueAfterRevaluation);",
+											"\tpm.environment.set(\"valueAfterRevaluation\", valueAfterRevaluation);",
+											"\tpm.environment.set(\"currentCapitalizedValue\", valueAfterRevaluation);",
+											"\t",
+											"}else{",
+											"    valueAfterRevaluation = currentValue - num1;",
+											"    pm.environment.set(\"valueAfterRevaluation\", valueAfterRevaluation);",
+											"    pm.environment.set(\"currentCapitalizedValue\", valueAfterRevaluation);",
+											"}"
+										]
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -2003,7 +2361,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"currentCapitalizedValue\": 78,\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": \"{{revaluationAmount}}\",\n    \"valueAfterRevaluation\": null,\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"{{revaluatedBy}}\",\n    \"reasonForRevaluation\": \"reasonForRevaluation\",\n    \"voucherReference\": null,\n    \"fixedAssetsWrittenOffAccount\": null,\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Revaluation Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"currentCapitalizedValue\": \"{{currentCapitalizedValue}}\",\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": \"{{revaluationAmount}}\",\n    \"valueAfterRevaluation\": \"{{valueAfterRevaluation}}\",\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"Clerk\",\n    \"reasonForRevaluation\": \"Revaluation of Asset by value\",\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/revaluation/_create",
@@ -2023,6 +2381,29 @@
 						},
 						{
 							"name": "Revaluation_Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"tests[\"Asset Revaluation ID matches\"] = jsonData.Revaluations[0].id;",
+											"tests[\"Asset ID matches\"]= jsonData.Revaluations[0].assetId;",
+											"tests[\"Asset Current Value matches\"] = jsonData.Revaluations[0].currentCapitalizedValue;",
+											"tests[\"Revaluation Type of Change matches\"] = jsonData.Revaluations[0].typeOfChange;",
+											"tests[\"Revaluaion Amount matches\"] = jsonData.Revaluations[0].revaluationAmount;",
+											"tests[\"Value after Revaluation matches \"] = jsonData.Revaluations[0].valueAfterRevaluation;",
+											"tests[\"Revaluated date matches\"] = jsonData.Revaluations[0].revaluationDate;",
+											"",
+											"pm.test(\"Search Revaluation Success\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"postman.setNextRequest(\"Revaluation_Update\");"
+										]
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -2036,7 +2417,7 @@
 									"raw": "{\n\"RequestInfo\":{\n    \"action\":\"search\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
 								},
 								"url": {
-									"raw": "{{url}}/asset-services-maha/assets/revaluation/_search?tenantId={{tenantId}}",
+									"raw": "{{url}}/asset-services-maha/assets/revaluation/_search?tenantId={{tenantId}}&assetId={{assetId}}",
 									"host": [
 										"{{url}}"
 									],
@@ -2051,6 +2432,11 @@
 											"key": "tenantId",
 											"value": "{{tenantId}}",
 											"equals": true
+										},
+										{
+											"key": "assetId",
+											"value": "{{assetId}}",
+											"equals": true
 										}
 									]
 								},
@@ -2060,6 +2446,59 @@
 						},
 						{
 							"name": "Revaluation_Update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"pm.test(\"Revaluation Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"var jsonData = JSON.parse(responseBody);",
+											"tests[\"Asset Revaluation ID\"] = jsonData.Revaluations[0].id;",
+											"tests[\"Asset ID Matches\"]= jsonData.Revaluations[0].assetId;",
+											"tests[\"Asset Current Value Matches\"] = jsonData.Revaluations[0].currentCapitalizedValue;",
+											"tests[\"Revaluation Type of Change\"] = jsonData.Revaluations[0].typeOfChange;",
+											"tests[\"Revaluaion Amount Matches\"] = jsonData.Revaluations[0].revaluationAmount;",
+											"tests[\"Value after Revaluation Matches \"] = jsonData.Revaluations[0].valueAfterRevaluation;",
+											"tests[\"Revaluated on date\"] = jsonData.Revaluations[0].revaluationDate;",
+											"postman.setNextRequest(\"UpdatedRevaluation_Search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"var num1 = Math.floor((Math.random() * 1000) + 1);",
+											"var valueAfterRevaluation;",
+											"var currentValue =pm.environment.get(\"currentCapitalizedValue\");",
+											"",
+											"",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"revaluationDate\", epoch1);",
+											"pm.environment.set(\"revaluationAmount\", num1);",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"if(reqBody.Revaluation.typeOfChange == \"INCREASED\")",
+											"{",
+											"\tvalueAfterRevaluation = (+currentValue) + (+num1);",
+											"\tconsole.log(valueAfterRevaluation);",
+											"\tpm.environment.set(\"valueAfterRevaluation\", valueAfterRevaluation);",
+											"\tpm.environment.set(\"currentCapitalizedValue\", valueAfterRevaluation);",
+											"\t",
+											"}else{",
+											"    valueAfterRevaluation = currentValue - num1;",
+											"    pm.environment.set(\"valueAfterRevaluation\", valueAfterRevaluation);",
+											"    pm.environment.set(\"currentCapitalizedValue\", valueAfterRevaluation);",
+											"}"
+										]
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -2070,10 +2509,10 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\" :\"access_token\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n    },\n  \"Revaluation\": {\n    \"remarks\": \"remarks\",\n    \"orderNumber\": \"ordr_no\",\n    \"orderDate\": 27102017,\n    \"tenantId\": \"string\",\n    \"id\": 21,\n    \"assetId\":11,\n    \"currentCapitalizedValue\": 12,\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": 40,\n    \"valueAfterRevaluation\": 52,\n    \"revaluationDate\": 27102017,\n    \"revaluatedBy\": \"revaluatedBy\",\n    \"reasonForRevaluation\": \"reasonForRevaluation\",\n    \"voucherReference\": \"6\",\n    \"fixedAssetsWrittenOffAccount\":78,\n    \"function\": 70,\n    \"fund\":71,\n    \"scheme\": 2,\n    \"subScheme\": 1,\n    \"comments\": \"comments\",\n    \"status\": \"REVALUATED\"\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Revaluation Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"currentCapitalizedValue\": \"{{currentCapitalizedValue}}\",\n    \"typeOfChange\": \"DECREASED\",\n    \"revaluationAmount\": \"{{revaluationAmount}}\",\n    \"valueAfterRevaluation\": \"{{valueAfterRevaluation}}\",\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"Clerk\",\n    \"reasonForRevaluation\": \"Revaluation of Asset by value\",\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
 								},
 								"url": {
-									"raw": "{{url}}/asset-services-maha/assets/revaluation/_update",
+									"raw": "{{url}}/asset-services-maha/assets/revaluation/_create",
 									"host": [
 										"{{url}}"
 									],
@@ -2081,15 +2520,38 @@
 										"asset-services-maha",
 										"assets",
 										"revaluation",
-										"_update"
+										"_create"
 									]
 								},
-								"description": ""
+								"description": "Revaluate Asset again"
 							},
 							"response": []
 						},
 						{
-							"name": "Depreciation",
+							"name": "UpdatedRevaluation_Search",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"tests[\"Asset Revaluation ID matches\"] = jsonData.Revaluations[0].id;",
+											"tests[\"Asset ID matches\"]= jsonData.Revaluations[0].assetId;",
+											"tests[\"Asset Current Value matches\"] = jsonData.Revaluations[0].currentCapitalizedValue;",
+											"tests[\"Revaluation Type of Change matches\"] = jsonData.Revaluations[0].typeOfChange;",
+											"tests[\"Revaluaion Amount matches\"] = jsonData.Revaluations[0].revaluationAmount;",
+											"tests[\"Value after Revaluation matches \"] = jsonData.Revaluations[0].valueAfterRevaluation;",
+											"tests[\"Revaluated date matches\"] = jsonData.Revaluations[0].revaluationDate;",
+											"",
+											"pm.test(\"Search Revaluation Success\", function () {",
+											"    pm.response.to.have.status(200);",
+											"});",
+											"postman.setNextRequest(\"Logout\");"
+										]
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -2100,18 +2562,150 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n     \"RequestInfo\" : {\n        \"apiId\" : null,\n        \"ver\" : \"1.0\",\n        \"action\" : \"create\",\n        \"did\" : \"1\",\n        \"key\" : \"abcdkey\",\n        \"msgId\" : \"20170310130900\",\n        \"requesterId\" : \"\",\n        \"authToken\" : \"{{access_token}}\"\n       \n    },\n  \"Depreciation\": {\n  \"tenantId\": \"{{tenantId}}\",\n    \"financialYear\": \"2017-18\",\n    \"fromDate\": 1491004800000,\n    \"toDate\": 1510721243000,\n    \"assetIds\": [27]\n  }\n}"
+									"raw": "{\n\"RequestInfo\":{\n    \"action\":\"search\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
 								},
 								"url": {
-									"raw": "{{url}}/asset-services-maha/assets/depreciations/_create",
+									"raw": "{{url}}/asset-services-maha/assets/revaluation/_search?tenantId={{tenantId}}&id={{revaluationId}}",
 									"host": [
 										"{{url}}"
 									],
 									"path": [
 										"asset-services-maha",
 										"assets",
-										"depreciations",
-										"_create"
+										"revaluation",
+										"_search"
+									],
+									"query": [
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"equals": true
+										},
+										{
+											"key": "id",
+											"value": "{{revaluationId}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Logout",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"tests[\"Status code is 200\"] = responseCode.code === 200;"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"org.egov.pgr\",\n    \"ver\": \"1.0\",\n    \"ts\": \"13-04-2017 12:13:30\",\n    \"action\": \"POST\",\n    \"did\": \"4354648646\",\n    \"key\": \"xyz\",\n    \"msgId\": \"654654\",\n    \"requesterId\": \"61\",\n    \"authToken\": \"{{access_token}}\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/user/_logout?access_token={{access_token}}",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"_logout"
+									],
+									"query": [
+										{
+											"key": "access_token",
+											"value": "{{access_token}}",
+											"equals": true
+										}
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Login copy",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"postman.setEnvironmentVariable(\"access_token\", jsonData.access_token);",
+											"",
+											"tests[\"Status code is 200\"] = responseCode.code === 200;",
+											"postman.setNextRequest(\"Create_Asset\");"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/x-www-form-urlencoded"
+									},
+									{
+										"key": "Authorization",
+										"value": "Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0"
+									}
+								],
+								"body": {
+									"mode": "urlencoded",
+									"urlencoded": [
+										{
+											"key": "username",
+											"value": "TL001",
+											"type": "text"
+										},
+										{
+											"key": "password",
+											"value": "12345678",
+											"type": "text"
+										},
+										{
+											"key": "grant_type",
+											"value": "password",
+											"type": "text"
+										},
+										{
+											"key": "scope",
+											"value": "read",
+											"type": "text"
+										},
+										{
+											"key": "tenantId",
+											"value": "{{tenantId}}",
+											"type": "text"
+										}
+									]
+								},
+								"url": {
+									"raw": "{{url}}/user/oauth/token",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"user",
+										"oauth",
+										"token"
 									]
 								},
 								"description": ""
@@ -2130,7 +2724,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\":\"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"Disposal\": {\n    \"remarks\": \"remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": 42,\n    \"buyerName\": \"buyer1\",\n    \"buyerAddress\": \"buyer1address\",\n    \"disposalReason\": \"Asset Transfered or Disposed\",\n    \"disposalDate\": \"{{disposalDate}}\",\n    \"panCardNumber\": \"GYDP372673\",\n    \"aadharCardNumber\": \"897613446789\",\n    \"assetcurrentvalue\": \"{{assetcurrentvalue}}\",\n    \"saleValue\": \"{{saleValue}}\",\n    \"transactionType\": \"{{transactionType}}\",\n    \"profitLossVoucherReference\": null,\n    \"assetSaleAccount\": \"1234567890\",\n    \"status\": \"DISPOSED\"\n  }\n}"
+									"raw": "{\n \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\":\"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"Disposal\": {\n    \"remarks\": \"remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"buyerName\": \"Buyer1\",\n    \"buyerAddress\": \"Buyer1 Address: Roha, MH\",\n    \"disposalReason\": \"Not usefull\",\n    \"disposalDate\": \"{{disposalDate}}\",\n    \"panCardNumber\": \"ABCDE1234F\",\n    \"aadharCardNumber\": \"123456789012\",\n    \"assetcurrentvalue\": \"{{assetcurrentvalue}}\",\n    \"saleValue\": \"{{saleValue}}\",\n    \"transactionType\": \"SALE\",\n    \"status\": \"DISPOSED\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/dispose/_create",
@@ -2160,7 +2754,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\": \"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  }\n}"
+									"raw": "{\n  \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\": \"469ac490-988f-4342-86a4-94e50308d4ae\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"default\"\n  }\n  }"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/dispose/_search?tenantId={{tenantId}}",
@@ -2186,7 +2780,7 @@
 							"response": []
 						},
 						{
-							"name": "Logout",
+							"name": "Logout copy",
 							"event": [
 								{
 									"listen": "test",

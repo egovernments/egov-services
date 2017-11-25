@@ -417,8 +417,9 @@ var dat = {
             "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate",
              "pattern": "",
             "type": "datePicker",
+            "maxDate":"today",
             "isRequired": false,
-            "isDisabled": true,
+            "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
           },

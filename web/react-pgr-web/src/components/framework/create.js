@@ -280,7 +280,6 @@ class Report extends Component {
             self.props.setFormData(obj);
             self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
           } else {
-
             self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
               self.props.setFormData(res);
           }
@@ -893,6 +892,29 @@ class Report extends Component {
     setMockData(_mockData);
   }
 
+  checkifHasValueBasedOn = (jsonPath, val) => {
+    let _mockData = {...this.props.mockData};
+    let {formData} = this.props;
+    let {moduleName, actionName, setMockData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if( _mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn && _mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn.length) {
+          for(let k=0; k<_mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn.length; k++) {
+            if(this.getVal(_mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].jsonPath)) {
+              _.set(formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, _mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].valueIfDataFound);
+            }
+            else {
+              _.set(formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, !(_mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].valueIfDataFound));
+              _.set(formData, _mockData[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].jsonPath, "");
+              
+            }
+          }
+        }
+      }
+    }
+    setMockData(_mockData);
+  }
+
   returnPathValueFunction()
   {
 
@@ -1236,6 +1258,7 @@ class Report extends Component {
           }
         }
       }
+      this.checkifHasValueBasedOn(property, e.target.value);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
       try{
@@ -1501,7 +1524,7 @@ class Report extends Component {
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
 
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
-
+    console.log({...this.props.formData})
     return (
       <div className="Report">
         <Row>

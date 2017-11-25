@@ -138,7 +138,7 @@ class Report extends Component {
   }
 
   setInitialUpdateData(form, specs, moduleName, actionName, objectName) {
-    let {setMockData} = this.props;
+    let {setMockData, formData} = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
@@ -174,11 +174,23 @@ class Report extends Component {
         }
       }
 
+      //for valueBasedOn feature
+      for(let j=0; j<specs[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if( specs[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn && specs[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn.length) {
+          for(let k=0; k<specs[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn.length; k++) {
+            if(this.getVal(specs[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].jsonPath)) {
+              _.set(formData, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath, specs[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].valueIfDataFound);
+            }
+            else {
+              _.set(formData, specs[moduleName + "." + actionName].groups[i].fields[j].jsonPath,  !(specs[moduleName + "." + actionName].groups[i].fields[j].valueBasedOn[k].valueIfDataFound));
+            }
+          }
+        }
+      }
       if(specs[moduleName + "." + actionName].groups[ind || i].children && specs[moduleName + "." + actionName].groups[ind || i].children.length) {
         this.setInitialUpdateChildData(form, specs[moduleName + "." + actionName].groups[ind || i].children);
       }
     }
-
     setMockData(specs);
   }
 

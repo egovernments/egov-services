@@ -1,0 +1,42 @@
+UIInfo:
+- referencePath: "/vehicletripsheetdetails"
+  groups:
+    Group1:
+      fields:
+      - vehicleTripSheetDetails[0].vehicle.regNumber
+      - vehicleTripSheetDetails[0].vehicle.vendor.name
+      - vehicleTripSheetDetails[0].tripStartDate
+      - vehicleTripSheetDetails[0].tripEndDate
+      - vehicleTripSheetDetails[0].route.name
+      - vehicleTripSheetDetails[0].route.endingDumpingGroundPoint.siteDetails.name
+      - vehicleTripSheetDetails[0].route.endingCollectionPoint.name
+    Location Covered :
+      fields:
+      - vehicleTripSheetDetails[0].route.collectionPoints[0].name
+    Trip Sheet Details:
+      fields:
+      - vehicleTripSheetDetails[0].route.distance
+      - vehicleTripSheetDetails[0].route.collectionType.name
+      - vehicleTripSheetDetails[0].inTime
+      - vehicleTripSheetDetails[0].outTime
+      - vehicleTripSheetDetails[0].entryWeight
+      - vehicleTripSheetDetails[0].exitWeight
+  dependents:
+  - onChangeField: vehicleTripSheetDetails[0].vehicle.regNumber
+    affectedFields:
+      vehicleTripSheetDetails[0].vehicle.vendor.name:
+        pattern: "/swm-services/vehicles/_search?regNumber=={vehicleTripSheetDetails[0].vehicle.regNumber}|$..regNumber|$..regNumber"
+        type: text
+  searchResult:
+    rowClickUrlUpdate: "/update/swm/vehicleTripSheetDetails/{tripNo}"
+    rowClickUrlView: "/view/swm/vehicleTripSheetDetails/{tripNo}"
+    columns:
+    - regNumber
+    - tripStartDate
+    - tripEndDate
+    - name
+    values:
+    - regNumber
+    - tripStartDate
+    - tripEndDate
+    - name

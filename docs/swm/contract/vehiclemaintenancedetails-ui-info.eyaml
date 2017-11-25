@@ -1,0 +1,31 @@
+UIInfo:
+- referencePath: "/vehiclemaintenancedetails"
+  groups:
+    Selection:
+      fields:
+      - vehicleMaintenanceDetails[0].maintenanceType
+    VehicleMaintenanceDeatils:
+      fields:
+      - vehicleMaintenanceDetails[0].vehicle.regNumber
+      - vehicleMaintenanceDetails[0].vehicle.vehicleType.name
+      - vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate
+      - vehicleMaintenanceDetails[0].actualMaintenanceDate
+      - vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate
+      - vehicleMaintenanceDetails[0].costIncurred
+      - vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance
+      - vehicleMaintenanceDetails[0].vehicleDowntimeActual
+      - vehicleMaintenanceDetails[0].vehicleDownTimeActualUom  
+      - vehicleMaintenanceDetails[0].remarks
+  searchResult:
+    rowClickUrlUpdate: "/update/swm/vehicleMaintenanceDetails/{regNumber}"
+    rowClickUrlView: "/view/swm/vehicleMaintenanceDetails/{regNumber}"
+    columns:
+    - regNumber
+    - name
+    - vehicleScheduledMaintenanceDate
+    - costIncurred
+    values:
+    - regNumber
+    - name
+    - vehicleScheduledMaintenanceDate
+    - costIncurred

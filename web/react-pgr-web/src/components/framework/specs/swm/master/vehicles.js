@@ -531,7 +531,7 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": "",
+            "defaultValue": false,
             "showHideFields": [{
               "ifValue": true,
               "hide": [],
@@ -545,7 +545,11 @@ var dat = {
                 "isGroup": false,
                 "isField": true
               }]
-            }]
+            }],
+            "valueBasedOn": [
+              {"jsonPath": "vehicles[0].kilometers",
+              "valueIfDataFound": true} 
+            ]
           },
           {
             "name": "kilometers",
@@ -581,16 +585,11 @@ var dat = {
             "isRequired": false,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": "",
-            "showHideFields": [{
-              "ifValue": false,
-              "hide": [],
-              "show": [{
-                "name": "vendorname",
-                "isGroup": false,
-                "isField": true
-              }]
-            }]
+            "defaultValue": true,
+            "valueBasedOn": [
+              {"jsonPath": "vehicles[0].vendor.name",
+              "valueIfDataFound": false} 
+            ]
           },
           {
             "name": "vendorname",
@@ -599,7 +598,7 @@ var dat = {
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "hide": true,
+            "hide": false,
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": ""

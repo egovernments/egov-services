@@ -392,21 +392,26 @@ printer = () => {
     let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
     let self = this;
+    var mappingObject;
 
     const renderGrid = function() {
-      if(formData && formData.Assets){
-        Api.commonApiPost("/asset-services-maha/assets/currentvalues/_search",{"assetIds":formData.Assets[0].id}).then(function(response)
+
+      if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("transactionHistory")){
+        Api.commonApiPost("/asset-services-maha/assets/_search",{"id":formData.Assets[0].id, "isTransactionHistoryRequired": true}).then(function(response)
         {
             console.log(response);
-            if(response && response.hasOwnProperty("AssetCurrentValues")){
+            if(response && response.hasOwnProperty("Assets") && response.Assets[0].hasOwnProperty("transactionHistory") && response.Assets[0].transactionHistory != null){
               self.setState({
-                responseHolder: response.AssetCurrentValues
+                responseHolder: response.Assets[0].transactionHistory
               })
             }
         },function(err) {
           console.log(err);
         });
-        return (
+        mappingObject = self.state.responseHolder;
+        console.log(mappingObject);
+        if(mappingObject != null){
+        return(
           <div>
             <Card className="uiCard">
               <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("")}</div>}/>
@@ -423,29 +428,30 @@ printer = () => {
                       </tr>
                     </thead>
                   <tbody>
-                  {self.state.responseHolder && self.state.responseHolder.map(function(item, index) {
-                    let date = new Date(item.transactionDate);
-              			let finDate = ('0' + date.getDate()).slice(-2) + '/'
-                           + ('0' + (date.getMonth()+1)).slice(-2) + '/'
-                           + date.getFullYear();
-                    return (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>{finDate}</td>
-                        <td>{item.currentAmount}</td>
-                        <td>{item.assetTranType}</td>
-                        <td>{item.currentAmount}</td>
-                        <td>{item.currentAmount - item.currentAmount}</td>
-                      </tr>
-                    )
-                  })}
+                    {mappingObject && mappingObject.map(function(item, index) {
+                        let date = new Date(item.transactionDate);
+                        let finDate = ('0' + date.getDate()).slice(-2) + '/'
+                               + ('0' + (date.getMonth()+1)).slice(-2) + '/'
+                               + date.getFullYear();
+                        return(
+                          <tr key={index}>
+                            <td>{index + 1}</td>
+                            <td>{finDate}</td>
+                            <td>{item.valueBeforeTransaction}</td>
+                            <td>{item.transactionType}</td>
+                            <td>{item.transactionAmount}</td>
+                            <td>{item.valueAfterTransaction}</td>
+                          </tr>
+                        )
+                      })}
                 </tbody>
               </Table>
             </CardText>
           </Card>
         </div>
-      )
-    }
+        )
+      }
+      }
     }
           const renderBody = function() {
               if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
@@ -508,7 +514,6 @@ printer = () => {
         {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
 
         <div>
-          {renderGrid()}
           {renderBody()}
         </div>
 
@@ -569,7 +574,11 @@ printer = () => {
 
 
         </form>
-
+        <div>
+          <Card className="uiCard">
+            {renderGrid()}
+          </Card>
+        </div>
       </div>
     );
   }

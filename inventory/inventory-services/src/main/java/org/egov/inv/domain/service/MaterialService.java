@@ -23,9 +23,6 @@ import static org.springframework.util.StringUtils.isEmpty;
 @Service
 public class MaterialService extends DomainService {
 
-    public static final String UPDATE = "UPDATE";
-    public static final String CREATE = "CREATE";
-
     @Autowired
     private MaterialJdbcRepository materialJdbcRepository;
 
@@ -51,7 +48,7 @@ public class MaterialService extends DomainService {
         try {
             List<MaterialStoreMapping> materialStoreMappings = new ArrayList<>();
 
-            validate(materialRequest.getMaterials(), CREATE);
+            validate(materialRequest.getMaterials(), Constants.ACTION_CREATE);
 
             List<String> materialIdList = materialJdbcRepository.getSequence(Material.class.getSimpleName(), materialRequest.getMaterials().size());
 
@@ -88,7 +85,7 @@ public class MaterialService extends DomainService {
         try {
             List<MaterialStoreMapping> materialStoreMappings = new ArrayList<>();
 
-            validate(materialRequest.getMaterials(), UPDATE);
+            validate(materialRequest.getMaterials(), Constants.ACTION_UPDATE);
             for (Material material : materialRequest.getMaterials()) {
                 if (isEmpty(material.getTenantId())) {
                     material.setTenantId(tenantId);
@@ -156,10 +153,12 @@ public class MaterialService extends DomainService {
                         materials.forEach(material -> {
                             uniqueCheck(material);
                             validateAsset(material);
+                            minmaxvalidate(material);
                         });
                     }
                 }
 
+                break;
 
                 case Constants.ACTION_UPDATE: {
                     if (materials == null) {
@@ -168,6 +167,7 @@ public class MaterialService extends DomainService {
                         materials.forEach(material -> {
                             uniqueCheck(material);
                             validateAsset(material);
+                            minmaxvalidate(material);
                         });
                     }
                 }
@@ -236,4 +236,9 @@ public class MaterialService extends DomainService {
         }
     }
 
+    private void minmaxvalidate(Material material) {
+        if (material.getMaxQuantity().compareTo(material.getMinQuantity()) < 0) {
+            throw new CustomException("inv.0013", "maximum quantity should be greater than minimum quantity");
+        }
+    }
 }

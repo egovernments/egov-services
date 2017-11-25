@@ -33,8 +33,8 @@ public class MaterialReceiptDetailService extends DomainService {
                         .receiptDetailId(Arrays.asList(materialReceiptDetail.getId()))
                         .tenantId(materialReceiptDetailSearch.getTenantId())
                         .build();
-                Pagination<MaterialReceiptDetailAddnlinfo> detailAddnlinfoPagination = materialReceiptDetailAddInfoService.search(materialReceiptAddInfoSearch);
-                materialReceiptDetail.setReceiptDetailsAddnInfo(detailAddnlinfoPagination.getPagedData());
+                Pagination<MaterialReceiptDetailAddnlinfo> detailAddnlInfoPagination = materialReceiptDetailAddInfoService.search(materialReceiptAddInfoSearch);
+                materialReceiptDetail.setReceiptDetailsAddnInfo(detailAddnlInfoPagination.getPagedData());
             }
         }
 

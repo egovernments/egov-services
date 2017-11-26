@@ -744,37 +744,43 @@ class Transaction extends Component {
       }else if(response.Depreciation.DepreciationDetail!=""){
         console.log("Not null");
         self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "transaction" ? "wc.create.message.success" : "wc.update.message.success"), true);
+        Api.commonApiPost((_url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
+          self.props.setLoadingStatus('hide');
+          console.log("api");
+          self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "wc.create.message.success"), true);
+          setTimeout(function() {
+          if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+            console.log("first");
+            if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
+              var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+            } else {
+              console.log("one");
+              if(self.props.actionName == "transaction") {
+                console.log("two");
+                var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              } else {
+                console.log("three");
+                var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              }
+            }
+            self.props.setRoute(hash);
+          }
+        }, 1500);
+      }, function(err) {
+      self.props.setLoadingStatus('hide');
+      self.props.toggleSnackbarAndSetText(true, err.message);
+    })
       }
       self.props.setFormData(response);
     }, function(err) {
       self.props.setLoadingStatus('hide');
       self.props.toggleSnackbarAndSetText(true, err.message);
     })
-    if(formData.Depreciation.DepreciationDetail == null || formData.Depreciation.DepreciationDetail == "" || formData.Depreciation.DepreciationDetail == "undefined"){
-      console.log("DepreciationDetail is null");
-    }else{
-      Api.commonApiPost((_url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
-        self.props.setLoadingStatus('hide');
-        self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "wc.create.message.success"), true);
-        setTimeout(function() {
-        if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
-          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
-            var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-          } else {
-            if(self.props.actionName == "transaction") {
-              var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-            } else {
-              var hash = "/non-framework/asset/acknowledgeDepreciation" + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
-            }
-          }
-          self.props.setRoute(hash);
-        }
-      }, 1500);
-    }, function(err) {
-    self.props.setLoadingStatus('hide');
-    self.props.toggleSnackbarAndSetText(true, err.message);
-  })
-  }
+    //if(formData && formData.Depreciation && formData.Depreciation.DepreciationDetail && formData.Depreciation.DepreciationDetail.length){
+
+  //   }else{
+  //     console.log("Depreciation is null");
+  // }
 }
 
   render() {

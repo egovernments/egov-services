@@ -34,8 +34,10 @@ export default class UiImage extends Component {
 			case 'google':
 
 					return (
-            <img src={item.imagePath}  width="50%" height = "50%"  label= {item.label}/>
+            <div>
 
+              <img src={item.imagePath}  width="20%" height = "60%"  label= {item.label}/>
+            </div>
 						// <TextField
             //   className="custom-form-control-for-textfield"
             //   id={item.jsonPath.split(".").join("-")}
@@ -60,7 +62,7 @@ export default class UiImage extends Component {
 	}
 
 	render () {
-    
+
 		return (
 	        this.renderImage(this.props.item)
 

@@ -59,28 +59,26 @@ class UiMultiFieldAddToTable extends Component {
     _.set(formData, property, e.target.value);
     this.setState({
       formData
-    }, function() {
-      this.getVal()
-    });
-    console.log({...this.props.formData})
+    }, function() {});
   }
 
   addToParent = () => {
 
-    let formData = {...this.props.formData};
-    // console.log(_.get(formData, this.props.item.jsonPath))
+    let formData = _.cloneDeep(this.props.formData);
+    let formData2 = _.cloneDeep(this.state.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
-    let stateFormDataTable = _.get(this.state.formData, this.props.item.jsonPath);
-   
-    console.log(myTableInParent, stateFormDataTable[0])
+    let stateFormDataTable = _.get(formData2, this.props.item.jsonPath);
  
     if(!myTableInParent) {
       this.props.handler({target: {value: stateFormDataTable}}, this.props.item.jsonPath);
     } else {
       myTableInParent.push(stateFormDataTable[0]);
-      console.log(myTableInParent)
       this.props.handler({target: {value: myTableInParent}}, this.props.item.jsonPath);
     }
+
+    this.setState({
+      formData: {}
+    })
   } 
 
   renderFields = (item, screen) => {

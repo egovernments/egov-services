@@ -30,7 +30,7 @@ public class RefillingPumpStationQueueRepository {
 
         kafkaTemplate.send(createTopic, refillingPumpStationRequest);
 
-        kafkaTemplate.send(indexTopic, refillingPumpStationRequest.getRefillingPumpStations());
+        kafkaTemplate.send(indexTopic, refillingPumpStationRequest);
 
         return refillingPumpStationRequest;
     }
@@ -39,7 +39,7 @@ public class RefillingPumpStationQueueRepository {
 
         kafkaTemplate.send(updateTopic, refillingPumpStationRequest);
 
-        kafkaTemplate.send(indexTopic, refillingPumpStationRequest.getRefillingPumpStations());
+        kafkaTemplate.send(indexTopic, refillingPumpStationRequest);
 
         return refillingPumpStationRequest;
     }

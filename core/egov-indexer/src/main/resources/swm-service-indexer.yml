@@ -17,3 +17,12 @@ ServiceMaps:
       id: $.code
       isBulk: true
       jsonPath: $.refillingPumpStations.*
+
+  - topic: swm-vehiclemaintenancedetail-indexer-topic
+    indexes:
+    - name: vehiclemaintenancedetails
+      type: vehiclemaintenancedetails
+      id: $.code
+      isBulk: true
+      jsonPath: $.vehicleMaintenanceDetails.*
+

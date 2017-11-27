@@ -1,0 +1,49 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "isScheduled": {
+            "type": "keyword"
+        },
+        "maintenanceType": {
+            "type": "keyword"
+        },
+        "vehicle": {
+            "type": "object"
+        },
+        "actualMaintenanceDate": {
+            "type": "keyword"
+        },
+        "vehicleScheduledMaintenanceDate": {
+            "type": "keyword"
+        },
+        "vehicleDownTimeActual": {
+            "type": "keyword"
+        },
+        "vehicleDownTimeActualUom": {
+            "type": "keyword"
+        },
+        "vehicleReadingDuringMaintenance": {
+            "type": "keyword"
+        },
+        "remarks": {
+            "type": "keyword"
+        },
+        "costIncurred": {
+            "type": "keyword"
+        },
+        "auditDetails": {
+            "type": "object"
+        }
+    }
+}

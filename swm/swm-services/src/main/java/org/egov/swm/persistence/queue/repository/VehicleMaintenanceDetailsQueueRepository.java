@@ -30,7 +30,7 @@ public class VehicleMaintenanceDetailsQueueRepository {
 
         kafkaTemplate.send(createTopic, vehicleMaintenanceDetailsRequest);
 
-        kafkaTemplate.send(indexTopic, vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
+        kafkaTemplate.send(indexTopic, vehicleMaintenanceDetailsRequest);
 
         return vehicleMaintenanceDetailsRequest;
     }
@@ -39,7 +39,7 @@ public class VehicleMaintenanceDetailsQueueRepository {
 
         kafkaTemplate.send(updateTopic, vehicleMaintenanceDetailsRequest);
 
-        kafkaTemplate.send(indexTopic, vehicleMaintenanceDetailsRequest.getVehicleMaintenanceDetails());
+        kafkaTemplate.send(indexTopic, vehicleMaintenanceDetailsRequest);
 
         return vehicleMaintenanceDetailsRequest;
     }

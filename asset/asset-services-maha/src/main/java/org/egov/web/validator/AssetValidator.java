@@ -198,7 +198,7 @@ public class AssetValidator implements Validator {
 		if(revaluation.getRevaluationDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_REVALUATION_DATE", "Assets Cannot be Revaluated For Future Dates");
 		
-		if(revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
+		if(revaluation.getOrderDate()!=null && revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_REVALUATION_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
 		
 		if (asset != null) {

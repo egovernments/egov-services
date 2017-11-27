@@ -468,8 +468,8 @@ public class ActionRepository {
 		List<Action> actionList = new ArrayList<Action>();
 		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
 		String actionFilter = "[?(@.id IN [$actionid])]";
-		url = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
-		actionurl = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=$tenantid&filter=";
+		url = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
+		actionurl = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=$tenantid&filter=";
 
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();

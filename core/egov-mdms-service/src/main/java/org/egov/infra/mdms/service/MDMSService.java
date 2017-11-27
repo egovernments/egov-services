@@ -108,7 +108,7 @@ public class MDMSService {
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		List<Object> tenantSpecificModuleData = tenantIdMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId());
 		if(null == tenantSpecificModuleData) 
-			throw new CustomException("500","Invalid Tenant Id");
+			throw new CustomException("400","Invalid Tenant Id");
 		Integer index = 0;
 		String content = preProcessor(tenantSpecificModuleData, mDMSCreateRequest, tenantIdMap, index);
     	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
@@ -162,11 +162,18 @@ public class MDMSService {
 			}
 			index++;
 		}
+		if(null == moduleContent){
+			throw new CustomException("400", "There is no master data available for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());
+		}
 		logger.info("Module content: "+moduleContent);
 		String moduleContentJson = mapper.writeValueAsString(moduleContent);
     	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
-    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
-    			mDMSCreateRequest.getMasterMetaData().getMasterData());
+    	try{
+	    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
+	    			mDMSCreateRequest.getMasterMetaData().getMasterData());
+    	}catch(Exception e){
+			throw new CustomException("400", "There is no master data available for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
+    	}
     	moduleContentJson = documentContext.jsonString().toString();
     	logger.info("Updated contents: "+moduleContentJson);
     	

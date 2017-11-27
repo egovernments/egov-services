@@ -22,6 +22,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
+import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -36,6 +37,8 @@ public class MDMSApplicationRunnerImpl {
 	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
 	private static Map<String, String> filePathMap = new HashMap<>();
+	private static Map<String, Map<String, Object>> validationMap = new HashMap<>();
+
 
 	@PostConstruct
 	public void run() {
@@ -70,6 +73,7 @@ public class MDMSApplicationRunnerImpl {
 						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
 						filterMaster(obj);
 						buildFilePathMap(obj, file.getName());
+						buildValidationMap(obj);
 						System.out.println("yaml obj:" + obj);
 
 					} catch (Exception e) {
@@ -80,8 +84,10 @@ public class MDMSApplicationRunnerImpl {
 					log.info("Reading json file....:- "+name);
 					try {
 						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
+						log.info("Map: "+jsonStr);
 						filterMaster(jsonStr);
 						buildFilePathMap(jsonStr, file.getName());
+						buildValidationMap(jsonStr);
 						System.out.println(jsonStr);
 					} catch (JsonGenerationException e) {
 						// TODO Auto-generated catch block
@@ -105,7 +111,10 @@ public class MDMSApplicationRunnerImpl {
 			}
 		}
 		
+		log.info("tenantMap: "+tenantMap);
 		log.info("filePathMap: "+filePathMap);
+		log.info("validationMap: "+validationMap);
+
 
 
 	}
@@ -158,6 +167,13 @@ public class MDMSApplicationRunnerImpl {
 		
 		filePathMap.put(key.toString(), filePath);
 	}
+	
+	private void buildValidationMap(Map<String, Object> map){
+		StringBuilder key = new StringBuilder();
+		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
+		
+		validationMap.put(key.toString(), map);
+	}
 
 	public static Map<String, List<Object>> getTenantMap(){
 		return tenantMap;
@@ -169,6 +185,11 @@ public class MDMSApplicationRunnerImpl {
 	
 	public static Map<String, String> getFilePathMap(){
 		return filePathMap;
+	
+	}
+	
+	public static Map<String, Map<String, Object>> getValidationMap(){
+		return validationMap;
 	
 	}
 	

@@ -292,6 +292,7 @@ ReportDefinitions:
 
   - name: supplierName
     label: inventory.supplierName
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -304,6 +305,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
+    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -414,6 +416,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
+    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -467,12 +470,14 @@ ReportDefinitions:
 
   - name: supplierName
     label: inventory.supplierName
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
 
   - name: materialName
     label: inventory.materialName
+    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -521,12 +526,15 @@ ReportDefinitions:
 
   - name: supplierName
     label: inventory.supplierName
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
+    
 
   - name: materialName
     label: inventory.materialName
+    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false

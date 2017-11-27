@@ -64,7 +64,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	public ResponseEntity<MaterialIssueResponse> materailIssuesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		materialIssueService.update(indentIssueRequest);
-		return new ResponseEntity<MaterialIssueResponse>(HttpStatus.OK);
+		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId);
+		return new ResponseEntity(materialIssueResponse,HttpStatus.OK);
 	}
 }

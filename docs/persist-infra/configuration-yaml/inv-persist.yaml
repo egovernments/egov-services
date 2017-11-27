@@ -551,8 +551,10 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.tenantId
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.orderNumber
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.value
+              dbType: DOUBLE
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.uom.code
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.scrapValue
+              dbType: DOUBLE
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityToBeIssued
@@ -573,7 +575,80 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.quantity
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.status
             - jsonPath: $.materialIssues.*.materialIssueDetails[?({id} in @.materialIssuedFromReceipts[*].id)].id
+            
+    - version: 1.0
+      name: Material Issue update
+      description: Update Material Issue
+      fromTopic: inv-issues-update-topic
+      isTransaction: true
+      queryMaps:
+        - query: >-
+               update materialissue set issuetype = ?, fromstore  = ?, tostore = ?, issuedate = ?, materialissuestatus = ?, description = ?,
+               totalissuevalue = ?, fileStoreId = ?, designation = ?, indentid = ?, issuedtoemployee = ?, issuedtodesignation = ?, issuepurpose = ?, supplier = ?, stateId = ?, lastmodifiedby = ?, lastModifiedTime = ? where issuenumber = ? and tenantid = ?;
+          basePath: $.materialIssues.*
+          jsonMaps:
+            - jsonPath: $.materialIssues.*.issueType
+            - jsonPath: $.materialIssues.*.fromStore.code
+            - jsonPath: $.materialIssues.*.toStore.code
+            - jsonPath: $.materialIssues.*.issueDate
+            - jsonPath: $.materialIssues.*.materialIssueStatus
+            - jsonPath: $.materialIssues.*.description
+            - jsonPath: $.materialIssues.*.totalIssueValue
+              dbType: DOUBLE
+            - jsonPath: $.materialIssues.*.fileStoreId
+            - jsonPath: $.materialIssues.*.designation
+            - jsonPath: $.materialIssues.*.indent.id
+            - jsonPath: $.materialIssues.*.issuedToEmployee
+            - jsonPath: $.materialIssues.*.issuedToDesignation
+            - jsonPath: $.materialIssues.*.issuePurpose
+            - jsonPath: $.materialIssues.*.supplier.code
+            - jsonPath: $.materialIssues.*.stateId
+            - jsonPath: $.materialIssues.*.auditDetails.lastModifiedBy
+            - jsonPath: $.materialIssues.*.auditDetails.lastModifiedTime
+              dbType: LONG
+            - jsonPath: $.materialIssues.*.issueNumber
+            - jsonPath: $.materialIssues.*.tenantId
+        - query: >-
+                 INSERT INTO materialissuedetail(id, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, materialissuenumber, indentdetailid, quantitytobeissued,
+                   materialid, quantityissued, description) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 orderNumber = EXCLUDED.orderNumber, value  = EXCLUDED.value, uom = EXCLUDED.uom,
+                 scrapvalue = EXCLUDED.scrapvalue, voucherheader = EXCLUDED.voucherheader, materialissuenumber = EXCLUDED.materialissuenumber,
+                 indentdetailid = EXCLUDED.indentdetailid, quantitytobeissued = EXCLUDED.quantitytobeissued, materialid = EXCLUDED.materialid, quantityissued = 
+                 EXCLUDED.quantityissued, description = EXCLUDED.description;
+          basePath: $.materialIssues.*.materialIssueDetails.*
+          jsonMaps:
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.tenantId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.orderNumber
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.value
+              dbType: DOUBLE
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.uom.code
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.scrapValue
+              dbType: DOUBLE
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
+            - jsonPath: $.materialIssues[?({id} in @.materialIssueDetails[*].id)].issueNumber
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityToBeIssued
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
 
+
+        - query: >-
+                 INSERT INTO materialissuedfromreceipt(id, tenantId, receiptid, receiptdetailId, receiptdetailaddnlinfoid, quantity, status, issuedetailid ) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 receiptid = EXCLUDED.receiptid, receiptdetailId  = EXCLUDED.receiptdetailId, receiptdetailaddnlinfoid = EXCLUDED.receiptdetailaddnlinfoid,
+                 quantity = EXCLUDED.quantity, status = EXCLUDED.status, issuedetailid = EXCLUDED.issuedetailid;
+          basePath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*
+          jsonMaps:
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.tenantId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.materialReceiptId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.materialReceiptDetail.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.materialReceiptDetailAddnlinfoId
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.quantity
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.materialIssuedFromReceipts.*.status
+            - jsonPath: $.materialIssues.*.materialIssueDetails[?({id} in @.materialIssuedFromReceipts[*].id)].id
+       
     - version: 1.0
       name: Material Reciept Note
       description: Create Material Receipt Note
@@ -1012,3 +1087,4 @@ serviceMaps:
             - jsonPath: $.indents.*.indentDetails.*.remarks
             - jsonPath: $.indents.*.indentDetails.*.id
             - jsonPath: $.indents.*.indentDetails.*.tenantId
+

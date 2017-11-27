@@ -3,11 +3,10 @@ package org.egov.inv.domain.service;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.stream.Collectors;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
-import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
@@ -18,10 +17,10 @@ import org.egov.inv.model.MaterialIssueRequest;
 import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
-import org.egov.inv.model.RequestInfo;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
+import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -36,11 +35,20 @@ public class MaterialIssuesService extends DomainService {
 	@Autowired
 	private MaterialIssueDetailsJdbcRepository materialIssueDetailsJdbcRepository;
 
+	@Autowired
+	private MaterialIssuedFromReceiptsJdbcRepository materialIssuedFromReceiptsJdbcRepository;
+	
 	@Value("${inv.issues.save.topic}")
 	private String createTopic;
 
 	@Value("${inv.issues.save.key}")
 	private String createKey;
+	
+	@Value("${inv.issues.update.topic}")
+	private String updateTopic;
+	
+	@Value("${inv.issues.update.key}")
+	private String updateKey;
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
@@ -102,6 +110,11 @@ public class MaterialIssuesService extends DomainService {
 					}
 				}
 				break;
+			case "update":
+				for (MaterialIssue materialIssue : materialIssues) {
+				if(StringUtils.isEmpty(materialIssue.getIssueNumber()))
+						throw new CustomBindException("Issue Number is not provided");
+				}
 			default:
 
 			}
@@ -110,19 +123,39 @@ public class MaterialIssuesService extends DomainService {
 
 	}
 
-	public void update(final MaterialIssueRequest materialIssueRequest) {
-		
-		
+	public MaterialIssueResponse update(final MaterialIssueRequest materialIssueRequest, String tenantId) {
+		validate(materialIssueRequest.getMaterialIssues(),Constants.ACTION_UPDATE);
 		List<MaterialIssue> materialIssues = materialIssueRequest.getMaterialIssues();
-		List<String> materialIssueNumbers = materialIssues.stream().map(materialIssue -> materialIssue.getIssueNumber())
-				.collect(Collectors.toList());
-		List<MaterialIssueDetail> matyerialIssueDetails = materialIssueJdbcRepository.getMaterialIssueDetailsByIssueNumber(materialIssueRequest.getMaterialIssues().get(0).getTenantId(),
-				materialIssueNumbers);
-		materialIssueJdbcRepository.compareAndGenerateObjects(materialIssueRequest.getMaterialIssues(),
-				matyerialIssueDetails);
-		
-		
+		for(MaterialIssue materialIssue:materialIssues){
+			List<String> materialIssueDetailsIds = new ArrayList<>();
+			if(StringUtils.isEmpty(materialIssue.getTenantId()))
+				materialIssue.setTenantId(tenantId);
+			materialIssue.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+		for(MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()){
+			List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
+			if(StringUtils.isEmpty(materialIssueDetail.getTenantId()))
+				materialIssueDetail.setTenantId(tenantId);
+			if(StringUtils.isEmpty(materialIssueDetail.getId()))		
+				materialIssueDetail.setId(materialIssueDetailsJdbcRepository.getSequence(MaterialIssueDetail.class.getSimpleName(),1).get(0));
+			materialIssueDetailsIds.add(materialIssueDetail.getId());
+			for(MaterialIssuedFromReceipt mifr: materialIssueDetail.getMaterialIssuedFromReceipts())
+			{
+				if(StringUtils.isEmpty(mifr.getTenantId()))
+					mifr.setTenantId(tenantId);
+				if(StringUtils.isEmpty(mifr.getId()))
+					mifr.setId(materialIssuedFromReceiptsJdbcRepository.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(),1).get(0));
+				materialIssuedFromReceiptsIds.add(mifr.getId());
+			}
+			materialIssuedFromReceiptsJdbcRepository.markDeleted(materialIssuedFromReceiptsIds, tenantId, "materialissuedfromreceipt", "issuedetailid", materialIssueDetail.getId());
+		}
+		materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail", "materialissuenumber", materialIssue.getIssueNumber());
 
+		}
+		kafkaTemplate.send(updateTopic, updateKey, materialIssueRequest);
+		MaterialIssueResponse response = new MaterialIssueResponse();
+		response.setMaterialIssues(materialIssueRequest.getMaterialIssues());
+		response.setResponseInfo(getResponseInfo(materialIssueRequest.getRequestInfo()));
+		return response;
 	}
 
 	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract) {

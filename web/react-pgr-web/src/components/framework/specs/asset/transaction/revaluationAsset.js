@@ -236,8 +236,8 @@ var dat = {
 	        {
 	          "name": "ValuationDate",
 	          "jsonPath": "Revaluation.revaluationDate",
-	          "label": "ac.create.Revaluation.date",
-						//"label": "Revaluation date",
+	          //"label": "ac.create.Revaluation.date",
+						"label": "Revaluation date",
 	          "pattern": "",
 	          "type": "datePicker",
 	          "isRequired": true,
@@ -273,7 +273,8 @@ var dat = {
 	        {
 	          "name": "ValuationAmount",
 	          "jsonPath": "Revaluation.valueAfterRevaluation",
-	          "label": "ac.create.title",
+	          //"label": "ac.create.title",
+						"label": "Value After Revaluation",
 	          "pattern": "",
 	          "type": "text",
 	          "isRequired": true,

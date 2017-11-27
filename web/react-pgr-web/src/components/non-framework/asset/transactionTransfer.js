@@ -16,7 +16,7 @@ import $ from "jquery";
 
 
 var count=0;
-
+var recordSelect = false;
 var specifications={};
 
 let reqRequired = [];
@@ -511,6 +511,15 @@ class Transaction extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
       console.log(property);
+
+      for (var i = 0; i < formData.Disposal.Assets.length; i++) {
+        if (formData.Disposal.Assets[i].isRadio==true) {
+          recordSelect = false;
+        }else{
+          recordSelect = true;
+        }
+      }
+
       if (property.search("isRadio") != -1 && property.indexOf("transactionType")== -1) {
         let _indexVal = property.split("[")[1].split("]")[0];
         if (formData.Disposal.Assets && self.props.formData.Disposal.Assets.length) {
@@ -676,6 +685,19 @@ class Transaction extends Component {
     let self=this;
     e.preventDefault();
     var formData = {...this.props.formData};
+    console.log(formData.Disposal.Assets);
+
+    for (var i = 0; i < formData.Disposal.Assets.length; i++) {
+      console.log(formData.Disposal.Assets[i]);
+      if (formData.Disposal.Assets[i].isRadio==true) {
+        console.log("hit");
+          formData.Disposal["assetId"]=formData.Disposal.Assets[i].id;
+          console.log(formData.Disposal["assetId"]);
+      }
+    }
+    if(formData.Disposal["assetId"]){
+      console.log(formData.Disposal["assetId"]);
+
 
     if(!(formData.Disposal.remarks) || formData.Disposal.remarks == null || formData.Disposal.remarks == ""){
       self.props.toggleSnackbarAndSetText(true, "Please enter Remarks", false, true);
@@ -700,14 +722,7 @@ class Transaction extends Component {
     self.props.setLoadingStatus('loading');
     var amountValidation=true;
     var amountValidationMsg="";
-      console.log(formData.Disposal.Assets);
-    for (var i = 0; i < formData.Disposal.Assets.length; i++) {
-      if (formData.Disposal.Assets[i].isRadio==true) {
-        console.log("hit");
-          formData.Disposal["assetId"]=formData.Disposal.Assets[i].id;
-          console.log(formData.Disposal["assetId"]);
-      }
-    }
+
 
     delete formData.Disposal.Assets;
 
@@ -724,6 +739,9 @@ class Transaction extends Component {
 
 
             }
+          }else{
+            self.props.toggleSnackbarAndSetText(true, "Please Select a Record", false, true);
+          }
      }
 
   render() {
@@ -752,7 +770,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid && recordSelect ? false : true}} ui="google"/>}
                     <br/>
                   </div>
       </div>

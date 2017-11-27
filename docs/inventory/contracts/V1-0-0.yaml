@@ -39,8 +39,6 @@ consumes:
 produces:
   - application/json
 basePath: "/inventory-inventory/v110"
-x-ui-info:
-  $ref: /home/pradeep/egov-services/egov-services/docs/inventory/contracts/po-ui-info.yaml
 x-common-path: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/inventory-inventory/contracts/v1-0-0.yml'
 x-api-id: 'org.egov.inventory.inventory'
 paths:
@@ -123,6 +121,81 @@ paths:
             description: Opening Balance Updated Successfully.
             schema:
               $ref: '#/definitions/OpeningBalanceResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /indents/_searchindentforpo:
+      post:
+        summary: Get the list of indent notes/transfer indent information.
+        description: Indent object holds the information for both Indent Note and Transfer Indent.
+        tags:
+          - Indent Note
+          - Transfer Indent
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items:
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: issueStore
+            type: integer
+            format: int64
+            in: query
+            description: |
+              issue store of the Indent
+          - name: indentDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              indent date of the Indent
+          - name: indentNumber
+            type: string
+            in: query
+            description: |
+              indentNumber  Auto generated number, read only <ULB short code><Store
+              Code><fin. Year><serial No.>
+          - name: indentPurpose
+            type: string
+            in: query
+            description: |
+              indent purpose of the Indent
+            enum:
+              - Consumption
+              - Repairs and Maintenance
+              - Capital
+              - Material Transfer Note
+          - name: indentStatus
+            type: string
+            in: query
+            description: |
+              indent status of the Indent
+            enum:
+              - CREATED
+              - APPROVED
+              - REJECTED
+              - CANCELED
+          - name: totalIndentValue
+            type: number
+            format: BigDecimal
+            in: query
+            description: |
+              totalIndentValue  denormalized value from Indent Material
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: Indent retrieved Successfully
+            schema:
+              $ref: '#/definitions/IndentResponse'
           400:
             description: Invalid Input
             schema:
@@ -403,6 +476,29 @@ paths:
         responses:
           200:
             description: PurchaseOrder retrieved Successfully
+            schema:
+              $ref: '#/definitions/PurchaseOrderResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /purchaseorders/_preparepofromindents:
+      post:
+        summary: Create  new  purchaseorder from indent
+        description: Purchase order is created to purchase the materials required, using indents selected in search screen. Supplier and rate type also required to load supplier rate contract details in purchase order screen. Based on pending quantity required in indent and supplier rate contract rates, items will be autopopulated in purchase order screen.  This API created a purchase order in the system and initiates the workflow.
+        tags:
+          - Purchase Order
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: purchaseOrderRequest
+            in: body
+            description: Create  new
+            schema:
+              $ref: '#/definitions/PurchaseOrderRequest'
+        responses:
+          200:
+            description: PurchaseOrder created Successfully
             schema:
               $ref: '#/definitions/PurchaseOrderResponse'
           400:
@@ -1956,6 +2052,13 @@ definitions:
             - TransferIndent
           description: |
             There are 2 types of indent namely Indent Note and Transfer Indent
+        searchPurpose:
+          type: string
+          enum:
+            - PurchaseOrder
+            - IssueMaterial
+          description: |
+            Using this field to search indents for purchase order or material issue creation.
         indentPurpose:
           type: string
           format: singleValueList
@@ -2304,6 +2407,11 @@ definitions:
           maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+        indents:
+          description: Used for indent search result and used in indent purchase order creation
+          type:  array
+          items:
+            type: string 
       required:
       - store
       - purchaseOrderDate

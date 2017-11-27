@@ -62,7 +62,7 @@ public class PurchaseOrderService extends DomainService {
 			    i++;
 			    int j=0;
 			    purchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_CREATE));
-			    List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(),purchaseOrders.size()); 
+			    List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(),purchaseOrder.getPurchaseOrderDetails().size()); 
 			    for(PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails())
 			    {
 			    	 purchaseOrderDetail.setId(detailSequenceNos.get(j));
@@ -74,13 +74,14 @@ public class PurchaseOrderService extends DomainService {
 			// TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
 			// PUSH DATA TO KAFKA.
 
-			if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
+			/*if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
 				if (purchaseOrders.get(0).getPurchaseType().toString()
 						.equalsIgnoreCase(PurchaseTypeEnum.INDENT.toString()))
 					kafkaQue.send(saveTopic, saveKey, purchaseOrderRequest);
 				else
-					kafkaQue.send(saveNonIndentTopic, saveNonIndentKey, purchaseOrderRequest);
-			}
+					kafkaQue.send(saveTopic, saveKey, purchaseOrderRequest);
+			}*/
+			kafkaQue.send(saveTopic, saveKey, purchaseOrderRequest);
 			PurchaseOrderResponse response = new PurchaseOrderResponse();
 			response.setPurchaseOrders(purchaseOrderRequest.getPurchaseOrders());
 			response.setResponseInfo(getResponseInfo(purchaseOrderRequest.getRequestInfo()));
@@ -105,7 +106,7 @@ public class PurchaseOrderService extends DomainService {
 						.equalsIgnoreCase(PurchaseTypeEnum.INDENT.toString()))
 					kafkaQue.send(updateTopic, updateKey, purchaseOrderRequest);
 				else
-					kafkaQue.send(updateNonIndentTopic, updateNonIndentKey, purchaseOrderRequest);
+					kafkaQue.send(updateTopic, updateKey, purchaseOrderRequest);
 			}
 
 			PurchaseOrderResponse response = new PurchaseOrderResponse();

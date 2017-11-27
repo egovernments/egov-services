@@ -3,7 +3,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "",
-    "url": "/inventory-inventory/v110/purchaseorders/_search",
+    "url": "/inventory-services/v110/purchaseorders/_search",
     "groups": [
       {
         "name": "search",
@@ -131,6 +131,7 @@ var dat = {
             "label": "inventory.purchaseorder.date",
             "pattern": "",
             "type": "datePicker",
+            "maxDate":"today",
             "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
@@ -453,7 +454,7 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/purchaseorders/_create",
+    "url": "/inventory-services/v110/purchaseorders/_create",
     "tenantIdRequired": true
   },
   "inventory.view": {
@@ -742,7 +743,7 @@ var dat = {
       }
     ],
     "tenantIdRequired": true,
-    "url": "/inventory-inventory/v110/purchaseorders/_search?tenantId={tenantId}"
+    "url": "/inventory-services/v110/purchaseorders/_search?tenantId={tenantId}"
   },
   "inventory.update": {
     "numCols": 4,
@@ -1029,9 +1030,9 @@ var dat = {
         ]
       }
     ],
-    "url": "/inventory-inventory/v110/purchaseorders/_update",
+    "url": "/inventory-services/v110/purchaseorders/_update",
     "tenantIdRequired": true,
-    "searchUrl": "/inventory-inventory/v110/purchaseorders/_search?tenantId={tenantId}"
+    "searchUrl": "/inventory-services/v110/purchaseorders/_search?tenantId={tenantId}"
   }
 }
  export default dat;

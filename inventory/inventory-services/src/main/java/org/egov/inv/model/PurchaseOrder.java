@@ -242,7 +242,7 @@ public class PurchaseOrder   {
   @ApiModelProperty(required = true, value = "Store which orders item for purchase order")
   @NotNull
 
-  @Valid
+  
 
   public Store getStore() {
     return store;
@@ -347,7 +347,7 @@ public class PurchaseOrder   {
   @ApiModelProperty(required = true, value = "supplier code of the purchase order ")
   @NotNull
 
-  @Valid
+  
 
   public Supplier getSupplier() {
     return supplier;
@@ -368,7 +368,7 @@ public class PurchaseOrder   {
   **/
   @ApiModelProperty(value = "advance amount of the PurchaseOrder ")
 
-  @Valid
+  
 
   public BigDecimal getAdvanceAmount() {
     return advanceAmount;
@@ -389,7 +389,7 @@ public class PurchaseOrder   {
   **/
   @ApiModelProperty(value = "advance percentage of the PurchaseOrder ")
 
-  @Valid
+  
 
   public BigDecimal getAdvancePercentage() {
     return advancePercentage;
@@ -510,7 +510,7 @@ public class PurchaseOrder   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+  
 
   public WorkFlowDetails getWorkFlowDetails() {
     return workFlowDetails;
@@ -557,7 +557,7 @@ public class PurchaseOrder   {
   @ApiModelProperty(required = true, value = "")
   @NotNull
 
-  @Valid
+  
 
   public List<PurchaseOrderDetail> getPurchaseOrderDetails() {
     return purchaseOrderDetails;
@@ -618,7 +618,7 @@ public class PurchaseOrder   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+  
 
   public AuditDetails getAuditDetails() {
     return auditDetails;

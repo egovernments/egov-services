@@ -359,6 +359,9 @@ const menuConvention={
 //Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",
+"Inventory.Inventory Report.Rates Comparison With History Data":"/report/inventory/ratesComparisonWithHistory",
+"Inventory.Inventory Report.Comparison Between Different Rates":"/reports/inventory/comparisonBetweenDifferentRates",
+
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/abstractEstimate",
 "Works Management.Abstract Estimate.Estimate Search":"/search/works/abstractEstimate/view"

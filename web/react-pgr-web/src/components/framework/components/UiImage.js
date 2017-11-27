@@ -35,7 +35,11 @@ export default class UiImage extends Component {
 
 					return (
             <div>
-
+            <label className="custom-form-control-for-textfield">
+              <span>
+                {item.label}
+              </span>
+            </label> <br/>
               <img src={item.imagePath}  width="20%" height = "60%"  label= {item.label}/>
             </div>
 						// <TextField

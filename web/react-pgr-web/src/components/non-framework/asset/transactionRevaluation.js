@@ -699,6 +699,17 @@ class Transaction extends Component {
     let self=this;
     e.preventDefault();
     var formData = {...this.props.formData};
+
+    for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
+      if (formData.Revaluation.Assets[i].isRadio==true) {
+          formData.Revaluation.assetId=formData.Revaluation.Assets[i].id;
+          console.log(formData.Revaluation["assetId"]);
+      }
+    }
+
+    if(formData.Revaluation["assetId"]){
+      console.log(formData.Revaluation["assetId"]);
+
     if(!(formData.Revaluation.valueAfterRevaluation) || formData.Revaluation.valueAfterRevaluation == null || formData.Revaluation.valueAfterRevaluation == ""){
       self.props.toggleSnackbarAndSetText(true, "Please enter Valuation Amount", false, true);
 
@@ -714,6 +725,7 @@ class Transaction extends Component {
       if(!(formData.Revaluation.revaluationDate) || formData.Revaluation.revaluationDate == null || formData.Revaluation.revaluationDate == ""){
         self.props.toggleSnackbarAndSetText(true, "Please enter Revaluation Date", false, true);
       }
+
     }else{
 
     self.props.setLoadingStatus('loading');
@@ -739,14 +751,7 @@ class Transaction extends Component {
         }
       }
 
-      for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
-        console.log("i");
-        if (formData.Revaluation.Assets[i].isRadio==true) {
-          console.log("hit");
-            formData.Revaluation.assetId=formData.Revaluation.Assets[i].id;
-            console.log(formData.Revaluation["assetId"]);
-        }
-      }
+
 
     delete formData.Revaluation.Assets;
 
@@ -764,6 +769,9 @@ class Transaction extends Component {
 
             }
 
+          }else{
+            self.props.toggleSnackbarAndSetText(true, "Please Select a Record", false, true);
+          }
      }
 
   render() {

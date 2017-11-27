@@ -512,13 +512,14 @@ class Transaction extends Component {
       let obj = specifications[`asset.transaction`];
       console.log(property);
 
-      for (var i = 0; i < formData.Disposal.Assets.length; i++) {
-        if (formData.Disposal.Assets[i].isRadio==true) {
-          recordSelect = false;
-        }else{
-          recordSelect = true;
+
+        for (var i = 0; i < formData.Disposal.Assets.length; i++) {
+          if (formData.Disposal.Assets[i].isRadio==true) {
+            recordSelect = false;
+          }else{
+            recordSelect = true;
+          }
         }
-      }
 
       if (property.search("isRadio") != -1 && property.indexOf("transactionType")== -1) {
         let _indexVal = property.split("[")[1].split("]")[0];

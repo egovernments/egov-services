@@ -40,6 +40,9 @@
 
 package org.egov.access.persistence.repository;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URI;
+import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,6 +59,9 @@ import org.egov.access.persistence.repository.rowmapper.ModuleSearchRowMapper;
 import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.access.web.contract.action.ActionService;
 import org.egov.access.web.contract.action.Module;
+import org.egov.common.contract.request.RequestInfo;
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +69,9 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.RestTemplate;
+
+import com.jayway.jsonpath.JsonPath;
 
 @Repository
 public class ActionRepository {
@@ -448,7 +457,114 @@ public class ActionRepository {
 
 		return actionList;
 	}
+	
+	public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONException, UnsupportedEncodingException {
+		
+		RestTemplate restTemplate = new RestTemplate();
+		String url;
+		String res = "";
+		String actionres = "";
+		String actionurl = "";
+		List<Action> actionList = new ArrayList<Action>();
+		String roleFilter = "[?(@.rolecode IN [$rolecode] && @.tenantid == '$tenantid')]";
+		String actionFilter = "[?(@.id IN [$actionid])]";
+		url = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=mh&filter=";
+		actionurl = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=mh&filter=";
 
+		List<String> rolecodes = actionRequest.getRoleCodes();
+		StringBuffer rolecodelist = new StringBuffer();
+		
+		for(int i=0;i<rolecodes.size();i++) {
+			rolecodelist.append("'");
+			rolecodelist.append(rolecodes.get(i));
+			rolecodelist.append("'");
+			if(i != rolecodes.size()-1)
+				rolecodelist.append(",");
+			
+		}
+		String tenantid = actionRequest.getTenantId();
+		Boolean enabled = actionRequest.getEnabled();
+		
+		roleFilter = roleFilter.replaceAll("\\$tenantid", tenantid);
+		roleFilter = roleFilter.replaceAll("\\$rolecode", rolecodelist.toString());
+		roleFilter = roleFilter.replaceAll("\\$enabled", enabled.toString());
+		LOGGER.info("Role Filter: "+roleFilter.toString());
+		roleFilter = URLEncoder.encode( roleFilter, "UTF-8" ); 
+		
+		// TODO Auto-generated method stub
+
+		url = url.concat(roleFilter);
+		LOGGER.info("The URL is: "+url);
+		URI uri = URI.create(url);
+		try {
+		res = restTemplate.postForObject(uri, getRInfo(),String.class);
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		Object jsonObject = JsonPath.read(res,"$.MdmsRes.ACCESSCONTROL.roleactions");
+		JSONArray mdmsArray = new JSONArray(jsonObject.toString());
+		LOGGER.info("Role Action ID from MDMS: "+jsonObject.toString());
+		StringBuffer actionids = new StringBuffer();
+		for (int i = 0; i < mdmsArray.length(); i++) {
+			
+			actionids.append(mdmsArray.getJSONObject(i).getInt("actionid"));
+			
+			if(i != mdmsArray.length()-1)
+				actionids.append(",");
+			
+			
+		}
+		LOGGER.info("Action Id is "+actionids.toString());
+		actionFilter = actionFilter.replaceAll("\\$actionid", actionids.toString());
+		LOGGER.info("Action Filter is "+actionFilter);
+		actionFilter=URLEncoder.encode( actionFilter, "UTF-8" ); 
+		
+		String newactionuri = actionurl.concat(actionFilter);
+		 
+		 LOGGER.info("encoded url is: "+newactionuri);
+		
+		
+		URI actionuri = URI.create(newactionuri);
+		actionres = restTemplate.postForObject(actionuri, getRInfo(),String.class);
+		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions");
+		LOGGER.info("Actions from MDMS: "+action.toString());
+		
+		JSONArray actionsArray = new JSONArray(action.toString());
+		for (int i = 0; i < actionsArray.length(); i++) {
+			Action act = new Action();
+			act.setDisplayName(actionsArray.getJSONObject(i).getString("displayName"));
+			act.setEnabled(actionsArray.getJSONObject(i).getBoolean("enabled"));
+			act.setId(actionsArray.getJSONObject(i).getLong("id"));
+			act.setName(actionsArray.getJSONObject(i).getString("name"));
+			act.setOrderNumber(actionsArray.getJSONObject(i).getInt("orderNumber"));
+			act.setParentModule(actionsArray.getJSONObject(i).get("parentModule").toString());
+			act.setPath(actionsArray.getJSONObject(i).getString("path"));
+			act.setQueryParams(actionsArray.getJSONObject(i).get("queryParams").toString());
+			act.setServiceCode(actionsArray.getJSONObject(i).getString("serviceCode"));
+			act.setTenantId(actionRequest.getTenantId());
+			actionList.add(act);
+		}
+ 
+         return actionList;
+	}
+    
+	public static RequestInfo getRInfo()
+	{
+		// TODO Auto-generated method stub
+				RequestInfo ri = new RequestInfo();
+				ri.setAction("action");
+				ri.setAuthToken("a487e887-cafd-41cf-bb8a-2245acbb6c01");
+				/*ri.setTs(new Date());*/
+				ri.setApiId("apiId");
+				ri.setVer("version");
+				ri.setDid("did");
+				ri.setKey("key");
+				ri.setMsgId("msgId");
+				ri.setRequesterId("requestId");
+		return ri;
+	}
+	
 	private String getPath(String serviceCode, List<Module> modules) {
 
 		String path = "";

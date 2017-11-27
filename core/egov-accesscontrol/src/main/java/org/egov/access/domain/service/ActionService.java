@@ -1,5 +1,6 @@
 package org.egov.access.domain.service;
 
+/*import java.io.UnsupportedEncodingException;*/
 import java.util.List;
 
 import org.egov.access.domain.criteria.ActionSearchCriteria;
@@ -14,6 +15,7 @@ import org.egov.access.persistence.repository.rowmapper.ActionRowMapper;
 import org.egov.access.persistence.repository.rowmapper.ActionValidationRowMapper;
 import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.access.web.contract.action.Module;
+/*import org.json.JSONException;*/
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -66,8 +68,8 @@ public class ActionService {
 
 	}
 
-	public List<Action> getAllActions(final ActionRequest actionRequest) {
-
-		return actionRepository.getAllActions(actionRequest);
+	public List<Action> getAllActions(final ActionRequest actionRequest) /*throws JSONException, UnsupportedEncodingException*/{
+         return actionRepository.getAllActions(actionRequest);
+		//return actionRepository.getAllMDMSActions(actionRequest);
 	}
 }

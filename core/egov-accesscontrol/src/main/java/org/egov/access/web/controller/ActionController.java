@@ -1,5 +1,6 @@
 package org.egov.access.web.controller;
 
+/*import java.io.UnsupportedEncodingException;*/
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,6 +24,7 @@ import org.egov.access.web.errorhandlers.ErrorResponse;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ErrorField;
 import org.egov.common.contract.response.ResponseInfo;
+/*import org.json.JSONException;*/
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,14 +72,16 @@ public class ActionController {
 	}
 
 	@PostMapping(value = "_get")
-	public ResponseEntity<?> getAllActions(@RequestBody final ActionRequest actionRequest) {
+	public ResponseEntity<?> getAllActions(@RequestBody final ActionRequest actionRequest) /*throws JSONException, UnsupportedEncodingException*/{
 
 		final List<ErrorResponse> errorResponses = validateActionRequest(actionRequest, "get");
 
 		if (!errorResponses.isEmpty())
 			return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-
+		
 		List<Action> actionList = actionService.getAllActions(actionRequest);
+
+		//<Action> actionList = actionService.getAllActions(actionRequest);
 
 		return getNewListSuccessResponse(actionRequest.getRequestInfo(), actionList);
 

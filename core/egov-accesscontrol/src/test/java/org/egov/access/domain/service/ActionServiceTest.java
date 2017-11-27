@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.when;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,6 +22,7 @@ import org.egov.access.persistence.repository.rowmapper.ActionValidationRowMappe
 import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.request.User;
+import org.json.JSONException;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -142,7 +144,7 @@ public class ActionServiceTest {
 	}
 
 	@Test
-	public void testShouldGetModules() {
+	public void testShouldGetModules() throws UnsupportedEncodingException, JSONException {
 
 		ActionRequest actionRequest = new ActionRequest();
 

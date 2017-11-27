@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
 import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
@@ -30,7 +31,7 @@ import UiFileTable from './UiFileTable';
 import { translate } from '../../common/common';
 import _ from 'lodash';
 
-export default class multiFieldAddToTable extends Component {
+class UiMultiFieldAddToTable extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -42,14 +43,15 @@ export default class multiFieldAddToTable extends Component {
     }
   }
   // componentWillReceiveProps(nextProps) {
-  //   let arrayValue = this.props.getVal(this.props.item.jsonPath);
-  //   console.log(arrayValue)
-  //   let { valueList } = this.state;
-  //   if (_.isArray(arrayValue) && JSON.stringify(arrayValue) != JSON.stringify(valueList)) {
-  //     this.setState({
-  //       valueList: arrayValue
-  //     })
-  //   }
+    // let arrayValue = this.props.getVal(this.props.item.jsonPath);
+    // console.log(arrayValue)
+    
+    // let { valueList } = this.state;
+    // if (_.isArray(arrayValue) && JSON.stringify(arrayValue) != JSON.stringify(valueList)) {
+    //   this.setState({
+    //     valueList: arrayValue
+    //   })
+    // }
   // }
   
   handler = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
@@ -58,16 +60,28 @@ export default class multiFieldAddToTable extends Component {
     this.setState({
       formData
     }, function() {
-      this.props.getVal()
+      this.getVal()
     });
-
+    console.log({...this.props.formData})
   }
 
   addToParent = () => {
-    
-    this.setState({
-    })
-  }
+
+    let formData = {...this.props.formData};
+    // console.log(_.get(formData, this.props.item.jsonPath))
+    let myTableInParent = _.get(formData, this.props.item.jsonPath);
+    let stateFormDataTable = _.get(this.state.formData, this.props.item.jsonPath);
+   
+    console.log(myTableInParent, stateFormDataTable[0])
+ 
+    if(!myTableInParent) {
+      this.props.handler({target: {value: stateFormDataTable}}, this.props.item.jsonPath);
+    } else {
+      myTableInParent.push(stateFormDataTable[0]);
+      console.log(myTableInParent)
+      this.props.handler({target: {value: myTableInParent}}, this.props.item.jsonPath);
+    }
+  } 
 
   renderFields = (item, screen) => {
     if (screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1) {
@@ -184,6 +198,7 @@ export default class multiFieldAddToTable extends Component {
                 <tbody>
                   {
                     this.state.valueList.map((v, i) => {
+                      formdata-> JSONpath-> data (_get)
                       return (
                         <tr key={i}>
                           <td>{i + 1}</td>
@@ -223,7 +238,6 @@ export default class multiFieldAddToTable extends Component {
 
   getVal = (path, dateBool) => {
     var _val = _.get(this.state.formData, path);
-    console.log(path + "--" + _.get(this.state.formData, path));
     
     if(dateBool && typeof _val == 'string' && _val && _val.indexOf("-") > -1) {
       var _date = _val.split("-");
@@ -239,13 +253,13 @@ export default class multiFieldAddToTable extends Component {
     this.setState({
       valueList: list
     }, () => {
+      alert("hello")
       this.props.handler({ target: { value: this.state.valueList.length ? this.state.valueList : "" } }, this.props.item.jsonPath, this.props.item.isRequired ? true : false, '', this.props.item.requiredErrMsg, this.props.item.patternErrMsg);
     })
   }
 
    
   render() {
-    console.log(this.state.formData);
     return (<div>
       {this.renderArrayField(this.props.item)}
     </div>);
@@ -260,4 +274,6 @@ const mapDispatchToProps = dispatch => ({
   setFormData: (data) => {
     dispatch({type: "SET_FORM_DATA", data});
   }
-})  
+}) 
+
+export default connect(mapStateToProps, mapDispatchToProps)(UiMultiFieldAddToTable);

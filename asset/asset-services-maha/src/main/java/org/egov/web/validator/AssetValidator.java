@@ -130,7 +130,7 @@ public class AssetValidator implements Validator {
 			errorMap.put("EGASSET_INVALID_ASSETCATEGORY", "the given AssetCategory Id is Invalid");
 		else {
 			System.err.println("masterAssetCat"+masterAssetCat);
-			 if(!masterAssetCat.getIsAssetAllow().equals(false)) 
+			 if(asset.getAssetCategory().getIsAssetAllow().equals(false)) 
 				   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
 		}

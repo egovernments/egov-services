@@ -88,7 +88,7 @@ public class AssetValidator implements Validator {
 		if(asset.getOrderDate()!=null && asset.getOrderDate().compareTo(new Date().getTime()) > 0) 
 			errorMap.put("Asset_OderDate", "OderDate cannot be future Date");
 		
-		if(asset.getOpeningDate().compareTo(new Date().getTime()) > 0) 
+		if(asset.getOpeningDate()!=null && asset.getOpeningDate().compareTo(new Date().getTime()) > 0) 
 			errorMap.put("Asset_OpeningDate", "OpeningDate cannot be future Date");
 		
 		if((asset.getAcquisitionDate().compareTo(new Date().getTime()) > 0))
@@ -129,7 +129,8 @@ public class AssetValidator implements Validator {
 		if (masterAssetCat == null)
 			errorMap.put("EGASSET_INVALID_ASSETCATEGORY", "the given AssetCategory Id is Invalid");
 		else {
-			 if(!asset.getAssetCategory().getIsAssetAllow().equals(true)) 
+			System.err.println("masterAssetCat"+masterAssetCat);
+			 if(!masterAssetCat.getIsAssetAllow().equals(false)) 
 				   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
 		}
@@ -172,8 +173,10 @@ public class AssetValidator implements Validator {
 			asset.setDefectLiabilityPeriod(new DefectLiability());
 		if (asset.getLocationDetails() == null)
 			asset.setLocationDetails(new Location());
-		if(asset.getFundSource() == null || asset.getFundSource().getCode().isEmpty())
+		if(asset.getFundSource() == null || asset.getFundSource().getCode().isEmpty()) {
+			
 			asset.setFundSource(new FundSource());
+		}
 		
 		//FIXME TODO remove it after ghansyam handles it in persister
 		if(asset.getTitleDocumentsAvailable()==null) {
@@ -202,7 +205,9 @@ public class AssetValidator implements Validator {
 		if(revaluation.getOrderDate()!=null && revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_REVALUATION_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
 		
+		
 		if (asset != null) {
+			
 			BigDecimal positiveTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
 			BigDecimal negativeTransaction = asset.getCurrentValue().add(revaluation.getRevaluationAmount());
 			revaluation.setCurrentCapitalizedValue(asset.getCurrentValue());
@@ -224,24 +229,25 @@ public class AssetValidator implements Validator {
 	public void validateForDisposal(DisposalRequest disposalRequest) {
 		
 		Map<String, String> errorMap = new HashMap<>();
-		
+
 		Disposal disposal = disposalRequest.getDisposal();
+		 
 		
-		Asset asset = assetService.getAsset(disposal.getTenantId(),
-				disposal.getAssetId(), disposalRequest.getRequestInfo());
-		
-		if(asset == null)
+		Asset asset = assetService.getAsset(disposal.getTenantId(), disposal.getAssetId(),
+				disposalRequest.getRequestInfo());
+
+		if (asset == null)
 			errorMap.put("EGASSET_DISPOSAL_ASSET", "Given Asset For Disposal Cannot Be Found");
-		
-		if(disposal.getSaleValue()!=null && disposal.getSaleValue().longValue()<=0)
+
+		if (disposal.getSaleValue() != null && disposal.getSaleValue().longValue() <= 0)
 			errorMap.put("EGASSET_DISPOSAL_AMOUNT", "Negative Sale Amount Cannot Be Accepted");
-		
-		if(disposal.getDisposalDate().compareTo(new Date().getTime()) > 0)
+
+		if (disposal.getDisposalDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_DISPOSAL_DATE", "Assets Cannot be Disposed/Sold For Future Dates");
-		
-		if(disposal.getOrderDate().compareTo(new Date().getTime()) > 0)
+
+		if (disposal.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_DISPOSAL_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
-		
+
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
@@ -256,6 +262,18 @@ public class AssetValidator implements Validator {
 				errorMap.put("EGASSET_SEARCH_ASSET_CATEGORY", "Either AssetCategory Or AssetSubCategory Has To Be Given For Search");
 		}*/
 		
+		if(!errorMap.isEmpty())
+			throw new CustomException(errorMap);
+	}
+	
+public void validateAssetId(AssetRequest assetRequest) {
+		
+		Map<String, String> errorMap = new HashMap<>();
+		Asset asset = assetService.getAsset(assetRequest.getAsset().getTenantId(),
+				assetRequest.getAsset().getId(), assetRequest.getRequestInfo());
+		
+		if(asset == null)
+			errorMap.put("EGASSET_ASSET", "Given AssetId For Update Cannot Be Found");
 		if(!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}

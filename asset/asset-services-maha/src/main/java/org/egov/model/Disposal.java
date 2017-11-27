@@ -39,6 +39,7 @@ public class Disposal   {
   @JsonProperty("id")
   private Long id;
 
+  @NotNull
   @JsonProperty("assetId")
   private Long assetId;
 

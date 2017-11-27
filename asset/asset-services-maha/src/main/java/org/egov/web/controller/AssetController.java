@@ -84,6 +84,7 @@ public class AssetController {
 	@ResponseBody
 	public ResponseEntity<?> update(@RequestBody @Valid final AssetRequest assetRequest) {
 		assetValidator.validateAsset(assetRequest);
+		assetValidator.validateAssetId(assetRequest);
 		final AssetResponse assetResponse = assetService.updateAsync(assetRequest);
 		return new ResponseEntity<>(assetResponse, HttpStatus.OK);
 	}

@@ -220,7 +220,7 @@ ReportDefinitions:
 
   - name: returnDate
     label: inventory.returnDate
-    type: String
+    type: string
     source: inventory
 
   - name: supplierName
@@ -330,7 +330,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
-    type: String
+    type: string
     source: inventory
 
   - name: materialTypeName
@@ -440,7 +440,7 @@ ReportDefinitions:
 
   - name: supplierName
     label: inventory.supplierName
-    type: String
+    type: string
     source: inventory
 
   - name: rateType
@@ -478,6 +478,64 @@ ReportDefinitions:
     isMandatory: false
 
   query: select * from material;
+
+# Comparison between different rates Report
+# Need to Change drop down Link based on report and Query
+- reportName: comparisonBetweenDifferentRatesReport
+  summary: Comparison between different rates Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+
+  - name: materialCode
+    label: inventory.materialCode
+    type: string
+    source: inventory
+
+  - name: materialName
+    label: inventory.materialName
+    type: string
+    source: inventory
+
+  - name: supplierName
+    label: inventory.supplierName
+    type: string
+    source: inventory
+
+  - name: DTT
+    label: inventory.DTT
+    type: string
+    source: inventory
+
+  - name: DGSND
+    label: inventory.DGSND
+    type: string
+    source: inventory
+    
+  - name: tender
+    label: inventory.tender
+    type: string
+    source: inventory
+
+  searchParams:
+
+  - name: supplierName
+    label: inventory.supplierName
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  - name: materialName
+    label: inventory.materialName
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  query: select * from material;
+
+
+
+
 
 
 

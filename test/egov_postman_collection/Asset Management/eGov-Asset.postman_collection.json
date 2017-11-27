@@ -162,7 +162,7 @@
 							"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"works-services\",\n    \"ver\": null,\n    \"ts\": null,\n    \"action\": \"Search\",\n    \"did\": null,\n    \"key\": null,\n    \"msgId\": \"search with from and to values\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"MdmsCriteria\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"moduleDetails\": [\n      {\n        \"moduleName\": \"ASSET\",\n        \"masterDetails\": [\n          {\n            \"name\": \"AssetCategory\"\n          }\n        ]\n      }\n    ]\n  }\n}"
 						},
 						"url": {
-							"raw": "{{url}}/egov-mdms-service/v1/_search",
+							"raw": "{{url}}/egov-mdms-service/v1/_search?tenantId={{tenantId}}",
 							"host": [
 								"{{url}}"
 							],
@@ -170,6 +170,13 @@
 								"egov-mdms-service",
 								"v1",
 								"_search"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								}
 							]
 						},
 						"description": "Asset Category"
@@ -186,7 +193,7 @@
 					"description": "",
 					"item": [
 						{
-							"name": "With",
+							"name": "Immovable Asset",
 							"event": [
 								{
 									"listen": "test",
@@ -205,6 +212,7 @@
 											"",
 											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
 											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"pm.environment.set(\"assetStatus\", jsonData.Assets[0].status);",
 											"",
 											"postman.setNextRequest(\"Asset_Search\");"
 										]
@@ -218,7 +226,7 @@
 											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
 											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
 											"var num3 = Math.floor((Math.random() * 100000) + 1);",
-											"var d = 15;",
+											"var d = 6.66;",
 											"var a = Math.round(100/d);",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
 											"",
@@ -254,7 +262,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n    \t\"tenantId\": \"default\",\n        \"id\": 2,\n        \"name\": \"Infrastructure assets\",\n        \"code\": \"002\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"depreciationRate\": \"{{depreciationRate}}\",\n        \"unitOfMeasurement\": \"NOS\"\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ENGINEERING\",\n    \t\"code\":\"ENG\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 51,\n        \"name\": \"Sewerage\",\n        \"code\": \"051\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"1\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -272,7 +280,186 @@
 							"response": []
 						},
 						{
-							"name": "Without",
+							"name": "Movable Asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"jsonData = JSON.parse(responseBody);",
+											"pm.test(\"Asset Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"var gv = pm.environment.get(\"grossValue\");",
+											"var av = pm.environment.get(\"accumulatedDepreciation\");",
+											"var ov = pm.environment.get(\"originalValue\");",
+											"var currentValue;",
+											"if(gv !== null && av !== null) {",
+											"    currentValue = gv - av;",
+											"}else if(gv !== null){",
+											"    currentValue = gv;",
+											"}else",
+											"    currentValue = ov;",
+											"    ",
+											"pm.environment.set(\"currentCapitalizedValue\", currentValue);",
+											"tests[\"Asset Status\"] = jsonData.Assets[0].status;",
+											"postman.setNextRequest(\"Asset_Search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor(Math.random() * 10000000);",
+											"var num3 = Math.floor((Math.random() * 1000) + 1);",
+											"var d = 20;",
+											"var a = Math.round(100/d);",
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
+											"pm.environment.set(\"dateOfCreation\", epoch1);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
+											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"if(reqBody.Asset.warrantyAvailable === true){",
+											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+											"}",
+											"pm.environment.set(\"openingDate\", epoch1);",
+											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": true,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\",\n      \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Movable Assets\",\n    \"oldCode\": null,\n    \"department\": {\n      \"name\": \"ENGINEERING\",\n      \"code\": \"ENG\",\n      \"tenantId\": \"{{tenantId}}\"\n    },\n    \"assetCategory\": {\n      \"id\": 27,\n      \"name\": \"Tractor\",\n      \"code\": \"027\",\n      \"assetCategoryType\": \"MOVABLE\",\n      \"parent\": 18,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": null,\n      \"depreciationExpenseAccount\": null,\n      \"unitOfMeasurement\": \"NOS\",\n      \"version\": \"1.0\",\n      \"depreciationRate\": 20,\n      \"isDepreciationApplicable\": true,\n      \"assetFieldsDefination\": null\n    },\n    \"modeOfAcquisition\": {\n      \"code\": \"PURCHASE\",\n      \"name\": \"Purchase\",\n      \"tenantId\": \"{{tenantId}}\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Asset Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"1\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_create"
+									]
+								},
+								"description": "if (grossValue != null && accumulatedDepreciation != null)\r\n{\r\n\r\n\tcurrentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));\r\n\r\n}"
+							},
+							"response": []
+						},
+						{
+							"name": "Without Update",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"jsonData = JSON.parse(responseBody);",
+											"",
+											"// pm.test(\"Environment to be Asset\", function () { ",
+											"//     pm.expect(pm.environment.get(\"env\")).to.equal(\"Asset\"); ",
+											"// });",
+											"",
+											"pm.test(\"Asset Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"",
+											"postman.setNextRequest(\"Asset_Search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
+											"var num3 = Math.floor((Math.random() * 100000) + 1);",
+											"var d = 6.66;",
+											"var a = Math.round(100/d);",
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
+											"pm.environment.set(\"dateOfCreation\", epoch1);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
+											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"if(reqBody.Asset.warrantyAvailable === true){",
+											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+											"}",
+											"pm.environment.set(\"openingDate\", epoch1);",
+											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\",\n    \"tenantId\": \"tenantId\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": 123,\n    \"id\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 51,\n        \"name\": \"Sewerage\",\n        \"code\": \"051\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_update",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_update"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Without Create",
 							"event": [
 								{
 									"listen": "test",
@@ -303,24 +490,32 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"var num1 = Math.floor((Math.random() * 10000) + 1);",
-											"var name2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
+											"var reqBody = JSON.parse(request.data);",
+											"var d;",
+											"pm.environment.set(\"d\", reqBody.Asset.assetCategory.depreciationRate);",
+											"var a = Math.round(100/d);",
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
+											"var num3 = Math.floor((Math.random() * 100000) + 1);",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
 											"",
-											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
 											"pm.environment.set(\"dateOfCreation\", epoch1);",
-											"pm.environment.set(\"acquisitionDate\", 1479280508);",
-											"pm.environment.set(\"orderNumber\", \"G\"+num1)",
-											"pm.environment.set(\"orderDate\", 1479280508);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
+											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
 											"",
-											"var reqBody = JSON.parse(request.data);",
 											"",
 											"if(reqBody.Asset.warrantyAvailable === true){",
 											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
 											"}",
-											"",
 											"pm.environment.set(\"openingDate\", epoch1);",
-											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);"
+											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.get(\"depreciationRate\", d);"
 										]
 									}
 								}
@@ -335,7 +530,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": null,\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": null,\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"defectLiabilityPeriod\": {\n      \"year\": 2017,\n      \"month\": 10,\n      \"day\": 24\n    },\n    \"securityDepositRetained\": 33,\n    \"securityDepositRealized\": 24501009,\n    \"acquisitionDate\": null,\n    \"originalValue\": null,\n    \"assetAccount\": 1234567890,\n    \"accumulatedDepreciationAccount\": 5678925410444,\n    \"revaluationReserveAccount\": 8687531545,\n    \"depreciationExpenseAccount\": 5678925410666,\n    \"titleDocumentsAvalable\": [\n      \"document1\",\n      \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"address\": null,\n    \"quantity\": 0,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": null,\n    \"oldCode\": \"oldcode3\",\n    \"departmentCode\": null,\n    \"assetCategory\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 7,\n      \"name\": \"Category_name02\",\n      \"code\": \"cat002\",\n      \"assetCategoryType\": \"LAND\",\n      \"parent\": 0,\n      \"isDepreciationApplicable\": true,\n      \"depreciationMethod\": \"Straight Line Method\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": 32456898876,\n      \"accumulatedDepreciationAccount\": 24545666644,\n      \"revaluationReserveAccount\": 24534543,\n      \"depreciationExpenseAccount\": 4524546565,\n      \"unitOfMeasurement\": 3,\n      \"version\": \"v1\",\n      \"depreciationRate\": 2,\n      \"assetFieldsDefination\": [\n        {\n          \"name\": \"Type of Truck\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"1\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Year of Manufacture\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"2\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Registration Details\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"3\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Engine Number\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"4\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Chassis Number\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"5\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Acquired from\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"6\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Acquisition Cost\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"7\",\n          \"columns\": []\n        },\n        {\n          \"name\": \"Available Doc List\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": \"8\",\n          \"columns\": []\n        }\n      ]\n    },\n    \"modeOfAcquisition\": \"ACQUIRED\",\n    \"status\": \"CREATED\",\n    \"grossValue\": null,\n    \"accumulatedDepreciation\": 45653245,\n    \"description\": null,\n    \"dateOfCreation\": null,\n    \"remarks\": \"remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type of Truck\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Year of Manufacture\",\n        \"type\": \"Text\",\n        \"value\": \"2014\"\n      },\n      {\n        \"key\": \"Registration Details\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Engine Number\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Chassis Number\",\n        \"type\": \"Text\",\n        \"value\": null\n      },\n      {\n        \"key\": \"Total Cost\",\n        \"type\": \"Text\",\n        \"value\": \"50000\"\n      },\n      {\n        \"key\": \"Available Doc List\",\n        \"type\": \"Text\",\n        \"value\": \"2\"\n      }\n    ],\n    \"depreciationRate\": 10,\n    \"yearWiseDepreciationRate\": [\n      {\n        \"depreciationRate\": 12,\n        \"financialYear\": \"2017-18\",\n        \"assetId\": 2,\n        \"usefulLifeInYears\": 3\n      }\n    ],\n    \"auditDetails\": {\n      \"createdBy\": \"1\",\n      \"createdDate\": 1223446556,\n      \"lastModifiedBy\": \"1\",\n      \"lastModifiedDate\": 123455656\n    },\n    \"fundSource\": \"finance\",\n    \"Location\": \"bangalore\",\n    \"openingDate\": 123455656,\n    \"landDetails\": [\n      {\n        \"code\": \"iuytre\",\n        \"area\": 67.9,\n        \"surveyNo\": \"sur_no\"\n      }\n    ]\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": null,\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": null,\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": null,\n    \"originalValue\": null,\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": null,\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": null,\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":null,\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 51,\n        \"name\": \"Sewerage\",\n        \"code\": \"051\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": null,\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": null,\n    \"dateOfCreation\": null,\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -441,17 +636,14 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
+											"jsonData = JSON.parse(responseBody);",
 											"pm.test(\"Status code is 400\", function () {",
 											"    pm.response.to.have.status(400);",
 											"});",
 											"",
-											"jsonData = JSON.parse(responseBody);",
-											"var Errors = [];",
-											"",
 											"pm.test(\"Errors\", function () {",
 											"    for(var i=0; i<10; i++){",
-											"    jsonData.Errors[i].code;",
-											"    console.log(jsonData.Errors[i].code);",
+											"    tests[\"Anticipated Life Cannot be Null For IMMOVABLE Assets\"] = jsonData.Errors[i].message;",
 											"    }",
 											"});",
 											"",
@@ -476,7 +668,7 @@
 											"",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
 											"pm.environment.set(\"dateOfCreation\", epoch1);",
-											"pm.environment.set(\"acquisitionDate\", 1479280508);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
 											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
 											"pm.environment.set(\"orderDate\", 1479280508);",
 											"pm.environment.set(\"originalValue\", num2);",
@@ -505,7 +697,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"name3\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 33,\n    \"securityDepositRealized\": 24501009,\n    \"acquisitionDate\": 20201009,\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 937468245,\n    \"accumulatedDepreciationAccount\": 5678925410444,\n    \"revaluationReserveAccount\": 8687531545,\n    \"depreciationExpenseAccount\": 5678925410666,\n    \"titleDocumentsAvalable\": [\n      \"document1\"\n    ],\n    \"usage\": \"usage\",\n    \"locationDetails\": {\n      \"locality\": 2,\n      \"zone\": 3,\n      \"revenueWard\": 4,\n      \"block\": 10,\n      \"street\": 6,\n      \"electionWard\": 13,\n      \"doorNo\": \"104\",\n      \"pinCode\": 560104\n    },\n    \"totalArea\": 5,\n    \"address\": \"{{address}}\",\n    \"longitude\": 9.9,\n    \"latitude\": 6.6,\n    \"floors\": 4,\n    \"landSurveyNo\": \"Survey_num03\",\n    \"quantity\": 0,\n    \"tenantId\": \"{{tenantId}}\",\n    \"id\": 116,\n    \"name\": \"{{name}}\",\n    \"code\": \"code03\",\n    \"oldCode\": \"oldcode3\",\n       \"department\":{\n  \"id\":\"2\",\n  \"name\":\"Asset Department\",\n  \"code\":\"AT\",\n  \"active\":\"true\",\n  \"tenantId\":\"{{tenantId}}\"\n  },\n    \"assetCategory\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 36,\n      \"name\": \"Furniture\",\n      \"code\": \"036\",\n      \"assetCategoryType\": \"MOVABLE\",\n      \"parent\": 21,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": null,\n      \"depreciationExpenseAccount\": null,\n      \"unitOfMeasurement\": \"NOS\",\n      \"version\": \"1.0\",\n      \"depreciationRate\": 15,\n      \"isDepreciationApplicable\": true,\n      \"assetFieldsDefination\": [\n        {\n          \"name\": \"Type\",\n          \"type\": \"Select\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": \"wood,plastic,steel\",\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Color\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        }\n      ]\n    },\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": 500000,\n    \"accumulatedDepreciation\": 20000,\n    \"description\": \"common place\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"none\",\n    \"version\": \"v1\",\n    \"assetReference\": 1,\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": 5,\n    \"yearWiseDepreciationRate\": [\n      {\n        \"depreciationRate\": 12,\n        \"financialYear\": \"2017-18\",\n        \"assetId\": 2,\n        \"usefulLifeInYears\": 3\n      }\n    ],\n    \"auditDetails\": {\n      \"createdBy\": \"1\",\n      \"createdDate\": 1223446556,\n      \"lastModifiedBy\": \"1\",\n      \"lastModifiedDate\": 123455656\n    },\n    \"fundSource\":{\n      \"id\": \"1\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\",\n      \"identifier\": \"1\",\n      \"parent\": null,\n      \"active\": true,\n      \"level\": \"1\"\n    },\n    \"Location\": \"bangalore\",\n    \"openingDate\": \"{{openingDate}}\",\n    \"landDetails\": [\n      {\n        \"code\": \"iuytre\",\n        \"area\": 67.9,\n        \"surveyNo\": \"sur_no\"\n      }\n    ]\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": null,\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 51,\n        \"name\": \"Sewerage\",\n        \"code\": \"051\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -539,8 +731,7 @@
 											"",
 											"pm.test(\"Errors\", function () {",
 											"    for(var i=0; i<10; i++){",
-											"    jsonData.Errors[i].code;",
-											"    console.log(jsonData.Errors[i].code);",
+											"    tests[\"WIP Reference number is mandatory for IMMOVABLE Assets\"] = jsonData.Errors[i].message;",
 											"    }",
 											"});",
 											"",
@@ -554,32 +745,31 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"var num1 = Math.floor((Math.random() * 10000) + 1);",
-											"var num2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
-											"var pYear = new Date().getFullYear()-1;",
-											"var fYear = new Date().getFullYear()+1",
-											"var month = new Date().getMonth();",
-											"var date = new Date().getDate();",
-											"var d = 15;",
-											"var a = 100/d;",
-											"",
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
+											"var num3 = Math.floor((Math.random() * 100000) + 1);",
+											"var d = 6.66;",
+											"var a = Math.round(100/d);",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
 											"pm.environment.set(\"dateOfCreation\", epoch1);",
-											"pm.environment.set(\"acquisitionDate\", 1479280508);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
 											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
-											"pm.environment.set(\"orderDate\", 1479280508);",
-											"pm.environment.set(\"originalValue\", num2);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
 											"",
 											"var reqBody = JSON.parse(request.data);",
 											"",
 											"if(reqBody.Asset.warrantyAvailable === true){",
 											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
 											"}",
-											"",
 											"pm.environment.set(\"openingDate\", epoch1);",
 											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
-											"pm.environment.set(\"depreciationRate\", d);",
-											"pm.environment.set(\"anticipatedLife\", a);"
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
 										]
 									}
 								}
@@ -594,7 +784,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": 7,\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": null,\n    \"acquiredFrom\": \"name3\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 33,\n    \"securityDepositRealized\": 24501009,\n    \"acquisitionDate\": 20201009,\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 937468245,\n    \"accumulatedDepreciationAccount\": 5678925410444,\n    \"revaluationReserveAccount\": 8687531545,\n    \"depreciationExpenseAccount\": 5678925410666,\n    \"titleDocumentsAvalable\": [\n      \"document1\"\n    ],\n    \"usage\": \"usage\",\n    \"locationDetails\": {\n      \"locality\": 2,\n      \"zone\": 3,\n      \"revenueWard\": 4,\n      \"block\": 10,\n      \"street\": 6,\n      \"electionWard\": 13,\n      \"doorNo\": \"104\",\n      \"pinCode\": 560104\n    },\n    \"totalArea\": 5,\n    \"address\": \"{{address}}\",\n    \"longitude\": 9.9,\n    \"latitude\": 6.6,\n    \"floors\": 4,\n    \"landSurveyNo\": \"Survey_num03\",\n    \"quantity\": 0,\n    \"tenantId\": \"{{tenantId}}\",\n    \"id\": 116,\n    \"name\": \"{{name}}\",\n    \"code\": \"code03\",\n    \"oldCode\": \"oldcode3\",\n       \"department\":{\n  \"id\":\"2\",\n  \"name\":\"Asset Department\",\n  \"code\":\"AT\",\n  \"active\":\"true\",\n  \"tenantId\":\"{{tenantId}}\"\n  },\n    \"assetCategory\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 36,\n      \"name\": \"Furniture\",\n      \"code\": \"036\",\n      \"assetCategoryType\": \"MOVABLE\",\n      \"parent\": 21,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": null,\n      \"depreciationExpenseAccount\": null,\n      \"unitOfMeasurement\": \"NOS\",\n      \"version\": \"1.0\",\n      \"depreciationRate\": 15,\n      \"isDepreciationApplicable\": true,\n      \"assetFieldsDefination\": [\n        {\n          \"name\": \"Type\",\n          \"type\": \"Select\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": \"wood,plastic,steel\",\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Color\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        }\n      ]\n    },\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": 500000,\n    \"accumulatedDepreciation\": 20000,\n    \"description\": \"common place\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"none\",\n    \"version\": \"v1\",\n    \"assetReference\": 1,\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": 5,\n    \"yearWiseDepreciationRate\": [\n      {\n        \"depreciationRate\": 12,\n        \"financialYear\": \"2017-18\",\n        \"assetId\": 2,\n        \"usefulLifeInYears\": 3\n      }\n    ],\n    \"auditDetails\": {\n      \"createdBy\": \"1\",\n      \"createdDate\": 1223446556,\n      \"lastModifiedBy\": \"1\",\n      \"lastModifiedDate\": 123455656\n    },\n    \"fundSource\":{\n      \"id\": \"1\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\",\n      \"identifier\": \"1\",\n      \"parent\": null,\n      \"active\": true,\n      \"level\": \"1\"\n    },\n    \"Location\": \"bangalore\",\n    \"openingDate\": \"{{openingDate}}\",\n    \"landDetails\": [\n      {\n        \"code\": \"iuytre\",\n        \"area\": 67.9,\n        \"surveyNo\": \"sur_no\"\n      }\n    ]\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": null,\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 51,\n        \"name\": \"Sewerage\",\n        \"code\": \"051\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -628,8 +818,7 @@
 											"",
 											"pm.test(\"Errors\", function () {",
 											"    for(var i=0; i<10; i++){",
-											"    jsonData.Errors[i].code;",
-											"    console.log(jsonData.Errors[i].code);",
+											"    tests[\"Acquisition Date is mandatory for IMMOVABLE Assets\"] = jsonData.Errors[i].message;",
 											"    }",
 											"});",
 											"",
@@ -643,32 +832,31 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"var num1 = Math.floor((Math.random() * 10000) + 1);",
-											"var num2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
-											"var pYear = new Date().getFullYear()-1;",
-											"var fYear = new Date().getFullYear()+1",
-											"var month = new Date().getMonth();",
-											"var date = new Date().getDate();",
-											"var d = 15;",
-											"var a = 100/d;",
-											"",
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
+											"var num3 = Math.floor((Math.random() * 100000) + 1);",
+											"var d = 6.66;",
+											"var a = Math.round(100/d);",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
 											"pm.environment.set(\"dateOfCreation\", epoch1);",
-											"pm.environment.set(\"acquisitionDate\", 1479280508);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
 											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
-											"pm.environment.set(\"orderDate\", 1479280508);",
-											"pm.environment.set(\"originalValue\", num2);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
 											"",
 											"var reqBody = JSON.parse(request.data);",
 											"",
 											"if(reqBody.Asset.warrantyAvailable === true){",
 											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
 											"}",
-											"",
 											"pm.environment.set(\"openingDate\", epoch1);",
 											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
-											"pm.environment.set(\"depreciationRate\", d);",
-											"pm.environment.set(\"anticipatedLife\", a);"
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
 										]
 									}
 								}
@@ -980,17 +1168,15 @@
 											"});",
 											"",
 											"jsonData = JSON.parse(responseBody);",
-											"var Errors = [];",
-											"",
-											"pm.test(\"Errors\", function () {",
-											"    for(var i=0; i<10; i++){",
-											"    jsonData.Errors[i].code;",
-											"    console.log(jsonData.Errors[i].code);",
-											"    }",
-											"});",
 											"",
 											"pm.environment.set(\"Response:\", JSON.stringify(jsonData));",
-											"postman.getEnvironmentVariable(\"Response:\");"
+											"postman.getEnvironmentVariable(\"Response:\");",
+											"",
+											"pm.test(\"Department field validation matches \", function () {",
+											"    for(var i=0; i<10; i++){",
+											"        pm.expect(pm.response.text()).to.include(jsonData.Errors[0].message);",
+											"    }",
+											"});"
 										]
 									}
 								},
@@ -999,32 +1185,31 @@
 									"script": {
 										"type": "text/javascript",
 										"exec": [
-											"var num1 = Math.floor((Math.random() * 10000) + 1);",
-											"var num2 = Math.floor(Math.random() * (999999 - 100000 + 1)) + 100000;",
-											"var pYear = new Date().getFullYear()-1;",
-											"var fYear = new Date().getFullYear()+1",
-											"var month = new Date().getMonth();",
-											"var date = new Date().getDate();",
-											"var d = 15;",
-											"var a = 100/d;",
-											"",
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor((Math.random() * 1000000) + 1);",
+											"var num3 = Math.floor((Math.random() * 100000) + 1);",
+											"var d = 6.66;",
+											"var a = Math.round(100/d);",
 											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
 											"pm.environment.set(\"dateOfCreation\", epoch1);",
-											"pm.environment.set(\"acquisitionDate\", 1479280508);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
 											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
-											"pm.environment.set(\"orderDate\", 1479280508);",
-											"pm.environment.set(\"originalValue\", num2);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
 											"",
 											"var reqBody = JSON.parse(request.data);",
 											"",
 											"if(reqBody.Asset.warrantyAvailable === true){",
 											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
 											"}",
-											"",
 											"pm.environment.set(\"openingDate\", epoch1);",
 											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
-											"pm.environment.set(\"depreciationRate\", d);",
-											"pm.environment.set(\"anticipatedLife\", a);"
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
 										]
 									}
 								}
@@ -1039,7 +1224,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": 7,\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"name3\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 33,\n    \"securityDepositRealized\": 24501009,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 937468245,\n    \"accumulatedDepreciationAccount\": 5678925410444,\n    \"revaluationReserveAccount\": 8687531545,\n    \"depreciationExpenseAccount\": 5678925410666,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"address\": \"{{address}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"{{name}}\",\n    \"code\": \"{{assetCode}}\",\n    \"oldCode\": \"oldcode3\",\n       \"department\":{\n  \"name\":\"Asset Department\",\n  \"code\":null,\n  \"active\":\"true\",\n  \"tenantId\":\"{{tenantId}}\"\n  },\n    \"assetCategory\": {\n      \"tenantId\": \"{{tenantId}}\",\n      \"id\": 36,\n      \"name\": \"Furniture\",\n      \"code\": \"036\",\n      \"assetCategoryType\": \"MOVABLE\",\n      \"parent\": 21,\n      \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n      \"isAssetAllow\": true,\n      \"assetAccount\": null,\n      \"accumulatedDepreciationAccount\": null,\n      \"revaluationReserveAccount\": null,\n      \"depreciationExpenseAccount\": null,\n      \"unitOfMeasurement\": \"NOS\",\n      \"version\": \"1.0\",\n      \"depreciationRate\": 15,\n      \"isDepreciationApplicable\": true,\n      \"assetFieldsDefination\": [\n        {\n          \"name\": \"Type\",\n          \"type\": \"Select\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": \"wood,plastic,steel\",\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        },\n        {\n          \"name\": \"Color\",\n          \"type\": \"Text\",\n          \"isActive\": true,\n          \"isMandatory\": false,\n          \"values\": null,\n          \"localText\": null,\n          \"regExFormate\": null,\n          \"url\": null,\n          \"order\": null,\n          \"columns\": []\n        }\n      ]\n    },\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": 500000,\n    \"accumulatedDepreciation\": 20000,\n    \"description\": \"common place\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"none\",\n    \"version\": \"v1\",\n    \"assetReference\": 1,\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": 5,\n    \"yearWiseDepreciationRate\": [\n      {\n        \"depreciationRate\": 12,\n        \"financialYear\": \"2017-18\",\n        \"assetId\": 2,\n        \"usefulLifeInYears\": 3\n      }\n    ],\n    \"auditDetails\": {\n      \"createdBy\": \"1\",\n      \"createdDate\": 1223446556,\n      \"lastModifiedBy\": \"1\",\n      \"lastModifiedDate\": 123455656\n    },\n    \"fundSource\":{\n      \"id\": \"1\",\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\",\n      \"identifier\": \"1\",\n      \"parent\": null,\n      \"active\": true,\n      \"level\": \"1\"\n    },\n    \"Location\": \"bangalore\",\n    \"openingDate\": \"{{openingDate}}\",\n    \"landDetails\": [\n      {\n        \"code\": \"iuytre\",\n        \"area\": 67.9,\n        \"surveyNo\": \"sur_no\"\n      }\n    ]\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":null,\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n        \"tenantId\": \"{{tenantId}}\",\n        \"id\": 51,\n        \"name\": \"Sewerage\",\n        \"code\": \"051\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -1724,6 +1909,47 @@
 						}
 					],
 					"_postman_isSubFolder": true
+				},
+				{
+					"name": "Location-BoundaryType",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n \"RequestInfo\": {\r\n   \"apiId\": \"asset-services\",\r\n   \"ver\": null,\r\n   \"ts\": null,\r\n   \"action\": null,\r\n   \"did\": null,\r\n   \"key\": null,\r\n   \"msgId\": \"search with from and to values\",\r\n   \"authToken\": \"{{access_token}}\"\r\n }\r\n}"
+						},
+						"url": {
+							"raw": "{{url}}/egov-location/boundarys/getByBoundaryType?tenantId={{tenantId}}&boundaryTypeId=10",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"egov-location",
+								"boundarys",
+								"getByBoundaryType"
+							],
+							"query": [
+								{
+									"key": "tenantId",
+									"value": "{{tenantId}}",
+									"equals": true
+								},
+								{
+									"key": "boundaryTypeId",
+									"value": "10",
+									"equals": true
+								}
+							]
+						},
+						"description": null
+					},
+					"response": []
 				}
 			]
 		},
@@ -2054,6 +2280,98 @@
 								"description": ""
 							},
 							"response": []
+						},
+						{
+							"name": "Update_Asset",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"jsonData = JSON.parse(responseBody);",
+											"pm.test(\"Asset Created\", function () {",
+											"    pm.response.to.have.status(201);",
+											"});",
+											"",
+											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
+											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"var gv = pm.environment.get(\"grossValue\");",
+											"var av = pm.environment.get(\"accumulatedDepreciation\");",
+											"var ov = pm.environment.get(\"originalValue\");",
+											"var currentValue;",
+											"if(gv !== null && av !== null) {",
+											"    currentValue = gv - av;",
+											"}else if(gv !== null){",
+											"    currentValue = gv;",
+											"}else",
+											"    currentValue = ov;",
+											"    ",
+											"pm.environment.set(\"currentCapitalizedValue\", currentValue);",
+											"postman.setNextRequest(\"Asset_Search\");"
+										]
+									}
+								},
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var num1 = Math.floor((Math.random() * 10000000) + 1);",
+											"var num2 = Math.floor(Math.random() * 10000000);",
+											"var num3 = Math.floor((Math.random() * 1000) + 1);",
+											"var d = 20;",
+											"var a = Math.round(100/d);",
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"pm.environment.set(\"originalValue\", num1);",
+											"pm.environment.set(\"grossValue\", num2);",
+											"pm.environment.set(\"accumulatedDepreciation\", num3);",
+											"pm.environment.set(\"dateOfCreation\", epoch1);",
+											"pm.environment.set(\"acquisitionDate\", epoch1);",
+											"pm.environment.set(\"orderNumber\", \"G\"+num1);",
+											"pm.environment.set(\"orderDate\", epoch1);",
+											"pm.environment.set(\"address\", \"Roha, Maharastra\");",
+											"",
+											"var reqBody = JSON.parse(request.data);",
+											"",
+											"if(reqBody.Asset.warrantyAvailable === true){",
+											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
+											"}",
+											"pm.environment.set(\"openingDate\", epoch1);",
+											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
+											"pm.environment.set(\"anticipatedLife\", a);",
+											"pm.environment.set(\"depreciationRate\", d);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"For ULB\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": 1,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Tractor\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n\t\t\"id\": 27,\n        \"name\": \"Tractor\",\n        \"code\": \"027\",\n        \"assetCategoryType\": \"MOVABLE\",\n        \"parent\": 18,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"assetAccount\": null,\n        \"accumulatedDepreciationAccount\": null,\n        \"revaluationReserveAccount\": null,\n        \"depreciationExpenseAccount\": null,\n        \"unitOfMeasurement\": \"NOS\",\n        \"version\": \"1.0\",\n        \"depreciationRate\": 20,\n        \"isDepreciationApplicable\": true,\n        \"assetFieldsDefination\": null\n},\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"PURCHASED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Asset Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/_update",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"_update"
+									]
+								},
+								"description": "if (grossValue != null && accumulatedDepreciation != null)\r\n{\r\n\r\n\tcurrentValue.setCurrentAmount(grossValue.subtract(accumulatedDepreciation));\r\n\r\n}"
+							},
+							"response": []
 						}
 					],
 					"_postman_isSubFolder": true
@@ -2192,7 +2510,9 @@
 											"",
 											"if(reqBody.Asset.warrantyAvailable === true){",
 											"    pm.environment.set(\"warrantyExpiryDate\", 1605510908);",
-											"}",
+											"}else",
+											"    pm.environment.set(\"warrantyExpiryDate\", 0);",
+											"",
 											"pm.environment.set(\"openingDate\", epoch1);",
 											"pm.environment.set(\"wipReferenceNo\", \"WIP\"+num1);",
 											"pm.environment.set(\"anticipatedLife\", a);",
@@ -2211,7 +2531,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": \"{{warrantyExpiryDate}}\",\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Roads and Bridges\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n    \t\"tenantId\": \"default\",\n        \"id\": 12,\n        \"name\": \"Roads and Bridges\",\n        \"code\": \"012\",\n        \"parent\": 2,\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"depreciationRate\": 6.66,\n        \"unitOfMeasurement\": \"NOS\"\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Asset Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": \"apiId\",\n    \"ver\": \"ver\",\n    \"ts\": 0,\n    \"authToken\": \"{{access_token}}\",\n    \"resMsgId\": \"resMsgId\",\n    \"msgId\": \"msgId\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"status\": \"SUCCESSFUL\"\n  },\n  \"Asset\": {\n    \"anticipatedLife\": \"{{anticipatedLife}}\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"wipReferenceNo\": \"{{wipReferenceNo}}\",\n    \"acquiredFrom\": \"Private\",\n    \"warrantyAvailable\": false,\n    \"warrantyExpiryDate\": null,\n    \"securityDepositRetained\": 500000,\n    \"securityDepositRealized\": 100000,\n    \"acquisitionDate\": \"{{acquisitionDate}}\",\n    \"originalValue\": \"{{originalValue}}\",\n    \"assetAccount\": 1234567890,\n    \"titleDocumentsAvalable\": [\n      \"document1\", \"document2\"\n    ],\n    \"usage\": \"Public\",\n    \"totalArea\": null,\n    \"address\": \"{{address}}\",\n    \"quantity\": null,\n    \"tenantId\": \"{{tenantId}}\",\n    \"name\": \"Channels\",\n    \"oldCode\": null,\n    \"department\":{\n    \t\"name\":\"ACCOUNTS\",\n    \t\"code\":\"ACC\",\n    \t\"tenantId\":\"{{tenantId}}\"\n\t\t},\n    \"assetCategory\": {\n    \t\"tenantId\": \"default\",\n        \"id\": 14,\n        \"name\": \"Water Ways\",\n        \"code\": \"014\",\n        \"assetCategoryType\": \"IMMOVABLE\",\n        \"parent\": 2,\n        \"depreciationMethod\": \"STRAIGHT_LINE_METHOD\",\n        \"isAssetAllow\": true,\n        \"unitOfMeasurement\": \"NOS\",\n        \"depreciationRate\": 6.66,\n        \"isDepreciationApplicable\": true\n    },\t\t\n    \"modeOfAcquisition\": {\n      \"code\": \"ACQUIRED\"\n    },\n    \"status\": \"CREATED\",\n    \"grossValue\": \"{{grossValue}}\",\n    \"accumulatedDepreciation\": \"{{accumulatedDepreciation}}\",\n    \"description\": \"Asset Description\",\n    \"dateOfCreation\": \"{{dateOfCreation}}\",\n    \"remarks\": \"Asset Remarks\",\n    \"enableYearWiseDepreciation\": true,\n    \"assetAttributes\": [\n      {\n        \"key\": \"Type\",\n        \"type\": \"Text\",\n        \"value\": \"steel\"\n      },\n      {\n        \"key\": \"Color\",\n        \"type\": \"Text\",\n        \"value\": \"black\"\n      }\n    ],\n    \"depreciationRate\": \"{{depreciationRate}}\",\n    \"fundSource\":{\n      \"tenantId\": \"{{tenantId}}\",\n      \"name\": \"FAKE FUND 1\",\n      \"code\": \"2\"\n    },\n    \"Location\": \"Roha, MH\",\n    \"openingDate\": \"{{openingDate}}\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/_create",
@@ -2251,6 +2571,8 @@
 											"pm.environment.set(\"originalValue\", jsonData.Assets[0].originalValue);",
 											"pm.environment.set(\"assetCode\", jsonData.Assets[0].code);",
 											"pm.environment.set(\"assetId\", jsonData.Assets[0].id);",
+											"tests[\"Status of the Asset Matches\"] = jsonData.Assets[0].status;",
+											"// tests[\"Response has an ID\"] = jsonData.Assets[0].status === \"DISPOSED\";",
 											"postman.setNextRequest(\"Revaluation_Create\");"
 										]
 									}
@@ -2361,7 +2683,7 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Revaluation Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"currentCapitalizedValue\": \"{{currentCapitalizedValue}}\",\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": \"{{revaluationAmount}}\",\n    \"valueAfterRevaluation\": \"{{valueAfterRevaluation}}\",\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"Clerk\",\n    \"reasonForRevaluation\": \"Revaluation of Asset by value\",\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"Revaluation\": {\n    \"remarks\": \"Revaluation Remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"currentCapitalizedValue\": \"{{currentCapitalizedValue}}\",\n    \"typeOfChange\": \"INCREASED\",\n    \"revaluationAmount\": \"{{revaluationAmount}}\",\n    \"valueAfterRevaluation\": \"{{valueAfterRevaluation}}\",\n    \"revaluationDate\": \"{{revaluationDate}}\",\n    \"revaluatedBy\": \"Clerk\",\n    \"reasonForRevaluation\": \"Revaluation of Asset by value\",\n    \"function\": null,\n    \"fund\": null,\n    \"scheme\": null,\n    \"subScheme\": null,\n    \"comments\": \"comments\",\n    \"status\": \"APPROVED\",\n    \"stateId\": \"17\",\n    \"workFlowDetails\": {\n      \"department\": \"4578799898678\",\n      \"designation\": \"7687453534535\",\n      \"assignee\": 21,\n      \"action\": \"Approved\",\n      \"status\": \"NEW\",\n      \"comments\": \"comments\"\n    }\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/revaluation/_create",
@@ -2713,7 +3035,21 @@
 							"response": []
 						},
 						{
-							"name": "Disposal_Create",
+							"name": "Depreciation_Create",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var jsonData = JSON.parse(responseBody);",
+											"",
+											"pm.environment.set(\"depreciationValue\", jsonData.Depreciation.DepreciationDetail[0].depreciationValue);",
+											"pm.environment.set(\"valueAfterDepreciation\", jsonData.Depreciation.DepreciationDetail[0].valueAfterDepreciation);"
+										]
+									}
+								}
+							],
 							"request": {
 								"method": "POST",
 								"header": [
@@ -2724,7 +3060,56 @@
 								],
 								"body": {
 									"mode": "raw",
-									"raw": "{\n \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\":\"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"Disposal\": {\n    \"remarks\": \"remarks\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"buyerName\": \"Buyer1\",\n    \"buyerAddress\": \"Buyer1 Address: Roha, MH\",\n    \"disposalReason\": \"Not usefull\",\n    \"disposalDate\": \"{{disposalDate}}\",\n    \"panCardNumber\": \"ABCDE1234F\",\n    \"aadharCardNumber\": \"123456789012\",\n    \"assetcurrentvalue\": \"{{assetcurrentvalue}}\",\n    \"saleValue\": \"{{saleValue}}\",\n    \"transactionType\": \"SALE\",\n    \"status\": \"DISPOSED\"\n  }\n}"
+									"raw": "{\n  \"RequestInfo\": {\n    \"apiId\": null,\n    \"ver\": \"1.0\",\n    \"action\": \"create\",\n    \"did\": \"1\",\n    \"key\": \"abcdkey\",\n    \"msgId\": \"20170310130900\",\n    \"requesterId\": \"\",\n    \"authToken\": \"{{access_token}}\"\n  },\n  \"Depreciation\": {\n    \"tenantId\": \"{{tenantId}}\",\n    \"financialYear\": \"2017-18\",\n    \"fromDate\": 1485239110,\n    \"toDate\": 1511524931000,\n    \"assetIds\": [\n    \t\"{{assetId}}\"\n    ]\n  }\n}"
+								},
+								"url": {
+									"raw": "{{url}}/asset-services-maha/assets/depreciations/_create",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"asset-services-maha",
+										"assets",
+										"depreciations",
+										"_create"
+									]
+								},
+								"description": ""
+							},
+							"response": []
+						},
+						{
+							"name": "Disposal_Create",
+							"event": [
+								{
+									"listen": "prerequest",
+									"script": {
+										"type": "text/javascript",
+										"exec": [
+											"var gv = pm.environment.get(\"grossValue\");",
+											"var av = pm.environment.get(\"accumulatedDepreciation\");",
+											"var vr = pm.environment.get(\"valueAfterRevaluation\");",
+											"var dv = pm.environment.get(\"depreciationValue\");",
+											"var epoch1 = Math.round(new Date().getTime()/1000);",
+											"",
+											"var assetcurrentvalue = ((+gv) - (+av) + (+vr) - (+dv));",
+											"pm.environment.set(\"assetcurrentvalue\", assetcurrentvalue);",
+											"pm.environment.set(\"disposalDate\", epoch1);"
+										]
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n \"RequestInfo\":{\n    \"action\":\"action\",\n    \"did\":\"did\",\n    \"msgId\": \"msgId\",\n    \"requesterId\":\"reuesterId\",\n    \"authToken\":\"{{access_token}}\",\n    \"apiId\": \"123456789\",\n    \"ver\": \"159\",\n    \"ts\": null,\n    \"key\": \"key\",\n    \"tenantId\": \"{{tenantId}}\"\n  },\n  \"Disposal\": {\n    \"remarks\": \"Dispose/Transfer of Asset\",\n    \"orderNumber\": \"{{orderNumber}}\",\n    \"orderDate\": \"{{orderDate}}\",\n    \"tenantId\": \"{{tenantId}}\",\n    \"assetId\": \"{{assetId}}\",\n    \"buyerName\": \"Buyer1\",\n    \"buyerAddress\": \"Buyer1 Address: Roha, MH\",\n    \"disposalReason\": \"Not usefull\",\n    \"disposalDate\": \"{{disposalDate}}\",\n    \"panCardNumber\": \"ABCDE1234F\",\n    \"aadharCardNumber\": \"123456789012\",\n    \"assetcurrentvalue\": \"{{assetcurrentvalue}}\",\n    \"saleValue\": 1432152,\n    \"transactionType\": \"SALE\",\n    \"status\": \"DISPOSED\"\n  }\n}"
 								},
 								"url": {
 									"raw": "{{url}}/asset-services-maha/assets/dispose/_create",

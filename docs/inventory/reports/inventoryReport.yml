@@ -475,6 +475,7 @@ ReportDefinitions:
     source: inventory
     searchClause: AND pl.supplier = $supplierName
     isMandatory: false
+    wrapper: true
 
   - name: materialName
     label: inventory.materialName
@@ -483,6 +484,8 @@ ReportDefinitions:
     source: inventory
     searchClause: AND pld.material = $materialName
     isMandatory: false
+    wrapper: true
+
 
   query: select pld.material as materialCode, 
           sup.name as supplierName, 
@@ -546,6 +549,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     isMandatory: false
+    wrapper: true
     
 
   - name: materialName
@@ -554,6 +558,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     isMandatory: false
+    wrapper: true
 
   query: select * from material;
 

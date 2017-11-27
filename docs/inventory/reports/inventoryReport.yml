@@ -473,6 +473,7 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
+    searchClause: AND pl.supplier = $supplierName
     isMandatory: false
 
   - name: materialName
@@ -480,9 +481,24 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
+    searchClause: AND pld.material = $materialName
     isMandatory: false
 
-  query: select * from material;
+  query: select pld.material as materialCode, 
+          sup.name as supplierName, 
+          mat.name as materialName, 
+          pl.ratetype as ratetype,
+          pld.ratePerUnit as currentRate, 
+          (select count(*) from pricelistdetails where material=pld.material and fromdate::bigint>=1483209000000 and todate::bigint<=1488306600000) as date, 
+          (select count(*) from pricelistdetails where material=pld.material and fromdate::bigint>=1451586600000 and todate::bigint<=1483122600000) as date 
+          from pricelist pl,pricelistdetails pld,supplier sup,material mat
+          where pl.tenantid='default'
+          AND pld.tenantid=pl.tenantid
+          AND mat.tenantid=pld.tenantid
+          AND sup.tenantid=mat.tenantid
+          AND pld.material=mat.code
+          AND pl.supplier=sup.code 
+          AND mat.code=pld.material;
 
 # Comparison between different rates Report
 # Need to Change drop down Link based on report and Query

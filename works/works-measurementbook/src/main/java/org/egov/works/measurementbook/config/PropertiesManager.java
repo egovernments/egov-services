@@ -23,4 +23,10 @@ public class PropertiesManager {
     @Value("${egov.services.works.measurementsheet.pagesize.max}")
     private String pageSizeMax;
     
+    @Value("${egov.services.works.measurementbook.create.update.topic}")
+    private String worksMBCreateUpdateTopic;
+    
+    @Value("${egov.services.works.revision.detailed.estimate.create.update.topic}")
+    private String worksRECreateUpdateTopic;
+    
 }

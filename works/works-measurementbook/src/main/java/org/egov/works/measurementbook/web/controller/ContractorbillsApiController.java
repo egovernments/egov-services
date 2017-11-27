@@ -31,7 +31,7 @@ public class ContractorbillsApiController implements ContractorbillsApi {
 	private ContractorBillService contractorBillService;
 
 	public ResponseEntity<ContractorBillResponse> contractorbillsCreatePost(
-			@ApiParam(value = "Details of new Contractor Bill(s) + RequestInfo meta data.", required = true) @Valid @RequestBody ContractorBillRequest contractorBillRequest) {
+			@ApiParam(value = "Details of new Contractor Bill(s) + RequestInfo meta data.", required = true) @RequestBody ContractorBillRequest contractorBillRequest) {
 		return new ResponseEntity<ContractorBillResponse>(contractorBillService.create(contractorBillRequest), HttpStatus.OK);
 	}
 

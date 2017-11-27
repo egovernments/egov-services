@@ -503,14 +503,6 @@ definitions:
       letterOfAcceptanceEstimate:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
         description: Reference of Letter of Acceptance Estimate
-      mbContractorBills:
-        type: array
-        description: Array of MB and Contractor bill mapping
-        minItems: 1
-        items:
-         $ref: '#/definitions/MBContractorBills'
-      #billregister:
-        # $ref: '#/definitions/BillRegister'
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MeasurementBookStatus'
         description: Status of the Measurement Book
@@ -565,32 +557,6 @@ definitions:
       - fromPageNo
       - mbAmount
       - status
-      
-  MBContractorBills:
-    type: object
-    description: An Object that holds the basic data for a Measurement book and contractor bill mapping
-    properties:
-      id:
-        type: string
-        description: Unique Identifier 
-      tenantId:
-        type: string
-        description: Tenant id of the BillMB
-        maxLength: 128
-        minLength: 2
-      measurementBook:
-        type: string
-        description: Measurement book reference
-      contractorBill:
-        $ref: '#/definitions/ContractorBill'
-        description: Contractor Bill reference
-      auditDetails:
-        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-
-    required:
-      - tenantId
-      - measurementBook
-      - contractorBill
       
   MeasurementBookDetail:
     type: object

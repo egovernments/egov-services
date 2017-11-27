@@ -1171,37 +1171,6 @@ serviceMaps:
 
        - jsonPath: $.projedetailedEstimates.*.estimateTechnicalSanctions.*.auditDetails.lastModifiedTime
 
-    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
-
-      basePath: $.detailedEstimates.*.documentdetails.*
-      jsonMaps:
-         
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.id
-         
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.tenantId
-         
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.objectId
-       
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.objectType
-       
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.documentType
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.fileStore
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.latitude
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.longitude
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.description
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.dateOfCapture
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.workProgress
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.createdBy
-
-       - jsonPath: $.detailedEstimates.*.documentdetails.*.createdTime
-       
     - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET objectid=EXCLUDED.objectid, objecttype=EXCLUDED.objecttype, documenttype=EXCLUDED.documenttype, filestore=EXCLUDED.filestore, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
 
       basePath: $.abstractEstimates.*.documentdetails.*

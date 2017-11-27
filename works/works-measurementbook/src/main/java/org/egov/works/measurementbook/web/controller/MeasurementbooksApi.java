@@ -42,7 +42,7 @@ public interface MeasurementbooksApi {
 
 	@RequestMapping(value = "/measurementbooks/_create", method = RequestMethod.POST)
 	ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
-			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest);
+			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest);
 
 	@ApiOperation(value = "Get the list of Measurement Book(s) defined in the system.", notes = "Search and get Measurement Book(s) based on defined search criteria. Currently search parameters are only allowed as HTTP query params.  In case multiple parameters are passed Measurement Book(s) will be searched as an AND combination of all the parameters.  Maximum result size is restricted based on the maxlength of Notice as defined in MeasurementBookResponse model.  Search results will be sorted by the sortProperty Provided in the parameters ", response = MeasurementBookResponse.class, tags = {
 			"Measurement Book", })

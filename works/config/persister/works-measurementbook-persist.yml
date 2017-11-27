@@ -1,0 +1,253 @@
+serviceMaps:
+ serviceName: Works Measurement Book
+ mappings:
+ - version: 1.0
+   name: Measurement Book Create/Update
+   description: Create/Update Measurement Book in egw_measurementbook table
+   fromTopic: works-measurementbook-create-update
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_measurementbook(id, tenantid, mbrefno, contractorcomments, mbdate, mbissueddate, mbabstract, frompageno, topageno, letterofacceptanceestimate, status, islegacymb, mbamount, approveddate, stateid, cancellationreason, cancellationremarks, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET mbrefno=EXCLUDED.mbrefno, contractorcomments=EXCLUDED.contractorcomments, mbdate=EXCLUDED.mbdate, mbissueddate=EXCLUDED.mbissueddate, mbabstract=EXCLUDED.mbabstract, frompageno=EXCLUDED.frompageno, topageno=EXCLUDED.topageno, letterofacceptanceestimate=EXCLUDED.letterofacceptanceestimate, status=EXCLUDED.status, islegacymb=EXCLUDED.islegacymb, mbamount=EXCLUDED.mbamount, approveddate=EXCLUDED.approveddate, stateid=EXCLUDED.stateid, cancellationreason=EXCLUDED.cancellationreason, cancellationremarks=EXCLUDED.cancellationremarks, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+      basePath: $.measurementBooks.*
+      jsonMaps:
+
+       - jsonPath: $.measurementBooks.*.id
+       
+       - jsonPath: $.measurementBooks.*.tenantId
+         
+       - jsonPath: $.measurementBooks.*.mbRefNo
+         
+       - jsonPath: $.measurementBooks.*.contractorComments
+       
+       - jsonPath: $.measurementBooks.*.mbDate
+         dbType: LONG
+       
+       - jsonPath: $.measurementBooks.*.mbIssuedDate
+         dbType: LONG
+       
+       - jsonPath: $.measurementBooks.*.mbAbstract
+       
+       - jsonPath: $.measurementBooks.*.fromPageNo
+       
+       - jsonPath: $.measurementBooks.*.toPageNo
+       
+       - jsonPath: $.measurementBooks.*.letterOfAcceptanceEstimate.id
+
+       - jsonPath: $.measurementBooks.*.status
+       
+       - jsonPath: $.measurementBooks.*.isLegacyMB
+                 
+       - jsonPath: $.measurementBooks.*.mbAmount
+                 
+       - jsonPath: $.measurementBooks.*.approvedDate
+         dbType: LONG
+         
+       - jsonPath: $.measurementBooks.*.stateId
+                  
+       - jsonPath: $.measurementBooks.*.cancellationReason
+       
+       - jsonPath: $.measurementBooks.*.cancellationRemarks
+       
+       - jsonPath: $.measurementBooks.*.auditDetails.createdBy
+       
+       - jsonPath: $.measurementBooks.*.auditDetails.createdTime
+       
+       - jsonPath: $.measurementBooks.*.auditDetails.lastModifiedBy
+  
+       - jsonPath: $.measurementBooks.*.auditDetails.lastModifiedTime
+       
+    - query: INSERT INTO egw_measurementbook_details(id, tenantid, measurementbook, loaactivity, quantity, rate, remarks, amount, partrate, reducedrate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET measurementbook=EXCLUDED.measurementbook, loaactivity=EXCLUDED.loaactivity, quantity=EXCLUDED.quantity, rate=EXCLUDED.rate, remarks=EXCLUDED.remarks, amount=EXCLUDED.amount, partrate=EXCLUDED.partrate, reducedrate=EXCLUDED.reducedrate;
+      basePath: $.measurementBooks.*.measurementBookDetails.*
+      jsonMaps:
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.id
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.tenantId
+         
+       - jsonPath: $.measurementBooks[?({id} in @.measurementBookDetails[*].id)].id
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.loaActivity.id
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.quantity
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.rate
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.remarks
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.amount
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.partrate
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.reducedrate
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.auditDetails.createdBy
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.auditDetails.createdTime
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_mb_measurementsheet(id, tenantid, remarks, "number", length, width, depthorheight, quantity, measurementbookdetail, loameasurementsheet, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, "number"=EXCLUDED."number", length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, measurementbookdetail= EXCLUDED.measurementbookdetail, loameasurementsheet=EXCLUDED.loameasurementsheet, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+      basePath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*
+      jsonMaps:
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.id
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.tenantId
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.remarks
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.number
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.length
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.width
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.depthorheight
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.quantity
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails[?({id} in @.measurementSheets[*].id)].id
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.loaMeasurementSheet.id
+
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.auditDetails.createdBy
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.auditDetails.createdTime
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.auditDetails.lastModifiedBy
+       
+       - jsonPath: $.measurementBooks.*.measurementBookDetails.*.measurementSheets.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.measurementBooks.*.documentDetails.*
+      jsonMaps:
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.id
+         
+       - jsonPath: $.measurementBooks.*.documentDetails.*.tenantId
+         
+       - jsonPath: $.measurementBooks.*.documentDetails.*.objectId
+       
+       - jsonPath: $.measurementBooks.*.documentDetails.*.objectType
+       
+       - jsonPath: $.measurementBooks.*.documentDetails.*.documentType
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.fileStore
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.latitude
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.longitude
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.description
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.dateOfCapture
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.workProgress
+       
+       - jsonPath: $.measurementBooks.*.assetDetails.*.auditDetails.createdBy
+       
+       - jsonPath: $.measurementBooks.*.assetDetails.*.auditDetails.createdTime
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.measurementBooks.*.documentDetails.*.auditDetails.lastModifiedTime
+
+ - version: 1.0
+   name: Revision Detailed AbstractEstimate Create/Update
+   description: Update revision detailed abstract estimate in egw_detailed_estimate table
+   fromTopic: works-revision-detailed-estimate-create-update
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_detailedestimate(id, tenantid, parent, createdby, createdtime, lastModifiedBy, lastModifiedTime) VALUES  (?, ?, ?, ?, ?, ?, ?) on CONFLICT  (id,tenantid) DO UPDATE parent=EXCLUDED.parent;
+      basePath: $.detailedEstimates.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.id
+       
+       - jsonPath: $.detailedEstimates.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.parent.id
+                  
+       - jsonPath: $.detailedEstimates.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.auditDetails.createdTime
+         dbType: LONG
+       
+       - jsonPath: $.detailedEstimates.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_estimate_activity(id, tenantid, scheduleofrate, nonsor, uom, unitrate, estimaterate, quantity, servicetaxperc, revisiontype, parent, detailedestimate, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET scheduleofrate=EXCLUDED.scheduleofrate, nonsor=EXCLUDED.nonsor, uom=EXCLUDED.uom, unitrate=EXCLUDED.unitrate, estimaterate=EXCLUDED.estimaterate, quantity=EXCLUDED.quantity, servicetaxperc=EXCLUDED.servicetaxperc, revisiontype=EXCLUDED.revisiontype, parent=EXCLUDED.parent, detailedestimate=EXCLUDED.detailedestimate, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+      basePath: $.detailedEstimates.*.estimateActivities.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.scheduleOfRate.id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.nonSor.id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.uom.code
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.unitRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateRate
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.quantity
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.serviceTaxPerc
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.revisionType
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.parent.id
+        
+       - jsonPath: $.detailedEstimates[?({id} in @.estimateActivities[*].id)].id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime
+
+    - query: INSERT INTO egw_estimate_measurementsheet(id, tenantid, slno, identifier, remarks, number, length, width, depthorheight, quantity, estimateactivity, parent, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET slno=EXCLUDED.slno, identifier=EXCLUDED.identifier, remarks=EXCLUDED.remarks, number=EXCLUDED.number, length=EXCLUDED.length, width=EXCLUDED.width, depthorheight=EXCLUDED.depthorheight, quantity=EXCLUDED.quantity, estimateactivity=EXCLUDED.estimateactivity, parent=EXCLUDED.parent, lastmodifiedby=EXCLUDED.lastmodifiedby, lastmodifiedtime=EXCLUDED.lastmodifiedtime;
+      basePath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*
+      jsonMaps:
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.id
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.tenantId
+         
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.slNo
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.identifier
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.remarks
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.number
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.length
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.width
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.depthOrHeight
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.quantity
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities[?({id} in @.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets[*].id)].id
+        
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.estimateMeasurementSheets.*.parent.id
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdBy
+ 
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.createdTime
+       
+       - jsonPath: $.detailedEstimates.*.estimateActivities.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.projedetailedEstimates.*.estimateActivitiesctCodes.*.auditDetails.lastModifiedTime

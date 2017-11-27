@@ -1423,7 +1423,7 @@ var dat = {
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
-							"convertToString": true
+							//"convertToString": true
   					},
             {
   						"name": "RefNoOfWIP",
@@ -1685,7 +1685,7 @@ var dat = {
             "isDisabled": false,
             "requiredErrMsg": "",
             "patternErrMsg": "",
-						"isStateLevel":true
+						//"isStateLevel":true
           },
           {
             "name": "SecurityDepositRetained",

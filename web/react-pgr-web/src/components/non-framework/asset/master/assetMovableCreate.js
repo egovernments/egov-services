@@ -672,6 +672,14 @@ class assetMovableCreate extends Component {
     assetAttributes.push(tempFinObj);
   });
 
+  if(formData && formData.Asset && formData.Asset.fundSource){
+    console.log(formData.Asset.fundSource.code);
+    if(formData.Asset.fundSource.code == null || formData.Asset.fundSource.code == ""){
+      delete formData.Asset.fundSource;
+    }
+    console.log(formData.Asset);
+  }
+
 formData.Asset.assetAttributes = assetAttributes;
 delete formData.Asset.assetAttributesCheck;
 
@@ -1339,6 +1347,10 @@ delete formData.Asset.assetAttributesCheck;
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     let self = this;
+    if(formData && formData.Asset && formData.Asset.fundSource){
+      console.log(formData.Asset.fundSource.name);
+    }
+
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
 
     // })}

@@ -461,6 +461,7 @@ console.log(self.props.formData);
           var  customFieldsArray = [];
           for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
             var customTemp = {};
+            console.log(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j]);
              customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
              customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
              customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
@@ -714,7 +715,14 @@ console.log(self.props.formData);
     });
     assetAttributes.push(tempFinObj);
   });
-
+  if(formData && formData.Asset && formData.Asset.fundSource){
+    console.log(formData.Asset.fundSource.code);
+    if(formData.Asset.fundSource.code == null || formData.Asset.fundSource.code == ""){
+      delete formData.Asset.fundSource;
+    }
+    console.log(formData.Asset);
+  }
+  
 formData.Asset.assetAttributes = assetAttributes;
 delete formData.Asset.assetAttributesCheck;
 

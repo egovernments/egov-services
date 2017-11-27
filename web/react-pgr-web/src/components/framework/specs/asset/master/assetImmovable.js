@@ -1609,7 +1609,7 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
 							"isStateLevel":true,
-							"convertToString": true
+							//"convertToString": true
   					},
             {
   						"name": "RefNoOfWIP",

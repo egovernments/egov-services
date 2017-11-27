@@ -555,7 +555,7 @@ ReportDefinitions:
     pattern: /lcms-services/legalcase/advocate/agency/_search?tenantId=$tenantid&agencyName={oragnization}&pageSize=500|$.agencies[*].advocates[*].code|$.agencies[*].advocates[*].name
     source: lcms
     isMandatory: false
-    searchClause : AND position($advocate in tempadvocate.advocatecode) > 0
+    searchClause : AND position($advocatename in tempadvocate.advocatecode) > 0
     
   - name: department
     label: reports.lcms.department

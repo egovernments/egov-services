@@ -119,7 +119,7 @@ public class AssetValidator implements Validator {
 		Map<String, Map<String, JSONArray>> ResultDataMap = mDService.getStateWideMastersByListParams(assets,
 				assetRequest.getRequestInfo(), asset.getTenantId());
 		
-		System.err.println("the result : "+ResultDataMap);
+		log.debug(" the response for master : "+ResultDataMap);
 		Map<Long, AssetCategory> assetCatMap = mDService.getAssetCategoryMapFromJSONArray(ResultDataMap.get("ASSET").get("AssetCategory"));
 		Map<String, FundSource> fundMap = mDService.getFundSourceMapFromJSONArray(ResultDataMap.get("egf-master").get("funds"));
 		Map<String, Department> departmentMap = mDService.getDepartmentMapFromJSONArray(ResultDataMap.get("common-masters").get("Department"));
@@ -148,7 +148,6 @@ public class AssetValidator implements Validator {
 			else
 				asset.setFundSource(fundSource);
 		}
-	
 		
 	}
 
@@ -173,7 +172,7 @@ public class AssetValidator implements Validator {
 			asset.setDefectLiabilityPeriod(new DefectLiability());
 		if (asset.getLocationDetails() == null)
 			asset.setLocationDetails(new Location());
-		if(asset.getFundSource() == null)
+		if(asset.getFundSource() == null || asset.getFundSource().getCode().isEmpty())
 			asset.setFundSource(new FundSource());
 		
 		//FIXME TODO remove it after ghansyam handles it in persister

@@ -47,21 +47,19 @@ import org.hibernate.validator.constraints.Length;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 @NoArgsConstructor
 @AllArgsConstructor
-@Getter
-@Setter
+@Data
 @Builder
 
 public class FundSource {
 
 	private String id;
 
-	@Length(min = 1, max = 25)
+	@Length(min = 0, max = 25)
 	@NotNull
 	private String code;
 

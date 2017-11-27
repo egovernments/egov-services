@@ -139,7 +139,9 @@ public class AssetValidator implements Validator {
 		else
 			asset.setDepartment(department);
 
-		if (asset.getFundSource().getCode() != null) {
+		String fundSourceCode = asset.getFundSource().getCode();
+		
+		if (fundSourceCode != null && !fundSourceCode.isEmpty()) {
 			FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
 			if (fundSource == null)
 				errorMap.put("EGASSET_INVALID_FUNDSOURCE", "The given FundSource code is Invalid");

@@ -2,7 +2,6 @@ package org.egov.model;
 
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 
 import org.egov.model.enums.TypeOfChange;
@@ -58,6 +57,7 @@ public class Revaluation   {
   private BigDecimal valueAfterRevaluation;
 
   @JsonProperty("revaluationDate")
+  @NotNull
   private Long revaluationDate;
 
   @JsonProperty("revaluatedBy")

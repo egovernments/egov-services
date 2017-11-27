@@ -145,7 +145,7 @@ public class Constants {
     public static final String KEY_NULL_ADMINSANCTIONDATE = "UNIQUE_ADMINSANCTIONDATE";
     public static final String MESSAGE_NULL_ADMINSANCTIONDATE = "Admin Sanction Date should be entered";
     
-    public static final String KEY_NULL_ADMINSANCTIONBY = "UNIQUE_ADMINSANCTIONBY";
+    public static final String KEY_NULL_ADMINSANCTIONBY = "INVALID_ADMINSANCTIONBY";
     public static final String MESSAGE_NULL_ADMINSANCTIONBY = "Admin Sanction By should be entered";
 
     public static final String KEY_UNIQUE_ESTIMATENUMBER = "UNIQUE_ESTIMATENUMBER";

@@ -137,9 +137,6 @@ public class EstimateValidator {
 						Constants.MESSAGE_FUTUREDATE_ADMINSANCTIONDATE);
 			if (estimate.getAdminSanctionDate() < estimate.getDateOfProposal())
 				messages.put(Constants.KEY_ADMINSANCTION_PROPOSAL_DATE, Constants.MESSAGE_ADMINSANCTION_PROPOSAL_DATE);
-			if (estimate.getAdminSanctionBy() == null || (estimate.getAdminSanctionBy() != null
-					&& StringUtils.isBlank(estimate.getAdminSanctionBy().getUserName())))
-				messages.put(Constants.KEY_NULL_ADMINSANCTIONBY, Constants.MESSAGE_NULL_ADMINSANCTIONBY);
 			if ((isNew && !oldEstimates.isEmpty()) || (!isNew && !oldEstimates.isEmpty()
 					&& !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId())))
 				messages.put(Constants.KEY_UNIQUE_ADMINSANCTIONNUMBER, Constants.MESSAGE_UNIQUE_ADMINSANCTIONNUMBER);

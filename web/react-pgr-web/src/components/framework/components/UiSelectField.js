@@ -7,8 +7,6 @@ import jp from "jsonpath";
 import _ from 'lodash';
 import { withRouter } from 'react-router'
 
-
-
 class UiSelectField extends Component {
 
   constructor(props) {
@@ -113,6 +111,11 @@ class UiSelectField extends Component {
       this.initData(this.props);
    }
 
+   shouldComponentUpdate(nextProps, nextState){
+    //  console.log('shouldComponentUpdate:', !(_.isEqual(this.props, nextProps)));
+     return !(_.isEqual(this.props, nextProps));
+   }
+
 	 componentWillReceiveProps(nextProps) {
     let {dropDownData, value} = this.props;
 
@@ -130,7 +133,8 @@ class UiSelectField extends Component {
 
    renderSelect =(item) => {
       let {dropDownData, value}=this.props;
-      //console.log('jsonPath ---->', item.jsonPath, this.props.getVal(item.jsonPath));
+      // if(item.jsonPath == 'abstractEstimates[0].natureOfWork.code' || item.jsonPath == 'abstractEstimates[0].pmcName' || item.jsonPath == 'abstractEstimates[0].department.code')
+      // console.log(item.jsonPath, '<--->', value, typeof(value) );
 
       switch (this.props.ui) {
          case 'google':
@@ -148,6 +152,7 @@ class UiSelectField extends Component {
                      hintText="Please Select"
                      floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
                      value={value}
+                     underlineDisabledStyle={{backgroundColor:'#eee!important'}}
                      onChange={(event, key, value) =>{
                         this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
                      }}
@@ -173,12 +178,13 @@ class UiSelectField extends Component {
 const mapStateToProps = (state, props) => {
   let {item} = props;
   let value =  _.get(state.frameworkForm.form, item.jsonPath);
+  // console.log(item.jsonPath , '---->', _.get(state.frameworkForm.form, item.jsonPath));
   if(item.convertToString && value)
     value = value.toString();
   else if(item.convertToNumber && value) {
     value = parseInt(value);
   }
-  
+
   return {
      dropDownData: state.framework.dropDownData[item.jsonPath],
      value:value

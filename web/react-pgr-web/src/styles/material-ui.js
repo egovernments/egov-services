@@ -51,6 +51,9 @@ const styles = {
   },
   dialogBody: {
     paddingBottom: 0
+  },
+  buttonSpacing:{
+    margin: '0 4px',
   }
 };
 

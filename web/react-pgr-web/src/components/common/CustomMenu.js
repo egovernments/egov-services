@@ -363,8 +363,9 @@ const menuConvention={
 "Inventory.Inventory Report.Comparison Between Different Rates":"/report/inventory/comparisonBetweenDifferentRates",
 
 //Works
-"Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/abstractEstimate",
-"Works Management.Abstract Estimate.Estimate Search":"/search/works/abstractEstimate/view"
+"Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/create/abstractEstimate",
+"Works Management.Abstract Estimate.Estimate Search":"/search/works/abstractEstimate/view",
+"Works Management.Abstract Estimate.Spillover Abstract Estimate":"/non-framework/works/transaction/create/spilloverAE"
 
 }
 

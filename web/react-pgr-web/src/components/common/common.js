@@ -2657,9 +2657,11 @@ var localization_EN_Data = {
 "legal.create.caseregistration.toDate": "Case Registration To Date",
 
 //works
+"works.create.spilloverEstimate":"Create Spill Over Estimate",
 "works.create.abstractEstimate":"Create Abstract Estimate",
 "works.create.searchEstimate":"Search Abstract Estimate",
 "works.create.groups.label.estandadminsanction": "Estimate and Administrative Sanction",
+"works.create.groups.fields.abstractEstimateNumber":"Abstract Estimate Number",
 "works.create.groups.fields.dateOfProposal":"Date of Proposal",
 "works.create.groups.fields.department":"Department",
 "works.create.groups.fields.referenceType":"Reference Type",
@@ -2718,6 +2720,23 @@ var localization_EN_Data = {
 "works.create.groups.fields.owner":"Owner",
 "works.create.groups.fields.totalamount":"Total Amount",
 "works.create.groups.label.workflowDetails":"Approval Details",
+"works.create.groups.label.financialDetails":"Financial Details",
+"works.create.groups.fields.objectCode":"Object Code",
+"works.create.groups.fields.accountCode":"Account Code",
+"works.create.groups.fields.scheme":"Scheme",
+"works.create.groups.fields.subScheme":"Sub Scheme",
+"works.create.groups.fields.fundSanctioningAuthority":"Fund Sanction Authority",
+"works.create.groups.fields.fundAvailable":"Is Fund Available?",
+"works.create.groups.fields.adminSanctionNumber":"Admin Sanction No.",
+"works.create.groups.fields.adminSanctionDate":"Amin Sanction Date",
+"works.create.groups.fields.councilResolutionNumber":"Council Resolution No.",
+"works.create.groups.fields.councilResolutionDate":"Council Resolution Date",
+"works.create.groups.fields.detailedEstimateCreated":"Detailed Estimate Created",
+"works.create.groups.fields.workOrderCreated":"Work Order Created",
+"works.create.groups.fields.billsCreated":"Bills Created",
+"works.create.groups.label.workIdentificationNumber":"Work Identification No.",
+"works.create.groups.label.grossAmountBilled":"Gross Amount Billed So Far",
+
 
 //Performance Assessment
 "perfManagement.create.KPIs.groups.kpiMaster":"Key Performance Indicator Master",

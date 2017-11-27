@@ -4,14 +4,14 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
 import _ from "lodash";
-import ShowFields from "../../../framework/showFields";
-import {translate} from '../../../common/common';
-import Api from '../../../../api/api';
+import ShowFields from "../../../../framework/showFields";
+import {translate} from '../../../../common/common';
+import Api from '../../../../../api/api';
 import jp from "jsonpath";
-import UiButton from '../../../framework/components/UiButton';
-import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utility';
-import UiTable from '../../../framework/components/UiTable';
-import styles from '../../../../styles/material-ui';
+import UiButton from '../../../../framework/components/UiButton';
+import {fileUpload, getInitiatorPosition} from '../../../../framework/utility/utility';
+import UiTable from '../../../../framework/components/UiTable';
+import styles from '../../../../../styles/material-ui';
 
 var specifications={};
 
@@ -182,7 +182,7 @@ class viewAbstractEstimate extends Component {
 
   initData() {
 
-    specifications = require(`../../../framework/specs/works/master/abstractEstimate`).default;
+    specifications = require(`../../../../framework/specs/works/master/abstractEstimate`).default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let self = this;
@@ -211,11 +211,17 @@ class viewAbstractEstimate extends Component {
    }
 
   //  console.log(query);
-    Api.commonApiPost(url, query, {}, false, specifications['works.view'].useTimestamp).then(function(res){
-      self.props.setFormData(res);
-      self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'works', 'view', specifications['works.view'].objectName);
-    }, function(err){
-
+    Promise.all([
+      Api.commonApiPost(url, query, {}, false, specifications['works.view'].useTimestamp)
+    ]).then((responses)=>{
+      try{
+        this.props.setFormData(responses[0]);
+        if(responses[0].abstractEstimates[0].spillOverFlag)
+          this.props.setRoute("/non-framework/works/transaction/viewspilloverAE/"+encodeURIComponent(this.props.match.params.id));
+        this.setInitialUpdateData(responses[0], JSON.parse(JSON.stringify(specifications)), 'works', 'view', specifications['works.view'].objectName);
+      }catch(e){
+        console.log('error', e);
+      }
     })
   }
 
@@ -233,26 +239,6 @@ class viewAbstractEstimate extends Component {
                + _date.getFullYear();
     }
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val === true) ? "Yes" : (val === false) ? "No" : (val + "") : "";
-  }
-
-  showDocs = () => {
-    let {formData} = this.props;
-    let docs = formData.abstractEstimates && formData.abstractEstimates[0] && formData.abstractEstimates[0].documentDetails;
-    console.log(docs);
-    if(docs && docs.length){
-      return(
-        <Card style={styles.marginStyle}>
-          <CardHeader title={< div > {translate('works.create.groups.label.uploadDocs')}< /div>}/>
-          <CardText>
-            <Row>
-              {docs && docs.map((doc, index)=>{
-                console.log(doc);
-              })}
-            </Row>
-          </CardText>
-        </Card>
-      )
-    }
   }
 
   printer = () => {
@@ -325,9 +311,15 @@ class viewAbstractEstimate extends Component {
       <div className="Report">
         <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
         <form id="printable">
-        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
+        {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] &&
+        <ShowFields
+          groups={mockData[`${moduleName}.${actionName}`].groups}
+          noCols={mockData[`${moduleName}.${actionName}`].numCols}
+          ui="google" handler={""} getVal={getVal}
+          fieldErrors={fieldErrors}
+          useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
+          addNewCard={""} removeCard={""} screen="view"/>}
           {renderTable()}
-          {this.showDocs()}
         </form>
         <div style={{"textAlign": "center"}}>
             <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
@@ -338,7 +330,7 @@ class viewAbstractEstimate extends Component {
 }
 
 const mapStateToProps = state => {
-  console.log(state.frameworkForm.form);
+  // console.log(state.frameworkForm.form);
   return({
     metaData:state.framework.metaData,
     mockData: state.framework.mockData,
@@ -370,6 +362,7 @@ const mapDispatchToProps = dispatch => ({
   },
   toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
     dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
-  }
+  },
+  setRoute:(route)=>dispatch({type:'SET_ROUTE',route})
 });
 export default connect(mapStateToProps, mapDispatchToProps)(viewAbstractEstimate);

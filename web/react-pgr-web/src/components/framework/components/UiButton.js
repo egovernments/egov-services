@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import RaisedButton from 'material-ui/RaisedButton';
 
+const style = {
+  margin: '0 4px',
+};
+
 export default class UiButton extends Component {
 	constructor(props) {
        super(props);
@@ -10,7 +14,7 @@ export default class UiButton extends Component {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<RaisedButton id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.props.handler || function(){}} disabled={item.isDisabled ? true : false}/>
+					<RaisedButton style={style} id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.props.handler || function(){}} disabled={item.isDisabled ? true : false}/>
   				);
   		}
   	}

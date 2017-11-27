@@ -41,64 +41,132 @@ class UiMultiFieldTable extends Component {
        	values: [],
        	list: [],
        	index: 0,
-		jsonPath: "",
-		isintialLoad:false
+    		jsonPath: "",
+    		isintialLoad:false
        };
    	}
 
-   	componentDidMount() {
-   		this.setState({
-   			values: [this.props.item.tableList.values],
-   			list: Object.assign([], this.props.item.tableList.values),
-   			jsonPath: this.props.item.jsonPath
-   		})
-	   }
+ 	componentDidMount() {
+
+    let values = [this.props.item.tableList.values];
+    // console.log('came to did mount');
+    // console.log(values);
+    this.addMandatoryOnLoad(this.props.item.tableList.values, 1);
+
+ 		this.setState({
+ 			values,
+ 			list: Object.assign([], this.props.item.tableList.values),
+ 			jsonPath: this.props.item.jsonPath
+ 		});
+
+   }
+
 	componentWillReceiveProps(nextProps){
+    // console.log('will receive props');
 		var valuesArray=[];
 		let {isintialLoad }=this.state;
-		if(nextProps.formData){
+    // console.log(this.props, nextProps, _.isEqual(this.props, nextProps));
+		if(!(_.isEqual(this.props, nextProps)))
+    {
+      // console.log('receive props condition succeeded');
 			var numberOfRowsArray= _.get(nextProps.formData,this.props.item.jsonPath);
+      // console.log(numberOfRowsArray.length);
 			var listValues = _.cloneDeep(this.props.item.tableList.values);
+      // console.log(this.state.jsonPath);
 			if(numberOfRowsArray && numberOfRowsArray.length>0 && !isintialLoad){
             for(var i=0;i<numberOfRowsArray.length;i++){
-				var listValuesArray=_.cloneDeep(listValues);
-				for(var j=0; j<listValuesArray.length; j++) {
-					 listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" +i+ "]");
-
-				}
-				valuesArray.push(listValuesArray);
-
-			}
-			this.setState({
-				values:valuesArray,
-				index:(numberOfRowsArray)?(numberOfRowsArray.length-1):0,
-				isintialLoad:true
-			})
+      				var listValuesArray=_.cloneDeep(listValues);
+      				for(var j=0; j<listValuesArray.length; j++) {
+                //  console.log(listValuesArray[j].jsonPath);
+      					 listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(this.props.item.jsonPath + "[" + 0 + "]",this.props.item.jsonPath + "[" +i+ "]");
+      				}
+      				valuesArray.push(listValuesArray);
+		        }
+      			this.setState({
+      				values:valuesArray,
+      				index:(numberOfRowsArray)?(numberOfRowsArray.length-1):0,
+      				isintialLoad:true
+      			})
 			}else if(numberOfRowsArray && numberOfRowsArray.length == 0){
               this.setState({
-				 isintialLoad:true
-			  })
+      				 isintialLoad:true
+      			  })
 			}
-
+      this.addMandatoryOnLoad(nextProps.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
 		}
-
 	}
 
-   	addNewRow() {
+  addMandatoryOnLoad = (values,length) => {
+    // console.log(values, '<--->', length, this.props.item.jsonPath);
+    let {addRequiredFields, delRequiredFields, formData} = this.props;
+    let addReq=[];
+    let delReq=[];
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
+    for(let i=0;i<length;i++){
+      values && values.map((row,rowIdx)=>{
+        if(row.isRequired && !row.isHidden){
+          row.jsonPath = row.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
+          // console.log(row.jsonPath);
+          addReq.push(row.jsonPath);
+        }else if(row.isHidden){
+          //isHidden -true
+          // let check_val = _.get(formData, row.checkjPath);
+          // // console.log(check_val);
+          // if(row.checkjPath && check_val){
+          //   row.jsonPath = row.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
+          //   // console.log('add as required');
+          //   addReq.push(row.jsonPath)
+          // }else{
+          //   row.jsonPath = row.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
+          //   // console.log('remove as required');
+          //   delReq.push(row.jsonPath)
+          // }
+        }
+      });
+      // console.log(addReq, delReq);
+      addRequiredFields(addReq);
+      // delRequiredFields(delReq);
+    }
+  }
+
+  addMandatoryforAdd = (values) => {
+    // console.log('add mandatory');
+    let {addRequiredFields} = this.props;
+    let req=[];
+    values && values.map((val,idx)=>{
+      if(val.isRequired && !val.isHidden)
+        req.push(val.jsonPath);
+    });
+    addRequiredFields(req);
+  }
+
+  removeMandatoryForDelete = (idx) => {
+    // console.log('remove mandatory');
+    let {delRequiredFields} = this.props;
+    let req=[];
+    var regexp = new RegExp(`${this.escapeRegExp(this.state.jsonPath)}\\[\\d+\\]`);
+    this.props.item.tableList.values.map((item)=>{
+      item.jsonPath = item.jsonPath.replace(regexp, `${this.state.jsonPath}[${idx}]`);
+      req.push(item.jsonPath);
+    })
+    delRequiredFields(req);
+  }
+
+	addNewRow() {
    		var val = JSON.parse(JSON.stringify(this.state.list));
    		var regexp = new RegExp(this.state.jsonPath + "\\[\\d{1}\\]", "g");
    		this.setState({
    			index: this.state.index + 1
    		}, () => {
    			for(var i=0; i<val.length; i++) {
-				   //val[i].jsonPath = val[i].jsonPath.replace(regexp, this.state.jsonPath + "[" + this.state.index + "]")
 				 val[i].jsonPath = val[i].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" + this.state.index + "]");
-	   		}
-			let values = [...this.state.values];
-			values.push(val);
-			this.setState({
-				values
-			});
+        }
+        this.addMandatoryforAdd(val);
+  			let values = [...this.state.values];
+  			values.push(val);
+  			this.setState({
+  				values
+  			});
    		})
    	}
 
@@ -113,6 +181,7 @@ class UiMultiFieldTable extends Component {
 		let sumField="";
 
 		let values = Object.assign([], this.state.values);
+    this.removeMandatoryForDelete(values.length-1);
 		values.splice(ind, 1);
 		var regexp = new RegExp(`${this.escapeRegExp(this.state.jsonPath)}\\[\\d+\\]`);
 		for(var i=0; i<values.length; i++) {
@@ -126,7 +195,6 @@ class UiMultiFieldTable extends Component {
 					}
 			}
 		}
-
 		this.setState({
 			values,
 			index: this.state.index-1,
@@ -230,19 +298,24 @@ class UiMultiFieldTable extends Component {
 		let footerArray=[];
 
 		item.tableList.values.map((val=>{
-			footerArray.push(undefined);
+      if(val.isHidden){
+        if(val.checkjPath && _.get(formData, val.checkjPath))
+          footerArray.push(undefined);
+      }else{
+        footerArray.push(undefined);
+      }
 		}));
 
-    // console.log(formData);
+    // console.log(footerArray);
 
 		if(item.tableList.hasFooter){
 			for(var i=0;i<item.tableList.footer.length;i++){
 				// console.log(JSON.stringify(formData));
 				for(var key in item.tableList.footer[i]){
-					// console.log(key);
 					let array = jp.query(formData, `$..${item.tableList.footer[i][key]}`);
-          // console.log(array);
-					footerArray.splice(key+1,0,array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0))
+          // console.log(key, array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0));
+          footerArray[key]=array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0);
+          // footerArray.splice(key+1,0,array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0))
 				}
 			}
 		}
@@ -251,7 +324,7 @@ class UiMultiFieldTable extends Component {
 
 		return (
 			<div>
-				<Table className="table table-striped table-bordered" responsive>
+				<table className="table table-striped table-bordered">
 					<thead>
 						<tr>
 							<th>#</th>
@@ -261,10 +334,21 @@ class UiMultiFieldTable extends Component {
 									 if(v.style){
 										style =v.style;
 									 }
-
-									return (
-										<th style={style} key={i}>{translate(v.label)}</th>
-									)
+                  if(v.hide){
+                    let jp = this.state.values && this.state.values[0] && this.state.values[0].find((x, index)=>{
+                      return index == i;
+                    });
+                    if(jp && jp.checkjPath && _.get(formData, jp.checkjPath)){
+                      return (
+                        <th style={style} key={i}>{translate(v.label)}</th>
+                      )
+                    }else
+                      return null;
+                  }else{
+                    return (
+                      <th style={style} key={i}>{translate(v.label)}</th>
+                    )
+                  }
 								})
 							}
 							{!item.tableList.actionsNotRequired ? <th>{translate("reports.common.action")}</th> : ''}
@@ -278,11 +362,19 @@ class UiMultiFieldTable extends Component {
 										<td>{i + 1}</td>
 										{
 											v.map((v2, i2) => {
-												return (
-													<td key={i2}>
-														{this.renderFields(v2, this.props.screen)}
-													</td>
-												)
+                        if(v2.isHidden){
+                          if(v2.checkjPath && _.get(formData, v2.checkjPath)){
+                            return (
+                              <td key={i2}>{this.renderFields(v2, this.props.screen)}</td>
+                            )
+                          }else{
+                              return null;
+                          }
+                        }else{
+                          return (
+                            <td key={i2}>{this.renderFields(v2, this.props.screen)}</td>
+                          )
+                        }
 											})
 										}
 										{!item.tableList.actionsNotRequired ?
@@ -300,6 +392,7 @@ class UiMultiFieldTable extends Component {
 					{item.tableList.hasFooter ?
 					<tfoot>
 						<tr>
+              <td></td>
 							{footerArray.map((val, index) => {
 								let value = val !== undefined ? val.toFixed(2) : '';
 							  return (<td key={index} className="text-right" style={{fontWeight:'bold'}}>{value ? `Total: ${value}` : ''}</td>)
@@ -307,7 +400,7 @@ class UiMultiFieldTable extends Component {
 							{!item.tableList.actionsNotRequired ? <td></td> : ''}
 						</tr>
 					</tfoot> : ''}
-				</Table>
+				</table>
 				{!item.tableList.actionsNotRequired ?
 				<div style={{"textAlign": "right"}}>
 					<RaisedButton label={translate("pgr.lbl.add")} primary={true} onClick={() => {
@@ -327,13 +420,23 @@ class UiMultiFieldTable extends Component {
 	}
 }
 
-const mapStateToProps = state => ({
-	formData: state.frameworkForm.form
-});
+const mapStateToProps = state => {
+  // console.log(state.frameworkForm.requiredFields);
+  return ({
+    formData: state.frameworkForm.form,
+    requiredFields: state.frameworkForm.requiredFields
+  })
+};
 
 const mapDispatchToProps = dispatch => ({
   setFormData: (data) => {
     dispatch({type: "SET_FORM_DATA", data});
+  },
+  delRequiredFields: (requiredFields) => {
+    dispatch({type: "DEL_REQUIRED_FIELDS", requiredFields})
+  },
+  addRequiredFields: (requiredFields) => {
+    dispatch({type: "ADD_REQUIRED_FIELDS", requiredFields})
   }
 });
 

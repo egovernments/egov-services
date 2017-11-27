@@ -18,6 +18,7 @@ export default class UiLabel extends Component {
     let {item, useTimestamp} = this.props;
     let self = this;
     var val = this.props.getVal(item.jsonPath,item.isDate);
+		// console.log(item);
     if(item.configUrl && item.url) {
       let _url = item.configUrl.split("?")[0];
       let qString = {};
@@ -121,7 +122,14 @@ export default class UiLabel extends Component {
       },function(err) {
           console.log(err);
       });
-    } else if(val) {
+    } else if(val && item.defaultValue) {
+			let defaultObj = item.defaultValue.find((obj)=> {return obj.key == val});
+			if(defaultObj){
+				this.setState({
+					value: defaultObj.value
+				})
+			}
+		}else if(val) {
 			this.setState({
 				value: val
 			})
@@ -143,7 +151,7 @@ export default class UiLabel extends Component {
   }
 
  	renderLabel = (item) => {
-
+		// console.log(item.jsonPath, this.props.getVal(item.jsonPath,item.isDate));
  		return (
       <div>
    			<Row>

@@ -22,6 +22,7 @@ import UiLabel from './components/UiLabel'
 import UiRadioButton from './components/UiRadioButton'
 import UiTextSearch from './components/UiTextSearch'
 import UiDocumentList from './components/UiDocumentList'
+import UiDocuments from './components/UiDocuments'
 import UiAutoComplete from './components/UiAutoComplete'
 import FloatingActionButton from 'material-ui/FloatingActionButton'
 import UiDate from './components/UiDate';
@@ -70,7 +71,7 @@ export default class ShowFields extends Component {
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type==="window" || field.type === "workflow" ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "viewDocuments" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" ? 12 : noCols} md={field.type === "documentList" || field.type === "viewDocuments" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type==="window" || field.type === "workflow" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex,field.screenView)}
                       </Col>
                     )
@@ -152,7 +153,7 @@ export default class ShowFields extends Component {
 
 
   renderField=(item, screen, index,screenView)=> {
-    if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber", "tableList", "workflow"].indexOf(item.type) == -1 ) {
+    if(screen == "view" && ["viewDocuments","documentList", "fileTable", "arrayText", "arrayNumber", "tableList", "workflow"].indexOf(item.type) == -1 ) {
       if (item.type == "datePicker") {
         item.isDate = true;
       }
@@ -205,6 +206,8 @@ export default class ShowFields extends Component {
         return <UiTextSearch tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler}/>
       case 'documentList':
         return <UiDocumentList tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
+      case 'viewDocuments':
+        return <UiDocuments id={this.props.id} tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>
       case 'arrayText':
       case 'arrayNumber':
         return <UiArrayField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : ""}/>

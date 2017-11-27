@@ -22,30 +22,35 @@ class WorkFlow extends Component {
   componentDidMount(){
       this.initCall();
   }
+  componentWillReceiveProps(nextProps){
+    this.initCall();
+  }
   // shouldComponentUpdate(nextProps, nextState){
-  //   console.log('props: ', this.props.formData, nextProps.formData);
-  //   if(this.props !== nextProps){
-  //       return true;
-  //   }else{
-  //     return false;
-  //   }
+  //   console.log(!(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
+  //   return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   // }
   initCall = () => {
 
-    Promise.all([
-      Api.commonApiPost( 'egov-common-masters/departments/_search')
-      // Api.commonApiPost('egov-common-workflows/process/_search', {},{}, false, true)
-    ]).then(responses => {
-      // console.log(responses[1].processInstance);
+    console.log('came to initcall');
+
+    let initCall = [];
+
+    initCall.push(Api.commonApiPost( 'egov-common-masters/departments/_search'));
+
+    if(this.props.status && _.get(this.props.formData, `${this.props.stateId}`))
+      initCall.push(Api.commonApiPost('egov-common-workflows/process/_search', {id:_.get(this.props.formData, `${this.props.stateId}`)},{}, false, true))
+
+    Promise.all(initCall).then(responses => {
+      // console.log(responses[0].Department);
       try{
         self.setState({
-          workFlowDepartment: responses[0].Department
-          // process : responses[1].processInstance});
+          workFlowDepartment: responses[0].Department,
+          process : responses[1] && responses[1].processInstance
         });
-      }catch(e){
-        console.log('Error:',e);
-      }
-
+        this.props.callbackFromParent(responses[1].processInstance);
+        }catch(e){
+          console.log('Error:',e);
+        }
     });
   }
   loadDesignation = (departmentId) => {
@@ -64,7 +69,9 @@ class WorkFlow extends Component {
           return;
       }
 
-       Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'AbstractEstimate',departmentRule:'',currentStatus:'',amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
+      // let cs = this.props.status ? _.get(this.props.formData, `${this.props.status}`) : '';
+
+       Api.commonApiPost( 'egov-common-workflows/designations/_search',{businessKey:'AbstractEstimate',departmentRule:'',currentStatus:'' ,amountRule:'',additionalRule:'',pendingAction:'',approvalDepartmentName:departmentObj.name,designation:''}, {},false, false).then((res)=>{
         for(var i=0; i<res.length;i++){
           Api.commonApiPost('hr-masters/designations/_search', {name:res[i].name}).then((response)=>{
             // response.Designation.unshift({id:-1, name:'None'});
@@ -98,21 +105,6 @@ class WorkFlow extends Component {
       // self.props.handleError(err.message);
     });
   }
-  // worKFlowActions = () => {
-    // console.log('came to workflow actions');
-    // if(this.state.stateId && !this.props.departmentId){
-    //   // console.log('try to load workflow process:', self.state.stateId, obj.applications[0].state_id);
-    //   if(this.state.stateId === obj.applications[0].state_id){
-        // console.log('workflow process:');
-        // Api.commonApiPost('egov-common-workflows/process/_search', {},{}, false, true).then((response)=>{
-        //   console.log('process status:',response.processInstance.status);
-        //   self.setState({process : response.processInstance});
-        // },function(err) {
-        //   self.props.handleError(err.message);
-        // });
-    //   }
-    // }
-  // }
   // handleChange = (value, property, isRequired, pattern) => {
   //   //Check position or approval comments
   //   self.props.handleChange(value, property, isRequired, pattern);

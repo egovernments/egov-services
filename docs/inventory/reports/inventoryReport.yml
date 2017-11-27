@@ -429,12 +429,12 @@ ReportDefinitions:
   sourceColumns:
 
   - name: materialCode
-    label: inventory.materialCode
+    label: inventory.material.code
     type: string
     source: inventory
 
   - name: materialName
-    label: inventory.materialName
+    label: inventory.material.name
     type: string
     source: inventory
 
@@ -488,7 +488,7 @@ ReportDefinitions:
   sourceColumns:
 
   - name: materialCode
-    label: inventory.materialCode
+    label: inventory.material.code
     type: string
     source: inventory
 
@@ -590,7 +590,6 @@ ReportDefinitions:
     isMandatory: true
 
   query: select * from material;
-
 
 
 

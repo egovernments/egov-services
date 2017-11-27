@@ -4,7 +4,7 @@
 
 1. Data folder parallel to docs (https://github.com/egovernments/egov-services/tree/master/data/mh). 
 2. Under data folder there will be a folder "mh" where maharastra specific state wide master data will be published.
-3. Under "mh" folder there will "tenant" folders where ulb specific master data will be checked in. for example "mh.roha"
+3. Under "mh" folder there will "tenant" folders where ulb specific master data will be checked in. for example "roha"
 4. Each module will have one file each for statewide and ulb wise master data. Keep the file name as module name itself.
 
 #### Query Construction

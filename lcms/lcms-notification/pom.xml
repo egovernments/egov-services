@@ -99,6 +99,11 @@
 			<artifactId>postgresql</artifactId>
 		</dependency>
 		
+		<dependency>
+			<groupId>org.egov</groupId>
+			<artifactId>mdms-client</artifactId>
+			<version>0.0.2-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 
 	<repositories>

@@ -314,4 +314,16 @@ public class PropertiesManager {
 	 */	
 	@Value("${case.searchpath}")
 	private String caseSearchpath;
+	
+	/**
+	 * mdms service url info
+	 */
+	@Value("${egov.services.mdms-services.hostname}")
+	private String mdmsBasePath;
+	
+	@Value("${egov.services.mdms.searchpath}")
+	private String mdmsSearhPath;
+	
+	@Value("${egov.common.master.module.name}")
+	private String commonModuleName;
 }

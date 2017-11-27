@@ -27,6 +27,7 @@ import org.egov.lcms.notification.model.SummonRequest;
 import org.egov.lcms.notification.model.UserDetail;
 import org.egov.lcms.notification.repository.AdvocateRepository;
 import org.egov.lcms.notification.repository.CaseRepository;
+import org.egov.lcms.notification.repository.MdmsRepository;
 import org.egov.lcms.notification.repository.UserReository;
 import org.egov.lcms.notification.util.NotificationUtil;
 import org.egov.lcms.notification.util.TimeStampUtil;
@@ -45,6 +46,9 @@ public class NotificationService {
 
 	@Autowired
 	AdvocateRepository advocateRepository;
+
+	@Autowired
+	MdmsRepository mdmsRepository;
 
 	@Autowired
 	NotificationUtil notificationUtil;
@@ -336,15 +340,15 @@ public class NotificationService {
 				hearingProcessMessage.put("Dated",
 						TimeStampUtil.getDateWithoutTimezone(caseObj.getCaseRegistrationDate()));
 				hearingProcessMessage.put("ULB Name", caseObj.getTenantId());
-				
+
 				userDetails = userReository.getUser(caseObj.getTenantId(), roleCodes, caseRequest.getRequestInfo());
 
 				for (HearingDetails hearingDetails : caseObj.getHearingDetails()) {
 
 					if (hearingDetails.getNextHearingDate() == null && hearingDetails.getNextHearingTime() == null) {
-							
+
 						hearingProcessMessage.put("Hearing Decision", hearingDetails.getCaseFinalDecision());
-						
+
 						for (UserDetail userDetail : userDetails) {
 
 							hearingProcessMessage.put("Legal Department/Concerned Department", userDetail.getName());
@@ -365,8 +369,8 @@ public class NotificationService {
 							}
 						}
 					} else {
-						
-						hearingProcessMessage.put("Hearing Decision", hearingDetails.getCaseJudgeMent());						
+
+						hearingProcessMessage.put("Hearing Decision", hearingDetails.getCaseJudgeMent());
 						hearingProcessMessage.put("Next Hearing Date",
 								TimeStampUtil.getDateWithoutTimezone(hearingDetails.getNextHearingDate()));
 						hearingProcessMessage.put("Next Hearing Time", hearingDetails.getNextHearingTime());
@@ -583,8 +587,10 @@ public class NotificationService {
 
 		for (Opinion opinion : opinionRequest.getOpinions()) {
 
+			String departmentName = mdmsRepository.getDepartmentName(opinion.getTenantId(),
+					opinion.getDepartmentName().getCode(), opinionRequest.getRequestInfo());
 			opinionMessage.put("Opinion No", opinion.getOpinionOn());
-			opinionMessage.put("Department Name", opinion.getDepartmentName().getName());
+			opinionMessage.put("Department Name", departmentName);
 			opinionMessage.put("Dated", TimeStampUtil.getDateWithoutTimezone(opinion.getOpinionRequestDate()));
 			opinionMessage.put("ULB Name", opinion.getTenantId());
 			userDetails = userReository.getUser(opinion.getTenantId(), roleCodes, opinionRequest.getRequestInfo());

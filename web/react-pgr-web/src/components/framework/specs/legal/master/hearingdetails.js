@@ -2,7 +2,7 @@ var dat ={
   "legal.update": {
     "testhearing": true,
     "numCols": 4,
-    title:"hearingdetails.update.document.title",
+    "title":"hearingdetails.update.document.title",
     "useTimestamp": true,
     "objectName": "cases",
     "searchUrl": "/lcms-services/legalcase/case/_search?code={id}",

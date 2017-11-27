@@ -348,7 +348,7 @@ var dat = {
                 fields: [
                     {
                         name: "caseNumber",
-                        jsonPath: "cases[0].code",
+                        jsonPath: "cases[0].caseNo",
                         label: "legal.vakalatnama.create.caseNumber",
                         pattern: "",
                         type: "text",
@@ -916,7 +916,7 @@ var dat = {
                 fields: [
                     {
                         name: "referenceCaseNo",
-                        jsonPath: "cases[0].caseRefernceNo",
+                        jsonPath: "cases[0].summon.summonReferenceNo",
                         label: "caseRegistration.create.referenceCaseNo",
                         type: "text",
                         isRequired: false,
@@ -972,7 +972,7 @@ var dat = {
                 fields: [
                     {
                         name: "caseNumber",
-                        jsonPath: "cases[0].code",
+                        jsonPath: "cases[0].summon.caseNo",
                         label: "legal.vakalatnama.create.caseNumber",
                         pattern: "",
                         type: "text",

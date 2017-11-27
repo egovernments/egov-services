@@ -15,7 +15,9 @@ var dat = {
             jsonPath: "isSummon",
             label: "legal.create.isSummon",
             type: "radio",
-            styleObj:{"display": "-webkit-box"},
+            styleObj:{
+              "display": "-webkit-box"
+            },
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: "",
@@ -28,7 +30,8 @@ var dat = {
                 label: "legal.create.Warrant",
                 value: false
               }
-            ]
+            ],
+            defaultValue: true
           }
         ]
       },
@@ -148,11 +151,12 @@ var dat = {
             },{
               label: "Ref Evidence",
               url:"/update/legal/referenceevidence/"
-            },
-            {
-              label: "Update",
-              url:"/update/legal/casedetails/"
             }
+            //,
+            // {
+            //   label: "Update",
+            //   url:"/update/legal/casedetails/"
+            // }
             //,
             // {
             //   label: "View",
@@ -240,7 +244,8 @@ var dat = {
                 label: "legal.create.Warrant",
                 value: false
               }
-            ]
+            ],
+            defaultValue : true
           }
         ]
       },

@@ -305,7 +305,6 @@ class Report extends Component {
     var hash = window.location.hash.split("/");
     let endPoint="";
     let self = this;
-
       try {
         if(hash.length == 3 || (hash.length == 4 && hash.indexOf("update") > -1)) {
           specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
@@ -376,13 +375,18 @@ class Report extends Component {
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
-      console.log('Back response');
-      console.log(response);
-      if(response.summons.length>0){
-        self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "Created Successfully Summon Ref No. is " + response.summons[0].summonReferenceNo : "wc.update.message.success"), true);
-      }else{
+       console.log('Back response');
+       console.log(response);
+       if(response.summons){
+          if(response.summons.length>0){
+          self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "Created Successfully Summon Ref No. is " + response.summons[0].summonReferenceNo : "wc.update.message.success"), true);
+        }else{
+          self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+        }
+       }else{
         self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
       }
+      
       
       setTimeout(function() {
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
@@ -447,6 +451,7 @@ class Report extends Component {
   }
 
   checkForOtherFiles = (formData, _url) => {
+    // console.log(_url);
     let { mockData, actionName, moduleName } = this.props;
     let self = this;
     let fileList = {};
@@ -512,6 +517,7 @@ class Report extends Component {
 
     if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
       _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
+     console.log(_url);
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g,"");
       _url = _url.replace(match, _.get(formData, jPath));
@@ -1527,6 +1533,7 @@ class Report extends Component {
     console.log({...this.props.formData})
     return (
       <div className="Report">
+
         <Row>
           <Col xs={6} md={6}>
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>

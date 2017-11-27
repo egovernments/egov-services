@@ -19,7 +19,7 @@ var dat = {
         fields: [
           {
             name: "caseNumber",
-            jsonPath: "cases[0].caseNo",
+            jsonPath: "cases[0].summon.caseNo",
             label: "legal.vakalatnama.create.caseNumber",
             pattern: "",
             type: "text",
@@ -30,7 +30,7 @@ var dat = {
           },
           {
             name: "referenceCaseNumber",
-            jsonPath: "cases[0].caseRefernceNo",
+            jsonPath: "cases[0].summon.summonReferenceNo",
             label: "legal.vakalatnama.create.referenceCaseNumber",
             pattern: "",
             type: "text",
@@ -201,7 +201,7 @@ var dat = {
                   label: "legal.create.advocateAssignDate"
                 },
                 {
-                  label: "legal.create.advocateFee"
+                  label: "legal.create.advocateStatus",
                 }
               ],
               values: [
@@ -225,11 +225,11 @@ var dat = {
                   isDisabled: true
                 },
                 {
-                  name: "advocateFee",
+                  name: "advocatestaus",
                   pattern: "",
                   type: "text",
-                  jsonPath: "cases[0].advocateDetails[0].fee",
-                  isRequired: true,
+                  jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                  isRequired: false,
                   isDisabled: true
                 }
               ]

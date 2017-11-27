@@ -105,12 +105,20 @@ export default class UiEmailField extends Component {
 												//if false
 					                            this.props.handler({target: {value: val}}, item.jsonPath, item.isRequired ? true : false, /\d{12,13}/, item.requiredErrMsg, (item.patternErrMsg || translate("framework.date.error.message")), item.expression, item.expressionMsg, true)
 					                        }}/>*/
+					                        // console.log(item);
+					                        //       console.log(item.showCurrentDate);
 
-		// let defaultdate = new Date();		
-		// let day = defaultdate.getDate();
-		// let month = defaultdate.getMonth()+1;
-		// let year = defaultdate.getFullYear();
-		// defaultdate = day+'/'+month+'/'+year;		                        
+		// if(item.showCurrentDate === true){
+		//     var defaultdate = new Date();		
+		// 	let day = defaultdate.getDate();
+		// 	let month = defaultdate.getMonth()+1;
+		// 	let year = defaultdate.getFullYear();
+		// 	defaultdate = day+'/'+month+'/'+year;
+		// }else{
+		// 	var defaultdate = '';	
+		// }
+		
+	                        
 		switch (this.props.ui) {
 			case 'google':
 				return (

@@ -50,17 +50,19 @@ var dat ={
         },
         {
           "label": "legal.search.result.mobileNumber"
-        },
-        {
-          "label": "legal.search.result.agencyName"
         }
+        // ,
+        // {
+        //   "label": "legal.search.result.agencyName"
+        // }
       ],
       "values": [
         "code",
         "name",
         "emailId",
-        "contactNo",
-        "agencyName"
+        "mobileNumber"
+        //,
+        // "agencyName"
       ],
       "resultPath": "agencies[0].advocates"
     }
@@ -117,7 +119,18 @@ var dat ={
                     "name": "personalDetails",
                     "isGroup": true,
                     "isField": false
+                  },
+                      {
+                    "name": "advocateEmpanelmentDetails",
+                    "isGroup": true,
+                    "isField": false
+                  },
+                  {
+                    "name": "bankDetails",
+                    "isGroup": true,
+                    "isField": false
                   }
+
                 ]
               },
               {
@@ -419,7 +432,7 @@ var dat ={
             "type": "pan",
             "isRequired": true,
             "isDisabled": false,
-            "requiredErrMsg": "",
+            "requiredErrMsg":"",
             "patternErrMsg": ""
           },
           {
@@ -1631,7 +1644,7 @@ var dat ={
             "jsonPath": "agencies[0].advocates[0].standingCommitteeDecisionDate",
             "label": "advocates.create.standingCommiteDecisionDate",
             "pattern": "",
-            "type": "datePicker",
+            "type": "datePicker",,
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
@@ -1642,7 +1655,7 @@ var dat ={
             "jsonPath": "agencies[0].advocates[0].newsPaperAdvertismentDate",
             "label": "advocates.create.newsPaperAdvertismentDate",
             "pattern": "",
-            "type": "datePicker",
+            "type": "datePicker",,
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",

@@ -206,7 +206,7 @@ ReportDefinitions:
           order by supplier.name asc;
 
 # Material Returned Report
-# Need to change data type as well drop down based on report and Qery
+# Need to change  drop down Link based on report and Query
 - reportName: materialReturnedReport
   summary: Material Returned Report
   version: 1.0.0
@@ -309,3 +309,114 @@ ReportDefinitions:
     isMandatory: false
 
   query: select * from material;
+
+# Disposal of Scrap Report
+# Need to Change drop down Link based on report and Query
+- reportName: disposalOfScrapReport
+  summary: Disposal of Scrap Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+
+  - name: storeName
+    label: inventory.storeName
+    type: string
+    source: inventory
+
+  - name: materialCode
+    label: inventory.materialCode
+    type: string
+    source: inventory
+
+  - name: materialName
+    label: inventory.materialName
+    type: String
+    source: inventory
+
+  - name: materialTypeName
+    label: inventory.materialTypeName
+    type: epoch
+    source: inventory
+
+  - name: disposalNo
+    label: inventory.disposalNo
+    type: string
+    source: inventory
+
+  - name: disposalDate
+    label: inventory.disposalDate
+    type: string
+    source: inventory
+
+  - name: disposalQty
+    label: inventory.disposalQty
+    type: string
+    source: inventory
+
+  - name: uom
+    label: inventory.uom
+    type: string
+    source: inventory
+
+  - name: disposalValue
+    label: inventory.disposalValue
+    type: string
+    source: inventory
+
+  - name: lotNo
+    label: inventory.lotNo
+    type: string
+    source: inventory
+
+  - name: disposalBy
+    label: inventory.disposalBy
+    type: string
+    source: inventory
+
+  - name: remarks
+    label: inventory.remarks
+    type: string
+    source: inventory
+
+  searchParams:
+  
+  - name: storeName
+    label: inventory.store.name
+    type: singlevaluelist
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    source: store
+    isMandatory: true
+    wrapper: true
+
+  - name: disposalFromDate
+    label: inventory.disposalFromDate
+    type: epoch
+    source: inventory
+    isMandatory: false
+
+  - name: toDate
+    label: inventory.toDate
+    type: epoch
+    source: inventory
+    isMandatory: false
+
+  - name: materialtypename
+    label: inventory.materialtypename
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+  
+  - name: disposalNo
+    label: inventory.disposalNo
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  - name: materialName
+    label: inventory.materialName
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  query: select * from material;
+

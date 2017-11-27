@@ -41,10 +41,12 @@ class ShowForm extends Component {
     {
       for (var i = 0; i < metaData.reportDetails.searchParams.length; i++) {
         if (metaData.reportDetails.searchParams[i].type=="url" && (typeof(metaData.reportDetails.searchParams[i].defaultValue)!="object" || metaData.reportDetails.searchParams[i].hasOwnProperty("pattern"))) {
+            
             if (!metaData.reportDetails.searchParams[i].hasOwnProperty("pattern")) {
               metaData.reportDetails.searchParams[i]["pattern"]=metaData.reportDetails.searchParams[i].defaultValue;
             }
 
+            if(metaData.reportDetails.searchParams[i].pattern.indexOf("{" + property + "}") == -1) return;
             if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1) {
               let splitArray = metaData.reportDetails.searchParams[i].pattern.split("?");
               let url = splitArray[0];

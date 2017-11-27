@@ -484,9 +484,7 @@
       "name": "Review Petition WP",
       "code": "RPWP",
       "active": true,
-      "side": {
-		"code": "CVL"
-      },
+      "sideCode": "CVL",
       "tenantId": "default"
     },
     {
@@ -507,9 +505,7 @@
       "name": "Tax Appeal",
       "code": "TA",
       "active": true,
-      "side": {
-		"code": "CVL"
-      },
+      "sideCode":"CVL", 
       "tenantId": "default"
     },
     {
@@ -915,12 +911,7 @@
       "name": "Civil contempt petition (inpt)",
       "code": "CCPI",
       "active": true,
-      "side": {
-        "name": "Original",
-        "code": "ORGNL",
-        "active": true,
-        "tenantId": "default"
-      },
+      "sideCode": "ORGNL",
       "tenantId": "default"
     },
     {
@@ -1515,12 +1506,7 @@
       "name": "Judges order (insolvency)",
       "code": "JOI",
       "active": true,
-      "side": {
-        "name": "Original",
-        "code": "ORGNL",
-        "active": true,
-        "tenantId": "default"
-      },
+      "sideCode":"ORGNL",
       "tenantId": "default"
     },
     {

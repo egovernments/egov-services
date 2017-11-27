@@ -714,7 +714,6 @@ class Transaction extends Component {
     let self = this, _url;
     e.preventDefault();
     var formData = {...this.props.formData};
-    self.props.setLoadingStatus('loading');
     var amountValidation=true;
     var amountValidationMsg="";
 
@@ -732,7 +731,9 @@ class Transaction extends Component {
       var mainAssetIdssplice = mainAssetIds.slice(0, -1);
       formData.Depreciation.assetIds = mainAssetIdssplice.split(",");
     }
-    delete formData.Depreciation.Assets;
+    if(formData.Depreciation.assetIds){
+      self.props.setLoadingStatus('loading');
+      delete formData.Depreciation.Assets;
 
     Api.commonApiPost("/asset-services-maha/assets/depreciations/_create", "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
@@ -781,6 +782,9 @@ class Transaction extends Component {
   //   }else{
   //     console.log("Depreciation is null");
   // }
+}else{
+  self.props.toggleSnackbarAndSetText(true, "Please Select a Record", false, true);
+}
 }
 
   render() {

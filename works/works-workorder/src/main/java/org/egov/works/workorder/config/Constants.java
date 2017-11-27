@@ -37,8 +37,19 @@ public class Constants {
     public static final String KEY_WORKORDER_ASSET_DETAILS_REQUIRED= "INVALID_WORKORDER_ASSET_DETAILES";
     public static final String MESSAGE_WORKORDER_ASSET_DETAILS_REQUIRED= "Asset details required for an workorder";
 
+    public static final String KEY_INVALID_LOANUMBER = "INVALID_LOANUMBER";
+    public static final String MESSAGE_INVALID_LOANUMBER = "Please enter a valid LOA number";
+
+    public static final String KEY_INVALID_WORKORDERDATE = "INVALID_WORKORDERDATE";
+    public static final String MESSAGE_INVALID_WORKORDERDATE = "Workorder Date cannot be greater then LOA date";
 
 
 
-    
+    public static final String KEY_LOA_OFFLINE_STATUS = "INVALID_LOA_OFFLINE_STATUS";
+    public static final String MESSAGE_LOA_OFFLINE_STATUS = "Offline Status for LOA should be Agreement Order Signed";
+
+
+
+
+
 }

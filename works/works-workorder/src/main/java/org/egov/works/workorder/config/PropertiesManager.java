@@ -40,4 +40,17 @@ public class PropertiesManager {
     @Value("${loanumber.prefix}")
     private String loaNumberPrefix;
 
+    @Value("${works.workordernumber.format}")
+    private String workOrderNumberFormat;
+
+    @Value("${works.workordernumber}")
+    private String worksWorkOrderNumber;
+
+    @Value("${egov.services.works.workorder.createupdate.topic.validated}")
+    private String worksWorkOrderCreateTopic;
+
+    @Value("${workordernumber.prefix}")
+    private String workOrderNumberPrefix;
+
+
 }

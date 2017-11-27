@@ -24,7 +24,7 @@ public class WorksMastersRepository {
         this.searchContractorUrl = worksMastersHost + searchContractorUrl;
     }
 
-    public List<Contractor> searchScheduleOfRates(final String tenantId, final List<String> contractorNames,final RequestInfo requestInfo) {
+    public List<Contractor> searchContractors(final String tenantId, final List<String> contractorNames,final RequestInfo requestInfo) {
         String name = contractorNames.get(0);
         return restTemplate.postForObject(searchContractorUrl,
                 requestInfo, ContractorResponse.class, tenantId, name).getContractors();

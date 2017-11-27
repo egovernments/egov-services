@@ -1532,10 +1532,9 @@ definitions:
         description: Epoch time of Work Order Date
       workOrderNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         description: Work Order Number. Auto generated.
         maxLength: 50
-        minLength: 1
       documentDetails:
         type: array
         description: Array of document details
@@ -1545,10 +1544,14 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkFlowDetails'
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      status:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/WorkOrderStatus'
+      stateId:
+        type: string
+        description: State id of the workflow
     required:
       - tenantId
       - workOrderDate
-      - workOrderNumber
       - letterOfAcceptance
     
   WorkOrderDetail:
@@ -1572,12 +1575,15 @@ definitions:
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         maxLength: 1024
         minLength: 1
+      editable:
+        type: boolean
+        description: True for default
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - tenantId
-      - workOrder
       - remarks
+      - editable
             
   WorkOrderRequest:
       description: Contract class to send response. Array of Wor kOrder items are used in case of search results, also multiple  Work Order item is used for create and update
@@ -1994,5 +2000,6 @@ tags:
     description: APIs required for Track Milestone.
   - name: Contractor Advance Requisition
     description: APIs required for Contractor Advance Requisition.
+
 
 

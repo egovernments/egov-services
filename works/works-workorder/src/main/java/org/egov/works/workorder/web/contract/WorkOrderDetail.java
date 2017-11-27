@@ -1,189 +1,211 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Work Order Details
  */
 @ApiModel(description = "An Object that holds the basic data of Work Order Details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-27T05:41:29.315Z")
 
-public class WorkOrderDetail {
-	@JsonProperty("id")
-	private String id = null;
+public class WorkOrderDetail   {
+  @JsonProperty("id")
+  private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+  @JsonProperty("tenantId")
+  private String tenantId = null;
 
-	@JsonProperty("workOrder")
-	private String workOrder = null;
+  @JsonProperty("workOrder")
+  private String workOrder = null;
 
-	@JsonProperty("remarks")
-	private String remarks = null;
+  @JsonProperty("remarks")
+  private String remarks = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+  @JsonProperty("editable")
+  private Boolean editable = null;
 
-	public WorkOrderDetail id(String id) {
-		this.id = id;
-		return this;
-	}
+  @JsonProperty("auditDetails")
+  private AuditDetails auditDetails = null;
 
-	/**
-	 * Unique Identifier of the Work Order Details
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Work Order Details")
+  public WorkOrderDetail id(String id) {
+    this.id = id;
+    return this;
+  }
 
-	public String getId() {
-		return id;
-	}
+   /**
+   * Unique Identifier of the Work Order Details
+   * @return id
+  **/
+  @ApiModelProperty(value = "Unique Identifier of the Work Order Details")
 
-	public void setId(String id) {
-		this.id = id;
-	}
 
-	public WorkOrderDetail tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+  public String getId() {
+    return id;
+  }
 
-	/**
-	 * tenant id of the Work Order Details
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "tenant id of the Work Order Details")
-	@NotNull
+  public void setId(String id) {
+    this.id = id;
+  }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+  public WorkOrderDetail tenantId(String tenantId) {
+    this.tenantId = tenantId;
+    return this;
+  }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+   /**
+   * tenant id of the Work Order Details
+   * @return tenantId
+  **/
+  @ApiModelProperty(required = true, value = "tenant id of the Work Order Details")
+  @NotNull
 
-	public WorkOrderDetail workOrder(String workOrder) {
-		this.workOrder = workOrder;
-		return this;
-	}
+ @Size(min=2,max=128)
+  public String getTenantId() {
+    return tenantId;
+  }
 
-	/**
-	 * Reference of Work Order
-	 * 
-	 * @return workOrder
-	 **/
-	@ApiModelProperty(required = true, value = "Reference of Work Order")
-	@NotNull
+  public void setTenantId(String tenantId) {
+    this.tenantId = tenantId;
+  }
 
-	public String getWorkOrder() {
-		return workOrder;
-	}
+  public WorkOrderDetail workOrder(String workOrder) {
+    this.workOrder = workOrder;
+    return this;
+  }
 
-	public void setWorkOrder(String workOrder) {
-		this.workOrder = workOrder;
-	}
+   /**
+   * Reference of Work Order
+   * @return workOrder
+  **/
+  @ApiModelProperty(required = true, value = "Reference of Work Order")
 
-	public WorkOrderDetail remarks(String remarks) {
-		this.remarks = remarks;
-		return this;
-	}
 
-	/**
-	 * Remarks for the Work Order
-	 * 
-	 * @return remarks
-	 **/
-	@ApiModelProperty(required = true, value = "Remarks for the Work Order")
-	@NotNull
+  public String getWorkOrder() {
+    return workOrder;
+  }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	@Size(min = 1, max = 1024)
-	public String getRemarks() {
-		return remarks;
-	}
+  public void setWorkOrder(String workOrder) {
+    this.workOrder = workOrder;
+  }
 
-	public void setRemarks(String remarks) {
-		this.remarks = remarks;
-	}
+  public WorkOrderDetail remarks(String remarks) {
+    this.remarks = remarks;
+    return this;
+  }
 
-	public WorkOrderDetail auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+   /**
+   * Remarks for the Work Order
+   * @return remarks
+  **/
+  @ApiModelProperty(required = true, value = "Remarks for the Work Order")
+  @NotNull
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+ @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(min=1,max=1024)
+  public String getRemarks() {
+    return remarks;
+  }
 
-	@Valid
+  public void setRemarks(String remarks) {
+    this.remarks = remarks;
+  }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+  public WorkOrderDetail editable(Boolean editable) {
+    this.editable = editable;
+    return this;
+  }
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+   /**
+   * True for default
+   * @return editable
+  **/
+  @ApiModelProperty(required = true, value = "True for default")
+  @NotNull
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		WorkOrderDetail workOrderDetail = (WorkOrderDetail) o;
-		return Objects.equals(this.id, workOrderDetail.id) && Objects.equals(this.tenantId, workOrderDetail.tenantId)
-				&& Objects.equals(this.workOrder, workOrderDetail.workOrder)
-				&& Objects.equals(this.remarks, workOrderDetail.remarks)
-				&& Objects.equals(this.auditDetails, workOrderDetail.auditDetails);
-	}
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, workOrder, remarks, auditDetails);
-	}
+  public Boolean getEditable() {
+    return editable;
+  }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class WorkOrderDetail {\n");
+  public void setEditable(Boolean editable) {
+    this.editable = editable;
+  }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    workOrder: ").append(toIndentedString(workOrder)).append("\n");
-		sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+  public WorkOrderDetail auditDetails(AuditDetails auditDetails) {
+    this.auditDetails = auditDetails;
+    return this;
+  }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+   /**
+   * Get auditDetails
+   * @return auditDetails
+  **/
+  @ApiModelProperty(value = "")
+
+  @Valid
+
+  public AuditDetails getAuditDetails() {
+    return auditDetails;
+  }
+
+  public void setAuditDetails(AuditDetails auditDetails) {
+    this.auditDetails = auditDetails;
+  }
+
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    WorkOrderDetail workOrderDetail = (WorkOrderDetail) o;
+    return Objects.equals(this.id, workOrderDetail.id) &&
+        Objects.equals(this.tenantId, workOrderDetail.tenantId) &&
+        Objects.equals(this.workOrder, workOrderDetail.workOrder) &&
+        Objects.equals(this.remarks, workOrderDetail.remarks) &&
+        Objects.equals(this.editable, workOrderDetail.editable) &&
+        Objects.equals(this.auditDetails, workOrderDetail.auditDetails);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(id, tenantId, workOrder, remarks, editable, auditDetails);
+  }
+
+  @Override
+  public String toString() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("class WorkOrderDetail {\n");
+    
+    sb.append("    id: ").append(toIndentedString(id)).append("\n");
+    sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+    sb.append("    workOrder: ").append(toIndentedString(workOrder)).append("\n");
+    sb.append("    remarks: ").append(toIndentedString(remarks)).append("\n");
+    sb.append("    editable: ").append(toIndentedString(editable)).append("\n");
+    sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("}");
+    return sb.toString();
+  }
+
+  /**
+   * Convert the given object to string with each line indented by 4 spaces
+   * (except the first line).
+   */
+  private String toIndentedString(Object o) {
+    if (o == null) {
+      return "null";
+    }
+    return o.toString().replace("\n", "\n    ");
+  }
 }
+

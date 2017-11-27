@@ -246,3 +246,101 @@ serviceMaps:
        - jsonPath: $.letterOfAcceptances.*.documentDetails.*.auditDetails.lastModifiedTime
          dbType: LONG
 
+ - version: 1.0
+   name: Work Order
+   description: Persists Work Order in egw_workorder table
+   fromTopic: works-workorder-createupdate-validated
+   isTransaction: true
+   queryMaps:
+    - query: INSERT INTO egw_workorder(id, tenantid, letterofacceptance, workorderdate, workordernumber, status, stateid, createdby, createdtime,lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET workorderdate=EXCLUDED.workorderdate, status= EXCLUDED.status, stateid=EXCLUDED.stateid, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;;
+
+      basePath: $.workOrders.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.id
+
+       - jsonPath: $.workOrders.*.tenantId
+
+       - jsonPath: $.workOrders.*.letterOfAcceptance.id
+
+       - jsonPath: $.workOrders.*.workOrderDate
+         dbType: LONG
+
+       - jsonPath: $.workOrders.*.workOrderNumber
+
+       - jsonPath: $.workOrders.*.status
+
+       - jsonPath: $.workOrders.*.stateId
+
+       - jsonPath: $.workOrders.*.auditDetails.createdBy
+
+       - jsonPath: $.workOrders.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.workOrders.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.workOrders.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_workorder_details(id, tenantid, workorder, remarks, editable, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT (id,tenantid) DO UPDATE SET remarks=EXCLUDED.remarks, editable=EXCLUDED.editable, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.workOrders.*.workOrderDetails.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.id
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.tenantId
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.workOrder
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.remarks
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.editable
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.workOrders.*.workOrderDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG
+
+    - query: INSERT INTO egw_documentdetail(id, tenantid, objectid, objecttype, documenttype, filestore, latitude, longitude, description, dateofcapture, workprogress, createdby, createdtime, lastmodifiedby, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)  on CONFLICT (id,tenantid) DO UPDATE SET filestore=EXCLUDED.filestore, documenttype= EXCLUDED.documenttype, latitude=EXCLUDED.latitude, longitude=EXCLUDED.longitude, description=EXCLUDED.description, dateofcapture=EXCLUDED.dateofcapture, workprogress=EXCLUDED.workprogress, lastmodifiedtime=EXCLUDED.lastmodifiedtime, lastmodifiedby=EXCLUDED.lastmodifiedby;
+
+      basePath: $.workOrders.*.documentDetails.*
+      jsonMaps:
+
+       - jsonPath: $.workOrders.*.documentDetails.*.id
+
+       - jsonPath: $.workOrders.*.documentDetails.*.tenantId
+
+       - jsonPath: $.workOrders.*.documentDetails.*.objectId
+
+       - jsonPath: $.workOrders.*.documentDetails.*.objectType
+
+       - jsonPath: $.workOrders.*.documentDetails.*.documentType
+
+       - jsonPath: $.workOrders.*.documentDetails.*.fileStore
+
+       - jsonPath: $.workOrders.*.documentDetails.*.latitude
+
+       - jsonPath: $.workOrders.*.documentDetails.*.longitude
+
+       - jsonPath: $.workOrders.*.documentDetails.*.description
+
+       - jsonPath: $.workOrders.*.documentDetails.*.dateOfCapture
+         dbType: LONG
+
+       - jsonPath: $.workOrders.*.documentDetails.*.workProgress
+
+       - jsonPath: $.workOrders.*.documentDetails.*.auditDetails.createdBy
+
+       - jsonPath: $.workOrders.*.documentDetails.*.auditDetails.createdTime
+         dbType: LONG
+
+       - jsonPath: $.workOrders.*.documentDetails.*.auditDetails.lastModifiedBy
+
+       - jsonPath: $.workOrders.*.documentDetails.*.auditDetails.lastModifiedTime
+         dbType: LONG

@@ -116,7 +116,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
         List<String> contractorCodes = new ArrayList<>();
         if (letterOfAcceptanceSearchCriteria.getContractorNames() != null && !letterOfAcceptanceSearchCriteria.getContractorNames().isEmpty()) {
-            List<Contractor> contractors = worksMastersRepository.searchScheduleOfRates(letterOfAcceptanceSearchCriteria.getTenantId(), letterOfAcceptanceSearchCriteria.getContractorNames(), requestInfo);
+            List<Contractor> contractors = worksMastersRepository.searchContractors(letterOfAcceptanceSearchCriteria.getTenantId(), letterOfAcceptanceSearchCriteria.getContractorNames(), requestInfo);
             for (Contractor contractor : contractors)
                 contractorCodes.add(contractor.getCode());
             if(!contractorCodes.isEmpty())

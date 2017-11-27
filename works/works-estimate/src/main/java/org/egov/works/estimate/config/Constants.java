@@ -155,7 +155,7 @@ public class Constants {
     public static final String MESSAGE_INVALID_ESTIMATEAMOUNT = "Estimate Amount should be greater then 0";
     
     public static final String KEY_UNIQUE_WORKIDENTIFICATIONNUMBER = "UNIQUE_WORKIDENTIFICATIONNUMBER";
-    public static final String MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER = "Work Identification Number should be entered";
+    public static final String MESSAGE_UNIQUE_WORKIDENTIFICATIONNUMBER = "Unique Work Identification Number should be entered";
 
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE= "INVALID_ESTIMATE_ACTIVITY_SCHEDULEOFRATE";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE = "Duplicate data for activity schedule of rates";

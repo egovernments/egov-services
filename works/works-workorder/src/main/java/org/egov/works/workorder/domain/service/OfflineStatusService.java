@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.works.commons.web.contract.DetailedEstimateOfflineStatus;
+import org.egov.works.commons.web.contract.LOAOfflineStatuses;
 import org.egov.works.workorder.domain.repository.OfflineStatusRepository;
 import org.egov.works.workorder.web.contract.OfflineStatus;
 import org.egov.works.workorder.web.contract.OfflineStatusResponse;
@@ -29,6 +30,22 @@ public class OfflineStatusService {
 		offlineStatusSearchContract.setStatuses(statuses);
 		offlineStatusSearchContract.setTenantId(tenantId);
 		
+		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
+				.getOfflineStatus(offlineStatusSearchContract, tenantId, requestInfo);
+		return offlineStatusResponse;
+	}
+
+	public OfflineStatusResponse getOfflineStatusForWorkOrder(final String letterOfAcceptance, final String tenantId,
+												  final RequestInfo requestInfo) {
+		OfflineStatusSearchContract offlineStatusSearchContract = new OfflineStatusSearchContract();
+		final List<String> loaNumber = new ArrayList<>();
+		loaNumber.add(letterOfAcceptance);
+		offlineStatusSearchContract.setLoaNumbers(loaNumber);
+		List<String> statuses = new ArrayList<>();
+		statuses.add(LOAOfflineStatuses.AGREEMENT_ORDER_SIGNED.toString());
+		offlineStatusSearchContract.setStatuses(statuses);
+		offlineStatusSearchContract.setTenantId(tenantId);
+
 		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
 				.getOfflineStatus(offlineStatusSearchContract, tenantId, requestInfo);
 		return offlineStatusResponse;

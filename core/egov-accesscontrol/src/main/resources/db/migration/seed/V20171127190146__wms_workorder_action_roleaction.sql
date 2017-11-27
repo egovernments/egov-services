@@ -1,0 +1,9 @@
+insert into service (id, code, name, enabled, displayname, ordernumber, parentmodule, tenantId) values (nextval('SEQ_SERVICE'), 'WorkOrder', 'Work Order', false, 'Work Order', 1, (select id from service where code = 'WMS' and tenantId='default'), 'default');
+
+insert into eg_action(id, name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'Create Work Order', '/works-workorder/v1/workorders/_create', 'WorkOrder', null, 0, 'Create Work Order', false, 1, now(), 1, now());
+insert into eg_action(id, name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'Update Work Order', '/works-workorder/v1/workorders/_update', 'WorkOrder', null, 0, 'Update Work Order', false, 1, now(), 1, now());
+insert into eg_action(id, name, url, servicecode, queryparams, ordernumber, displayname, enabled, createdby, createddate, lastmodifiedby, lastmodifieddate) values(nextval('SEQ_EG_ACTION'), 'Search Work Order', '/works-workorder/v1/workorders/_search', 'WorkOrder', null, 0, 'Search Work Order', false, 1, now(), 1, now());
+
+insert into eg_roleaction(roleCode, actionid, tenantid) values ('SUPERUSER', (select id from eg_action where name = 'Create Work Order' and url='/works-workorder/v1/workorders/_create'), 'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Update Work Order' and url='/works-workorder/v1/workorders/_update' ), 'default');
+insert into eg_roleaction(roleCode,actionid,tenantid)values('SUPERUSER', (select id from eg_action where name = 'Search Work Order' and url='/works-workorder/v1/workorders/_search' ), 'default');

@@ -417,8 +417,8 @@ class UiWindowForm extends Component {
                         self.props.item.patternErrMsg
                       );
                       self.setState({
-                        valuesObj: {},
-                        open: false,
+                       // valuesObj: {},
+                        //open: false,
                         index: -1
                       });
                     }

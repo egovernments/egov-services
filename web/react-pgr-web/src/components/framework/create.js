@@ -678,7 +678,7 @@ class Report extends Component {
 
   resetCheck  = (mockData,element,val) =>{
     //let val = 'TEXT';
-    console.log('reset check here');
+   // console.log('reset check here');
     let {moduleName, actionName, setMockData} = this.props;
     for(let i=0; i<mockData[moduleName + "." + actionName].groups.length; i++) {
 
@@ -1530,7 +1530,7 @@ class Report extends Component {
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
 
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
-    console.log({...this.props.formData})
+  //  console.log({...this.props.formData})
     return (
       <div className="Report">
 

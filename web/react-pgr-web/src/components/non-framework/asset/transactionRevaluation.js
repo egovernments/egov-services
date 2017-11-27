@@ -709,7 +709,7 @@ class Transaction extends Component {
 
     if(formData.Revaluation["assetId"]){
       console.log(formData.Revaluation["assetId"]);
-
+ 
     if(!(formData.Revaluation.valueAfterRevaluation) || formData.Revaluation.valueAfterRevaluation == null || formData.Revaluation.valueAfterRevaluation == ""){
       self.props.toggleSnackbarAndSetText(true, "Please enter Valuation Amount", false, true);
 

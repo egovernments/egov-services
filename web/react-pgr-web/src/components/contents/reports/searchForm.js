@@ -37,8 +37,17 @@ class ShowForm extends Component {
     }
 
     // console.log(metaData);
-    if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0)
-    {
+    if(metaData.hasOwnProperty("reportDetails") && metaData.reportDetails.searchParams.length > 0){
+      
+      if(!e.target.value) {
+        for (var l=0; l<metaData.reportDetails.searchParams.length; l++) {
+          if (metaData.reportDetails.searchParams[l].type == "url" && metaData.reportDetails.searchParams[l].pattern.search(property) > -1) {
+              metaData.reportDetails.searchParams[l].defaultValue = {};
+          }
+        }
+        return setMetaData(metaData); 
+      }
+
       for (var i = 0; i < metaData.reportDetails.searchParams.length; i++) {
         if (metaData.reportDetails.searchParams[i].type=="url" && (typeof(metaData.reportDetails.searchParams[i].defaultValue)!="object" || metaData.reportDetails.searchParams[i].hasOwnProperty("pattern"))) {
             
@@ -46,7 +55,8 @@ class ShowForm extends Component {
               metaData.reportDetails.searchParams[i]["pattern"]=metaData.reportDetails.searchParams[i].defaultValue;
             }
 
-            if(metaData.reportDetails.searchParams[i].pattern.indexOf("{" + property + "}") == -1) return;
+            if(metaData.reportDetails.searchParams[i].pattern.indexOf("{" + property + "}") == -1) continue;
+
             if(metaData.reportDetails.searchParams[i].pattern.search(property)>-1) {
               let splitArray = metaData.reportDetails.searchParams[i].pattern.split("?");
               let url = splitArray[0];

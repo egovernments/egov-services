@@ -9,3 +9,11 @@ ServiceMaps:
       id: $.transactionNo
       isBulk: true
       jsonPath: $.vehicleFuellingDetails.*
+
+  - topic: swm-refillingpumpstation-indexer-topic
+    indexes:
+    - name: refillingpumpstations
+      type: refillingpumpstations
+      id: $.code
+      isBulk: true
+      jsonPath: $.refillingPumpStations.*

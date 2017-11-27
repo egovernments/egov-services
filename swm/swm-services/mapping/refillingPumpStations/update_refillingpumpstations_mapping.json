@@ -1,0 +1,37 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "location": {
+            "type": "object"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "typeOfPump": {
+            "type": "object"
+        },
+        "remarks": {
+            "type": "keyword"
+        },
+        "typeOfFuel": {
+            "type": "object"
+        },
+        "quantity": {
+            "type": "keyword"
+        },
+        "AuditDetails": {
+            "type": "object"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

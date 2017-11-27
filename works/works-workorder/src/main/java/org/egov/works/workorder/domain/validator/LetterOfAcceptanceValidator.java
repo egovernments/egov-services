@@ -15,7 +15,7 @@ import org.egov.works.workorder.web.contract.DetailedEstimateStatus;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchCriteria;
+import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
 import org.egov.works.workorder.web.contract.OfflineStatus;
 import org.egov.works.workorder.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -119,7 +119,7 @@ public class LetterOfAcceptanceValidator {
 		@SuppressWarnings("unused")
 		LetterOfAcceptance savedLetterOfAcceptance = new LetterOfAcceptance();
 
-		LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria = new LetterOfAcceptanceSearchCriteria();
+		LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria = new LetterOfAcceptanceSearchContract();
 		letterOfAcceptanceSearchCriteria.builder().tenantId(letterOfAcceptance.getTenantId())
 				.loaNumbers(Arrays.asList(letterOfAcceptance.getLoaNumber())).build();
 

@@ -51,7 +51,7 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
 			@Size(max = 50) @ApiParam(value = "Comma separated list of Names of the contractor to which Letter Of Acceptance belongs to.") @RequestParam(value = "contractorNames", required = false) List<String> contractorNames,
 			@Size(max = 50) @ApiParam(value = "Comma separated list of codes of the contractor to which Letter Of Acceptance belongs to.") @RequestParam(value = "contractorCodes", required = false) List<String> contractorCodes) {
 
-        LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria = LetterOfAcceptanceSearchCriteria.builder()
+        LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria = LetterOfAcceptanceSearchContract.builder()
                 .tenantId(tenantId).contractorCodes(contractorCodes).contractorNames(contractorNames)
                 .pageNumber(pageNumber).pageSize(pageSize).department(department).detailedEstimateNumbers(detailedEstimateNumbers)
                 .fileNumber(fileNumber).fromDate(fromDate).ids(ids).loaNumbers(loaNumbers).fromDate(fromDate).toDate(toDate).build();

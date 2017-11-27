@@ -2,7 +2,6 @@ package org.egov.works.workorder.domain.repository;
 
 import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.AssetsForLOAHelper;
-import org.egov.works.workorder.persistence.helper.LetterOfAcceptanceEstimateHelper;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -18,7 +17,7 @@ public class AssetsForLOARepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_assetsforloa loaassets";
 
 
-    public List<AssetsForLOA> searchLoaAssets(final AssetsForLoaSearchCriteria assetsForLoaSearchCriteria) {
+    public List<AssetsForLOA> searchLoaAssets(final AssetsForLoaSearchContract assetsForLoaSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 

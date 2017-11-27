@@ -30,7 +30,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
     public static final String LOA_ESTIMATESEARCH_EXTENTION = "egw_letterofacceptanceestimate loaestimate";
 
 
-    public List<LetterOfAcceptance> searchLOAs(final LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria, final RequestInfo requestInfo) {
+    public List<LetterOfAcceptance> searchLOAs(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria, final RequestInfo requestInfo) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -162,10 +162,10 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         for (LetterOfAcceptanceHelper letterOfAcceptanceHelper : loaList) {
             LetterOfAcceptance letterOfAcceptance = letterOfAcceptanceHelper.toDomain();
 
-            LetterOfAcceptanceEstimateSearchCriteria letterOfAcceptanceEstimateSearchCriteria = LetterOfAcceptanceEstimateSearchCriteria.builder()
+            LetterOfAcceptanceEstimateSearchContract letterOfAcceptanceEstimateSearchCriteria = LetterOfAcceptanceEstimateSearchContract.builder()
                     .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
 
-            SecurityDepositSearchCriteria securityDepositeSearchCriteria = SecurityDepositSearchCriteria.builder()
+            SecurityDepositSearchContract securityDepositeSearchCriteria = SecurityDepositSearchContract.builder()
                     .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
 
             letterOfAcceptance.setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));

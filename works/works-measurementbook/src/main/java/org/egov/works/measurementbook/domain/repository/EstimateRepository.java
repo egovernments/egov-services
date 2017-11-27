@@ -1,9 +1,15 @@
 package org.egov.works.measurementbook.domain.repository;
 
+import org.egov.works.measurementbook.web.contract.DetailedEstimate;
+import org.egov.works.measurementbook.web.contract.DetailedEstimateResponse;
+import org.egov.works.measurementbook.web.contract.DetailedEstimateStatus;
+import org.egov.works.measurementbook.web.contract.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.RestTemplate;
+
+import java.util.List;
 
 @Repository
 public class EstimateRepository {
@@ -21,9 +27,10 @@ public class EstimateRepository {
         this.detailedEstimateByDepartmentUrl = worksEstimateHostname + detailedEstimateByDepartmentUrl;
 	}
 
-  /*  public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
+    public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
 
-        return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departmentCodes).getDetailedEstimates();
-    }*/
+        String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departmentCodes, status).getDetailedEstimates();
+    }
 
 }

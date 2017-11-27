@@ -1,6 +1,5 @@
 package org.egov.works.measurementbook.domain.repository;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.works.measurementbook.common.persistence.repository.JdbcRepository;
 import org.egov.works.measurementbook.persistence.helper.MeasurementBookHelper;
 import org.egov.works.measurementbook.web.contract.*;
@@ -18,6 +17,12 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
 
     @Autowired
     private MeasurementBookDetailRepository measurementBookDetailRepository;
+
+    @Autowired
+    private EstimateRepository estimateRepository;
+
+    @Autowired
+    private WorkOrderRepository workOrderRepository;
 
     public static final String TABLE_NAME = "egw_mb_measurementsheet mb";
     public static final String MB_LOAESTIMATE_EXTENTION = "egw_letterofacceptanceestimate loaestimate";
@@ -63,23 +68,11 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("ids", measurementBookSearchContract.getIds());
         }
         if (measurementBookSearchContract.getLoaNumbers() != null && measurementBookSearchContract.getLoaNumbers().size() == 1) {
-            addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance like (:loaNumber)");
-            paramValues.put("loaNumber", "%" + measurementBookSearchContract.getLoaNumbers().get(0) + "%");
-        } else if (measurementBookSearchContract.getLoaNumbers() != null && measurementBookSearchContract.getLoaNumbers().size() > 1) {
-            addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
-            paramValues.put("loaNumber", measurementBookSearchContract.getLoaNumbers());
+            searchByLOANumbers(measurementBookSearchContract.getLoaNumbers(), params, paramValues);
         }
 
         if (measurementBookSearchContract.getDetailedEstimateNumbers() != null && measurementBookSearchContract.getDetailedEstimateNumbers().size() == 1) {
-            addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.detailedEstimate like (:detailedEstimate)");
-            paramValues.put("detailedEstimate", "%" + measurementBookSearchContract.getDetailedEstimateNumbers().get(0) + "%");
-        } else if (measurementBookSearchContract.getDetailedEstimateNumbers() != null && measurementBookSearchContract.getDetailedEstimateNumbers().size() > 1) {
-            addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:detailedEstimate)");
-            paramValues.put("detailedEstimate", measurementBookSearchContract.getDetailedEstimateNumbers());
+            searchByDetailedEstimateNumbers(measurementBookSearchContract.getDetailedEstimateNumbers(), params, paramValues);
         }
 
         if (measurementBookSearchContract.getCreatedBy() != null) {
@@ -108,11 +101,14 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             params.append("mb.mbRefNo in(:mbRefNo)");
             paramValues.put("mbRefNo", measurementBookSearchContract.getMbRefNumbers());
         }
-        /*if (measurementBookSearchContract.getDepartment() != null) {
-            addAnd(params);
-            params.append("loa.department =:department");
-            paramValues.put("department", measurementBookSearchContract.getDepartment());
-        }*/
+        List<String> detailedEstimateNumbers = new ArrayList<>();
+        if (measurementBookSearchContract.getDepartment() != null && !measurementBookSearchContract.getDepartment().isEmpty()) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(measurementBookSearchContract.getDepartment(),measurementBookSearchContract.getTenantId(),requestInfo);
+            for(DetailedEstimate detailedEstimate : detailedEstimates)
+              detailedEstimateNumbers.add(detailedEstimate.getEstimateNumber());
+            if(detailedEstimateNumbers != null && !detailedEstimateNumbers.isEmpty())
+            searchByDetailedEstimateNumbers(detailedEstimateNumbers,params,paramValues);
+        }
 
         if (measurementBookSearchContract.getStatuses() != null) {
             addAnd(params);
@@ -120,30 +116,25 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             paramValues.put("status", measurementBookSearchContract.getStatuses());
         }
 
-        /*if (measurementBookSearchContract.getContractorCodes() != null && !measurementBookSearchContract.getContractorCodes().isEmpty()) {
-            searchByContractorCodes(measurementBookSearchContract.getContractorCodes(), params, paramValues);
+        List<String> loaNumbers = null;
+        if (measurementBookSearchContract.getContractorCodes() != null && !measurementBookSearchContract.getContractorCodes().isEmpty()) {
+           List<LetterOfAcceptance> loas = workOrderRepository.searchLetterOfAcceptance(measurementBookSearchContract.getContractorCodes(), null, measurementBookSearchContract.getTenantId(), requestInfo);
+            loaNumbers = new ArrayList<String>();
+            for(LetterOfAcceptance letterOfAcceptance : loas)
+                loaNumbers.add(letterOfAcceptance.getLoaNumber());
+            searchByLOANumbers(loaNumbers, params, paramValues);
+
         }
 
-        List<String> contractorCodes = new ArrayList<>();
         if (measurementBookSearchContract.getContractorNames() != null && !measurementBookSearchContract.getContractorNames().isEmpty()) {
-            List<Contractor> contractors = worksMastersRepository.searchScheduleOfRates(measurementBookSearchContract.getTenantId(), measurementBookSearchContract.getContractorNames(), requestInfo);
-            for (Contractor contractor : contractors)
-                contractorCodes.add(contractor.getCode());
-            if (!contractorCodes.isEmpty())
-                searchByContractorCodes(contractorCodes, params, paramValues);
+            List<LetterOfAcceptance> loas = workOrderRepository.searchLetterOfAcceptance(null,measurementBookSearchContract.getContractorNames(), measurementBookSearchContract.getTenantId(), requestInfo);
+            loaNumbers = new ArrayList<String>();
+            for(LetterOfAcceptance letterOfAcceptance : loas)
+                loaNumbers.add(letterOfAcceptance.getLoaNumber());
+            searchByLOANumbers(loaNumbers, params, paramValues);
+
         }
 
-        List<String> estimateNumbers = new ArrayList<>();
-        if (measurementBookSearchContract.getDepartment() != null && !measurementBookSearchContract.getDepartment().isEmpty()) {
-            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(measurementBookSearchContract.getDepartment(), measurementBookSearchContract.getTenantId(), requestInfo);
-            for (DetailedEstimate detailedEstimate : detailedEstimates)
-                estimateNumbers.add(detailedEstimate.getEstimateNumber());
-
-            addAnd(params);
-            params.append("loaestimate.letterofacceptance = loa.loanumber and loaestimate.detailedestimate in :detailedestimatenumber");
-            paramValues.put("detailedestimatenumber", measurementBookSearchContract.getDetailedEstimateNumbers());
-
-        }*/
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());
@@ -161,11 +152,11 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         for (MeasurementBookHelper measurementBookHelper : loaList) {
             MeasurementBook measurementBook = measurementBookHelper.toDomain();
 
-            MBContractorBillSearchCriteria mbContractorBillSearchCriteria = MBContractorBillSearchCriteria.builder()
+            MBContractorBillSearchContract mbContractorBillSearchCriteria = MBContractorBillSearchContract.builder()
                     .tenantId(measurementBook.getTenantId())
                     .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
 
-            MeasurementBookDetailSearchCriteria measurementBookDetailSearchCriteria = MeasurementBookDetailSearchCriteria.builder()
+            MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria = MeasurementBookDetailSearchContract.builder()
                     .tenantId(measurementBook.getTenantId())
                     .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
 
@@ -177,5 +168,31 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         }
 
         return measurementBooks;
+    }
+
+    private void searchByLOANumbers(List<String> loaNumbers, StringBuilder params, Map<String, Object> paramValues) {
+        if (loaNumbers.size() == 1) {
+            addAnd(params);
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance like (:loaNumber)");
+            paramValues.put("loaNumber", "%" + loaNumbers.get(0) + "%");
+        } else if (loaNumbers.size() > 1) {
+            addAnd(params);
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
+            paramValues.put("loaNumber", loaNumbers);
+        }
+    }
+
+    private void searchByDetailedEstimateNumbers(List<String> detailedEstimateNumbers, StringBuilder params, Map<String,Object> paramValues) {
+
+        if (detailedEstimateNumbers.size() == 1) {
+            addAnd(params);
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.detailedEstimate like (:detailedEstimate)");
+            paramValues.put("detailedEstimate", "%" + detailedEstimateNumbers.get(0) + "%");
+        } else if (detailedEstimateNumbers.size() > 1) {
+            addAnd(params);
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:detailedEstimate)");
+            paramValues.put("detailedEstimate", detailedEstimateNumbers);
+        }
+
     }
 }

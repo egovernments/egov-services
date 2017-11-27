@@ -4,7 +4,7 @@ import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.SecurityDepositHelper;
 import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.SecurityDeposit;
-import org.egov.works.workorder.web.contract.SecurityDepositSearchCriteria;
+import org.egov.works.workorder.web.contract.SecurityDepositSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
@@ -18,7 +18,7 @@ public class SecurityDepositJdbcRepository extends JdbcRepository{
 
     public static final String TABLE_NAME = "egw_securitydeposit securitydeposite";
 
-    public List<SecurityDeposit> searchSecurityDeposite(final SecurityDepositSearchCriteria securityDepositeSearchCriteria) {
+    public List<SecurityDeposit> searchSecurityDeposite(final SecurityDepositSearchContract securityDepositeSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 

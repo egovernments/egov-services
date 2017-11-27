@@ -17,7 +17,7 @@ public class LoaActivityRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egw_loaactivity loaactivity";
 
-    public List<LOAActivity> searchLoaActivity(final LoaActivitySearchCriteria loaActivitySearchCriteria) {
+    public List<LOAActivity> searchLoaActivity(final LoaActivitySearchContract loaActivitySearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 

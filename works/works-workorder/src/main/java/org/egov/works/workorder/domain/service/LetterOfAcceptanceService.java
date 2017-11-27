@@ -22,7 +22,7 @@ import org.egov.works.workorder.web.contract.LetterOfAcceptance;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceRequest;
 import org.egov.works.workorder.web.contract.LetterOfAcceptanceResponse;
-import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchCriteria;
+import org.egov.works.workorder.web.contract.LetterOfAcceptanceSearchContract;
 import org.egov.works.workorder.web.contract.RequestInfo;
 import org.egov.works.workorder.web.contract.SecurityDeposit;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -147,7 +147,7 @@ public class LetterOfAcceptanceService {
 		loaActivities.add(activity);
 	}
 
-	public LetterOfAcceptanceResponse search(final LetterOfAcceptanceSearchCriteria letterOfAcceptanceSearchCriteria,
+	public LetterOfAcceptanceResponse search(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria,
 			final RequestInfo requestInfo) {
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
 		letterOfAcceptanceResponse.setLetterOfAcceptances(

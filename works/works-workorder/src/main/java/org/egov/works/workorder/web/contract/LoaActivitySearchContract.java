@@ -9,7 +9,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class LoaActivitySearchCriteria {
+public class LoaActivitySearchContract {
 
     private List<String> ids;
 

@@ -3,7 +3,7 @@ package org.egov.works.measurementbook.domain.repository;
 import org.egov.works.measurementbook.common.persistence.repository.JdbcRepository;
 import org.egov.works.measurementbook.persistence.helper.MBMeasurementSheetHelper;
 import org.egov.works.measurementbook.web.contract.MBMeasurementSheet;
-import org.egov.works.measurementbook.web.contract.MBMeasurementSheetSearchCriteria;
+import org.egov.works.measurementbook.web.contract.MBMeasurementSheetSearchContract;
 import org.egov.works.measurementbook.web.contract.MeasurementBook;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -19,7 +19,7 @@ public class MBMeasurementSheetRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_mb_measurementsheet measurementsheet";
 
 
-    public List<MBMeasurementSheet> searchMBMeasurementSheets(final MBMeasurementSheetSearchCriteria mbMeasurementSheetSearchCriteria) {
+    public List<MBMeasurementSheet> searchMBMeasurementSheets(final MBMeasurementSheetSearchContract mbMeasurementSheetSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 

@@ -1,9 +1,6 @@
 package org.egov.works.workorder.domain.repository;
 
-import org.egov.works.workorder.web.contract.DetailedEstimate;
-import org.egov.works.workorder.web.contract.DetailedEstimateResponse;
-import org.egov.works.workorder.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.workorder.web.contract.RequestInfo;
+import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -44,7 +41,8 @@ public class EstimateRepository {
 
     public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
 
-        return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departmentCodes).getDetailedEstimates();
+        String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class, tenantId, departmentCodes, status).getDetailedEstimates();
     }
 
 }

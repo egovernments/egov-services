@@ -2,10 +2,10 @@ package org.egov.works.measurementbook.domain.repository;
 
 import org.egov.works.measurementbook.common.persistence.repository.JdbcRepository;
 import org.egov.works.measurementbook.persistence.helper.MeasurementBookDetailHelper;
-import org.egov.works.measurementbook.web.contract.MBMeasurementSheetSearchCriteria;
+import org.egov.works.measurementbook.web.contract.MBMeasurementSheetSearchContract;
 import org.egov.works.measurementbook.web.contract.MeasurementBook;
 import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
-import org.egov.works.measurementbook.web.contract.MeasurementBookDetailSearchCriteria;
+import org.egov.works.measurementbook.web.contract.MeasurementBookDetailSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -21,7 +21,7 @@ public class MeasurementBookDetailRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_measurementbook_details mbdetail";
 
 
-    public List<MeasurementBookDetail> searchMeasurementBookDetail(final MeasurementBookDetailSearchCriteria measurementBookDetailSearchCriteria) {
+    public List<MeasurementBookDetail> searchMeasurementBookDetail(final MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -79,7 +79,7 @@ public class MeasurementBookDetailRepository extends JdbcRepository {
         List<MeasurementBookDetail> measurementBookDetails = new ArrayList<>();
         for (MeasurementBookDetailHelper measurementBookDetailHelper : loaList) {
             MeasurementBookDetail measurementBookDetail = measurementBookDetailHelper.toDomain();
-            MBMeasurementSheetSearchCriteria mbMeasurementSheetSearchCriteria = MBMeasurementSheetSearchCriteria.builder()
+            MBMeasurementSheetSearchContract mbMeasurementSheetSearchCriteria = MBMeasurementSheetSearchContract.builder()
                     .tenantId(measurementBookDetail.getTenantId()).measurementBookDetailIds(Arrays.asList(measurementBookDetail.getId())).build();
 
             measurementBookDetail.setMeasurementSheets(mbMeasurementSheetRepository.searchMBMeasurementSheets(mbMeasurementSheetSearchCriteria));

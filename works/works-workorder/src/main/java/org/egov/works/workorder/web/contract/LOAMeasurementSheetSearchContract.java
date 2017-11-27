@@ -1,4 +1,4 @@
-package org.egov.works.measurementbook.web.contract;
+package org.egov.works.workorder.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,15 +7,15 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @Builder
-public class MeasurementBookDetailSearchCriteria {
+@AllArgsConstructor
+public class LOAMeasurementSheetSearchContract {
 
     private List<String> ids;
 
     private String tenantId;
 
-    private List<String> measurementBookIds;
+    private List<String> loaActivity;
 
     private Integer pageSize;
 

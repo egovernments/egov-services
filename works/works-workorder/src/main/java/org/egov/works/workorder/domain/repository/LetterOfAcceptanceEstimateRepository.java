@@ -1,9 +1,7 @@
 package org.egov.works.workorder.domain.repository;
 
-import org.apache.commons.lang3.StringUtils;
 import org.egov.works.common.persistence.repository.JdbcRepository;
 import org.egov.works.workorder.persistence.helper.LetterOfAcceptanceEstimateHelper;
-import org.egov.works.workorder.persistence.helper.LetterOfAcceptanceHelper;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,7 +21,7 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_letterofacceptanceestimate loaestimate";
 
 
-    public List<LetterOfAcceptanceEstimate> searchLOAs(final LetterOfAcceptanceEstimateSearchCriteria letterOfAcceptanceEstimateSearchCriteria) {
+    public List<LetterOfAcceptanceEstimate> searchLOAs(final LetterOfAcceptanceEstimateSearchContract letterOfAcceptanceEstimateSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -83,11 +81,11 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
         for (LetterOfAcceptanceEstimateHelper letterOfAcceptanceEstimateHelper : loaEstimatesList) {
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateHelper.toDomain();
 
-            AssetsForLoaSearchCriteria assetsForLoaSearchCriteria = AssetsForLoaSearchCriteria.builder()
+            AssetsForLoaSearchContract assetsForLoaSearchCriteria = AssetsForLoaSearchContract.builder()
                     .tenantId(letterOfAcceptanceEstimate.getTenantId())
                     .letterOfAcceptanceEstimateIds(Arrays.asList(letterOfAcceptanceEstimate.getId())).build();
 
-            LoaActivitySearchCriteria loaActivitySearchCriteria = LoaActivitySearchCriteria.builder()
+            LoaActivitySearchContract loaActivitySearchCriteria = LoaActivitySearchContract.builder()
                     .tenantId(letterOfAcceptanceEstimate.getTenantId())
                     .letterOfAcceptanceEstimateIds(Arrays.asList(letterOfAcceptanceEstimate.getId())).build();
 

@@ -1,4 +1,4 @@
-package org.egov.works.measurementbook.web.contract;
+package org.egov.works.workorder.web.contract;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,15 +7,15 @@ import lombok.Data;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 @Builder
-public class MBMeasurementSheetSearchCriteria {
+@AllArgsConstructor
+public class LetterOfAcceptanceEstimateSearchContract {
 
     private List<String> ids;
 
     private String tenantId;
 
-    private List<String> measurementBookDetailIds;
+    private List<String> letterOfAcceptanceIds;
 
     private Integer pageSize;
 

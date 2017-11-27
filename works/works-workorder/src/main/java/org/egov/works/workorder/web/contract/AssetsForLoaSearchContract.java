@@ -9,13 +9,13 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class LetterOfAcceptanceEstimateSearchCriteria {
+public class AssetsForLoaSearchContract {
 
     private List<String> ids;
 
     private String tenantId;
 
-    private List<String> letterOfAcceptanceIds;
+    private List<String> letterOfAcceptanceEstimateIds;
 
     private Integer pageSize;
 

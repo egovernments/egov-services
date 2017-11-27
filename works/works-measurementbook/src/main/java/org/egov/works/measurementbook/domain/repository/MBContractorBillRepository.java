@@ -2,7 +2,6 @@ package org.egov.works.measurementbook.domain.repository;
 
 import org.egov.works.measurementbook.common.persistence.repository.JdbcRepository;
 import org.egov.works.measurementbook.persistence.helper.MBContractorBillHelper;
-import org.egov.works.measurementbook.persistence.helper.MeasurementBookDetailHelper;
 import org.egov.works.measurementbook.web.contract.*;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
@@ -15,7 +14,7 @@ public class MBContractorBillRepository extends JdbcRepository{
     public static final String TABLE_NAME = "egw_mb_contractor_bills mbcontractorbill";
 
 
-    public List<MBContractorBills> searchMBContractorBill(final MBContractorBillSearchCriteria mbContractorBillSearchCriteria) {
+    public List<MBContractorBills> searchMBContractorBill(final MBContractorBillSearchContract mbContractorBillSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 

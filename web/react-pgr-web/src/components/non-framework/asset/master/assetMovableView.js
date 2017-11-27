@@ -393,17 +393,18 @@ printer = () => {
     const renderGrid = function() {
 
       if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("transactionHistory")){
-        Api.commonApiPost("/asset-services-maha/assets/_search",{"id":formData.Assets[0].id, "isTransactionHistoryRequired": true}).then(function(response)
-        {
-            console.log(response);
-            if(response && response.hasOwnProperty("Assets") && response.Assets[0].hasOwnProperty("transactionHistory") && response.Assets[0].transactionHistory != null){
-              self.setState({
-                responseHolder: response.Assets[0].transactionHistory
-              })
-            }
-        },function(err) {
-          console.log(err);
-        });
+        if(!self.state.responseHolder)
+          Api.commonApiPost("/asset-services-maha/assets/_search",{"id":formData.Assets[0].id, "isTransactionHistoryRequired": true}).then(function(response)
+          {
+              console.log(response);
+              if(response && response.hasOwnProperty("Assets") && response.Assets[0].hasOwnProperty("transactionHistory") && response.Assets[0].transactionHistory != null){
+                self.setState({
+                  responseHolder: response.Assets[0].transactionHistory
+                })
+              }
+          },function(err) {
+            console.log(err);
+          });
         mappingObject = self.state.responseHolder;
         console.log(mappingObject);
         if(mappingObject != null){

@@ -533,6 +533,65 @@ ReportDefinitions:
 
   query: select * from material;
 
+# Procurement Expenditure Report
+# Need to Change drop down Link based on report and Query
+- reportName: procurementExpenditureReport
+  summary: Procurement Expenditure Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+
+  - name: budgetHeadCode
+    label: inventory.budgetHeadCode
+    type: string
+    source: inventory
+
+  - name: nameOfBudgetHead
+    label: inventory.nameOfBudgetHead
+    type: string
+    source: inventory
+
+  - name: estimateBudget
+    label: inventory.estimateBudget
+    type: string
+    source: inventory
+
+  - name: actualExpenses
+    label: inventory.actualExpenses
+    type: string
+    source: inventory
+
+  - name: remainingBudget
+    label: inventory.remainingBudget
+    type: string
+    source: inventory
+    
+  searchParams:
+
+  - name: storeName
+    label: inventory.store.name
+    type: singlevaluelist
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    source: inventory
+    isMandatory: true
+    wrapper: true
+
+  - name: financialYear
+    label: inventory.financialYear
+    type: singlevaluelist
+    pattern: 'list://2017-2018:2017-2018'
+    source: inventory
+    isMandatory: true
+
+  - name: budgetHead
+    label: inventory.budgetHead
+    type: singlevaluelist
+    source: inventory
+    isMandatory: true
+
+  query: select * from material;
+
+
 
 
 

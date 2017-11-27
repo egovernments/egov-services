@@ -185,6 +185,10 @@ import abstractEstimate from './components/non-framework/works/transaction/abstr
 import viewAbstractEstimate from './components/non-framework/works/transaction/viewAbstractEstimate';
 import detailedEstimate from './components/non-framework/works/transaction/detailedEstimate';
 
+// KPI
+import kpiReports from './components/non-framework/perfManagement/reports/kpiReports'
+
+
 const base = "";
 
 const Main = () => {
@@ -378,6 +382,9 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/works/transaction/abstractEstimate'} component={abstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/detailedEstimate'} component={detailedEstimate}/>
+
+      {/* performance management */}
+      <Route exact path= {base + '/non-framework/perfManagement/reports/kpiReports'} component={kpiReports}/>
 
 
       <Route component={NoMatch}/>

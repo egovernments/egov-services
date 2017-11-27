@@ -466,10 +466,10 @@ public class ActionRepository {
 		String actionres = "";
 		String actionurl = "";
 		List<Action> actionList = new ArrayList<Action>();
-		String roleFilter = "[?(@.rolecode IN [$rolecode] && @.tenantid == '$tenantid')]";
+		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
 		String actionFilter = "[?(@.id IN [$actionid])]";
-		url = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=mh&filter=";
-		actionurl = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=mh&filter=";
+		url = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
+		actionurl = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=$tenantid&filter=";
 
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();
@@ -485,7 +485,7 @@ public class ActionRepository {
 		String tenantid = actionRequest.getTenantId();
 		Boolean enabled = actionRequest.getEnabled();
 		
-		roleFilter = roleFilter.replaceAll("\\$tenantid", tenantid);
+		
 		roleFilter = roleFilter.replaceAll("\\$rolecode", rolecodelist.toString());
 		roleFilter = roleFilter.replaceAll("\\$enabled", enabled.toString());
 		LOGGER.info("Role Filter: "+roleFilter.toString());
@@ -494,6 +494,7 @@ public class ActionRepository {
 		// TODO Auto-generated method stub
 
 		url = url.concat(roleFilter);
+		url = url.replaceAll("\\$tenantid", tenantid);
 		LOGGER.info("The URL is: "+url);
 		URI uri = URI.create(url);
 		try {
@@ -521,10 +522,17 @@ public class ActionRepository {
 		actionFilter=URLEncoder.encode( actionFilter, "UTF-8" ); 
 		
 		String newactionuri = actionurl.concat(actionFilter);
+		
+		 
+		 if(tenantid.contains(".")){
+			 String[] stateid = tenantid.split("\\.");
+			 System.out.println("State IDs are :"+stateid);
+			 newactionuri = newactionuri.replaceAll("\\$tenantid", stateid[0]);
+		 } else {
+			 newactionuri = newactionuri.replaceAll("\\$tenantid", tenantid); 
+		 }
 		 
 		 LOGGER.info("encoded url is: "+newactionuri);
-		
-		
 		URI actionuri = URI.create(newactionuri);
 		actionres = restTemplate.postForObject(actionuri, getRInfo(),String.class);
 		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions");

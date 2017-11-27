@@ -14,8 +14,6 @@ import {fileUpload, getInitiatorPosition} from '../../../../framework/utility/ut
 import jp from "jsonpath";
 import template from '../../../../framework/specs/works/master/spilloverAE';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-// import UploadDocs from '../../utility/uploadDocs';
-// import WorkFlow from '../../workflow/WorkFlow';
 import styles from '../../../../../styles/material-ui';
 
 var specifications={};
@@ -1398,17 +1396,6 @@ class SpilloverAE extends Component {
                                     screen={window.location.hash.split("/").indexOf("update") == 1 ? "update" : "create"}
                                     workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id || this.props.match.params.master) : ""}
                                     />}
-          {/*<UploadDocs maxFile="5"
-            path="abstractEstimates[0].documents"
-            handler={handleChange}
-          />*/}
-          {/*<WorkFlow formData={formData}
-            handler={handleChange}
-            path="abstractEstimates[0].workFlowDetails"
-            status="abstractEstimates[0].status"
-            stateId="abstractEstimates[0].stateId"
-            callbackFromParent={this.myCallback}
-          />*/}
           <div style={{"textAlign": "center"}}>
             <br/>
             <UiButton item={{"label": "Save", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google" handler={this.save}/>

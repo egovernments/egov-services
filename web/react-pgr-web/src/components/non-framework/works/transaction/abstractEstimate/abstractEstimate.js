@@ -14,7 +14,6 @@ import {fileUpload, getInitiatorPosition} from '../../../../framework/utility/ut
 import jp from "jsonpath";
 import template from '../../../../framework/specs/works/master/abstractEstimate';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-// import UploadDocs from '../../utility/uploadDocs';
 import WorkFlow from '../../workflow/WorkFlow';
 import styles from '../../../../../styles/material-ui';
 

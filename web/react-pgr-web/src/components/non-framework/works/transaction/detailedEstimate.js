@@ -14,7 +14,6 @@ import {fileUpload, getInitiatorPosition} from '../../../framework/utility/utili
 import jp from "jsonpath";
 import template from '../../../framework/specs/works/master/detailedEstimate';
 import {Card, CardHeader, CardText} from 'material-ui/Card';
-import UploadDocs from '../utility/uploadDocs';
 import WorkFlow from '../workflow/WorkFlow';
 import styles from '../../../../styles/material-ui';
 
@@ -1100,10 +1099,6 @@ class DetailedEstimate extends Component {
             </SelectField>
             </CardText>
           </Card>
-          <UploadDocs maxFile="5"
-            path="detailedEstimates[0].documents"
-            handler={handleChange}
-          />
           <WorkFlow formData={formData}
             handler={handleChange}
             path="detailedEstimates[0].workFlowDetails"

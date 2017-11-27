@@ -254,10 +254,8 @@ var dat = {
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                "enable": [],
-                "disable": [
-                  "terminationDate", "inActivationDate"
-                ]
+                "enable": ["terminationDate", "inActivationDate"],
+                "disable": []
               },{
                 "ifValue": "inactive",
                 "enable": [

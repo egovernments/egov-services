@@ -158,34 +158,6 @@ var dat = {
           }
         ]
       }, {
-        name: "additionalAdvocate",
-        label: "legal.create.additionalAdvocate",
-        fields: [
-          {
-            type: "tableList",
-            jsonPath: "cases[0].advocateDetails",
-            tableList: {
-              header: [
-                {
-                  label: "legal.create.additionalAdvocate"
-                }
-              ],
-              values: [
-                {
-                  name: "additionalAdvocate",
-                  jsonPath: "cases[0].advocateDetails[1].advocate.name",
-                  pattern: "",
-                  type: "text",
-                  isRequired: false,
-                  isDisabled: true,
-                  requiredErrMsg: "",
-                  patternErrMsg: ""
-                }
-              ]
-            }
-          }
-        ]
-      },{
         name: "assignAdvocate",
         label: "legal.create.group.title.assignAdvocate",
         fields: [
@@ -210,7 +182,7 @@ var dat = {
                   pattern: "",
                   type: "singleValueList",
                   isKeyOtherPair:"agencyName",
-                  jsonPath: "cases[0].advocateDetails[0].advocate.code",
+                  jsonPath: "cases[0].advocateDetails[1].advocate.code",
                   isRequired: true,
                   isDisabled: true,
                   url:
@@ -220,7 +192,7 @@ var dat = {
                   name: "advocateAssignDate",
                   pattern: "",
                   type: "datePicker",
-                  jsonPath: "cases[0].advocateDetails[0].assignedDate",
+                  jsonPath: "cases[0].advocateDetails[1].assignedDate",
                   isRequired: true,
                   isDisabled: true
                 },
@@ -228,7 +200,7 @@ var dat = {
                   name: "advocatestaus",
                   pattern: "",
                   type: "text",
-                  jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                  jsonPath: "cases[0].advocateDetails[1].advocatestaus",
                   isRequired: false,
                   isDisabled: true
                 }

@@ -420,3 +420,64 @@ ReportDefinitions:
 
   query: select * from material;
 
+# Rates comparison with history data Report
+# Need to Change drop down Link based on report and Query
+- reportName: ratesComparisonWithHistoryDataReport
+  summary: Rates comparison with history data Report
+  version: 1.0.0
+  moduleName: inventory
+  sourceColumns:
+
+  - name: materialCode
+    label: inventory.materialCode
+    type: string
+    source: inventory
+
+  - name: materialName
+    label: inventory.materialName
+    type: string
+    source: inventory
+
+  - name: supplierName
+    label: inventory.supplierName
+    type: String
+    source: inventory
+
+  - name: rateType
+    label: inventory.rateType
+    type: string
+    source: inventory
+
+  - name: currentRate
+    label: inventory.currentRate
+    type: string
+    source: inventory
+
+  - name: date
+    label: inventory.date
+    type: string
+    source: inventory
+
+  - name: date
+    label: inventory.date
+    type: string
+    source: inventory
+
+  searchParams:
+
+  - name: supplierName
+    label: inventory.supplierName
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  - name: materialName
+    label: inventory.materialName
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  query: select * from material;
+
+
+

@@ -176,7 +176,7 @@ class UiMultiFieldTable extends Component {
 	}
 
    	renderFields = (item, screen) => {
-   		if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1 ) {
+   		if(screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) == -1 ) {
 	      if (item.type == "datePicker") {
 	        item.isDate = true;
 	      }

@@ -32,4 +32,5 @@ public class IndentSearch   {
 	 private String departmentId;
 	 private String indentRaisedBy;
 	 private String stateId;
+	 private String searchPurpose;
 }

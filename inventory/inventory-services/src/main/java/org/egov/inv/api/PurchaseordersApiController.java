@@ -58,4 +58,10 @@ public class PurchaseordersApiController implements PurchaseordersApi {
         return   new ResponseEntity(response,HttpStatus.OK);
     }
 
+    public ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
+            @ApiParam(value = "Create  new"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest) {
+    	PurchaseOrderResponse response = purchaseOrderService.preparePoFromIndents(purchaseOrderRequest);
+        return   new ResponseEntity(response,HttpStatus.OK);
+        }
+
 }

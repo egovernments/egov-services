@@ -1,21 +1,19 @@
 package org.egov.inv.model;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonCreator;
-import com.fasterxml.jackson.annotation.JsonValue;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-import org.egov.inv.model.AuditDetails;
-import org.egov.inv.model.PurchaseOrderDetail;
-import org.egov.inv.model.Store;
-import org.egov.inv.model.Supplier;
-import org.egov.inv.model.WorkFlowDetails;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonValue;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * This object holds the purchase order information.   
@@ -190,6 +188,9 @@ public class PurchaseOrder   {
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
 
+  @JsonProperty("indents")
+  private List<String> indents = null;
+  
   public PurchaseOrder id(String id) {
     this.id = id;
     return this;
@@ -628,6 +629,34 @@ public class PurchaseOrder   {
     this.auditDetails = auditDetails;
   }
 
+  public PurchaseOrder indents(List<String> indents) {
+    this.indents = indents;
+    return this;
+  }
+
+  public PurchaseOrder addIndentsItem(String indentsItem) {
+    if (this.indents == null) {
+      this.indents = new ArrayList<String>();
+    }
+    this.indents.add(indentsItem);
+    return this;
+  }
+
+   /**
+   * Used for indent search result and used in indent purchase order creation
+   * @return indents
+  **/
+  @ApiModelProperty(value = "Used for indent search result and used in indent purchase order creation")
+
+
+  public List<String> getIndents() {
+    return indents;
+  }
+
+  public void setIndents(List<String> indents) {
+    this.indents = indents;
+  }
+
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -658,12 +687,13 @@ public class PurchaseOrder   {
         Objects.equals(this.purchaseOrderDetails, purchaseOrder.purchaseOrderDetails) &&
         Objects.equals(this.fileStoreId, purchaseOrder.fileStoreId) &&
         Objects.equals(this.designation, purchaseOrder.designation) &&
-        Objects.equals(this.auditDetails, purchaseOrder.auditDetails);
+        Objects.equals(this.auditDetails, purchaseOrder.auditDetails) &&
+        Objects.equals(this.indents, purchaseOrder.indents);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, workFlowDetails, stateId, purchaseOrderDetails, fileStoreId, designation, auditDetails);
+    return Objects.hash(id, tenantId, store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, workFlowDetails, stateId, purchaseOrderDetails, fileStoreId, designation, auditDetails, indents);
   }
 
   @Override
@@ -692,6 +722,7 @@ public class PurchaseOrder   {
     sb.append("    fileStoreId: ").append(toIndentedString(fileStoreId)).append("\n");
     sb.append("    designation: ").append(toIndentedString(designation)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+    sb.append("    indents: ").append(toIndentedString(indents)).append("\n");
     sb.append("}");
     return sb.toString();
   }

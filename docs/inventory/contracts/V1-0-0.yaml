@@ -172,6 +172,14 @@ paths:
               - Repairs and Maintenance
               - Capital
               - Material Transfer Note
+          - name: searchPurpose
+            type: string
+            in: query
+            description: |
+              search purpose of the Indent
+            enum: 
+              - PurchaseOrder
+              - IssueMaterial
           - name: indentStatus
             type: string
             in: query
@@ -2492,6 +2500,11 @@ definitions:
           maxLength: 512
           description: |
             remarks of the Purchase material details
+        indentNumber:
+          type: string
+          maxLength: 512
+          description: |
+            temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.   
         purchaseIndentDetails:
           type:  array
           items:

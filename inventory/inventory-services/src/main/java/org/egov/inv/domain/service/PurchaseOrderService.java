@@ -1,5 +1,7 @@
 package org.egov.inv.domain.service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -8,12 +10,17 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.IndentDetail;
+import org.egov.inv.model.Material;
+import org.egov.inv.model.PriceList;
+import org.egov.inv.model.PurchaseIndentDetail;
 import org.egov.inv.model.PurchaseOrder;
 import org.egov.inv.model.PurchaseOrder.PurchaseTypeEnum;
 import org.egov.inv.model.PurchaseOrderDetail;
 import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
+import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -154,6 +161,97 @@ public class PurchaseOrderService extends DomainService {
 		}
 
 		return pos;
+	}
+	
+	
+	public PurchaseOrderResponse preparePoFromIndents(PurchaseOrderRequest purchaseOrderRequest) {
+		PurchaseOrderResponse response=new PurchaseOrderResponse();
+		response.setResponseInfo(getResponseInfo(purchaseOrderRequest.getRequestInfo()));
+		
+		List<PurchaseOrder> purchaseOrders = fetchRelated(purchaseOrderRequest.getPurchaseOrders());
+		validate(purchaseOrders, Constants.ACTION_SEARCH_INDENT_FOR_PO);
+		List<PurchaseOrder> finalPurchaseOrders = new ArrayList<PurchaseOrder>();
+		for (PurchaseOrder purchaseOrder : purchaseOrders) {
+			
+		  //TODO: TEMPORARY DATA ADDED FOR TESTING PURPOSE.
+			
+		    purchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_CREATE));
+		    
+		    PurchaseOrderDetail purchaseOrderDetail= new PurchaseOrderDetail();
+		    purchaseOrderDetail.setTenantId(purchaseOrder.getTenantId());
+		    Material material1=new Material();
+		    material1.setCode("NOS");
+		    Uom uom1= new Uom();
+		    uom1.setCode("CM");
+		    purchaseOrderDetail.setMaterial(material1);
+		    purchaseOrderDetail.setUom(uom1);
+		    purchaseOrderDetail.setIndentNumber("MR1");
+		    
+		    PurchaseIndentDetail poIndentDetail = new PurchaseIndentDetail();
+		    poIndentDetail.setTenantId(purchaseOrder.getTenantId());
+		    poIndentDetail.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_CREATE));
+			poIndentDetail.setQuantity(BigDecimal.ONE);
+			
+			 IndentDetail indentDetail= new IndentDetail();
+			 indentDetail.setId("1");
+			 poIndentDetail.setIndentDetail(indentDetail);
+			 
+			 PriceList priceList = new PriceList();
+			 priceList.setRateContractNumber("RC1");
+			 
+			 purchaseOrderDetail.setPriceList(priceList); 
+			 purchaseOrderDetail.setUnitPrice(BigDecimal.TEN);
+			 List<PurchaseIndentDetail> poindentlist= new ArrayList<PurchaseIndentDetail>();	 
+			 poindentlist.add(poIndentDetail);
+			 
+		    purchaseOrderDetail.setPurchaseIndentDetails(poindentlist);
+		    purchaseOrder.addPurchaseOrderDetailsItem(purchaseOrderDetail);
+		    
+		    PurchaseOrderDetail purchaseOrderDetail1= new PurchaseOrderDetail();
+		    purchaseOrderDetail1.setTenantId(purchaseOrder.getTenantId());
+		    Material material2=new Material();
+		    material2.setCode("MAT3");
+		    Uom uom2= new Uom();
+		    uom2.setCode("NOS");
+		    purchaseOrderDetail1.setMaterial(material2);
+		    purchaseOrderDetail1.setUom(uom2);
+		    purchaseOrderDetail1.setIndentNumber("MR2");
+		    
+		    PurchaseIndentDetail poIndentDetail1 = new PurchaseIndentDetail();
+		    poIndentDetail1.setTenantId(purchaseOrder.getTenantId());
+		    poIndentDetail1.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_CREATE));
+		    poIndentDetail1.setQuantity(BigDecimal.TEN);
+			
+			 IndentDetail indentDetail1= new IndentDetail();
+			 indentDetail1.setId("2");
+			 poIndentDetail1.setIndentDetail(indentDetail1);
+			 
+			 PriceList priceList1 = new PriceList();
+			 priceList1.setRateContractNumber("RC2");
+			 
+			 purchaseOrderDetail1.setPriceList(priceList1); 
+			 purchaseOrderDetail1.setUnitPrice(BigDecimal.valueOf(2));
+			 List<PurchaseIndentDetail> poindentlist1= new ArrayList<PurchaseIndentDetail>();	 
+			 poindentlist1.add(poIndentDetail1);
+			 
+		    purchaseOrderDetail1.setPurchaseIndentDetails(poindentlist1);
+		    purchaseOrder.addPurchaseOrderDetailsItem(purchaseOrderDetail1);
+		    
+		    finalPurchaseOrders.add(purchaseOrder);
+		    }
+		    
+		    
+		response.setPurchaseOrders(finalPurchaseOrders);
+		    
+		    
+		
+		// Iterate through each indent
+		// supplier and rate type is required.
+		// for each indent check available quantity to procure.
+		// for each material, group together and build indent detail and po link
+		// for each material, check rate contract and amount detail by supplier. If not found, skip that material.
+		// Build Po reponse object and send back.
+		return response;
 	}
 
 }

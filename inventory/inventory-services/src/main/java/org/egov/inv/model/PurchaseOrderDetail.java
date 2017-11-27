@@ -52,6 +52,9 @@ public class PurchaseOrderDetail   {
   @JsonProperty("description")
   private String description = null;
 
+  @JsonProperty("indentNumber")
+  private String indentNumber = null;
+  
   @JsonProperty("purchaseIndentDetails")
   private List<PurchaseIndentDetail> purchaseIndentDetails = null;
 
@@ -266,6 +269,25 @@ public class PurchaseOrderDetail   {
     this.description = description;
   }
 
+  public PurchaseOrderDetail indentNumber(String indentNumber) {
+    this.indentNumber = indentNumber;
+    return this;
+  }
+
+   /**
+   * temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.    
+   * @return indentNumber
+  **/
+  @ApiModelProperty(value = "temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.    ")
+
+ @Size(max=512)
+  public String getIndentNumber() {
+    return indentNumber;
+  }
+
+  public void setIndentNumber(String indentNumber) {
+    this.indentNumber = indentNumber;
+  }
   public PurchaseOrderDetail purchaseIndentDetails(List<PurchaseIndentDetail> purchaseIndentDetails) {
     this.purchaseIndentDetails = purchaseIndentDetails;
     return this;
@@ -315,12 +337,13 @@ public class PurchaseOrderDetail   {
         Objects.equals(this.receivedQuantity, purchaseOrderDetail.receivedQuantity) &&
         Objects.equals(this.unitPrice, purchaseOrderDetail.unitPrice) &&
         Objects.equals(this.description, purchaseOrderDetail.description) &&
+        Objects.equals(this.indentNumber, purchaseOrderDetail.indentNumber) &&
         Objects.equals(this.purchaseIndentDetails, purchaseOrderDetail.purchaseIndentDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, material, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, purchaseIndentDetails);
+    return Objects.hash(id, tenantId, material, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, indentNumber,purchaseIndentDetails);
   }
 
   @Override
@@ -338,6 +361,7 @@ public class PurchaseOrderDetail   {
     sb.append("    receivedQuantity: ").append(toIndentedString(receivedQuantity)).append("\n");
     sb.append("    unitPrice: ").append(toIndentedString(unitPrice)).append("\n");
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
+    sb.append("    indentNumber: ").append(toIndentedString(indentNumber)).append("\n");
     sb.append("    purchaseIndentDetails: ").append(toIndentedString(purchaseIndentDetails)).append("\n");
     sb.append("}");
     return sb.toString();

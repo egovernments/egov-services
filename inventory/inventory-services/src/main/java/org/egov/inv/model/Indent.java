@@ -74,6 +74,42 @@ public class Indent   {
 
   @JsonProperty("indentType")
   private IndentTypeEnum indentType = null;
+  
+
+  /**
+   * Using this field to search indents for purchase order or material issue creation. 
+   */
+  public enum SearchPurposeEnum {
+    PURCHASEORDER("PurchaseOrder"),
+    
+    ISSUEMATERIAL("IssueMaterial");
+
+    private String value;
+
+    SearchPurposeEnum(String value) {
+      this.value = value;
+    }
+
+    @Override
+    @JsonValue
+    public String toString() {
+      return String.valueOf(value);
+    }
+
+    @JsonCreator
+    public static SearchPurposeEnum fromValue(String text) {
+      for (SearchPurposeEnum b : SearchPurposeEnum.values()) {
+        if (String.valueOf(b.value).equals(text)) {
+          return b;
+        }
+      }
+      return null;
+    }
+  }
+
+  @JsonProperty("searchPurpose")
+  private SearchPurposeEnum searchPurpose = null;
+
 
   /**
    * Consumption, RepairsAndMaintenance, Capital - applicable for Indent Note. MaterialTransferNote - applicable for Transfer Indent. 
@@ -364,6 +400,27 @@ public class Indent   {
     this.indentType = indentType;
   }
 
+
+  public Indent searchPurpose(SearchPurposeEnum searchPurpose) {
+    this.searchPurpose = searchPurpose;
+    return this;
+  }
+
+   /**
+   * Using this field to search indents for purchase order or material issue creation. 
+   * @return searchPurpose
+  **/
+  @ApiModelProperty(value = "Using this field to search indents for purchase order or material issue creation. ")
+
+
+  public SearchPurposeEnum getSearchPurpose() {
+    return searchPurpose;
+  }
+
+  public void setSearchPurpose(SearchPurposeEnum searchPurpose) {
+    this.searchPurpose = searchPurpose;
+  }
+  
   public Indent indentPurpose(IndentPurposeEnum indentPurpose) {
     this.indentPurpose = indentPurpose;
     return this;
@@ -672,6 +729,7 @@ public class Indent   {
         Objects.equals(this.indentDate, indent.indentDate) &&
         Objects.equals(this.indentNumber, indent.indentNumber) &&
         Objects.equals(this.indentType, indent.indentType) &&
+        Objects.equals(this.searchPurpose, indent.searchPurpose) &&
         Objects.equals(this.indentPurpose, indent.indentPurpose) &&
         Objects.equals(this.inventoryType, indent.inventoryType) &&
         Objects.equals(this.expectedDeliveryDate, indent.expectedDeliveryDate) &&
@@ -690,7 +748,7 @@ public class Indent   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, issueStore, indentStore, indentDate, indentNumber, indentType, indentPurpose, inventoryType, expectedDeliveryDate, materialHandOverTo, narration, indentStatus, indentDetails, department, totalIndentValue, fileStoreId, indentCreatedBy, designation, stateId, auditDetails);
+    return Objects.hash(id, tenantId, issueStore, indentStore, indentDate, indentNumber, indentType, searchPurpose,indentPurpose, inventoryType, expectedDeliveryDate, materialHandOverTo, narration, indentStatus, indentDetails, department, totalIndentValue, fileStoreId, indentCreatedBy, designation, stateId, auditDetails);
   }
 
   @Override
@@ -705,6 +763,7 @@ public class Indent   {
     sb.append("    indentDate: ").append(toIndentedString(indentDate)).append("\n");
     sb.append("    indentNumber: ").append(toIndentedString(indentNumber)).append("\n");
     sb.append("    indentType: ").append(toIndentedString(indentType)).append("\n");
+    sb.append("    searchPurpose: ").append(toIndentedString(searchPurpose)).append("\n");
     sb.append("    indentPurpose: ").append(toIndentedString(indentPurpose)).append("\n");
     sb.append("    inventoryType: ").append(toIndentedString(inventoryType)).append("\n");
     sb.append("    expectedDeliveryDate: ").append(toIndentedString(expectedDeliveryDate)).append("\n");

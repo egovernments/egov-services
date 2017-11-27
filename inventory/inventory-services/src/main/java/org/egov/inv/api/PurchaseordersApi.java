@@ -40,6 +40,16 @@ public interface PurchaseordersApi {
         method = RequestMethod.POST)
     ResponseEntity<PurchaseOrderResponse> purchaseordersCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
 
+    @ApiOperation(value = "Create  new  purchaseorder from indent", notes = "Purchase order is created to purchase the materials required, using indents selected in search screen. Supplier and rate type also required to load supplier rate contract details in purchase order screen. Based on pending quantity required in indent and supplier rate contract rates, items will be autopopulated in purchase order screen.  This API created a purchase order in the system and initiates the workflow.", response = PurchaseOrderResponse.class, tags={ "Purchase Order", })
+    @ApiResponses(value = { 
+        @ApiResponse(code = 200, message = "PurchaseOrder created Successfully", response = PurchaseOrderResponse.class),
+        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+    
+    @RequestMapping(value = "/purchaseorders/_preparepofromindents",
+        produces = { "application/json" }, 
+        consumes = { "application/json" },
+        method = RequestMethod.POST)
+    ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
 
     @ApiOperation(value = "Get the list of purchase orders", notes = "Purchase order is issued for indent material as well as for non-indent materials as well. This API restruns the list of Purchase oder, associated materials and indents(if any).", response = PurchaseOrderResponse.class, tags={ "Purchase Order", })
     @ApiResponses(value = { 

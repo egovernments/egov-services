@@ -422,8 +422,8 @@ ReportDefinitions:
 
 # Rates comparison with history data Report
 # Need to Change drop down Link based on report and Query
-- reportName: ratesComparisonWithHistoryDataReport
-  summary: Rates comparison with history data Report
+- reportName: ratesComparisonWithHistory
+  summary: Rates comparison with history data
   version: 1.0.0
   moduleName: inventory
   sourceColumns:
@@ -481,8 +481,8 @@ ReportDefinitions:
 
 # Comparison between different rates Report
 # Need to Change drop down Link based on report and Query
-- reportName: comparisonBetweenDifferentRatesReport
-  summary: Comparison between different rates Report
+- reportName: comparisonBetweenDifferentRates
+  summary: Comparison between different rates
   version: 1.0.0
   moduleName: inventory
   sourceColumns:

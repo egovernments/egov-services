@@ -360,7 +360,7 @@ const menuConvention={
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",
 "Inventory.Inventory Report.Rates Comparison With History Data":"/report/inventory/ratesComparisonWithHistory",
-"Inventory.Inventory Report.Comparison Between Different Rates":"/reports/inventory/comparisonBetweenDifferentRates",
+"Inventory.Inventory Report.Comparison Between Different Rates":"/report/inventory/comparisonBetweenDifferentRates",
 
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/abstractEstimate",

@@ -36,6 +36,7 @@ import UiTimeField from './components/UiTimeField';
 import UiWindowForm from './components/UiWindowForm';
 import UiCalendar from './components/UiCalendar';
 import UiImage from './components/UiImage';
+import UiMultiFieldAddToTable from './components/UiMultiFieldAddToTable';
 
 let styles={
   reducePadding: {
@@ -168,6 +169,8 @@ export default class ShowFields extends Component {
       return <UiMultiSelectField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
       case 'autoCompelete':
         return <UiAutoComplete tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.props.autoComHandler || ""}/>
+      case 'multiFieldAddToTable':
+        return <UiMultiFieldAddToTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
     	case 'number':
   			return <UiNumberField tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler}/>
   		case 'textarea':

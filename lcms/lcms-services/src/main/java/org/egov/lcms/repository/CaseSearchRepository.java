@@ -156,7 +156,7 @@ public class CaseSearchRepository {
 			}
 			casee.setAdvocateDetails(searchAdvocateDetails(casee));
 
-			casee.setCaseVoucher(searchCaseVoucher(casee));
+			// casee.setCaseVoucher(searchCaseVoucher(casee));
 
 		}
 
@@ -311,11 +311,11 @@ public class CaseSearchRepository {
 		final List<Object> preparedStatementValues = new ArrayList<Object>();
 		final String queryStr = caseBuilder.searchHearingDetails(code, tenantId,
 				ConstantUtility.HEARING_DETAILS_TABLE_NAME, preparedStatementValues);
-		
+
 		List<Map<String, Object>> hearingDateValues = new ArrayList<>();
 
 		try {
-			
+
 			hearingDateValues = jdbcTemplate.queryForList(queryStr, preparedStatementValues.toArray());
 		} catch (Exception ex) {
 			log.info("the exception is :" + ex.getMessage());

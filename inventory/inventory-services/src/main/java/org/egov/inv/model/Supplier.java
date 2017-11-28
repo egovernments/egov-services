@@ -480,8 +480,8 @@ public class Supplier {
 	 * @return panNo
 	 **/
 	@ApiModelProperty(value = "pan number of supplier ")
-
-	@Size(max = 10)
+    @Pattern(regexp ="[A-Z]{5}[0-9]{4}[A-Z]{1}")
+	@Size(max = 10,min = 10)
 	public String getPanNo() {
 		return panNo;
 	}
@@ -502,7 +502,8 @@ public class Supplier {
 	 **/
 	@ApiModelProperty(value = "tin number of supplier    ")
 
-	@Size(max = 10)
+	@Size(max = 11, min = 11)
+	@Pattern(regexp = "[0-9]{2}[A-Za-z0-9-!@#$%&*.?=]{9}")
 	public String getTinNo() {
 		return tinNo;
 	}
@@ -522,8 +523,9 @@ public class Supplier {
 	 * @return cstNo
 	 **/
 	@ApiModelProperty(value = "cst number of supplier   ")
+	@Size(max = 11, min = 11)
+	@Pattern(regexp = "[0-9]{2}[A-Za-z0-9-!@#$%&*.?=]{8}[C]{1}")
 
-	@Size(max = 10)
 	public String getCstNo() {
 		return cstNo;
 	}
@@ -543,8 +545,8 @@ public class Supplier {
 	 * @return vatNo
 	 **/
 	@ApiModelProperty(value = "vat number of supplier   ")
-
-	@Size(max = 10)
+	@Size(max = 11, min = 11)
+	@Pattern(regexp = "[0-9]{2}[A-Za-z0-9-!@#$%&*.?=]{8}[V]{1}")
 	public String getVatNo() {
 		return vatNo;
 	}
@@ -564,7 +566,8 @@ public class Supplier {
 	 * @return gstNo
 	 **/
 	@ApiModelProperty(value = "gst number of supplier  ")
-	@Size(max = 10)
+	@Size(min = 15,max = 15)
+	@Pattern(regexp ="[0-9]{2}[A-Z]{5}[0-9]{4}[A-Z]{1}[0-9A-Za-z]{1}[Z]{1}[0-9]{1}")
 	public String getGstNo() {
 		return gstNo;
 	}

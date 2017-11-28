@@ -1,5 +1,5 @@
 {
-  "tenantId": "mh",
+  "tenantId": "default",
   "moduleName": "ACCESSCONTROL",
   "actions": [
     {

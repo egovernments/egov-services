@@ -379,7 +379,7 @@ class Report extends Component {
        console.log(response);
        if(response.summons){
           if(response.summons.length>0){
-          self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "Created Successfully Summon Ref No. is " + response.summons[0].summonReferenceNo : "wc.update.message.success"), true);
+          self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "Created Successfully Ref No. is " + response.summons[0].summonReferenceNo : "wc.update.message.success"), true);
         }else{
           self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
         }

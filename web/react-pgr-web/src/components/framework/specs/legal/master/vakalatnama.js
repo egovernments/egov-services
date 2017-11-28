@@ -163,8 +163,10 @@ var dat = {
         fields: [
           {
             type: "tableList",
+            startIndex:1,
             jsonPath: "cases[0].advocateDetails",
             tableList: {
+              actionsNotRequired: true,
               header: [
                 {
                   label: "legal.create.advocateName"
@@ -200,7 +202,7 @@ var dat = {
                   name: "advocatestaus",
                   pattern: "",
                   type: "text",
-                  jsonPath: "cases[0].advocateDetails[1].advocatestaus",
+                  jsonPath: "cases[0].advocateDetails[1].advocate.status",
                   isRequired: false,
                   isDisabled: true
                 }

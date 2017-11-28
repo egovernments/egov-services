@@ -357,9 +357,11 @@ class UiMultiFieldTable extends Component {
 					<tbody>
 						{
 							this.state.values.map((v, i) => {
+								let startIndex=item.startIndex || 0;
+								if(i>=startIndex)
 								return (
 									<tr key={i}>
-										<td>{i + 1}</td>
+										<td>{(i-startIndex) + 1}</td>
 										{
 											v.map((v2, i2) => {
                         if(v2.isHidden){

@@ -233,7 +233,7 @@ var dat = {
             "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
             "pattern": "",
             "type": "datePicker",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""
@@ -438,7 +438,7 @@ var dat = {
             "jsonPath": "materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate",
             "pattern": "",
             "type": "datePicker",
-            "isRequired": false,
+            "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
             "patternErrorMsg": ""

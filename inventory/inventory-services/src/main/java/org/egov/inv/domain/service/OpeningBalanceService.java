@@ -92,6 +92,7 @@ public class OpeningBalanceService extends DomainService {
 
 	public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
 		try {
+			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_UPDATE);
 			List<String> materialReceiptDetailIds = new ArrayList<>();
 			List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
@@ -190,6 +191,12 @@ public class OpeningBalanceService extends DomainService {
 							if (isEmpty(detail.getReceivedQty())) {
 								throw new CustomException("receivedQty", "Quantity Is Required In Row " + detailIndex);
 							}
+							if (detail.getReceivedQty().doubleValue() <= 0 ) {
+								throw new CustomException("receivedQty", "Quantity Should Be greater Than Zero In Row " + detailIndex);
+							}
+							if (detail.getUnitRate().doubleValue() <=  0) {
+								throw new CustomException("unitRate", "UnitRate Should Be greater Than Zero In Row " + detailIndex);
+							}
 							if (isEmpty(detail.getUnitRate())) {
 								throw new CustomException("unitRate", "UnitRate Is Required In Row " + detailIndex);
 							}
@@ -198,11 +205,16 @@ public class OpeningBalanceService extends DomainService {
 									int detailIndexAddInfo = detail.getReceiptDetailsAddnInfo().indexOf(addInfo) + 1;
 
 									if (null != addInfo.getReceivedDate()
-											&& Long.valueOf(addInfo.getReceivedDate()) > currentMilllis) {
+											&& Long.valueOf(addInfo.getReceivedDate()) >= currentMilllis) {
 										throw new CustomException("ReceiptDate",
-												"ReceiptDate  must be less than or equal to Today's date In Row "
+												"ReceiptDate  Must Be less Than Or Equal To Today's Date In Row "
 														+ detailIndexAddInfo);
-
+									}
+									if (null != addInfo.getExpiryDate()
+											&& Long.valueOf(addInfo.getExpiryDate()) <= currentMilllis) {
+										throw new CustomException("ExpiryDate",
+												"ExpiryDate  Must Be Greater Than Or Equal To Today's Date In Row "
+														+ detailIndexAddInfo);
 									}
 								}
 							}

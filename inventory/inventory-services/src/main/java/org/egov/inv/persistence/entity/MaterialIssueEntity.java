@@ -2,6 +2,7 @@ package org.egov.inv.persistence.entity;
 
 import java.math.BigDecimal;
 
+import org.apache.commons.lang3.StringUtils;
 import org.egov.inv.model.AuditDetails;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.MaterialIssue;
@@ -128,6 +129,7 @@ public class MaterialIssueEntity {
 	    materialIssue.setIndent(indent);
 	    materialIssue.setIssuedToEmployee(issuedToEmployee);
 	    materialIssue.setIssuedToDesignation(issuedToDesignation);
+	    if(StringUtils.isNotBlank(issuePurpose))
 	    materialIssue.setIssuePurpose(IssuePurposeEnum.valueOf(issuePurpose));
 	    Supplier materialSupplier = new Supplier ();
 	    materialSupplier.setCode(supplier);

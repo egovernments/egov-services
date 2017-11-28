@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.works.workorder.web.contract.Asset;
 import org.egov.works.workorder.web.contract.AssetsForLOA;
 import org.egov.works.workorder.web.contract.AuditDetails;
@@ -11,6 +12,7 @@ import org.egov.works.workorder.web.contract.AuditDetails;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class AssetsForLOAHelper {
 
     @JsonProperty("id")

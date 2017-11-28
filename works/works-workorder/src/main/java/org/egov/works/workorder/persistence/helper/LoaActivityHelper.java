@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.works.workorder.web.contract.AuditDetails;
 import org.egov.works.workorder.web.contract.EstimateActivity;
 import org.egov.works.workorder.web.contract.LOAActivity;
@@ -15,6 +16,7 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
+@NoArgsConstructor
 public class LoaActivityHelper {
 
     @JsonProperty("id")

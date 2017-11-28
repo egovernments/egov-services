@@ -1,7 +1,10 @@
 package org.egov.works.workorder.persistence.helper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.works.workorder.web.contract.AssetsForLOA;
 import org.egov.works.workorder.web.contract.DetailedEstimate;
 import org.egov.works.workorder.web.contract.LOAActivity;
@@ -11,6 +14,9 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class LetterOfAcceptanceEstimateHelper {
 
     @JsonProperty("id")

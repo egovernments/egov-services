@@ -1,16 +1,17 @@
 package org.egov.works.workorder.persistence.helper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.egov.works.workorder.web.contract.*;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class LetterOfAcceptanceHelper {
 
     @JsonProperty("id")

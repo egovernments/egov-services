@@ -530,28 +530,16 @@
   "Remarks": [
     {
       "id": 1,
+      "code": "WorkOrderNotice",
       "tenantId": "default",
-      "typeOfDocument": "Work Order - Fake",
-      "type": "Approval Work Order - Fake",
+      "typeOfDocument": "Work Order / Notice",
+      "type": "Approval / Show Cause / Rejection",
       "remarksDetails": [
         {
           "id": 1,
           "tenantId": "default",
-          "remarks": "Approve Work order",
-          "editable": true
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "tenantId": "default",
-      "typeOfDocument": "LOA - Fake",
-      "type": "Approval LOA - Fake",
-      "remarkDetails": [
-        {
-          "id": 1,
-          "tenantId": "default",
-          "remarks": "Approve LOA",
+          "remarks": "WorkOrderNotice",
+          "remarksDescription": "Reviewed and approved",
           "editable": true
         }
       ]

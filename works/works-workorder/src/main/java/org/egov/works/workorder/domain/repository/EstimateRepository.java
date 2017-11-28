@@ -17,15 +17,19 @@ public class EstimateRepository {
 
     private String detailedEstimateByDepartmentUrl;
 
+	private String detailedEstimateByWINUrl;
+
 	@Autowired
 	public EstimateRepository(final RestTemplate restTemplate,
 			@Value("${egov.services.egov_works_estimate.hostname}") final String worksEstimateHostname,
 			@Value("${egov.services.egov_works_estimate.searchpath}") final String detailedEstimateUrl,
-            @Value("${egov.services.egov_works_estimate.searchbydepartment}") final String detailedEstimateByDepartmentUrl) {
+            @Value("${egov.services.egov_works_estimate.searchbydepartment}") final String detailedEstimateByDepartmentUrl,
+	        @Value("${egov.services.egov_works_estimate.searchbywin}") final String detailedEstimateByWINUrl) {
 
 		this.restTemplate = restTemplate;
 		this.detailedEstimateUrl = worksEstimateHostname + detailedEstimateUrl;
         this.detailedEstimateByDepartmentUrl = worksEstimateHostname + detailedEstimateByDepartmentUrl;
+        this.detailedEstimateByWINUrl = worksEstimateHostname + detailedEstimateByWINUrl;
 	}
 
 	public DetailedEstimateResponse getDetailedEstimateById(
@@ -44,5 +48,11 @@ public class EstimateRepository {
         String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
         return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class, tenantId, departmentCodes, status).getDetailedEstimates();
     }
+
+	public List<DetailedEstimate> searchDetailedEstimatesByProjectCode(final List<String> winCodes, final String tenantId,final RequestInfo requestInfo) {
+
+		String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+		return restTemplate.postForObject(detailedEstimateByWINUrl, requestInfo, DetailedEstimateResponse.class, tenantId, winCodes, status).getDetailedEstimates();
+	}
 
 }

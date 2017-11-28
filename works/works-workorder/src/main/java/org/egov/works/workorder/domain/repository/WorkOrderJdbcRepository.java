@@ -146,7 +146,17 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
             paramValues.put("detailedestimatenumber", workOrderSearchContract.getDetailedEstimateNumbers());
+        }
 
+        List<String> winEstimateNumbers = new ArrayList<>();
+        if (workOrderSearchContract.getWorkIdentificationNumbers() != null && !workOrderSearchContract.getWorkIdentificationNumbers().isEmpty()) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByProjectCode(workOrderSearchContract.getWorkIdentificationNumbers(), workOrderSearchContract.getTenantId(), requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                winEstimateNumbers.add(detailedEstimate.getEstimateNumber());
+
+            addAnd(params);
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
+            paramValues.put("detailedestimatenumber", winEstimateNumbers);
         }
 
         if (params.length() > 0) {

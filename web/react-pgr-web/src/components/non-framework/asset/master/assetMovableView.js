@@ -357,6 +357,13 @@ class assetMovableView extends Component {
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ? ((val === true || val === "true" ? "Yes" : (val === "false" || val === false ? "No" : val )) + "") : "";
   }
 
+  dateConversion = (date) => {
+    var finOpeningDate = ('0' + date.getDate()).slice(-2) + '/'
+           + ('0' + (date.getMonth()+1)).slice(-2) + '/'
+           + date.getFullYear();
+           return finOpeningDate;
+  }
+
 printer = () => {
   var mywindow = window.open('', 'PRINT', 'height=400,width=600');
 
@@ -388,10 +395,58 @@ printer = () => {
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
     let self = this;
     var mappingObject;
-    console.log(formData);
+
+    const renderOpeningValues = function() {
+      let self = this;
+      if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("openingDate")) {
+        console.log(formData.Assets[0].openingDate);
+        var varopeningDate = new Date(formData.Assets[0].openingDate);
+        var vargrossValue = formData.Assets[0].grossValue;
+        console.log(varopeningDate);
+        let finOpeningDate = ('0' + varopeningDate.getDate()).slice(-2) + '/'
+               + ('0' + (varopeningDate.getMonth()+1)).slice(-2) + '/'
+               + varopeningDate.getFullYear();
+               console.log(finOpeningDate);
+        return(
+        <CardText>
+          <Col xs={12} md={3}>
+            <Col style={{textAlign:"left"}}>
+              <label>
+                <span style={{"fontWeight":600, "fontSize": "13px"}}>
+                  Open WDV Value
+                </span>
+              </label>
+            </Col>
+              <Col style={{textAlign:"left"}}>
+                <label>
+                  <span style={{"fontWeight":400, "fontSize": "13px"}}>
+                    {finOpeningDate}
+                  </span>
+                </label>
+              </Col>
+          </Col>
+          <Col xs={12} md={3}>
+            <Col style={{textAlign:"left"}}>
+              <label>
+                <span style={{"fontWeight":600, "fontSize": "13px"}}>
+                  Open WDV Value
+                </span>
+              </label>
+            </Col>
+            <Col style={{textAlign:"left"}}>
+              <label>
+                <span style={{"fontWeight":400, "fontSize": "13px"}}>
+                  {vargrossValue}
+                </span>
+              </label>
+            </Col>
+          </Col>
+          </CardText>
+        )
+      }
+    }
 
     const renderGrid = function() {
-
       if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("transactionHistory")){
         if(!self.state.responseHolder)
           Api.commonApiPost("/asset-services-maha/assets/_search",{"id":formData.Assets[0].id, "isTransactionHistoryRequired": true}).then(function(response)
@@ -410,9 +465,7 @@ printer = () => {
         if(mappingObject != null){
         return(
           <div>
-            <Card className="uiCard">
-              <CardHeader title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{translate("")}</div>}/>
-                <CardText>
+                  <CardText>
                   <Table bordered responsive className="table-striped">
                     <thead>
                       <tr>
@@ -444,7 +497,6 @@ printer = () => {
                 </tbody>
               </Table>
             </CardText>
-          </Card>
         </div>
         )
       }
@@ -579,7 +631,12 @@ printer = () => {
         </form>
         <div>
           <Card className="uiCard">
-            {renderGrid()}
+            <CardText>
+              {renderOpeningValues()}
+            </CardText>
+            <CardText>
+              {renderGrid()}
+            </CardText>
           </Card>
         </div>
       </div>

@@ -109,21 +109,24 @@ export default class UiEmailField extends Component {
 					                        //       console.log(item.showCurrentDate);
 
 		// if(item.showCurrentDate === true){
-		//     var defaultdate = new Date();		
+		//     var defaultdate = new Date();
 		// 	let day = defaultdate.getDate();
 		// 	let month = defaultdate.getMonth()+1;
 		// 	let year = defaultdate.getFullYear();
 		// 	defaultdate = day+'/'+month+'/'+year;
 		// }else{
-		// 	var defaultdate = '';	
+		// 	var defaultdate = '';
 		// }
-		
-	                        
+
+
 		switch (this.props.ui) {
 			case 'google':
+
+			let label = !item.isHideLabel && (<div><label>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label><br/></div>)
+
 				return (
 					<div style={{"width": "100%", "marginTop": "17px", "display": (item.hide ? 'none' : 'inline-block')}} className="custom-form-control-for-datepicker">
-						<label>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></label><br/>
+						{label}
 						<DateTime
 							value={this.props.getVal(item.jsonPath)}
 							dateFormat='DD/MM/YYYY'

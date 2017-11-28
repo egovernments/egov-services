@@ -926,3 +926,88 @@ span.errorMsg{
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     background-color: #F5F5F5;
 }
+
+.flex-table{
+	display: flex;
+	flex-flow: column nowrap;
+  width: 100% ;
+	margin-bottom: 16px;
+	background: white;
+	box-shadow: 0px 1px 5px 0px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 3px 1px -2px rgba(0, 0, 0, 0.12);
+}
+
+.flex-table-sm .flex-table-header{
+	font-size: 12px;
+}
+
+.flex-table-header{
+	font-weight: bold;
+	padding:10px;
+	border-bottom: 1px solid rgba(0, 0, 0, 0.075);
+}
+
+.flex-row{
+	display: flex;
+  flex-flow: row nowrap;
+}
+
+.flex-cell{
+	display: flex;
+  flex-flow: row nowrap;
+  flex-grow: 1;
+  flex-basis: 0;
+  margin-left: 5px;
+	overflow: hidden;
+}
+
+.flex-row > div:last-child{
+	margin-right: 5px;
+}
+
+.flex-table-sm *[class^="custom-form-control-"]{
+	font-size: 12px;
+}
+
+.flex-table .childTable{
+	padding: 10px;
+	background: #F7F7F7;
+}
+
+.childTable .flex-table{
+	margin-bottom: 0;
+}
+
+.flex-table-sm .custom-form-control-for-textfield input,
+.flex-table-sm .custom-form-control-for-textarea textarea,
+.flex-table-sm .custom-form-control-for-datepicker input {
+	 padding: 0 5px !important;
+	 height: 30px !important;
+	 font-size: 14px !important;
+}
+
+.flex-table-sm .custom-form-control-for-datepicker{
+	margin-top:15px !important;
+}
+
+.flex-table-sm .custom-form-control-for-textfield input{
+	top: 15px !important;
+}
+
+.flex-table-sm .custom-form-control-for-textarea textarea{
+	top: 2px !important;
+}
+
+.flex-table-sm .custom-form-control-for-textarea {
+	height: 90px !important;
+}
+
+.flex-table-sm .custom-form-control-for-select > div > div:nth-child(1){
+	height: 30px !important;
+	font-size: 14px !important;
+	position: absolute !important;
+  top: 14px !important;
+}
+
+.flex-table-sm .border-top{
+	border-top:1px solid rgba(0, 0, 0, 0.075);
+}

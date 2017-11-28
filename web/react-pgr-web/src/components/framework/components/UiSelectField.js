@@ -138,21 +138,24 @@ class UiSelectField extends Component {
 
       switch (this.props.ui) {
          case 'google':
+            let labelProperty = !item.isHideLabel && {
+              floatingLabelFixed:true,
+              floatingLabelText:(<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>),
+              hintText:"Please Select"
+            }
             return (
                   <SelectField
                      className="custom-form-control-for-select"
                      id={item.jsonPath.split(".").join("-")}
                      floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
                      labelStyle={{"color": "#5F5C57"}}
-                     floatingLabelFixed={true}
                      dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                      style={{"display": (item.hide ? 'none' : 'inline-block')}}
                      errorStyle={{"float":"left"}}
                      fullWidth={true}
-                     hintText="Please Select"
-                     floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
                      value={value}
                      underlineDisabledStyle={{backgroundColor:'#eee!important'}}
+                     {...labelProperty}
                      onChange={(event, key, value) =>{
                         this.props.handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg)
                      }}
@@ -163,7 +166,6 @@ class UiSelectField extends Component {
                                <MenuItem value={dd.key} key={index} primaryText={dd.value} />
                            ))}
                      </SelectField>
-
             );
       }
    }

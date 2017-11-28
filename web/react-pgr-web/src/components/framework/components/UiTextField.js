@@ -18,10 +18,19 @@ const styles = {
 };
 
 export default class UiTextField extends Component {
+
 	constructor(props) {
-       super(props);
-		 }
-			
+     super(props);
+	}
+
+
+  componentDidMount(){
+    if(this.props.item.url && this.props.makeAjaxCall)
+      console.log('ajaxCall', this.props.makeAjaxCall);
+      //console.log('result', this.props.makeAjaxCall(this.props.item.url));
+  }
+
+
 	renderTextBox = (item) => {
 		var disabledValue=false;
 		     if(item.isDisablePath && (typeof this.props.getVal(item.isDisablePath)== "boolean")){
@@ -55,21 +64,26 @@ export default class UiTextField extends Component {
 					);
 				}
 				else {
+
+          let labelProperty = !item.isHideLabel && {
+            floatingLabelFixed:true,
+            floatingLabelStyle:({"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}),
+            floatingLabelText:(<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>)
+          }
+
 					return (
 						<TextField
               className="custom-form-control-for-textfield"
               id={item.jsonPath.split(".").join("-")}
-							floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
               inputStyle={{"color": "#5F5C57","textAlign":item.hasOwnProperty("textAlign")?item.textAlign:"left"}}
-							floatingLabelFixed={true}
 							maxLength={item.maxLength || ""}
 							style={{"display": (item.hide ? 'none' : 'inline-block')}}
 							errorStyle={{"float":"left"}}
 							fullWidth={true}
-							floatingLabelText={<span>{item.label} <span style={{"color": "#FF0000"}}>{item.isRequired ? " *" : ""}</span></span>}
 							value={this.props.getVal(item.jsonPath)}
 							disabled={disabledValue}
 							errorText={this.props.fieldErrors[item.jsonPath]}
+              {...labelProperty}
 							onChange={(e) => {
 								if(e.target.value) {
 									e.target.value = e.target.value.replace(/^\s*/, "");

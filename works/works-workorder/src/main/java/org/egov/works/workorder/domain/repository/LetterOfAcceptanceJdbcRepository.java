@@ -27,7 +27,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
 
     public static final String TABLE_NAME = "egw_letterofacceptance loa";
-    public static final String LOA_ESTIMATESEARCH_EXTENTION = "egw_letterofacceptanceestimate loaestimate";
+    public static final String LOA_ESTIMATESEARCH_EXTENTION = " , egw_letterofacceptanceestimate loaestimate";
 
 
     public List<LetterOfAcceptance> searchLOAs(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria, final RequestInfo requestInfo) {
@@ -72,16 +72,11 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() == 1) {
             addAnd(params);
             params.append("loa.loaNumber like (:loaNumber)");
-            paramValues.put("loa.loaNumber", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers() + "%");
+            paramValues.put("loa.loaNumber", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers().get(0) + "%");
         } else if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() > 1) {
             addAnd(params);
             params.append("loa.loaNumber in(:loaNumber)");
             paramValues.put("loaNumber", letterOfAcceptanceSearchCriteria.getLoaNumbers());
-        }
-        if (letterOfAcceptanceSearchCriteria.getDepartment() != null) {
-            addAnd(params);
-            params.append("loa.department =:department");
-            paramValues.put("department", letterOfAcceptanceSearchCriteria.getDepartment());
         }
         if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getFileNumber())) {
             addAnd(params);

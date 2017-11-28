@@ -615,7 +615,6 @@ printer = () => {
                     </span>
                   </label>
                   <br/><br/>
-
                 </CardText>
               </Card>
 

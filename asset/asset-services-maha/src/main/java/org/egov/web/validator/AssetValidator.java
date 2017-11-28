@@ -84,7 +84,7 @@ public class AssetValidator implements Validator {
 				errorMap.put("Asset_warranty", "warrantyExpiryDate should be greater than asset date");
 		}
 		
-	    if(!asset.getAssetCategory().getIsAssetAllow().equals(true)) 
+	    if(asset.getAssetCategory().getIsAssetAllow().equals(false)) 
 		   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
            
 		  
@@ -287,12 +287,14 @@ public class AssetValidator implements Validator {
 	private void validateLandDetails(AssetRequest assetRequest, Map<String, String> errorMap) {
 		List<LandDetail> landDetails = assetRequest.getAsset().getLandDetails();
 		List<String> landDetailCode = new ArrayList<>();
+		if(landDetails!=null) {
 		landDetailCode.add(landDetails.get(0).getCode());
 		for (int i=1;i<landDetails.size();i++) {
 			if((!landDetailCode.isEmpty())&&(!landDetailCode.contains(landDetails.get(i).getCode())))
 			landDetailCode.add(landDetails.get(i).getCode());
 			else
 				errorMap.put("Asset_LandDetails", "Duplicate LandDetails cannot be given for a single asset");
+		}
 		}
 		
        /*for (String ld : landDetailCode) {

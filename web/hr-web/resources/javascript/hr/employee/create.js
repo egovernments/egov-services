@@ -236,13 +236,15 @@ var commom_fields_rules = {
         alphanumericWSplChar: true
     },
     ifscCode:{
-        required: true
+        required: true,
+        alphanumeric: true
     },
     group: {
         required: false
     },
     placeOfBirth: {
-        required: false
+        required: false,
+        alphanumericWSpc: true
     },
     documents: {
         required: false
@@ -311,7 +313,8 @@ var commom_fields_rules = {
         required: false
     },
     "user.fatherOrHusbandName": {
-        required: false
+        required: false,
+        alphanumericWSpc: true
     },
     "user.bloodGroup": {
         required: false

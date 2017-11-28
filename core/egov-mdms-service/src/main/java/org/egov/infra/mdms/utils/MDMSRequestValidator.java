@@ -3,7 +3,6 @@ package org.egov.infra.mdms.utils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.egov.MDMSApplicationRunnerImpl;
 import org.egov.mdms.model.MDMSCreateRequest;
@@ -11,9 +10,9 @@ import org.egov.tracer.model.CustomException;
 import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 
@@ -21,6 +20,9 @@ import com.jayway.jsonpath.JsonPath;
 public class MDMSRequestValidator {
 
 	public static final Logger logger = LoggerFactory.getLogger(MDMSRequestValidator.class);
+	
+	@Autowired
+	private MDMSUtils mDMSUtils;
 
 	@SuppressWarnings("unchecked")
 	public ArrayList<Object> validateCreateRequest(MDMSCreateRequest mDMSCreateRequest) throws Exception{
@@ -33,7 +35,7 @@ public class MDMSRequestValidator {
 		List<Object> allmasterConfigs = new ArrayList<>();
 		masterData = (List<Object>) allMasters.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
 		allmasterConfigs = (List<Object>) allMasters.get("mdms-config");
-		List<Object> masterConfig = filter(allmasterConfigs, "$.masterName", mDMSCreateRequest.getMasterMetaData().getMasterName());		
+		List<Object> masterConfig = mDMSUtils.filter(allmasterConfigs, "$.masterName", mDMSCreateRequest.getMasterMetaData().getMasterName());		
 		if(masterConfig.size() > 1){
 			throw new CustomException("400", "There are duplicate mdms-configs for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
 		}else if(masterConfig.isEmpty()){
@@ -53,7 +55,7 @@ public class MDMSRequestValidator {
 				logger.info("key: "+key);
 				Object value;
 				value = JsonPath.read(masterDataArray.get(i).toString(), key.toString());
-				filterResult = filter(masterData, key, value);
+				filterResult = mDMSUtils.filter(masterData, key, value);
 				masterData = filterResult;
 				logger.info("filterResult: "+filterResult);				
 
@@ -65,29 +67,6 @@ public class MDMSRequestValidator {
 		}
 		logger.info("Validation result, List of error objects: "+result);
 		return result;
-	}
-	
-	public List<Object> filter(List<Object> list, String key, Object value) throws JsonProcessingException{
-		List<Object> filteredList = new ArrayList<>();
-		ObjectMapper mapper = new ObjectMapper();
-		try{
-			filteredList = list.parallelStream()
-					.filter(obj -> true == ((JsonPath.read(obj.toString(), key.toString())).equals(value)))
-					.collect(Collectors.toList());
-		}catch(Exception e){
-			filteredList = list.parallelStream()
-					.map(obj -> {
-						try{
-							return mapper.writeValueAsString(obj);
-						}catch(Exception ex){
-							logger.error("Parsing error inside the stream: ",ex);
-						}
-						return null;
-					})
-					.filter(obj -> true == ((JsonPath.read(obj, key.toString())).equals(value)))
-					.collect(Collectors.toList());	
-		}
-		return filteredList;
 	}
 	
 }

@@ -72,8 +72,8 @@ public class MDMSApplicationRunnerImpl {
 					try {
 						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
 						filterMaster(obj);
-						buildFilePathMap(obj, file.getName());
-						buildValidationMap(obj);
+						//buildFilePathMap(obj, file.getName());
+						//buildValidationMap(obj);
 						System.out.println("yaml obj:" + obj);
 
 					} catch (Exception e) {

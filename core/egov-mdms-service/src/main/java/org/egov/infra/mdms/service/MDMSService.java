@@ -9,6 +9,7 @@ import java.util.Map;
 import org.egov.MDMSApplicationRunnerImpl;
 import org.egov.infra.mdms.repository.MDMSCreateRepository;
 import org.egov.infra.mdms.utils.MDMSConstants;
+import org.egov.infra.mdms.utils.MDMSUtils;
 import org.egov.mdms.model.MDMSCreateRequest;
 import org.egov.mdms.model.MasterDetail;
 import org.egov.mdms.model.MdmsCriteriaReq;
@@ -42,6 +43,9 @@ public class MDMSService {
 	
 	@Autowired
 	private MDMSCreateRepository mDMSCreateRepository;
+	
+	@Autowired
+	private MDMSUtils mDMSUtils;
 
 
 	public Map<String, Map<String, JSONArray>> getMaster(MdmsCriteriaReq mdmsCriteriaReq) {
@@ -299,6 +303,21 @@ public class MDMSService {
 		logger.info("pushResponse: "+pushResponse.toString());
 		
 		return pushResponse.toString();
+	}
+	
+	
+	@SuppressWarnings("unchecked")
+	public List<Object> getConfigs(String tenantId, String module, String master) throws JsonProcessingException{
+		Map<String, Map<String, Object>> validationMap = MDMSApplicationRunnerImpl.getValidationMap();
+		Map<String, Object> allMasters = 
+				validationMap.get(tenantId+"-"+module);
+		List<Object> allmasterConfigs = new ArrayList<>();
+		allmasterConfigs = (List<Object>) allMasters.get("mdms-config");
+		if(null != master){
+			List<Object> masterConfig = mDMSUtils.filter(allmasterConfigs, "$.masterName", master);
+			return masterConfig;
+		}else
+			return allmasterConfigs;
 	}
 
 }

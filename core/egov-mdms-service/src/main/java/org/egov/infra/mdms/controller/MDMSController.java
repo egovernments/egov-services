@@ -2,6 +2,7 @@ package org.egov.infra.mdms.controller;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -97,6 +98,29 @@ public class MDMSController {
 			return new ResponseEntity<>(mdmsCreateResponse, HttpStatus.OK);
 		}catch(Exception e){
 			log.error("Error: ",e);
+			throw e;
+		}
+
+		
+	}
+	
+	@PostMapping("config/_search")
+	@ResponseBody
+	private ResponseEntity<?> configSearch(@RequestBody RequestInfo requestInfo, @RequestParam("tenantId") String tenantId, 
+			@RequestParam("module") String module, @RequestParam("master") String master) throws Exception {
+		log.info("Search criteria: " + tenantId+","+module+","+master);
+		try{
+			List<Object> response = mdmsService.getConfigs(tenantId, module, master);
+		    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+			Gson gson = new Gson();
+			Object data = gson.fromJson(response.toString(), type);
+			MdmsCreateResponse mdmsCreateResponse = new MdmsCreateResponse();
+			mdmsCreateResponse.setData(data);
+			mdmsCreateResponse.setResponseInfo(responseInfoFactory.
+					createResponseInfoFromRequestInfo(requestInfo, true));
+			return new ResponseEntity<>(mdmsCreateResponse, HttpStatus.OK);		
+		}catch(Exception e){
+			log.error("Error at controller level: ",e);
 			throw e;
 		}
 

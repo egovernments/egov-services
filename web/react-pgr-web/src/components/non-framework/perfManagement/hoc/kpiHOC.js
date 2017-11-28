@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 
-export const EGSelectField = (label, isRequired, value = 1, items, cbOnSelected) => {
+export const EGSelectField = (label, isRequired, value = 1, items, displayKey="name", cbOnSelected) => {
     return (
         <SelectField
             className="custom-form-control-for-select"
@@ -20,7 +20,7 @@ export const EGSelectField = (label, isRequired, value = 1, items, cbOnSelected)
         >
             {
                 items.map((item, i) => {
-                    return <MenuItem value={i} primaryText={item.name} />
+                    return <MenuItem key={i} value={i} primaryText={item[displayKey]} />
                 })
             }
         </SelectField>

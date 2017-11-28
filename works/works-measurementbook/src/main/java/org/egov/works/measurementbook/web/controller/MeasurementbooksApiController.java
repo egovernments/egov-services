@@ -18,6 +18,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import io.swagger.annotations.ApiParam;
@@ -30,12 +32,14 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 	@Autowired
 	private MeasurementBookService measurementBookService;
 
+	@RequestMapping(value = "/measurementbooks/_create", method = RequestMethod.POST)
 	public ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
 			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest) {
 		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.create(measurementBookRequest),
 				HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/measurementbooks/_search", method = RequestMethod.POST)
 	public ResponseEntity<MeasurementBookResponse> measurementbooksSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
@@ -65,6 +69,7 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 				HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/measurementbooks/_update", method = RequestMethod.POST)
 	public ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
 			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
 		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.update(measurementBookRequest),

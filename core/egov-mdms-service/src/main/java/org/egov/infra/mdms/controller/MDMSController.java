@@ -52,7 +52,7 @@ public class MDMSController {
 	@PostMapping("_search")
 	@ResponseBody
 	private ResponseEntity<?> search(@RequestBody @Valid MdmsCriteriaReq mdmsCriteriaReq) {
-		log.info("MDMSController mdmsCriteriaReq:" + mdmsCriteriaReq);
+		log.info("MDMSController - mdmsCriteriaReq:" + mdmsCriteriaReq);
 		/*
 		 * if(bindingResult.hasErrors()) { throw new
 		 * CustomBindingResultExceprion(bindingResult); }

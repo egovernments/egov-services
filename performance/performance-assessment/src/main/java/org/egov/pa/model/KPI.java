@@ -33,14 +33,11 @@ public class KPI   {
   @JsonProperty("remoteSystemId")
   private String remoteSystemId = null;
   
+  @JsonProperty("periodicity")
+  private String periodicity = null; 
+  
   @JsonProperty("targetType")
   private String targetType;
-
-  @JsonProperty("targetValue")
-  private Long targetValue = null;
-  
-  @JsonProperty("targetDescription")
-  private String targetDescription = null;
 
   @JsonProperty("instructions")
   private String instructions = null;
@@ -54,17 +51,28 @@ public class KPI   {
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null; 
   
-  
-  
-  
-  
-
-  public String getTargetDescription() {
-	return targetDescription;
+  public KpiTarget getKpiTarget() {
+	return kpiTarget;
 }
 
-public void setTargetDescription(String targetDescription) {
-	this.targetDescription = targetDescription;
+public void setKpiTarget(KpiTarget kpiTarget) {
+	this.kpiTarget = kpiTarget;
+}
+
+@JsonProperty("kpiTarget")
+  private KpiTarget kpiTarget = null; 
+  
+  
+  
+  
+
+
+public String getPeriodicity() {
+	return periodicity;
+}
+
+public void setPeriodicity(String periodicity) {
+	this.periodicity = periodicity;
 }
 
 public String getTargetType() {
@@ -176,24 +184,6 @@ public void setCode(String code) {
     this.remoteSystemId = remoteSystemId;
   }
 
-  public KPI targetValue(Long targetValue) {
-    this.targetValue = targetValue;
-    return this;
-  }
-
-   /**
-   * Value for the KPI Target
-   * @return targetValue
-  **/
-
-  public Long getTargetValue() {
-    return targetValue;
-  }
-
-  public void setTargetValue(Long targetValue) {
-    this.targetValue = targetValue;
-  }
-
   public KPI instructions(String instructions) {
     this.instructions = instructions;
     return this;
@@ -257,14 +247,13 @@ public void setCode(String code) {
         Objects.equals(this.id, KPI.id) &&
         Objects.equals(this.name, KPI.name) &&
         Objects.equals(this.remoteSystemId, KPI.remoteSystemId) &&
-        Objects.equals(this.targetValue, KPI.targetValue) &&
         Objects.equals(this.instructions, KPI.instructions) &&
         Objects.equals(this.documents, KPI.documents);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(departmentId, id, name, remoteSystemId, targetValue, instructions, financialYear, documents);
+    return Objects.hash(departmentId, id, name, remoteSystemId, instructions, financialYear, documents);
   }
 
   @Override
@@ -276,7 +265,6 @@ public void setCode(String code) {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    remoteSystemId: ").append(toIndentedString(remoteSystemId)).append("\n");
-    sb.append("    targetValue: ").append(toIndentedString(targetValue)).append("\n");
     sb.append("    instructions: ").append(toIndentedString(instructions)).append("\n");
     sb.append("    documents: ").append(toIndentedString(documents)).append("\n");
     sb.append("}");

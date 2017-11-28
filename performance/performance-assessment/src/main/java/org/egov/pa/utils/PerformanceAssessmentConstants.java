@@ -39,6 +39,9 @@
  */
 package org.egov.pa.utils;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
@@ -53,6 +56,9 @@ public class PerformanceAssessmentConstants {
     
     @Autowired
     private Environment environment;
+    
+    public static final String PERIODICITY_DEFAULT = "MONTHLY";
+    public static final List<String> MONTHLIST = Arrays.asList("4","5","6","7","8","9","10","11","12","1","2","3");  
 
     
     public static final String PERSIST_FAILURE = "Something went wrong. Please try again later!" ; 
@@ -167,6 +173,18 @@ public class PerformanceAssessmentConstants {
     public static final String MANDATORY_DOCS_REQUIRED_CODE = "pa.0027";
     public static final String MANDATORY_DOCS_REQUIRED_FIELD_NAME = "documents";
     public static final String MANDATORY_DOCS_REQUIRED_ERROR_MESSAGE = "Mandatory Documents are missing for the KPI Value Entry. Please upload and try again!";
+    
+    public static final String VALUE_LIST_REQUIRED_CODE = "pa.0028";
+    public static final String VALUE_LIST_REQUIRED_FIELD_NAME = "valueList";
+    public static final String VALUE_LIST_REQUIRED_ERROR_MESSAGE = "KPI Value List is mandatory";
+    
+    public static final String VALUE_DETAIL_INVALID_CODE = "pa.0029";
+    public static final String VALUE_DETAIL_INVALID_FIELD_NAME = "valueid";
+    public static final String VALUE_DETAIL_INVALID_ERROR_MESSAGE = "Value Detail is not valid";
+    
+    public static final String VALUE_PERIOD_INVALID_CODE = "pa.0030";
+    public static final String VALUE_PERIOD_INVALID_FIELD_NAME = "period";
+    public static final String VALUE_PERIOD_INVALID_ERROR_MESSAGE = "Value Period is not valid";
         
     public String getErrorMessage(final String property) {
         return environment.getProperty(property);

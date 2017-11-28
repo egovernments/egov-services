@@ -48,7 +48,7 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.pa.config.ApplicationProperties;
 import org.egov.pa.model.Department;
 import org.egov.pa.model.Tenant;
-import org.egov.pa.web.contract.DepartmentResponse;
+import org.egov.pa.web.contract.MDMSResponse;
 import org.egov.pa.web.contract.RequestInfoBody;
 import org.egov.pa.web.contract.TenantResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,13 +102,31 @@ public class RestCallService {
 		final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
 		final RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo);
 		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
-		log.info("URL to invoke Tenant Service : " + url.toString());
+		log.info("URL to invoke MDMS Service : " + url.toString());
 		log.info("Request Info to invoke the URL : " + request);
-		DepartmentResponse dr = new RestTemplate().postForObject(url.toString(), request, DepartmentResponse.class);
+		MDMSResponse dr = new RestTemplate().postForObject(url.toString(), request, MDMSResponse.class);
 		log.info("Response from MDMS : " + dr);
 		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getCommonMasters()
 				&& null != dr.getMdmsRes().getCommonMasters().getDepartments()) {
 			return dr.getMdmsRes().getCommonMasters().getDepartments();
+		}
+		return null;
+	}
+	
+	public List<Tenant> getAllTenants() {
+		final StringBuilder url = new StringBuilder(
+				applicationProperties.getMdmsServiceHostName() + applicationProperties.getMdmsServiceSearchPath()
+						+ applicationProperties.getMdmsServiceSearchTenantUrl());
+		final RequestInfo requestInfo = RequestInfo.builder().ts(11111111l).build();
+		final RequestInfoBody requestInfoBody = new RequestInfoBody(requestInfo);
+		final HttpEntity<RequestInfoBody> request = new HttpEntity<>(requestInfoBody);
+		log.info("URL to invoke MDMS Service : " + url.toString());
+		log.info("Request Info to invoke the URL : " + request);
+		MDMSResponse dr = new RestTemplate().postForObject(url.toString(), request, MDMSResponse.class);
+		log.info("Response from MDMS : " + dr);
+		if (null != dr && null != dr.getMdmsRes() && null != dr.getMdmsRes().getTenantList()
+				&& null != dr.getMdmsRes().getTenantList().getTenantList()) {
+			return dr.getMdmsRes().getTenantList().getTenantList();
 		}
 		return null;
 	}

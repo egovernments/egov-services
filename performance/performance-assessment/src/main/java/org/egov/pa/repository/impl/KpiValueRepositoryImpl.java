@@ -2,13 +2,15 @@ package org.egov.pa.repository.impl;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
-import org.egov.pa.model.ValueDocument;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
@@ -48,13 +50,25 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
     
     @Value("${kafka.topics.kpivalue.update.name}")
 	private String updateKpiValueTopic;
-
+    
+    @Value("${kafka.topics.kpivaluedetail.create.name}")
+    private String kpiValueDetailCreateTopic;
+    
+    @Value("${kafka.topics.kpivaluedetail.delete.name}")
+    private String kpiValueDetailDeleteTopic; 
+    
 	@Override
 	public void persistKpiValue(KPIValueRequest kpiValueRequest) {
 		log.info("Request before pushing to Kafka Queue : " + kpiValueRequest);
     	kafkaTemplate.send(createKpiValueTopic, kpiValueRequest);	
 	}
-
+	
+	@Override
+	public void persistKpiValueDetail(KPIValueRequest kpiValueRequest) {
+		log.info("Request before pushing to Kafka Queue : " + kpiValueRequest);
+    	kafkaTemplate.send(kpiValueDetailCreateTopic, kpiValueRequest);
+	}
+	
 	@Override
 	public void updateKpiValue(KPIValueRequest kpiValueRequest) {
 		log.info("Request before pushing to Kafka Queue : " + kpiValueRequest);
@@ -73,18 +87,29 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	@Override
 	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq, preparedStatementValues);
+		String query = queryBuilder.getValueSearchQuery(kpiValueSearchReq, preparedStatementValues);
 		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper();
-		List<KpiValue> listOfValues = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
-		if(listOfValues.size() == 1) { 
-			String docQuery = queryBuilder.getDocumentForKpiValue();
-			for(KpiValue value : listOfValues) { 
-				final HashMap<String, Object> parametersMap = new HashMap<>(); 
-				parametersMap.put("vid", value.getId());
-				List<ValueDocument> docList = namedParameterJdbcTemplate.query(docQuery, parametersMap, new BeanPropertyRowMapper<>(ValueDocument.class));
-				value.setDocuments(docList);
+		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+		List<KpiValue> listOfValues = new ArrayList<>(); 
+		Map<String, KpiValue> valueMap = mapper.valueMap; 
+		Iterator<Entry<String, KpiValue>> itr = valueMap.entrySet().iterator();
+
+		while(itr.hasNext()) { 
+			Entry<String, KpiValue> entry = itr.next();
+			String id = entry.getKey(); 
+			KpiValue value = entry.getValue();
+			
+			if(mapper.valueDetailMap.containsKey(id)) { 
+				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id); 
+				value.setValueList(valueDetailList);
+			} else { 
+				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId());
+				value.setValueList(defaultValueDetailList);
 			}
+			listOfValues.add(value);
 		}
+		log.info("Size of Kpi Value List :  " + listOfValues.size());
+		log.info("Kpi Value List :  " + listOfValues.toString());
 		return listOfValues;
 	}
 
@@ -168,5 +193,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		}
 		return numberOfDocsReq;
 	}
+
+	
 
 }

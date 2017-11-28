@@ -47,12 +47,14 @@ import org.egov.common.contract.response.ErrorField;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.service.impl.KpiMasterServiceImpl;
 import org.egov.pa.service.impl.KpiValueServiceImpl;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.egov.pa.web.contract.KPIRequest;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
+import org.egov.pa.web.contract.ValueResponse;
 import org.egov.pa.web.errorhandler.Error;
 import org.egov.pa.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -107,7 +109,8 @@ public class RequestValidator {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		List<KPI> kpis = kpiRequest.getKpIs();
 		
-		for(KPI kpi : kpis) { 
+		for(KPI kpi : kpis) {
+			kpi.setPeriodicity(PerformanceAssessmentConstants.PERIODICITY_DEFAULT);
 			if(StringUtils.isBlank(kpi.getName())) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPINAME_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.KPINAME_MANDATORY_ERROR_MESSAGE,
@@ -173,7 +176,33 @@ public class RequestValidator {
 	public Error getError(final KPIValueRequest kpiValueRequest, Boolean createOrUpdate) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		
-		for(KpiValue kpiValue : kpiValueRequest.getKpiValues()) { 
+		List<ValueResponse> valueResponseList = kpiValueRequest.getKpiValues();
+		for(ValueResponse vr : valueResponseList) {
+			KpiValue value = vr.getKpiValue();
+			log.info("Value List : " + value.getValueList().toString());
+			if(null == value.getValueList() || value.getValueList().size() <= 0) { 
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.VALUE_LIST_REQUIRED_CODE, 
+	                    PerformanceAssessmentConstants.VALUE_LIST_REQUIRED_ERROR_MESSAGE,
+	                    PerformanceAssessmentConstants.VALUE_LIST_REQUIRED_FIELD_NAME));
+			}
+			
+			for(KpiValueDetail valueDetail : value.getValueList()) {
+				if(StringUtils.isBlank(valueDetail.getValueid())) { 
+					errorFields.add(buildErrorField(PerformanceAssessmentConstants.VALUE_DETAIL_INVALID_CODE, 
+		                    PerformanceAssessmentConstants.VALUE_DETAIL_INVALID_ERROR_MESSAGE,
+		                    PerformanceAssessmentConstants.VALUE_DETAIL_INVALID_FIELD_NAME));
+				}
+				
+				if(StringUtils.isBlank(valueDetail.getPeriod())) { 
+					errorFields.add(buildErrorField(PerformanceAssessmentConstants.VALUE_PERIOD_INVALID_CODE, 
+		                    PerformanceAssessmentConstants.VALUE_PERIOD_INVALID_ERROR_MESSAGE,
+		                    PerformanceAssessmentConstants.VALUE_PERIOD_INVALID_FIELD_NAME));
+				}
+			}
+		}
+		
+		/*for(ValueResponse vr : kpiValueRequest.getKpiValues()) {
+			KpiValue kpiValue= vr.getKpiValue(); 
 			KPI kpi = kpiValue.getKpi();
 			if(StringUtils.isBlank(kpi.getCode())) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_MANDATORY_CODE, 
@@ -185,21 +214,6 @@ public class RequestValidator {
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TENANTID_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.TENANTID_MANADATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.TENANTID_MANADATORY_FIELD_NAME));
-			}
-			
-			if(null == kpiValue.getResultValue() && null != kpiValue.getTargetValue()) { 
-				kpiValue.setResultValue(kpiValue.getTargetValue());
-			}
-			if(null == kpiValue.getResultDescription() && null != kpiValue.getTargetDescription()) { 
-				kpiValue.setResultDescription(kpiValue.getTargetDescription());
-			}
-			if(StringUtils.isNotBlank(kpiValue.getResultDescription())) { 
-				kpiValue.setResultValue(0L);
-			}
-			if(null == kpiValue.getResultValue() && null == kpiValue.getTargetValue()) { 
-				errorFields.add(buildErrorField(PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_CODE, 
-	                    PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_ERROR_MESSAGE,
-	                    PerformanceAssessmentConstants.ACTUALVALUE_MANDATORY_FIELD_NAME));
 			}
 			
 			if(null != kpiValueRequest.getKpiValues()) { 
@@ -242,7 +256,7 @@ public class RequestValidator {
 	                    PerformanceAssessmentConstants.KPIVALUES_MANDATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.KPIVALUES_MANDATORY_FIELD_NAME));
 			}
-		}
+		}*/
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PerformanceAssessmentConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}

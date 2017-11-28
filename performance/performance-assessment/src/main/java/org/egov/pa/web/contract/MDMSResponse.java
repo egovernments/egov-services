@@ -4,13 +4,13 @@ import org.egov.common.contract.response.ResponseInfo;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public class DepartmentResponse {
+public class MDMSResponse {
 	
 	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo;
 	
 	@JsonProperty("MdmsRes")
-	private MdmsRes mdmdRes;
+	private MdmsRes mdmsRes;
 	public ResponseInfo getResponseInfo() {
 		return responseInfo;
 	}
@@ -18,11 +18,13 @@ public class DepartmentResponse {
 		this.responseInfo = responseInfo;
 	}
 	public MdmsRes getMdmsRes() {
-		return mdmdRes;
+		return mdmsRes;
 	}
 	public void setMdmsRes(MdmsRes mdmsRes) {
-		this.mdmdRes = mdmsRes;
+		this.mdmsRes = mdmsRes;
 	}
+	
+	
 	
 	
 	

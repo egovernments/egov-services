@@ -8,7 +8,6 @@ import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.pa.model.KpiValue;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -18,11 +17,11 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T05:16:16.756Z")
 
 public class KPIValueRequest   {
-  @JsonProperty("requestInfo")
+  @JsonProperty("RequestInfo")
   private RequestInfo requestInfo = null;
 
   @JsonProperty("kpiValues")
-  private List<KpiValue> kpiValues = new ArrayList<KpiValue>();
+  private List<ValueResponse> kpiValues = new ArrayList<ValueResponse>();
 
   public KPIValueRequest requestInfo(RequestInfo requestInfo) {
     this.requestInfo = requestInfo;
@@ -45,12 +44,12 @@ public class KPIValueRequest   {
     this.requestInfo = requestInfo;
   }
 
-  public KPIValueRequest kpiValues(List<KpiValue> kpiValues) {
+  public KPIValueRequest kpiValues(List<ValueResponse> kpiValues) {
     this.kpiValues = kpiValues;
     return this;
   }
 
-  public KPIValueRequest addKpiValuesItem(KpiValue kpiValuesItem) {
+  public KPIValueRequest addKpiValuesItem(ValueResponse kpiValuesItem) {
     this.kpiValues.add(kpiValuesItem);
     return this;
   }
@@ -63,11 +62,11 @@ public class KPIValueRequest   {
 
   @Valid
 
-  public List<KpiValue> getKpiValues() {
+  public List<ValueResponse> getKpiValues() {
     return kpiValues;
   }
 
-  public void setKpiValues(List<KpiValue> kpiValues) {
+  public void setKpiValues(List<ValueResponse> kpiValues) {
     this.kpiValues = kpiValues;
   }
 

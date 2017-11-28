@@ -23,20 +23,14 @@ public class KpiValue   {
   @JsonProperty("kpi")
   private KPI kpi = null;
   
-  @JsonProperty("targetValue")
-  private Long targetValue=null;
+  @JsonProperty("kpiCode")
+  private String kpiCode = null; 
   
-  @JsonProperty("targetDescription")
-  private String targetDescription = null;
-
-  @JsonProperty("resultValue")
-  private Long resultValue = null;
-  
-  @JsonProperty("resultDescription")
-  private String resultDescription = null;
-
   @JsonProperty("tenantId")
   private String tenantId = null;
+  
+  @JsonProperty("valueList")
+  private List<KpiValueDetail> valueList = null ; 
 
   @JsonProperty("documents")
   private List<ValueDocument> documents = null;
@@ -47,28 +41,20 @@ public class KpiValue   {
   
 
   
-  public String getTargetDescription() {
-	return targetDescription;
+  public String getKpiCode() {
+	return kpiCode;
 }
 
-public void setTargetDescription(String targetDescription) {
-	this.targetDescription = targetDescription;
+public void setKpiCode(String kpiCode) {
+	this.kpiCode = kpiCode;
 }
 
-public Long getTargetValue() {
-	return targetValue;
+public List<KpiValueDetail> getValueList() {
+	return valueList;
 }
 
-public void setTargetValue(Long targetValue) {
-	this.targetValue = targetValue;
-}
-
-public String getResultDescription() {
-	return resultDescription;
-}
-
-public void setResultDescription(String resultDescription) {
-	this.resultDescription = resultDescription;
+public void setValueList(List<KpiValueDetail> valueList) {
+	this.valueList = valueList;
 }
 
 public String getId() {
@@ -100,23 +86,6 @@ public KpiValue kpi(KPI kpi) {
     this.kpi = kpi;
   }
 
-  public KpiValue resultValue(Long resultValue) {
-    this.resultValue = resultValue;
-    return this;
-  }
-
-   /**
-   * Actual Value at ULB Level for the KPI Target
-   * @return resultValue
-  **/
-
-  public Long getResultValue() {
-    return resultValue;
-  }
-
-  public void setResultValue(Long resultValue) {
-    this.resultValue = resultValue;
-  }
 
   public KpiValue tenantId(String tenantId) {
     this.tenantId = tenantId;
@@ -197,7 +166,6 @@ public KpiValue kpi(KPI kpi) {
     }
     KpiValue kpiValue = (KpiValue) o;
     return Objects.equals(this.kpi, kpiValue.kpi) &&
-        Objects.equals(this.resultValue, kpiValue.resultValue) &&
         Objects.equals(this.tenantId, kpiValue.tenantId) &&
         Objects.equals(this.documents, kpiValue.documents) &&
         Objects.equals(this.auditDetails, kpiValue.auditDetails);
@@ -205,7 +173,7 @@ public KpiValue kpi(KPI kpi) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(kpi, resultValue, tenantId, documents, auditDetails);
+    return Objects.hash(kpi, tenantId, documents, auditDetails);
   }
 
   @Override
@@ -214,7 +182,6 @@ public KpiValue kpi(KPI kpi) {
     sb.append("class KpiValue {\n");
     
     sb.append("    kpi: ").append(toIndentedString(kpi)).append("\n");
-    sb.append("    resultValue: ").append(toIndentedString(resultValue)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    documents: ").append(toIndentedString(documents)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

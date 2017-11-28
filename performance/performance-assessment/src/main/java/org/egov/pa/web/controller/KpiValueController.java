@@ -54,6 +54,7 @@ import org.egov.pa.web.contract.KPIValueResponse;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.egov.pa.web.contract.KPIValueSearchResponse;
 import org.egov.pa.web.contract.RequestInfoWrapper;
+import org.egov.pa.web.contract.ValueResponse;
 import org.egov.pa.web.contract.factory.ResponseInfoFactory;
 import org.egov.pa.web.errorhandler.ErrorResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,7 +95,7 @@ public class KpiValueController implements KpiValue {
         }
         final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueRequest, Boolean.TRUE);
         if (!errorResponses.isEmpty())
-            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        	return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         kpiValueService.createKpiValue(kpiValueRequest); 
         return getCreateUpdateSuccessResponse(kpiValueRequest);
     }
@@ -141,8 +142,9 @@ public class KpiValueController implements KpiValue {
 	public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
 			 @RequestParam(value="departmentId", required = false) Long departmentId,
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
-			 @RequestParam("finYear") List<String> finYearList,
+			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo) {
+    	
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
     	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
@@ -150,11 +152,14 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setDepartmentId(departmentId);
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
-        List<org.egov.pa.model.KpiValue> kpiValueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
-        return getSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo()); 
+    	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
+        if (!errorResponses.isEmpty())
+            return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
+        List<ValueResponse> valueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 
+        return getSearchSuccessResponse(valueList, kpiValueSearchReq.getRequestInfo()); 
     }
     
-    public ResponseEntity<?> getSearchSuccessResponse(final List<org.egov.pa.model.KpiValue> kpiValues,
+    public ResponseEntity<?> getSearchSuccessResponse(final List<ValueResponse> kpiValues,
             final RequestInfo requestInfo) {
         final KPIValueSearchResponse kpiValueSearchResponse = new KPIValueSearchResponse();
         final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true);

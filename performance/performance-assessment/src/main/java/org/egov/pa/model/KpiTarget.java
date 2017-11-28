@@ -14,19 +14,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class KpiTarget   {
   @JsonProperty("id")
-  private Long id = null;
+  private String id = null;
 
   @JsonProperty("kpiCode")
   private String kpiCode = null;
 
   @JsonProperty("targetValue")
-  private Long targetValue = null;
-
-  @JsonProperty("targetDescription")
-  private String targetDescription = null;
-
-  @JsonProperty("instructions")
-  private String instructions = null;
+  private String targetValue = null;
+  
+  @JsonProperty("tenantId")
+  private String tenantId = null;
 
   @JsonProperty("createdBy")
   private Long createdBy = null;
@@ -39,8 +36,18 @@ public class KpiTarget   {
 
   @JsonProperty("lastModifiedDate")
   private Long lastModifiedDate = null;
+  
+  
 
-  public KpiTarget id(Long id) {
+  public String getTenantId() {
+	return tenantId;
+}
+
+public void setTenantId(String tenantId) {
+	this.tenantId = tenantId;
+}
+
+public KpiTarget id(String id) {
     this.id = id;
     return this;
   }
@@ -51,11 +58,11 @@ public class KpiTarget   {
   **/
 
 
-  public Long getId() {
+  public String getId() {
     return id;
   }
 
-  public void setId(Long id) {
+  public void setId(String id) {
     this.id = id;
   }
 
@@ -79,7 +86,7 @@ public class KpiTarget   {
     this.kpiCode = kpiCode;
   }
 
-  public KpiTarget targetValue(Long targetValue) {
+  public KpiTarget targetValue(String targetValue) {
     this.targetValue = targetValue;
     return this;
   }
@@ -91,51 +98,14 @@ public class KpiTarget   {
   @NotNull
 
 
-  public Long getTargetValue() {
+  public String getTargetValue() {
     return targetValue;
   }
 
-  public void setTargetValue(Long targetValue) {
+  public void setTargetValue(String targetValue) {
     this.targetValue = targetValue;
   }
 
-  public KpiTarget targetDescription(String targetDescription) {
-    this.targetDescription = targetDescription;
-    return this;
-  }
-
-   /**
-   * Detailed description for target value in words
-   * @return targetDescription
-  **/
-
- @Pattern(regexp="^[a-zA-Z0-9 ]+$")
-  public String getTargetDescription() {
-    return targetDescription;
-  }
-
-  public void setTargetDescription(String targetDescription) {
-    this.targetDescription = targetDescription;
-  }
-
-  public KpiTarget instructions(String instructions) {
-    this.instructions = instructions;
-    return this;
-  }
-
-   /**
-   * Instructions on how to achieve the target
-   * @return instructions
-  **/
-
- @Pattern(regexp="^[a-zA-Z0-9 ]+$")
-  public String getInstructions() {
-    return instructions;
-  }
-
-  public void setInstructions(String instructions) {
-    this.instructions = instructions;
-  }
 
   public KpiTarget createdBy(Long createdBy) {
     this.createdBy = createdBy;
@@ -226,8 +196,6 @@ public class KpiTarget   {
     return Objects.equals(this.id, kpiTarget.id) &&
         Objects.equals(this.kpiCode, kpiTarget.kpiCode) &&
         Objects.equals(this.targetValue, kpiTarget.targetValue) &&
-        Objects.equals(this.targetDescription, kpiTarget.targetDescription) &&
-        Objects.equals(this.instructions, kpiTarget.instructions) &&
         Objects.equals(this.createdBy, kpiTarget.createdBy) &&
         Objects.equals(this.lastModifiedBy, kpiTarget.lastModifiedBy) &&
         Objects.equals(this.createdDate, kpiTarget.createdDate) &&
@@ -236,7 +204,7 @@ public class KpiTarget   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, kpiCode, targetValue, targetDescription, instructions, createdBy, lastModifiedBy, createdDate, lastModifiedDate);
+    return Objects.hash(id, kpiCode, targetValue, createdBy, lastModifiedBy, createdDate, lastModifiedDate);
   }
 
   @Override
@@ -247,8 +215,6 @@ public class KpiTarget   {
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    kpiCode: ").append(toIndentedString(kpiCode)).append("\n");
     sb.append("    targetValue: ").append(toIndentedString(targetValue)).append("\n");
-    sb.append("    targetDescription: ").append(toIndentedString(targetDescription)).append("\n");
-    sb.append("    instructions: ").append(toIndentedString(instructions)).append("\n");
     sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
     sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
     sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");

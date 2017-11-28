@@ -275,6 +275,17 @@ class UpdateCancellation extends React.Component {
       });
 
 
+      if(process.status && process.status!="Rejected"){
+          
+          $("#orderNumber").prop("disabled", true)
+          $("#orderDate").prop("disabled", true)
+          $("#terminationDate").prop("disabled", true)
+          $("#reasonForCancellation").prop("disabled", true)
+          $("#documents").prop("disabled", true)
+          $("#remarks").prop("disabled", true)
+      }
+
+
       $('#orderDate').datepicker({
           format: 'dd/mm/yyyy',
           autoclose:true,
@@ -352,6 +363,104 @@ class UpdateCancellation extends React.Component {
 
     handleProcess(e) {
 
+        e.preventDefault();
+
+        if ($('#update-promotion').valid()) {}
+        var ID = e.target.id;
+        var _this = this;
+        var agreement = Object.assign({}, _this.state.agreement);
+  
+        agreement.action = "cancellation";
+        agreement.workflowDetails.action = ID;
+  
+        console.log("Documents",agreement);
+  
+        if (agreement.documents && agreement.documents.constructor == FileList) {
+          let counter = agreement.documents.length,
+            breakout = 0,
+            docs = [];
+          for (let i = 0, len = agreement.documents.length; i < len; i++) {
+            this.makeAjaxUpload(agreement.documents[i], function(err, res) {
+              if (breakout == 1) {
+                console.log("breakout", breakout);
+                return;
+              } else if (err) {
+                showError("Error uploding the files. Please contact Administrator");
+                breakout = 1;
+              } else {
+                counter--;
+                docs.push({fileStore:res.files[0].fileStoreId});
+                console.log("docs", docs);
+                if (counter == 0 && breakout == 0) {
+                  agreement.documents = docs;
+  
+                  var body = {
+                    "RequestInfo": requestInfo,
+                    "Agreement": agreement
+                  };
+  
+                  $.ajax({
+                    url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
+                    type: 'POST',
+                    dataType: 'json',
+                    data: JSON.stringify(body),
+                    contentType: 'application/json',
+                    headers: {
+                      'auth-token': authToken
+                    },
+                    success: function(res) {
+  
+                      showSuccess("Forwarded successfully");
+  
+                    },
+                    error: function(err) {
+                      if(err.responseJSON.Error && err.responseJSON.Error.message)
+                        showError(err.responseJSON.Error.message);
+                      else
+                        showError("Something went wrong. Please contact Administrator");
+                    }
+  
+                  })
+  
+                }
+              }
+            })
+          }
+          // if (breakout == 1)
+          //     return;
+        } else {
+  
+          var body = {
+            "RequestInfo": requestInfo,
+            "Agreement": agreement
+          };
+  
+          $.ajax({
+            url: baseUrl + "/lams-services/agreements/cancel/_update?tenantId=" + tenantId,
+            type: 'POST',
+            dataType: 'json',
+            data: JSON.stringify(body),
+            contentType: 'application/json',
+            headers: {
+              'auth-token': authToken
+            },
+            success: function(res) {
+  
+              showSuccess("Forwarded successfully");
+  
+            },
+            error: function(err) {
+              if(err.responseJSON.Error && err.responseJSON.Error.message)
+                showError(err.responseJSON.Error.message);
+              else
+                showError("Something went wrong. Please contact Administrator");
+            }
+  
+          })
+  
+        }
+  
+
     }
 
 
@@ -381,7 +490,7 @@ class UpdateCancellation extends React.Component {
                   </button> &nbsp; </span>)
             })
           }
-        }
+         }
 
         const renderAssetDetails=function(){
            return(
@@ -602,7 +711,7 @@ class UpdateCancellation extends React.Component {
                 </div>
             </div>
           );
-        }
+         }
 
         const renderAgreementDetails = function(){
            return(
@@ -787,7 +896,7 @@ class UpdateCancellation extends React.Component {
                </div>
            </div>
          );
-        }
+         }
 
         const renderWorkFlowDetails = function(){
           return(
@@ -852,7 +961,7 @@ class UpdateCancellation extends React.Component {
             </div>
           );
 
-        }
+         }
 
 
     return(

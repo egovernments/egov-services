@@ -1766,6 +1766,12 @@ function printValue(object = "", values) {
                     } else {
                         $('[data-ph="no"]').prop("checked", true);
                     }
+                } else if (key == "medicalReportProduced") {
+                    if ([true, "true"].indexOf(values[key]) > -1) {
+                        $('[data-mrp="yes"]').prop("checked", true);
+                    } else {
+                        $('[data-mrp="no"]').prop("checked", true);
+                    }
                 } else if (key == "bank" && values[key]) {
                     commonApiPost("egf-masters", "bankbranches", "_search", {
                         "pageSize" : 500,

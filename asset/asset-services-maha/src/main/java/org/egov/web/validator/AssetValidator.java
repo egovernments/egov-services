@@ -4,8 +4,11 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.contract.AssetRequest;
@@ -17,6 +20,7 @@ import org.egov.model.DefectLiability;
 import org.egov.model.Department;
 import org.egov.model.Disposal;
 import org.egov.model.FundSource;
+import org.egov.model.LandDetail;
 import org.egov.model.Location;
 import org.egov.model.Revaluation;
 import org.egov.model.criteria.AssetCriteria;
@@ -60,9 +64,11 @@ public class AssetValidator implements Validator {
 		Asset asset = assetRequest.getAsset();
 		AssetCategory assetCategory = asset.getAssetCategory();
 
+		validateLandDetails(assetRequest,errorMap);
+	    validateAndEnrichStateWideMasters(assetRequest, errorMap);
 		addMissingPathForPersister(asset);
-		validateAndEnrichStateWideMasters(assetRequest, errorMap);
-		if (!assetCategory.getAssetCategoryType().equals(AssetCategoryType.LAND)) {
+		validateDepreciationRate(assetCategory.getDepreciationRate(),assetCategory.getAssetCategoryType(),errorMap);
+		if ((!assetCategory.getAssetCategoryType().equals(AssetCategoryType.LAND))) {
 			validateAnticipatedLife(asset.getAnticipatedLife(), assetCategory.getAssetCategoryType(),
 					assetCategory.getDepreciationRate(), errorMap);
 			if (asset.getWipReferenceNo() == null && StringUtils.isEmpty(asset.getWipReferenceNo())) {
@@ -130,7 +136,8 @@ public class AssetValidator implements Validator {
 			errorMap.put("EGASSET_INVALID_ASSETCATEGORY", "the given AssetCategory Id is Invalid");
 		else {
 			System.err.println("masterAssetCat"+masterAssetCat);
-			 if(asset.getAssetCategory().getIsAssetAllow().equals(false)) 
+			if (masterAssetCat.getIsAssetAllow().equals(false))
+			/* if(asset.getAssetCategory().getIsAssetAllow().equals(false)) */
 				   errorMap.put("Asset_ParentCategory", "Cannot Create asset with parent category");
 			asset.setAssetCategory(masterAssetCat);
 		}
@@ -139,8 +146,9 @@ public class AssetValidator implements Validator {
 			errorMap.put("EGASSET_INVALID_DEPARTMENT", "the  given Department code is Invalid");
 		else
 			asset.setDepartment(department);
-
-		String fundSourceCode = asset.getFundSource().getCode();
+		
+		if(asset.getFundSource()!=null) {
+        String fundSourceCode = asset.getFundSource().getCode();
 		
 		if (fundSourceCode != null && !fundSourceCode.isEmpty()) {
 			FundSource fundSource = fundMap.get(asset.getFundSource().getCode());
@@ -149,16 +157,19 @@ public class AssetValidator implements Validator {
 			else
 				asset.setFundSource(fundSource);
 		}
+		}
 		
 	}
 
 	private void validateAndEnrichUlbWideMasters(AssetRequest assetRequest) {
+		
+		
 
 	}
 
 	private void validateAnticipatedLife(Long anticipatedLife,AssetCategoryType type, Double depreciationRate, Map<String, String> errorMap) {
 
-		if(anticipatedLife!=null) {
+		if(anticipatedLife!=null&&depreciationRate!=null) {
 		long newVal = new Double(Math.round(100 / depreciationRate)).longValue();
 		if (anticipatedLife-newVal != 0) {
 			errorMap.put("Asset_anticipatedLife", "anticipatedLife Value is wrong");
@@ -166,6 +177,13 @@ public class AssetValidator implements Validator {
 		}else
 			errorMap.put("Asset_anticipatedLife", "anticipatedLife Cannot be Null For "+ type.toString()+ " Assets");			
 	}
+	
+	private void validateDepreciationRate(Double depreciationRate,AssetCategoryType type ,Map<String, String> errorMap) {
+		/*if(type.equals(AssetCategoryType.LAND)||type.equals(AssetCategoryType.IMMOVABLE)||type.equals(AssetCategoryType.MOVABLE))*/
+		if ((!type.equals(AssetCategoryType.LAND)))
+		if(depreciationRate==null)
+			errorMap.put("AssetCategory_depreciationRate", "depreciationRate Cannot be Null For "+type.toString()+ " AssetCategory");
+			}
 
 	public void addMissingPathForPersister(Asset asset) {
 
@@ -266,7 +284,25 @@ public class AssetValidator implements Validator {
 			throw new CustomException(errorMap);
 	}
 	
-public void validateAssetId(AssetRequest assetRequest) {
+	private void validateLandDetails(AssetRequest assetRequest, Map<String, String> errorMap) {
+		List<LandDetail> landDetails = assetRequest.getAsset().getLandDetails();
+		List<String> landDetailCode = new ArrayList<>();
+		landDetailCode.add(landDetails.get(0).getCode());
+		for (int i=1;i<landDetails.size();i++) {
+			if((!landDetailCode.isEmpty())&&(!landDetailCode.contains(landDetails.get(i).getCode())))
+			landDetailCode.add(landDetails.get(i).getCode());
+			else
+				errorMap.put("Asset_LandDetails", "Duplicate LandDetails cannot be given for a single asset");
+		}
+		
+       /*for (String ld : landDetailCode) {
+			System.err.println(ld);
+			
+		}
+      */
+	}
+	
+  public void validateAssetId(AssetRequest assetRequest) {
 		
 		Map<String, String> errorMap = new HashMap<>();
 		Asset asset = assetService.getAsset(assetRequest.getAsset().getTenantId(),

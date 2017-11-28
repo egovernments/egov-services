@@ -61,8 +61,17 @@ public class MasterDataService {
 				.map(asset -> asset.getDepartment().getCode()).collect(Collectors.toSet());
 		Set<String> modeOfAcSet = assets.stream().filter(a -> a.getModeOfAcquisition().getCode() != null)
 				.map(asset -> asset.getModeOfAcquisition().getCode()).collect(Collectors.toSet());
-		Set<String> fundSet = assets.stream().filter(a -> a.getFundSource().getCode() != null)
-				.map(a -> a.getFundSource().getCode()).collect(Collectors.toSet());
+		/*Set<String> fundSet = assets.stream().filter(a -> a.getFundSource().getCode() != null)
+				.map(a -> a.getFundSource().getCode()).collect(Collectors.toSet());*/
+		  Set<String> fundSet = assets.stream().filter(a -> {
+			if (a.getFundSource() != null && a.getFundSource().getCode() != null)
+				return true;
+			else
+				return false;
+		}).map(a -> a.getFundSource().getCode()).collect(Collectors.toSet());
+		
+		
+		/**/
 		
 		// module Map
 		Map<String, Map<String, Map<String, String>>> moduleMapInput = new HashMap<>();
@@ -126,7 +135,7 @@ public class MasterDataService {
 	}
 	
 	public Map<String, Department> getDepartmentMapFromJSONArray(JSONArray jsonArray ) {
-
+		System.err.println("jsonArray"+jsonArray);
 		if(jsonArray.isEmpty())
 			return new HashMap<String,Department>();
 		

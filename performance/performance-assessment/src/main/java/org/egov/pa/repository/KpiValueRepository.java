@@ -13,6 +13,8 @@ public interface KpiValueRepository {
 	public void persistKpiValue(final KPIValueRequest kpiValueRequest);
     
     public void updateKpiValue(final KPIValueRequest kpiValueRequest);
+    
+    public void persistKpiValueDetail(final KPIValueRequest kpiValueRequest);
 
     public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
     

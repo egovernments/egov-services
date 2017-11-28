@@ -1,5 +1,6 @@
 package org.egov.pa.service.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -8,11 +9,14 @@ import java.util.Map;
 import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
+import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiValueService;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
+import org.egov.pa.web.contract.ValueResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -29,27 +33,25 @@ public class KpiValueServiceImpl implements KpiValueService {
 	@Autowired 
 	@Qualifier("kpiValueRepo")
 	private KpiValueRepository kpiValueRepository;
+	
+	@Autowired 
+	@Qualifier("kpiMasterRepo")
+	private KpiMasterRepository kpiMasterRepository;
 
 	@Override
 	public KPIValueRequest createKpiValue(KPIValueRequest kpiValueRequest) {
-		int numberOfIds = kpiValueRequest.getKpiValues().size();  
-		log.info("KPI Value Create Request Received at Service Level : " + kpiValueRequest);
-		List<Long> kpiValueIds = kpiValueRepository.getNewKpiIds(numberOfIds);
-		setCreatedDateAndUpdatedDate(kpiValueRequest);
-		if(kpiValueIds.size() == kpiValueRequest.getKpiValues().size()) { 
-			for(int i=0 ; i < kpiValueIds.size() ; i++) {
-				kpiValueRequest.getKpiValues().get(i).setId(String.valueOf(kpiValueIds.get(i)));
-				if(null != kpiValueRequest.getKpiValues().get(i).getDocuments()) { 
-					for(int j=0 ; j< kpiValueRequest.getKpiValues().get(i).getDocuments().size() ; j++) { 
-						kpiValueRequest.getKpiValues().get(i).getDocuments().get(j).setValueId(kpiValueIds.get(i));
-						kpiValueRequest.getKpiValues().get(i).getDocuments().get(j).setKpiCode(kpiValueRequest.getKpiValues().get(i).getKpi().getCode());
-						kpiValueRequest.getKpiValues().get(i).getDocuments().get(j).setAuditDetails(kpiValueRequest.getKpiValues().get(i).getAuditDetails()); 
-					}
-				}
+		kpiValueDetailListUpdate(kpiValueRequest);
+		kpiValueRepository.persistKpiValueDetail(kpiValueRequest);
+    	return kpiValueRequest; 
+	}
+	
+	private void kpiValueDetailListUpdate(KPIValueRequest kpiValueRequest) {
+		List<ValueResponse> valueResponseList = kpiValueRequest.getKpiValues();
+		for(ValueResponse vr : valueResponseList) { 
+			for(KpiValueDetail detail : vr.getKpiValue().getValueList()) { 
+				detail.setValueid(vr.getKpiValue().getId());
 			}
 		}
-    	kpiValueRepository.persistKpiValue(kpiValueRequest);
-    	return kpiValueRequest; 
 	}
 
 	@Override
@@ -66,21 +68,54 @@ public class KpiValueServiceImpl implements KpiValueService {
 	}
 	
 	@Override
-	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
-		return kpiValueRepository.searchKpiValue(kpiValueSearchReq); 
+	public List<ValueResponse> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+		List<KpiValue> kpiValueList = kpiValueRepository.searchKpiValue(kpiValueSearchReq);
+		List<String> kpiCodeList = new ArrayList<>(); 
+		for(int i=0 ; i<kpiValueList.size() ; i++) { 
+			for(int j=0 ; j < kpiValueList.get(i).getValueList().size() ; j++) { 
+					kpiValueList.get(i).getValueList().get(j).setValueid(kpiValueList.get(i).getId());
+			}
+			kpiCodeList.add(kpiValueList.get(i).getKpiCode()); 
+		}
+		List<KPI> kpiList = new ArrayList<>(); 
+		if(kpiCodeList.size() > 0) { 
+			kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList);
+		}
+		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);
+	}
+	
+	private List<ValueResponse> sortKpiAndValues(KPIValueSearchRequest kpiValueSearchReq, List<KpiValue> kpiValueList, List<KPI> kpiList) { 
+		List<ValueResponse> list = new ArrayList<>(); 
+		for(int i=0 ; i<kpiValueList.size() ; i++) { 
+			for(int j=0 ; j<kpiList.size() ; j++) {
+				if(kpiValueList.get(i).getKpiCode().equals(kpiList.get(j).getCode())) { 
+					if(null != kpiValueSearchReq.getDepartmentId() && kpiList.get(j).getDepartmentId() == kpiValueSearchReq.getDepartmentId()) {
+						if(null != kpiValueSearchReq.getKpiCodes() && kpiValueSearchReq.getKpiCodes().size() > 0 
+								&& kpiValueSearchReq.getKpiCodes().contains(kpiList.get(j).getCode())) {
+							list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),kpiValueList.get(i)));
+						} else if(null == kpiValueSearchReq.getKpiCodes()){ 
+							list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),kpiValueList.get(i)));	
+						}
+								
+					}
+				}
+			}
+		}
+		log.info("After sorting KPI and Value List : " + list.toString()); 
+		return list; 
 	}
 	
 	
 	private void setCreatedDateAndUpdatedDate(KPIValueRequest kpiValueRequest) {
-    	List<KpiValue> kpiValues = kpiValueRequest.getKpiValues();
-    	for(KpiValue value : kpiValues) { 
-    		AuditDetails audit = new AuditDetails(); 
-    		audit.setCreatedTime(new java.util.Date().getTime());
-    		audit.setCreatedBy(kpiValueRequest.getRequestInfo().getUserInfo().getId());
-    		audit.setLastModifiedTime(new java.util.Date().getTime());
-    		audit.setLastModifiedBy(kpiValueRequest.getRequestInfo().getUserInfo().getId());
-    		value.setAuditDetails(audit);
-    	}
+		for(ValueResponse vr : kpiValueRequest.getKpiValues()) { 
+			KpiValue value = vr.getKpiValue();
+			AuditDetails audit = new AuditDetails(); 
+			audit.setCreatedTime(new java.util.Date().getTime());
+			audit.setCreatedBy(kpiValueRequest.getRequestInfo().getUserInfo().getId());
+			audit.setLastModifiedTime(new java.util.Date().getTime());
+			audit.setLastModifiedBy(kpiValueRequest.getRequestInfo().getUserInfo().getId());
+			value.setAuditDetails(audit);
+		}
     }
 	
 	public boolean checkKpiExists(String kpiCode) { 

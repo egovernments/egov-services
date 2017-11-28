@@ -2,10 +2,10 @@ package org.egov.pa.service;
 
 import java.util.List;
 
-import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueList;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
+import org.egov.pa.web.contract.ValueResponse;
 import org.springframework.stereotype.Service;
 
 
@@ -40,7 +40,7 @@ public interface KpiValueService {
 	 * @param kpiValueSearchReq
 	 * @return
 	 */
-	public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+	public List<ValueResponse> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
 	
 	/** 
 	 * This API is used to search the existing records of Actual Values

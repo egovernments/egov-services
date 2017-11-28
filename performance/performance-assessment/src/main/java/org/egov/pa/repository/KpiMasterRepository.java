@@ -28,6 +28,8 @@ public interface KpiMasterRepository {
     
     public Boolean getKpiType(String kpiCode, String tenantId); 
     
-    public List<DocumentTypeContract> getDocumentForKpi(String kpiCode); 
+    public List<DocumentTypeContract> getDocumentForKpi(String kpiCode);
+    
+    public List<KPI> getKpiByCode(List<String> kpiCodeList); 
     
 }

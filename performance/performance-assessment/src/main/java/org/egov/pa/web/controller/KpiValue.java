@@ -39,7 +39,7 @@ public interface KpiValue {
     public ResponseEntity<?> search(@RequestParam("tenantId") List<String> tenantIdList,
 			 @RequestParam(value="departmentId", required = false) Long departmentId,
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCode,
-			 @RequestParam("finYear") List<String> finYearList,
+			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo);
 
 }

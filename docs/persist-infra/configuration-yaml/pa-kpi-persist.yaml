@@ -6,7 +6,7 @@ serviceMaps:
    description: Create a new KPI Master Record
    fromTopic: egov.pa.newkpi-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, targetvalue, targetdescription, instructions, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, instructions, periodicity, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -20,12 +20,9 @@ serviceMaps:
        
        - jsonPath: $.KPIs.*.targetType
        
-       - jsonPath: $.KPIs.*.targetValue
-         type: LONG
-         
-       - jsonPath: $.KPIs.*.targetDescription
-         
        - jsonPath: $.KPIs.*.instructions
+       
+       - jsonPath: $.KPIs.*.periodicity
        
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG
@@ -60,7 +57,7 @@ serviceMaps:
    description: Update an existing KPI Master Record
    fromTopic: egov.pa.newkpi-update
    queryMaps: 
-    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, targettype = ?, targetvalue = ?, targetdescription = ?,  instructions =?, lastmodifiedby = ?, lastmodifieddate = ?, department = ? WHERE code = ? AND id = ? ;
+    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, department = ? , instructions =?, periodicity = ?, active = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -68,21 +65,18 @@ serviceMaps:
        
        - jsonPath: $.KPIs.*.financialYear
        
-       - jsonPath: $.KPIs.*.targetType
-       
-       - jsonPath: $.KPIs.*.targetValue
+       - jsonPath: $.KPIs.*.departmentId
          type: LONG
-         
-       - jsonPath: $.KPIs.*.targetDescription
-         
+       
        - jsonPath: $.KPIs.*.instructions
+       
+       - jsonPath: $.KPIs.*.periodicity
+       
+       - jsonPath: $.KPIs.*.active
          
        - jsonPath: $.RequestInfo.userInfo.id
          
        - jsonPath: $.KPIs.*.auditDetails.lastModifiedTime
-         type: LONG
-       
-       - jsonPath: $.KPIs.*.departmentId
          type: LONG
        
        - jsonPath: $.KPIs.*.code
@@ -136,44 +130,19 @@ serviceMaps:
    description: Insert actual value for a KPI Master Record
    fromTopic: egov.pa.kpivalue-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_value (id, kpicode, tenantid, actualvalue, actualdescription,  createdby, createddate) VALUES (?, ?, ? ,? ,? ,?, ?) ; 
+    - query: INSERT INTO egpa_kpi_value (id, kpicode, tenantid, createdby, createddate) VALUES (nextval('seq_egpa_kpi_value'), ?, ? ,? ,?) ; 
       basePath: $.kpiValues.*
       jsonMaps:
                
-       - jsonPath: $.kpiValues.*.id
-                      
        - jsonPath: $.kpiValues.*.kpi.code
          
        - jsonPath: $.kpiValues.*.tenantId
          
-       - jsonPath: $.kpiValues.*.resultValue
-         type: LONG
-         
-       - jsonPath: $.kpiValues.*.resultDescription
-         
-       - jsonPath: $.kpiValues.*.auditDetails.createdBy
+       - jsonPath: $.kpiValues.*.kpiValue.auditDetails.createdBy
          type: LONG
        
-       - jsonPath: $.kpiValues.*.auditDetails.createdTime
+       - jsonPath: $.kpiValues.*.kpiValue.auditDetails.createdTime
          type: LONG  
-         
-    - query: INSERT INTO egpa_kpi_value_documents (id, documentcode, kpicode, valueid, filestoreid, createdby, createddate) VALUES (nextval('seq_egpa_kpi_value_documents'), ?, ? ,? ,? ,?, ?) ; 
-      basePath: $.kpiValues.*.documents.*
-      jsonMaps:
-       
-       - jsonPath: $.kpiValues.*.documents.*.code
-         
-       - jsonPath: $.kpiValues.*.documents.*.kpiCode
-         
-       - jsonPath: $.kpiValues.*.documents.*.valueId
-       
-       - jsonPath: $.kpiValues.*.documents.*.fileStoreId
-         
-       - jsonPath: $.kpiValues.*.documents.*.auditDetails.createdBy
-         type: LONG
-       
-       - jsonPath: $.kpiValues.*.documents.*.auditDetails.createdTime
-         type: LONG
          
  - version: 1.0
    name: kpiValue update
@@ -200,4 +169,73 @@ serviceMaps:
        - jsonPath: $.kpiValues.*.tenantId
          
        - jsonPath: $.kpiValues.*.id
+         type: LONG
+         
+ - version: 1.0
+   name: kpiTarget create
+   description: Create and Set the target for a particular KPI Record
+   fromTopic: egov.pa.kpitarget-create
+   queryMaps: 
+    - query: INSERT INTO egpa_kpi_master_target (id, kpicode, targetvalue, tenantid, createdby, createddate) values (nextval('seq_egpa_kpi_master_target'), ?, ?, ?, ?, ?)   
+      basePath: $.kpiTargets.*
+      jsonMaps:
+       
+       - jsonPath: $.kpiTargets.*.kpiCode
+         
+       - jsonPath: $.kpiTargets.*.targetValue  
+       
+       - jsonPath: $.kpiTargets.*.tenantId
+         
+       - jsonPath: $.RequestInfo.userInfo.id
          type: LONG  
+         
+       - jsonPath: $.kpiTargets.*.createdDate
+         type: LONG
+         
+ - version: 1.0
+   name: kpiTarget update
+   description: Update the value of the target for a particular KPI Record
+   fromTopic: egov.pa.kpitarget-update
+   queryMaps: 
+    - query: UPDATE egpa_kpi_master_target set targetvalue = ? , lastmodifiedby = ?, lastmodifieddate = ? WHERE id = ? and kpicode = ?  
+      basePath: $.kpiTargets.*
+      jsonMaps:
+       
+       - jsonPath: $.kpiTargets.*.targetValue  
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG  
+         
+       - jsonPath: $.kpiTargets.*.lastModifiedDate
+         type: LONG
+         
+       - jsonPath: $.kpiTargets.*.id
+         
+       - jsonPath: $.kpiTargets.*.kpiCode
+         
+ - version: 1.0
+   name: kpiValueDetail create
+   description: Insert actual value for a KPI Master Record
+   fromTopic: egov.pa.kpivaluedetail-create
+   queryMaps: 
+    - query: DELETE FROM egpa_kpi_value_detail WHERE valueid = ?  
+      basePath: $.kpiValues.*.kpiValue
+      jsonMaps:
+               
+       - jsonPath: $.kpiValues.*.kpiValue.id
+
+    - query: INSERT INTO egpa_kpi_value_detail (id, valueid, period, value, createdby, createddate) values (nextval('seq_egpa_kpi_value_detail'), ?, ?, ?, ?, ?)   
+      basePath: $.kpiValues.*.kpiValue.valueList.*
+      jsonMaps:
+       
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.valueid
+         
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.period  
+       
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.value
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG  
+         
+       - jsonPath: $.kpiValues.*.auditDetails.createdTime
+         type: LONG

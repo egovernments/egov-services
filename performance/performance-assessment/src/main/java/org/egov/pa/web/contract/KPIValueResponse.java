@@ -7,7 +7,6 @@ import java.util.Objects;
 import javax.validation.Valid;
 
 import org.egov.common.contract.response.ResponseInfo;
-import org.egov.pa.model.KpiValue;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,7 +20,7 @@ public class KPIValueResponse   {
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("kpiValues")
-  private List<KpiValue> kpiValues = null;
+  private List<ValueResponse> kpiValues = null;
 
   public KPIValueResponse responseInfo(ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
@@ -43,14 +42,14 @@ public class KPIValueResponse   {
     this.responseInfo = responseInfo;
   }
 
-  public KPIValueResponse kpiValues(List<KpiValue> kpiValues) {
+  public KPIValueResponse kpiValues(List<ValueResponse> kpiValues) {
     this.kpiValues = kpiValues;
     return this;
   }
 
-  public KPIValueResponse addKpiValuesItem(KpiValue kpiValuesItem) {
+  public KPIValueResponse addKpiValuesItem(ValueResponse kpiValuesItem) {
     if (this.kpiValues == null) {
-      this.kpiValues = new ArrayList<KpiValue>();
+      this.kpiValues = new ArrayList<ValueResponse>();
     }
     this.kpiValues.add(kpiValuesItem);
     return this;
@@ -63,11 +62,11 @@ public class KPIValueResponse   {
 
   @Valid
 
-  public List<KpiValue> getKpiValues() {
+  public List<ValueResponse> getKpiValues() {
     return kpiValues;
   }
 
-  public void setKpiValues(List<KpiValue> kpiValues) {
+  public void setKpiValues(List<ValueResponse> kpiValues) {
     this.kpiValues = kpiValues;
   }
 

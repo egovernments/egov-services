@@ -48,148 +48,127 @@ import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.model.AuditDetails;
-import org.egov.pa.model.Document;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
-import org.egov.pa.model.TargetType;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Component
+@Slf4j
 public class PerformanceAssessmentRowMapper {
 
-	public static final Logger LOGGER = LoggerFactory.getLogger(PerformanceAssessmentRowMapper.class);
-
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
-		public Map<String, KPI> kpiMap = new HashMap<>();
-		public Map<String, List<Document>> docMap = new HashMap<>();
-		public List<Long> docIdList = new ArrayList<>();
-		public static final String TRUE_FLAG = "true";
-		public static final String FALSE_FLAG = "false"; 
 
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-			if (!kpiMap.containsKey(rs.getLong("id"))) {
-				KPI kpi = new KPI();
-				kpi.setId(String.valueOf(rs.getLong("id")));
-				kpi.setName(rs.getString("name"));
-				kpi.setCode(rs.getString("code"));
-				kpi.setFinancialYear(rs.getString("finYear"));
-				AuditDetails audit = new AuditDetails();
-				audit.setCreatedBy(rs.getLong("createdBy"));
-				audit.setCreatedTime(rs.getLong("createdDate"));
-				audit.setLastModifiedBy(rs.getLong("lastModifiedBy"));
-				audit.setLastModifiedTime(rs.getLong("lastModifiedDate"));
-				kpi.setTargetValue(rs.getLong("targetValue"));
-				kpi.setTargetType(rs.getString("targetType"));
-				kpi.setTargetDescription(rs.getString("targetDescription"));
-				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
-					if(rs.getLong("targetValue") == 1) 
-						kpi.setTargetDescription("Yes");
-					else if(rs.getLong("targetValue") == 2)
-						kpi.setTargetDescription("No");
-					else if(rs.getLong("targetValue") == 3)
-						kpi.setTargetDescription("In Progress");
-				}
-				if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.VALUE.toString())) { 
-					kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
-				}
-				kpi.setInstructions(rs.getString("instructions"));
-				kpi.setDepartmentId(rs.getLong("departmentId"));
-				kpiMap.put(String.valueOf(rs.getLong("id")), kpi);
+			KPI kpi = new KPI(); 
+			kpi.setId(rs.getString("id"));
+			kpi.setName(rs.getString("name"));
+			kpi.setCode(rs.getString("code"));
+			kpi.setDepartmentId(rs.getLong("departmentId"));
+			kpi.setFinancialYear(rs.getString("financialYear"));
+			kpi.setInstructions(rs.getString("instructions"));
+			kpi.setPeriodicity(rs.getString("periodicity"));
+			kpi.setTargetType(rs.getString("targetType"));
+			kpi.setAuditDetails(addAuditDetails(rs));
+			if(StringUtils.isNotBlank(rs.getString("targetId"))) { 
+				KpiTarget target = new KpiTarget();
+				target.setId(rs.getString("targetId"));
+				target.setKpiCode(rs.getString("kpiCode"));
+				target.setTargetValue(rs.getString("targetValue"));
+				target.setTenantId(rs.getString("tenantId"));
+				kpi.setKpiTarget(target);
 			}
-
-			if (docMap.containsKey(String.valueOf(rs.getLong("id")))) {
-				List<Document> docList = docMap.get(String.valueOf(rs.getLong("id")));
-				if (StringUtils.isNotBlank(rs.getString("documentname")) && !docIdList.contains(rs.getLong("docid"))) { 
-						Document doc = new Document();
-						doc.setId(String.valueOf(rs.getLong("docid")));
-						doc.setKpiCode(rs.getString("dockpicode"));
-						doc.setCode(rs.getString("documentcode"));
-						doc.setName(rs.getString("documentname"));
-						doc.setActive(rs.getBoolean("mandatoryflag"));
-						docList.add(doc);	
-						docIdList.add(rs.getLong("docid"));
-				}
-			} else {
-				List<Document> docList = new ArrayList<>();
-				Document doc = new Document();
-				doc.setId(String.valueOf(rs.getLong("docid")));
-				doc.setKpiCode(rs.getString("dockpicode"));
-				doc.setCode(rs.getString("documentcode"));
-				doc.setName(rs.getString("documentname"));
-				doc.setActive(rs.getBoolean("mandatoryflag"));
-				if (StringUtils.isNotBlank(rs.getString("documentname"))) {
-					docList.add(doc);
-					docIdList.add(rs.getLong("docid"));
-				}
-				docMap.put(String.valueOf(rs.getLong("id")), docList);
-			}
-			return null;
+			return kpi;
 		}
 	}
-
+	
 	public class KPIValueListRowMapper implements RowMapper<KpiValueList> {
 		@Override
 		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			KpiValueList valueList = new KpiValueList();
 			valueList.setTenantId(rs.getString("tenantId"));
 			KPI kpi = new KPI();
-			kpi.setCode(rs.getString("kpiCode"));
-			kpi.setTargetValue(rs.getLong("targetValue"));
+			kpi.setCode(rs.getString("code"));
 			kpi.setInstructions(rs.getString("instructions"));
 			valueList.setKpi(kpi);
-			valueList.setFinYear(rs.getString("finYear"));
+			valueList.setFinYear(rs.getString("financialYear"));
 			KpiValue value = new KpiValue();
 			value.setId(String.valueOf(rs.getLong("valueId")));
-			value.setResultValue(rs.getLong("actualValue"));
 			value.setTenantId(rs.getString("tenantId"));
 			List<KpiValue> kpiValueList = new ArrayList<>();
 			kpiValueList.add(value);
-			valueList.setKpiValue(kpiValueList);
+			// valueList.setKpiValue(value);
 			return valueList;
 		}
 	}
-	
+
 	public class KPIValueRowMapper implements RowMapper<KpiValue> {
-		public static final String TRUE_FLAG = "true";
-		public static final String FALSE_FLAG = "false"; 
+		public Map<String, KpiValue> valueMap = new HashMap<>();
+		public Map<String, List<KpiValueDetail>> valueDetailMap = new HashMap<>();
 		@Override
 		public KpiValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-			KpiValue value = new KpiValue(); 
-			value.setId(String.valueOf(rs.getString("valueId"))); 
-			value.setResultValue(rs.getLong("actualValue"));
-			value.setResultDescription(rs.getString("actualDescription"));
-			value.setTenantId(rs.getString("tenantId"));
 			
-			KPI kpi = new KPI();
-			kpi.setId(rs.getString("kpiId"));
-			kpi.setCode(rs.getString("kpiCode"));
-			kpi.setInstructions(rs.getString("instructions"));
-			kpi.setFinancialYear(rs.getString("finYear"));
-			kpi.setName(rs.getString("kpiName"));
-			kpi.setTargetValue(rs.getLong("targetValue"));
-			kpi.setTargetType(rs.getString("targetType"));
-			kpi.setTargetDescription(rs.getString("targetDescription"));
-			if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
-				if(rs.getLong("targetValue") == 1) kpi.setTargetDescription("Yes");
-				else if(rs.getLong("targetValue") == 2) kpi.setTargetDescription("No");
-				else if(rs.getLong("targetValue") == 3) kpi.setTargetDescription("In Progress");
-				
-				if(rs.getLong("actualValue") == 1) value.setResultDescription("Yes");
-				else if (rs.getLong("actualValue") == 2) value.setResultDescription("No");
-				else if (rs.getLong("actualValue") == 3) value.setResultDescription("In Progress");
+			if(!valueMap.containsKey(rs.getString("id"))) { 
+				KpiValue value = new KpiValue();
+				value.setId(rs.getString("id"));
+				value.setKpiCode(rs.getString("kpiCode"));
+				value.setTenantId(rs.getString("tenantId"));
+				value.setAuditDetails(addAuditDetails(rs));
+				valueMap.put(rs.getString("id"), value); 
 			}
-			if(null != rs.getString("targetType") && rs.getString("targetType").equals(TargetType.VALUE.toString())) { 
-				kpi.setTargetDescription(String.valueOf(rs.getLong("targetValue")));
-				value.setResultDescription(String.valueOf(rs.getLong("actualValue")));
+			
+			if(StringUtils.isNotBlank(rs.getString("valueId")) && !valueDetailMap.containsKey(rs.getString("valueId"))) { 
+				List<KpiValueDetail> valueDetailList = new ArrayList<>();
+				valueDetailList.add(addValueDetails(rs)); 
+				valueDetailMap.put(rs.getString("valueId"), valueDetailList); 
+			} else if(StringUtils.isNotBlank(rs.getString("valueId")) && valueDetailMap.containsKey(rs.getString("valueId"))) {
+				List<KpiValueDetail> valueDetailList = valueDetailMap.get(rs.getString("valueId"));
+				valueDetailList.add(addValueDetails(rs));
+			} else if(StringUtils.isBlank(rs.getString("valueId"))) { 
+				List<KpiValueDetail> valueDetailList = new ArrayList<>();
+				KpiValueDetail detail =null ; 
+				for(int i=0 ; i<PerformanceAssessmentConstants.MONTHLIST.size();i++) {
+					detail = new KpiValueDetail();
+					detail.setPeriod(PerformanceAssessmentConstants.MONTHLIST.get(i));
+					detail.setValue("");
+					valueDetailList.add(detail);
+				}
+				valueDetailMap.put(rs.getString("kpiCode").concat("_" + rs.getString("tenantId")), valueDetailList); 
 			}
-			value.setKpi(kpi);
-			return value; 
+			return null; 
 		}
+	}
+	
+	private AuditDetails addAuditDetails(ResultSet rs) {
+		AuditDetails audit = new AuditDetails();
+		try { 
+			audit.setCreatedBy(rs.getLong("createdBy"));
+			audit.setCreatedTime(rs.getLong("createdDate"));
+			audit.setLastModifiedBy(rs.getLong("lastModifiedBy"));
+			audit.setLastModifiedTime(rs.getLong("lastModifiedDate"));
+		} catch (Exception e) {
+			log.error("Encountered an exception while adding Audit Details" + e);
+		}
+		return audit;
+	}
+	
+	private KpiValueDetail addValueDetails(ResultSet rs) { 
+		KpiValueDetail detail = new KpiValueDetail(); 
+		try { 
+			detail.setPeriod(rs.getString("period"));
+			detail.setValue(rs.getString("value"));
+			detail.setValueid(rs.getString("valueId"));
+		}  catch (Exception e) {
+			log.error("Encountered an exception while adding Value Details" + e);
+		}
+		return detail;
 	}
 
 }

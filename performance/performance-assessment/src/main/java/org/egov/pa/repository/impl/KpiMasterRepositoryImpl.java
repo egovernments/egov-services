@@ -15,7 +15,6 @@ import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
-import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIMasterRowMapper;
 import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
@@ -126,17 +125,34 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 		List<Department> deptList = restCallService.getDepartmentForId("mh");
 		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
     	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues); 
-    	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
-    	jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
-    	List<KPI> kpiList = getListFromMapper(mapper.kpiMap);
+    	List<KPI> kpiList = jdbcTemplate.query(query, preparedStatementValues.toArray(), new PerformanceAssessmentRowMapper().new KPIMasterRowMapper());
     	log.info("Number of KPIs Obtainted : " + kpiList.size()); 
-    	// List<DepartmentKpiList> deptWiseKpiList = new ArrayList<>();
     	if(null != kpiList && kpiList.size() > 0) { 
-    		arrangeDocsToKpiList(kpiList, mapper.docMap);
     		arrangeDeptToKpiList(kpiList, deptList);
-    		// arrangeListDepartmentWise(kpiList, deptList, deptWiseKpiList);
+    		if(kpiList.size() == 1) { 
+    			kpiList.get(0).setDocuments(getDocumentListForKpi(kpiList.get(0).getCode())); 
+    		}
     	}
     	return kpiList; 
+	}
+	
+	@Override
+	public List<KPI> getKpiByCode(List<String> kpiCodeList) {
+		String query = queryBuilder.getKpiByCode();
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("kpiCodeList", kpiCodeList);
+		List<KPI> kpiList = namedParameterJdbcTemplate.query(query,
+                parametersMap, new PerformanceAssessmentRowMapper().new KPIMasterRowMapper());
+		return kpiList;
+	}
+	
+	private List<Document> getDocumentListForKpi(String kpiCode) {
+		String query = queryBuilder.getDocumentForKpi(); 
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("kpiCode", kpiCode);
+		List<Document> docList = namedParameterJdbcTemplate.query(query,
+                parametersMap, new BeanPropertyRowMapper<>(Document.class));
+		return docList;
 	}
 	
 	private List<KPI> getListFromMapper(Map<String, KPI> kpiMap) { 
@@ -149,17 +165,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     	return kpiList;
     }
 	
-	private void arrangeDocsToKpiList(List<KPI> kpiList, Map<String, List<Document>> map) { 
-    	Iterator<Entry<String, List<Document>>> itr = map.entrySet().iterator();
-    	while(itr.hasNext()) { 
-    		Entry<String, List<Document>> entry = itr.next();
-    		for(KPI kpi : kpiList) { 
-    			if(kpi.getId().equals(entry.getKey())) { 
-    				kpi.setDocuments(entry.getValue());
-    			}
-    		}
-    	}
-    }
+	
 	
 	private void arrangeDeptToKpiList(List<KPI> kpiList, List<Department> deptList) {
 		Map<String, Department> deptMap = new HashMap<>();
@@ -220,5 +226,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 		List<DocumentTypeContract> documentList = namedParameterJdbcTemplate.query(query,parametersMap, new BeanPropertyRowMapper<>(DocumentTypeContract.class));
 		return documentList;
 	}
+
+	
 
 }

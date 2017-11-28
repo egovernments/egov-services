@@ -1,7 +1,5 @@
 package org.egov.pa.model;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 import javax.validation.Valid;
@@ -25,7 +23,7 @@ public class KpiValueList   {
   private String finYear = null;
 
   @JsonProperty("kpiValue")
-  private List<KpiValue> kpiValue = null;
+  private KpiValue kpiValue = null;
 
   public KpiValueList tenantId(String tenantId) {
     this.tenantId = tenantId;
@@ -83,34 +81,6 @@ public class KpiValueList   {
 
   public void setFinYear(String finYear) {
     this.finYear = finYear;
-  }
-
-  public KpiValueList kpiValue(List<KpiValue> kpiValue) {
-    this.kpiValue = kpiValue;
-    return this;
-  }
-
-  public KpiValueList addKpiValueItem(KpiValue kpiValueItem) {
-    if (this.kpiValue == null) {
-      this.kpiValue = new ArrayList<KpiValue>();
-    }
-    this.kpiValue.add(kpiValueItem);
-    return this;
-  }
-
-   /**
-   * Get kpiValue
-   * @return kpiValue
-  **/
-
-  @Valid
-
-  public List<KpiValue> getKpiValue() {
-    return kpiValue;
-  }
-
-  public void setKpiValue(List<KpiValue> kpiValue) {
-    this.kpiValue = kpiValue;
   }
 
 

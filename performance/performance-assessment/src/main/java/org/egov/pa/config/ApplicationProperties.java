@@ -72,7 +72,58 @@ public class ApplicationProperties {
     @Value("${egov.services.mdms_service.department_search}")
     private String mdmsServiceSearchGetDepartmentUrl; 
     
+    @Value("${egov.services.mdms_service.tenant_search}")
+    private String mdmsServiceSearchTenantUrl;
     
+    @Value("${kafka.topics.kpivaluedetail.create.name}")
+    private String kpiValueDetailCreateTopic;
+    
+    @Value("${kafka.topics.kpivaluedetail.create.key}")
+    private String kpiValueDetailCreateKey;
+    
+    
+    
+    
+
+	public String getKpiValueDetailCreateTopic() {
+		return kpiValueDetailCreateTopic;
+	}
+
+	public void setKpiValueDetailCreateTopic(String kpiValueDetailCreateTopic) {
+		this.kpiValueDetailCreateTopic = kpiValueDetailCreateTopic;
+	}
+
+	public String getKpiValueDetailCreateKey() {
+		return kpiValueDetailCreateKey;
+	}
+
+	public void setKpiValueDetailCreateKey(String kpiValueDetailCreateKey) {
+		this.kpiValueDetailCreateKey = kpiValueDetailCreateKey;
+	}
+
+	public String getMdmsServiceSearchTenantUrl() {
+		return mdmsServiceSearchTenantUrl;
+	}
+
+	public void setMdmsServiceSearchTenantUrl(String mdmsServiceSearchTenantUrl) {
+		this.mdmsServiceSearchTenantUrl = mdmsServiceSearchTenantUrl;
+	}
+
+	public void setNewKpiCreateTopicName(String newKpiCreateTopicName) {
+		this.newKpiCreateTopicName = newKpiCreateTopicName;
+	}
+
+	public void setNewKpiCreateTopicKey(String newKpiCreateTopicKey) {
+		this.newKpiCreateTopicKey = newKpiCreateTopicKey;
+	}
+
+	public void setTenantServiceHostName(String tenantServiceHostName) {
+		this.tenantServiceHostName = tenantServiceHostName;
+	}
+
+	public void setTenantServiceSearchPath(String tenantServiceSearchPath) {
+		this.tenantServiceSearchPath = tenantServiceSearchPath;
+	}
 
 	public String getMdmsServiceHostName() {
 		return mdmsServiceHostName;

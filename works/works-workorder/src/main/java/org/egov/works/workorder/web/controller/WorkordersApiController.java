@@ -53,7 +53,9 @@ public class WorkordersApiController implements WorkordersApi {
         WorkOrderSearchContract workOrderSearchContract = WorkOrderSearchContract.builder().tenantId(tenantId).contractorCodes(contractorCodes).contractorNames(contractorNames)
                 .pageNumber(pageNumber).pageSize(pageSize).department(department).detailedEstimateNumbers(detailedEstimateNumbers)
                 .fromDate(fromDate).toDate(toDate).ids(ids).loaNumbers(loaNumbers).sortBy(sortBy).statuses(statuses).workIdentificationNumbers(workIdentificationNumbers).build();
-        return new ResponseEntity<WorkOrderResponse>(HttpStatus.OK);
+
+        WorkOrderResponse workOrderResponse = workOrderService.search(workOrderSearchContract,requestInfo);
+        return new ResponseEntity(workOrderResponse,HttpStatus.OK);
     }
 
     public ResponseEntity<WorkOrderResponse> workordersUpdatePost(@ApiParam(value = "Details of Work Order(s) + RequestInfo meta data." ,required=true )  @Valid @RequestBody WorkOrderRequest workOrderRequest) {

@@ -3,12 +3,15 @@ package org.egov.works.workorder.domain.service;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.workorder.config.PropertiesManager;
+import org.egov.works.workorder.domain.repository.WorkOrderRepository;
 import org.egov.works.workorder.domain.repository.builder.IdGenerationRepository;
 import org.egov.works.workorder.domain.validator.WorkOrderValidator;
 import org.egov.works.workorder.utils.WorkOrderUtils;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * Created by ritesh on 27/11/17.
@@ -33,6 +36,9 @@ public class WorkOrderService {
 
     @Autowired
     private IdGenerationRepository idGenerationRepository;
+
+    @Autowired
+    private WorkOrderRepository workOrderRepository;
 
     public WorkOrderResponse create(final WorkOrderRequest workOrderRequest) {
 
@@ -86,9 +92,8 @@ public class WorkOrderService {
     }
 
     public WorkOrderResponse search(final WorkOrderSearchContract workOrderSearchContract, final RequestInfo requestInfo) {
-
         WorkOrderResponse workOrderResponse = new WorkOrderResponse();
-
+        workOrderResponse.setWorkOrders(workOrderRepository.search(workOrderSearchContract,requestInfo));
         return workOrderResponse;
     }
 }

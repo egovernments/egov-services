@@ -1,15 +1,13 @@
 package org.egov.works.workorder.domain.repository;
 
 import org.egov.works.common.persistence.repository.JdbcRepository;
+import org.egov.works.workorder.persistence.helper.WorkOrderHelper;
 import org.egov.works.workorder.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ritesh on 27/11/17.
@@ -23,7 +21,16 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
     @Autowired
     private WorksMastersRepository worksMastersRepository;
 
-    public List<WorkOrder> searchLOAs(final WorkOrderSearchContract workOrderSearchContract, final RequestInfo requestInfo) {
+    @Autowired
+    private EstimateRepository estimateRepository;
+
+    @Autowired
+    private WorkOrderDetailRepository workOrderDetailRepository;
+
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+
+    public List<WorkOrder> searchWorkOrders(final WorkOrderSearchContract workOrderSearchContract, final RequestInfo requestInfo) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -35,11 +42,11 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
         if (workOrderSearchContract.getSortBy() != null
                 && !workOrderSearchContract.getSortBy().isEmpty()) {
             validateSortByOrder(workOrderSearchContract.getSortBy());
-            validateEntityFieldName(workOrderSearchContract.getSortBy(), LetterOfAcceptance.class);
+            validateEntityFieldName(workOrderSearchContract.getSortBy(), WorkOrder.class);
         }
 
-        if (workOrderSearchContract.getDetailedEstimateNumbers() != null && !workOrderSearchContract.getDetailedEstimateNumbers().isEmpty()
-                || workOrderSearchContract.getDepartment() != null && !workOrderSearchContract.getDepartment().isEmpty())
+        if ((workOrderSearchContract.getDetailedEstimateNumbers() != null && !workOrderSearchContract.getDetailedEstimateNumbers().isEmpty())
+                || (workOrderSearchContract.getDepartment() != null && !workOrderSearchContract.getDepartment().isEmpty()))
             tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
         String orderBy = "order by wo.workorderdate";
@@ -83,21 +90,21 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
 
         if (workOrderSearchContract.getLoaNumbers() != null && workOrderSearchContract.getLoaNumbers().size() == 1) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.loanumber) = :loaNumber)");
+            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber)");
             paramValues.put("loaNumber", "%" + workOrderSearchContract.getLoaNumbers().get(0).toLowerCase() + "%");
         } else if (workOrderSearchContract.getLoaNumbers() != null) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.loanumber) in (:loaNumbers))");
+            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers))");
             paramValues.put("loaNumbers", workOrderSearchContract.getLoaNumbers());
         }
 
         if (workOrderSearchContract.getContractorCodes() != null && !workOrderSearchContract.getContractorCodes().isEmpty() && workOrderSearchContract.getContractorCodes().size() == 1) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.contractor = (:contractorcode))");
-            paramValues.put("contractorcode", workOrderSearchContract.getContractorCodes());
+            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
+            paramValues.put("contractorcode", "%" + workOrderSearchContract.getContractorCodes().get(0).toLowerCase() + "%");
         } else if (workOrderSearchContract.getContractorCodes() != null) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.contractor) in (:contractorcodes))");
+            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
             paramValues.put("contractorcodes", workOrderSearchContract.getContractorCodes());
         }
 
@@ -110,8 +117,8 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             if (!contractorCodes.isEmpty()) {
                 if (!contractorCodes.isEmpty() && contractorCodes.size() == 1) {
                     addAnd(params);
-                    params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.contractor) = (:contractorcode))");
-                    paramValues.put("contractorcode", contractorCodes.get(0).toLowerCase());
+                    params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
+                    paramValues.put("contractorcode", "%" + contractorCodes.get(0).toLowerCase() + "%");
                 } else if (contractorCodes != null) {
                     addAnd(params);
                     params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
@@ -120,6 +127,27 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             }
         }
 
+        if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() == 1) {
+            addAnd(params);
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and upper(loaestimate.detailedestimate) like :detailedestimatenumber");
+            paramValues.put("detailedestimatenumber", '%' + workOrderSearchContract.getDetailedEstimateNumbers().get(0).toUpperCase() + '%');
+        } else if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() > 1) {
+            addAnd(params);
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
+            paramValues.put("detailedestimatenumber", workOrderSearchContract.getDetailedEstimateNumbers());
+        }
+
+        List<String> estimateNumbers = new ArrayList<>();
+        if (workOrderSearchContract.getDepartment() != null && !workOrderSearchContract.getDepartment().isEmpty()) {
+            List<DetailedEstimate> detailedEstimates = estimateRepository.searchDetailedEstimatesByDepartment(workOrderSearchContract.getDepartment(), workOrderSearchContract.getTenantId(), requestInfo);
+            for (DetailedEstimate detailedEstimate : detailedEstimates)
+                estimateNumbers.add(detailedEstimate.getEstimateNumber());
+
+            addAnd(params);
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
+            paramValues.put("detailedestimatenumber", workOrderSearchContract.getDetailedEstimateNumbers());
+
+        }
 
         if (params.length() > 0) {
 
@@ -131,10 +159,32 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
 
         searchQuery = searchQuery.replace(":orderby", orderBy);
 
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(WorkOrder.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(WorkOrderHelper.class);
 
-        List<WorkOrder> loaList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-        return loaList;
+        List<WorkOrderHelper> workOrderHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+
+        List<WorkOrder> workOrders = new ArrayList<>();
+        WorkOrderDetailSearchContract workOrderDetailSearchContract = new WorkOrderDetailSearchContract();
+        for (WorkOrderHelper workOrderHelper : workOrderHelpers) {
+
+            WorkOrder workOrder = workOrderHelper.toDomain();
+            workOrderDetailSearchContract.setTenantId(workOrderSearchContract.getTenantId());
+            workOrderDetailSearchContract.setWorkOrders(Arrays.asList(workOrderHelper.getId()));
+            workOrder.setWorkOrderDetails(workOrderDetailRepository.searchWorkOrderDetails(workOrderDetailSearchContract));
+
+            LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
+            letterOfAcceptanceSearchContract.setTenantId(workOrderSearchContract.getTenantId());
+            letterOfAcceptanceSearchContract.setIds(Arrays.asList(workOrderHelper.getLetterOfAcceptance()));
+
+            List<LetterOfAcceptance> letterOfAcceptanceList = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract, requestInfo);
+            LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
+            if (letterOfAcceptanceList != null && !letterOfAcceptanceList.isEmpty())
+                letterOfAcceptance = letterOfAcceptanceList.get(0);
+            workOrder.setLetterOfAcceptance(letterOfAcceptance);
+            workOrders.add(workOrder);
+        }
+
+        return workOrders;
     }
 
 }

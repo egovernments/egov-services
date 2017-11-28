@@ -28,15 +28,16 @@ public class WorkOrderSearchContract {
 
     private List<String> statuses;
 
+    private List<String> contractorNames;
+
+    private List<String> contractorCodes;
+
+
     private List<String> detailedEstimateNumbers;
 
     private List<String> workIdentificationNumbers;
 
     private List<String> department;
-
-    private List<String> contractorNames;
-
-    private List<String> contractorCodes;
 
     private String tenantId;
 

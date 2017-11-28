@@ -61,7 +61,10 @@ public class RegisterService {
 	}
 
 	public RegisterResponse searchRegister(RegisterSearchCriteria registerSearchCriteria, RequestInfo requestInfo) {
-
+		
+		if (registerSearchCriteria.getIsActive() == null) {
+			registerSearchCriteria.setIsActive(true);
+		}
 		List<Register> registers = registerRepository.search(registerSearchCriteria);
 		return new RegisterResponse(responseInfoFactory.getResponseInfo(requestInfo, HttpStatus.CREATED), registers);
 	}

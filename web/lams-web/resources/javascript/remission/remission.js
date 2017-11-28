@@ -8,7 +8,7 @@ class RemissionAgreement extends React.Component {
           agreementNumber: "",
           acknowledgementNumber: "",
           stateId: "",
-          action: "remission",
+          action: "Remission",
           agreementDate: "",
           timePeriod: "",
           allottee: {
@@ -117,7 +117,7 @@ class RemissionAgreement extends React.Component {
           isAdvancePaid: "",
           adjustmentStartDate: ""
         },
-        remissionReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
+        remissionReasons: ["Natural Calamity", "Infrastructure Development"],
         positionList: [],
         departmentList: [],
         designationList: [],
@@ -216,14 +216,14 @@ console.log("Documents",agreement);
             showSuccess("Remission details updated!");
             setTimeout(function () {
                open(location, '_self').close();
-            }, 2000);
+            }, 4000);
 
           },
           error: function(err) {
             if(err.responseJSON.Error && err.responseJSON.Error.message)
               showError(err.responseJSON.Error.message);
             else
-              showError("Something went wrong. Please contact Administrator");
+              showError("Something went wrong.");
           }
 
         })
@@ -742,7 +742,7 @@ console.log("Documents",agreement);
                                    <label htmlFor="remissionOrder"> Order Number<span>*</span> </label>
                                </div>
                                <div className="col-sm-6">
-                                   <input type="text" name="remissionOrder" id="remissionOrder" value= {remission.remissionOrder}
+                                   <input type="text" name="remissionOrder" id="remissionOrder"
                                        onChange={(e)=>{handleChangeTwoLevel(e, "remission", "remissionOrder")}} required/>
                                </div>
                            </div>
@@ -755,7 +755,7 @@ console.log("Documents",agreement);
                                <div className="col-sm-6">
                                  <div className="text-no-ui">
                                      <span className="glyphicon glyphicon-calendar"></span>
-                                        <input type="text" id="remissionDate" name="remissionDate" value="remissionDate" value={remission.remissionDate}
+                                        <input type="text" id="remissionDate" name="remissionDate"
                                         onChange={(e)=>{handleChangeTwoLevel(e, "remission", "remissionDate")}} required/>
                                  </div>
                                </div>
@@ -771,7 +771,7 @@ console.log("Documents",agreement);
                            <div className="col-sm-6">
                              <div className="text-no-ui">
                                  <span className="glyphicon glyphicon-calendar"></span>
-                                    <input type="text" className="datepicker" id="remissionFromDate" name="remissionFromDate" value="remissionFromDate" value={remission.remissionFromDate}
+                                    <input type="text" className="datepicker" id="remissionFromDate" name="remissionFromDate"
                                     onChange={(e)=>{handleChangeTwoLevel(e, "remission", "remissionFromDate")}} required/>
                              </div>
                            </div>
@@ -785,7 +785,7 @@ console.log("Documents",agreement);
                                <div className="col-sm-6">
                                  <div className="text-no-ui">
                                      <span className="glyphicon glyphicon-calendar"></span>
-                                        <input type="text" className="datepicker" id="remissionToDate" name="remissionToDate" value="remissionToDate" value={remission.remissionToDate}
+                                        <input type="text" className="datepicker" id="remissionToDate" name="remissionToDate"
                                         onChange={(e)=>{handleChangeTwoLevel(e, "remission", "remissionToDate")}} required/>
                                  </div>
                                </div>
@@ -813,14 +813,14 @@ console.log("Documents",agreement);
                        <div className="col-sm-6">
                            <div className="row">
                                <div className="col-sm-6 label-text">
-                                   <label htmlFor="reasonForRemission">Remission Reason
+                                   <label htmlFor="remissionReason">Remission Reason
                                     <span>*</span>
                                    </label>
                                </div>
                                <div className="col-sm-6">
                                    <div className="styled-select">
-                                     <select name="reasonForRemission" id="reasonForRemission" value={remission.reasonForRemission}
-                                       onChange={(e)=>{handleChangeTwoLevel(e, "remission", "reasonForRemission")}} required>
+                                     <select name="remissionReason" id="remissionReason"
+                                       onChange={(e)=>{handleChangeTwoLevel(e, "remission", "remissionReason")}} required>
                                        <option value="">Select Reason</option>
                                           {renderOption(remissionReasons)}
                                      </select>
@@ -848,7 +848,7 @@ console.log("Documents",agreement);
                                    <label htmlFor="remarks">Remarks </label>
                                </div>
                                <div className="col-sm-6">
-                               <textarea rows="4" cols="50" id="remarks" name="remarks" value={remission.remarks}
+                               <textarea rows="4" cols="50" id="remarks" name="remarks"
                                onChange={(e)=>{handleChangeTwoLevel(e, "agreement", "remarks")}} ></textarea>
                                </div>
                            </div>

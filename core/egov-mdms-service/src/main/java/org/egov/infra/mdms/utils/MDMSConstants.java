@@ -17,7 +17,7 @@ public class MDMSConstants {
 	public static final String FINAL_FILE_PATH_APPEND = "https://github.com/egovernments/egov-services/blob/master/";
 
 	public static final String GIT_BLOB_MODE = "100644";
-	public static final String DATA_ROOT_FOLDER = "data";
+	public static final String DATA_ROOT_FOLDER = "test-data";
 
 
 

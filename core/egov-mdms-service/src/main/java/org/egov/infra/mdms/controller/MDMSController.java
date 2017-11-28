@@ -1,6 +1,5 @@
 package org.egov.infra.mdms.controller;
 
-import java.awt.List;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
@@ -19,7 +18,6 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,20 +70,25 @@ public class MDMSController {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		Object response = null;
 		try{
-			ArrayList<Object> validationError = mDMSRequestValidator.validateCreateRequest(mDMSCreateRequest);
-		    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
-			Gson gson = new Gson();
-			Object errorData = gson.fromJson(validationError.toString(), type);
-			if(!validationError.isEmpty()){
-				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
-				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
-					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-				mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, Please rectify and retry");
-				mDMSCreateErrorResponse.setData(errorData);
-				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
+			if(mDMSCreateRequest.getMasterMetaData().getIsValidate()){
+				ArrayList<Object> validationError = mDMSRequestValidator.validateCreateRequest(mDMSCreateRequest);
+			    Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+				Gson gson = new Gson();
+				Object errorData = gson.fromJson(validationError.toString(), type);
+				if(!validationError.isEmpty()){
+					MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
+					mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
+						createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+					mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, Please rectify and retry");
+					mDMSCreateErrorResponse.setData(errorData);
+					return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
+				}else{
+					return new ResponseEntity<>(mDMSCreateRequest, HttpStatus.OK);
+				}
 			}
 			response = mdmsService.gitPush(mDMSCreateRequest);
 		    Type secondType = new TypeToken<Map<String, Object>>() {}.getType();
+			Gson gson = new Gson();
 			Map<String, Object> data = gson.fromJson(response.toString(), secondType);
 			MdmsCreateResponse mdmsCreateResponse = new MdmsCreateResponse();
 			mdmsCreateResponse.setData(data);

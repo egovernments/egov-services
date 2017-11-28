@@ -161,6 +161,7 @@ public class MDMSService {
 				break;
 			}
 			index++;
+			logger.info("increment: "+index);
 		}
 		if(null == moduleContent){
 			throw new CustomException("400", "There is no master data available for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());

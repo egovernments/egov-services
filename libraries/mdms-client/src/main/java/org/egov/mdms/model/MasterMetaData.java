@@ -24,6 +24,9 @@ public class MasterMetaData {
 	@JsonProperty("masterName")
 	public String masterName;
 	
+	@JsonProperty("isValidate")
+	public Boolean isValidate;
+	
 	@JsonProperty("masterData")
 	public Object masterData;
 

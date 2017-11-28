@@ -57,10 +57,10 @@ public class AdvocateService {
 
 				if (agency.getIsTerminate() == null)
 					agency.setIsTerminate(false);
-				
-				if(agency.getStatus() == null)
+
+				if (agency.getStatus() == null)
 					agency.setStatus(propertiesManager.getAgencyStatus());
-				
+
 				if (agency.getAgencyAddress() == null)
 					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),
 							propertiesManager.getAgencyAddressErrorMsg());
@@ -125,8 +125,8 @@ public class AdvocateService {
 
 					if (advocate.getIsTerminate() == null)
 						advocate.setIsTerminate(false);
-					
-					if(advocate.getStatus() == null)
+
+					if (advocate.getStatus() == null)
 						advocate.setStatus(propertiesManager.getAgencyStatus());
 
 					advocate.setIsIndividual(agency.getIsIndividual());
@@ -189,9 +189,9 @@ public class AdvocateService {
 				if (agency.getIsTerminate() == null)
 					agency.setIsTerminate(false);
 
-				if(agency.getStatus() == null)
+				if (agency.getStatus() == null)
 					agency.setStatus(propertiesManager.getAgencyStatus());
-				
+
 				if (agency.getAgencyAddress() == null)
 					throw new CustomException(propertiesManager.getAgencyAddressErrorCode(),
 							propertiesManager.getAgencyAddressErrorMsg());
@@ -268,6 +268,7 @@ public class AdvocateService {
 							createAgencyRequest.getRequestInfo(), propertiesManager.getPersonDetailsUlbFormat(),
 							propertiesManager.getPersonDetailsUlbName(), Boolean.FALSE, null, Boolean.FALSE);
 					reqPersonDetails.setCode(code);
+					reqPersonDetails.setAgencyName(agency.getName());
 					createPersonDetails.add(reqPersonDetails);
 					break;
 				} else {
@@ -318,8 +319,8 @@ public class AdvocateService {
 
 				if (reqAdvocate.getIsTerminate() == null)
 					reqAdvocate.setIsTerminate(false);
-				
-				if(reqAdvocate.getStatus() == null)
+
+				if (reqAdvocate.getStatus() == null)
 					reqAdvocate.setStatus(propertiesManager.getAgencyStatus());
 
 				reqAdvocate.setIsIndividual(agency.getIsIndividual());

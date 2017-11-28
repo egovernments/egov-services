@@ -43,17 +43,17 @@ class CommonSearch extends React.Component {
             if(window.opener){
               window.opener.location.reload();
               if(action.toLowerCase()==='renewal'){
-            window.location.href = "app/renewal/create-renewal.html?&agreementNumber=" +agreementNumber+"&assetId="+assetId+"&tenantId="+tenantId;
+            window.location.href = "app/renewal/create-renewal.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='cancellation'){
-            window.location.href = "app/cancel/create-cancellation.html?&agreementNumber=" +agreementNumber+"&assetId="+assetId+"&tenantId="+tenantId;
+            window.location.href = "app/cancellation/create-cancellation.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='eviction'){
-            window.location.href = "app/eviction/create-eviction.html?&agreementNumber=" +agreementNumber+"&assetId="+assetId+"&tenantId="+tenantId;
+            window.location.href = "app/eviction/create-eviction.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='objection'){
-            window.location.href = "app/objection/create-objection.html?&agreementNumber=" +agreementNumber+"&assetId="+assetId+"&tenantId="+tenantId;
+            window.location.href = "app/objection/create-objection.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='judgement'){
-            window.location.href = "app/judgement/create-judgement.html?&agreementNumber=" +agreementNumber+"&assetId="+assetId+"&tenantId="+tenantId;
+            window.location.href = "app/judgement/create-judgement.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }else if(action.toLowerCase()==='remission'){
-            window.location.href = "app/remisiion/create-remission.html?&agreementNumber=" +agreementNumber+"&assetId="+assetId+"&tenantId="+tenantId;
+            window.location.href = "app/remission/create-remission.html?&agreementNumber=" +agreementNumber+"&tenantId="+tenantId;
           }
            }
         }

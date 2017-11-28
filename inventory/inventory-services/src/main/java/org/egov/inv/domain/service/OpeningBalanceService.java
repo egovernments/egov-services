@@ -2,6 +2,7 @@ package org.egov.inv.domain.service;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -10,6 +11,7 @@ import java.util.List;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
@@ -20,6 +22,7 @@ import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
 import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
+import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -65,6 +68,7 @@ public class OpeningBalanceService extends DomainService {
 				if (null != materialReceipt.getReceiptDetails()) {
 					materialReceipt.getReceiptDetails().stream().forEach(detail -> {
 						detail.setId(jdbcRepository.getSequence("seq_materialreceiptdetail"));
+						setQuantity(tenantId, detail);
 						if (isEmpty(detail.getTenantId())) {
 							detail.setTenantId(tenantId);
 						}
@@ -103,6 +107,7 @@ public class OpeningBalanceService extends DomainService {
 					if (isEmpty(detail.getTenantId())) {
 						detail.setTenantId(tenantId);
 					}
+					setQuantity(tenantId, detail);
 					if (isEmpty(detail.getId())) {
 						setMaterialDetails(tenantId, detail);
 					}
@@ -191,11 +196,13 @@ public class OpeningBalanceService extends DomainService {
 							if (isEmpty(detail.getReceivedQty())) {
 								throw new CustomException("receivedQty", "Quantity Is Required In Row " + detailIndex);
 							}
-							if (detail.getReceivedQty().doubleValue() <= 0 ) {
-								throw new CustomException("receivedQty", "Quantity Should Be greater Than Zero In Row " + detailIndex);
+							if (detail.getReceivedQty().doubleValue() <= 0) {
+								throw new CustomException("receivedQty",
+										"Quantity Should Be greater Than Zero In Row " + detailIndex);
 							}
-							if (detail.getUnitRate().doubleValue() <=  0) {
-								throw new CustomException("unitRate", "UnitRate Should Be greater Than Zero In Row " + detailIndex);
+							if (detail.getUnitRate().doubleValue() <= 0) {
+								throw new CustomException("unitRate",
+										"UnitRate Should Be greater Than Zero In Row " + detailIndex);
 							}
 							if (isEmpty(detail.getUnitRate())) {
 								throw new CustomException("unitRate", "UnitRate Is Required In Row " + detailIndex);
@@ -244,5 +251,17 @@ public class OpeningBalanceService extends DomainService {
 				materialReceiptDetailAddnlInfo.setTenantId(tenantId);
 			}
 		});
+	}
+
+	private void setQuantity(String tenantId, MaterialReceiptDetail detail) {
+		Uom uom = getUom(tenantId, detail.getUom().getCode(), new RequestInfo());
+		detail.setUom(uom);
+
+		if (null != detail.getReceivedQty() && null != uom.getConversionFactor()) {
+			Double convertedReceivedQuantity = getSaveConvertedQuantity(detail.getReceivedQty().doubleValue(),
+					uom.getConversionFactor().doubleValue());
+			detail.setReceivedQty(BigDecimal.valueOf(convertedReceivedQuantity));
+		}
+
 	}
 }

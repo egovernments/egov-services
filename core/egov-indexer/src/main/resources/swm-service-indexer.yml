@@ -26,3 +26,18 @@ ServiceMaps:
       isBulk: true
       jsonPath: $.vehicleMaintenanceDetails.*
 
+  - topic: swm-vehicleschedule-indexer-topic
+    indexes:
+    - name: vehicleschedules
+      type: vehicleschedules
+      id: $.transactionNo
+      isBulk: true
+      jsonPath: $.vehicleSchedules.*
+
+  - topic: swm-vendor-indexer-topic
+    indexes:
+    - name: vendor
+      type: vendor
+      id: $.vendorNo
+      isBulk: true
+      jsonPath: $.vendors.*

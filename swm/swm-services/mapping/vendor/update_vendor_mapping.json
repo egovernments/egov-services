@@ -1,0 +1,40 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "vendorNo": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "servicedLocations": {
+            "type": "object"
+        },
+        "registrationNo": {
+            "type": "keyword"
+        },
+        "supplier": {
+            "type": "object"
+        },
+        "agreementDocument": {
+            "type": "object"
+        },
+        "servicesOffered": {
+            "type": "object"
+        },
+        "details": {
+            "type": "keyword"
+        },
+        "auditDetails": {
+            "type": "object"
+        }
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "transactionNo": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "scheduledFrom": {
+            "type": "keyword"
+        },
+        "scheduledTo": {
+            "type": "keyword"
+        },
+        "route": {
+            "type": "object"
+        },
+        "vehicle": {
+            "type": "object"
+        },
+        "targetedGarbage": {
+            "type": "keyword"
+        },
+        "auditDetails": {
+            "type": "object"
+        }
+    }
+}

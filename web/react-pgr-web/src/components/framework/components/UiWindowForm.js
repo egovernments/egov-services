@@ -257,8 +257,13 @@ class UiWindowForm extends Component {
             <tbody>
               {_.isArray(_internal_val) &&
                 _internal_val.map((v, i) => {
-                  return (
-                    <tr>
+                   if(item.hidePrimaryRecord && i == 0){
+                              this.props.item.style = {"display":"none"};
+                            }else{
+                        this.props.item.style = {"display":"table-row"};
+                            }
+               return (
+                   <tr style={item.style}>
                       <td>{i}</td>
                       {item.tableConfig.rows.map((value, idx) => {
                         return <td>{_.get(v, value.displayField)}</td>;
@@ -417,8 +422,8 @@ class UiWindowForm extends Component {
                         self.props.item.patternErrMsg
                       );
                       self.setState({
-                       // valuesObj: {},
-                        //open: false,
+                        valuesObj: {},
+                        open: false,
                         index: -1
                       });
                     }

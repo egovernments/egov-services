@@ -1927,11 +1927,11 @@ var dat ={
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                 "enable": [],
-                "disable": [
-                  "terminationDate",
+                 "enable": [ 
+                 "terminationDate",
                   "inActivationDate"
-                ]
+                  ],
+                "disable": []
               },
               {
                 "ifValue": "inactive",
@@ -1997,13 +1997,14 @@ var dat ={
             "arrayPath": "personDetails",
             "label": "legal.advocates.create.additionalOwnerWindow",
             "modulepath":"legal.create",
-            "isExceptFirstRecord":true,
+            // "isExceptFirstRecord":true,
+            "hidePrimaryRecord" :true,
             "pattern": "",
             "type": "window",
             "tableConfig": {
               "header": [
                 {
-                  "label": "legal.create.advocateName",
+                  "label": "legal.create.additionalOwnerName",
                   "style": {
                     "width": "700px"
                   }
@@ -2038,7 +2039,7 @@ var dat ={
             "tableConfig": {
               "header": [
                 {
-                  "label": "legal.create.additionalOwnerName",
+                  "label": "legal.create.advocateName",
                   "style": {
                     "width": "700px"
                   }

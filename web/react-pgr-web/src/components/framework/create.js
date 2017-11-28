@@ -1250,6 +1250,7 @@ class Report extends Component {
   }
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
+      //debugger;
       let {getVal} = this.props;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;

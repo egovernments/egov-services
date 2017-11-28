@@ -29,8 +29,8 @@ var dat = {
        isAction: true,
           actionItems: [
             {
-              label: "Update Advocate",
-              url: "/update/legal/advocate/"
+              label: "Update Agency",
+              url: "/update/legal/updateagency/"
             }
           ],
       "header": [

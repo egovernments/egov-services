@@ -46,7 +46,8 @@ renderTimePicker = (item) => {
 							inputFormat='h:mm A'
 							inputProps={{
 								"placeholder": "h:mm A",
-								"id": item.jsonPath.split(".").join("-")
+								"id": item.jsonPath.split(".").join("-"),
+								"disabled":item.isDisabled
 							}}
 							defaultText=""
 							onChange={(e) => {debugger;

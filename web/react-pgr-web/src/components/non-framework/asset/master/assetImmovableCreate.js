@@ -189,7 +189,6 @@ class assetImmovableCreate extends Component {
         formFin.type = fields[x].type;
         finArr.push(formFin);
       }
-      console.log(groups);
       this.setState({
         hide: false
       })
@@ -248,8 +247,6 @@ class assetImmovableCreate extends Component {
 
       response.Assets[0].assetAttributesCheck = assetCheck;
       self.props.setFormData({Asset: response.Assets[0]});
-      console.log(self.props.formData.Asset.assetCategory.id);
-      console.log(self.props.formData.Asset.assetCategory.name);
       self.setInitialUpdateData({Asset: response.Assets[0]}, JSON.parse(JSON.stringify(specifications)), 'asset', 'update', specifications["asset.update"].objectName);
       self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
       self.warrantyFunction(response.Assets[0].warrantyAvailable);
@@ -326,7 +323,7 @@ class assetImmovableCreate extends Component {
       let cateoryObject = [];
     //  var customFieldsArray = [];
     //  var customArr;
-console.log(self.props.formData);
+
 
     Api.commonApiPost("/egov-mdms-service/v1/_get",{"moduleName":"ASSET","masterName":"Assetconfiguration"},{}, false, false, false, "", "", true).then(function(response) {
 
@@ -461,7 +458,7 @@ console.log(self.props.formData);
           var  customFieldsArray = [];
           for(var j=0; j< response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++){
             var customTemp = {};
-            console.log(response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j]);
+            
              customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
              customTemp.jsonPath = "Asset.assetAttributesCheck." + response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +"."+response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
              customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
@@ -716,13 +713,11 @@ console.log(self.props.formData);
     assetAttributes.push(tempFinObj);
   });
   if(formData && formData.Asset && formData.Asset.fundSource){
-    console.log(formData.Asset.fundSource.code);
     if(formData.Asset.fundSource.code == null || formData.Asset.fundSource.code == ""){
       delete formData.Asset.fundSource;
     }
-    console.log(formData.Asset);
   }
-  
+
 formData.Asset.assetAttributes = assetAttributes;
 delete formData.Asset.assetAttributesCheck;
 
@@ -1261,7 +1256,6 @@ delete formData.Asset.assetAttributesCheck;
       let obj = specifications[`asset.create`];
 
       if(property=="Asset.assetCategory.id"){
-        console.log(e.target.value);
         if (self.state.depericiationValue[e.target.value]) {
 
           var newVal = Math.round(100/self.state.depericiationValue[e.target.value]);

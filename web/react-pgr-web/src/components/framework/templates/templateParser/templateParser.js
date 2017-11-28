@@ -44,7 +44,8 @@ class TemplateParser extends Component {
 		let {back} = this;
 		return(
 			<div>
-				<div id="printTemplate" className = "page">
+				<div id="printTemplate">
+					<div className="myPage">
 					{localStorage.reportData ? JSON.parse(localStorage.reportData).map((v, i) => {
 						return (
 							<div>
@@ -63,6 +64,7 @@ class TemplateParser extends Component {
 							</div>
 						)
 					}) : ""}
+					</div>
 				</div>
 				<div style={{"textAlign": "center"}}>
 					<RaisedButton label={"Print"} primary={true} onClick={this.printTemplate}/>

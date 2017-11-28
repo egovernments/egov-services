@@ -265,7 +265,7 @@ public class AgreementController {
 		}
 
 		LOGGER.info("agreementRequest cancel ::" + agreementRequest);
-		agreementValidator.validateRemission(agreementRequest, errors);
+		agreementValidator.validateRemissionDetails(agreementRequest, errors);
 
 		if (errors.hasFieldErrors()) {
 			ErrorResponse errRes = populateErrors(errors);

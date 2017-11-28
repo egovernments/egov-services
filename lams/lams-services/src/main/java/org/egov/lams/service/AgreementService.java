@@ -156,7 +156,8 @@ public class AgreementService {
 		Agreement agreement = enrichAgreement(agreementRequest);
 		agreement.setExpiryDate(getExpiryDate(agreement));
 		agreement.setAdjustmentStartDate(getAdjustmentDate(agreement));
-		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
+		
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getDemands().get(0),agreementRequest.getRequestInfo());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
@@ -169,7 +170,7 @@ public class AgreementService {
 	public Agreement createObjection(AgreementRequest agreementRequest) {
 		logger.info("createObjection on agreement::" + agreementRequest.getAgreement());
 		Agreement agreement = enrichAgreement(agreementRequest);
-		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getDemands().get(0),agreementRequest.getRequestInfo());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
@@ -182,7 +183,7 @@ public class AgreementService {
 	public Agreement createJudgement(AgreementRequest agreementRequest) {
 		logger.info("create judgement on agreement::" + agreementRequest.getAgreement());
 		Agreement agreement = enrichAgreement(agreementRequest);
-		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getLegacyDemands());
+		List<Demand> demands = demandService.prepareDemandsForClone(agreement.getDemands().get(0),agreementRequest.getRequestInfo());
 		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandIdList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
@@ -207,8 +208,8 @@ public class AgreementService {
 	public Agreement saveRemission(AgreementRequest agreementRequest) {
 		Agreement agreement = agreementRequest.getAgreement();
 		agreement.setId(agreementRepository.getAgreementID());
-		List<Demand> demands = demandService.updateDemandOnRemission(agreement, agreement.getLegacyDemands());
-		DemandResponse demandResponse = demandRepository.createDemand(demands, agreementRequest.getRequestInfo());
+		List<Demand> demands = demandService.updateDemandOnRemission(agreement, agreementRequest.getRequestInfo());
+		DemandResponse demandResponse = demandRepository.updateDemand(demands, agreementRequest.getRequestInfo());
 		List<String> demandList = demandResponse.getDemands().stream().map(Demand::getId)
 				.collect(Collectors.toList());
 		agreement.setDemands(demandList);

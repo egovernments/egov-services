@@ -119,7 +119,7 @@ public class AgreementValidator {
 		Agreement agreement = agreementRequest.getAgreement();
 		AssetCategory assetCategory = agreement.getAsset().getCategory();
 
-		if(agreement.getIsUnderWorkflow()){
+		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
 		List<String> assetCategoryNames = getConfigurations(propertiesManager.getEvictionAssetCategoryKey(),
@@ -128,8 +128,7 @@ public class AgreementValidator {
 		for (String string : assetCategoryNames) {
 			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
 
-				errors.reject("Agreement not allowed for Evicition",
-						"Eviction is valid only for Shop types.");
+				errors.reject("Agreement not allowed for Evicition", "Eviction is valid only for Shop types.");
 			}
 		}
 	}
@@ -138,9 +137,9 @@ public class AgreementValidator {
 
 		Agreement agreement = agreementRequest.getAgreement();
 		RequestInfo requestInfo = agreementRequest.getRequestInfo();
-		if(agreement.getIsUnderWorkflow()){
+		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
-			}
+		}
 		checkRentDue(agreement.getDemands().get(0), requestInfo, errors, agreement.getAction().toString());
 
 		Long assetId = agreement.getAsset().getId();
@@ -206,32 +205,32 @@ public class AgreementValidator {
 		if (!"ACTIVE".equals(objectionStatus)) {
 			errors.reject("Can't proceed ", "Judgement will be applicable on objected agreements only!");
 		}
-		if(agreement.getIsUnderWorkflow()){
+		if (agreement.getIsUnderWorkflow()) {
 			errors.reject(ERROR_FIELD_AGREEMENT_NO, ERROR_MSG_UNDER_WORKFLOW);
 		}
 	}
 
-	public void validateRemission(AgreementRequest agreementRequest, Errors errors) {
+	public void validateRemissionDetails(AgreementRequest agreementRequest, Errors errors) {
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
 		Agreement agreement = agreementRequest.getAgreement();
 		Date fromDate = agreement.getRemission().getRemissionDate();
 		Date toDate = agreement.getRemission().getRemissionToDate();
 		AssetCategory assetCategory = agreement.getAsset().getCategory();
 		Boolean isRentCollected;
-		isRentCollected = checkCollection(agreement.getLegacyDemands(), fromDate, toDate);
-		List<String> assetCategoryNames = getConfigurations(propertiesManager.getRemissionAssetCategoryKey(),
-				agreement.getTenantId());
-		logger.info("the eviction asset category names found ::: " + assetCategoryNames);
-		for (String string : assetCategoryNames) {
-			if (!(string.equalsIgnoreCase(assetCategory.getName()))) {
-
-				errors.reject("Agreement",
-						"remission is valid only for market asset category");
-			}
+		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
+		if (!propertiesManager.getAssetCategoryMarket().equalsIgnoreCase(assetCategory.getName())) {
+			errors.reject("Remission Can't allowed", "Remission can be allowed on Market asset type only.");
 		}
+		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, agreementRequest.getRequestInfo())
+				.getDemands().get(0);
+		if (demand == null)
+			errors.reject("No demands", "No Demands found for the given agreement");
+		else {
+			isRentCollected = checkCollection(demand.getDemandDetails(), fromDate, toDate);
 
-		if (isRentCollected) {
-			errors.reject("Agreement",
-					"Rent can not be modified for already collected installment!");
+			if (isRentCollected) {
+				errors.reject("Agreement", "Rent can not be modified for already collected installment!");
+			}
 		}
 
 	}
@@ -275,23 +274,24 @@ public class AgreementValidator {
 	private void checkRentDue(String demandId, RequestInfo requestInfo, Errors errors, String processName) {
 
 		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
-		if(demandId == null){
+		if (demandId == null) {
 			errors.rejectValue("No Demand", "", "No demandId in this agreement request");
-		
-		}else{
-		demandSearchCriteria.setDemandId(Long.valueOf(demandId));
-		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
-		if (demand == null)
-			errors.reject("No demands", "No Demands found for the given agreement");
-		else {
-			Date today = new Date();
-			for (DemandDetails demandDetails : demand.getDemandDetails()) {
-				if (today.compareTo(demandDetails.getPeriodStartDate()) >= 0
-						&& (!demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount()).equals(0)))
-					errors.reject("Rent due",
-							"All the dues must be paid till current installment to initiate " + processName);
+
+		} else {
+			demandSearchCriteria.setDemandId(Long.valueOf(demandId));
+			Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
+			if (demand == null)
+				errors.reject("No demands", "No Demands found for the given agreement");
+			else {
+				Date today = new Date();
+				for (DemandDetails demandDetails : demand.getDemandDetails()) {
+					if (today.compareTo(demandDetails.getPeriodStartDate()) >= 0
+							&& (demandDetails.getTaxAmount().subtract(demandDetails.getCollectionAmount()))
+									.compareTo(BigDecimal.ZERO) > 0)
+						errors.reject("Rent due",
+								"All the dues must be paid till current installment to initiate " + processName);
+				}
 			}
-		}
 		}
 	}
 
@@ -330,9 +330,9 @@ public class AgreementValidator {
 		return lamsConfigurationService.getLamsConfigurations(lamsConfigurationGetRequest).get(keyName);
 	}
 
-	private Boolean checkCollection(List<Demand> demands, Date fromDate, Date toDate) {
+	private Boolean checkCollection(List<DemandDetails> demandDetails, Date fromDate, Date toDate) {
 		Boolean isPaid = Boolean.FALSE;
-		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
+		for (DemandDetails demandDetail : demandDetails) {
 			if (propertiesManager.getTaxReasonRent().equalsIgnoreCase(demandDetail.getTaxReason())) {
 				if (demandDetail.getPeriodEndDate().compareTo(fromDate) >= 0
 						&& demandDetail.getPeriodStartDate().compareTo(toDate) <= 0
@@ -368,4 +368,19 @@ public class AgreementValidator {
 			validateRemission(agreementRequest, errors);
 		}
 	}
+
+	public void validateRemission(AgreementRequest agreementRequest, Errors errors) {
+		Agreement agreement = agreementRequest.getAgreement();
+		Date currentDate = new Date();
+		Date expiryDate = agreement.getExpiryDate();
+		AssetCategory assetCategory = agreement.getAsset().getCategory();
+		if (currentDate.after(expiryDate)) {
+			errors.reject("Can't allowed", "Remission Can not be allowed on expired agreements.");
+		}
+		if (!propertiesManager.getAssetCategoryMarket().equalsIgnoreCase(assetCategory.getName())) {
+			errors.reject("Can't allowed", "Remission can be allowed on Market asset type only.");
+		}
+
+	}
+
 }

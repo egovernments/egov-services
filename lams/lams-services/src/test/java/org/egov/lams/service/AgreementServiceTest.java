@@ -1,29 +1,50 @@
 package org.egov.lams.service;
 
-import org.egov.lams.model.*;
+import static org.junit.Assert.assertEquals;
+import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.lams.model.Agreement;
+import org.egov.lams.model.AgreementCriteria;
+import org.egov.lams.model.Allottee;
+import org.egov.lams.model.Asset;
+import org.egov.lams.model.AssetCategory;
+import org.egov.lams.model.Demand;
+import org.egov.lams.model.Location;
+import org.egov.lams.model.WorkflowDetails;
 import org.egov.lams.model.enums.Action;
 import org.egov.lams.model.enums.Source;
 import org.egov.lams.model.enums.Status;
-import org.egov.lams.repository.*;
+import org.egov.lams.repository.AgreementMessageQueueRepository;
+import org.egov.lams.repository.AgreementRepository;
+import org.egov.lams.repository.AllotteeRepository;
+import org.egov.lams.repository.DemandRepository;
+import org.egov.lams.repository.PositionRestRepository;
 import org.egov.lams.util.AcknowledgementNumberUtil;
 import org.egov.lams.util.AgreementNumberUtil;
-import org.egov.lams.web.contract.*;
-import org.junit.Before;
+import org.egov.lams.web.contract.AgreementRequest;
+import org.egov.lams.web.contract.AllotteeResponse;
+import org.egov.lams.web.contract.DemandResponse;
+import org.egov.lams.web.contract.DepartmentDesignation;
+import org.egov.lams.web.contract.Designation;
+import org.egov.lams.web.contract.Position;
+import org.egov.lams.web.contract.PositionResponse;
+import org.egov.lams.web.contract.RequestInfo;
+import org.egov.lams.web.contract.User;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.math.BigDecimal;
-import java.util.*;
-
-import static org.junit.Assert.assertEquals;
-import static org.mockito.Matchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AgreementServiceTest {
@@ -124,7 +145,7 @@ public class AgreementServiceTest {
                 .thenReturn(getDesignationsList());
         when(acknowledgementNumberService.generateAcknowledgeNumber())
                 .thenReturn("AA453DD");
-        when(demandService.prepareDemandsForClone(any())).thenReturn(getDemands());
+        when(demandService.prepareDemandsForClone(any(),any())).thenReturn(getDemands());
         when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
 
         Agreement agreement = agreementService.createRenewal(agreementRequest);
@@ -144,7 +165,7 @@ public class AgreementServiceTest {
                 .thenReturn(getDesignationsList());
         when(acknowledgementNumberService.generateAcknowledgeNumber())
                 .thenReturn("AA453DD");
-        when(demandService.prepareDemandsForClone(any())).thenReturn(getDemands());
+        when(demandService.prepareDemandsForClone(any(),any())).thenReturn(getDemands());
         when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
 
         Agreement agreement = agreementService.createObjection(agreementRequest);
@@ -164,7 +185,7 @@ public class AgreementServiceTest {
                 .thenReturn(getDesignationsList());
         when(acknowledgementNumberService.generateAcknowledgeNumber())
                 .thenReturn("AA453DD");
-        when(demandService.prepareDemandsForClone(any())).thenReturn(getDemands());
+        when(demandService.prepareDemandsForClone(any(),any())).thenReturn(getDemands());
         when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
 
         Agreement agreement = agreementService.createJudgement(agreementRequest);
@@ -178,7 +199,7 @@ public class AgreementServiceTest {
         AgreementRequest agreementRequest = getAgreementRequest();
         when(agreementRepository.getAgreementID()).thenReturn(2l);
         when(demandService.updateDemandOnRemission(any(), any())).thenReturn(getDemands());
-        when(demandRepository.createDemand(any(), any())).thenReturn(getDemandResponse());
+        when(demandRepository.updateDemand(any(), any())).thenReturn(getDemandResponse());
 
         Agreement agreement = agreementService.saveRemission(agreementRequest);
 
@@ -499,11 +520,15 @@ public class AgreementServiceTest {
                 .securityDeposit(2000d)
                 .commencementDate(new Date())
                 .timePeriod(3l)
+                .demands(getDemandList())
                 .legacyDemands(getDemands())
                 .expiryDate(new Date())
                 .build();
     }
 
+    private List<String> getDemandList(){
+    	return Arrays.asList("2"); 
+    }
     private Allottee getAllottee(){
         return Allottee.builder()
                 .userName("Raghu007")

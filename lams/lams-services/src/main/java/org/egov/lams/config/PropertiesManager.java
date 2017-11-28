@@ -161,4 +161,7 @@ public class PropertiesManager {
 	@Value("${app.timezone}")
 	public String timeZone;
 	
+	@Value("${egov.services.lams.assetcategory.market}")
+	public String assetCategoryMarket;
+	
 }

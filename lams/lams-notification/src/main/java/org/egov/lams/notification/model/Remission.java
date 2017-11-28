@@ -18,11 +18,11 @@ public class Remission {
 	private String remissionReason;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("fromDate")
+	@JsonProperty("remissionFromDate")
 	private Date remissionFromDate;
 
 	@JsonFormat(pattern = "dd/MM/yyyy")
-	@JsonProperty("toDate")
+	@JsonProperty("remissionToDate")
 	private Date remissionToDate;
 
 	@JsonProperty("remissionOrder")

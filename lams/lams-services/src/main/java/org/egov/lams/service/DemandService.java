@@ -15,6 +15,7 @@ import org.egov.lams.model.enums.Source;
 import org.egov.lams.repository.DemandRepository;
 import org.egov.lams.web.contract.AgreementRequest;
 import org.egov.lams.web.contract.DemandSearchCriteria;
+import org.egov.lams.web.contract.RequestInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -141,14 +142,22 @@ public class DemandService {
 		}
 	}
 
-	public List<Demand> prepareDemandsForClone(List<Demand> demands) {
+	public List<Demand> prepareDemandsForClone(String demandId,RequestInfo requestInfo) {
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		List<Demand> demands= new ArrayList<>();
+		if(demandId!=null){
+			demandSearchCriteria.setDemandId(Long.valueOf(demandId));
+		
+		Demand demand = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands().get(0);
 		List<DemandDetails> clonedDemandDetails = new ArrayList<>();
-		for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
+		for (DemandDetails demandDetail : demand.getDemandDetails()) {
 			demandDetail.setId(null);
 			clonedDemandDetails.add(demandDetail);
 		}
-		demands.get(0).getDemandDetails().clear();
-		demands.get(0).setDemandDetails(clonedDemandDetails);
+		demand.getDemandDetails().clear();
+		demand.setDemandDetails(clonedDemandDetails);
+		demands.add(demand);
+		}
 		return demands;
 	}
 
@@ -211,7 +220,10 @@ public class DemandService {
 		return legacyDemandReasons;
 	}
 
-	public List<Demand> updateDemandOnRemission(Agreement agreement, List<Demand> demands) {
+	public List<Demand> updateDemandOnRemission(Agreement agreement, RequestInfo requestInfo) {
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
+		List<Demand> demands = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands();
 		BigDecimal excessCollection = BigDecimal.ZERO;
 		BigDecimal revisedRent = BigDecimal.valueOf(agreement.getRemission().getRemissionRent());
 		Date fromDate = agreement.getRemission().getRemissionFromDate();
@@ -256,6 +268,13 @@ public class DemandService {
 
 				} else
 					demandDetail.getCollectionAmount().add(balance);
+			}
+		}
+		if (collection.compareTo(BigDecimal.ZERO) > 0) {
+			for (DemandDetails demandDetail : demands.get(0).getDemandDetails()) {
+				if ("ADVANCE_TAX".equalsIgnoreCase(demandDetail.getTaxReasonCode())) {
+					demandDetail.getCollectionAmount().add(collection);
+				}
 			}
 		}
 

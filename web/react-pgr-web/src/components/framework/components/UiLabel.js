@@ -17,7 +17,7 @@ export default class UiLabel extends Component {
   setVal = () => {
     let {item, useTimestamp} = this.props;
     let self = this;
-    var val = this.props.getVal(item.jsonPath,item.isDate);
+       var val = this.props.getVal(item.jsonPath,item.isDate,item.isTime);
 		// console.log(item);
     if(item.configUrl && item.url) {
       let _url = item.configUrl.split("?")[0];

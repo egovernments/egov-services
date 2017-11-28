@@ -157,6 +157,9 @@ export default class ShowFields extends Component {
       if (item.type == "datePicker") {
         item.isDate = true;
       }
+      if(item.type =="timePicker"){
+        item.isTime=true
+      }
       item.type = "label";
     }
   	switch(item.type) {

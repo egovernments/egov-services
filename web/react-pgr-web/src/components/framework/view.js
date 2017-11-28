@@ -257,8 +257,18 @@ class Report extends Component {
   componentDidMount() {
       this.initData();
   }
+   formatAMPM =(date)=> {
+  var hours = date.getHours();
+  var minutes = date.getMinutes();
+  var ampm = hours >= 12 ? 'PM' : 'AM';
+  hours = hours % 12;
+  hours = hours ? hours : 12; // the hour '0' should be '12'
+  minutes = minutes < 10 ? '0'+minutes : minutes;
+  var strTime = hours + ':' + minutes + ' ' + ampm;
+  return strTime;
+}
 
-  getVal = (path,isDate) => {
+  getVal = (path,isDate,isTime) => {
     var val = _.get(this.props.formData, path);
 
     if( isDate && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0) {
@@ -266,6 +276,9 @@ class Report extends Component {
       return ('0' + _date.getDate()).slice(-2) + '/'
                + ('0' + (_date.getMonth()+1)).slice(-2) + '/'
                + _date.getFullYear();
+    }
+    if(isTime && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0){
+        return this.formatAMPM(new Date(parseInt(val)));
     }
     return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val === true) ? "Yes" : (val === false) ? "No" : (val + "") : "";
   }

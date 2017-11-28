@@ -71,10 +71,10 @@ var dat = {
               label: "Update Opinion",
               url: "/update/legal/updateopinion/"
             },
-            {
-              label: "Update",
-              url: "/update/legal/opiniondetails/"
-            },
+            // {
+            //   label: "Update",
+            //   url: "/update/legal/opiniondetails/"
+            // },
              {
               label: "View",
               url: "/view/legal/opiniondetails/"

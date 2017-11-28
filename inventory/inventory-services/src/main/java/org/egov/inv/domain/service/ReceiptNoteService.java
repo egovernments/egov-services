@@ -17,6 +17,7 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -43,6 +44,9 @@ public class ReceiptNoteService extends DomainService {
 
     @Autowired
     private ReceiptNoteRepository receiptNoteRepository;
+
+    @Autowired
+    private PurchaseOrderService purchaseOrderService;
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -86,6 +90,8 @@ public class ReceiptNoteService extends DomainService {
                 if (isEmpty(materialReceiptDetail.getTenantId())) {
                     materialReceiptDetail.setTenantId(tenantId);
                 }
+
+                setUomAndQuantity(tenantId, materialReceiptDetail);
 
                 if (isEmpty(materialReceiptDetail.getId())) {
                     setMaterialDetails(tenantId, materialReceiptDetail);
@@ -132,6 +138,19 @@ public class ReceiptNoteService extends DomainService {
             materialReceiptDetail.setTenantId(tenantId);
         }
 
+        setUomAndQuantity(tenantId, materialReceiptDetail);
+
+        materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
+                materialReceiptDetailAddnlInfo -> {
+                    materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
+                    if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
+                        materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+                    }
+                }
+        );
+    }
+
+    private void setUomAndQuantity(String tenantId, MaterialReceiptDetail materialReceiptDetail) {
         Uom uom = getUom(tenantId, materialReceiptDetail.getUom().getCode(), new RequestInfo());
         materialReceiptDetail.setUom(uom);
 
@@ -144,15 +163,6 @@ public class ReceiptNoteService extends DomainService {
             Double convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
             materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(convertedAcceptedQuantity));
         }
-
-        materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
-                materialReceiptDetailAddnlInfo -> {
-                    materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
-                    if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
-                        materialReceiptDetailAddnlInfo.setTenantId(tenantId);
-                    }
-                }
-        );
     }
 
 
@@ -200,6 +210,42 @@ public class ReceiptNoteService extends DomainService {
                         " and " + materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
             }
         });
+    }
+
+
+    private void checkPurchaseOrderPresent(List<MaterialReceiptDetail> materialReceiptDetails, String tenantId) {
+        List<String> purchaseOrderIdList = new ArrayList<>();
+
+        HashMap<String, String> errors = new HashMap<>();
+
+        materialReceiptDetails.stream().forEach(materialReceiptDetail -> {
+            if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
+                purchaseOrderIdList.add(materialReceiptDetail.getPurchaseOrderDetail().getId());
+            }
+        });
+
+        PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+        purchaseOrderSearch.setIds(purchaseOrderIdList);
+        purchaseOrderSearch.setTenantId(tenantId);
+
+        PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
+
+        List<String> purchaseOrderIdFromDb = purchaseOrders.getPurchaseOrders().stream()
+                .map(purchaseOrder -> purchaseOrder.getId())
+                .collect(Collectors.toList());
+
+        List<String> nonMatched = purchaseOrderIdList.stream()
+                .filter(purchaseOrder -> !purchaseOrderIdFromDb.contains(purchaseOrder))
+                .collect(Collectors.toList());
+
+        nonMatched.stream().map(nonMatchedId -> {
+            errors.put(nonMatchedId, "purchase order - " + nonMatchedId + " is not present");
+            return errors;
+        });
+
+        if (errors.size() > 0) {
+            throw new CustomException(errors);
+        }
     }
 
     private String appendString(MaterialReceipt materialReceipt) {

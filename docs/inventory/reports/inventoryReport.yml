@@ -454,13 +454,13 @@ ReportDefinitions:
     type: string
     source: inventory
 
-  - name: date
-    label: inventory.date
+  - name: currentYear
+    label: inventory.currentYear
     type: string
     source: inventory
 
-  - name: date
-    label: inventory.date
+  - name: previousYear
+    label: inventory.previousYear
     type: string
     source: inventory
 
@@ -488,10 +488,14 @@ ReportDefinitions:
           mat.name as materialName, 
           pl.ratetype as ratetype,
           pld.ratePerUnit as currentRate, 
-          (select count(*) from pricelistdetails where material=pld.material and fromdate::bigint>=1483209000000 and todate::bigint<=1488306600000) as date, 
-          (select count(*) from pricelistdetails where material=pld.material and fromdate::bigint>=1451586600000 and todate::bigint<=1483122600000) as date 
+          (select count(*) from pricelistdetails where material=pld.material 
+          and fromdate::bigint>=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','01','-','01')))) 
+          and todate::bigint<=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','03','-','01'))))) as currentYear, 
+          (select count(*) from pricelistdetails where material=pld.material 
+          and fromdate::bigint>=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','01','-','01')))) 
+          and todate::bigint<=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','12','-','31'))))) as previousYear 
           from pricelist pl,pricelistdetails pld,supplier sup,material mat
-          where pl.tenantid='default'
+          where pl.tenantid=$tenantid
           AND pld.tenantid=pl.tenantid
           AND mat.tenantid=pld.tenantid
           AND sup.tenantid=mat.tenantid

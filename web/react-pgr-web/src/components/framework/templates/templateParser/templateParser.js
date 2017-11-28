@@ -44,7 +44,7 @@ class TemplateParser extends Component {
 		let {back} = this;
 		return(
 			<div>
-				<div id="printTemplate">
+				<div id="printTemplate" className = "page">
 					{localStorage.reportData ? JSON.parse(localStorage.reportData).map((v, i) => {
 						return (
 							<div>

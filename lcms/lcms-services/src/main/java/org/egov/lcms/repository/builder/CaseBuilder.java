@@ -184,7 +184,7 @@ public class CaseBuilder {
 		searchQuery.append(" WHERE casecode=?");
 		preparedStatementValues.add(caseObj.getCode());
 
-		searchQuery.append(" AND tenantid=?");
+		searchQuery.append(" AND tenantid=?  order by createdtime asc");
 		preparedStatementValues.add(caseObj.getTenantId());
 
 		return searchQuery.toString();

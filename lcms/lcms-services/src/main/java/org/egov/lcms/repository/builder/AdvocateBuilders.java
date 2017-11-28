@@ -137,6 +137,7 @@ public class AdvocateBuilders {
 		}else{
 			searchQuery.append(" AND agencycode =?");
 			preparedStatementValues.add(code);
+			searchQuery.append(" order by createdtime asc");
 		}
 
 		return searchQuery.toString();

@@ -386,8 +386,8 @@ public class AgreementService {
 		}
 	}
 	
-	public List<Agreement> getAgreementsByAgreementNumber(String agreementNumber, String tenantId){
-		return agreementRepository.findByAgreementNumber(agreementNumber, tenantId);
+	public List<Agreement> getAgreementsByAgreementNumber(AgreementCriteria agreementCriteria, RequestInfo requestInfo){
+		return agreementRepository.findByAgreementNumber(agreementCriteria, requestInfo);
 	}
 
 	private static Date setToTime(Date toDate) {

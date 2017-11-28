@@ -215,12 +215,12 @@ public class AgreementRepository {
         return agreements;
     }
 
-	public List<Agreement> findByAgreementNumber(String agreementNumber, String tenantId) {
+	public List<Agreement> findByAgreementNumber(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
 		String query = AGREEMENT_SEARCH_QUERY;
 		List<Agreement> agreements = null;
 		Map<String, Object> params = new HashMap<>();
-		params.put("agreementNumber", agreementNumber);
-		params.put("tenantId", tenantId);
+		params.put("agreementNumber", agreementCriteria.getAgreementNumber());
+		params.put("tenantId", agreementCriteria.getTenantId());
 
 		try {
 			agreements = namedParameterJdbcTemplate.query(query, params, new AgreementRowMapper());
@@ -228,6 +228,14 @@ public class AgreementRepository {
 			logger.info("exception occured while getting agreement by agreementNumber" + e);
 			throw new RuntimeException(e.getMessage());
 		}
+		if(agreements.isEmpty()){
+			return agreements;
+		}
+		agreementCriteria.setAsset(assetHelper.getAssetIdListByAgreements(agreements));
+		agreementCriteria.setAllottee(allotteeHelper.getAllotteeIdListByAgreements(agreements));
+		List<Asset> assets = getAssets(agreementCriteria, requestInfo);
+		List<Allottee> allottees = getAllottees(agreementCriteria, requestInfo);
+		agreements = agreementHelper.filterAndEnrichAgreements(agreements, allottees, assets);
 		return agreements;
 	}
     /*

@@ -83,8 +83,7 @@ public class AgreementController {
 		AgreementRequest agreementRequest = new AgreementRequest();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
-			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria.getAgreementNumber(),
-					agreementCriteria.getTenantId());
+			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria, requestInfo);
 		}
 		if (agreements != null && !agreements.isEmpty()) {
 			agreementRequest.setRequestInfo(requestInfo);

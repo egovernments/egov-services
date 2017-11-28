@@ -468,8 +468,8 @@ public class ActionRepository {
 		List<Action> actionList = new ArrayList<Action>();
 		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
 		String actionFilter = "[?(@.id IN [$actionid])]";
-		url = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
-		actionurl = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=$tenantid&filter=";
+		url = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
+		actionurl = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=$tenantid&filter=";
 
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();
@@ -542,6 +542,7 @@ public class ActionRepository {
 		for (int i = 0; i < actionsArray.length(); i++) {
 			Action act = new Action();
 			act.setDisplayName(actionsArray.getJSONObject(i).getString("displayName"));
+			act.setUrl(actionsArray.getJSONObject(i).getString("url"));
 			act.setEnabled(actionsArray.getJSONObject(i).getBoolean("enabled"));
 			act.setId(actionsArray.getJSONObject(i).getLong("id"));
 			act.setName(actionsArray.getJSONObject(i).getString("name"));

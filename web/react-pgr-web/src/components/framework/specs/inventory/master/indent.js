@@ -255,10 +255,24 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
-            "defaultValue": "",
+            "defaultValue": JSON.parse(localStorage.getItem("userRequest")).name,
             "maxLength": 128,
             "patternErrorMsg": ""
           },
+
+ 						{
+            "name": "name",
+            "jsonPath": "indents[0].desig.code",
+            "label": "inventory.store.name",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "isHidden":true,
+            "defaultValue": "",
+            "patternErrorMsg": "inventory.create.field.message.store.name",
+						"url":"/hr-masters/designations/_search?&|$.Designation[*].code|$.Designation[*].name"
+          },
+
           {
             "name": "designation",
             "jsonPath": "indents[0].designation",
@@ -364,7 +378,7 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":"",
-									"url":"/asset-services-maha/assets/_search?&|$..code|$..name"
+									"url":"/asset-services-maha/assets/_search?&|$.Assets..code|$.Assets..name"
                }, {
                   "name":"projectcode",
                   "jsonPath":"indents[0].indentDetails[0].projectCode.code",

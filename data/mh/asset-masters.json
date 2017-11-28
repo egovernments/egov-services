@@ -90,6 +90,18 @@
           "columns": []
         },
         {
+          "name": "Area",
+          "type": "Number",
+          "isActive": true,
+          "isMandatory": false,
+          "values": null,
+          "localText": null,
+          "regExFormate": null,
+          "url": null,
+          "order": null,
+          "columns": []
+        },
+        {
           "name": "Length",
           "type": "Number",
           "isActive": true,
@@ -138,32 +150,20 @@
           "columns": []
         },
         {
-          "name": "Layer description",
-          "type": "Text",
+          "name": "Layer Type",
+          "type": "Select",
           "isActive": true,
           "isMandatory": false,
           "values": null,
           "localText": null,
           "regExFormate": null,
-          "url": null,
+          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=mh",
           "order": null,
           "columns": []
         },
         {
           "name": "No. Of Layers",
           "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Layer Type",
-          "type": "Text",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -186,8 +186,8 @@
           "columns": []
         },
         {
-          "name": "Area",
-          "type": "Number",
+          "name": "Layer description",
+          "type": "image",
           "isActive": true,
           "isMandatory": false,
           "values": null,
@@ -2032,6 +2032,26 @@
       "tenantId": "mh",
       "code": "DONATION",
       "name": "Donation",
+      "isActive": true
+    }
+  ],
+  "LayerType": [
+    {
+      "id": 1,
+      "tenantId": "mh",
+      "name": "FAKE LAYER 1",
+      "description": "./temp/images/headerLogo.png",
+      "numberOfLayers": 2,
+      "layerSize": 2,
+      "isActive": true
+    },
+    {
+      "id": 2,
+      "tenantId": "mh",
+      "name": "FAKE LAYER 2",
+      "description": "./temp/images/mortarlessPavement.jpg",
+      "numberOfLayers": 4,
+      "layeSize": 2,
       "isActive": true
     }
   ],

@@ -3,9 +3,11 @@ package org.egov.report.service;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -75,6 +77,11 @@ public class IntegrationService {
 					
 					String res = "";
 					 String[] stateid = null;
+					 
+					    url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
+					    
+					    LOGGER.info("url:"+url);
+					 
 						if(searchColumn.getStateData() && (!metadataResponse.getTenantId().equals("default"))) {
 							stateid = metadataResponse.getTenantId().split("\\.");
 							url = url.replaceAll("\\$tenantid",stateid[0]);
@@ -132,6 +139,13 @@ public class IntegrationService {
 		return riw;
 	}
 	
+	public long getCurrentTime(){
+	  Calendar calendar = Calendar.getInstance();
+	  calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+	  return calendar.getTimeInMillis();
+	}
+	  
+
 	
 
 }

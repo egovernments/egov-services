@@ -2,11 +2,13 @@ package org.egov.report.repository.builder;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swagger.model.ExternalService;
@@ -105,7 +107,7 @@ public class ReportQueryBuilder {
 		for (ExternalService es : reportDefinition.getExternalService()) {
 			
 			url = es.getApiURL();
-			
+			url = url.replaceAll("\\$currentTime", Long.toString(getCurrentTime()));
 			 String[] stateid = null;
 			if(es.getStateData() && (!tenantid.equals("default"))) {
 				stateid = tenantid.split("\\.");
@@ -449,5 +451,11 @@ public String generateUnionQuery(List<SearchParam> searchParams, String tenantId
 				ri.setRequesterId("requestId");
 		return ri;
 	}
+   
+	public long getCurrentTime(){
+		  Calendar calendar = Calendar.getInstance();
+		  calendar.setTimeZone(TimeZone.getTimeZone("UTC"));
+		  return calendar.getTimeInMillis();
+		}
 
 }

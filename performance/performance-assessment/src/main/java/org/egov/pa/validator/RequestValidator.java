@@ -276,7 +276,7 @@ public class RequestValidator {
 	public Error getError(final KPIValueSearchRequest kpiValueSearchRequest) {
 		final List<ErrorField> errorFields = new ArrayList<>();
 		
-		if(null == kpiValueSearchRequest.getFinYear()) { 
+		/*if(null == kpiValueSearchRequest.getFinYear()) { 
 			errorFields.add(buildErrorField(PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_CODE,  
                     PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_ERROR_MESSAGE,
                     PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_FIELD_NAME));
@@ -309,7 +309,7 @@ public class RequestValidator {
 			errorFields.add(buildErrorField(PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_CODE,  
                     PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_ERROR_MESSAGE,
                     PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_FIELD_NAME));
-		}
+		}*/
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PerformanceAssessmentConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}

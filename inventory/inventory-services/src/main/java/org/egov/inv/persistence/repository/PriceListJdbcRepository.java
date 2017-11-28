@@ -92,7 +92,7 @@ public class PriceListJdbcRepository extends JdbcRepository {
             validateEntityFieldName(priceListSearchRequest.getSortBy(), PriceListSearchRequest.class);
         }
 
-        String orderBy = "order by id";
+        String orderBy = "order by supplier asc, rateType asc, rateContractDate desc";
         if (!isEmpty(priceListSearchRequest.getSortBy())) {
             orderBy = "order by " + priceListSearchRequest.getSortBy();
         }

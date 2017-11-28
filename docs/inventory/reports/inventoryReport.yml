@@ -526,16 +526,21 @@ ReportDefinitions:
     type: string
     source: inventory
 
-  - name: DTT
+  - name: dtt
     label: inventory.DTT
     type: string
     source: inventory
 
-  - name: DGSND
+  - name: quotation
+    label: inventory.quotation
+    type: string
+    source: inventory
+
+  - name: dgsnd
     label: inventory.DGSND
     type: string
     source: inventory
-    
+
   - name: tender
     label: inventory.tender
     type: string
@@ -549,6 +554,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     isMandatory: false
+    searchClause: AND pl.supplier = $supplierName
     
 
   - name: materialName
@@ -556,9 +562,32 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
+    searchClause: AND pld.material = $materialName
     isMandatory: false
 
-  query: select * from material;
+  query: select pld.material as materialCode,
+         mat.name as materialName,
+         pl.supplier as SupplierName,
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='Quotation'
+         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000)
+         order by createdtime desc limit 1) as quotation,
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='DGSC Rate Contract' 
+         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000)
+         order by createdtime desc limit 1) as dgsnd,
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='ULB Rate Contract'
+         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000) 
+         order by createdtime desc limit 1) as dtt,
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='One Time Tender' 
+         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000)
+         order by createdtime desc limit 1) as tender
+         FROM pricelistdetails pld, pricelist pl, material mat
+         where  pld.tenantid=$tenantid
+         AND pl.tenantid=pld.tenantid
+         AND mat.tenantid=pl.tenantid
+         AND mat.code=pld.material 
+         AND pld.pricelist=pl.id ;
+
+
 
 # Procurement Expenditure Report
 # Need to Change drop down Link based on report and Query

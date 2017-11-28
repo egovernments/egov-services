@@ -30,6 +30,7 @@ public class ActionRequest {
 	private String tenantId;
 	private Boolean enabled;
 	private List<Action> actions;
+	private String actionMaster;
 
 	public ActionSearchCriteria toDomain() {
 		return ActionSearchCriteria.builder().tenantId(tenantId).roleCodes(roleCodes).build();

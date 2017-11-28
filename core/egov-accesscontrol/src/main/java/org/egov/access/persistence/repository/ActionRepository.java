@@ -467,9 +467,9 @@ public class ActionRepository {
 		String actionurl = "";
 		List<Action> actionList = new ArrayList<Action>();
 		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
-		String actionFilter = "[?(@.id IN [$actionid])]";
-		url = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
-		actionurl = "http://localhost:8093/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=actions&tenantId=$tenantid&filter=";
+		String actionFilter = "[?(@.id IN [$actionid] && @.enabled == $enabled)]";
+		url = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
+		actionurl = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=$actionmaster&tenantId=$tenantid&filter=";
 
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();
@@ -487,13 +487,15 @@ public class ActionRepository {
 		
 		
 		roleFilter = roleFilter.replaceAll("\\$rolecode", rolecodelist.toString());
-		roleFilter = roleFilter.replaceAll("\\$enabled", enabled.toString());
+		
+		
 		LOGGER.info("Role Filter: "+roleFilter.toString());
 		roleFilter = URLEncoder.encode( roleFilter, "UTF-8" ); 
 		
 		// TODO Auto-generated method stub
 
 		url = url.concat(roleFilter);
+		
 		url = url.replaceAll("\\$tenantid", tenantid);
 		LOGGER.info("The URL is: "+url);
 		URI uri = URI.create(url);
@@ -518,15 +520,17 @@ public class ActionRepository {
 		}
 		LOGGER.info("Action Id is "+actionids.toString());
 		actionFilter = actionFilter.replaceAll("\\$actionid", actionids.toString());
+		actionFilter = actionFilter.replaceAll("\\$enabled", enabled.toString());
 		LOGGER.info("Action Filter is "+actionFilter);
 		actionFilter=URLEncoder.encode( actionFilter, "UTF-8" ); 
 		
 		String newactionuri = actionurl.concat(actionFilter);
 		
-		 
+		newactionuri = newactionuri.replaceAll("\\$actionmaster", actionRequest.getActionMaster());
 		 if(tenantid.contains(".")){
 			 String[] stateid = tenantid.split("\\.");
 			 System.out.println("State IDs are :"+stateid);
+			 
 			 newactionuri = newactionuri.replaceAll("\\$tenantid", stateid[0]);
 		 } else {
 			 newactionuri = newactionuri.replaceAll("\\$tenantid", tenantid); 

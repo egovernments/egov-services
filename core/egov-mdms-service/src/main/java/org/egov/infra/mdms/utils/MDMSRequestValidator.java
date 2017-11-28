@@ -18,7 +18,7 @@ import com.jayway.jsonpath.JsonPath;
 
 @Service
 public class MDMSRequestValidator {
-
+/*
 	public static final Logger logger = LoggerFactory.getLogger(MDMSRequestValidator.class);
 	
 	@Autowired
@@ -67,6 +67,6 @@ public class MDMSRequestValidator {
 		}
 		logger.info("Validation result, List of error objects: "+result);
 		return result;
-	}
+	}*/
 	
 }

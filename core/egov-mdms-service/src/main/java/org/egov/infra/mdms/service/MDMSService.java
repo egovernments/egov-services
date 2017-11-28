@@ -107,7 +107,7 @@ public class MDMSService {
 		return filteredMasters;
 	}
 	
-	public String gitPush(MDMSCreateRequest mDMSCreateRequest) throws JsonProcessingException{
+	/*public String gitPush(MDMSCreateRequest mDMSCreateRequest) throws JsonProcessingException{
 		Map<String, List<Object>> tenantIdMap = MDMSApplicationRunnerImpl.getTenantMap();
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		List<Object> tenantSpecificModuleData = tenantIdMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId());
@@ -318,6 +318,6 @@ public class MDMSService {
 			return masterConfig;
 		}else
 			return allmasterConfigs;
-	}
+	}*/
 
 }

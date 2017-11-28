@@ -36,8 +36,8 @@ public class MDMSApplicationRunnerImpl {
 	public String mdmsFileDirectory;
 	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
-	private static Map<String, String> filePathMap = new HashMap<>();
-	private static Map<String, Map<String, Object>> validationMap = new HashMap<>();
+	//private static Map<String, String> filePathMap = new HashMap<>();
+	//private static Map<String, Map<String, Object>> validationMap = new HashMap<>();
 
 
 	@PostConstruct
@@ -74,7 +74,7 @@ public class MDMSApplicationRunnerImpl {
 						filterMaster(obj);
 						//buildFilePathMap(obj, file.getName());
 						//buildValidationMap(obj);
-						System.out.println("yaml obj:" + obj);
+						//System.out.println("yaml obj:" + obj);
 
 					} catch (Exception e) {
 						log.error("Exception while fetching service map for: ");
@@ -84,11 +84,11 @@ public class MDMSApplicationRunnerImpl {
 					log.info("Reading json file....:- "+name);
 					try {
 						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
-						log.info("Map: "+jsonStr);
+						//log.info("Map: "+jsonStr);
 						filterMaster(jsonStr);
-						buildFilePathMap(jsonStr, file.getName());
-						buildValidationMap(jsonStr);
-						System.out.println(jsonStr);
+						//buildFilePathMap(jsonStr, file.getName());
+						//buildValidationMap(jsonStr);
+						//System.out.println(jsonStr);
 					} catch (JsonGenerationException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -111,10 +111,10 @@ public class MDMSApplicationRunnerImpl {
 			}
 		}
 		
-		log.info("tenantMap: "+tenantMap);
+		/*log.debug("tenantMap: "+tenantMap);
 		log.info("filePathMap: "+filePathMap);
 		log.info("validationMap: "+validationMap);
-
+*/
 
 
 	}
@@ -140,7 +140,7 @@ public class MDMSApplicationRunnerImpl {
 	}
 	
 	private void filterMaster(Map<String, Object> map) {
-		ObjectMapper objectMapper = new ObjectMapper();
+		//ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			List<Object> list = null;
 			if (!tenantMap.containsKey(map.get("tenantId").toString())) {
@@ -161,7 +161,7 @@ public class MDMSApplicationRunnerImpl {
 
 	}
 	
-	private void buildFilePathMap(Map<String, Object> map, String filePath){
+	/*private void buildFilePathMap(Map<String, Object> map, String filePath){
 		StringBuilder key = new StringBuilder();
 		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
 		
@@ -173,15 +173,15 @@ public class MDMSApplicationRunnerImpl {
 		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
 		
 		validationMap.put(key.toString(), map);
-	}
+	}*/
 
 	public static Map<String, List<Object>> getTenantMap(){
 		return tenantMap;
 	}
 	
-	public static void setTenantMap(Map<String, List<Object>> tenantIdMap){
+	/*public static void setTenantMap(Map<String, List<Object>> tenantIdMap){
 		tenantMap = tenantIdMap;
-	}
+	} 
 	
 	public static Map<String, String> getFilePathMap(){
 		return filePathMap;
@@ -191,6 +191,6 @@ public class MDMSApplicationRunnerImpl {
 	public static Map<String, Map<String, Object>> getValidationMap(){
 		return validationMap;
 	
-	}
+	} */
 	
 }

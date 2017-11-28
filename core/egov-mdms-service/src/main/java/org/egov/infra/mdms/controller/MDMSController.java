@@ -65,7 +65,7 @@ public class MDMSController {
 		
 	}
 	
-	@PostMapping("_create")
+	/*@PostMapping("_create")
 	@ResponseBody
 	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
@@ -125,7 +125,7 @@ public class MDMSController {
 		}
 
 		
-	}
+	} */
 	
 
 	@PostMapping("_get")

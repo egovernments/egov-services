@@ -15,7 +15,7 @@ import com.jayway.jsonpath.JsonPath;
 @Component
 public class MDMSUtils {
 	
-	public static final Logger logger = LoggerFactory.getLogger(MDMSUtils.class);
+	/*public static final Logger logger = LoggerFactory.getLogger(MDMSUtils.class);
 
 	public List<Object> filter(List<Object> list, String key, Object value) throws JsonProcessingException{
 		List<Object> filteredList = new ArrayList<>();
@@ -38,6 +38,6 @@ public class MDMSUtils {
 					.collect(Collectors.toList());	
 		}
 		return filteredList;
-	}
+	}*/
 
 }

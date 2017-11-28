@@ -25,7 +25,7 @@ public class SanitationStaffScheduleQueueRepository {
 
         kafkaTemplate.send(saveTopic, sanitationStaffScheduleRequest);
 
-        kafkaTemplate.send(indexerTopic, sanitationStaffScheduleRequest.getSanitationStaffSchedules());
+        kafkaTemplate.send(indexerTopic, sanitationStaffScheduleRequest);
 
         return sanitationStaffScheduleRequest;
 
@@ -35,7 +35,7 @@ public class SanitationStaffScheduleQueueRepository {
 
         kafkaTemplate.send(updateTopic, sanitationStaffScheduleRequest);
 
-        kafkaTemplate.send(indexerTopic, sanitationStaffScheduleRequest.getSanitationStaffSchedules());
+        kafkaTemplate.send(indexerTopic, sanitationStaffScheduleRequest);
 
         return sanitationStaffScheduleRequest;
 

@@ -25,7 +25,7 @@ public class VehicleQueueRepository {
 
         kafkaTemplate.send(saveTopic, vehicleRequest);
 
-        kafkaTemplate.send(indexerTopic, vehicleRequest.getVehicles());
+        kafkaTemplate.send(indexerTopic, vehicleRequest);
 
         return vehicleRequest;
 
@@ -35,7 +35,7 @@ public class VehicleQueueRepository {
 
         kafkaTemplate.send(updateTopic, vehicleRequest);
 
-        kafkaTemplate.send(indexerTopic, vehicleRequest.getVehicles());
+        kafkaTemplate.send(indexerTopic, vehicleRequest);
 
         return vehicleRequest;
 

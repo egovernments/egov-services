@@ -30,7 +30,7 @@ public class SourceSegregationQueueRepository {
 
         kafkaTemplate.send(saveTopic, sourceSegregationRequest);
 
-        kafkaTemplate.send(indexerTopic, sourceSegregationRequest.getSourceSegregations());
+        kafkaTemplate.send(indexerTopic, sourceSegregationRequest);
 
         return sourceSegregationRequest;
 
@@ -43,7 +43,7 @@ public class SourceSegregationQueueRepository {
 
         kafkaTemplate.send(updateTopic, sourceSegregationRequest);
 
-        kafkaTemplate.send(indexerTopic, sourceSegregationRequest.getSourceSegregations());
+        kafkaTemplate.send(indexerTopic, sourceSegregationRequest);
 
         return sourceSegregationRequest;
 

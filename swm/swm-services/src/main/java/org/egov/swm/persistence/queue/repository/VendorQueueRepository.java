@@ -34,7 +34,7 @@ public class VendorQueueRepository {
 
         kafkaTemplate.send(saveTopic, vendorRequest);
 
-        kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
+        kafkaTemplate.send(indexerTopic, vendorRequest);
 
         return vendorRequest;
 
@@ -51,7 +51,7 @@ public class VendorQueueRepository {
 
         kafkaTemplate.send(updateTopic, vendorRequest);
 
-        kafkaTemplate.send(indexerTopic, vendorRequest.getVendors());
+        kafkaTemplate.send(indexerTopic, vendorRequest);
 
         return vendorRequest;
 

@@ -34,7 +34,7 @@ public class CollectionPointQueueRepository {
 
         kafkaTemplate.send(saveTopic, collectionPointRequest);
 
-        kafkaTemplate.send(indexerTopic, collectionPointRequest.getCollectionPoints());
+        kafkaTemplate.send(indexerTopic, collectionPointRequest);
 
         return collectionPointRequest;
 
@@ -52,7 +52,7 @@ public class CollectionPointQueueRepository {
 
         kafkaTemplate.send(updateTopic, collectionPointRequest);
 
-        kafkaTemplate.send(indexerTopic, collectionPointRequest.getCollectionPoints());
+        kafkaTemplate.send(indexerTopic, collectionPointRequest);
 
         return collectionPointRequest;
 

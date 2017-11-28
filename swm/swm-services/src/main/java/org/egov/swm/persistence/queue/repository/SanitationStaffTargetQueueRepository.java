@@ -30,7 +30,7 @@ public class SanitationStaffTargetQueueRepository {
 
         kafkaTemplate.send(saveTopic, sanitationStaffTargetRequest);
 
-        kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest.getSanitationStaffTargets());
+        kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest);
 
         return sanitationStaffTargetRequest;
 
@@ -43,7 +43,7 @@ public class SanitationStaffTargetQueueRepository {
 
         kafkaTemplate.send(updateTopic, sanitationStaffTargetRequest);
 
-        kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest.getSanitationStaffTargets());
+        kafkaTemplate.send(indexerTopic, sanitationStaffTargetRequest);
 
         return sanitationStaffTargetRequest;
 

@@ -30,7 +30,7 @@ public class VendorPaymentDetailsQueueRepository {
 
         kafkaTemplate.send(createTopic, vendorPaymentDetailsRequest);
 
-        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
+        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest);
 
         return vendorPaymentDetailsRequest;
     }
@@ -39,7 +39,7 @@ public class VendorPaymentDetailsQueueRepository {
 
         kafkaTemplate.send(updateTopic, vendorPaymentDetailsRequest);
 
-        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest.getVendorPaymentDetails());
+        kafkaTemplate.send(indexTopic, vendorPaymentDetailsRequest);
 
         return vendorPaymentDetailsRequest;
     }

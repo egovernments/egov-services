@@ -25,7 +25,7 @@ public class VendorContractQueueRepository {
 
         kafkaTemplate.send(saveTopic, vendorContractRequest);
 
-        kafkaTemplate.send(indexerTopic, vendorContractRequest.getVendorContracts());
+        kafkaTemplate.send(indexerTopic, vendorContractRequest);
 
         return vendorContractRequest;
 
@@ -35,7 +35,7 @@ public class VendorContractQueueRepository {
 
         kafkaTemplate.send(updateTopic, vendorContractRequest);
 
-        kafkaTemplate.send(indexerTopic, vendorContractRequest.getVendorContracts());
+        kafkaTemplate.send(indexerTopic, vendorContractRequest);
 
         return vendorContractRequest;
 

@@ -113,3 +113,11 @@ ServiceMaps:
       id: $.paymentNo
       isBulk: true
       jsonPath: $.vendorPaymentDetails.*
+
+  - topic: swm-sourcesegregation-indexer-topic
+    indexes:
+    - name: sourcesegregation
+      type: sourcesegregation
+      id: $.code
+      isBulk: true
+      jsonPath: $.sourceSegregations.*

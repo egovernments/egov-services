@@ -30,7 +30,7 @@ public class RouteQueueRepository {
 
         kafkaTemplate.send(saveTopic, routeRequest);
 
-        kafkaTemplate.send(indexerTopic, routeRequest.getRoutes());
+        kafkaTemplate.send(indexerTopic, routeRequest);
 
         return routeRequest;
 
@@ -43,7 +43,7 @@ public class RouteQueueRepository {
 
         kafkaTemplate.send(updateTopic, routeRequest);
 
-        kafkaTemplate.send(indexerTopic, routeRequest.getRoutes());
+        kafkaTemplate.send(indexerTopic, routeRequest);
 
         return routeRequest;
 

@@ -900,10 +900,9 @@ var dat = {
                                       name: "advocatestaus",
                                       pattern: "",
                                       type: "text",
-                                      jsonPath: "cases[0].advocateDetails[0].advocatestaus",
+                                      jsonPath: "cases[0].advocateDetails[0].advocate.status",
                                       isRequired: false,
-                                      isDisabled: true,
-                                      url: "/lcms-services/legalcase/advocate/_search?$..status"
+                                      isDisabled: true
                                  }
                             ]
                         }

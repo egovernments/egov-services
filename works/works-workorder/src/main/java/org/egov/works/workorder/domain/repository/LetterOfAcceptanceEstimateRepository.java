@@ -13,7 +13,7 @@ import java.util.*;
 public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
 
     @Autowired
-    private AssetsForLOARepository assetsForLOARepository;
+    private AssetsLOARepository assetsForLOARepository;
 
     @Autowired
     private LoaActivityRepository loaActivityRepository;
@@ -33,7 +33,7 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
         if (letterOfAcceptanceEstimateSearchCriteria.getSortBy() != null
                 && !letterOfAcceptanceEstimateSearchCriteria.getSortBy().isEmpty()) {
             validateSortByOrder(letterOfAcceptanceEstimateSearchCriteria.getSortBy());
-            validateEntityFieldName(letterOfAcceptanceEstimateSearchCriteria.getSortBy(), LetterOfAcceptance.class);
+            validateEntityFieldName(letterOfAcceptanceEstimateSearchCriteria.getSortBy(), LetterOfAcceptanceEstimate.class);
         }
 
         String orderBy = "order by id";

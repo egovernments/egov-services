@@ -30,7 +30,7 @@ public class SecurityDepositJdbcRepository extends JdbcRepository{
         if (securityDepositeSearchCriteria.getSortBy() != null
                 && !securityDepositeSearchCriteria.getSortBy().isEmpty()) {
             validateSortByOrder(securityDepositeSearchCriteria.getSortBy());
-            validateEntityFieldName(securityDepositeSearchCriteria.getSortBy(), LetterOfAcceptance.class);
+            validateEntityFieldName(securityDepositeSearchCriteria.getSortBy(), SecurityDeposit.class);
         }
 
         String orderBy = "order by id";

@@ -29,7 +29,7 @@ public class LoaActivityRepository extends JdbcRepository {
         if (loaActivitySearchCriteria.getSortBy() != null
                 && !loaActivitySearchCriteria.getSortBy().isEmpty()) {
             validateSortByOrder(loaActivitySearchCriteria.getSortBy());
-            validateEntityFieldName(loaActivitySearchCriteria.getSortBy(), LetterOfAcceptance.class);
+            validateEntityFieldName(loaActivitySearchCriteria.getSortBy(), LoaActivityHelper.class);
         }
 
         String orderBy = "order by id";
@@ -70,7 +70,7 @@ public class LoaActivityRepository extends JdbcRepository {
 
         searchQuery = searchQuery.replace(":orderby", orderBy);
 
-        BeanPropertyRowMapper row = new BeanPropertyRowMapper(AssetsForLOAHelper.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(LoaActivityHelper.class);
 
         List<LoaActivityHelper> assetsForLoaList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
         List<LOAActivity> loaActivities = new ArrayList<>();

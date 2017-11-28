@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Repository
-public class AssetsForLOARepository extends JdbcRepository {
+public class AssetsLOARepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egw_assetsforloa loaassets";
 
@@ -29,7 +29,7 @@ public class AssetsForLOARepository extends JdbcRepository {
         if (assetsForLoaSearchCriteria.getSortBy() != null
                 && !assetsForLoaSearchCriteria.getSortBy().isEmpty()) {
             validateSortByOrder(assetsForLoaSearchCriteria.getSortBy());
-            validateEntityFieldName(assetsForLoaSearchCriteria.getSortBy(), LetterOfAcceptance.class);
+            validateEntityFieldName(assetsForLoaSearchCriteria.getSortBy(), AssetsForLOA.class);
         }
 
         String orderBy = "order by id";

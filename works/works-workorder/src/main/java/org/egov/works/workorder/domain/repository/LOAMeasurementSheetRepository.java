@@ -30,7 +30,7 @@ public class LOAMeasurementSheetRepository  extends JdbcRepository {
         if (loaMeasurementSheetSearchCriteria.getSortBy() != null
                 && !loaMeasurementSheetSearchCriteria.getSortBy().isEmpty()) {
             validateSortByOrder(loaMeasurementSheetSearchCriteria.getSortBy());
-            validateEntityFieldName(loaMeasurementSheetSearchCriteria.getSortBy(), LetterOfAcceptance.class);
+            validateEntityFieldName(loaMeasurementSheetSearchCriteria.getSortBy(), LOAMeasurementSheet.class);
         }
 
         String orderBy = "order by id";

@@ -1,19 +1,22 @@
 package org.egov.inv.domain.service;
 
+import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.common.exception.ErrorCode;
+import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.persistence.repository.ReceiptNoteRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.List;
+import java.math.BigDecimal;
+import java.util.*;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -43,6 +46,8 @@ public class ReceiptNoteService extends DomainService {
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
+
+        validate(materialReceipts, Constants.ACTION_CREATE);
 
         materialReceipts.forEach(materialReceipt ->
         {
@@ -127,6 +132,19 @@ public class ReceiptNoteService extends DomainService {
             materialReceiptDetail.setTenantId(tenantId);
         }
 
+        Uom uom = getUom(tenantId, materialReceiptDetail.getUom().getCode(), new RequestInfo());
+        materialReceiptDetail.setUom(uom);
+
+        if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
+            Double convertedReceivedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getReceivedQty().doubleValue(), uom.getConversionFactor().doubleValue());
+            materialReceiptDetail.setReceivedQty(BigDecimal.valueOf(convertedReceivedQuantity));
+        }
+
+        if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
+            Double convertedAcceptedQuantity = getSaveConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
+            materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(convertedAcceptedQuantity));
+        }
+
         materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
                 materialReceiptDetailAddnlInfo -> {
                     materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
@@ -135,6 +153,53 @@ public class ReceiptNoteService extends DomainService {
                     }
                 }
         );
+    }
+
+
+    private void validate(List<MaterialReceipt> materialReceipts, String method) {
+
+        try {
+            switch (method) {
+
+                case Constants.ACTION_CREATE: {
+                    if (materialReceipts == null) {
+                        throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
+                    } else {
+                        materialReceipts.stream().forEach(materialReceipt -> {
+                            checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                        });
+                    }
+                }
+
+                break;
+
+                case Constants.ACTION_UPDATE: {
+                    if (materialReceipts == null) {
+                        throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
+                    } else {
+                        materialReceipts.stream().forEach(materialReceipt -> {
+                            checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                        });
+                    }
+                }
+
+                break;
+            }
+        } catch (IllegalArgumentException e) {
+
+        }
+
+    }
+
+    private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
+        HashSet<String> hashSet = new HashSet<>();
+        materialReceiptDetails.stream().forEach(materialReceiptDetail ->
+        {
+            if (false == hashSet.add(materialReceiptDetail.getPurchaseOrderDetail().getId() + "-" + materialReceiptDetail.getMaterial().getCode())) {
+                throw new CustomException("inv.0015", materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                        " and " + materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
+            }
+        });
     }
 
     private String appendString(MaterialReceipt materialReceipt) {

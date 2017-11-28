@@ -2,14 +2,13 @@ package org.egov.inv.domain.service;
 
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.inv.model.MaterialReceiptAddInfoSearch;
-import org.egov.inv.model.MaterialReceiptDetail;
-import org.egov.inv.model.MaterialReceiptDetailAddnlinfo;
-import org.egov.inv.model.MaterialReceiptDetailSearch;
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.model.*;
 import org.egov.inv.persistence.repository.MaterialReceiptDetailJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 
@@ -29,6 +28,17 @@ public class MaterialReceiptDetailService extends DomainService {
 
         if (receiptDetails.size() > 0) {
             for (MaterialReceiptDetail materialReceiptDetail : receiptDetails) {
+                Uom uom = getUom(materialReceiptDetail.getTenantId(), materialReceiptDetail.getUom().getCode(), new RequestInfo());
+
+                if (null != materialReceiptDetail.getReceivedQty() && null != uom.getConversionFactor()) {
+                    Double receivedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getReceivedQty().doubleValue(), uom.getConversionFactor().doubleValue());
+                    materialReceiptDetail.setReceivedQty(BigDecimal.valueOf(receivedQuantity));
+                }
+
+                if (null != materialReceiptDetail.getAcceptedQty() && null != uom.getConversionFactor()) {
+                    Double acceptedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
+                    materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(acceptedQuantity));
+                }
                 MaterialReceiptAddInfoSearch materialReceiptAddInfoSearch = MaterialReceiptAddInfoSearch.builder()
                         .receiptDetailId(Arrays.asList(materialReceiptDetail.getId()))
                         .tenantId(materialReceiptDetailSearch.getTenantId())

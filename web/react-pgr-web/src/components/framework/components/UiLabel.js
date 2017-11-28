@@ -123,11 +123,13 @@ export default class UiLabel extends Component {
           console.log(err);
       });
     } else if(val && item.defaultValue) {
-			let defaultObj = item.defaultValue.find((obj)=> {return obj.key == val});
-			if(defaultObj){
-				this.setState({
-					value: defaultObj.value
-				})
+			if(_.isArray(item.defaultValue)){
+				let defaultObj = item.defaultValue.find((obj)=> {return obj.key == val});
+				if(defaultObj){
+					this.setState({
+						value: defaultObj.value
+					})
+				}
 			}
 		}else if(val) {
 			this.setState({

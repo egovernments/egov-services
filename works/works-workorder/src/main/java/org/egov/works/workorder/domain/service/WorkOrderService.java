@@ -42,7 +42,7 @@ public class WorkOrderService {
 
     public WorkOrderResponse create(final WorkOrderRequest workOrderRequest) {
 
-        workOrderValidator.validateWorkOrder(workOrderRequest);
+        workOrderValidator.validateWorkOrder(workOrderRequest,Boolean.FALSE);
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
         String departmentCode;
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
@@ -72,7 +72,7 @@ public class WorkOrderService {
     }
 
     public WorkOrderResponse update(final WorkOrderRequest workOrderRequest) {
-        workOrderValidator.validateWorkOrder(workOrderRequest);
+        workOrderValidator.validateWorkOrder(workOrderRequest,Boolean.TRUE);
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
             if (workOrder.getId() == null)
                 workOrder.setId(commonUtils.getUUID());

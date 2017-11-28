@@ -61,7 +61,7 @@ public class LetterOfAcceptanceService {
 	private PropertiesManager propertiesManager;
 
 	public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
-		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest);
+		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.FALSE);
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
 			letterOfAcceptance.setId(commonUtils.getUUID());
@@ -179,7 +179,7 @@ public class LetterOfAcceptanceService {
 	}
 
 	public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
-		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest);
+		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.TRUE);
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
 			if (letterOfAcceptance.getId().isEmpty())

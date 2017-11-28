@@ -34,8 +34,8 @@ public class Constants {
     public static final String KEY_DETAILEDESTIMATE_EXIST = "INVALID_DETAILEDESTIMATE_EXIST";
     public static final String MESSAGE_DETAILEDESTIMATE_EXIST = "Please provide valid detailed estimate";
     
-    public static final String KEY_WORKORDER_ASSET_DETAILS_REQUIRED= "INVALID_WORKORDER_ASSET_DETAILES";
-    public static final String MESSAGE_WORKORDER_ASSET_DETAILS_REQUIRED= "Asset details required for an workorder";
+    public static final String KEY_WORKORDER_LOANUMBER_REQUIRED= "INVALID_WORKORDER_LOANUMBER";
+    public static final String MESSAGE_WORKORDER_LOANUMBER_REQUIRED= "LOA Number is required when Detailed Estimate is spillover";
 
     public static final String KEY_INVALID_LOANUMBER = "INVALID_LOANUMBER";
     public static final String MESSAGE_INVALID_LOANUMBER = "Please enter a valid LOA number";
@@ -43,11 +43,23 @@ public class Constants {
     public static final String KEY_INVALID_WORKORDERDATE = "INVALID_WORKORDERDATE";
     public static final String MESSAGE_INVALID_WORKORDERDATE = "Workorder Date cannot be greater then LOA date";
 
-
-
     public static final String KEY_LOA_OFFLINE_STATUS = "INVALID_LOA_OFFLINE_STATUS";
     public static final String MESSAGE_LOA_OFFLINE_STATUS = "Offline Status for LOA should be Agreement Order Signed";
 
+    public static final String KEY_INVALID_LOA = "INVALID_LOA";
+    public static final String MESSAGE_INVALID_LOA = "LOA does not exist with given data";
+
+    public static final String KEY_INVALID_LOA_EXISTS = "INVALID_LOA_EXISTS";
+    public static final String MESSAGE_INVALID_LOA_EXISTS = "LOA with LOA Number already exist in the system";
+
+    public static final String KEY_INVALID_WORKORDER = "INVALID_WORKORDER";
+    public static final String MESSAGE_INVALID_WORKORDER = "Workorder does not exist with given data";
+
+    public static final String KEY_INVALID_WORKORDER_EXISTS = "INVALID_WORKORDER_EXISTS";
+    public static final String MESSAGE_INVALID_WORKORDER_EXISTS = "Workorder with work order Number already exist in the system";
+
+    public static final String KEY_WORKORDER_WORKORDERNUMBER_REQUIRED= "INVALID_WORKORDER_WORKORDER";
+    public static final String MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED= "Work order number is required when LOA is spillover";
 
 
 

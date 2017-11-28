@@ -1,0 +1,25 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "transactionNo": {
+            "type": "keyword"
+        },
+        "sanitationStaffTarget": {
+            "type": "object"
+        },
+        "shift": {
+            "type": "object"
+        },
+        "AuditDetails": {
+            "type": "object"
+        }
+    }
+}

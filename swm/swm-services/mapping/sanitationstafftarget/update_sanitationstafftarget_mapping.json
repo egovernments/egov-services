@@ -1,0 +1,52 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "targetNo": {
+            "type": "keyword"
+        },
+        "targetFrom": {
+            "type": "keyword"
+        },
+        "targetTo": {
+            "type": "keyword"
+        },
+        "swmProcess": {
+            "type": "object"
+        },
+        "location": {
+            "type": "object"
+        },
+        "route": {
+            "type": "object"
+        },
+        "employee": {
+            "type": "object"
+        },
+        "collectionPoints": {
+            "type": "object"
+        },
+        "targetedGarbage": {
+            "type": "keyword"
+        },
+        "wetWaste": {
+            "type": "keyword"
+        },
+        "dryWaste": {
+            "type": "keyword"
+        },
+        "dumpingGround": {
+            "type": "object"
+        },
+        "AuditDetails": {
+            "type": "object"
+        }
+    }
+}

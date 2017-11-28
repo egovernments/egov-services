@@ -1,0 +1,43 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "tripNo": {
+            "type": "keyword"
+        },
+        "vehicle": {
+            "type": "object"
+        },
+        "route": {
+            "type": "object"
+        },
+        "tripStartDate": {
+            "type": "keyword"
+        },
+        "tripEndDate": {
+            "type": "keyword"
+        },
+        "inTime": {
+            "type": "keyword"
+        },
+        "outTime": {
+            "type": "keyword"
+        },
+        "entryWeight": {
+            "type": "keyword"
+        },
+        "exitWeight": {
+            "type": "keyword"
+        },
+        "auditDetails": {
+            "type": "object"
+        }
+    }
+}

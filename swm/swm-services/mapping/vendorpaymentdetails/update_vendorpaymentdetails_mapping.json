@@ -1,0 +1,43 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "paymentNo": {
+            "type": "keyword"
+        },
+        "vendorContract": {
+            "type": "object"
+        },
+        "vendorInvoiceAmount": {
+            "type": "keyword"
+        },
+        "documents": {
+            "type": "object"
+        },
+        "invoiceNo": {
+            "type": "keyword"
+        },
+        "fromDate": {
+            "type": "keyword"
+        },
+        "toDate": {
+            "type": "keyword"
+        },
+        "paymentTerms": {
+            "type": "object"
+        },
+        "remarks": {
+            "type": "keyword"
+        },
+        "auditDetails": {
+            "type": "object"
+        }
+    }
+}

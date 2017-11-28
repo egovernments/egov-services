@@ -1,0 +1,28 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "dumpingGround": {
+            "type": "object"
+        },
+        "sourceSegregationDate": {
+            "type": "keyword"
+        },
+        "collectionDetails": {
+            "type": "object"
+        },
+        "AuditDetails": {
+            "type": "object"
+        }
+    }
+}

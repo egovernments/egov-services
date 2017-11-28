@@ -1,0 +1,31 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "location": {
+            "type": "object"
+        },
+        "binDetails": {
+            "type": "object"
+        },
+        "collectionPointDetails": {
+            "type": "object"
+        },
+        "AuditDetails": {
+            "type": "object"
+        }
+    }
+}

@@ -1,0 +1,43 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "code": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "name": {
+            "type": "keyword"
+        },
+        "collectionType": {
+            "type": "object"
+        },
+        "startingCollectionPoint": {
+            "type": "object"
+        },
+        "endingCollectionPoint": {
+            "type": "object"
+        },
+        "endingDumpingGroundPoint": {
+            "type": "object"
+        },
+        "collectionPoints": {
+            "type": "object"
+        },
+        "distance": {
+            "type": "keyword"
+        },
+        "garbageEstimate": {
+            "type": "keyword"
+        },
+        "AuditDetails": {
+            "type": "object"
+        }
+    }
+}

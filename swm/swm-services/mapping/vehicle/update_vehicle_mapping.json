@@ -1,0 +1,49 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "regNumber": {
+            "type": "keyword"
+        },
+        "vehicleType": {
+            "type": "object"
+        },
+        "purchaseInfo": {
+            "type": "object"
+        },
+        "fuelType": {
+            "type": "object"
+        },
+        "operatorsReq": {
+            "type": "keyword"
+        },
+        "vendor": {
+            "type": "object"
+        },
+        "manufacturingDetails": {
+            "type": "object"
+        },
+        "insuranceDetails": {
+            "type": "object"
+        },
+        "kilometers": {
+            "type": "keyword"
+        },
+        "endOfWarranty": {
+            "type": "keyword"
+        },
+        "remarks": {
+            "type": "keyword"
+        },
+        "AuditDetails": {
+            "type": "object"
+        },
+        "tenantId": {
+            "type": "keyword"
+        }
+    }
+}

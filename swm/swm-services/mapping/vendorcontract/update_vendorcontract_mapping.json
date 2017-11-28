@@ -1,0 +1,43 @@
+{
+    "_all": {
+        "enabled": true
+    },
+    "properties": {
+        "id": {
+            "type": "keyword"
+        },
+        "tenantId": {
+            "type": "keyword"
+        },
+        "vendor": {
+            "type": "object"
+        },
+        "contractNo": {
+            "type": "keyword"
+        },
+        "contractDate": {
+            "type": "keyword"
+        },
+        "contractPeriodFrom": {
+            "type": "keyword"
+        },
+        "contractPeriodTo": {
+            "type": "keyword"
+        },
+        "securityDeposit": {
+            "type": "keyword"
+        },
+        "paymentAmount": {
+            "type": "keyword"
+        },
+        "paymentTerms": {
+            "type": "object"
+        },
+        "remarks": {
+            "type": "keyword"
+        },
+        "auditDetails": {
+            "type": "object"
+        }
+    }
+}

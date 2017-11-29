@@ -1612,7 +1612,12 @@ class Report extends Component {
         </Row>
 
 
-        <Row>
+
+
+        <form onSubmit={(e) => {
+          create(e)
+        }}>
+        {/*<Row>
           <Col xs={6} md={6}>
             <div style={{marginLeft: "16px"
             }}>
@@ -1630,11 +1635,7 @@ class Report extends Component {
 </i>} ui="google"/>}
           </div>
           </Col>
-        </Row>
-
-        <form onSubmit={(e) => {
-          create(e)
-        }}>
+        </Row>*/}
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}
@@ -1655,7 +1656,15 @@ class Report extends Component {
                                     workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id && decodeURIComponent(this.props.match.params.id) || this.props.match.params.master) : ""}
                                     />}
           <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
-
+          <div style={{"textAlign": "center"}}>
+           <br/>
+           {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+           {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+           &nbsp;&nbsp;<RaisedButton label="Reset" primary={false} onClick={() => {
+             this.initData();
+           }}/>
+           <br/>
+         </div>
 
         </form>
       </div>

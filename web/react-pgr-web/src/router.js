@@ -382,6 +382,7 @@ const Main = () => {
 	    <Route exact path= {base + '/non-framework/inventory/transaction/pricelist'} component={PriceListSearch}/>
       <Route exact path= {base + '/non-framework/inventory/transaction/materialReceiptNote'} component={MaterialReceiptNote}/>
       <Route exact path= {base + '/non-framework/inventory/transaction/po/searchIndent'} component={SearchIndent}/>
+      <Route exact path= {base + '/non-framework/inventory/transaction/materialissue/searchIndent'} component={SearchIndentIssue}/>
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/:action/abstractEstimate/:code?'} component={abstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>

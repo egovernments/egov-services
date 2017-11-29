@@ -270,7 +270,7 @@ class Login extends Component {
         for (var i = 0; i < response.data.UserRequest.roles.length; i++) {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
-
+        //old menu item api access/v1/actions/_get
         Api.commonApiPost("access/v1/actions/_get",{},{tenantId:response.data.UserRequest.tenantId,roleCodes,enabled:true}).then(function(response){
           var actions = response.actions;
           var roles = JSON.parse(localStorage.userRequest).roles;

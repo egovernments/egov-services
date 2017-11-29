@@ -179,7 +179,7 @@ class UiTable extends Component {
 		}
 
   	render() {
-  		let {resultList, rowClickHandler,showDataTable,showHeader,rowButtonClickHandler,rowCheckboxClickHandler,selectedValue} = this.props;
+  		let {resultList, rowClickHandler,showDataTable,showHeader,rowButtonClickHandler,rowCheckboxClickHandler,rowIconClickHandler,selectedValue} = this.props;
   		let self = this;
 
   		const getNameById = function(item2, i2) {
@@ -247,9 +247,10 @@ class UiTable extends Component {
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
 		                return (
 		                  <th  key={i}>{translate(item.label)}</th>
+
 		                )
 		              })}
-
+									<th>{translate("Action")}</th>
 		            </tr>
 		          </thead>
 		          <tbody>
@@ -257,13 +258,16 @@ class UiTable extends Component {
 		                {resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
 
 		                  return (
-		                    <tr key={i} onClick={() => { if(!resultList.disableRowClick){rowClickHandler(i)}}}>
+		                    <tr key={i} >
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
 			                          <td  key={i2}>{typeof item2 != "undefined" ? getNameById(item2, i2) : ""}</td>
 			                        )
 		                      })}
+
+													<td style={{textAlign:"center",marginRight:"10px"}}><i style={{marginRight:"10px"}} onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"view")}}}  className="material-icons">remove_red_eye</i><i onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"update")}}} className="material-icons">edit</i></td>
+
 		                    </tr>
 		                    )
 
@@ -294,3 +298,6 @@ const mapDispatchToProps = dispatch => ({
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(UiTable);
+
+
+// onClick={() => { if(!resultList.disableRowClick){rowClickHandler(i)}}}

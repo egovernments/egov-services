@@ -10,16 +10,16 @@ export default class UiButton extends Component {
        super(props);
    	}
 
-	renderBtn = (item) => {
+	renderBtn = (item,icon) => {
 		switch (this.props.ui) {
 			case 'google':
 				return (
-					<RaisedButton style={style} id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.props.handler || function(){}} disabled={item.isDisabled ? true : false}/>
+					<RaisedButton icon={icon} style={style} id={item.label.split(".").join("-")} type={item.uiType || "button"} label={item.label} primary={typeof item.primary != 'undefined' ? item.primary : true} secondary={item.secondary || false} onClick={this.props.handler || function(){}} disabled={item.isDisabled ? true : false}/>
   				);
   		}
   	}
 
 	render () {
-		return this.renderBtn(this.props.item)
+		return this.renderBtn(this.props.item,this.props.icon)
 	}
 }

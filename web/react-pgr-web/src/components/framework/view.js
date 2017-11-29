@@ -12,6 +12,7 @@ import UiButton from './components/UiButton';
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
 import UiBackButton from './components/UiBackButton';
+import UiEditButton from './components/UiEditButton';
 
 
 
@@ -356,16 +357,29 @@ class Report extends Component {
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
           </Col>
         </Row>
-        <UiBackButton />
+
+        <Row>
+          <Col xs={6} md={6}>
+            <div style={{marginLeft: "16px"
+            }}>
+                <UiBackButton/>
+            </div>
+          </Col>
+          <Col xs={6} md={6}>
+          <div style={{"textAlign": "right",marginRight:"16px"}}>
+            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" icon={<i style={{color:"white"}} className="material-icons">print</i>} handler={printer}/>  &nbsp;&nbsp;
+            <UiEditButton/>
+          </div>
+          </Col>
+        </Row>
+
         <form id="printable">
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
           <br/>
         </form>
-        <div style={{"textAlign": "center"}}>
-            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
-        </div>
+
       </div>
     );
   }

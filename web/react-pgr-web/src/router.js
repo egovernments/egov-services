@@ -203,7 +203,7 @@ const Main = () => {
         <Route exact path={base + '/coming/soon'} component={ComingSoon}/>
 	      <Route exact path= {base + '/view/:moduleName/:master?/:id'} component={View}/>
 
-        <Route exact path= {base + '/search/:moduleName/:master?/:action'} component={Search}/>
+        <Route exact path= {base + '/search/:moduleName/:master?/:action?'} component={Search}/>
         <Route exact path={base + '/employee/:action/:id?'} component={Employee}/>
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit}/>
         <Route exact path={base+'/prd/dashboard'} component={Dashboard}/>

@@ -8,6 +8,7 @@ import ShowFields from "./showFields";
 import {translate} from '../common/common';
 import Api from '../../api/api';
 import UiButton from './components/UiButton';
+import UiAddButton from './components/UiAddButton';
 import UiDynamicTable from './components/UiDynamicTable';
 import {fileUpload} from './utility/utility';
 import UiTable from './components/UiTable';
@@ -153,7 +154,7 @@ class Search extends Component {
     var specifications=JSON.parse(window.localStorage.getItem("specifications"));
     var currentSpecification=specifications[`${self.props.match.params.moduleName}.${self.props.match.path.split("/")[1]}`];
     let {getVal, getValFromDropdownData} = self;
-    
+
     Api.commonApiPost(currentSpecification.url, formData, {}, null, currentSpecification.useTimestamp).then(function(res){
       self.props.setLoadingStatus('hide');
       var result = currentSpecification.result;
@@ -176,7 +177,7 @@ class Search extends Component {
             }
             if(typeof valuePath === 'object' && valuePath.isObj){
               var childArray=[];
-                if(valuePath.childArray && valuePath.childArray.length>0){ 
+                if(valuePath.childArray && valuePath.childArray.length>0){
                   for(var k=0;k<valuePath.childArray.length;k++){
                     childArray.push(_.get(values[i],valuePath.childArray[k]));
                   }
@@ -525,7 +526,7 @@ class Search extends Component {
        this.props.setRoute(buttonUrl+selectedRecordId);
       }
      }
-   
+
  }
   rowCheckboxClickHandler=(code)=>{
     this.setState({
@@ -578,6 +579,53 @@ class Search extends Component {
    }
  }
 
+ rowIconClickHandler = (index,action) => {
+  let {formData}=this.props;
+  var value = this.state.values[index];
+  var _url = (action=="update") ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
+
+  //======================Check if direct URL or array====================>>
+  if(typeof _url == 'object') {
+   let isMatchFound = false;
+   for(var i=0; i<_url.multiple.length; i++) {
+     var _key = _url.multiple[i].ifValue.split("=")[0];
+     var _value = _url.multiple[i].ifValue.split("=")[1];
+     if(_.get(value, _key) === _value) {
+       _url = _url.multiple[i].goto;
+       isMatchFound = true;
+       break;
+     }
+   }
+   if(!isMatchFound) _url = _url.default;
+  }
+
+  console.log(formData);
+  localStorage.setItem("formData",JSON.stringify(formData));
+  localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
+
+
+  //======================================================================>>
+  if(_url.indexOf("?") > -1) {
+    var url = _url.split("?")[0];
+    var query = _url.split("?")[1];
+    var params = query.indexOf("&") > -1 ? query.split("&") : [query];
+    var queryString = "?";
+    for(var i=0; i< params.length; i++) {
+      queryString += (i>0?'&':'') + params[i].split("=")[0] + "=" +  (/\{/.test(params[i]) ? encodeURIComponent(_.get(value, params[i].split("=")[1].split("{")[1].split("}")[0])) : params[i].split("=")[1]);
+    }
+    var key = url.split("{")[1].split("}")[0];
+    url = url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+
+    action=="update" && url.replace("/view","/update");
+    this.props.setRoute(url + queryString);
+  } else {
+     var key = _url.split("{")[1].split("}")[0];
+     _url = _url.replace("{" + key + "}", encodeURIComponent(_.get(value, key)));
+     action=="update" && _url.replace("/view","/update");
+     this.props.setRoute(_url);
+  }
+}
+
  resetForm = () => {
      let {moduleName, actionName, metaData, setFormData} = this.props;
      let obj = metaData[`${moduleName}.${actionName}`];
@@ -592,33 +640,38 @@ class Search extends Component {
 
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
-    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,rowButtonClickHandler,rowCheckboxClickHandler} = this;
+    let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,rowButtonClickHandler,rowCheckboxClickHandler,rowIconClickHandler} = this;
     let {showResult, resultList,selectedRecordId} = this.state;
     // console.log(formData);
     // console.log(this.props.dropDownData);
     return (
       <div className="SearchResult">
+
         <Row>
           <Col xs={6} md={6}>
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
           </Col>
-          <Col xs={6} md={6}>
-            <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
+          <Col xs={6} md={6} >
+            <div style={{"textAlign": "right",marginRight:"16px",marginTop:"16px"}}>
+              <UiAddButton />
+            </div>
           </Col>
         </Row>
         <form onSubmit={(e) => {
           search(e)
         }}>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
+          <div style={{"textAlign": "right", "color": "#FF0000",marginRight: "16px"}}><i>( * ) {translate("framework.required.note")}</i>  </div>
+
           <div style={{"textAlign": "center"}}>
             <br/>
-            <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
+            <UiButton icon={<i style={{color:"white"}} className="material-icons">search</i>} item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
             {	showResult && resultList.actionItems &&  resultList.actionItems.map((actionitem,index) =>{
 							return 	(<span style={{"margin-right":"20px"}}><UiButton item={{"label": actionitem.label, "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url)}}/></span>)
 					}) }
-          <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
+          <UiButton icon={<i style={{color:"black"}} className="material-icons">backspace</i>} item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
             <br/>
-            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} rowButtonClickHandler={rowButtonClickHandler} rowCheckboxClickHandler={rowCheckboxClickHandler} selectedValue={selectedRecordId}/>}
+            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} rowButtonClickHandler={rowButtonClickHandler} rowCheckboxClickHandler={rowCheckboxClickHandler} rowIconClickHandler={rowIconClickHandler} selectedValue={selectedRecordId}/>}
           </div>
         </form>
       </div>

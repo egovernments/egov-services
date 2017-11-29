@@ -1569,11 +1569,31 @@ class Report extends Component {
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
           </Col>
           <Col xs={6} md={6}>
-            <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
+
           </Col>
         </Row>
 
-        {actionName == "update" && <UiBackButton/>}
+
+        <Row>
+          <Col xs={6} md={6}>
+            <div style={{marginLeft: "16px"
+            }}>
+                <UiBackButton/>
+            </div>
+          </Col>
+          <Col xs={6} md={6}>
+          <div style={{"textAlign": "right",marginRight:"16px"}}>
+            <RaisedButton icon={<i style={{color:"black"}} className="material-icons">backspace</i>} label="Reset" primary={false} onClick={() => {
+              this.initData();
+            }}/>  &nbsp;&nbsp;
+            {actionName == "create" && <UiButton item={{"label": "Save", "uiType":"submit", "isDisabled": isFormValid ? false : true}} icon={<i style={{color:"white"}} className="material-icons">save
+</i>} ui="google"/>}
+            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} icon={<i style={{color:"white"}} className="material-icons">update
+</i>} ui="google"/>}
+          </div>
+          </Col>
+        </Row>
+
         <form onSubmit={(e) => {
           create(e)
         }}>
@@ -1596,15 +1616,9 @@ class Report extends Component {
                                     screen={window.location.hash.split("/").indexOf("update") == 1 ? "update" : "create"}
                                     workflowId={window.location.hash.split("/").indexOf("update") == 1 ? (this.props.match.params.id && decodeURIComponent(this.props.match.params.id) || this.props.match.params.master) : ""}
                                     />}
-          <div style={{"textAlign": "center"}}>
-            <br/>
-            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
-            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
-            &nbsp;&nbsp;<RaisedButton label="Reset" primary={false} onClick={() => {
-              this.initData();
-            }}/>
-            <br/>
-          </div>
+          <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
+
+
         </form>
       </div>
     );

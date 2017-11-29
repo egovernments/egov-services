@@ -14,22 +14,23 @@ class UiBackButton extends Component {
 
 	 back=(e)=>
 	 {
-				 let {setRoute}=this.props;
-         setRoute("/"+localStorage.getItem("returnUrl"));
+				 let {setRoute,match}=this.props;
+         let {params,path}=match;
+         if (path.split("/")[1]=="create") {
+           setRoute(`/search/${params.moduleName}`+ (params.master && "/"+params.master)+"/view");
+         }
+         else {
+           setRoute("/"+localStorage.getItem("returnUrl"));
+         }
+
 	 }
 
    render () {
 		 let {back}=this;
       return (
-				<div style={{"textAlign": "right",
-				"paddingRight": "15px"}}>
-					<br/>
 						<RaisedButton type="button" onClick={(e)=>{
 							back(e)
-						}} primary={true} label={"Back"} />
-					<br/>
-					<br/>
-				</div>
+						}} primary={true} label={"Back"} icon={<i className="material-icons" style={{color:"white"}}>arrow_back</i>} />
        );
    }
 }

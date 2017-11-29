@@ -28,9 +28,15 @@ class UiBackButton extends Component {
    render () {
 		 let {back}=this;
       return (
-						<RaisedButton type="button" onClick={(e)=>{
-							back(e)
-						}} primary={true} label={"Back"} icon={<i className="material-icons" style={{color:"white"}}>arrow_back</i>} />
+        <div style={{"textAlign": "right",
+    "paddingRight": "15px"}}>
+      <br/>
+        <RaisedButton type="button" onClick={(e)=>{
+          back(e)
+        }} primary={true} label={"Back"} />
+      <br/>
+      <br/>
+    </div>
        );
    }
 }

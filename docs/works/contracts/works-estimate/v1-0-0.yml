@@ -454,7 +454,7 @@ paths:
           x-displayformat: 'dd/MM/yyyy'
           required: false
           description: Epoch time till when the Detailed Estimate created
-        - name: department
+        - name: departmentCodes
           in: query
           type: array
           items:
@@ -1289,7 +1289,7 @@ definitions:
         description: Department for which Detailed Estimate belongs to
       adminSanctionNumber:
         type: string
-        pattern: '[a-zA-Z0-9-\\]+'
+        pattern: '[a-zA-Z0-9-/]+'
         maxLength: 50
         description: Unique number after admin sanction for the Detailed Estimate
       adminSanctionDate:
@@ -1955,4 +1955,5 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
+
 

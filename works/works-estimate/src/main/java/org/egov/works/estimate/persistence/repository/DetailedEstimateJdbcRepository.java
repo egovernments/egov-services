@@ -57,10 +57,10 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 			params.append("estimateNumber in(:estimateNumbers)");
 			paramValues.put("estimateNumbers", detailedEstimateSearchContract.getDetailedEstimateNumbers());
 		}
-		if (detailedEstimateSearchContract.getDepartment() != null) {
+		if (detailedEstimateSearchContract.getDepartmentCodes() != null) {
 			addAnd(params);
-			params.append("department =:department");
-			paramValues.put("department", detailedEstimateSearchContract.getDepartment());
+			params.append("department  in (:departmentCodes)");
+			paramValues.put("departmentCodes", detailedEstimateSearchContract.getDepartmentCodes());
 		}
 		if (detailedEstimateSearchContract.getTypeOfWork() != null) {
 			addAnd(params);

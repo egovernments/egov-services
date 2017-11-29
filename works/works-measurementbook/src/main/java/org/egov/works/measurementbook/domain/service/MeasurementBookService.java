@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.measurementbook.config.PropertiesManager;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
@@ -20,7 +19,6 @@ import org.egov.works.measurementbook.web.contract.LOAMeasurementSheet;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceRequest;
-import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
 import org.egov.works.measurementbook.web.contract.MBMeasurementSheet;
 import org.egov.works.measurementbook.web.contract.MeasurementBook;
 import org.egov.works.measurementbook.web.contract.MeasurementBookDetail;
@@ -42,8 +40,8 @@ public class MeasurementBookService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	 @Autowired
-	 private CommonUtils commonUtils;
+//	 @Autowired
+//	 private CommonUtils commonUtils;
 
 	@Autowired
 	private MeasurementBookUtils measurementBookUtils;

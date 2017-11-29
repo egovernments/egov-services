@@ -393,7 +393,7 @@ var dat = {
             label: "legal.create.hearingTime",
             type: "timePicker",
             isNumber: true,
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },

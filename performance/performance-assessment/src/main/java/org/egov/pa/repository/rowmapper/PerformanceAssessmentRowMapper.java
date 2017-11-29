@@ -53,6 +53,7 @@ import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.TargetType;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -82,6 +83,16 @@ public class PerformanceAssessmentRowMapper {
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("kpiCode"));
 				target.setTargetValue(rs.getString("targetValue"));
+				if(rs.getString("targetType").equals(TargetType.OBJECTIVE.toString())) { 
+					if(rs.getString("targetValue").equals("1"))  
+						target.setTargetDescription("Yes");
+					else if (rs.getString("targetValue").equals("2"))
+						target.setTargetDescription("No");
+					else if (rs.getString("targetValue").equals("3"))
+						target.setTargetDescription("In Progress");
+				} else {
+					target.setTargetDescription(rs.getString("targetValue"));
+				}
 				target.setTenantId(rs.getString("tenantId"));
 				kpi.setKpiTarget(target);
 			}

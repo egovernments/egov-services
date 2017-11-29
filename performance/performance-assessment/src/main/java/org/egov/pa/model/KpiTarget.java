@@ -22,6 +22,9 @@ public class KpiTarget   {
   @JsonProperty("targetValue")
   private String targetValue = null;
   
+  @JsonProperty("targetDescription")
+  private String targetDescription = null; 
+  
   @JsonProperty("tenantId")
   private String tenantId = null;
 
@@ -38,8 +41,17 @@ public class KpiTarget   {
   private Long lastModifiedDate = null;
   
   
+  
 
-  public String getTenantId() {
+  public String getTargetDescription() {
+	return targetDescription;
+}
+
+public void setTargetDescription(String targetDescription) {
+	this.targetDescription = targetDescription;
+}
+
+public String getTenantId() {
 	return tenantId;
 }
 

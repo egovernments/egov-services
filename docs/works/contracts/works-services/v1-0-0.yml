@@ -486,6 +486,10 @@ definitions:
         type: string
         pattern: '[a-zA-Z0-9-\\]+'
         description: Referenece number for the particular object. For example the Tender number needs to be captures for Tender Notice document release, Agreement number for Agreement order signed status.
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -547,6 +551,10 @@ definitions:
         description: Refrernce of Budget Referance Number of the Estimate Appropriation
         maxLength: 100
         minLength: 3
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

@@ -11,7 +11,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.MaterialSearchRequest;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListRequest;
@@ -246,8 +245,7 @@ public class PriceListService extends DomainService {
 				for(PriceListDetails pld:pl.getPriceListDetails()){
 					for(PriceListDetails plds:pl.getPriceListDetails()){
 						if(pld!=plds && pld.getMaterial().getCode().toString().equals(plds.getMaterial().getCode().toString())){
-							MaterialSearchRequest msr = MaterialSearchRequest.builder().code(plds.getMaterial().getCode()).build();
-							throw new CustomException("Material", "A duplicate material "+ materialJdbcRepository.search(msr).getPagedData().get(0).getName() + " is found, please remove them and create pricelist");
+							throw new CustomException("Material", "Duplicate material(s) " + "" + " found, please remove them and try creating pricelist");
 						}
 					}
 				}

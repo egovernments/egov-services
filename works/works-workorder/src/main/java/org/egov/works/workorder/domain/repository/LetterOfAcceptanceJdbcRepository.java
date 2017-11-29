@@ -164,7 +164,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
                     .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
 
             letterOfAcceptance.setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));
-            letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria));
+            letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria,requestInfo));
 
             loas.add(letterOfAcceptance);
 

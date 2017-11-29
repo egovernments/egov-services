@@ -652,9 +652,9 @@ class Search extends Component {
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
           </Col>
           <Col xs={6} md={6} >
-            <div style={{"textAlign": "right",marginRight:"16px",marginTop:"16px"}}>
+            {/*<div style={{"textAlign": "right",marginRight:"16px",marginTop:"16px"}}>
               <UiAddButton />
-            </div>
+            </div>*/}
           </Col>
         </Row>
         <form onSubmit={(e) => {

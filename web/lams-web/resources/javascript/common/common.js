@@ -2,23 +2,6 @@ var baseUrl = window.location.origin;
 
 var authToken = localStorage.getItem("auth-token");
 
-
-var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
-
-if (tenantId) {
-  tenantId=tenantId.tenantId;
-} else {
-  if(window.location.origin.split("-").length>1)
-  {
-    tenantId+=window.location.origin.split("-")[0].split("//")[1]
-  }
-  else {
-    tenantId+=window.location.origin.split(".")[0].split("//")[1]
-  }
-
-  tenantId = tenantIds[tenantId] || "ap." + tenantId;
-
-}
 //request info from cookies
 var requestInfo = {
     "apiId": "org.egov.pgr",
@@ -31,7 +14,22 @@ var requestInfo = {
     "requesterId": "61",
     "authToken": authToken
    };
+   var tenantId = JSON.parse(localStorage.getItem("userRequest")) || "";
 
+   if (tenantId) {
+     tenantId=tenantId.tenantId;
+   } else {
+     if(window.location.origin.split("-").length>1)
+     {
+       tenantId+=window.location.origin.split("-")[0].split("//")[1]
+     }
+     else {
+       tenantId+=window.location.origin.split(".")[0].split("//")[1]
+     }
+
+     tenantId = tenantIds[tenantId] || "ap." + tenantId;
+   
+   }
 function titleCase(field) {
     if (field) {
         var newField = field[0].toUpperCase();

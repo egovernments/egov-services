@@ -296,7 +296,7 @@ var dat = {
           },
 					{
             "name": "TitleDocumentsAvailable",
-            "jsonPath": "Asset.titleDocumentsAvalable",
+            "jsonPath": "Asset.titleDocumentsAvailable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
             "type": "textarea",
@@ -1081,7 +1081,7 @@ var dat = {
           },
           {
             "name": "TitleDocumentsAvailable",
-            "jsonPath": "Assets[0].titleDocumentsAvalable",
+            "jsonPath": "Assets[0].titleDocumentsAvailable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
             "type": "textarea",
@@ -1664,7 +1664,7 @@ var dat = {
           },
           {
             "name": "TitleDocumentsAvailable",
-            "jsonPath": "Asset.titleDocumentsAvalable",
+            "jsonPath": "Asset.titleDocumentsAvailable",
             "label": "ac.create.Title.documents.available",
             "pattern": "",
             "type": "textarea",

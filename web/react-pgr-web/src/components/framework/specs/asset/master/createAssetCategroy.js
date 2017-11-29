@@ -69,18 +69,6 @@ var dat = {
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
   					},
-            {
-  						"name": "DepericiationRate",
-  						"jsonPath": "AssetCategory[0].depreciationRate",
-  						"label": "ac.create.depericiation.rate",
-  						"pattern": "",
-  						"type": "number",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
 						{
 							"name": "IsDepreciationApplicable",
 							"jsonPath": "AssetCategory[0].isDepreciationApplicable",
@@ -93,6 +81,18 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						}
+            {
+  						"name": "DepericiationRate",
+  						"jsonPath": "AssetCategory[0].depreciationRate",
+  						"label": "ac.create.depericiation.rate",
+  						"pattern": "",
+  						"type": "number",
+  						"url": "",
+  						"isRequired": true,
+  						"isDisabled": false,
+  						"requiredErrMsg": "",
+  						"patternErrMsg": ""
+  					}
 				]
 			},
       {

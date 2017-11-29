@@ -471,11 +471,12 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     searchClause: AND pl.supplier = $supplierName
+    wrapper: true
     isMandatory: false
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     searchClause: AND pld.material = $materialName
@@ -547,24 +548,24 @@ ReportDefinitions:
     source: inventory
 
   searchParams:
-
   - name: supplierName
     label: inventory.supplierName
     pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
-    isMandatory: false
     searchClause: AND pl.supplier = $supplierName
-    
+    wrapper: true
+    isMandatory: false
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     searchClause: AND pld.material = $materialName
-    wrapper: true
     isMandatory: false
+    wrapper: true
+
 
   query: select pld.material as materialCode,
          mat.name as materialName,

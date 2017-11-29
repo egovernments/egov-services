@@ -29,7 +29,7 @@ public class WorkOrderValidator {
     private WorkOrderRepository workOrderRepository;
 
     public void validateWorkOrder(final WorkOrderRequest workOrderRequest, Boolean isUpdate) {
-        LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
+        LetterOfAcceptance letterOfAcceptance;
         HashMap<String, String> messages = new HashMap<>();
         OfflineStatus offlineStatus = null;
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
@@ -49,7 +49,7 @@ public class WorkOrderValidator {
 
             List<OfflineStatus> offlineStatuses = offlineStatusService
                     .getOfflineStatusForWorkOrder(workOrder.getLetterOfAcceptance().getLoaNumber(),
-                            letterOfAcceptance.getTenantId(), workOrderRequest.getRequestInfo())
+                            workOrder.getTenantId(), workOrderRequest.getRequestInfo())
                     .getOfflineStatuses();
             if (!offlineStatuses.isEmpty())
                 offlineStatus = offlineStatuses.get(0);
@@ -57,7 +57,7 @@ public class WorkOrderValidator {
             validateOfflineStatus(offlineStatus, messages);
             validateWorkOrder(letterOfAcceptance, messages, workOrder, letterOfAcceptanceResponse);
 
-            if (messages != null && !messages.isEmpty())
+            if (!messages.isEmpty())
                 throw new CustomException(messages);
 
 
@@ -115,6 +115,9 @@ public class WorkOrderValidator {
     private void validateWorkOrder(LetterOfAcceptance letterOfAcceptance, HashMap<String, String> messages, WorkOrder workOrder, LetterOfAcceptanceResponse letterOfAcceptanceResponse) {
         if (letterOfAcceptanceResponse.getLetterOfAcceptances() != null && !letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty())
             letterOfAcceptance = letterOfAcceptanceResponse.getLetterOfAcceptances().get(0);
+
+        if (messages != null && !messages.isEmpty())
+            throw new CustomException(messages);
 
         if (letterOfAcceptance.getLoaDate() > workOrder.getWorkOrderDate())
             messages.put(Constants.KEY_INVALID_WORKORDERDATE, Constants.MESSAGE_INVALID_WORKORDERDATE);

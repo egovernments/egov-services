@@ -158,8 +158,8 @@ class Transaction extends Component {
 
   componentDidMount() {
     let self = this;
-      this.initData();
-      
+      this.initData(); 
+
       var defaultDate = new Date();
       console.log(defaultDate);
       let findefaultDate = ('0' + defaultDate.getDate()).slice(-2) + '/'

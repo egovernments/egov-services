@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.egov.MDMSApplicationRunnerImpl;
+import org.egov.infra.mdms.service.MDMSService;
 import org.egov.mdms.model.MDMSCreateRequest;
 import org.egov.tracer.model.CustomException;
 import org.json.JSONArray;
@@ -25,18 +26,26 @@ public class MDMSRequestValidator {
 	@Autowired
 	private MDMSUtils mDMSUtils;
 
+	@Autowired
+	private MDMSService mDMSService;
+	
 	@SuppressWarnings("unchecked")
 	public ArrayList<Object> validateCreateRequest(MDMSCreateRequest mDMSCreateRequest) throws Exception{
 		ArrayList<Object> result = new ArrayList<>();
+		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
-		Map<String, Map<String, Object>> validationMap = MDMSApplicationRunnerImpl.getValidationMap();
-		Map<String, Object> allMasters = 
-				validationMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() +"-"+ mDMSCreateRequest.getMasterMetaData().getModuleName());
+		Object fileContents = mDMSService.getFileContents(filePathMap, mDMSCreateRequest);
+		if(null == fileContents) 
+			throw new CustomException("400","Invalid Tenant Id");
+		fileContents = mapper.writeValueAsString(fileContents);		
+		Map<String, Object> allMasters = mapper.readValue(fileContents.toString(), Map.class);
 		Object requestMasterData = mDMSCreateRequest.getMasterMetaData().getMasterData();
 		JSONArray masterDataArray = new JSONArray(mapper.writeValueAsString(requestMasterData));
 		List<Object> masterData = new ArrayList<>();
 		List<Object> allmasterConfigs = new ArrayList<>();
 		masterData = (List<Object>) allMasters.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
+		logger.info(mDMSCreateRequest.getMasterMetaData().getMasterName() + " master data: ");
+		logger.info(masterData.toString());
 		allmasterConfigs = (List<Object>) allMasters.get("mdms-config");
 		if(null == allmasterConfigs || allmasterConfigs.isEmpty()){
 			logger.info("There is no mdms-config for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());

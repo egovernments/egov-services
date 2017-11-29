@@ -19,6 +19,7 @@ import org.egov.mdms.model.MdmsCriteria;
 import org.egov.mdms.model.MdmsCriteriaReq;
 import org.egov.mdms.model.MdmsResponse;
 import org.egov.mdms.model.ModuleDetail;
+import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -90,8 +91,18 @@ public class MDMSController {
 			mdmsResponse.setMdmsRes(response);
 			mdmsResponse.setResponseInfo(responseInfoFactory.
 					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
-			
 			return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
+		}catch(CustomException e){
+			log.error("Error: ",e);
+			if((e.getMessage()).equals("Invalid Request")){
+				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
+				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
+					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+				mDMSCreateErrorResponse.setMessage("Following records failed unique key constraint, Please rectify and retry");
+				mDMSCreateErrorResponse.setData(mDMSCreateRequest.getMasterMetaData().getMasterData());
+				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
+			}
+			throw e;
 		}catch(Exception e){
 			log.error("Error: ",e);
 			throw e;

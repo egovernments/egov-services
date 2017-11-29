@@ -1,7 +1,7 @@
 {
   "tenantId": "mh.roha",
   "moduleName": "SWM",
-   "mdms-config": [
+  "mdms-config": [
    {
     "masterName": "CollectionPoint",
     "moduleDefinition": "a/b/c",

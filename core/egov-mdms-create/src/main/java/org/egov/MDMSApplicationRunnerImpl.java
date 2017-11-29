@@ -94,6 +94,7 @@ public class MDMSApplicationRunnerImpl implements ApplicationRunner {
 			}
 		}
 		
+		log.info("filePathMap: "+filePathMap);
 	}		
 	private void buildFilePathMap(Map<String, Object> map, String filePath){
 		StringBuilder key = new StringBuilder();

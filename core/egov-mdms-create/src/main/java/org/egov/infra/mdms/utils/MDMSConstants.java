@@ -35,7 +35,7 @@ public class MDMSConstants {
 	public static final String CREATECOMMITSHA_JSONPATH = "$.sha";
 	public static final String UNIQUEKEYS_JSONPATH = "$.uniqueKeys";
 	public static final String MASTERNAME_JSONPATH = "$.masterName";
-	public static final String MASTERDATA_JSONPATH = "$.masterName";
+	public static final String MASTERDATA_JSONPATH = "$.masterData";
 
 
 	

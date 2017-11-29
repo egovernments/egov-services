@@ -172,34 +172,35 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
             vehicleNos.append(vehicleNo);
 
         }
+        if (vehicleNos != null && vehicleNos.length() > 0) {
+            String tenantId = null;
+            Map<String, Vehicle> vehicleMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, Vehicle> vehicleMap = new HashMap<>();
+            if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty())
+                tenantId = vehicleScheduleList.get(0).getTenantId();
 
-        if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty())
-            tenantId = vehicleScheduleList.get(0).getTenantId();
+            vehicleSearch = new VehicleSearch();
+            vehicleSearch.setTenantId(tenantId);
+            vehicleSearch.setRegNumbers(vehicleNos.toString());
 
-        vehicleSearch = new VehicleSearch();
-        vehicleSearch.setTenantId(tenantId);
-        vehicleSearch.setRegNumbers(vehicleNos.toString());
+            vehicles = vehicleService.search(vehicleSearch);
 
-        vehicles = vehicleService.search(vehicleSearch);
+            if (vehicles != null && vehicles.getPagedData() != null)
+                for (Vehicle v : vehicles.getPagedData()) {
 
-        if (vehicles != null && vehicles.getPagedData() != null)
-            for (Vehicle v : vehicles.getPagedData()) {
+                    vehicleMap.put(v.getRegNumber(), v);
 
-                vehicleMap.put(v.getRegNumber(), v);
+                }
+
+            for (VehicleSchedule vfd : vehicleScheduleList) {
+
+                if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                        && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                    vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+                }
 
             }
-
-        for (VehicleSchedule vfd : vehicleScheduleList) {
-
-            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
-                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
-            }
-
         }
 
     }
@@ -233,31 +234,34 @@ public class VehicleScheduleJdbcRepository extends JdbcRepository {
 
         }
 
-        String tenantId = null;
-        Map<String, Route> routeMap = new HashMap<>();
+        if (routeCodes != null && routeCodes.length() > 0) {
 
-        if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty())
-            tenantId = vehicleScheduleList.get(0).getTenantId();
+            String tenantId = null;
+            Map<String, Route> routeMap = new HashMap<>();
 
-        routeSearch.setTenantId(tenantId);
-        routeSearch.setCodes(routeCodes.toString());
-        routes = routeService.search(routeSearch);
+            if (vehicleScheduleList != null && !vehicleScheduleList.isEmpty())
+                tenantId = vehicleScheduleList.get(0).getTenantId();
 
-        if (routes != null && routes.getPagedData() != null)
-            for (Route bd : routes.getPagedData()) {
+            routeSearch.setTenantId(tenantId);
+            routeSearch.setCodes(routeCodes.toString());
+            routes = routeService.search(routeSearch);
 
-                routeMap.put(bd.getCode(), bd);
+            if (routes != null && routes.getPagedData() != null)
+                for (Route bd : routes.getPagedData()) {
+
+                    routeMap.put(bd.getCode(), bd);
+
+                }
+
+            for (VehicleSchedule vehicleSchedule : vehicleScheduleList) {
+
+                if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
+                        && !vehicleSchedule.getRoute().getCode().isEmpty()) {
+
+                    vehicleSchedule.setRoute(routeMap.get(vehicleSchedule.getRoute().getCode()));
+                }
 
             }
-
-        for (VehicleSchedule vehicleSchedule : vehicleScheduleList) {
-
-            if (vehicleSchedule.getRoute() != null && vehicleSchedule.getRoute().getCode() != null
-                    && !vehicleSchedule.getRoute().getCode().isEmpty()) {
-
-                vehicleSchedule.setRoute(routeMap.get(vehicleSchedule.getRoute().getCode()));
-            }
-
         }
 
     }

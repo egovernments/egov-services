@@ -1849,6 +1849,9 @@ definitions:
           minimum: 0
           maximum: 15
           example: 3
+        driver:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/hr/contracts/hr-employee/v1-0-0.yml#/definitions/Employee'
+          description: name of the driver who will drive the Vehicle. Driver name shall be fetched from HRMS. Assumption-> One driver shall be assigned to one vehicle only. Raise an visual alert if driver is being assigned to more than 1 vehicle but allow the assignment.
         vendor:
           $ref: "#/definitions/Vendor"
           description: name of the vendor who supplied the Vehicle. If name is not provide, vehicle is considered as ULB vehicle
@@ -1884,6 +1887,7 @@ definitions:
       - fuelType
       - manufacturingDetails
       - operatorsReq
+      - driver
  
     PurchaseInfo:
       type: object
@@ -3452,6 +3456,7 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+
 
 
 

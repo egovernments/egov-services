@@ -185,36 +185,37 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             vendorContractNos.append(vendorContractNo);
 
         }
+        if (vendorContractNos != null && vendorContractNos.length() > 0) {
+            String tenantId = null;
+            Map<String, VendorContract> vendorContractMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, VendorContract> vendorContractMap = new HashMap<>();
+            if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
+                tenantId = vendorPaymentDetailsList.get(0).getTenantId();
 
-        if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
-            tenantId = vendorPaymentDetailsList.get(0).getTenantId();
+            vendorContractSearch = new VendorContractSearch();
+            vendorContractSearch.setTenantId(tenantId);
+            vendorContractSearch.setContractNos(vendorContractNos.toString());
 
-        vendorContractSearch = new VendorContractSearch();
-        vendorContractSearch.setTenantId(tenantId);
-        vendorContractSearch.setContractNos(vendorContractNos.toString());
+            vendorContracts = vendorContractService.search(vendorContractSearch);
 
-        vendorContracts = vendorContractService.search(vendorContractSearch);
+            if (vendorContracts != null && vendorContracts.getPagedData() != null)
+                for (VendorContract bd : vendorContracts.getPagedData()) {
 
-        if (vendorContracts != null && vendorContracts.getPagedData() != null)
-            for (VendorContract bd : vendorContracts.getPagedData()) {
+                    vendorContractMap.put(bd.getContractNo(), bd);
 
-                vendorContractMap.put(bd.getContractNo(), bd);
+                }
+
+            for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
+
+                if (vendorPaymentDetails.getVendorContract() != null
+                        && vendorPaymentDetails.getVendorContract().getContractNo() != null
+                        && !vendorPaymentDetails.getVendorContract().getContractNo().isEmpty()) {
+
+                    vendorPaymentDetails
+                            .setVendorContract(vendorContractMap.get(vendorPaymentDetails.getVendorContract().getContractNo()));
+                }
 
             }
-
-        for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
-
-            if (vendorPaymentDetails.getVendorContract() != null
-                    && vendorPaymentDetails.getVendorContract().getContractNo() != null
-                    && !vendorPaymentDetails.getVendorContract().getContractNo().isEmpty()) {
-
-                vendorPaymentDetails
-                        .setVendorContract(vendorContractMap.get(vendorPaymentDetails.getVendorContract().getContractNo()));
-            }
-
         }
 
     }
@@ -245,32 +246,33 @@ public class VendorPaymentDetailsJdbcRepository extends JdbcRepository {
             employeeCodes.append(code);
 
         }
+        if (employeeCodes != null && employeeCodes.length() > 0) {
+            String tenantId = null;
+            Map<String, Employee> employeeMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, Employee> employeeMap = new HashMap<>();
+            if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
+                tenantId = vendorPaymentDetailsList.get(0).getTenantId();
 
-        if (vendorPaymentDetailsList != null && !vendorPaymentDetailsList.isEmpty())
-            tenantId = vendorPaymentDetailsList.get(0).getTenantId();
+            EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId,
+                    new RequestInfo());
 
-        EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId, new RequestInfo());
+            if (response != null && response.getEmployees() != null)
+                for (Employee e : response.getEmployees()) {
 
-        if (response != null && response.getEmployees() != null)
-            for (Employee e : response.getEmployees()) {
+                    employeeMap.put(e.getCode(), e);
 
-                employeeMap.put(e.getCode(), e);
+                }
+
+            for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
+
+                if (vendorPaymentDetails.getEmployee() != null && vendorPaymentDetails.getEmployee().getCode() != null
+                        && !vendorPaymentDetails.getEmployee().getCode().isEmpty()) {
+
+                    vendorPaymentDetails.setEmployee(employeeMap.get(vendorPaymentDetails.getEmployee().getCode()));
+                }
 
             }
-
-        for (VendorPaymentDetails vendorPaymentDetails : vendorPaymentDetailsList) {
-
-            if (vendorPaymentDetails.getEmployee() != null && vendorPaymentDetails.getEmployee().getCode() != null
-                    && !vendorPaymentDetails.getEmployee().getCode().isEmpty()) {
-
-                vendorPaymentDetails.setEmployee(employeeMap.get(vendorPaymentDetails.getEmployee().getCode()));
-            }
-
         }
-
     }
 
 }

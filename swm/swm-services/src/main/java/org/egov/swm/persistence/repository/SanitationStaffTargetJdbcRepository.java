@@ -415,28 +415,32 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             employeeCodes.append(code);
 
         }
+        if (employeeCodes != null && employeeCodes.length() > 0) {
+            
+            String tenantId = null;
+            Map<String, Employee> employeeMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, Employee> employeeMap = new HashMap<>();
+            if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+                tenantId = sanitationStaffTargetList.get(0).getTenantId();
 
-        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
-            tenantId = sanitationStaffTargetList.get(0).getTenantId();
+            EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId,
+                    new RequestInfo());
 
-        EmployeeResponse response = employeeRepository.getEmployeeByCodes(employeeCodes.toString(), tenantId, new RequestInfo());
+            if (response != null && response.getEmployees() != null)
+                for (Employee e : response.getEmployees()) {
 
-        if (response != null && response.getEmployees() != null)
-            for (Employee e : response.getEmployees()) {
+                    employeeMap.put(e.getCode(), e);
 
-                employeeMap.put(e.getCode(), e);
+                }
 
-            }
+            for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
 
-        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+                if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null
+                        && !sanitationStaffTarget.getEmployee().getCode().isEmpty()) {
 
-            if (sanitationStaffTarget.getEmployee() != null && sanitationStaffTarget.getEmployee().getCode() != null
-                    && !sanitationStaffTarget.getEmployee().getCode().isEmpty()) {
+                    sanitationStaffTarget.setEmployee(employeeMap.get(sanitationStaffTarget.getEmployee().getCode()));
+                }
 
-                sanitationStaffTarget.setEmployee(employeeMap.get(sanitationStaffTarget.getEmployee().getCode()));
             }
 
         }

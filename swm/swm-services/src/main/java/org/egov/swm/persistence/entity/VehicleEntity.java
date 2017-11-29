@@ -8,6 +8,7 @@ import org.egov.swm.domain.model.PurchaseInfo;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleType;
 import org.egov.swm.domain.model.Vendor;
+import org.egov.swm.web.contract.Employee;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -41,6 +42,8 @@ public class VehicleEntity {
     private Long operatorsReq = null;
 
     private String model = null;
+
+    private String driver = null;
 
     private String vendor = null;
 
@@ -81,7 +84,8 @@ public class VehicleEntity {
         vehicle.getManufacturingDetails().setVehicleCapacity(vehicleCapacity);
         vehicle.setOperatorsReq(operatorsReq);
         vehicle.getManufacturingDetails().setModel(model);
-        vehicle.setVendor(Vendor.builder().name(vendor).build());
+        vehicle.setDriver(Employee.builder().code(driver).build());
+        vehicle.setVendor(Vendor.builder().vendorNo(vendor).build());
         vehicle.setPurchaseInfo(new PurchaseInfo());
         vehicle.getPurchaseInfo().setPurchaseDate(purchaseDate);
         vehicle.getPurchaseInfo().setPrice(price);

@@ -167,32 +167,34 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             routeCodes.append(code);
 
         }
+        if (routeCodes != null && routeCodes.length() > 0) {
+            
+            String tenantId = null;
+            Map<String, Route> routeMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, Route> routeMap = new HashMap<>();
+            if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
+                tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
 
-        if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
-            tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
+            routeSearch.setTenantId(tenantId);
+            routeSearch.setCodes(routeCodes.toString());
+            routes = routeService.search(routeSearch);
 
-        routeSearch.setTenantId(tenantId);
-        routeSearch.setCodes(routeCodes.toString());
-        routes = routeService.search(routeSearch);
+            if (routes != null && routes.getPagedData() != null)
+                for (Route bd : routes.getPagedData()) {
 
-        if (routes != null && routes.getPagedData() != null)
-            for (Route bd : routes.getPagedData()) {
+                    routeMap.put(bd.getCode(), bd);
 
-                routeMap.put(bd.getCode(), bd);
+                }
+
+            for (VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsList) {
+
+                if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null
+                        && !vehicleTripSheetDetails.getRoute().getCode().isEmpty()) {
+
+                    vehicleTripSheetDetails.setRoute(routeMap.get(vehicleTripSheetDetails.getRoute().getCode()));
+                }
 
             }
-
-        for (VehicleTripSheetDetails vehicleTripSheetDetails : vehicleTripSheetDetailsList) {
-
-            if (vehicleTripSheetDetails.getRoute() != null && vehicleTripSheetDetails.getRoute().getCode() != null
-                    && !vehicleTripSheetDetails.getRoute().getCode().isEmpty()) {
-
-                vehicleTripSheetDetails.setRoute(routeMap.get(vehicleTripSheetDetails.getRoute().getCode()));
-            }
-
         }
 
     }
@@ -225,34 +227,35 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
             vehicleNos.append(vehicleNo);
 
         }
+        if (vehicleNos != null && vehicleNos.length() > 0) {
+            String tenantId = null;
+            Map<String, Vehicle> vehicleMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, Vehicle> vehicleMap = new HashMap<>();
+            if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
+                tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
 
-        if (vehicleTripSheetDetailsList != null && !vehicleTripSheetDetailsList.isEmpty())
-            tenantId = vehicleTripSheetDetailsList.get(0).getTenantId();
+            vehicleSearch = new VehicleSearch();
+            vehicleSearch.setTenantId(tenantId);
+            vehicleSearch.setRegNumbers(vehicleNos.toString());
 
-        vehicleSearch = new VehicleSearch();
-        vehicleSearch.setTenantId(tenantId);
-        vehicleSearch.setRegNumbers(vehicleNos.toString());
+            vehicles = vehicleService.search(vehicleSearch);
 
-        vehicles = vehicleService.search(vehicleSearch);
+            if (vehicles != null && vehicles.getPagedData() != null)
+                for (Vehicle v : vehicles.getPagedData()) {
 
-        if (vehicles != null && vehicles.getPagedData() != null)
-            for (Vehicle v : vehicles.getPagedData()) {
+                    vehicleMap.put(v.getRegNumber(), v);
 
-                vehicleMap.put(v.getRegNumber(), v);
+                }
+
+            for (VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList) {
+
+                if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                        && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                    vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+                }
 
             }
-
-        for (VehicleTripSheetDetails vfd : vehicleTripSheetDetailsList) {
-
-            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
-                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
-            }
-
         }
 
     }

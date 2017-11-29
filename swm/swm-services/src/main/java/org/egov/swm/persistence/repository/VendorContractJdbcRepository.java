@@ -170,33 +170,35 @@ public class VendorContractJdbcRepository extends JdbcRepository {
 
         }
 
-        String tenantId = null;
-        Map<String, Vendor> vendorMap = new HashMap<>();
+        if (vendorNos != null && vendorNos.length() > 0) {
+            String tenantId = null;
+            Map<String, Vendor> vendorMap = new HashMap<>();
 
-        if (vendorContractList != null && !vendorContractList.isEmpty())
-            tenantId = vendorContractList.get(0).getTenantId();
+            if (vendorContractList != null && !vendorContractList.isEmpty())
+                tenantId = vendorContractList.get(0).getTenantId();
 
-        vendorSearch = new VendorSearch();
-        vendorSearch.setTenantId(tenantId);
-        vendorSearch.setVendorNos(vendorNos.toString());
+            vendorSearch = new VendorSearch();
+            vendorSearch.setTenantId(tenantId);
+            vendorSearch.setVendorNos(vendorNos.toString());
 
-        vendors = vendorService.search(vendorSearch);
+            vendors = vendorService.search(vendorSearch);
 
-        if (vendors != null && vendors.getPagedData() != null)
-            for (Vendor bd : vendors.getPagedData()) {
+            if (vendors != null && vendors.getPagedData() != null)
+                for (Vendor bd : vendors.getPagedData()) {
 
-                vendorMap.put(bd.getVendorNo(), bd);
+                    vendorMap.put(bd.getVendorNo(), bd);
+
+                }
+
+            for (VendorContract vendorContract : vendorContractList) {
+
+                if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null
+                        && !vendorContract.getVendor().getVendorNo().isEmpty()) {
+
+                    vendorContract.setVendor(vendorMap.get(vendorContract.getVendor().getVendorNo()));
+                }
 
             }
-
-        for (VendorContract vendorContract : vendorContractList) {
-
-            if (vendorContract.getVendor() != null && vendorContract.getVendor().getVendorNo() != null
-                    && !vendorContract.getVendor().getVendorNo().isEmpty()) {
-
-                vendorContract.setVendor(vendorMap.get(vendorContract.getVendor().getVendorNo()));
-            }
-
         }
 
     }

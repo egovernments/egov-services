@@ -14,6 +14,10 @@ import org.egov.swm.domain.model.Vendor;
 import org.egov.swm.domain.model.VendorSearch;
 import org.egov.swm.domain.repository.VehicleRepository;
 import org.egov.swm.utils.Utils;
+import org.egov.swm.web.contract.DesignationResponse;
+import org.egov.swm.web.contract.EmployeeResponse;
+import org.egov.swm.web.repository.DesignationRepository;
+import org.egov.swm.web.repository.EmployeeRepository;
 import org.egov.swm.web.requests.VehicleRequest;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,6 +39,12 @@ public class VehicleService {
 
     @Autowired
     private VendorService vendorService;
+
+    @Autowired
+    private DesignationRepository designationRepository;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     @Autowired
     private Utils utils;
@@ -102,6 +112,9 @@ public class VehicleService {
 
         VendorSearch vendorSearch;
         Pagination<Vendor> vendors;
+        DesignationResponse designationResponse = null;
+        String designationId = null;
+        EmployeeResponse employeeResponse = null;
 
         findDuplicatesInUniqueFields(vehicleRequest);
 
@@ -160,6 +173,38 @@ public class VehicleService {
                             "Given PurchaseDate is invalid: "
                                     + new Date(vehicle.getInsuranceDetails().getInsuranceValidityDate())
                                     + " It should not be a future date");
+
+            // Validate Driver
+            if (vehicle.getDriver() != null && vehicle.getDriver().getCode() != null
+                    && !vehicle.getDriver().getCode().isEmpty()) {
+
+                designationResponse = designationRepository.getDesignationByName("Driver", vehicle.getTenantId(),
+                        vehicleRequest.getRequestInfo());
+                if (designationResponse != null && designationResponse.getDesignation() != null
+                        && !designationResponse.getDesignation().isEmpty()) {
+                    designationId = designationResponse.getDesignation().get(0).getId().toString();
+                } else {
+                    throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+                }
+
+                if (designationId != null) {
+                    employeeResponse = employeeRepository.getEmployeeByDesgIdAndCode(designationId,
+                            vehicle.getDriver().getCode(), vehicle.getTenantId(), vehicleRequest.getRequestInfo());
+                } else {
+                    throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+                }
+
+                if (employeeResponse == null || employeeResponse.getEmployees() == null
+                        || employeeResponse.getEmployees().isEmpty()) {
+                    throw new CustomException("Driver", "Given Driver is invalid: " + vehicle.getDriver().getCode());
+                } else {
+                    vehicle.setDriver(employeeResponse.getEmployees().get(0));
+                }
+
+            } else {
+                throw new CustomException("Driver",
+                        "The field Driver is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+            }
 
             validateUniqueFields(action, vehicle);
         }

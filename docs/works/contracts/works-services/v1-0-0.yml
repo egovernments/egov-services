@@ -63,7 +63,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma Seaprated List of LOA Number
-        - name: detailedEstimateNumber
+        - name: detailedEstimateNumbers
           in: query
           type: array
           items:
@@ -93,6 +93,10 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Work Identification Numbers
+        - name: objectType
+          in: query
+          type: string
+          description: Object type for the offline status.
       responses:
         200:
           description: Offline Status(s) Retrieved Successfully
@@ -583,5 +587,6 @@ tags:
     description: APIs required for Estimate Appropriation.
   - name: Document Detail
     description: APIs required for Document Detail
+
 
 

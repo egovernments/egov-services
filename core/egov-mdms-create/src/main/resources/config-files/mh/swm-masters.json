@@ -1,11 +1,11 @@
 {
-  "tenantId": "mh",
+  "tenantId": "default",
   "moduleName": "SWM",
   "CollectionPoint": [
     {
       "id": 1,
       "type": "Fake Collection Point Type 1",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Collection Point Name 1",
       "ward": "Fake Collection Point Ward 1",
       "zone": "Fake Collection Point Zone 1",
@@ -20,7 +20,7 @@
     {
       "id": 2,
       "type": "Fake Collection Point Type 2",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Collection Point Name 2",
       "ward": "Fake Collection Point Ward 2",
       "zone": "Fake Collection Point Zone 2",
@@ -35,7 +35,7 @@
     {
       "id": 3,
       "type": "Fake Collection Point Type 3",
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Collection Point Name 3",
       "ward": "Fake Collection Point Ward 3",
       "zone": "Fake Collection Point Zone 3",
@@ -51,7 +51,7 @@
   "Route": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Route Name 1",
       "ward": "Fake Route Ward 1",
       "zone": "Fake Route Zone 1",
@@ -63,7 +63,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Route Name 2",
       "ward": "Fake Route Ward 2",
       "zone": "Fake Route Zone 2",
@@ -75,7 +75,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Route Name 3",
       "ward": "Fake Route Ward 3",
       "zone": "Fake Route Zone 3",
@@ -88,42 +88,25 @@
   ],
   "VehicleType": [
     {
-      "tenantId": "mh",
-      "name": "Fake Vehicle Type Name 1",
-      "code": "Fake Vehicle Type Code 1"
+      "id": 1,
+      "tenantId": "default",
+      "name": "Fake Vehicle Type 1"
     },
     {
-      "tenantId": "mh",
-      "name": "Fake Vehicle Type Name 2",
-      "code": "Fake Vehicle Type Code 2"
+      "id": 2,
+      "tenantId": "default",
+      "name": "Fake Vehicle Type 2"
     },
     {
-      "tenantId": "mh",
-      "name": "Fake Vehicle Type Name 3",
-      "code": "Fake Vehicle Type Code 3"
-    }
-  ],
-"FuelType": [
-    {
-      "tenantId": "mh",
-      "name": "Fake Fuel Type Name 1",
-      "code": "Fake Fuel Type Code 1"
-    },
-    {
-      "tenantId": "mh",
-      "name": "Fake Fuel Type Name 2",
-      "code": "Fake Fuel Type Code 2"
-    },
-    {
-      "tenantId": "mh",
-      "name": "Fake Fuel Type Name 3",
-      "code": "Fake Fuel Type Code 3"
+      "id": 3,
+      "tenantId": "default",
+      "name": "Fake Vehicle Type 3"
     }
   ],
   "Vehicle": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "vehicleType": "Fake Vehicle Type 1",
       "regNumber": "Fake registration Number 1",
       "engineSrNumber": "Fake engine Sr Number 1",
@@ -134,17 +117,17 @@
       "ulbOwnedVehicle": true,
       "vendorName": "Fake vendor Name 1",
       "vehicleDriverName": "Fake vehicle Driver Name 1",
-      "purchaseDate": "1508896131",
+      "purchaseDate": "2017-03-31 20:00:00 -0400",
       "yearOfPurchase": 2017,
       "price": 100000,
       "sourceOfPurchase": "Fake source Of Purchase 1",
       "remarks": "Fake remarks 1",
       "insuranceNumber": "Fake insurance Number 1",
-      "insuranceValidityDate": "1508896131"
+      "insuranceValidityDate": "2017-03-31 20:00:00 -0400"
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "vehicleType": "Fake Vehicle Type 2",
       "regNumber": "Fake registration Number 2",
       "engineSrNumber": "Fake engine Sr Number 2",
@@ -155,17 +138,17 @@
       "ulbOwnedVehicle": true,
       "vendorName": "Fake vendor Name 2",
       "vehicleDriverName": "Fake vehicle Driver Name 2",
-      "purchaseDate": "1508896131",
+      "purchaseDate": "2027-04-01 20:00:00 -0400",
       "yearOfPurchase": 2027,
       "price": 200000,
       "sourceOfPurchase": "Fake source Of Purchase 2",
       "remarks": "Fake remarks 2",
       "insuranceNumber": "Fake insurance Number 2",
-      "insuranceValidityDate": "1508896131"
+      "insuranceValidityDate": "2027-04-01 20:00:00 -0400"
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "vehicleType": "Fake Vehicle Type 3",
       "regNumber": "Fake registration Number 3",
       "engineSrNumber": "Fake engine Sr Number 3",
@@ -176,80 +159,120 @@
       "ulbOwnedVehicle": true,
       "vendorName": "Fake vendor Name 3",
       "vehicleDriverName": "Fake vehicle Driver Name 3",
-      "purchaseDate": "1508896131",
+      "purchaseDate": "3037-04-02 20:00:00 -0400",
       "yearOfPurchase": 3037,
       "price": 300000,
       "sourceOfPurchase": "Fake source Of Purchase 3",
       "remarks": "Fake remarks 3",
       "insuranceNumber": "Fake insurance Number 3",
-      "insuranceValidityDate": "1508896131"
+      "insuranceValidityDate": "3037-04-02 20:00:00 -0400"
     }
   ],
   "WasteType": [
     {
       "id": 1,
-      "tenantId": "mh",
-      "name": "Fake Waste Type Name 1",
-      "code": "Fake Waste Type Code 1"
-
+      "tenantId": "default",
+      "name": "Fake Waste Type 1"
     },
     {
       "id": 2,
-      "tenantId": "mh",
-      "name": "Fake Waste Type Name 2",
-      "code": "Fake Waste Type Code 2"
-
+      "tenantId": "default",
+      "name": "Fake Waste Type 2"
     },
     {
       "id": 3,
-      "tenantId": "mh",
-      "name": "Fake Waste Type Name 3",
-      "code": "Fake Waste Type Code 3"
-
+      "tenantId": "default",
+      "name": "Fake Waste Type 3"
     }
   ],
   "WasteSubType": [
     {
       "id": 1,
-      "tenantId": "mh",
-      "name": "Fake Waste  Sub Type Name 1",
-      "code": "Fake Waste  Sub Type Name 1",
+      "tenantId": "default",
+      "name": "Fake Waste  Sub Type 1",
       "wasteType": "Fake Waste Type 1"
     },
     {
       "id": 2,
-      "tenantId": "mh",
-      "name": "Fake Waste  Sub Type Name 2",
-      "code": "Fake Waste  Sub Type Name 2",
+      "tenantId": "default",
+      "name": "Fake Waste  Sub Type 2",
       "wasteType": "Fake Waste Type 2"
     },
     {
       "id": 3,
-      "tenantId": "mh",
-      "name": "Fake Waste  Sub Type Name 3",
-      "code": "Fake Waste  Sub Type Name 3",
+      "tenantId": "default",
+      "name": "Fake Waste  Sub Type 3",
       "wasteType": "Fake Waste Type 3"
     }
   ],
   "DumpingGround": [
     {
-      "code": "Fake Dumping Ground Code 1",
-      "tenantId": "mh"
+      "id": 1,
+      "tenantId": "default",
+      "name": "Fake Dumping Ground name 1",
+      "ward": "Fake Dumping Ground ward 1",
+      "zone": "Fake Dumping Ground zone 1",
+      "street": "Fake Dumping Ground street 1",
+      "colony": "Fake Dumping Ground colony 1",
+      "area": 100,
+      "capacity": 100,
+      "address": "Fake Dumping Ground address 1",
+      "latitude": 111.111,
+      "longitude": 222.222,
+      "mpcbAuthorisation": true,
+      "bankGuarantee": true,
+      "bankName": "Fake Dumping Ground bank name 1",
+      "bankValidityFrom": "2017-03-31 20:00:00 -0400",
+      "bankValidityTo": "2020-03-31 20:00:00 -0400"
     },
     {
-     "code": "Fake Dumping Ground Code 2",
-      "tenantId": "mh"
+      "id": 2,
+      "tenantId": "default",
+      "name": "Fake Dumping Ground name 2",
+      "ward": "Fake Dumping Ground ward 2",
+      "zone": "Fake Dumping Ground zone 2",
+      "street": "Fake Dumping Ground street 2",
+      "colony": "Fake Dumping Ground colony 2",
+      "area": 200,
+      "capacity": 200,
+      "address": "Fake Dumping Ground address 2",
+      "latitude": 222.222,
+      "longitude": 222.222,
+      "mpcbAuthorisation": true,
+      "bankGuarantee": true,
+      "bankName": "Fake Dumping Ground bank name 2",
+      "bankValidityFrom": "2027-04-01 20:00:00 -0400",
+      "bankValidityTo": "2020-04-01 20:00:00 -0400"
     },
     {
-      "code": "Fake Dumping Ground Code 3",
-      "tenantId": "mh"
+      "id": 3,
+      "tenantId": "default",
+      "name": "Fake Dumping Ground name 3",
+      "ward": "Fake Dumping Ground ward 3",
+      "zone": "Fake Dumping Ground zone 3",
+      "street": "Fake Dumping Ground street 3",
+      "colony": "Fake Dumping Ground colony 3",
+      "area": 300,
+      "capacity": 300,
+      "address": "Fake Dumping Ground address 3",
+      "latitude": 333.333,
+      "longitude": 333.333,
+      "mpcbAuthorisation": true,
+      "bankGuarantee": true,
+      "bankName": "Fake Dumping Ground bank name 3",
+      "bankValidityFrom": "3037-04-02 20:00:00 -0400",
+      "bankValidityTo": "3030-04-02 20:00:00 -0400"
     }
   ],
   "Vendor": [
     {
-      "vendorNo": 1,
-      "tenantId": "mh",
+      "id": 1,
+      "tenantId": "default",
       "name": "Fake Vendor name 1",
+      "ward": "Fake Vendor ward 1",
+      "zone": "Fake Vendor zone 1",
+      "street": "Fake Vendor street 1",
+      "colony": "Fake Vendor colony 1",
       "registrationNo": "Fake Vendor registration number 1",
       "email": "Fake Vendor email 1",
       "tinNumber": "Fake Vendor tin number 1",
@@ -258,12 +281,17 @@
       "contactNo": "Fake Vendor contact no 1",
       "faxNumber": "Fake Vendor fax num 1",
       "address": "Fake Vendor address 1",
+      "services": "Fake Vendor services 1",
       "details": "Fake Vendor details 1"
     },
     {
-      "vendorNo": 2,
-      "tenantId": "mh",
+      "id": 2,
+      "tenantId": "default",
       "name": "Fake Vendor name 2",
+      "ward": "Fake Vendor ward 2",
+      "zone": "Fake Vendor zone 2",
+      "street": "Fake Vendor street 2",
+      "colony": "Fake Vendor colony 2",
       "registrationNo": "Fake Vendor registration number 2",
       "email": "Fake Vendor email 2",
       "tinNumber": "Fake Vendor tin number 2",
@@ -272,12 +300,17 @@
       "contactNo": "Fake Vendor contact no 2",
       "faxNumber": "Fake Vendor fax num 2",
       "address": "Fake Vendor address 2",
+      "services": "Fake Vendor services 2",
       "details": "Fake Vendor details 2"
     },
     {
-      "vendorNo": 3,
-      "tenantId": "mh",
+      "id": 3,
+      "tenantId": "default",
       "name": "Fake Vendor name 3",
+      "ward": "Fake Vendor ward 3",
+      "zone": "Fake Vendor zone 3",
+      "street": "Fake Vendor street 3",
+      "colony": "Fake Vendor colony 3",
       "registrationNo": "Fake Vendor registration number 3",
       "email": "Fake Vendor email 3",
       "tinNumber": "Fake Vendor tin number 3",
@@ -286,13 +319,14 @@
       "contactNo": "Fake Vendor contact no 3",
       "faxNumber": "Fake Vendor fax num 3",
       "address": "Fake Vendor address 3",
+      "services": "Fake Vendor services 3",
       "details": "Fake Vendor details 3"
     }
   ],
   "VendorContract": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "contractNo": "Fake contact num 1",
       "vendorName": "Fake Vendor Name 1",
       "contractDate": "2017-03-31 20:00:00 -0400",
@@ -305,7 +339,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "contractNo": "Fake contact num 2",
       "vendorName": "Fake Vendor Name 2",
       "contractDate": "2027-04-01 20:00:00 -0400",
@@ -318,7 +352,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "contractNo": "Fake contact num 3",
       "vendorName": "Fake Vendor Name 3",
       "contractDate": "3037-04-02 20:00:00 -0400",
@@ -333,27 +367,24 @@
   "ShiftType": [
     {
       "id": 1,
-      "tenantId": "mh",
-      "name": "Fake Shift Type Name 1",
-      "code": "Fake Shift Type Code 1"
+      "tenantId": "default",
+      "name": "Fake Shift Type 1"
     },
     {
       "id": 2,
-      "tenantId": "mh",
-      "name": "Fake Shift Type Name 2",
-      "code": "Fake Shift Type Code 2"
+      "tenantId": "default",
+      "name": "Fake Shift Type 2"
     },
     {
       "id": 3,
-      "tenantId": "mh",
-      "name": "Fake Shift Type Name 3",
-      "code": "Fake Shift Type Code 3"
+      "tenantId": "default",
+      "name": "Fake Shift Type 3"
     }
   ],
   "Shift": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "shiftType": "Fake shift Type 1",
       "department": "Fake department 1",
       "designation": "Fake designation 1",
@@ -367,7 +398,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "shiftType": "Fake shift Type 2",
       "department": "Fake department 2",
       "designation": "Fake designation 2",
@@ -381,7 +412,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "shiftType": "Fake shift Type 3",
       "department": "Fake department 3",
       "designation": "Fake designation 3",
@@ -397,27 +428,24 @@
   "CollectionType": [
     {
       "id": 1,
-      "tenantId": "mh",
-      "name": "Fake Collection Type Name 1",
-      "code": "Fake Collection Type Code 1"
+      "tenantId": "default",
+      "name": "Fake Collection Type 1"
     },
     {
       "id": 2,
-      "tenantId": "mh",
-      "name": "Fake Collection Type Name 2",
-      "code": "Fake Collection Type Code 2"
+      "tenantId": "default",
+      "name": "Fake Collection Type 2"
     },
     {
       "id": 3,
-      "tenantId": "mh",
-      "name": "Fake Collection Type Name 3",
-      "code": "Fake Collection Type Code 3"
+      "tenantId": "default",
+      "name": "Fake Collection Type 3"
     }
   ],
   "CollectionPointDetails": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "collectionPointType": "Fake collection Point Type 1",
       "collectionPointName": "Fake collection Point Name 1",
       "garbageEstimate": "Fake garbage Estimate 1",
@@ -425,7 +453,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "collectionPointType": "Fake collection Point Type 2",
       "collectionPointName": "Fake collection Point Name 2",
       "garbageEstimate": "Fake garbage Estimate 2",
@@ -433,7 +461,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "collectionPointType": "Fake collection Point Type 3",
       "collectionPointName": "Fake collection Point Name 3",
       "garbageEstimate": "Fake garbage Estimate 3",
@@ -443,7 +471,7 @@
   "VehicleMaintenance": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 1",
       "zone": "Fake Zone 1",
       "street": "Fake Street 1",
@@ -454,7 +482,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 2",
       "zone": "Fake Zone 2",
       "street": "Fake Street 2",
@@ -465,7 +493,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 3",
       "zone": "Fake Zone 3",
       "street": "Fake Street 3",
@@ -478,7 +506,7 @@
   "Population": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 1",
       "zone": "Fake Zone 1",
       "censusYear": "Fake censusYear 1",
@@ -487,7 +515,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 2",
       "zone": "Fake Zone 2",
       "censusYear": "Fake censusYear 2",
@@ -496,7 +524,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 3",
       "zone": "Fake Zone 3",
       "censusYear": "Fake censusYear 3",
@@ -506,32 +534,41 @@
   ],
   "RefillingPumpStation": [
     {
-      "code": "Fake RefillingPumpStation Code 1",
-      "tenantId": "mh",
-      "location": "Fake location 1",
+      "id": 1,
+      "tenantId": "default",
+      "ward": "Fake Ward 1",
+      "zone": "Fake Zone 1",
+      "street": "Fake Street 1",
+      "colony": "Fake colony 1",
       "name": "Fake name 1",
+      "type": "Fake Type 1",
       "remarks": "Fake remarks 1",
-      "typeOfPump": "Fake type Of Pump 1",
       "typeOfFuel": "Fake type of fuel 1",
       "quantity": 1000
     },
     {
-      "code": "Fake RefillingPumpStation Code 2",
-      "tenantId": "mh",
-      "location": "Fake location 2",
+      "id": 2,
+      "tenantId": "default",
+      "ward": "Fake Ward 2",
+      "zone": "Fake Zone 2",
+      "street": "Fake Street 2",
+      "colony": "Fake colony 2",
       "name": "Fake name 2",
+      "type": "Fake Type 2",
       "remarks": "Fake remarks 2",
-      "typeOfPump": "Fake type Of Pump 2",
       "typeOfFuel": "Fake type of fuel 2",
       "quantity": 2000
     },
     {
-      "code": "Fake RefillingPumpStation Code 3",
-      "tenantId": "mh",
-      "location": "Fake location 3",
+      "id": 3,
+      "tenantId": "default",
+      "ward": "Fake Ward 3",
+      "zone": "Fake Zone 3",
+      "street": "Fake Street 3",
+      "colony": "Fake colony 3",
       "name": "Fake name 3",
+      "type": "Fake Type 3",
       "remarks": "Fake remarks 3",
-      "typeOfPump": "Fake type Of Pump 3",
       "typeOfFuel": "Fake type of fuel 3",
       "quantity": 3000
     }
@@ -539,7 +576,7 @@
   "Toilet": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Name 1",
       "ward": "Fake Ward 1",
       "zone": "Fake Zone 1",
@@ -550,7 +587,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Name 2",
       "ward": "Fake Ward 2",
       "zone": "Fake Zone 2",
@@ -561,7 +598,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "name": "Fake Name 3",
       "ward": "Fake Ward 3",
       "zone": "Fake Zone 3",
@@ -574,7 +611,7 @@
   "VehicleSchedule": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 1",
       "zone": "Fake Zone 1",
       "street": "Fake Street 1",
@@ -588,7 +625,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 2",
       "zone": "Fake Zone 2",
       "street": "Fake Street 2",
@@ -602,7 +639,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "ward": "Fake Ward 3",
       "zone": "Fake Zone 3",
       "street": "Fake Street 3",
@@ -618,7 +655,7 @@
   "SanitationStaffTarget": [
     {
       "id": 1,
-      "tenantId": "mh",
+      "tenantId": "default",
       "targetNo": "Fake target No 1",
       "targetFrom": "2014-09-03 44:44:44",
       "targetTo": "2020-09-03 44:44:44",
@@ -636,7 +673,7 @@
     },
     {
       "id": 2,
-      "tenantId": "mh",
+      "tenantId": "default",
       "targetNo": "Fake target No 2",
       "targetFrom": "2024-09-03 44:44:44",
       "targetTo": "2020-09-03 44:44:44",
@@ -654,7 +691,7 @@
     },
     {
       "id": 3,
-      "tenantId": "mh",
+      "tenantId": "default",
       "targetNo": "Fake target No 3",
       "targetFrom": "3034-09-03 44:44:44",
       "targetTo": "3030-09-03 44:44:44",

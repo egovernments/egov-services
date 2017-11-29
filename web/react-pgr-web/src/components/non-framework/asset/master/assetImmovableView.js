@@ -411,7 +411,7 @@ printer = () => {
             <Col style={{textAlign:"left"}}>
               <label>
                 <span style={{"fontWeight":600, "fontSize": "13px"}}>
-                  Open WDV Value
+                  {translate('ac.create.Opening.date')}
                 </span>
               </label>
             </Col>
@@ -427,7 +427,7 @@ printer = () => {
             <Col style={{textAlign:"left"}}>
               <label>
                 <span style={{"fontWeight":600, "fontSize": "13px"}}>
-                  Open WDV Value
+                  {translate('ac.create.Opening.Written.down.Value')}
                 </span>
               </label>
             </Col>

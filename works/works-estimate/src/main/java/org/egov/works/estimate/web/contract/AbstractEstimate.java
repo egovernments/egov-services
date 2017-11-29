@@ -1,24 +1,22 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * AN Object which holds the basic data for AbstractEstimate
  */
 @ApiModel(description = "AN Object which holds the basic data for AbstractEstimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T10:25:38.385Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class AbstractEstimate   {
   @JsonProperty("id")
@@ -174,20 +172,23 @@ public class AbstractEstimate   {
   @JsonProperty("otherAssetSpecificationRemarks")
   private String otherAssetSpecificationRemarks = null;
 
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
+
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
 
   @JsonProperty("abstractEstimateDetails")
-  private List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<>();
+  private List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<AbstractEstimateDetails>();
 
   @JsonProperty("sanctionDetails")
-  private List<AbstractEstimateSanctionDetail> sanctionDetails = new ArrayList<>();
+  private List<AbstractEstimateSanctionDetail> sanctionDetails = null;
 
   @JsonProperty("assetDetails")
-  private List<AbstractEstimateAssetDetail> assetDetails = new ArrayList<>();
+  private List<AbstractEstimateAssetDetail> assetDetails = null;
 
   @JsonProperty("documentDetails")
-  private List<DocumentDetail> documentDetails = new ArrayList<>();
+  private List<DocumentDetail> documentDetails = null;
 
   public AbstractEstimate id(String id) {
     this.id = id;
@@ -260,10 +261,9 @@ public class AbstractEstimate   {
    * Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.
    * @return abstractEstimateNumber
   **/
-  @ApiModelProperty(required = true, value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.")
-//  @NotNull
+  @ApiModelProperty(value = "Unique number for the Abstract Estimate. If the work is spillover then the Abstract Estimate number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Estimates.")
 
-  @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
   public String getAbstractEstimateNumber() {
     return abstractEstimateNumber;
   }
@@ -305,7 +305,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Reference Type of the Abstract Estimate")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public ReferenceType getReferenceType() {
     return referenceType;
@@ -369,7 +369,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Department for which Abstract Estimate belongs to")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public Department getDepartment() {
     return department;
@@ -388,10 +388,9 @@ public class AbstractEstimate   {
    * Status of the Abstract Estimate
    * @return status
   **/
-  @ApiModelProperty(required = true, value = "Status of the Abstract Estimate")
-//  @NotNull
+  @ApiModelProperty(value = "Status of the Abstract Estimate")
 
-//  @Valid
+  @Valid
 
   public AbstractEstimateStatus getStatus() {
     return status;
@@ -413,7 +412,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Beneficiary of this work")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public Beneficiary getBeneficiary() {
     return beneficiary;
@@ -435,7 +434,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Recommended Mode of Allotment of the work")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public ModeOfAllotment getModeOfAllotment() {
     return modeOfAllotment;
@@ -457,7 +456,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Type of work for which this Abstract Estimate belongs to")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public TypeOfWork getTypeOfWork() {
     return typeOfWork;
@@ -479,7 +478,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Sub Type of work for which this Abstract Estimate belongs to")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public TypeOfWork getSubTypeOfWork() {
     return subTypeOfWork;
@@ -501,7 +500,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Nature of work for which this Abstract Estimate belongs to")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public NatureOfWork getNatureOfWork() {
     return natureOfWork;
@@ -523,7 +522,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Admin Ward for which this Abstract Estimate belongs to")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public Boundary getWard() {
     return ward;
@@ -545,7 +544,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Locality in which the Abstract Estimate belongs to")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public Boundary getLocality() {
     return locality;
@@ -567,7 +566,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Work Category of the Abstract Estimate")
   @NotNull
 
-//  @Valid
+  @Valid
 
   public WorkCategory getWorkCategory() {
     return workCategory;
@@ -788,7 +787,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "User who admin sanctioned")
 
-//  @Valid
+  @Valid
 
   public User getAdminSanctionBy() {
     return adminSanctionBy;
@@ -849,7 +848,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "The user who Financial sanctioned the Abstract Estimate")
 
-//  @Valid
+  @Valid
 
   public User getFinancialSanctionBy() {
     return financialSanctionBy;
@@ -870,7 +869,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "")
 
-//  @Valid
+  @Valid
 
   public WorkFlowDetails getWorkFlowDetails() {
     return workFlowDetails;
@@ -929,9 +928,9 @@ public class AbstractEstimate   {
    * Fund of the Abstract Estimate. This data comes from financials.
    * @return fund
   **/
-  @ApiModelProperty(required = true, value = "Fund of the Abstract Estimate. This data comes from financials.")
+  @ApiModelProperty(value = "Fund of the Abstract Estimate. This data comes from financials.")
 
-//  @Valid
+  @Valid
 
   public Fund getFund() {
     return fund;
@@ -950,9 +949,9 @@ public class AbstractEstimate   {
    * Function of the Abstract Estimate. This data comes from financials.
    * @return function
   **/
-  @ApiModelProperty(required = true, value = "Function of the Abstract Estimate. This data comes from financials.")
+  @ApiModelProperty(value = "Function of the Abstract Estimate. This data comes from financials.")
 
-//  @Valid
+  @Valid
 
   public Function getFunction() {
     return function;
@@ -971,9 +970,9 @@ public class AbstractEstimate   {
    * Budget head of the Abstract Estimate. This data comes from financials.
    * @return budgetGroup
   **/
-  @ApiModelProperty(required = true, value = "Budget head of the Abstract Estimate. This data comes from financials.")
+  @ApiModelProperty(value = "Budget head of the Abstract Estimate. This data comes from financials.")
 
-//  @Valid
+  @Valid
 
   public BudgetGroup getBudgetGroup() {
     return budgetGroup;
@@ -1014,7 +1013,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Scheme of the Abstract Estimate. This data comes from financials.")
 
-//  @Valid
+  @Valid
 
   public Scheme getScheme() {
     return scheme;
@@ -1035,7 +1034,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Sub scheme of the Abstract Estimate. This data comes from financials.")
 
-//  @Valid
+  @Valid
 
   public SubScheme getSubScheme() {
     return subScheme;
@@ -1136,6 +1135,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Name of the PMC for PMC type Panel. The PMC(Project Management Consultant) data will fetch from Contractor master based on the boolean flag pmc=true. This field is not required if pmcType is 'New Appointment'.")
 
+ @Size(max=100)
   public String getPmcName() {
     return pmcName;
   }
@@ -1246,6 +1246,26 @@ public class AbstractEstimate   {
     this.otherAssetSpecificationRemarks = otherAssetSpecificationRemarks;
   }
 
+  public AbstractEstimate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public AbstractEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -1313,7 +1333,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of Abstract Estimate Sanction Details")
 
-//  @Valid
+  @Valid
 
   public List<AbstractEstimateSanctionDetail> getSanctionDetails() {
     return sanctionDetails;
@@ -1342,7 +1362,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of Asset/Land details")
 
-//  @Valid
+  @Valid
 
   public List<AbstractEstimateAssetDetail> getAssetDetails() {
     return assetDetails;
@@ -1371,7 +1391,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of document details")
 
-//  @Valid
+  @Valid
 
   public List<DocumentDetail> getDocumentDetails() {
     return documentDetails;
@@ -1383,7 +1403,7 @@ public class AbstractEstimate   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -1442,6 +1462,7 @@ public class AbstractEstimate   {
         Objects.equals(this.landAssetRequired, abstractEstimate.landAssetRequired) &&
         Objects.equals(this.noOfLands, abstractEstimate.noOfLands) &&
         Objects.equals(this.otherAssetSpecificationRemarks, abstractEstimate.otherAssetSpecificationRemarks) &&
+        Objects.equals(this.deleted, abstractEstimate.deleted) &&
         Objects.equals(this.auditDetails, abstractEstimate.auditDetails) &&
         Objects.equals(this.abstractEstimateDetails, abstractEstimate.abstractEstimateDetails) &&
         Objects.equals(this.sanctionDetails, abstractEstimate.sanctionDetails) &&
@@ -1451,7 +1472,7 @@ public class AbstractEstimate   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, dateOfProposal, abstractEstimateNumber, subject, referenceType, referenceNumber, description, department, status, beneficiary, modeOfAllotment, typeOfWork, subTypeOfWork, natureOfWork, ward, locality, workCategory, councilResolutionNumber, councilResolutionDate, spillOverFlag, detailedEstimateCreated, workOrderCreated, billsCreated, cancellationReason, cancellationRemarks, adminSanctionNumber, adminSanctionDate, adminSanctionBy, financialSanctionNumber, financialSanctionDate, financialSanctionBy, workFlowDetails, stateId, implementationPeriod, fund, function, budgetGroup, accountCode, scheme, subScheme, fundAvailable, fundSanctioningAuthority, pmcRequired, pmcType, pmcName, workProposedAsPerDP, dpRemarks, landAssetRequired, noOfLands, otherAssetSpecificationRemarks, auditDetails, abstractEstimateDetails, sanctionDetails, assetDetails, documentDetails);
+    return Objects.hash(id, tenantId, dateOfProposal, abstractEstimateNumber, subject, referenceType, referenceNumber, description, department, status, beneficiary, modeOfAllotment, typeOfWork, subTypeOfWork, natureOfWork, ward, locality, workCategory, councilResolutionNumber, councilResolutionDate, spillOverFlag, detailedEstimateCreated, workOrderCreated, billsCreated, cancellationReason, cancellationRemarks, adminSanctionNumber, adminSanctionDate, adminSanctionBy, financialSanctionNumber, financialSanctionDate, financialSanctionBy, workFlowDetails, stateId, implementationPeriod, fund, function, budgetGroup, accountCode, scheme, subScheme, fundAvailable, fundSanctioningAuthority, pmcRequired, pmcType, pmcName, workProposedAsPerDP, dpRemarks, landAssetRequired, noOfLands, otherAssetSpecificationRemarks, deleted, auditDetails, abstractEstimateDetails, sanctionDetails, assetDetails, documentDetails);
   }
 
   @Override
@@ -1510,6 +1531,7 @@ public class AbstractEstimate   {
     sb.append("    landAssetRequired: ").append(toIndentedString(landAssetRequired)).append("\n");
     sb.append("    noOfLands: ").append(toIndentedString(noOfLands)).append("\n");
     sb.append("    otherAssetSpecificationRemarks: ").append(toIndentedString(otherAssetSpecificationRemarks)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("    abstractEstimateDetails: ").append(toIndentedString(abstractEstimateDetails)).append("\n");
     sb.append("    sanctionDetails: ").append(toIndentedString(sanctionDetails)).append("\n");
@@ -1523,10 +1545,11 @@ public class AbstractEstimate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
   }
 }
+

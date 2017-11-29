@@ -1,22 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Technical Sanction for Detailed Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Technical Sanction for Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-22T13:44:22.389Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class EstimateTechnicalSanction   {
   @JsonProperty("id")
@@ -36,6 +34,9 @@ public class EstimateTechnicalSanction   {
 
   @JsonProperty("technicalSanctionBy")
   private User technicalSanctionBy = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -166,6 +167,26 @@ public class EstimateTechnicalSanction   {
     this.technicalSanctionBy = technicalSanctionBy;
   }
 
+  public EstimateTechnicalSanction deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public EstimateTechnicalSanction auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -189,7 +210,7 @@ public class EstimateTechnicalSanction   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -203,12 +224,13 @@ public class EstimateTechnicalSanction   {
         Objects.equals(this.detailedEstimate, estimateTechnicalSanction.detailedEstimate) &&
         Objects.equals(this.technicalSanctionDate, estimateTechnicalSanction.technicalSanctionDate) &&
         Objects.equals(this.technicalSanctionBy, estimateTechnicalSanction.technicalSanctionBy) &&
+        Objects.equals(this.deleted, estimateTechnicalSanction.deleted) &&
         Objects.equals(this.auditDetails, estimateTechnicalSanction.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, technicalSanctionNumber, detailedEstimate, technicalSanctionDate, technicalSanctionBy, auditDetails);
+    return Objects.hash(id, tenantId, technicalSanctionNumber, detailedEstimate, technicalSanctionDate, technicalSanctionBy, deleted, auditDetails);
   }
 
   @Override
@@ -222,6 +244,7 @@ public class EstimateTechnicalSanction   {
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
     sb.append("    technicalSanctionDate: ").append(toIndentedString(technicalSanctionDate)).append("\n");
     sb.append("    technicalSanctionBy: ").append(toIndentedString(technicalSanctionBy)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -231,7 +254,7 @@ public class EstimateTechnicalSanction   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

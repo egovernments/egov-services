@@ -1,21 +1,19 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this. Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only for the internal control of the ULB. 
  */
 @ApiModel(description = "Functionary is considered as another cost center. In the government set-up, demands for expenditure are drawn by the department discharging the functions and become the responsibility center for the assigned functions. Functionary group represents this. Each sub-level within this group typically can represent the organisational structure within the ULB. This level is used only for the internal control of the ULB. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class Functionary   {
   @JsonProperty("id")
@@ -139,7 +137,7 @@ public class Functionary   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -177,7 +175,7 @@ public class Functionary   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

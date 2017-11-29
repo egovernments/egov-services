@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
  * This shows the various ways by which an asset can come into the system. The Various values can be - purchased, constructed, acquired and so on.
  */
 @ApiModel(description = "This shows the various ways by which an asset can come into the system. The Various values can be - purchased, constructed, acquired and so on.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class ModeOfAcquisition   {
   @JsonProperty("id")
@@ -97,7 +98,8 @@ public class ModeOfAcquisition   {
    * Unique code of the modeOfAcquisition
    * @return code
   **/
-  @ApiModelProperty(value = "Unique code of the modeOfAcquisition")
+  @ApiModelProperty(required = true, value = "Unique code of the modeOfAcquisition")
+  @NotNull
 
 
   public String getCode() {

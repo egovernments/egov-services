@@ -1,23 +1,21 @@
 package org.egov.works.estimate.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that hold Abstract Estimate Detail for a given Abstract Estimate
  */
 @ApiModel(description = "An Object that hold Abstract Estimate Detail for a given Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class AbstractEstimateDetails   {
   @JsonProperty("id")
@@ -46,6 +44,9 @@ public class AbstractEstimateDetails   {
 
   @JsonProperty("documentDetails")
   private DocumentDetail documentDetails = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -185,7 +186,7 @@ public class AbstractEstimateDetails   {
   **/
   @ApiModelProperty(value = "Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.")
 
-//  @Valid
+  @Valid
 
   public ProjectCode getProjectCode() {
     return projectCode;
@@ -201,10 +202,10 @@ public class AbstractEstimateDetails   {
   }
 
    /**
-   * This object holds Budget Appropriation details for the Abstract Estimate
+   * This object holds Budget Appropriation details for the Abstract Estimate. Appropriation required or not is based on whether the Financial Integration is required or not.
    * @return abstractEstimateAppropriations
   **/
-  @ApiModelProperty(value = "This object holds Budget Appropriation details for the Abstract Estimate")
+  @ApiModelProperty(value = "This object holds Budget Appropriation details for the Abstract Estimate. Appropriation required or not is based on whether the Financial Integration is required or not.")
 
   @Valid
 
@@ -237,6 +238,26 @@ public class AbstractEstimateDetails   {
     this.documentDetails = documentDetails;
   }
 
+  public AbstractEstimateDetails deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public AbstractEstimateDetails auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -260,7 +281,7 @@ public class AbstractEstimateDetails   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -277,12 +298,13 @@ public class AbstractEstimateDetails   {
         Objects.equals(this.projectCode, abstractEstimateDetails.projectCode) &&
         Objects.equals(this.abstractEstimateAppropriations, abstractEstimateDetails.abstractEstimateAppropriations) &&
         Objects.equals(this.documentDetails, abstractEstimateDetails.documentDetails) &&
+        Objects.equals(this.deleted, abstractEstimateDetails.deleted) &&
         Objects.equals(this.auditDetails, abstractEstimateDetails.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, abstractEstimate, nameOfWork, estimateAmount, grossAmountBilled, projectCode, abstractEstimateAppropriations, documentDetails, auditDetails);
+    return Objects.hash(id, tenantId, abstractEstimate, nameOfWork, estimateAmount, grossAmountBilled, projectCode, abstractEstimateAppropriations, documentDetails, deleted, auditDetails);
   }
 
   @Override
@@ -299,6 +321,7 @@ public class AbstractEstimateDetails   {
     sb.append("    projectCode: ").append(toIndentedString(projectCode)).append("\n");
     sb.append("    abstractEstimateAppropriations: ").append(toIndentedString(abstractEstimateAppropriations)).append("\n");
     sb.append("    documentDetails: ").append(toIndentedString(documentDetails)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -308,7 +331,7 @@ public class AbstractEstimateDetails   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

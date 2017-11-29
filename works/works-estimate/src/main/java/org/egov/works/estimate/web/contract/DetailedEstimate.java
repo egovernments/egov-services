@@ -1,25 +1,23 @@
 package org.egov.works.estimate.web.contract;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-22T13:44:22.389Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -187,6 +185,9 @@ public class DetailedEstimate   {
   @JsonProperty("budgetGroup")
   private BudgetGroup budgetGroup = null;
 
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
+
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
 
@@ -347,7 +348,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Unique number after admin sanction for the Detailed Estimate")
 
- @Pattern(regexp="[a-zA-Z0-9-\\\\]+") @Size(max=50)
+ @Pattern(regexp="[a-zA-Z0-9-/]+") @Size(max=50)
   public String getAdminSanctionNumber() {
     return adminSanctionNumber;
   }
@@ -1387,6 +1388,26 @@ public class DetailedEstimate   {
     this.budgetGroup = budgetGroup;
   }
 
+  public DetailedEstimate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public DetailedEstimate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -1410,7 +1431,7 @@ public class DetailedEstimate   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -1473,12 +1494,13 @@ public class DetailedEstimate   {
         Objects.equals(this.scheme, detailedEstimate.scheme) &&
         Objects.equals(this.subScheme, detailedEstimate.subScheme) &&
         Objects.equals(this.budgetGroup, detailedEstimate.budgetGroup) &&
+        Objects.equals(this.deleted, detailedEstimate.deleted) &&
         Objects.equals(this.auditDetails, detailedEstimate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, auditDetails);
+    return Objects.hash(id, tenantId, estimateNumber, estimateDate, nameOfWork, description, department, adminSanctionNumber, adminSanctionDate, adminSanctionBy, status, workValue, estimateValue, projectCode, parent, copiedFrom, approvedDate, approvedBy, copiedEstimate, beneficiary, modeOfAllotment, worksType, worksSubtype, natureOfWork, ward, location, latitude, longitude, workCategory, locality, councilResolutionNumber, councilResolutionDate, workOrderCreated, billsCreated, spillOverFlag, grossAmountBilled, cancellationReason, cancellationRemarks, totalIncludingRE, abstractEstimateDetail, estimateActivities, multiYearEstimates, estimateTechnicalSanctions, detailedEstimateDeductions, documentDetails, assets, estimateOverheads, workFlowDetails, stateId, fund, function, functionary, scheme, subScheme, budgetGroup, deleted, auditDetails);
   }
 
   @Override
@@ -1541,6 +1563,7 @@ public class DetailedEstimate   {
     sb.append("    scheme: ").append(toIndentedString(scheme)).append("\n");
     sb.append("    subScheme: ").append(toIndentedString(subScheme)).append("\n");
     sb.append("    budgetGroup: ").append(toIndentedString(budgetGroup)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -1550,7 +1573,7 @@ public class DetailedEstimate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

@@ -1,23 +1,21 @@
 package org.egov.works.estimate.web.contract;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
-
 /**
  * Hold the asset specific information.
  */
 @ApiModel(description = "Hold the asset specific information.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class Asset   {
   @JsonProperty("anticipatedLife")
@@ -86,9 +84,6 @@ public class Asset   {
   @JsonProperty("latitude")
   private Double latitude = null;
 
-  @JsonProperty("landSurveyNo")
-  private String landSurveyNo = null;
-
   @JsonProperty("quantity")
   private Long quantity = null;
 
@@ -107,8 +102,8 @@ public class Asset   {
   @JsonProperty("oldCode")
   private String oldCode = null;
 
-  @JsonProperty("departmentCode")
-  private String departmentCode = null;
+  @JsonProperty("department")
+  private Department department = null;
 
   @JsonProperty("assetCategory")
   private AssetCategory assetCategory = null;
@@ -153,7 +148,7 @@ public class Asset   {
   private List<YearWiseDepreciation> yearWiseDepreciationRate = null;
 
   @JsonProperty("fundSource")
-  private String fundSource = null;
+  private Fundsource fundSource = null;
 
   @JsonProperty("location")
   private String location = null;
@@ -173,8 +168,7 @@ public class Asset   {
    * Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.
    * @return anticipatedLife
   **/
-  @ApiModelProperty(required = true, value = "Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.")
-  @NotNull
+  @ApiModelProperty(value = "Anticipated life of asset, This value is being calculated by diving 100 by the depreciation rate. for eg if the depreciation rate is 10%, then the anticiapted life will be 100/10 which equals 10years.")
 
 
   public Long getAnticipatedLife() {
@@ -191,10 +185,10 @@ public class Asset   {
   }
 
    /**
-   * unique id of the respective order.
+   * Order number used for creating this asset.
    * @return orderNumber
   **/
-  @ApiModelProperty(value = "unique id of the respective order.")
+  @ApiModelProperty(value = "Order number used for creating this asset.")
 
 
   public String getOrderNumber() {
@@ -234,8 +228,7 @@ public class Asset   {
    * Ref No of WIP(work in progress) Register.
    * @return wipReferenceNo
   **/
-  @ApiModelProperty(required = true, value = "Ref No of WIP(work in progress) Register.")
-  @NotNull
+  @ApiModelProperty(value = "Ref No of WIP(work in progress) Register.")
 
 
   public String getWipReferenceNo() {
@@ -252,10 +245,10 @@ public class Asset   {
   }
 
    /**
-   * From whom acquired should be entered.
+   * Asset is acquired from which party is tracked here.
    * @return acquiredFrom
   **/
-  @ApiModelProperty(value = "From whom acquired should be entered.")
+  @ApiModelProperty(value = "Asset is acquired from which party is tracked here.")
 
 
   public String getAcquiredFrom() {
@@ -272,10 +265,10 @@ public class Asset   {
   }
 
    /**
-   * is Warranty available for the given asset.
+   * If Warranty available for the given asset the value will be true, else it will be false.
    * @return warrantyAvailable
   **/
-  @ApiModelProperty(value = "is Warranty available for the given asset.")
+  @ApiModelProperty(value = "If Warranty available for the given asset the value will be true, else it will be false.")
 
 
   public Boolean getWarrantyAvailable() {
@@ -292,10 +285,10 @@ public class Asset   {
   }
 
    /**
-   * Date of the expiry of warranty.
+   * Date of the expiry of warranty. This will be required in case warranty available is true.
    * @return warrantyExpiryDate
   **/
-  @ApiModelProperty(value = "Date of the expiry of warranty.")
+  @ApiModelProperty(value = "Date of the expiry of warranty. This will be required in case warranty available is true.")
 
 
   public Long getWarrantyExpiryDate() {
@@ -312,10 +305,10 @@ public class Asset   {
   }
 
    /**
-   * This field contains year,month an day counts of the defect liability period in round figures.
+   * Get defectLiabilityPeriod
    * @return defectLiabilityPeriod
   **/
-  @ApiModelProperty(value = "This field contains year,month an day counts of the defect liability period in round figures.")
+  @ApiModelProperty(value = "")
 
   @Valid
 
@@ -333,10 +326,10 @@ public class Asset   {
   }
 
    /**
-   * value of the security deposit retained.
+   * value of the security deposit retained for the Work order
    * @return securityDepositRetained
   **/
-  @ApiModelProperty(value = "value of the security deposit retained.")
+  @ApiModelProperty(value = "value of the security deposit retained for the Work order")
 
   @Valid
 
@@ -354,10 +347,10 @@ public class Asset   {
   }
 
    /**
-   * value of the security deposit realized.
+   * value of the security deposit realized for the work order
    * @return securityDepositRealized
   **/
-  @ApiModelProperty(value = "value of the security deposit realized.")
+  @ApiModelProperty(value = "value of the security deposit realized for the work order")
 
   @Valid
 
@@ -375,10 +368,10 @@ public class Asset   {
   }
 
    /**
-   * Date of the Acquisition.
+   * Date of the Acquisition of the asset.
    * @return acquisitionDate
   **/
-  @ApiModelProperty(required = true, value = "Date of the Acquisition.")
+  @ApiModelProperty(required = true, value = "Date of the Acquisition of the asset.")
   @NotNull
 
 
@@ -506,10 +499,10 @@ public class Asset   {
   }
 
    /**
-   * names of the title documents available for the particular asset, values will be entered in comma separated format.
+   * names of the title documents available for the particular asset, values will be entered in comma separated format. For example- Fire NOC, Sale Deed
    * @return titleDocumentsAvalable
   **/
-  @ApiModelProperty(value = "names of the title documents available for the particular asset, values will be entered in comma separated format.")
+  @ApiModelProperty(value = "names of the title documents available for the particular asset, values will be entered in comma separated format. For example- Fire NOC, Sale Deed")
 
 
   public List<String> getTitleDocumentsAvalable() {
@@ -547,10 +540,10 @@ public class Asset   {
   }
 
    /**
-   * Total area of Land on which the asset is located.
+   * Total area of Land on which the asset is located. This will be calculated based on the land asset that is associated with this. If one asset falls across multiple land, the the total area will be the sum total of all the areas of the respective land.
    * @return totalArea
   **/
-  @ApiModelProperty(value = "Total area of Land on which the asset is located.")
+  @ApiModelProperty(value = "Total area of Land on which the asset is located. This will be calculated based on the land asset that is associated with this. If one asset falls across multiple land, the the total area will be the sum total of all the areas of the respective land.")
 
 
   public Double getTotalArea() {
@@ -567,10 +560,10 @@ public class Asset   {
   }
 
    /**
-   * address as entered by the user.
+   * Addess of the asset.
    * @return address
   **/
-  @ApiModelProperty(required = true, value = "address as entered by the user.")
+  @ApiModelProperty(required = true, value = "Addess of the asset.")
   @NotNull
 
 
@@ -588,10 +581,10 @@ public class Asset   {
   }
 
    /**
-   * longitude coordinate of asset.
+   * longitude coordinate of asset location.
    * @return longitude
   **/
-  @ApiModelProperty(value = "longitude coordinate of asset.")
+  @ApiModelProperty(value = "longitude coordinate of asset location.")
 
 
   public Double getLongitude() {
@@ -608,10 +601,10 @@ public class Asset   {
   }
 
    /**
-   * latitude coordinate of asset.
+   * latitude coordinate of asset location.
    * @return latitude
   **/
-  @ApiModelProperty(value = "latitude coordinate of asset.")
+  @ApiModelProperty(value = "latitude coordinate of asset location.")
 
 
   public Double getLatitude() {
@@ -620,26 +613,6 @@ public class Asset   {
 
   public void setLatitude(Double latitude) {
     this.latitude = latitude;
-  }
-
-  public Asset landSurveyNo(String landSurveyNo) {
-    this.landSurveyNo = landSurveyNo;
-    return this;
-  }
-
-   /**
-   * Survey No of land on which structure is located.
-   * @return landSurveyNo
-  **/
-  @ApiModelProperty(value = "Survey No of land on which structure is located.")
-
-
-  public String getLandSurveyNo() {
-    return landSurveyNo;
-  }
-
-  public void setLandSurveyNo(String landSurveyNo) {
-    this.landSurveyNo = landSurveyNo;
   }
 
   public Asset quantity(Long quantity) {
@@ -729,10 +702,10 @@ public class Asset   {
   }
 
    /**
-   * Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code, The format of the code will be <ULB_NAME>/<Deprartmentcode>/<assetCategoryCode>/running sequence (for eg- mh.rohaRevenueBuilding12).
+   * Unique code for the asset. This will be auto generated. The format of the code will be <ULB_NAME>/<Depratmentcode>/<assetCategoryCode>/running sequence (for eg- mh.roha/REV/Building/12).
    * @return code
   **/
-  @ApiModelProperty(value = "Unique code for the asset. This will be auto generated. The format for the asset code will be given by the client in case of auto generation of asset code, The format of the code will be <ULB_NAME>/<Deprartmentcode>/<assetCategoryCode>/running sequence (for eg- mh.rohaRevenueBuilding12).")
+  @ApiModelProperty(value = "Unique code for the asset. This will be auto generated. The format of the code will be <ULB_NAME>/<Depratmentcode>/<assetCategoryCode>/running sequence (for eg- mh.roha/REV/Building/12).")
 
 
   public String getCode() {
@@ -749,10 +722,10 @@ public class Asset   {
   }
 
    /**
-   * Old Asset ID should be entered for Asset Older than go live Date of this module.
+   * This is the asset code as per the legacy system. This will be applicable when doing legacy data entry.
    * @return oldCode
   **/
-  @ApiModelProperty(value = "Old Asset ID should be entered for Asset Older than go live Date of this module.")
+  @ApiModelProperty(value = "This is the asset code as per the legacy system. This will be applicable when doing legacy data entry.")
 
 
   public String getOldCode() {
@@ -763,25 +736,26 @@ public class Asset   {
     this.oldCode = oldCode;
   }
 
-  public Asset departmentCode(String departmentCode) {
-    this.departmentCode = departmentCode;
+  public Asset department(Department department) {
+    this.department = department;
     return this;
   }
 
    /**
-   * code of the department to which the asset belongs
-   * @return departmentCode
+   * Get department
+   * @return department
   **/
-  @ApiModelProperty(required = true, value = "code of the department to which the asset belongs")
+  @ApiModelProperty(required = true, value = "")
   @NotNull
 
+  @Valid
 
-  public String getDepartmentCode() {
-    return departmentCode;
+  public Department getDepartment() {
+    return department;
   }
 
-  public void setDepartmentCode(String departmentCode) {
-    this.departmentCode = departmentCode;
+  public void setDepartment(Department department) {
+    this.department = department;
   }
 
   public Asset assetCategory(AssetCategory assetCategory) {
@@ -833,10 +807,10 @@ public class Asset   {
   }
 
    /**
-   * asset status from assetstatus master for Object name \"Asset Master\".
+   * This shows the current status of the asset.
    * @return status
   **/
-  @ApiModelProperty(value = "asset status from assetstatus master for Object name \"Asset Master\".")
+  @ApiModelProperty(value = "This shows the current status of the asset.")
 
 
   public String getStatus() {
@@ -875,10 +849,10 @@ public class Asset   {
   }
 
    /**
-   * gross value of the asset, applicable only if the status is Capitalized
+   * Total value of the depreciation already applied on this asset will be the accumulated depreciation.
    * @return accumulatedDepreciation
   **/
-  @ApiModelProperty(value = "gross value of the asset, applicable only if the status is Capitalized")
+  @ApiModelProperty(value = "Total value of the depreciation already applied on this asset will be the accumulated depreciation.")
 
   @Valid
 
@@ -896,10 +870,10 @@ public class Asset   {
   }
 
    /**
-   * description of asset
+   * detailed description of asset
    * @return description
   **/
-  @ApiModelProperty(required = true, value = "description of asset")
+  @ApiModelProperty(required = true, value = "detailed description of asset")
   @NotNull
 
 
@@ -917,10 +891,10 @@ public class Asset   {
   }
 
    /**
-   * Date of asset creation.
+   * Date of asset creation in the books.
    * @return dateOfCreation
   **/
-  @ApiModelProperty(required = true, value = "Date of asset creation.")
+  @ApiModelProperty(required = true, value = "Date of asset creation in the books.")
   @NotNull
 
 
@@ -938,10 +912,10 @@ public class Asset   {
   }
 
    /**
-   * asset remarks.
+   * Any asset remarks.
    * @return remarks
   **/
-  @ApiModelProperty(value = "asset remarks.")
+  @ApiModelProperty(value = "Any asset remarks.")
 
 
   public String getRemarks() {
@@ -958,10 +932,10 @@ public class Asset   {
   }
 
    /**
-   * version of the assetcategory for which asset is created.
+   * version of the assetcategory for which asset is created. This is an internal field.
    * @return version
   **/
-  @ApiModelProperty(value = "version of the assetcategory for which asset is created.")
+  @ApiModelProperty(value = "version of the assetcategory for which asset is created. This is an internal field.")
 
 
   public String getVersion() {
@@ -978,10 +952,10 @@ public class Asset   {
   }
 
    /**
-   * Parent asset id of an asset.
+   * Parent asset id of an asset. This will be used when we want to link all the shops inside a shopping complex. Here both shop and shopping complex are distict assets.
    * @return assetReference
   **/
-  @ApiModelProperty(value = "Parent asset id of an asset.")
+  @ApiModelProperty(value = "Parent asset id of an asset. This will be used when we want to link all the shops inside a shopping complex. Here both shop and shopping complex are distict assets.")
 
 
   public Long getAssetReference() {
@@ -1090,23 +1064,24 @@ public class Asset   {
     this.yearWiseDepreciationRate = yearWiseDepreciationRate;
   }
 
-  public Asset fundSource(String fundSource) {
+  public Asset fundSource(Fundsource fundSource) {
     this.fundSource = fundSource;
     return this;
   }
 
    /**
-   * Source of fund
+   * only code is mandatory for the FundSource object while asset is created.
    * @return fundSource
   **/
-  @ApiModelProperty(value = "Source of fund")
+  @ApiModelProperty(value = "only code is mandatory for the FundSource object while asset is created.")
 
+  @Valid
 
-  public String getFundSource() {
+  public Fundsource getFundSource() {
     return fundSource;
   }
 
-  public void setFundSource(String fundSource) {
+  public void setFundSource(Fundsource fundSource) {
     this.fundSource = fundSource;
   }
 
@@ -1116,10 +1091,10 @@ public class Asset   {
   }
 
    /**
-   * location of asset
+   * Location of the Asset
    * @return location
   **/
-  @ApiModelProperty(value = "location of asset")
+  @ApiModelProperty(value = "Location of the Asset")
 
 
   public String getLocation() {
@@ -1136,10 +1111,10 @@ public class Asset   {
   }
 
    /**
-   * The date asset is been registered
+   * The date on which the opening written down value is been captured. This will be applicable for legacy asset data entry. In case of new assets this date is not relevant. This will be same as the date of entry.
    * @return openingDate
   **/
-  @ApiModelProperty(value = "The date asset is been registered")
+  @ApiModelProperty(value = "The date on which the opening written down value is been captured. This will be applicable for legacy asset data entry. In case of new assets this date is not relevant. This will be same as the date of entry.")
 
 
   public Long getOpeningDate() {
@@ -1164,10 +1139,10 @@ public class Asset   {
   }
 
    /**
-   * multiple rows can be specified for each asset
+   * One asset can be located in one or more land. These land are assets captured in the same entity.
    * @return landDetails
   **/
-  @ApiModelProperty(value = "multiple rows can be specified for each asset")
+  @ApiModelProperty(value = "One asset can be located in one or more land. These land are assets captured in the same entity.")
 
   @Valid
 
@@ -1181,7 +1156,7 @@ public class Asset   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -1211,14 +1186,13 @@ public class Asset   {
         Objects.equals(this.address, asset.address) &&
         Objects.equals(this.longitude, asset.longitude) &&
         Objects.equals(this.latitude, asset.latitude) &&
-        Objects.equals(this.landSurveyNo, asset.landSurveyNo) &&
         Objects.equals(this.quantity, asset.quantity) &&
         Objects.equals(this.tenantId, asset.tenantId) &&
         Objects.equals(this.id, asset.id) &&
         Objects.equals(this.name, asset.name) &&
         Objects.equals(this.code, asset.code) &&
         Objects.equals(this.oldCode, asset.oldCode) &&
-        Objects.equals(this.departmentCode, asset.departmentCode) &&
+        Objects.equals(this.department, asset.department) &&
         Objects.equals(this.assetCategory, asset.assetCategory) &&
         Objects.equals(this.modeOfAcquisition, asset.modeOfAcquisition) &&
         Objects.equals(this.status, asset.status) &&
@@ -1241,7 +1215,7 @@ public class Asset   {
 
   @Override
   public int hashCode() {
-    return Objects.hash(anticipatedLife, orderNumber, orderDate, wipReferenceNo, acquiredFrom, warrantyAvailable, warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized, acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, titleDocumentsAvalable, locationDetails, totalArea, address, longitude, latitude, landSurveyNo, quantity, tenantId, id, name, code, oldCode, departmentCode, assetCategory, modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate, fundSource, location, openingDate, landDetails);
+    return Objects.hash(anticipatedLife, orderNumber, orderDate, wipReferenceNo, acquiredFrom, warrantyAvailable, warrantyExpiryDate, defectLiabilityPeriod, securityDepositRetained, securityDepositRealized, acquisitionDate, originalValue, assetAccount, accumulatedDepreciationAccount, revaluationReserveAccount, depreciationExpenseAccount, titleDocumentsAvalable, locationDetails, totalArea, address, longitude, latitude, quantity, tenantId, id, name, code, oldCode, department, assetCategory, modeOfAcquisition, status, grossValue, accumulatedDepreciation, description, dateOfCreation, remarks, version, assetReference, enableYearWiseDepreciation, assetAttributes, depreciationRate, yearWiseDepreciationRate, fundSource, location, openingDate, landDetails);
   }
 
   @Override
@@ -1271,14 +1245,13 @@ public class Asset   {
     sb.append("    address: ").append(toIndentedString(address)).append("\n");
     sb.append("    longitude: ").append(toIndentedString(longitude)).append("\n");
     sb.append("    latitude: ").append(toIndentedString(latitude)).append("\n");
-    sb.append("    landSurveyNo: ").append(toIndentedString(landSurveyNo)).append("\n");
     sb.append("    quantity: ").append(toIndentedString(quantity)).append("\n");
     sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
     sb.append("    id: ").append(toIndentedString(id)).append("\n");
     sb.append("    name: ").append(toIndentedString(name)).append("\n");
     sb.append("    code: ").append(toIndentedString(code)).append("\n");
     sb.append("    oldCode: ").append(toIndentedString(oldCode)).append("\n");
-    sb.append("    departmentCode: ").append(toIndentedString(departmentCode)).append("\n");
+    sb.append("    department: ").append(toIndentedString(department)).append("\n");
     sb.append("    assetCategory: ").append(toIndentedString(assetCategory)).append("\n");
     sb.append("    modeOfAcquisition: ").append(toIndentedString(modeOfAcquisition)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
@@ -1305,7 +1278,7 @@ public class Asset   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

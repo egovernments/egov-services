@@ -13,7 +13,7 @@ import java.util.Objects;
  * An Object that holds the basic data of Multi Year Estimate
  */
 @ApiModel(description = "An Object that holds the basic data of Multi Year Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class MultiYearEstimate   {
   @JsonProperty("id")
@@ -30,6 +30,9 @@ public class MultiYearEstimate   {
 
   @JsonProperty("percentage")
   private Double percentage = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -106,7 +109,8 @@ public class MultiYearEstimate   {
    * Reference of the Detailed Estimate for Multi Year Estimate
    * @return detailedEstimate
   **/
-  @ApiModelProperty(value = "Reference of the Detailed Estimate for Multi Year Estimate")
+  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
+  @NotNull
 
 
   public String getDetailedEstimate() {
@@ -136,6 +140,26 @@ public class MultiYearEstimate   {
 
   public void setPercentage(Double percentage) {
     this.percentage = percentage;
+  }
+
+  public MultiYearEstimate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
   }
 
   public MultiYearEstimate auditDetails(AuditDetails auditDetails) {
@@ -174,12 +198,13 @@ public class MultiYearEstimate   {
         Objects.equals(this.financialYear, multiYearEstimate.financialYear) &&
         Objects.equals(this.detailedEstimate, multiYearEstimate.detailedEstimate) &&
         Objects.equals(this.percentage, multiYearEstimate.percentage) &&
+        Objects.equals(this.deleted, multiYearEstimate.deleted) &&
         Objects.equals(this.auditDetails, multiYearEstimate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, financialYear, detailedEstimate, percentage, auditDetails);
+    return Objects.hash(id, tenantId, financialYear, detailedEstimate, percentage, deleted, auditDetails);
   }
 
   @Override
@@ -192,6 +217,7 @@ public class MultiYearEstimate   {
     sb.append("    financialYear: ").append(toIndentedString(financialYear)).append("\n");
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
     sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

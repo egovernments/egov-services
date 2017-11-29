@@ -1,22 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that hold Market Rate Details for a given SOR
  */
 @ApiModel(description = "An Object that hold Market Rate Details for a given SOR")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class MarketRate   {
   @JsonProperty("id")
@@ -87,11 +85,10 @@ public class MarketRate   {
   }
 
    /**
-   * unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
+   * unique reference from 'ScheduleOfRate'. Primary key is ref. here.
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(required = true, value = "unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'")
-  @NotNull
+  @ApiModelProperty(value = "unique reference from 'ScheduleOfRate'. Primary key is ref. here.")
 
 
   public String getScheduleOfRate() {
@@ -188,7 +185,7 @@ public class MarketRate   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -230,7 +227,7 @@ public class MarketRate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

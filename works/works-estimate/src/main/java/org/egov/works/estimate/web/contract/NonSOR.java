@@ -1,22 +1,19 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that holds NON SOR details for a given Estimate template.
  */
 @ApiModel(description = "An Object that holds NON SOR details for a given Estimate template.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class NonSOR   {
   @JsonProperty("id")
@@ -29,7 +26,7 @@ public class NonSOR   {
   private String description = null;
 
   @JsonProperty("uom")
-  private UOM uom = null;
+  private String uom = null;
 
   public NonSOR id(String id) {
     this.id = id;
@@ -93,31 +90,30 @@ public class NonSOR   {
     this.description = description;
   }
 
-  public NonSOR uom(UOM uom) {
+  public NonSOR uom(String uom) {
     this.uom = uom;
     return this;
   }
 
    /**
-   * UOM for the NonSOR
+   * UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "UOM for the NonSOR")
+  @ApiModelProperty(required = true, value = "UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.")
   @NotNull
 
-  @Valid
 
-  public UOM getUom() {
+  public String getUom() {
     return uom;
   }
 
-  public void setUom(UOM uom) {
+  public void setUom(String uom) {
     this.uom = uom;
   }
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -153,7 +149,7 @@ public class NonSOR   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

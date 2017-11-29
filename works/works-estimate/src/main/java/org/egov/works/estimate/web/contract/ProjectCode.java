@@ -1,18 +1,21 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import java.math.BigDecimal;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data for a Project Code
  */
 @ApiModel(description = "An Object that holds the basic data for a Project Code")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class ProjectCode   {
   @JsonProperty("id")
@@ -41,6 +44,9 @@ public class ProjectCode   {
 
   @JsonProperty("completionDate")
   private Long completionDate = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -230,6 +236,26 @@ public class ProjectCode   {
     this.completionDate = completionDate;
   }
 
+  public ProjectCode deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public ProjectCode auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -253,7 +279,7 @@ public class ProjectCode   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -270,12 +296,13 @@ public class ProjectCode   {
         Objects.equals(this.active, projectCode.active) &&
         Objects.equals(this.projectValue, projectCode.projectValue) &&
         Objects.equals(this.completionDate, projectCode.completionDate) &&
+        Objects.equals(this.deleted, projectCode.deleted) &&
         Objects.equals(this.auditDetails, projectCode.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, code, name, description, status, active, projectValue, completionDate, auditDetails);
+    return Objects.hash(id, tenantId, code, name, description, status, active, projectValue, completionDate, deleted, auditDetails);
   }
 
   @Override
@@ -292,6 +319,7 @@ public class ProjectCode   {
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
     sb.append("    projectValue: ").append(toIndentedString(projectValue)).append("\n");
     sb.append("    completionDate: ").append(toIndentedString(completionDate)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -301,7 +329,7 @@ public class ProjectCode   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

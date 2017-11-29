@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds the basic data of Detailed Estimate Deductions
  */
 @ApiModel(description = "An Object that holds the basic data of Detailed Estimate Deductions")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class DetailedEstimateDeduction   {
   @JsonProperty("id")
@@ -34,6 +34,9 @@ public class DetailedEstimateDeduction   {
 
   @JsonProperty("amount")
   private BigDecimal amount = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -91,8 +94,7 @@ public class DetailedEstimateDeduction   {
   @ApiModelProperty(required = true, value = "Chart Of Accounts of the Detailed Estimate Deduction from Financials")
   @NotNull
 
-  //@Valid
-  //TODO Only code is required
+  @Valid
 
   public ChartOfAccount getChartOfAccounts() {
     return chartOfAccounts;
@@ -111,7 +113,8 @@ public class DetailedEstimateDeduction   {
    * Reference of the Detailed Estimate for Multi Year Estimate
    * @return detailedEstimate
   **/
-  @ApiModelProperty(value = "Reference of the Detailed Estimate for Multi Year Estimate")
+  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
+  @NotNull
 
 
   public String getDetailedEstimate() {
@@ -164,6 +167,26 @@ public class DetailedEstimateDeduction   {
     this.amount = amount;
   }
 
+  public DetailedEstimateDeduction deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public DetailedEstimateDeduction auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -201,12 +224,13 @@ public class DetailedEstimateDeduction   {
         Objects.equals(this.detailedEstimate, detailedEstimateDeduction.detailedEstimate) &&
         Objects.equals(this.percentage, detailedEstimateDeduction.percentage) &&
         Objects.equals(this.amount, detailedEstimateDeduction.amount) &&
+        Objects.equals(this.deleted, detailedEstimateDeduction.deleted) &&
         Objects.equals(this.auditDetails, detailedEstimateDeduction.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, chartOfAccounts, detailedEstimate, percentage, amount, auditDetails);
+    return Objects.hash(id, tenantId, chartOfAccounts, detailedEstimate, percentage, amount, deleted, auditDetails);
   }
 
   @Override
@@ -220,6 +244,7 @@ public class DetailedEstimateDeduction   {
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
     sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
     sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

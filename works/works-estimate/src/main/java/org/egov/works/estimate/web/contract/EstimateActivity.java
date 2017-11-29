@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object holds the basic data of Estimate Activity
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-10T07:36:50.343Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class EstimateActivity   {
   @JsonProperty("id")
@@ -50,13 +50,16 @@ public class EstimateActivity   {
   private RevisionType revisionType = null;
 
   @JsonProperty("parent")
-  private EstimateActivity parent = null;
+  private String parent = null;
 
   @JsonProperty("detailedEstimate")
   private String detailedEstimate = null;
 
   @JsonProperty("estimateMeasurementSheets")
   private List<EstimateMeasurementSheet> estimateMeasurementSheets = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -113,8 +116,7 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  //@Valid
-  //TODO only code is required
+  @Valid
 
   public ScheduleOfRate getScheduleOfRate() {
     return scheduleOfRate;
@@ -135,8 +137,7 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  //@Valid
-  //TODO only code is required
+  @Valid
 
   public NonSOR getNonSor() {
     return nonSor;
@@ -158,8 +159,7 @@ public class EstimateActivity   {
   @ApiModelProperty(required = true, value = "UOM for the Estimate Activity")
   @NotNull
 
-  //@Valid
-  //TODO only code is required
+  @Valid
 
   public UOM getUom() {
     return uom;
@@ -275,24 +275,23 @@ public class EstimateActivity   {
     this.revisionType = revisionType;
   }
 
-  public EstimateActivity parent(EstimateActivity parent) {
+  public EstimateActivity parent(String parent) {
     this.parent = parent;
     return this;
   }
 
    /**
-   * Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity)
+   * Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity). Ref. is pk here.
    * @return parent
   **/
-  @ApiModelProperty(value = "Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity)")
+  @ApiModelProperty(value = "Parent Activity in case of Revision Estimate Activity (Additional/Reduced Quantity). Ref. is pk here.")
 
-  @Valid
 
-  public EstimateActivity getParent() {
+  public String getParent() {
     return parent;
   }
 
-  public void setParent(EstimateActivity parent) {
+  public void setParent(String parent) {
     this.parent = parent;
   }
 
@@ -305,7 +304,8 @@ public class EstimateActivity   {
    * Reference of the Detailed Estimate for Estimate Activity
    * @return detailedEstimate
   **/
-  @ApiModelProperty(value = "Reference of the Detailed Estimate for Estimate Activity")
+  @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate Activity")
+  @NotNull
 
 
   public String getDetailedEstimate() {
@@ -343,6 +343,26 @@ public class EstimateActivity   {
 
   public void setEstimateMeasurementSheets(List<EstimateMeasurementSheet> estimateMeasurementSheets) {
     this.estimateMeasurementSheets = estimateMeasurementSheets;
+  }
+
+  public EstimateActivity deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
   }
 
   public EstimateActivity auditDetails(AuditDetails auditDetails) {
@@ -389,12 +409,13 @@ public class EstimateActivity   {
         Objects.equals(this.parent, estimateActivity.parent) &&
         Objects.equals(this.detailedEstimate, estimateActivity.detailedEstimate) &&
         Objects.equals(this.estimateMeasurementSheets, estimateActivity.estimateMeasurementSheets) &&
+        Objects.equals(this.deleted, estimateActivity.deleted) &&
         Objects.equals(this.auditDetails, estimateActivity.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, scheduleOfRate, nonSor, uom, unitRate, estimateRate, quantity, serviceTaxPerc, revisionType, parent, detailedEstimate, estimateMeasurementSheets, auditDetails);
+    return Objects.hash(id, tenantId, scheduleOfRate, nonSor, uom, unitRate, estimateRate, quantity, serviceTaxPerc, revisionType, parent, detailedEstimate, estimateMeasurementSheets, deleted, auditDetails);
   }
 
   @Override
@@ -415,6 +436,7 @@ public class EstimateActivity   {
     sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
     sb.append("    estimateMeasurementSheets: ").append(toIndentedString(estimateMeasurementSheets)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

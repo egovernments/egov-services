@@ -13,7 +13,7 @@ import java.util.Objects;
  * An Object that holds for Reference Type
  */
 @ApiModel(description = "An Object that holds for Reference Type")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class ReferenceType   {
   @JsonProperty("id")

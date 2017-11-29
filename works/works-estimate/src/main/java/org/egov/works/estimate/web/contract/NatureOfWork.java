@@ -1,22 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that holds Nature of work master details
  */
 @ApiModel(description = "An Object that holds Nature of work master details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class NatureOfWork   {
   @JsonProperty("id")
@@ -85,8 +83,7 @@ public class NatureOfWork   {
    * @return name
   **/
   @ApiModelProperty(required = true, value = "Name of the Nature Of Work")
-  //@NotNull
-  //TODO only code is mandatory
+  @NotNull
 
  @Pattern(regexp="[a-zA-Z0-9\\s\\.,]+") @Size(min=1,max=100)
   public String getName() {
@@ -128,10 +125,9 @@ public class NatureOfWork   {
    * @return expenditureType
   **/
   @ApiModelProperty(required = true, value = "Expenditure type Enum for the nature of work")
- // @NotNull
+  @NotNull
 
-  //@Valid
-  //TODO Not mandatory from UI
+  @Valid
 
   public ExpenditureType getExpenditureType() {
     return expenditureType;
@@ -143,7 +139,7 @@ public class NatureOfWork   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -181,7 +177,7 @@ public class NatureOfWork   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

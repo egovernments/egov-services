@@ -1,19 +1,22 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
+import javax.validation.constraints.Size;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
  * An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.
  */
 @ApiModel(description = "An Object which holds Schedule Of Rate Master Data. The combination of SOR code and Schedule Category is unique for given tenant.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T10:32:33.802Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class ScheduleOfRate   {
   @JsonProperty("id")
@@ -132,10 +135,10 @@ public class ScheduleOfRate   {
   }
 
    /**
-   * Schedule Category of the SOR. unique reference from 'ScheduleCategory'. We will store code of 'ScheduleCategory'
+   * Schedule Category of the SOR. unique reference from 'ScheduleCategory'. Code is ref. here.
    * @return scheduleCategory
   **/
-  @ApiModelProperty(required = true, value = "Schedule Category of the SOR. unique reference from 'ScheduleCategory'. We will store code of 'ScheduleCategory'")
+  @ApiModelProperty(required = true, value = "Schedule Category of the SOR. unique reference from 'ScheduleCategory'. Code is ref. here.")
   @NotNull
 
 
@@ -153,10 +156,10 @@ public class ScheduleOfRate   {
   }
 
    /**
-   * Unit Of Measurement of the SOR. unique reference from 'UOM'. We will store code of 'UOM'
+   * Unit Of Measurement of the SOR. unique reference from 'UOM'. Code is ref. here.
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "Unit Of Measurement of the SOR. unique reference from 'UOM'. We will store code of 'UOM'")
+  @ApiModelProperty(required = true, value = "Unit Of Measurement of the SOR. unique reference from 'UOM'. Code is ref. here.")
   @NotNull
 
 
@@ -247,7 +250,7 @@ public class ScheduleOfRate   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -293,7 +296,7 @@ public class ScheduleOfRate   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

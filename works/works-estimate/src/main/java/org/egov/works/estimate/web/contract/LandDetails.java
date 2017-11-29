@@ -4,13 +4,14 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 
 /**
  * Details of the land asset on which the immovable assets are build. This details will be available only for immovable assets.
  */
 @ApiModel(description = "Details of the land asset on which the immovable assets are build. This details will be available only for immovable assets.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class LandDetails   {
   @JsonProperty("surveyNo")
@@ -31,7 +32,8 @@ public class LandDetails   {
    * land survey number of the land asset
    * @return surveyNo
   **/
-  @ApiModelProperty(value = "land survey number of the land asset")
+  @ApiModelProperty(required = true, value = "land survey number of the land asset")
+  @NotNull
 
 
   public String getSurveyNo() {
@@ -51,7 +53,8 @@ public class LandDetails   {
    * Area of the land.
    * @return area
   **/
-  @ApiModelProperty(value = "Area of the land.")
+  @ApiModelProperty(required = true, value = "Area of the land.")
+  @NotNull
 
 
   public Double getArea() {
@@ -71,7 +74,8 @@ public class LandDetails   {
    * code of the landdetails
    * @return code
   **/
-  @ApiModelProperty(value = "code of the landdetails")
+  @ApiModelProperty(required = true, value = "code of the landdetails")
+  @NotNull
 
 
   public String getCode() {

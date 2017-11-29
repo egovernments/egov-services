@@ -1,29 +1,27 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadata and Error object as actual representation of error. In case of bulk apis, some apis may chose to return the array of Error objects to indicate individual failure.
  */
 @ApiModel(description = "All APIs will return ErrorRes in case of failure which will carry ResponseInfo as metadata and Error object as actual representation of error. In case of bulk apis, some apis may chose to return the array of Error objects to indicate individual failure.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class ErrorRes   {
   @JsonProperty("ResponseInfo")
   private ResponseInfo responseInfo = null;
 
   @JsonProperty("Errors")
-  private List<Error> errors = null;
+  private List<java.lang.Error> errors = null;
 
   public ErrorRes responseInfo(ResponseInfo responseInfo) {
     this.responseInfo = responseInfo;
@@ -47,14 +45,14 @@ public class ErrorRes   {
     this.responseInfo = responseInfo;
   }
 
-  public ErrorRes errors(List<Error> errors) {
+  public ErrorRes errors(List<java.lang.Error> errors) {
     this.errors = errors;
     return this;
   }
 
-  public ErrorRes addErrorsItem(Error errorsItem) {
+  public ErrorRes addErrorsItem(java.lang.Error errorsItem) {
     if (this.errors == null) {
-      this.errors = new ArrayList<Error>();
+      this.errors = new ArrayList<java.lang.Error>();
     }
     this.errors.add(errorsItem);
     return this;
@@ -68,17 +66,17 @@ public class ErrorRes   {
 
   @Valid
 
-  public List<Error> getErrors() {
+  public List<java.lang.Error> getErrors() {
     return errors;
   }
 
-  public void setErrors(List<Error> errors) {
+  public void setErrors(List<java.lang.Error> errors) {
     this.errors = errors;
   }
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -110,7 +108,7 @@ public class ErrorRes   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

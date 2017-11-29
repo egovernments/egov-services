@@ -1,4 +1,4 @@
-FROM egovio/apline-jre:8u121
+FROM egovio/apline-jre:8u121-mdms
 
 MAINTAINER Senthil<senthil.kalimuthu@tarento.com>
 

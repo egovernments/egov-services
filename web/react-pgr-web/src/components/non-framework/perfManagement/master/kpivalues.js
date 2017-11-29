@@ -29,6 +29,7 @@ class kpivalues  extends Component{
             KPIs:[],
             Department:[],
             FinantialYear:[],
+            KPIs:[],
             collapse:[],
             selectedDeptId:'',
             selectedFinYear:'',
@@ -92,7 +93,7 @@ class kpivalues  extends Component{
 
    prepareTableHeader()
    {
-     return [{'id':1,1:'',2:'Jan',3:'Feb',4:'March',5:'April',6:'May',7:'June',8:'July',9:'Augest',10:'Sep',11:'Oct',12:'Nov',13:'Dec'}];
+     return [{'id':1,1:'',2:'April',3:'May',4:'June',5:'July',6:'Augest',7:'Sep',8:'Oct',9:'Nov',10:'Dec',11:'Jan',12:'Feb',13:'March',}];
    }
 
    prepareTableBody(response,self)
@@ -102,7 +103,7 @@ class kpivalues  extends Component{
  	    var kpi = new Array();
       var accordian = new Array();
 
-      var result = {};
+
 
  	    for (var i = 0; i < response.length; i++) {
  	      //var row = {};
@@ -112,9 +113,8 @@ class kpivalues  extends Component{
         kpi[response[i].kpi.id] = [];
         accordian[response[i].kpi.id] = false;
 
-        var kpiValuelist = {};
-        result[response[i].kpi.id] = {};
-        kpiValuelist['valueList'] = [];
+
+
  	      for (var j = 0; j < response[i].kpiValue.valueList.length; j++) {
  	        var index = j+2;
 
@@ -122,28 +122,18 @@ class kpivalues  extends Component{
  	        						targetType:response[i].kpi.targetType,
  	        						val:response[i].kpiValue.valueList[j].value,
  	        						kpiid: response[i].kpi.id ,
- 	        						kpivalueid : response[i].kpiValue.valueList[j].period
+ 	        						kpivalueid : response[i].kpiValue.valueList[j].period,
+                      valueid : response[i].kpiValue.valueList[j].valueid
  	        					}
 
  	        kpi[response[i].kpi.id][response[i].kpiValue.valueList[j].period] = response[i].kpiValue.valueList[j].value;
 
-          kpiValuelist['valueList'].push({'period':response[i].kpiValue.valueList[j].period,'value':response[i].kpiValue.valueList[j].value,'valueid':response[i].kpiValue.valueList[j].valueid});
-
  	      }
 
-        result[response[i].kpi.id].kpiValue = { valueList : kpiValuelist['valueList'].map(function(item) {
-                   return {
-                     period: item.period,
-                     value: item.value,
-                     valueid: item.valueid
-                   };
-                 })};
-
-        //result[response[i].kpi.id]['kpiValue'] = kpiValuelist;
 
  	    }
 
- 	    self.setState({KPIs:kpi,KPIResult:result});
+ 	    self.setState({KPIs:kpi});
       self.setState({collapse:accordian});
        //self.state.KPIs = kpi;
  	    var result = [];
@@ -175,7 +165,7 @@ class kpivalues  extends Component{
          value={this.state.KPIs[item.kpiid][item.kpivalueid]}
          onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} />*/
 
-           return <input type="text" value={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} />;
+           return <input type="text" value={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid,item.valueid, e)} />;
            //return <TextField id='kpival_{item.id}' name='kpival_{item.id}'  value={item.val} onChange={this.handleChange} />;
        }
        if (item.targetType == 'VALUE') {
@@ -187,15 +177,15 @@ class kpivalues  extends Component{
          errorStyle={{"float":"left"}}
          value={this.state.KPIs[item.kpiid][item.kpivalueid]}
          onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} />*/
-         return <input type="text" value={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} />;
+         return <input type="text" pattern="[0-9]*" value={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid ,item.valueid, e)} />;
          //return <TextField id='kpival_{item.id}' name='kpival_{item.id}' value={item.val} onChange={this.handleChange}/>;
        }
        if (item.targetType == 'OBJECTIVE') {
 
-           return <RadioButtonGroup name={item.kpiid+'-'+item.kpivalueid} defaultSelected={this.state.KPIs[item.kpiid][item.kpivalueid]}  valueSelected={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} >
-                    <RadioButton  value={1} label="YES" disabled={false} />
-                    <RadioButton  value={2} label="NO" disabled={false} />
-                    <RadioButton  value={3} label="INPROGRESS" disabled={false}/>
+           return <RadioButtonGroup name={item.kpiid+'-'+item.kpivalueid} defaultSelected={this.state.KPIs[item.kpiid][item.kpivalueid]}  valueSelected={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid ,item.valueid, e)} >
+                    <RadioButton  value="1" label="YES" disabled={false} />
+                    <RadioButton  value="2" label="NO" disabled={false} />
+                    <RadioButton  value="3" label="INPROGRESS" disabled={false}/>
                  </RadioButtonGroup>;
        }
        if (item.field == 'BUTTON') {
@@ -218,20 +208,35 @@ class kpivalues  extends Component{
      this.setState({ collapse: accordianClone });
    }
 
-   handleChange(kpiId,kpiValueId,event) {
+   handleChange(kpiId,kpiValueId, valueid, event) {
     let KPIsClone = this.state.KPIs.slice();
-    console.log(kpiValueId,'kpi value id');
-    KPIsClone[kpiId][kpiValueId] = parseInt(event.target.value);
 
-    this.state.KPIResult[kpiId]['kpiValue']['valueList'].map(p =>{
+    //console.log(event.target.validity.valid);
+
+    KPIsClone[kpiId][kpiValueId] = (event.target.validity.valid)?event.target.value:KPIsClone[kpiId][kpiValueId];
+
+    /*this.state.KPIResult[kpiId]['kpiValue']['valueList'].map(p =>{
       if (p['period'] == kpiValueId) {
         p['value'] = KPIsClone[kpiId][kpiValueId];
       }
-    });
+    });*/
 
-    console.log(this.state.KPIResult[kpiId]['kpiValue']['valueList']);
 
-    this.setState({KPIs : KPIsClone});
+    let resultsClone = this.state.KPIResult.slice();
+    for (var i = 0; i < resultsClone.length; i++) {
+      if(valueid == resultsClone[i].kpiValue.id)
+      {
+          resultsClone[i].kpiValue.valueList.map(p =>{
+            if (p['period'] == kpiValueId) {
+              p['value'] = KPIsClone[kpiId][kpiValueId];
+            }
+        });
+      }
+    }
+
+    //console.log(this.state.KPIResult);
+
+    this.setState({KPIs : KPIsClone, KPIResult:resultsClone});
 
 
      //console.log(this.state.KPIs);
@@ -239,20 +244,22 @@ class kpivalues  extends Component{
 
    handleSubmit(event)
    {
-
+       this.props.setLoadingStatus('loading');
        let url = "perfmanagement/v1/kpivalue/_create";
        let query = [];
-       let body = this.state.KPIResult;
+       let body = {'kpiValues' : this.state.KPIResult};
        console.log(this.state.KPIResult);
        console.log(JSON.stringify(body));
-
+       let self = this;
       Api.commonApiPost(url, query, body , false, true).then(function(res){
+          self.props.setLoadingStatus('hide');
           if (res) {
-            console.log(res);
+            self.props.toggleSnackbarAndSetText(true, translate("perfManagement.update.KPIs.groups.updatekpivalue"), true);
           }
 
         }, function(err){
-
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err.message);
         });
 
 
@@ -275,20 +282,19 @@ class kpivalues  extends Component{
 
      let self = this;
      var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
-
+     this.props.setLoadingStatus('loading');
      Api.commonApiPost(url, {}, {}, false, true).then(function(res){
-
+        self.props.setLoadingStatus('hide');
         var response = res.kpiValues;
-         //console.log(res.kpiValues);
 
          var header = self.prepareTableHeader();
 
          var data   = self.prepareTableBody(response,self);
 
-         self.setState({data: data,header:header,showResult: true});
+         self.setState({data: data,header:header,showResult: true,KPIResult:response});
 
        }, function(err){
-
+         self.props.setLoadingStatus('hide');
        });
 
 
@@ -311,10 +317,39 @@ class kpivalues  extends Component{
          this.setState({selectedFinYear:event.target.innerHTML});
           break;
        case 'KPI':
-         this.setState({selectedKpiCode:event.target.value});
+         this.setState({selectedKpiCode:value});
          break;
         default:
       }
+
+      let args = [];
+      if (type == 'DEPT') {
+        args.push('departmentId='+value);
+      }
+      else if (this.state.selectedDeptId) {
+        args.push('departmentId='+this.state.selectedDeptId);
+      }
+      if (type == 'FINYEAR') {
+        args.push('finYear='+event.target.innerHTML);
+      }
+      else if (this.state.selectedFinYear) {
+        args.push('finYear='+this.state.selectedFinYear);
+        //args['finYear'] = this.state.selectedFinYear;
+      }
+
+
+      let self = this;
+      let url = 'perfmanagement/v1/kpimaster/_search?'+args.join('&');
+
+      Api.commonApiPost(url, {}, {}, false, true).then(function(res){
+
+         //console.log(res);
+         self.setState({KPIs : res.KPIs})
+
+        }, function(err){
+
+        });
+
     }
 
    nextSection()
@@ -527,15 +562,26 @@ class kpivalues  extends Component{
                    </Col>
 
                    <Col xs={4} md={4}>
-                   <TextField className="custom-form-control-for-textfield"
+
+                   <SelectField  value={this.state.selectedKpiCode}
+                   className="custom-form-control-for-select"
                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-                   inputStyle={{"color": "#5F5C57","textAlign":"left"}}
                    floatingLabelFixed={true}
-                   style={{"display": 'inline-block'}}
+                   dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                   style={{"display":  'inline-block'}}
                    errorStyle={{"float":"left"}}
                    fullWidth={true}
+                   hintText="Please Select"
+                   labelStyle={{"color": "#5F5C57"}}
                    floatingLabelText={<span>KPI Code</span>}
-                   onChange={(event, key, value) => this.searchKPIValues(event, key, value,'KPI')} />
+                   onChange={(event, key, value) => this.searchKPIValues(event, key, value,'KPI')}>
+
+                     {this.state.KPIs && this.state.KPIs.map((dd, index) => (
+                         <MenuItem value={dd.code && dd.code.toString()} key={index} primaryText={dd.code} />
+                     ))}
+                   </SelectField>
+
+
                    </Col>
 
                   </Row>

@@ -2716,6 +2716,9 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
+        batchNo:
+          type: string
+          description: batch number of material receipt detail.
         mrnNumber:
           type: string
           readOnly: true
@@ -2783,7 +2786,7 @@ definitions:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           description: The unique identifier for the receipt details additional information.
         tenantId:
           type: string

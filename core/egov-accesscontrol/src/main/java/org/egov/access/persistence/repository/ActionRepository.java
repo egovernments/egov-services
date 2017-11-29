@@ -689,7 +689,7 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 			actionmcq.setMdmsCriteria(actionmc);
 		
 		actionres = restTemplate.postForObject(url, actionmcq,String.class);
-		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions");
+		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions-test");
 		LOGGER.info("Actions from MDMS: "+action.toString());
 		
 		JSONArray actionsArray = new JSONArray(action.toString());

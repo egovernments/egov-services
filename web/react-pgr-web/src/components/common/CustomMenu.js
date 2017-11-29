@@ -343,13 +343,9 @@ const menuConvention={
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterSearch":"/search/perfManagement/kpi/view",
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueUpdate":"/search/perfManagement/actualKpiUpdate/update",
 
-<<<<<<< Updated upstream
-"Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/list/perfManagement/actualKpiCreate",
-=======
 // "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/create/perfManagement/actualKpiCreate/",
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueCreate":"/search/perfManagement/actualKpiUpdate/view",
 
->>>>>>> Stashed changes
 
 
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch":"/search/perfManagement/actualKpiUpdate/view",

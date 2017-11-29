@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -34,9 +35,6 @@ import org.springframework.stereotype.Service;
 public class OpeningBalanceService extends DomainService {
 
 	@Autowired
-	private IdgenRepository idgenRepository;
-
-	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 	@Value("${inv.openbalance.save.topic}")
 	private String createTopic;
@@ -59,6 +57,7 @@ public class OpeningBalanceService extends DomainService {
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
 				materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
 				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
+				
 				if (isEmpty(materialReceipt.getTenantId())) {
 					materialReceipt.setTenantId(tenantId);
 				}
@@ -158,7 +157,11 @@ public class OpeningBalanceService extends DomainService {
 			case Constants.ACTION_CREATE: {
 				if (receipt == null) {
 					throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
-				}
+				} else {
+					receipt.stream().forEach(materialReceipt -> {
+                        checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                    });
+                }
 			}
 				break;
 
@@ -209,19 +212,17 @@ public class OpeningBalanceService extends DomainService {
 							}
 							if (null != detail.getReceiptDetailsAddnInfo()) {
 								for (MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo()) {
-									int detailIndexAddInfo = detail.getReceiptDetailsAddnInfo().indexOf(addInfo) + 1;
+
 
 									if (null != addInfo.getReceivedDate()
 											&& Long.valueOf(addInfo.getReceivedDate()) >= currentMilllis) {
 										throw new CustomException("ReceiptDate",
-												"ReceiptDate  Must Be less Than Or Equal To Today's Date In Row "
-														+ detailIndexAddInfo);
+												"ReceiptDate  Must Be less Than Or Equal To Today's Date In Row "+ detailIndex);
 									}
 									if (null != addInfo.getExpiryDate()
 											&& Long.valueOf(addInfo.getExpiryDate()) <= currentMilllis) {
 										throw new CustomException("ExpiryDate",
-												"ExpiryDate  Must Be Greater Than Or Equal To Today's Date In Row "
-														+ detailIndexAddInfo);
+												"ExpiryDate  Must Be Greater Than Or Equal To Today's Date In Row "+ detailIndex);
 									}
 								}
 							}
@@ -264,4 +265,13 @@ public class OpeningBalanceService extends DomainService {
 		}
 
 	}
+	private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
+        HashSet<String> hashSet = new HashSet<>();
+        materialReceiptDetails.stream().forEach(materialReceiptDetail ->
+        {
+            if (false == hashSet.add(materialReceiptDetail.getMaterial().getCode())) {
+                throw new CustomException("inv.0015", materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
+            }
+        });
+    }
 }

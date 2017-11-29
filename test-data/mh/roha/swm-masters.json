@@ -1,6 +1,16 @@
 {
   "tenantId": "mh.roha",
   "moduleName": "SWM",
+   "mdms-config": [
+   {
+    "masterName": "CollectionPoint",
+    "moduleDefinition": "a/b/c",
+    "uniqueKeys": [
+      "$.id",
+      "$.tenantId"
+    ]
+   }
+  ],
   "CollectionPoint": [
     {
       "id": 1,

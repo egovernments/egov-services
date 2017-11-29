@@ -2911,6 +2911,10 @@ var localization_EN_Data = {
 
 // Material Issue Lables
  "inventory.search.issueStore":"Issuing Store",
+ "inventory.search.issueNumber":"Issue Number",
+ "inventory.search.issuePurpose":"Issue Purpose",
+ "inventory.search.issueType": "Issue Type",
+ "inventory.search.indentingStore":"Indenting Store",
  "inventory.create.indentDateFrom":"Indent Date From",
  "inventory.create.indentDateTo":"Indent Date To",
  "inventory.create.indentRaisedBy":"Indent Raised By",

@@ -95,7 +95,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        

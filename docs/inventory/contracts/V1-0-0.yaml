@@ -441,7 +441,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids
           - name: store
-            type: integer
+            type: string
             format: singleValueList
             in: query
             description: |

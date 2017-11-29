@@ -68,7 +68,7 @@ paths:
           required: false
           allowEmptyValue: true
           description: Comma separated list of Ids of Abstract Estimate to get the Abstract Estimates
-        - name: departmentCodes
+        - name: departments
           in: query
           type: array
           items:
@@ -454,7 +454,7 @@ paths:
           x-displayformat: 'dd/MM/yyyy'
           required: false
           description: Epoch time till when the Detailed Estimate created
-        - name: departmentCodes
+        - name: departments
           in: query
           type: array
           items:

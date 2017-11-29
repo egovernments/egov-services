@@ -15,21 +15,21 @@ public class MaterialDetailAddInfoEntity {
 
     private String id;
 
-    private String tenantid;
+    private String tenantId;
 
-    private String lotno;
+    private String lotNo;
 
-    private String serialno;
+    private String serialNo;
 
-    private BigDecimal manufacturedate;
+    private BigDecimal manufactureDate;
 
-    private String oldreceiptnumber;
+    private String oldReceiptNumber;
 
-    private BigDecimal receiveddate;
+    private BigDecimal receivedDate;
 
-    private BigDecimal expirydate;
+    private BigDecimal expiryDate;
 
-    private String receiptdetailid;
+    private String receiptDetailId;
 
 
     public MaterialReceiptDetailAddnlinfo toDomain() {
@@ -37,19 +37,13 @@ public class MaterialDetailAddInfoEntity {
 
         return addnlinfo
                 .id(id)
-                .tenantId(tenantid)
-                .lotNo(lotno)
-                .serialNo(serialno)
-                .manufactureDate(null != manufacturedate ? Long.valueOf(manufacturedate.toString()) : null)
-                .oldReceiptNumber(oldreceiptnumber)
-                .receivedDate(null != receiveddate ? Long.valueOf(receiveddate.toString()) : null)
-                .expiryDate(null != expirydate ? Long.valueOf(expirydate.toString()) : null)
-                .materialReceiptDetail(buildReceiptDetails());
-    }
-
-    private MaterialReceiptDetail buildReceiptDetails() {
-        MaterialReceiptDetail materialReceiptDetail = new MaterialReceiptDetail();
-
-        return materialReceiptDetail.id(receiptdetailid);
+                .tenantId(tenantId)
+                .lotNo(lotNo)
+                .serialNo(serialNo)
+                .manufactureDate(null != manufactureDate ? Long.valueOf(manufactureDate.toString()) : null)
+                .oldReceiptNumber(oldReceiptNumber)
+                .receivedDate(null != receivedDate ? Long.valueOf(receivedDate.toString()) : null)
+                .expiryDate(null != expiryDate ? Long.valueOf(expiryDate.toString()) : null)
+                .receiptDetailId(receiptDetailId);
     }
 }

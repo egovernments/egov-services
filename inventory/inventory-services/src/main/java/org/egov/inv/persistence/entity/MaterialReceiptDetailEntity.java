@@ -5,6 +5,8 @@ import org.egov.inv.model.*;
 
 import java.math.BigDecimal;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -14,62 +16,63 @@ public class MaterialReceiptDetailEntity {
 
     private String id;
 
-    private String tenantid;
+    private String tenantId;
 
     private String material;
 
-    private String mrnnumber;
+    private String mrnNumber;
 
-    private String batchno;
+    private String batchNo;
 
-    private String uomno;
+    private String uomNo;
 
-    private String ordernumber;
+    private String orderNumber;
 
-    private String podetailid;
+    private String poDetailId;
 
-    private BigDecimal receivedqty;
+    private BigDecimal receivedQty;
 
-    private BigDecimal acceptedqty;
+    private BigDecimal acceptedQty;
 
-    private BigDecimal unitrate;
+    private BigDecimal unitRate;
 
     private String asset;
 
-    private String voucherheader;
+    private String voucherHeader;
 
-    private String rejectionremark;
+    private String rejectionRemark;
 
-    private Boolean isscrapitem;
+    private Boolean isScrapItem;
 
     private String remarks;
 
-    private String createdby;
+    private String createdBy;
 
-    private Long createdtime;
+    private Long createdTime;
 
-    private String lastmodifiedby;
+    private String lastModifiedBy;
 
-    private Long lastmodifiedtime;
+    private Long lastModifiedTime;
 
     public MaterialReceiptDetail toDomain() {
         MaterialReceiptDetail materialReceiptDetail = new MaterialReceiptDetail();
         return materialReceiptDetail
                 .id(id)
-                .tenantId(tenantid)
+                .tenantId(tenantId)
                 .material(buildMaterial())
                 .uom(buildUom())
-                .orderNumber(null != ordernumber ? new BigDecimal(ordernumber) : null)
+                .orderNumber(null != orderNumber ? new BigDecimal(orderNumber) : null)
+                .mrnNumber(!isEmpty(mrnNumber) ? mrnNumber : null)
                 .purchaseOrderDetail(buildPurchaseOrderDetail())
-                .receivedQty(receivedqty)
-                .acceptedQty(acceptedqty)
-                .unitRate(unitrate)
-                .asset(buildAsset())
-                .voucherHeader(voucherheader)
-                .rejectionRemark(rejectionremark)
-                .isScrapItem(isscrapitem)
+                .receivedQty(receivedQty)
+                .acceptedQty(acceptedQty)
+                .unitRate(unitRate)
+                .asset(!isEmpty(asset) ? buildAsset() : null)
+                .voucherHeader(voucherHeader)
+                .rejectionRemark(rejectionRemark)
+                .isScrapItem(isScrapItem)
                 .remarks(remarks)
-                .batchNo(batchno);
+                .batchNo(batchNo);
     }
 
     private Material buildMaterial() {
@@ -79,12 +82,12 @@ public class MaterialReceiptDetailEntity {
 
     private Uom buildUom() {
         Uom uom = new Uom();
-        return uom.code(uomno);
+        return uom.code(uomNo);
     }
 
     private PurchaseOrderDetail buildPurchaseOrderDetail() {
         PurchaseOrderDetail purchaseOrderDetail = new PurchaseOrderDetail();
-        return purchaseOrderDetail.id(podetailid);
+        return purchaseOrderDetail.id(poDetailId);
     }
 
     private Asset buildAsset() {

@@ -134,7 +134,7 @@ public class PurchaseOrderService extends DomainService {
         if (search.getPagedData().size() > 0) {
             for (PurchaseOrder purchaseOrder : search.getPagedData()) {
                 PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
-                purchaseOrderDetailSearch.setPurchaseOrder(purchaseOrder.getId());
+                purchaseOrderDetailSearch.setPurchaseOrder(purchaseOrder.getPurchaseOrderNumber());
                 purchaseOrderDetailSearch.setTenantId(purchaseOrder.getTenantId());
                 Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
                 purchaseOrder.setPurchaseOrderDetails(detailPagination.getPagedData().size() > 0 ? detailPagination.getPagedData() : Collections.EMPTY_LIST);

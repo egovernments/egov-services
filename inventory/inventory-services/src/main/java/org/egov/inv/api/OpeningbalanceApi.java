@@ -34,7 +34,6 @@ public interface OpeningbalanceApi {
 		    	@ApiResponses(value = { 
 		        @ApiResponse(code = 200, message = "Opening Balance Created", response = OpeningBalanceResponse.class),
 		        @ApiResponse(code = 400, message = "Invalid input.", response = ErrorRes.class) })
-    
 		    	@RequestMapping(value = "/openingbalance/_create",
 		    	produces = { "application/json" }, 
 		    	consumes = { "application/json" },
@@ -47,7 +46,6 @@ public interface OpeningbalanceApi {
 	            @ApiResponses(value = { 
 	            @ApiResponse(code = 200, message = "Opening Balance  Updated Successfully.", response = OpeningBalanceResponse.class),
 	            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-    
             	@RequestMapping(value = "/openingbalance/_update",
             	produces = { "application/json" }, 
             	consumes = { "application/json" },
@@ -60,26 +58,23 @@ public interface OpeningbalanceApi {
                 @ApiResponses(value = { 
                 @ApiResponse(code = 200, message = "opening balance retrieved Successfully", response = OpeningBalanceResponse.class),
                 @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-            
                 @RequestMapping(value = "/openingbalance/_search",
                 produces = { "application/json" }, 
                 consumes = { "application/json" },
                 method = RequestMethod.POST)
-   ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
-            @RequestParam(value = "tenantId", required = true) String tenantId,
-    		@NotNull@ApiParam(value = "Unique id .", required = false) @RequestParam(value = "ids", required = false) String ids,
-            @ApiParam(value = "Parameter to carry Request metadata in the request body"  ) 
-            @Valid @RequestBody RequestInfo requestInfo,
-            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String finanncilaYear,
-            @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
-            @ApiParam(value = "search on basis of materialTypeName ") @RequestParam(value = "materialTypeName", required = false) String materialTypeName,
-            @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") 
-            @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,@ApiParam(value = "Page number", defaultValue = "1")
-            @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
-            @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") 
-            @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy);
-
-
+    ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
+                @RequestParam(value = "tenantId", required = true) String tenantId,
+	    		@NotNull@ApiParam(value = "Unique id .", required = false) @RequestParam(value = "ids", required = false) String ids,
+	            @ApiParam(value = "Parameter to carry Request metadata in the request body"  ) 
+	            @Valid @RequestBody RequestInfo requestInfo,
+	            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String finanncilaYear,
+	            @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
+	            @ApiParam(value = "search on basis of materialTypeName ") @RequestParam(value = "materialTypeName", required = false) String materialTypeName,
+	            @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") 
+	            @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,@ApiParam(value = "Page number", defaultValue = "1")
+	            @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
+	            @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") 
+	            @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy);
 
 }
 

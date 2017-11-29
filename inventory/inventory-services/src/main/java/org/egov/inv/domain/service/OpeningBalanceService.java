@@ -1,14 +1,12 @@
 package org.egov.inv.domain.service;
 
 import static org.springframework.util.StringUtils.isEmpty;
-
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
@@ -36,6 +34,7 @@ public class OpeningBalanceService extends DomainService {
 
 	@Autowired
 	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+	
 	@Value("${inv.openbalance.save.topic}")
 	private String createTopic;
 
@@ -57,7 +56,6 @@ public class OpeningBalanceService extends DomainService {
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
 				materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
 				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
-				
 				if (isEmpty(materialReceipt.getTenantId())) {
 					materialReceipt.setTenantId(tenantId);
 				}
@@ -116,7 +114,6 @@ public class OpeningBalanceService extends DomainService {
 						if (isEmpty(addinfo.getTenantId())) {
 							addinfo.setTenantId(tenantId);
 							materialReceiptDetailAddlnInfoIds.add(addinfo.getId());
-
 						}
 					});
 				});
@@ -153,36 +150,36 @@ public class OpeningBalanceService extends DomainService {
 
 		try {
 			switch (method) {
-
-			case Constants.ACTION_CREATE: {
-				if (receipt == null) {
-					throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
-				} else {
-					receipt.stream().forEach(materialReceipt -> {
-                        checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                    });
-                }
-			}
-				break;
-
-			case Constants.ACTION_UPDATE: {
-				if (receipt == null) {
-					throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
+				case Constants.ACTION_CREATE: {
+					if (receipt == null) {
+						throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
+					} 
+					else {
+						receipt.stream().forEach(materialReceipt -> {
+							checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+						});
+					}
 				}
-			}
-				break;
-
-			}
+					break;
+	
+				case Constants.ACTION_UPDATE: {
+					if (receipt == null) {
+						throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
+					}
+				}
+					break;
+	
+				}
 			Long currentMilllis = System.currentTimeMillis();
 
-			for (MaterialReceipt rcpt : receipt) {
+			for (MaterialReceipt rcpt : receipt) 
 				{
 					int index = receipt.indexOf(rcpt) + 1;
 					if (isEmpty(rcpt.getFinancialYear())) {
-						throw new CustomException("financialYear", "financialYear Is Required In Row " + index);
+						throw new CustomException("financialYear", "Financial Year Is Required In Row " + index);
 					}
 					if (isEmpty(rcpt.getReceivingStore().getCode())) {
-						throw new CustomException("receivingStore", "storeName Is Required In Row " + index);
+						throw new CustomException("receivingStore", "StoreName Is Required In Row " + index);
 					}
 
 					if (null != rcpt.getReceiptDetails()) {
@@ -201,11 +198,11 @@ public class OpeningBalanceService extends DomainService {
 							}
 							if (detail.getReceivedQty().doubleValue() <= 0) {
 								throw new CustomException("receivedQty",
-										"Quantity Should Be greater Than Zero In Row " + detailIndex);
+										"Quantity Should Be Greater Than Zero In Row " + detailIndex);
 							}
 							if (detail.getUnitRate().doubleValue() <= 0) {
 								throw new CustomException("unitRate",
-										"UnitRate Should Be greater Than Zero In Row " + detailIndex);
+										"UnitRate Should Be Greater Than Zero In Row " + detailIndex);
 							}
 							if (isEmpty(detail.getUnitRate())) {
 								throw new CustomException("unitRate", "UnitRate Is Required In Row " + detailIndex);
@@ -213,27 +210,27 @@ public class OpeningBalanceService extends DomainService {
 							if (null != detail.getReceiptDetailsAddnInfo()) {
 								for (MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo()) {
 
-
 									if (null != addInfo.getReceivedDate()
 											&& Long.valueOf(addInfo.getReceivedDate()) >= currentMilllis) {
 										throw new CustomException("ReceiptDate",
-												"ReceiptDate  Must Be less Than Or Equal To Today's Date In Row "+ detailIndex);
+												"ReceiptDate  Must Be Less Than Or Equal To Today's Date In Row "
+														+ detailIndex);
 									}
 									if (null != addInfo.getExpiryDate()
 											&& Long.valueOf(addInfo.getExpiryDate()) <= currentMilllis) {
 										throw new CustomException("ExpiryDate",
-												"ExpiryDate  Must Be Greater Than Or Equal To Today's Date In Row "+ detailIndex);
+												"ExpiryDate  Must Be Greater Than Or Equal To Today's Date In Row "
+														+ detailIndex);
 									}
 								}
 							}
 
 						}
 					} else
-						throw new CustomException("receipt", "please enter required fields");
+						throw new CustomException("receiptDetail", "Please Enter Required Fields");
 
 				}
-
-			}
+			
 
 		} catch (IllegalArgumentException e) {
 
@@ -265,13 +262,14 @@ public class OpeningBalanceService extends DomainService {
 		}
 
 	}
+
 	private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
-        HashSet<String> hashSet = new HashSet<>();
-        materialReceiptDetails.stream().forEach(materialReceiptDetail ->
-        {
-            if (false == hashSet.add(materialReceiptDetail.getMaterial().getCode())) {
-                throw new CustomException("inv.0015", materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
-            }
-        });
-    }
+		HashSet<String> hashSet = new HashSet<>();
+		materialReceiptDetails.stream().forEach(materialReceiptDetail -> {
+			if (false == hashSet.add(materialReceiptDetail.getMaterial().getCode())) {
+				throw new CustomException("inv.0015",
+						materialReceiptDetail.getMaterial().getCode() + " Combination Is Already Entered");
+			}
+		});
+	}
 }

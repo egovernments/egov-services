@@ -1,11 +1,18 @@
 package org.egov.inv.persistence.entity;
 
-import lombok.*;
-import org.egov.inv.model.*;
-import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
-
 import java.math.BigDecimal;
 import java.util.Arrays;
+import org.egov.inv.model.AuditDetails;
+import org.egov.inv.model.Material;
+import org.egov.inv.model.MaterialReceipt;
+import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
+import org.egov.inv.model.MaterialReceiptDetail;
+import org.egov.inv.model.Uom;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Getter
 @Setter
@@ -47,8 +54,7 @@ public class OpeningBalanceEntity {
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime));
     }
     
-    public OpeningBalanceEntity toEntity(MaterialReceipt materialReceipt)
-    {
+    public OpeningBalanceEntity toEntity(MaterialReceipt materialReceipt){
         return OpeningBalanceEntity.builder()
         		.id(materialReceipt.getId())
         		.financialYear(materialReceipt.getFinancialYear())
@@ -59,18 +65,16 @@ public class OpeningBalanceEntity {
         		.build();
 
     }
-    public OpeningBalanceEntity toEntity(MaterialReceiptDetail materialReceiptDetail)
-    {
+    
+    public OpeningBalanceEntity toEntity(MaterialReceiptDetail materialReceiptDetail){
         return OpeningBalanceEntity.builder()
         		.id(materialReceiptDetail.getId())
         		.receivedQty(materialReceiptDetail.getAcceptedQty())
         		.receivedQty(materialReceiptDetail.getReceivedQty())
                 .unitRate(materialReceiptDetail.getUnitRate())
         		.build();
-
     }
     
-
     private MaterialReceiptDetail mapMaterialReceiptDetail() {
         MaterialReceiptDetail materialReceiptDetail = new MaterialReceiptDetail();
         return materialReceiptDetail.
@@ -80,7 +84,6 @@ public class OpeningBalanceEntity {
                 .acceptedQty(receivedQty)
                 .unitRate(unitRate);
     }
-
 
     private Uom mapUom() {
         return Uom.builder()
@@ -94,7 +97,6 @@ public class OpeningBalanceEntity {
                 .build();
     }
 
-
     private AuditDetails mapAuditDetails(String tenantId, String createdBy, Long createdTime, String lastModifiedBy, Long lastModifiedTime) {
         return AuditDetails.builder()
                 .createdBy(createdBy)
@@ -103,5 +105,4 @@ public class OpeningBalanceEntity {
                 .lastModifiedTime(lastModifiedTime)
                 .build();
     }
-
 }

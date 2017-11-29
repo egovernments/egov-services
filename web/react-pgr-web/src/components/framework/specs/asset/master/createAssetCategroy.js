@@ -44,7 +44,7 @@ var dat = {
 							"depedants": [{
 								"jsonPath": "AssetCategory[0].parent",
 								"type": "dropDown",
-								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F%28%40.assetCategoryType%3D%3D'{AssetCategory[0].assetCategoryType}'%29%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%3D%3D'{AssetCategory[0].assetCategoryType}')%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
 							}]
   					},
 						{
@@ -53,7 +53,6 @@ var dat = {
   						"label": "ac.create.asset.sub.categroy",
 							"pattern": "",
 							"type": "singleValueList",
-							// "url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
 							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
@@ -79,11 +78,12 @@ var dat = {
   						"label": "ac.create.unit.of.measurement",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "/egov-common-masters/uoms/_search?|$.UOM.*.code|$.UOM.*.description",
+  						"url": "/egov-mdms-service/v1/_get?&masterName=Uom&moduleName=common-masters|$..code|$..description",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
+							"isStateLevel":true
   					},
 						{
 							"name": "IsDepreciationApplicable",
@@ -92,7 +92,7 @@ var dat = {
 							"url": "",
 							"pattern": "",
 							"type": "singleValueList",
-							"isRequired": false,
+							"isRequired": true,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
@@ -109,7 +109,7 @@ var dat = {
   						"name": "DepericiationRate",
   						"jsonPath": "AssetCategory[0].depreciationRate",
   						"label": "ac.create.depericiation.rate",
-  						"pattern": "",
+  						"pattern": "^[1-9]\\d{0,3}(\\.\\d{0,3})*(,\\d+)?$",
   						"type": "number",
   						"url": "",
   						"isRequired": true,
@@ -121,8 +121,8 @@ var dat = {
 				]
 			},
       {
-				//"label": "ac.create.additional.field",
-				"label": "",
+				"label": "ac.create.additional.field",
+				// "label": "",
 				"name": "AdditionalField",
         "multiple":true,
         "jsonPath":"",
@@ -148,7 +148,40 @@ var dat = {
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
+							"defaultValue":[{
+							    "key": "Text",
+							    "value": "Text"
+							  },
+							  {
+							    "key": "Number",
+							    "value": "Number"
+							  },
+							  {
+							    "key": "Select",
+							    "value": "Select"
+							  },
+								// {
+							  //   "key": "Email",
+							  //   "value": "Email"
+							  // },
+							  // {
+							  //   "key": "Multiselect",
+							  //   "value": "Multiselect"
+							  // },
+							  // {
+							  //   "key": "Date",
+							  //   "value": "Date"
+							  // },
+							  // {
+							  //   "key": "File",
+							  //   "value": "File"
+							  // },
+							  // {
+							  //   "key": "Table",
+							  //   "value": "Table"
+							  // }
+							]
   					},
             {
   						"name": "Active",

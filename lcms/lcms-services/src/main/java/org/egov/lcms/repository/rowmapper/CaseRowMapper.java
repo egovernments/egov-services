@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.enums.EntryType;
 import org.egov.lcms.models.Address;
 import org.egov.lcms.models.Bench;
 import org.egov.lcms.models.Case;
@@ -69,6 +70,7 @@ public class CaseRowMapper implements RowMapper<Case> {
 		summon.setTenantId(getString(rs.getObject("tenantId")));
 		summon.setStateId(getString(rs.getObject("stateId")));
 		summon.setCaseDetails(getString(rs.getObject("caseDetails")));
+		summon.setEntryType(EntryType.fromValue(rs.getString("entryType")));
 
 		try {
 			if (rs.getString("departmentName") != null) {

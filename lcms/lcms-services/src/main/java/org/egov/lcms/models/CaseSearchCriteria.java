@@ -2,6 +2,8 @@ package org.egov.lcms.models;
 
 import javax.validation.constraints.NotNull;
 
+import org.egov.lcms.enums.EntryType;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -54,6 +56,5 @@ public class CaseSearchCriteria {
 
 	private String searchResultLevel;
 	
-	private Boolean isSummon;
-
+	private String entryType;
 }

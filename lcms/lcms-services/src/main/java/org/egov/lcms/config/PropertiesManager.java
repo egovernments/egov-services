@@ -612,4 +612,10 @@ public class PropertiesManager {
 	
 	@Value("${egov.common.master.module.name}")
 	private String commonMasterModuleName;
+	
+	@Value("${summon.type}")
+	private String summonType;
+	
+	@Value("${warrant.type}")
+	private String warrantType;
 }

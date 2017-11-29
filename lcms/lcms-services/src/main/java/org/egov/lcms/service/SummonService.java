@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.enums.EntryType;
 import org.egov.lcms.factory.ResponseFactory;
 import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.Case;
@@ -60,11 +61,18 @@ public class SummonService {
 	 */
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
 
-		for (Summon Summon : summonRequest.getSummons()) {
-			if (Summon.getIsUlbinitiated() == null) {
-				Summon.setIsUlbinitiated(Boolean.FALSE);
+		for (Summon summon : summonRequest.getSummons()) {
+			
+			if (summon.getIsUlbinitiated() == null) {
+				summon.setIsUlbinitiated(Boolean.FALSE);
 			}
-		}
+	
+			if (summon.getIsSummon()) {
+				summon.setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
+			} else {
+				summon.setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
+			}				
+		}		
 		generateSummonReferenceNumber(summonRequest);
 
 		kafkaTemplate.send(propertiesManager.getCreateSummonvalidated(), summonRequest);

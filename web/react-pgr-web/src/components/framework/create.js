@@ -294,6 +294,45 @@ class Report extends Component {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
+
+      var id = self.props.match.params.id && decodeURIComponent(self.props.match.params.id);
+      if(id){
+        //console.log('id', id);
+        let mockObj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+
+        if(mockObj.onloadFetchUrl){
+          let params = JSON.parse(id);
+          self.props.setLoadingStatus('loading');
+          console.log('query', query);
+
+          let requestBody = {};
+
+          Object.keys(params).map((key)=>{
+            _.set(requestBody, key, params[key]);
+          });
+
+          Api.commonApiPost(mockObj.onloadFetchUrl, {}, requestBody, false, mockObj.useTimestamp).then(function(res){
+              self.props.setLoadingStatus('hide');
+              if(specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].isResponseArray) {
+                var obj = {};
+                _.set(obj, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName, jp.query(res, "$..[0]")[0]);
+                self.props.setFormData(obj);
+                self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+              } else {
+                self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), hashLocation.split("/")[2], hashLocation.split("/")[1], specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].objectName);
+                  self.props.setFormData(res);
+              }
+                let obj1 = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+
+              self.depedantValue(obj1.groups);
+          }, function(err){
+              self.props.setLoadingStatus('hide');
+          });
+        }
+
+
+      }
+
     }
 
     this.setState({
@@ -1250,7 +1289,6 @@ class Report extends Component {
   }
 
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
-      //debugger;
       let {getVal} = this.props;
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;

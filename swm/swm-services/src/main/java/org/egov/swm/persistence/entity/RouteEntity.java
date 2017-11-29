@@ -52,8 +52,8 @@ public class RouteEntity {
         route.setTenantId(tenantId);
         route.setName(name);
         route.setCollectionType(CollectionType.builder().code(collectionType).build());
-        route.setStartingCollectionPoint(CollectionPoint.builder().name(startingCollectionPoint).build());
-        route.setEndingCollectionPoint(CollectionPoint.builder().name(endingCollectionPoint).build());
+        route.setStartingCollectionPoint(CollectionPoint.builder().code(startingCollectionPoint).build());
+        route.setEndingCollectionPoint(CollectionPoint.builder().code(endingCollectionPoint).build());
         route.setEndingDumpingGroundPoint(DumpingGround.builder().code(endingDumpingGroundPoint).build());
         route.setDistance(distance);
         route.setGarbageEstimate(garbageEstimate);

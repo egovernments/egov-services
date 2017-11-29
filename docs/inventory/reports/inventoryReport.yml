@@ -471,6 +471,7 @@ ReportDefinitions:
     pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
+    wrapper: true
     searchClause: AND pl.supplier = $supplierName
     isMandatory: false
 
@@ -554,6 +555,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     isMandatory: false
+    wrapper: true
     searchClause: AND pl.supplier = $supplierName
     
 

@@ -48,7 +48,7 @@ public class WorkOrderValidator {
             validateLOA(messages, letterOfAcceptanceResponse);
 
             List<OfflineStatus> offlineStatuses = offlineStatusService
-                    .getOfflineStatus(workOrder.getLetterOfAcceptance().getLoaNumber(),
+                    .getOfflineStatusForWorkOrder(workOrder.getLetterOfAcceptance().getLoaNumber(),
                             letterOfAcceptance.getTenantId(), workOrderRequest.getRequestInfo())
                     .getOfflineStatuses();
             if (!offlineStatuses.isEmpty())

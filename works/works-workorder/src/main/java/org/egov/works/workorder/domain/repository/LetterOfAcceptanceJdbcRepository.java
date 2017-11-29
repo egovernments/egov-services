@@ -71,12 +71,12 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         }
         if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() == 1) {
             addAnd(params);
-            params.append("loa.loaNumber like (:loaNumber)");
-            paramValues.put("loa.loaNumber", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers().get(0) + "%");
+            params.append("loa.loaNumber like (:loaNumbers)");
+            paramValues.put("loaNumbers", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers().get(0) + "%");
         } else if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() > 1) {
             addAnd(params);
-            params.append("loa.loaNumber in(:loaNumber)");
-            paramValues.put("loaNumber", letterOfAcceptanceSearchCriteria.getLoaNumbers());
+            params.append("loa.loaNumber in(:loaNumbers)");
+            paramValues.put("loaNumbers", letterOfAcceptanceSearchCriteria.getLoaNumbers());
         }
         if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getFileNumber())) {
             addAnd(params);

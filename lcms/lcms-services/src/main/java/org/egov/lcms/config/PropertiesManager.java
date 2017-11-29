@@ -573,49 +573,55 @@ public class PropertiesManager {
 
 	@Value("${egov.lcms.bankdetails.error.msg}")
 	private String bankDetailsErrorMsg;
-	
+
 	@Value("${egov.lcms.agency.substring.code}")
 	private String agencySubStringCode;
-	
+
 	@Value("${egov.lcms.advocate.substring.code}")
 	private String advocateSubStringCode;
 
 	@Value("${egov.lcms.event.ulb.format}")
 	private String eventUlbFormat;
-	
+
 	@Value("${egov.lcms.event.ulb.name}")
 	private String eventUlbName;
-	
+
 	@Value("${egov.lcms.module.name}")
 	private String lcmsModuleName;
-	
+
 	@Value("${egov.lcms.case.entity.name}")
 	private String caseEntityName;
-	
+
 	@Value("${egov.lcms.event.created}")
 	private String eventCreateValidated;
-	
+
 	@Value("${egov.lcms.event.error.code}")
 	private String eventResponseErrorCode;
-	
+
 	@Value("${egov.lcms.event.error.msg}")
 	private String eventResponseErrorMsg;
-	
+
 	@Value("${default.title}")
 	private String defaultTitle;
-	
+
 	@Value("${egov.lcms.agency.status}")
 	private String agencyStatus;
-	
+
 	@Value("${egov.lcms.module.name}")
 	private String lCMSModuleName;
-	
+
 	@Value("${egov.common.master.module.name}")
 	private String commonMasterModuleName;
-	
+
 	@Value("${summon.type}")
 	private String summonType;
-	
+
 	@Value("${warrant.type}")
 	private String warrantType;
+
+	@Value("${egov.lcms.assignadvocate.duplicate.code}")
+	private String duplicateAdvocate;
+
+	@Value("${egov.lcms.assignadvocate.duplicate.message}")
+	private String duplicateAdvocateMessage;
 }

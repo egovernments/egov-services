@@ -27,7 +27,7 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 			validateEntityFieldName(estimateAppropriationSearchContract.getSortBy(), EstimateAppropriation.class);
 		}
 
-		String orderBy = "order by id";
+		String orderBy = "order by objectNumber";
 		if (estimateAppropriationSearchContract.getSortBy() != null
 				&& !estimateAppropriationSearchContract.getSortBy().isEmpty()) {
 			orderBy = "order by " + estimateAppropriationSearchContract.getSortBy();

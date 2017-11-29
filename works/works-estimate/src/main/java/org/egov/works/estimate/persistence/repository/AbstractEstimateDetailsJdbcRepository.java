@@ -15,76 +15,81 @@ import org.springframework.stereotype.Service;
 @Service
 public class AbstractEstimateDetailsJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egw_abstractestimate_details";
+    public static final String TABLE_NAME = "egw_abstractestimate_details";
 
-	public List<AbstractEstimateDetails> search(
-			AbstractEstimateDetailsSearchContract abstractEstimateDetailsSearchContract) {
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+    public List<AbstractEstimateDetails> search(
+            AbstractEstimateDetailsSearchContract abstractEstimateDetailsSearchContract) {
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuffer params = new StringBuffer();
 
-		if (abstractEstimateDetailsSearchContract.getSortBy() != null
-				&& !abstractEstimateDetailsSearchContract.getSortBy().isEmpty()) {
-			validateSortByOrder(abstractEstimateDetailsSearchContract.getSortBy());
-			validateEntityFieldName(abstractEstimateDetailsSearchContract.getSortBy(), AbstractEstimateDetails.class);
-		}
+        if (abstractEstimateDetailsSearchContract.getSortBy() != null
+                && !abstractEstimateDetailsSearchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(abstractEstimateDetailsSearchContract.getSortBy());
+            validateEntityFieldName(abstractEstimateDetailsSearchContract.getSortBy(), AbstractEstimateDetails.class);
+        }
 
-		String orderBy = "order by id";
-		if (abstractEstimateDetailsSearchContract.getSortBy() != null
-				&& !abstractEstimateDetailsSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + abstractEstimateDetailsSearchContract.getSortBy();
-		}
+        String orderBy = "order by id";
+        if (abstractEstimateDetailsSearchContract.getSortBy() != null
+                && !abstractEstimateDetailsSearchContract.getSortBy().isEmpty()) {
+            orderBy = "order by " + abstractEstimateDetailsSearchContract.getSortBy();
+        }
 
-		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+        searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		if (abstractEstimateDetailsSearchContract.getTenantId() != null) {
-			addAnd(params);
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", abstractEstimateDetailsSearchContract.getTenantId());
-		}
-		if (abstractEstimateDetailsSearchContract.getIds() != null) {
-			addAnd(params);
-			params.append("id in(:ids) ");
-			paramValues.put("ids", abstractEstimateDetailsSearchContract.getIds());
-		}
+        if (abstractEstimateDetailsSearchContract.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", abstractEstimateDetailsSearchContract.getTenantId());
+        }
+        if (abstractEstimateDetailsSearchContract.getIds() != null) {
+            addAnd(params);
+            params.append("id in(:ids) ");
+            paramValues.put("ids", abstractEstimateDetailsSearchContract.getIds());
+        }
 
-		if (abstractEstimateDetailsSearchContract.getAbstractEstimateIds() != null) {
-			addAnd(params);
-			params.append("abstractEstimate in(:estimateIds) ");
-			paramValues.put("estimateIds", abstractEstimateDetailsSearchContract.getAbstractEstimateIds());
-		}
-		if (abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers() != null) {
-			addAnd(params);
-			params.append("projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers))");
-			paramValues.put("workIdentificationNumbers",
-					abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers());
-		}
+        if (abstractEstimateDetailsSearchContract.getAbstractEstimateIds() != null) {
+            addAnd(params);
+            params.append("abstractEstimate in(:estimateIds) ");
+            paramValues.put("estimateIds", abstractEstimateDetailsSearchContract.getAbstractEstimateIds());
+        }
+        if (abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers() != null && !abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers().isEmpty() && abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers().size() == 1) {
+            addAnd(params);
+            params.append("projectCode in (select id from egw_projectcode where lower(code) like :workIdentificationNumbers)");
+            paramValues.put("workIdentificationNumbers",
+                    '%' + abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers().get(0).toLowerCase()  + '%');
+        } else if(abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers() != null) {
+            addAnd(params);
+            params.append("projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers))");
+            paramValues.put("workIdentificationNumbers",
+                    abstractEstimateDetailsSearchContract.getWorkIdentificationNumbers());
+        }
 
-		if (params.length() > 0) {
+        if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
-		} else
+        } else
 
-			searchQuery = searchQuery.replace(":condition", "");
+            searchQuery = searchQuery.replace(":condition", "");
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateDetailsHelper.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateDetailsHelper.class);
 
-		List<AbstractEstimateDetailsHelper> abstractEstimateDetailsEntities = namedParameterJdbcTemplate
-				.query(searchQuery.toString(), paramValues, row);
+        List<AbstractEstimateDetailsHelper> abstractEstimateDetailsEntities = namedParameterJdbcTemplate
+                .query(searchQuery.toString(), paramValues, row);
 
-		List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<>();
+        List<AbstractEstimateDetails> abstractEstimateDetails = new ArrayList<>();
 
-		for (AbstractEstimateDetailsHelper abstractEstimateDetailsEntity : abstractEstimateDetailsEntities) {
-			abstractEstimateDetails.add(abstractEstimateDetailsEntity.toDomain());
-		}
+        for (AbstractEstimateDetailsHelper abstractEstimateDetailsEntity : abstractEstimateDetailsEntities) {
+            abstractEstimateDetails.add(abstractEstimateDetailsEntity.toDomain());
+        }
 
-		return abstractEstimateDetails;
-	}
+        return abstractEstimateDetails;
+    }
 
 }

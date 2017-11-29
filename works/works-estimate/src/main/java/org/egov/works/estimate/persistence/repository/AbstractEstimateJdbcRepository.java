@@ -65,7 +65,11 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			params.append("estimate.id in(:ids) ");
 			paramValues.put("ids", abstractEstimateSearchContract.getIds());
 		}
-		if (abstractEstimateSearchContract.getAdminSanctionNumbers() != null) {
+		if (abstractEstimateSearchContract.getAdminSanctionNumbers() != null && !abstractEstimateSearchContract.getAdminSanctionNumbers().isEmpty() && abstractEstimateSearchContract.getAdminSanctionNumbers().size() == 1) {
+			addAnd(params);
+			params.append("lower(estimate.adminSanctionNumber) like :adminSanctionNumbers");
+			paramValues.put("adminSanctionNumbers", '%' + abstractEstimateSearchContract.getAdminSanctionNumbers().get(0).toLowerCase() + '%');
+		} else if(abstractEstimateSearchContract.getAdminSanctionNumbers() != null) {
 			addAnd(params);
 			params.append("estimate.adminSanctionNumber in (:adminSanctionNumbers)");
 			paramValues.put("adminSanctionNumbers", abstractEstimateSearchContract.getAdminSanctionNumbers());
@@ -124,8 +128,8 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		}
 		if (abstractEstimateSearchContract.getAbstractEstimateNumbers() != null && abstractEstimateSearchContract.getAbstractEstimateNumbers().size() == 1 && !abstractEstimateSearchContract.getAbstractEstimateNumbers().isEmpty()) {
 			addAnd(params);
-			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");
-			paramValues.put("abstractEstimateNumbers", abstractEstimateSearchContract.getAbstractEstimateNumbers().get(0).toUpperCase());
+			params.append("upper(estimate.abstractEstimateNumber) like :abstractEstimateNumbers");
+			paramValues.put("abstractEstimateNumbers", '%' + abstractEstimateSearchContract.getAbstractEstimateNumbers().get(0).toUpperCase() + '%' );
 		} else if(abstractEstimateSearchContract.getAbstractEstimateNumbers() != null && !abstractEstimateSearchContract.getAbstractEstimateNumbers().isEmpty()) {
 			addAnd(params);
 			params.append("estimate.abstractEstimateNumber in (:abstractEstimateNumbers)");

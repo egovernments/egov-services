@@ -48,7 +48,11 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 			params.append("id in(:ids) ");
 			paramValues.put("ids", detailedEstimateSearchContract.getIds());
 		}
-		if (detailedEstimateSearchContract.getDetailedEstimateNumbers() != null) {
+		if (detailedEstimateSearchContract.getDetailedEstimateNumbers() != null && !detailedEstimateSearchContract.getDetailedEstimateNumbers().isEmpty() && detailedEstimateSearchContract.getDetailedEstimateNumbers().size() == 1) {
+			addAnd(params);
+			params.append("lower(estimateNumber) like :estimateNumbers ");
+			paramValues.put("estimateNumbers", '%' + detailedEstimateSearchContract.getDetailedEstimateNumbers().get(0).toLowerCase() + '%' );
+		} else if (detailedEstimateSearchContract.getDetailedEstimateNumbers() != null) {
 			addAnd(params);
 			params.append("estimateNumber in(:estimateNumbers)");
 			paramValues.put("estimateNumbers", detailedEstimateSearchContract.getDetailedEstimateNumbers());
@@ -100,8 +104,8 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 		}
 		if (detailedEstimateSearchContract.getCreatedBy() != null) {
 			addAnd(params);
-			params.append("createdBy =:createdBy");
-			paramValues.put("createdBy", detailedEstimateSearchContract.getCreatedBy());
+			params.append("lower(createdBy) =:createdBy");
+			paramValues.put("createdBy", detailedEstimateSearchContract.getCreatedBy().toLowerCase());
 		}
 		if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null) {
 			addAnd(params);
@@ -114,7 +118,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 		if (detailedEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);
 			params.append("upper(nameOfWork) like :nameOfWork");
-			paramValues.put("nameOfWork", '%' + detailedEstimateSearchContract.getNameOfWork() + '%');
+			paramValues.put("nameOfWork", '%' + detailedEstimateSearchContract.getNameOfWork().toUpperCase() + '%');
 			
 		}
 

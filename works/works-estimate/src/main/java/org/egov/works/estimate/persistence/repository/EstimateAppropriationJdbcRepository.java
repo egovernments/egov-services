@@ -1,15 +1,15 @@
 package org.egov.works.estimate.persistence.repository;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.works.estimate.web.contract.EstimateAppropriation;
 import org.egov.works.estimate.web.contract.EstimateAppropriationSearchContract;
 import org.egov.works.estimate.web.contract.ProjectCode;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class EstimateAppropriationJdbcRepository extends JdbcRepository {
@@ -25,7 +25,7 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 		if (estimateAppropriationSearchContract.getSortBy() != null
 				&& !estimateAppropriationSearchContract.getSortBy().isEmpty()) {
 			validateSortByOrder(estimateAppropriationSearchContract.getSortBy());
-			validateEntityFieldName(estimateAppropriationSearchContract.getSortBy(), ProjectCode.class);
+			validateEntityFieldName(estimateAppropriationSearchContract.getSortBy(), EstimateAppropriation.class);
 		}
 
 		String orderBy = "order by id";

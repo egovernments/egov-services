@@ -27,7 +27,7 @@ public class DocumentDetailQueryBuilder {
 
     private void addOrderByClause(StringBuilder queryString, DocumentDetailSearchCriteria documentDetailSearchCriteria, MapSqlParameterSource preparedStatementValues) {
 
-        final String sortBy = StringUtils.isBlank(documentDetailSearchCriteria.getSortProperty()) ? "id"
+        final String sortBy = StringUtils.isBlank(documentDetailSearchCriteria.getSortProperty()) ? "objectid"
                 : documentDetailSearchCriteria.getSortProperty();
         queryString.append(" ORDER BY " + sortBy );
     }

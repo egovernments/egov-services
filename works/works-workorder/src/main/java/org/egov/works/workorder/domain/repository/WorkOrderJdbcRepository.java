@@ -88,6 +88,16 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             paramValues.put("todate", workOrderSearchContract.getToDate());
         }
 
+        if (workOrderSearchContract.getWorkOrderNumbers() != null && workOrderSearchContract.getWorkOrderNumbers().size() == 1) {
+            addAnd(params);
+            params.append("lower(wo.workordernumber) like :workordernumbers");
+            paramValues.put("workordernumbers", "%" + workOrderSearchContract.getWorkOrderNumbers().get(0).toLowerCase() + "%");
+        } else if (workOrderSearchContract.getWorkOrderNumbers() != null) {
+            addAnd(params);
+            params.append("wo.workordernumber in (:workordernumbers))");
+            paramValues.put("workordernumbers", workOrderSearchContract.getWorkOrderNumbers());
+        }
+
         if (workOrderSearchContract.getLoaNumbers() != null && workOrderSearchContract.getLoaNumbers().size() == 1) {
             addAnd(params);
             params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber)");

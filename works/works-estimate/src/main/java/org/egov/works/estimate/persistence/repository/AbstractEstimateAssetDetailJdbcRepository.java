@@ -1,16 +1,16 @@
 package org.egov.works.estimate.persistence.repository;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.common.persistence.repository.JdbcRepository;
 import org.egov.works.estimate.persistence.helper.AbstractEstimateAssetDetailHelper;
 import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetail;
 import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetailSearchContract;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
@@ -28,7 +28,7 @@ public class AbstractEstimateAssetDetailJdbcRepository  extends JdbcRepository
         if (abstractEstimateAssetDetailSearchContract.getSortBy() != null
                 && !abstractEstimateAssetDetailSearchContract.getSortBy().isEmpty()) {
             validateSortByOrder(abstractEstimateAssetDetailSearchContract.getSortBy());
-            validateEntityFieldName(abstractEstimateAssetDetailSearchContract.getSortBy(), AbstractEstimateAssetDetailHelper.class);
+            validateEntityFieldName(abstractEstimateAssetDetailSearchContract.getSortBy(), AbstractEstimateAssetDetail.class);
         }
 
         String orderBy = "order by id";

@@ -144,6 +144,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
         }
 
         if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty()) {
+
             populateCollectionPoints(sanitationStaffTargetList);
 
             populateDumpingGrounds(sanitationStaffTargetList);
@@ -155,6 +156,7 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
             populateEmployees(sanitationStaffTargetList);
 
             populateRoutes(sanitationStaffTargetList);
+
         }
         page.setTotalResults(sanitationStaffTargetList.size());
 
@@ -235,95 +237,100 @@ public class SanitationStaffTargetJdbcRepository extends JdbcRepository {
         List<SanitationStaffTargetMap> targetCollectionPoints;
         String tenantId = null;
 
-        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty())
+        if (sanitationStaffTargetList != null && !sanitationStaffTargetList.isEmpty()) {
+
             tenantId = sanitationStaffTargetList.get(0).getTenantId();
 
-        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+            for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
 
-            if (targetNos.length() > 0)
-                targetNos.append(",");
+                if (targetNos.length() > 0)
+                    targetNos.append(",");
 
-            targetNos.append(sanitationStaffTarget.getTargetNo());
-
-        }
-
-        sstm = new SanitationStaffTargetMap();
-
-        sstm.setTenantId(tenantId);
-        sstm.setTargetNos(targetNos.toString());
-
-        targetCollectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
-
-        for (SanitationStaffTargetMap map : targetCollectionPoints) {
-
-            if (map.getCollectionPoint() != null && !map.getCollectionPoint().isEmpty()) {
-
-                collectionPointCodeSet.add(map.getCollectionPoint());
-            }
-
-            if (sanitationStaffTargetMap.get(map.getSanitationStaffTarget()) == null) {
-
-                sanitationStaffTargetMap.put(map.getSanitationStaffTarget(), Collections.singletonList(map));
-
-            } else {
-
-                List<SanitationStaffTargetMap> mapList = new ArrayList<>(
-                        sanitationStaffTargetMap.get(map.getSanitationStaffTarget()));
-
-                mapList.add(map);
-
-                sanitationStaffTargetMap.put(map.getSanitationStaffTarget(), mapList);
+                targetNos.append(sanitationStaffTarget.getTargetNo());
 
             }
-        }
 
-        List<String> cpcs = new ArrayList(collectionPointCodeSet);
+            sstm = new SanitationStaffTargetMap();
 
-        for (String code : cpcs) {
+            sstm.setTenantId(tenantId);
+            sstm.setTargetNos(targetNos.toString());
 
-            if (collectionPointCodes.length() > 0)
-                collectionPointCodes.append(",");
+            targetCollectionPoints = sanitationStaffTargetMapJdbcRepository.search(sstm);
 
-            collectionPointCodes.append(code);
+            for (SanitationStaffTargetMap map : targetCollectionPoints) {
 
-        }
+                if (map.getCollectionPoint() != null && !map.getCollectionPoint().isEmpty()) {
 
-        cps = new CollectionPointSearch();
-        cps.setTenantId(tenantId);
-        cps.setCodes(collectionPointCodes.toString());
+                    collectionPointCodeSet.add(map.getCollectionPoint());
+                }
 
-        collectionPointList = collectionPointJdbcRepository.search(cps);
+                if (sanitationStaffTargetMap.get(map.getSanitationStaffTarget()) == null) {
 
-        if (collectionPointList != null && collectionPointList.getPagedData() != null
-                && !collectionPointList.getPagedData().isEmpty()) {
+                    sanitationStaffTargetMap.put(map.getSanitationStaffTarget(), Collections.singletonList(map));
 
-            for (CollectionPoint cp : collectionPointList.getPagedData()) {
-                collectionPointMap.put(cp.getCode(), cp);
+                } else {
+
+                    List<SanitationStaffTargetMap> mapList = new ArrayList<>(
+                            sanitationStaffTargetMap.get(map.getSanitationStaffTarget()));
+
+                    mapList.add(map);
+
+                    sanitationStaffTargetMap.put(map.getSanitationStaffTarget(), mapList);
+
+                }
             }
-        }
 
-        for (SanitationStaffTargetMap map : targetCollectionPoints) {
+            List<String> cpcs = new ArrayList(collectionPointCodeSet);
 
-            if (collectionPointsMap.get(map.getSanitationStaffTarget()) == null) {
+            for (String code : cpcs) {
 
-                collectionPointsMap.put(map.getSanitationStaffTarget(),
-                        Collections.singletonList(collectionPointMap.get(map.getCollectionPoint())));
+                if (collectionPointCodes.length() > 0)
+                    collectionPointCodes.append(",");
 
-            } else {
-
-                List<CollectionPoint> cpList = new ArrayList<>(collectionPointsMap.get(map.getSanitationStaffTarget()));
-
-                cpList.add(collectionPointMap.get(map.getCollectionPoint()));
-
-                collectionPointsMap.put(map.getSanitationStaffTarget(), cpList);
+                collectionPointCodes.append(code);
 
             }
-        }
 
-        for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+            if (collectionPointCodes != null && collectionPointCodes.length() > 0) {
 
-            sanitationStaffTarget.setCollectionPoints(collectionPointsMap.get(sanitationStaffTarget.getTargetNo()));
+                cps = new CollectionPointSearch();
+                cps.setTenantId(tenantId);
+                cps.setCodes(collectionPointCodes.toString());
 
+                collectionPointList = collectionPointJdbcRepository.search(cps);
+
+                if (collectionPointList != null && collectionPointList.getPagedData() != null
+                        && !collectionPointList.getPagedData().isEmpty()) {
+
+                    for (CollectionPoint cp : collectionPointList.getPagedData()) {
+                        collectionPointMap.put(cp.getCode(), cp);
+                    }
+                }
+
+                for (SanitationStaffTargetMap map : targetCollectionPoints) {
+
+                    if (collectionPointsMap.get(map.getSanitationStaffTarget()) == null) {
+
+                        collectionPointsMap.put(map.getSanitationStaffTarget(),
+                                Collections.singletonList(collectionPointMap.get(map.getCollectionPoint())));
+
+                    } else {
+
+                        List<CollectionPoint> cpList = new ArrayList<>(collectionPointsMap.get(map.getSanitationStaffTarget()));
+
+                        cpList.add(collectionPointMap.get(map.getCollectionPoint()));
+
+                        collectionPointsMap.put(map.getSanitationStaffTarget(), cpList);
+
+                    }
+                }
+
+                for (SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetList) {
+
+                    sanitationStaffTarget.setCollectionPoints(collectionPointsMap.get(sanitationStaffTarget.getTargetNo()));
+
+                }
+            }
         }
 
     }

@@ -230,119 +230,126 @@ public class RouteJdbcRepository extends JdbcRepository {
         List<RouteCollectionPointMap> routeCollectionPoints;
         String tenantId = null;
 
-        if (routeList != null && !routeList.isEmpty())
+        if (routeList != null && !routeList.isEmpty()) {
+
             tenantId = routeList.get(0).getTenantId();
 
-        for (Route route : routeList) {
+            for (Route route : routeList) {
 
-            if (routeCodes.length() > 0)
-                routeCodes.append(",");
+                if (routeCodes.length() > 0)
+                    routeCodes.append(",");
 
-            routeCodes.append(route.getCode());
+                routeCodes.append(route.getCode());
 
-            if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null
-                    && !route.getStartingCollectionPoint().getCode().isEmpty()) {
+                if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null
+                        && !route.getStartingCollectionPoint().getCode().isEmpty()) {
 
-                collectionPointCodeSet.add(route.getStartingCollectionPoint().getCode());
+                    collectionPointCodeSet.add(route.getStartingCollectionPoint().getCode());
 
-            }
+                }
 
-            if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null
-                    && !route.getEndingCollectionPoint().getCode().isEmpty()) {
+                if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null
+                        && !route.getEndingCollectionPoint().getCode().isEmpty()) {
 
-                collectionPointCodeSet.add(route.getEndingCollectionPoint().getCode());
-            }
-
-        }
-
-        rcpm = new RouteCollectionPointMap();
-
-        rcpm.setTenantId(tenantId);
-        rcpm.setRoutes(routeCodes.toString());
-
-        routeCollectionPoints = routeCollectionPointMapJdbcRepository.search(rcpm);
-
-        for (RouteCollectionPointMap map : routeCollectionPoints) {
-
-            if (map.getCollectionPoint() != null && !map.getCollectionPoint().isEmpty()) {
-
-                collectionPointCodeSet.add(map.getCollectionPoint());
-            }
-
-            if (routeCollectionPointMap.get(map.getRoute()) == null) {
-
-                routeCollectionPointMap.put(map.getRoute(), Collections.singletonList(map));
-
-            } else {
-
-                List<RouteCollectionPointMap> mapList = new ArrayList<>(routeCollectionPointMap.get(map.getRoute()));
-
-                mapList.add(map);
-
-                routeCollectionPointMap.put(map.getRoute(), mapList);
-
-            }
-        }
-
-        List<String> cpcs = new ArrayList(collectionPointCodeSet);
-
-        for (String code : cpcs) {
-
-            if (collectionPointCodes.length() > 0)
-                collectionPointCodes.append(",");
-
-            collectionPointCodes.append(code);
-
-        }
-
-        cps = new CollectionPointSearch();
-        cps.setTenantId(tenantId);
-        cps.setCodes(collectionPointCodes.toString());
-
-        collectionPointList = collectionPointJdbcRepository.search(cps);
-
-        if (collectionPointList != null && collectionPointList.getPagedData() != null
-                && !collectionPointList.getPagedData().isEmpty()) {
-
-            for (CollectionPoint cp : collectionPointList.getPagedData()) {
-                collectionPointMap.put(cp.getCode(), cp);
-            }
-        }
-
-        for (RouteCollectionPointMap map : routeCollectionPoints) {
-
-            if (collectionPointsMap.get(map.getRoute()) == null) {
-
-                collectionPointsMap.put(map.getRoute(),
-                        Collections.singletonList(collectionPointMap.get(map.getCollectionPoint())));
-
-            } else {
-
-                List<CollectionPoint> cpList = new ArrayList<>(collectionPointsMap.get(map.getRoute()));
-
-                cpList.add(collectionPointMap.get(map.getCollectionPoint()));
-
-                collectionPointsMap.put(map.getRoute(), cpList);
-
-            }
-        }
-
-        for (Route route : routeList) {
-
-            if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null
-                    && !route.getStartingCollectionPoint().getCode().isEmpty()) {
-
-                route.setStartingCollectionPoint(collectionPointMap.get(route.getStartingCollectionPoint().getCode()));
+                    collectionPointCodeSet.add(route.getEndingCollectionPoint().getCode());
+                }
 
             }
 
-            if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null
-                    && !route.getEndingCollectionPoint().getCode().isEmpty()) {
+            rcpm = new RouteCollectionPointMap();
 
-                route.setEndingCollectionPoint(collectionPointMap.get(route.getEndingCollectionPoint().getCode()));
+            rcpm.setTenantId(tenantId);
+            rcpm.setRoutes(routeCodes.toString());
+
+            routeCollectionPoints = routeCollectionPointMapJdbcRepository.search(rcpm);
+
+            for (RouteCollectionPointMap map : routeCollectionPoints) {
+
+                if (map.getCollectionPoint() != null && !map.getCollectionPoint().isEmpty()) {
+
+                    collectionPointCodeSet.add(map.getCollectionPoint());
+                }
+
+                if (routeCollectionPointMap.get(map.getRoute()) == null) {
+
+                    routeCollectionPointMap.put(map.getRoute(), Collections.singletonList(map));
+
+                } else {
+
+                    List<RouteCollectionPointMap> mapList = new ArrayList<>(routeCollectionPointMap.get(map.getRoute()));
+
+                    mapList.add(map);
+
+                    routeCollectionPointMap.put(map.getRoute(), mapList);
+
+                }
             }
 
-            route.setCollectionPoints(collectionPointsMap.get(route.getCode()));
+            List<String> cpcs = new ArrayList(collectionPointCodeSet);
+
+            for (String code : cpcs) {
+
+                if (collectionPointCodes.length() > 0)
+                    collectionPointCodes.append(",");
+
+                collectionPointCodes.append(code);
+
+            }
+
+            if (collectionPointCodes != null && collectionPointCodes.length() > 0) {
+
+                cps = new CollectionPointSearch();
+                cps.setTenantId(tenantId);
+                cps.setCodes(collectionPointCodes.toString());
+
+                collectionPointList = collectionPointJdbcRepository.search(cps);
+
+                if (collectionPointList != null && collectionPointList.getPagedData() != null
+                        && !collectionPointList.getPagedData().isEmpty()) {
+
+                    for (CollectionPoint cp : collectionPointList.getPagedData()) {
+                        collectionPointMap.put(cp.getCode(), cp);
+                    }
+                }
+
+                for (RouteCollectionPointMap map : routeCollectionPoints) {
+
+                    if (collectionPointsMap.get(map.getRoute()) == null) {
+
+                        collectionPointsMap.put(map.getRoute(),
+                                Collections.singletonList(collectionPointMap.get(map.getCollectionPoint())));
+
+                    } else {
+
+                        List<CollectionPoint> cpList = new ArrayList<>(collectionPointsMap.get(map.getRoute()));
+
+                        cpList.add(collectionPointMap.get(map.getCollectionPoint()));
+
+                        collectionPointsMap.put(map.getRoute(), cpList);
+
+                    }
+                }
+
+                for (Route route : routeList) {
+
+                    if (route.getStartingCollectionPoint() != null && route.getStartingCollectionPoint().getCode() != null
+                            && !route.getStartingCollectionPoint().getCode().isEmpty()) {
+
+                        route.setStartingCollectionPoint(collectionPointMap.get(route.getStartingCollectionPoint().getCode()));
+
+                    }
+
+                    if (route.getEndingCollectionPoint() != null && route.getEndingCollectionPoint().getCode() != null
+                            && !route.getEndingCollectionPoint().getCode().isEmpty()) {
+
+                        route.setEndingCollectionPoint(collectionPointMap.get(route.getEndingCollectionPoint().getCode()));
+                    }
+
+                    route.setCollectionPoints(collectionPointsMap.get(route.getCode()));
+
+                }
+
+            }
 
         }
 

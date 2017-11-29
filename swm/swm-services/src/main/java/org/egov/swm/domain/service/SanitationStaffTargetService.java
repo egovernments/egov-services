@@ -6,6 +6,8 @@ import java.util.Date;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Boundary;
+import org.egov.swm.domain.model.CollectionPoint;
+import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
@@ -47,6 +49,9 @@ public class SanitationStaffTargetService {
 
     @Autowired
     private BoundaryRepository boundaryRepository;
+
+    @Autowired
+    private CollectionPointService collectionPointService;
 
     @Value("${egov.swm.sanitationstaff.targetnum.idgen.name}")
     private String idGenNameForTargetNumPath;
@@ -108,6 +113,9 @@ public class SanitationStaffTargetService {
         final RouteSearch routeSearch = new RouteSearch();
         Pagination<Route> routes;
         Boundary boundary;
+        CollectionPointSearch search;
+        Pagination<CollectionPoint> collectionPoints;
+
         for (final SanitationStaffTarget sanitationStaffTarget : sanitationStaffTargetRequest.getSanitationStaffTargets()) {
 
             // Validate Boundary
@@ -197,6 +205,33 @@ public class SanitationStaffTargetService {
                 sanitationStaffTarget.setDumpingGround(dumpingGroundService.getDumpingGround(
                         sanitationStaffTarget.getTenantId(), sanitationStaffTarget.getDumpingGround().getCode(),
                         sanitationStaffTargetRequest.getRequestInfo()));
+
+            // Validate CollectionPoints
+            if (sanitationStaffTarget.getCollectionPoints() != null) {
+
+                for (CollectionPoint cp : sanitationStaffTarget.getCollectionPoints()) {
+
+                    if (cp != null && (cp.getCode() == null || cp.getCode().isEmpty()))
+                        throw new CustomException("CollectionPoint",
+                                "The field CollectionPoint Code is Mandatory . It cannot be not be null or empty.Please provide correct value ");
+
+                    if (cp != null && cp.getCode() != null) {
+                        search = new CollectionPointSearch();
+                        search.setTenantId(sanitationStaffTarget.getTenantId());
+                        search.setCode(cp.getCode());
+
+                        collectionPoints = collectionPointService.search(search);
+
+                        if (collectionPoints == null || collectionPoints.getPagedData() == null
+                                || collectionPoints.getPagedData().isEmpty())
+                            throw new CustomException("CollectionPoint",
+                                    "Given CollectionPoint is invalid: " + cp.getName());
+                        else
+                            cp = collectionPoints.getPagedData().get(0);
+                    }
+
+                }
+            }
 
         }
     }

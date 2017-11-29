@@ -29,7 +29,8 @@ export default class SearchForCreate extends Component {
       showResult: false,
       resultList : {
         resultHeader: [],
-        resultValues: []
+        resultValues: [],
+        isMultipleSelection:false
       },
       values: []
     }
@@ -209,6 +210,7 @@ export default class SearchForCreate extends Component {
       var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
       let {getVal, getValFromDropdownData} = self;
       let resultIdKey = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultIdKey;
+      let isMutlipleSelection = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.isMultipleSelection || false;
 
       if(values && values.length) {
         for(var i=0; i<values.length; i++) {
@@ -231,6 +233,9 @@ export default class SearchForCreate extends Component {
           resultList.resultValues.push(tmp);
         }
       }
+
+      resultList['isMultipleSelection'] = isMutlipleSelection;
+
       self.setState({
         resultList,
         values,
@@ -603,18 +608,35 @@ export default class SearchForCreate extends Component {
 
 
   renderFieldGroupForCustomButtons = (buttonObj) => {
-    return (<ShowFields groups={buttonObj.groups} noCols={buttonObj.numCols || 3} ui="google" handler={this.handleChange} getVal={this.getVal} fieldErrors={this.props.fieldErrors} useTimestamp={buttonObj.useTimestamp || false} addNewCard={""} removeCard={""}/>)
+    return (<ShowFields groups={buttonObj.groups} noCols={buttonObj.noCols || 4} ui="google" handler={this.handleChange} getVal={this.getVal} fieldErrors={this.props.fieldErrors} useTimestamp={buttonObj.useTimestamp || false} addNewCard={""} removeCard={""}/>)
+  }
+
+  escapeRegExp = (str) => {
+     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
   }
 
   onClickCustomButton = (buttonObj) => {
+    let {moduleName, actionName, metaData, setRoute, tableSelectionData} = this.props;
+    // let obj = metaData[`${moduleName}.${actionName}`];
+    // let resultIdKey = obj.result.resultIdKey;
+
+    let url = buttonObj.redirectUrl;
+    let values = {};
+
     //console.log('buttonObj', buttonObj);
     if(buttonObj.groups && buttonObj.groups.length > 0){
       let fields = jp.query(buttonObj.groups[0].fields, "$..[?(@.isRequired)]");
       //let jsonPaths = jp.query(fields, "$..jsonPath");
       let errorFields = [];
       for(let i=0;i<fields.length;i++){
-        if(!this.getVal(fields[i].jsonPath))
+        let value = this.getVal(fields[i].jsonPath);
+        if(!value)
           errorFields.push(translate(fields[i].label));
+        else{
+          values[fields[i].jsonPath] = value;
+          // let regexp = new RegExp(`{${this.escapeRegExp(fields[i].jsonPath)}}`);
+          // url = url.replace(regexp, encodeURIComponent(value));
+        }
       }
       if(errorFields.length > 0){
         this.props.toggleSnackbarAndSetText(translate(buttonObj.validationMessage).replace(/\{(.*?)\}/g, errorFields.join(",")))
@@ -622,7 +644,9 @@ export default class SearchForCreate extends Component {
       }
     }
 
-    
+    values[buttonObj.selectionParamName] = tableSelectionData;
+    url = url.replace(/\{0\}/g, encodeURIComponent(JSON.stringify(values)));
+    setRoute(url);
 
   }
 
@@ -648,7 +672,7 @@ export default class SearchForCreate extends Component {
             <UiButton item={{"label": "Search", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>&nbsp;&nbsp;
             <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.resetForm}/>&nbsp;&nbsp;
             {customButtons && customButtons.filter((button)=>!button.groups).map((button, idx) => {
-              return (<span><UiButton key={idx} item={{"label": button.buttonText, "uiType":"button", "isDisabled":!isEnableCustomButtons}} ui="google"/>&nbsp;&nbsp;</span>)
+              return (<span  key={idx}><UiButton handler={(e)=>{ this.onClickCustomButton(button)}} item={{"label": button.buttonText, "uiType":"button", "isDisabled":!isEnableCustomButtons}} ui="google"/>&nbsp;&nbsp;</span>)
             })}
             {/* <UiButton item={{"label": "View", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.view}/>&nbsp;&nbsp;
             <UiButton item={{"label": "Update", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.update}/>&nbsp;&nbsp;

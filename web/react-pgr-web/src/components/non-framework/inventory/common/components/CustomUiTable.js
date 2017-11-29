@@ -7,6 +7,8 @@ import Api from '../../../../../api/api';
 import _ from 'lodash';
 import jp from "jsonpath";
 import Checkbox from 'material-ui/Checkbox';
+import {RadioButton, RadioButtonGroup} from 'material-ui/RadioButton';
+
 
 // const $ = require('jquery');
 // $.DataTable = require('datatables.net');
@@ -186,8 +188,12 @@ class CustomUiTable extends Component {
 				let idx = tableSelectionData.indexOf(code);
 				if(idx > -1)
 						tableSelectionData.splice(idx, 1);
-				else
+				else{
+					if(this.props.resultList.isMultipleSelection)
 						tableSelectionData.push(code);
+					else
+					  tableSelectionData[0] = code;
+				}
 				this.props.setTableSelectionData(tableSelectionData);
 			}
 
@@ -197,7 +203,7 @@ class CustomUiTable extends Component {
   				<Card className="uiCard">
 		          <CardHeader title={<strong> {showHeader==undefined?translate("ui.table.title"):(showHeader?translate("ui.table.title"):"")} </strong>}/>
 		          <CardText>
-		          <Table className="table table-striped table-bordered" cellspacing="0" width="100%" id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} responsive >
+		          <Table className="table table-striped table-bordered" cellSpacing="0" width="100%" id={(showDataTable==undefined)?"searchTable":(showDataTable?"searchTable":"")} responsive >
 		          <thead>
 		            <tr>
 		              {resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
@@ -219,8 +225,21 @@ class CustomUiTable extends Component {
 		                      	item.map((item2, i2)=>{
 
 															if(i2 === 0){
-																return (<td  key={i2}><Checkbox checked={tableSelectionData.indexOf(item2) > -1}
-																	 onCheck={onChangeSelectionCheckbox.bind(this, item2)}/></td>);
+																if(resultList.isMultipleSelection)
+																	return (<td  key={i2}><Checkbox checked={tableSelectionData.indexOf(item2) > -1}
+																		 onCheck={onChangeSelectionCheckbox.bind(this, item2)}/></td>);
+															  else
+																  return (<td  key={i2}>
+																		{/* <Checkbox checked={tableSelectionData.indexOf(item2) > -1}
+																		 onCheck={onChangeSelectionCheckbox.bind(this, item2)}/> */}
+																		 <RadioButtonGroup name={i2}
+																			 onChange={onChangeSelectionCheckbox.bind(this, item2)}
+																			 valueSelected={tableSelectionData[0] || undefined}>
+																	      <RadioButton
+																	        value={`${item2}`}
+																	      />
+																		</RadioButtonGroup>
+																	</td>);
 															}
 															else if(typeof item2 === 'object'){
 																return(<td  key={i2}><Checkbox checked={item2 && item2.value || ""}/></td>)

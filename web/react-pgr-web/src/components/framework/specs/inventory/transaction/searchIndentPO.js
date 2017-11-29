@@ -5,20 +5,26 @@ var dat = {
     "objectName": "",
     "url": "/inventory-services/indents/_search",
     "customButtons":[
+      // {
+      //   buttonText:"Create Non Indent PO",
+      //   redirectUrl:"/create/inventory/purchaseorders/{0}",
+      //   selectionParamName:"purchaseOrders[0].indentNumbers"
+      // },
       {
         buttonText:"Create Indent PO",
         validationMessage : "Please enter {0}!",
-        redirectToUrl:"/create/inventory/indent/{resultIdKey}/{supplierCodes}/",
+        noCols:4,
+        redirectUrl:"/create/inventory/purchaseorders/{0}",
+        selectionParamName:"purchaseOrders[0].indents",
         "groups": [
           {
             "name": "search",
             "label": "Create PO",
-            "noCols":12/3,
             "objectName": "",
             "fields": [
               {
                 "name": "supplierName",
-                "jsonPath": "supplierCode",
+                "jsonPath": "purchaseOrders[0].supplier.code",
                 "label": "inventory.supplier.name",
                 "type": "autoCompelete",
                 "url":"inventory-services/suppliers/_search?|$..code|$..name",
@@ -26,7 +32,35 @@ var dat = {
                 "isRequired": true,
                 "isDisabled": false,
                 "patternErrorMsg": ""
-              }
+              },
+              {
+                  "name": "rateType",
+                  "jsonPath": "purchaseOrders[0].rateType",
+                  "label": "inventory.supplier.name",
+                  "type": "singleValueList",
+                  "defaultValue":[
+                    {key: null, value: "-- Please Select --"},
+                    {
+                       "key":"DGSC Rate Contract",
+                       "value":"DGSC Rate Contract"
+                    },
+                    {
+                       "key":"ULB Rate Contract",
+                       "value":"ULB Rate Contract"
+                    },
+                    {
+                       "key":"One Time Tender",
+                       "value":"One Time Tender"
+                    },
+                    {
+                       "key":"Quotation",
+                       "value":"Quotation"
+                    }
+                  ],
+                  "isRequired": true,
+                  "isDisabled": false,
+                  "patternErrorMsg": ""
+                }
             ]
         }
       ]
@@ -107,7 +141,7 @@ var dat = {
         "inventoryType",
         "issueStore.name"
       ],
-
+      "isMultipleSelection":true,
       "resultIdKey":"indentNumber",
       "resultPath": "indents",
       "rowClickUrlUpdate": "/update/inventory/indent/{indentNumber}",

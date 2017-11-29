@@ -8,7 +8,7 @@ class JudgementAgreement extends React.Component {
           agreementNumber: "",
           acknowledgementNumber: "",
           stateId: "",
-          action: "judgement",
+          action: "Judgement",
           agreementDate: "",
           timePeriod: "",
           allottee: {
@@ -131,10 +131,7 @@ class JudgementAgreement extends React.Component {
       e.preventDefault();
       var _this = this;
       var agreement = Object.assign({}, _this.state.agreement);
-
-
-
-      agreement.action = "judgement";
+      agreement.action = "Judgement";
 
 console.log("Documents",agreement);
 
@@ -374,11 +371,11 @@ console.log("Documents",agreement);
       }
 
 
-      //var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-      var agreementType = "Create Municipality Agreement";
-      // if (cityGrade.toLowerCase() === 'corp') {
-      //   agreementType = "Create Corporation Agreement";
-      // }
+      var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+      var agreementType = "Judgement Municipality Agreement";
+      if (cityGrade.toLowerCase() === 'corp') {
+        agreementType = "Judgement Corporation Agreement";
+      }
 
       getDesignations(null, function(designations) {
         _this.setState({
@@ -392,7 +389,7 @@ console.log("Documents",agreement);
       var agreement = commonApiPost("lams-services",
         "agreements",
         "_search", {
-          id: getUrlVars()["agreementNumber"],
+          agreementNumber: getUrlVars()["agreementNumber"],
           tenantId
         }).responseJSON["Agreements"][0] || {};
       console.log(agreement);

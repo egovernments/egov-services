@@ -8,7 +8,7 @@ class EvictionAgreement extends React.Component {
           agreementNumber: "",
           acknowledgementNumber: "",
           stateId: "",
-          action: "eviction",
+          action: "Eviction",
           agreementDate: "",
           timePeriod: "",
           allottee: {
@@ -110,7 +110,7 @@ class EvictionAgreement extends React.Component {
           isAdvancePaid: "",
           adjustmentStartDate: ""
         },
-        evictionReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
+        evictionReasons: ["Court Case", "Committee Order",],
         positionList: [],
         departmentList: [],
         designationList: [],
@@ -132,10 +132,7 @@ class EvictionAgreement extends React.Component {
       e.preventDefault();
       var _this = this;
       var agreement = Object.assign({}, _this.state.agreement);
-
-
-
-      agreement.action = "eviction";
+      agreement.action = "Eviction";
 
 console.log("Documents",agreement);
 
@@ -375,11 +372,11 @@ console.log("Documents",agreement);
       }
 
 
-      //var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-      var agreementType = "Create Municipality Agreement";
-      // if (cityGrade.toLowerCase() === 'corp') {
-      //   agreementType = "Create Corporation Agreement";
-      // }
+      var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+      var agreementType = "Evict Municipality Agreement";
+      if (cityGrade.toLowerCase() === 'corp') {
+        agreementType = "Evict Corporation Agreement";
+      }
 
       getDesignations(null, function(designations) {
         _this.setState({
@@ -393,7 +390,7 @@ console.log("Documents",agreement);
       var agreement = commonApiPost("lams-services",
         "agreements",
         "_search", {
-          id: getUrlVars()["agreementNumber"],
+          agreementNumber: getUrlVars()["agreementNumber"],
           tenantId
         }).responseJSON["Agreements"][0] || {};
       console.log(agreement);
@@ -404,7 +401,6 @@ console.log("Documents",agreement);
       if (!agreement.workflowDetails) {
         agreement.workflowDetails = {};
       }
-
 
       this.setState({
         ...this.state,

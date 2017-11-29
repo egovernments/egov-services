@@ -30,6 +30,11 @@ public class ProcessingSite {
     @NotNull
     private String tenantId;
 
+    @JsonProperty("name")
+    @Length(min = 1, max = 128)
+    @NotNull
+    private String name;
+
     @NotNull
     @JsonProperty("distanceFromDumpingGround")
     private Double distanceFromDumpingGround;

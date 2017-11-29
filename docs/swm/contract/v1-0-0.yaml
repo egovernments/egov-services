@@ -2058,6 +2058,11 @@ definitions:
           description: tenant id of the DumpingGround
           maxLength: 128
           minLength: 1
+        name:
+          type: string
+          description: name of the DumpingGround. should be unique in ULB
+          maxLength: 128
+          minLength: 1
         siteDetails:
           $ref: '#/definitions/SiteDetails'
         isProcessingSite:
@@ -2066,6 +2071,7 @@ definitions:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
       - tenantId
+      - name
       - siteDetails
       
     ProcessingSite:
@@ -2081,6 +2087,11 @@ definitions:
           description: tenant id of the DumpingGround
           maxLength: 128
           minLength: 1
+        name:
+          type: string
+          description: name of the DumpingGround. should be unique in ULB
+          maxLength: 128
+          minLength: 1
         distanceFromDumpingGround:
           type: number
           format: double
@@ -2094,6 +2105,7 @@ definitions:
           minItems: 1
       required:
       - tenantId
+      - name
       - distanceFromDumpingGround
       - siteDetails
       
@@ -2103,11 +2115,6 @@ definitions:
         tenantId:
           type: string
           description: tenant id of the VehicleType
-          maxLength: 128
-          minLength: 1
-        name:
-          type: string
-          description: name of the DumpingGround. should be unique in ULB
           maxLength: 128
           minLength: 1
         location:
@@ -2168,7 +2175,6 @@ definitions:
           description: Enable this field Iff mpcbAuthorisation is checked. Shall be > bankValidityFrom
       required:
       - tenantId
-      - name
       - location
       - area
       - capacity

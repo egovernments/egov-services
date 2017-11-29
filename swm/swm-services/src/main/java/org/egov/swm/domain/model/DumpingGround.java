@@ -27,6 +27,11 @@ public class DumpingGround {
     @NotNull
     private String tenantId;
 
+    @JsonProperty("name")
+    @Length(min = 1, max = 128)
+    @NotNull
+    private String name;
+
     @NotNull
     @JsonProperty("siteDetails")
     private SiteDetails siteDetails;

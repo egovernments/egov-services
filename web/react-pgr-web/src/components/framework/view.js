@@ -357,8 +357,12 @@ class Report extends Component {
             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
           </Col>
         </Row>
+        <UiBackButton />
 
-        <Row>
+
+
+        <form id="printable">
+        {/*<Row>
           <Col xs={6} md={6}>
             <div style={{marginLeft: "16px"
             }}>
@@ -371,13 +375,14 @@ class Report extends Component {
             <UiEditButton/>
           </div>
           </Col>
-        </Row>
-
-        <form id="printable">
+        </Row>*/}
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields groups={mockData[`${moduleName}.${actionName}`].groups} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <br/>
           {renderTable()}
           <br/>
+          <div style={{"textAlign": "center"}}>
+            <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" handler={printer}/>
+         </div>
         </form>
 
       </div>

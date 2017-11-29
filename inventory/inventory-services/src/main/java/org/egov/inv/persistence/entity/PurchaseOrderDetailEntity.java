@@ -44,6 +44,7 @@ public class PurchaseOrderDetailEntity  {
 		poDetails.setReceivedQuantity(receivedQuantity);
 		poDetails.setUnitPrice(unitPrice);
 		poDetails.setDescription(description);
+		poDetails.setPurchaseOrderNumber(purchaseOrder);
 		return poDetails;
 	}
 

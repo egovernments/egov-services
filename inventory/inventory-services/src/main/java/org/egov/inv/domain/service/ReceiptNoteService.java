@@ -48,6 +48,9 @@ public class ReceiptNoteService extends DomainService {
     @Autowired
     private PurchaseOrderService purchaseOrderService;
 
+    @Autowired
+    private PurchaseOrderDetailService purchaseOrderDetailService;
+
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
 
@@ -177,6 +180,7 @@ public class ReceiptNoteService extends DomainService {
                     } else {
                         materialReceipts.stream().forEach(materialReceipt -> {
                             checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), materialReceipt.getTenantId());
                         });
                     }
                 }
@@ -189,6 +193,7 @@ public class ReceiptNoteService extends DomainService {
                     } else {
                         materialReceipts.stream().forEach(materialReceipt -> {
                             checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), materialReceipt.getTenantId());
                         });
                     }
                 }
@@ -214,38 +219,40 @@ public class ReceiptNoteService extends DomainService {
 
 
     private void checkPurchaseOrderPresent(List<MaterialReceiptDetail> materialReceiptDetails, String tenantId) {
-        List<String> purchaseOrderIdList = new ArrayList<>();
 
-        HashMap<String, String> errors = new HashMap<>();
-
-        materialReceiptDetails.stream().forEach(materialReceiptDetail -> {
+        for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
             if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
-                purchaseOrderIdList.add(materialReceiptDetail.getPurchaseOrderDetail().getId());
+                PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
+                purchaseOrderDetailSearch.setTenantId(tenantId);
+                purchaseOrderDetailSearch.setIds(Collections.singletonList(materialReceiptDetail.getPurchaseOrderDetail().getId()));
+
+                Pagination<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
+
+                if (purchaseOrderDetails.getPagedData().size() > 0) {
+                    for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
+
+                        PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+                        purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
+                        purchaseOrderSearch.setTenantId(purchaseOrderDetail.getTenantId());
+
+                        PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
+
+                        if (purchaseOrders.getPurchaseOrders().size() > 0) {
+                            return;
+                        } else
+                            throw new CustomException("inv.0015", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                                    " is not present");
+                    }
+                } else
+                    throw new CustomException("inv.0015", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                            " is not present");
             }
-        });
-
-        PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
-        purchaseOrderSearch.setIds(purchaseOrderIdList);
-        purchaseOrderSearch.setTenantId(tenantId);
-
-        PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
-
-        List<String> purchaseOrderIdFromDb = purchaseOrders.getPurchaseOrders().stream()
-                .map(purchaseOrder -> purchaseOrder.getId())
-                .collect(Collectors.toList());
-
-        List<String> nonMatched = purchaseOrderIdList.stream()
-                .filter(purchaseOrder -> !purchaseOrderIdFromDb.contains(purchaseOrder))
-                .collect(Collectors.toList());
-
-        nonMatched.stream().map(nonMatchedId -> {
-            errors.put(nonMatchedId, "purchase order - " + nonMatchedId + " is not present");
-            return errors;
-        });
-
-        if (errors.size() > 0) {
-            throw new CustomException(errors);
         }
+    }
+
+
+    private PurchaseOrderResponse getPurchaseOrderResponse(PurchaseOrderSearch purchaseOrderSearch) {
+        return purchaseOrderService.search(purchaseOrderSearch);
     }
 
     private String appendString(MaterialReceipt materialReceipt) {

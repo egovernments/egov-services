@@ -518,7 +518,7 @@ ReportDefinitions:
   moduleName: inventory
   externalService:
   - entity: $.MdmsRes.inventory.Material
-    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
     keyOrder: code,name,tenantId
     tableName: tbl_material
   sourceColumns:
@@ -561,7 +561,7 @@ ReportDefinitions:
   searchParams:
   - name: supplierName
     label: inventory.supplierName
-    pattern: http://egov-micro-dev.egovernments.org/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     searchClause: AND pl.supplier = $supplierName
@@ -570,7 +570,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     searchClause: AND pld.material = $materialName

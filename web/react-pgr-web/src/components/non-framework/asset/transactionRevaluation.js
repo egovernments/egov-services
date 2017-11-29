@@ -18,7 +18,6 @@ import $ from "jquery";
 var count=0;
 
 var specifications={};
-var recordSelect=false;
 let reqRequired = [];
 class Transaction extends Component {
   state={
@@ -511,13 +510,6 @@ class Transaction extends Component {
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
 
-      for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
-        if (formData.Revaluation.Assets[i].isRadio==true) {
-          recordSelect = false;
-        }else{
-          recordSelect = true;
-        }
-      }
 
       if(property == "Revaluation.valueAfterRevaluation"){
           for (var i = 0; i < formData.Revaluation.Assets.length; i++) {
@@ -800,7 +792,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid && recordSelect ? false : true}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
                     <br/>
                   </div>
       </div>

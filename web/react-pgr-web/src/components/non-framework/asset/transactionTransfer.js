@@ -16,7 +16,6 @@ import $ from "jquery";
 
 
 var count=0;
-var recordSelect = false;
 var specifications={};
 
 let reqRequired = [];
@@ -510,16 +509,7 @@ class Transaction extends Component {
       let {handleChange,mockData,setDropDownData, formData} = this.props;
       let hashLocation = window.location.hash;
       let obj = specifications[`asset.transaction`];
-      console.log(property);
 
-
-        for (var i = 0; i < formData.Disposal.Assets.length; i++) {
-          if (formData.Disposal.Assets[i].isRadio==true) {
-            recordSelect = false;
-          }else{
-            recordSelect = true;
-          }
-        }
 
       if (property.search("isRadio") != -1 && property.indexOf("transactionType")== -1) {
         let _indexVal = property.split("[")[1].split("]")[0];
@@ -771,7 +761,7 @@ class Transaction extends Component {
                   {showResult && !_.isEmpty(mockData) && <ShowFields groups={mockData[`${moduleName}.${actionName}`].transaction} noCols={mockData[`${moduleName}.${actionName}`].numCols} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false} addNewCard={""} removeCard={""}/>}
                   <div style={{"textAlign": "center"}}>
                     <br/>
-                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid && recordSelect ? false : true}} ui="google"/>}
+                  {showResult &&  <UiButton handler={create} item={{"label": "Create", "uiType":"button","isDisabled": isFormValid ? false : true}} ui="google"/>}
                     <br/>
                   </div>
       </div>

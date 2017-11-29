@@ -1,6 +1,5 @@
 package org.egov.works.workorder.domain.repository;
 
-import org.egov.works.workorder.web.contract.DetailedEstimateResponse;
 import org.egov.works.workorder.web.contract.OfflineStatusResponse;
 import org.egov.works.workorder.web.contract.OfflineStatusSearchContract;
 import org.egov.works.workorder.web.contract.RequestInfo;

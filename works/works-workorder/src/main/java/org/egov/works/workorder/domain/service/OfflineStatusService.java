@@ -50,7 +50,7 @@ public class OfflineStatusService {
 		offlineStatusSearchContract.setTenantId(tenantId);
 
 		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
-				.getOfflineStatus(offlineStatusSearchContract, tenantId, requestInfo);
+				.getOfflineStatusByLoaNumber(offlineStatusSearchContract, tenantId, requestInfo);
 		return offlineStatusResponse;
 	}
 }

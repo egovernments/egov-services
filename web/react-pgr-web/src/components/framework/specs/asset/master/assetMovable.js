@@ -31,7 +31,8 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"maxDate":"today"
             },
             {
   						"name": "AssetName",
@@ -105,7 +106,8 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"maxDate":"today"
             },
 						{
 							"name": "ModeofAcquisition",
@@ -153,7 +155,8 @@ var dat = {
 					"isRequired": false,
 					"isDisabled": false,
 					"requiredErrMsg": "",
-					"patternErrMsg": ""
+					"patternErrMsg": "",
+					"maxDate":"today"
 				}
 				]},
       {
@@ -280,7 +283,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"maxDate":"today"
           },
           {
             "name": "OpeningWrittenDownValue",
@@ -1397,7 +1401,8 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"maxDate":"today"
             },
 						{
   						"name": "AssetName",
@@ -1459,7 +1464,8 @@ var dat = {
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"maxDate":"today"
             },
 						{
 							"name": "ModeofAcquisition",
@@ -1521,7 +1527,8 @@ var dat = {
               "isRequired": false,
               "isDisabled": false,
               "requiredErrMsg": "",
-              "patternErrMsg": ""
+              "patternErrMsg": "",
+							"maxDate":"today"
             }
 				]},
       {
@@ -1648,7 +1655,8 @@ var dat = {
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+						"maxDate":"today"
           },
           {
             "name": "OpeningWrittenDownValue",

@@ -259,7 +259,7 @@ var dat = {
 	        },
 					{
 	          "name": "OrderDate",
-	          "jsonPath": "Disposal.orderDate",
+	          "jsonPath": "Revaluation.orderDate",
 	          //"label": "ac.transaction.create.order.date",
 						"label": "Order Date",
 	          "pattern": "",

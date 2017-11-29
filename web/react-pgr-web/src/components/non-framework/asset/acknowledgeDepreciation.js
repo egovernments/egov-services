@@ -381,7 +381,7 @@ printer = () => {
                     <Table  bordered responsive className="table-striped">
                     <thead>
                       <tr>
-                        <th>Asset Id No</th>
+                        <th>Asset Code</th>
                         <th>Value Before Depreciation</th>
                         <th>Depreciation Value</th>
                         <th>Value After Depreciation</th>
@@ -393,7 +393,7 @@ printer = () => {
                       {ackCode.map(function(item, index) {
                         return(
                           <tr key={index}>
-                            <td>{item.assetId}</td>
+                            <td>{item.assetCode}</td>
                             <td>{item.valueBeforeDepreciation}</td>
                             <td>{item.depreciationValue}</td>
                             <td>{item.valueAfterDepreciation}</td>

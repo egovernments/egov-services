@@ -497,7 +497,7 @@ class assetMovableCreate extends Component {
                       holder.value = dropdownSplit[y];
                       valueHolder.push(holder);
                   }
-
+                  valueHolder.unshift({key: null, value: "-- Please Select --"});
                 }
                 else{
                   customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;

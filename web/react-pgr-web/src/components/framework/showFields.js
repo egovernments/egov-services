@@ -38,6 +38,8 @@ import UiWindowForm from './components/UiWindowForm';
 import UiCalendar from './components/UiCalendar';
 import UiImage from './components/UiImage';
 import UiMultiFieldAddToTable from './components/UiMultiFieldAddToTable';
+import UiNestedTablesInputs from './components/UiNestedTablesInputs';
+
 
 let styles={
   reducePadding: {
@@ -66,12 +68,12 @@ export default class ShowFields extends Component {
       <Card style={{"display": eval(group.hide) ? "none" : "block", "marginBottom": isMultiple ? '0px' : '', "marginTop": isMultiple ? '0px' : ''}} className={"uiCard "+group.name} key={groupIndex} expanded={self.state[group.name] ? false : true} onExpandChange={() => {self.changeExpanded(group.name)}}>
           {!isMultiple && <CardHeader style={{paddingTop:4,paddingBottom:0}} title={<div style={{color:"#354f57", fontSize:18,margin:'8px 0'}}>{group.label}</div>} actAsExpander={true}/>}
           <CardText style={{paddingTop:0,paddingBottom:0}} expandable={true}>
-          <Grid style={{paddingTop:0}}>
+          <Grid fluid={group.isFullWidth || false}  style={{paddingTop:0}}>
             <Row>
               {group.fields.map((field, fieldIndex)=>{
                   if(!field.isHidden) {
                     return (
-                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || (field.type === "textarea" && field.fullWidth === true) || field.type==="window" || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols}>
+                      <Col key={fieldIndex} xs={12} sm={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || field.type === "nestedTableList" || (field.type === "textarea" && field.fullWidth === true) || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols} md={field.type === "documentList" || field.type === "fileTable" || field.type === "tableList" || field.type === "nestedTableList" || (field.type === "textarea" && field.fullWidth === true) || field.type==="window" || field.type === "workflow" || field.type === "multiFieldAddToTable" ? 12 : noCols}>
                           {renderField(field, self.props.screen,fieldIndex,field.screenView)}
                       </Col>
                     )
@@ -218,6 +220,8 @@ export default class ShowFields extends Component {
         return <UiFileTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} readonly={screen === "view" ? "true" : (screenView?true:"")}/>
       case 'tableList':
         return <UiMultiFieldTable tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
+      case 'nestedTableList':
+        return <UiNestedTablesInputs tabIndex={index} ui={this.props.ui} addRequiredFields={this.props.addRequiredFields} delRequiredFields={this.props.delRequiredFields} setVal={this.props.setVal} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} screen={screen}/>
       case 'workflow':
         return <UiWorkflow tabIndex={index} ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} initiateWF={this.props.initiateWF} workflowId={this.props.workflowId || ""}/>
       case 'timePicker':

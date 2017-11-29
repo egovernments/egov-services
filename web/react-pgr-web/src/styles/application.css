@@ -927,7 +927,6 @@ span.errorMsg{
 		width: auto !important;
 		height: auto !important;
 		overflow: visible !important;
-
 	}
 
 	body {transform: scale(.4) !important;}
@@ -1032,4 +1031,8 @@ span.errorMsg{
 
 .flex-table-sm .border-top{
 	border-top:1px solid rgba(0, 0, 0, 0.075);
+}
+
+.custom-form-control-for-select label{
+	left:0px;
 }

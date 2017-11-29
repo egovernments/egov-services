@@ -3,6 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "",
 		"tenantIdRequired": true,
+		"useTimestamp":true,
 		"idJsonPath": "",
 		"objectName": "AssetCategory",
 		"groups": [
@@ -31,31 +32,46 @@ var dat = {
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
+							"defaultValue": [{
+							"key": "IMMOVABLE",
+							"value": "IMMOVABLE"
+						},
+						{
+								"key": "MOVABLE",
+								"value": "MOVABLE"
+							}],
+							"depedants": [{
+								"jsonPath": "AssetCategory[0].parent",
+								"type": "dropDown",
+								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F%28%40.assetCategoryType%3D%3D'{AssetCategory[0].assetCategoryType}'%29%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+							}]
   					},
-            {
-  						"name": "AssetCategoryName",
-  						"jsonPath": "AssetCategory[0].parent",
+						{
+							"name": "AssetCategory",
+							"jsonPath": "AssetCategory[0].parent",
   						"label": "ac.create.asset.sub.categroy",
-  						"pattern": "",
-  						"type": "singleValueList",
-  						"url": "",
-  						"isRequired": true,
-  						"isDisabled": false,
-  						"requiredErrMsg": "",
-  						"patternErrMsg": ""
-  					},
+							"pattern": "",
+							"type": "singleValueList",
+							// "url": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22IMMOVABLE%22)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",
+							"isRequired": true,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": "",
+							"isStateLevel":true,
+						},
             {
   						"name": "DepericiationMethod",
   						"jsonPath": "AssetCategory[0].depreciationMethod",
   						"label": "ac.create.depericiation.method",
   						"pattern": "",
-  						"type": "singleValueList",
+  						"type": "text",
   						"url": "",
   						"isRequired": false,
-  						"isDisabled": false,
+  						"isDisabled": true,
   						"requiredErrMsg": "",
-  						"patternErrMsg": ""
+  						"patternErrMsg": "",
+							"defaultValue": "Straight Line method"
   					},
             {
   						"name": "UnitOfMeasurement",
@@ -63,7 +79,7 @@ var dat = {
   						"label": "ac.create.unit.of.measurement",
   						"pattern": "",
   						"type": "singleValueList",
-  						"url": "",
+  						"url": "/egov-common-masters/uoms/_search?|$.UOM.*.code|$.UOM.*.description",
   						"isRequired": true,
   						"isDisabled": false,
   						"requiredErrMsg": "",
@@ -79,8 +95,16 @@ var dat = {
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
-							"patternErrMsg": ""
-						}
+							"patternErrMsg": "",
+							"defaultValue": [{
+							"key": "YES",
+							"value": "YES"
+						},
+						{
+								"key": "NO",
+								"value": "NO"
+							}],
+						},
             {
   						"name": "DepericiationRate",
   						"jsonPath": "AssetCategory[0].depreciationRate",
@@ -92,7 +116,8 @@ var dat = {
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": ""
-  					}
+  					},
+
 				]
 			},
       {

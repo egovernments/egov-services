@@ -2643,6 +2643,7 @@ definitions:
           description: Designation of the employee who has received the materials in store.
           format: varchar
         mrnStatus:
+          type: string
           description: >-
             Shows the current status of the receipt. By default the value will be
             "CREATED".

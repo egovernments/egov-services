@@ -4,11 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.works.measurementbook.web.contract.ContractorBill;
 import org.egov.works.measurementbook.web.contract.MBContractorBills;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class MBContractorBillHelper {
 

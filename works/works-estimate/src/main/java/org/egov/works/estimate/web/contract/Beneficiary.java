@@ -1,7 +1,7 @@
 package org.egov.works.estimate.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets Beneficiary

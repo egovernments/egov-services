@@ -53,7 +53,7 @@ handleChange(e,name){
 
 }
 
-componentDidMount() {
+componentWillMount() {
   var _this = this;
   if(window.opener && window.opener.document) {
      var logo_ele = window.opener.document.getElementsByClassName("homepage_logo");

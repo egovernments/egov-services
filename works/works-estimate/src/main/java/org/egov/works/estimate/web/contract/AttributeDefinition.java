@@ -1,17 +1,20 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
 import javax.validation.Valid;
-import javax.validation.constraints.*;
+import javax.validation.constraints.NotNull;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * Hold the Asset dynamic fields details as list of json object.
  */
 @ApiModel(description = "Hold the Asset dynamic fields details as list of json object.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class AttributeDefinition   {
   @JsonProperty("name")
@@ -42,7 +45,7 @@ public class AttributeDefinition   {
   private String order = null;
 
   @JsonProperty("columns")
-  private AttributeDefinition columns = null;
+  private List<AttributeDefinition> columns = null;
 
   public AttributeDefinition name(String name) {
     this.name = name;
@@ -227,8 +230,16 @@ public class AttributeDefinition   {
     this.order = order;
   }
 
-  public AttributeDefinition columns(AttributeDefinition columns) {
+  public AttributeDefinition columns(List<AttributeDefinition> columns) {
     this.columns = columns;
+    return this;
+  }
+
+  public AttributeDefinition addColumnsItem(AttributeDefinition columnsItem) {
+    if (this.columns == null) {
+      this.columns = new ArrayList<AttributeDefinition>();
+    }
+    this.columns.add(columnsItem);
     return this;
   }
 
@@ -240,17 +251,17 @@ public class AttributeDefinition   {
 
   @Valid
 
-  public AttributeDefinition getColumns() {
+  public List<AttributeDefinition> getColumns() {
     return columns;
   }
 
-  public void setColumns(AttributeDefinition columns) {
+  public void setColumns(List<AttributeDefinition> columns) {
     this.columns = columns;
   }
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -298,7 +309,7 @@ public class AttributeDefinition   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

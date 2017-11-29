@@ -20,6 +20,9 @@ import org.egov.swm.domain.service.FuelTypeService;
 import org.egov.swm.domain.service.VehicleTypeService;
 import org.egov.swm.domain.service.VendorService;
 import org.egov.swm.persistence.entity.VehicleEntity;
+import org.egov.swm.web.contract.Employee;
+import org.egov.swm.web.contract.EmployeeResponse;
+import org.egov.swm.web.repository.EmployeeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.stereotype.Service;
@@ -37,6 +40,9 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
     @Autowired
     private FuelTypeService fuelTypeService;
+
+    @Autowired
+    private EmployeeRepository employeeRepository;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -187,6 +193,8 @@ public class VehicleJdbcRepository extends JdbcRepository {
             populateVehicleTypes(vehicleList);
 
             populateVendors(vehicleList);
+            
+            populateDrivers(vehicleList);
         }
         page.setTotalResults(vehicleList.size());
 
@@ -272,31 +280,92 @@ public class VehicleJdbcRepository extends JdbcRepository {
 
         }
 
-        String tenantId = null;
-        Map<String, Vendor> vendorMap = new HashMap<>();
+        if (vendorNos != null && vendorNos.length() > 0) {
 
-        if (vehicleList != null && !vehicleList.isEmpty())
-            tenantId = vehicleList.get(0).getTenantId();
+            String tenantId = null;
+            Map<String, Vendor> vendorMap = new HashMap<>();
 
-        vendorSearch = new VendorSearch();
-        vendorSearch.setTenantId(tenantId);
-        vendorSearch.setVendorNos(vendorNos.toString());
+            if (vehicleList != null && !vehicleList.isEmpty())
+                tenantId = vehicleList.get(0).getTenantId();
 
-        vendors = vendorService.search(vendorSearch);
+            vendorSearch = new VendorSearch();
+            vendorSearch.setTenantId(tenantId);
+            vendorSearch.setVendorNos(vendorNos.toString());
 
-        if (vendors != null && vendors.getPagedData() != null)
-            for (Vendor bd : vendors.getPagedData()) {
+            vendors = vendorService.search(vendorSearch);
 
-                vendorMap.put(bd.getVendorNo(), bd);
+            if (vendors != null && vendors.getPagedData() != null)
+                for (Vendor bd : vendors.getPagedData()) {
+
+                    vendorMap.put(bd.getVendorNo(), bd);
+
+                }
+
+            for (Vehicle vehicle : vehicleList) {
+
+                if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null
+                        && !vehicle.getVendor().getVendorNo().isEmpty()) {
+
+                    vehicle.setVendor(vendorMap.get(vehicle.getVendor().getVendorNo()));
+                }
+
+            }
+        }
+
+    }
+
+    private void populateDrivers(List<Vehicle> vehicleList) {
+
+        StringBuffer driverCodes = new StringBuffer();
+        Set<String> driverCodesSet = new HashSet<>();
+
+        for (Vehicle v : vehicleList) {
+
+            if (v.getDriver() != null && v.getDriver().getCode() != null
+                    && !v.getDriver().getCode().isEmpty()) {
+
+                driverCodesSet.add(v.getDriver().getCode());
 
             }
 
-        for (Vehicle vehicle : vehicleList) {
+        }
 
-            if (vehicle.getVendor() != null && vehicle.getVendor().getVendorNo() != null
-                    && !vehicle.getVendor().getVendorNo().isEmpty()) {
+        List<String> driverCodeList = new ArrayList(driverCodesSet);
 
-                vehicle.setVendor(vendorMap.get(vehicle.getVendor().getVendorNo()));
+        for (String code : driverCodeList) {
+
+            if (driverCodes.length() >= 1)
+                driverCodes.append(",");
+
+            driverCodes.append(code);
+
+        }
+        if (driverCodes != null && driverCodes.length() > 0) {
+
+            String tenantId = null;
+            Map<String, Employee> driverMap = new HashMap<>();
+
+            if (vehicleList != null && !vehicleList.isEmpty())
+                tenantId = vehicleList.get(0).getTenantId();
+
+            EmployeeResponse response = employeeRepository.getEmployeeByCodes(driverCodes.toString(), tenantId,
+                    new RequestInfo());
+
+            if (response != null && response.getEmployees() != null)
+                for (Employee e : response.getEmployees()) {
+
+                    driverMap.put(e.getCode(), e);
+
+                }
+
+            for (Vehicle vehicle : vehicleList) {
+
+                if (vehicle.getDriver() != null && vehicle.getDriver().getCode() != null
+                        && !vehicle.getDriver().getCode().isEmpty()) {
+
+                    vehicle.setDriver(driverMap.get(vehicle.getDriver().getCode()));
+                }
+
             }
 
         }

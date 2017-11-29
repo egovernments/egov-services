@@ -24,54 +24,55 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.List;
 import javax.validation.constraints.*;
 import javax.validation.Valid;
+
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Api(value = "purchaseorders", description = "the purchaseorders API")
 public interface PurchaseordersApi {
 
-    @ApiOperation(value = "Create  new  purchaseorders", notes = "Purchase order is created to purchase the materials required, including Indent and Non Indent. This API created a purchase order in the system and initiates the workflow.", response = PurchaseOrderResponse.class, tags={ "Purchase Order", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "PurchaseOrder created Successfully", response = PurchaseOrderResponse.class),
-        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Create  new  purchaseorders", notes = "Purchase order is created to purchase the materials required, including Indent and Non Indent. This API created a purchase order in the system and initiates the workflow.", response = PurchaseOrderResponse.class, tags = {"Purchase Order",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PurchaseOrder created Successfully", response = PurchaseOrderResponse.class),
+            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class)})
+
     @RequestMapping(value = "/purchaseorders/_create",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<PurchaseOrderResponse> purchaseordersCreatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<PurchaseOrderResponse> purchaseordersCreatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Create  new") @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
 
-    @ApiOperation(value = "Create  new  purchaseorder from indent", notes = "Purchase order is created to purchase the materials required, using indents selected in search screen. Supplier and rate type also required to load supplier rate contract details in purchase order screen. Based on pending quantity required in indent and supplier rate contract rates, items will be autopopulated in purchase order screen.  This API created a purchase order in the system and initiates the workflow.", response = PurchaseOrderResponse.class, tags={ "Purchase Order", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "PurchaseOrder created Successfully", response = PurchaseOrderResponse.class),
-        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Create  new  purchaseorder from indent", notes = "Purchase order is created to purchase the materials required, using indents selected in search screen. Supplier and rate type also required to load supplier rate contract details in purchase order screen. Based on pending quantity required in indent and supplier rate contract rates, items will be autopopulated in purchase order screen.  This API created a purchase order in the system and initiates the workflow.", response = PurchaseOrderResponse.class, tags = {"Purchase Order",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PurchaseOrder created Successfully", response = PurchaseOrderResponse.class),
+            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class)})
+
     @RequestMapping(value = "/purchaseorders/_preparepofromindents",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Create  new"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Create  new") @RequestBody PurchaseOrderRequest purchaseOrderRequest);
 
-    @ApiOperation(value = "Get the list of purchase orders", notes = "Purchase order is issued for indent material as well as for non-indent materials as well. This API restruns the list of Purchase oder, associated materials and indents(if any).", response = PurchaseOrderResponse.class, tags={ "Purchase Order", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "PurchaseOrder retrieved Successfully", response = PurchaseOrderResponse.class),
-        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Get the list of purchase orders", notes = "Purchase order is issued for indent material as well as for non-indent materials as well. This API restruns the list of Purchase oder, associated materials and indents(if any).", response = PurchaseOrderResponse.class, tags = {"Purchase Order",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PurchaseOrder retrieved Successfully", response = PurchaseOrderResponse.class),
+            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class)})
+
     @RequestMapping(value = "/purchaseorders/_search",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<PurchaseOrderResponse> purchaseordersSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo, @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,@ApiParam(value = "store of the PurchaseOrder ") @RequestParam(value = "store", required = false) Long store,@ApiParam(value = "purchaseOrderNumber  Auto generated number, read only ") @RequestParam(value = "purchaseOrderNumber", required = false) String purchaseOrderNumber,@ApiParam(value = "purchase order date of the PurchaseOrder ") @RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate,@ApiParam(value = "rate type of the PurchaseOrder ", allowableValues = "DGSC Rate Contract, ULB Rate Contract, One Time Tender, Quotation") @RequestParam(value = "rateType", required = false) String rateType,@ApiParam(value = "supplier code of the PurchaseOrder ") @RequestParam(value = "supplierCode", required = false) String supplierCode,@ApiParam(value = "status of the PurchaseOrder ") @RequestParam(value = "status", required = false) String status, @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<PurchaseOrderResponse> purchaseordersSearchPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo, @Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids, @ApiParam(value = "store of the PurchaseOrder ") @RequestParam(value = "store", required = false) String store, @ApiParam(value = "purchaseOrderNumber  Auto generated number, read only ") @RequestParam(value = "purchaseOrderNumber", required = false) String purchaseOrderNumber, @ApiParam(value = "purchase order date of the PurchaseOrder ") @RequestParam(value = "purchaseOrderDate", required = false) Long purchaseOrderDate, @ApiParam(value = "rate type of the PurchaseOrder ", allowableValues = "DGSC Rate Contract, ULB Rate Contract, One Time Tender, Quotation") @RequestParam(value = "rateType", required = false) String rateType, @ApiParam(value = "supplier code of the PurchaseOrder ") @RequestParam(value = "supplierCode", required = false) String supplierCode, @ApiParam(value = "status of the PurchaseOrder ") @RequestParam(value = "status", required = false) String status, @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue = "20") Integer pageSize, @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue = "1") Integer pageNumber, @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue = "id") String sortBy);
 
 
-    @ApiOperation(value = "Update any of the purchase orders.", notes = "This API is used to update the existing purchase order information in the system. This API is invoked during the workflow as well.", response = PurchaseOrderResponse.class, tags={ "Purchase Order", })
-    @ApiResponses(value = { 
-        @ApiResponse(code = 200, message = "PurchaseOrder updated Successfully", response = PurchaseOrderResponse.class),
-        @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
-    
+    @ApiOperation(value = "Update any of the purchase orders.", notes = "This API is used to update the existing purchase order information in the system. This API is invoked during the workflow as well.", response = PurchaseOrderResponse.class, tags = {"Purchase Order",})
+    @ApiResponses(value = {
+            @ApiResponse(code = 200, message = "PurchaseOrder updated Successfully", response = PurchaseOrderResponse.class),
+            @ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class)})
+
     @RequestMapping(value = "/purchaseorders/_update",
-        produces = { "application/json" }, 
-        consumes = { "application/json" },
-        method = RequestMethod.POST)
-    ResponseEntity<PurchaseOrderResponse> purchaseordersUpdatePost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,@ApiParam(value = "common Request info"  )  @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
+            produces = {"application/json"},
+            consumes = {"application/json"},
+            method = RequestMethod.POST)
+    ResponseEntity<PurchaseOrderResponse> purchaseordersUpdatePost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "common Request info") @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
 
 }

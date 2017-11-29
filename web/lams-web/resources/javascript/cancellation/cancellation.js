@@ -8,7 +8,7 @@ class CancellationAgreement extends React.Component {
           agreementNumber: "",
           acknowledgementNumber: "",
           stateId: "",
-          action: "cancellation",
+          action: "Cancellation",
           agreementDate: "",
           timePeriod: "",
           allottee: {
@@ -115,7 +115,7 @@ class CancellationAgreement extends React.Component {
           isAdvancePaid: "",
           adjustmentStartDate: ""
         },
-        cancelReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
+        cancelReasons: ["Termination", "Cancellation"],
         positionList: [],
         departmentList: [],
         designationList: [],
@@ -137,10 +137,7 @@ class CancellationAgreement extends React.Component {
       e.preventDefault();
       var _this = this;
       var agreement = Object.assign({}, _this.state.agreement);
-
-
-
-      agreement.action = "cancellation";
+      agreement.action = "Cancellation";
 
 console.log("Documents",agreement);
 
@@ -186,7 +183,7 @@ console.log("Documents",agreement);
                     if(err.responseJSON.Error && err.responseJSON.Error.message)
                       showError(err.responseJSON.Error.message);
                     else
-                      showError("Something went wrong. Please contact Administrator");
+                      showError("Something went wrong.");
                   }
 
                 })
@@ -222,7 +219,7 @@ console.log("Documents",agreement);
             if(err.responseJSON.Error && err.responseJSON.Error.message)
               showError(err.responseJSON.Error.message);
             else
-              showError("Something went wrong. Please contact Administrator");
+              showError("Something went wrong. ");
           }
 
         })
@@ -380,11 +377,11 @@ console.log("Documents",agreement);
       }
 
 
-      //var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-      var agreementType = "Create Municipality Agreement";
-      // if (cityGrade.toLowerCase() === 'corp') {
-      //   agreementType = "Create Corporation Agreement";
-      // }
+      var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+      var agreementType = "Cancel Municipality Agreement";
+      if (cityGrade.toLowerCase() === 'corp') {
+        agreementType = "Cancel Corporation Agreement";
+      }
 
       getDesignations(null, function(designations) {
         _this.setState({
@@ -398,7 +395,7 @@ console.log("Documents",agreement);
       var agreement = commonApiPost("lams-services",
         "agreements",
         "_search", {
-          id: getUrlVars()["agreementNumber"],
+          agreementNumber: getUrlVars()["agreementNumber"],
           tenantId
         }).responseJSON["Agreements"][0] || {};
       console.log(agreement);

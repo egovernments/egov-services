@@ -441,7 +441,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids
           - name: store
-            type: integer
+            type: string
             format: singleValueList
             in: query
             description: |
@@ -2415,7 +2415,7 @@ definitions:
           maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-        indents:
+        indentNumbers:
           description: Used for indent search result and used in indent purchase order creation
           type:  array
           items:
@@ -2470,6 +2470,11 @@ definitions:
         material:
           $ref: "#/definitions/Material"
           format: autoComplete
+        purchaseOrderNumber:
+          type: string
+          readOnly: true
+          description: |
+            purchaseOrderNumber reference from purchase order
         orderNumber:
           type: number
           format: int32
@@ -2638,6 +2643,7 @@ definitions:
           description: Designation of the employee who has received the materials in store.
           format: varchar
         mrnStatus:
+          type: string
           description: >-
             Shows the current status of the receipt. By default the value will be
             "CREATED".
@@ -2710,6 +2716,13 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
+        batchNo:
+          type: string
+          description: batch number of material receipt detail.
+        mrnNumber:
+          type: string
+          readOnly: true
+          description: mrn number reference from material receipt.
         orderNumber:
           type: number
           format: int32
@@ -2773,7 +2786,7 @@ definitions:
       type: object
       properties:
         id:
-          type: integer
+          type: string
           description: The unique identifier for the receipt details additional information.
         tenantId:
           type: string
@@ -2793,6 +2806,9 @@ definitions:
           description: The date on which the materials are received into system.
           format: int64
           x-displayformat: 'dd/MM/yyyy'
+        receiptDetailId:
+          type: string
+          description: id reference from receipt detail.
         oldReceiptNumber:
           type: string
           description: old receipt number. Field used in opening balance screen.

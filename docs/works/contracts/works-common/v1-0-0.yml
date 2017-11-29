@@ -1113,6 +1113,10 @@ definitions:
       workProgress:
         $ref: '#/definitions/WorkProgress'
         description: WorkProgress Enum for Photos captured
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:

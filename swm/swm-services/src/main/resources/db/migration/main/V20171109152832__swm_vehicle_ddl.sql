@@ -10,7 +10,7 @@ Create table egswm_vehicle(
   operatorsReq bigint NOT NULL,
   model varchar(256) NOT NULL,
   vendor varchar(256),
-  driver varchar(256),
+  driver varchar(256) NOT NULL,
   purchaseDate bigint,
   price numeric (13,2),
   sourceOfPurchase varchar(256),

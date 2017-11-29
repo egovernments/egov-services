@@ -124,15 +124,12 @@ public class CaseBuilder {
 			selectQuery.append(" caseno=? ");
 			preparedStatementValues.add(caseSearchCriteria.getCaseNo());
 		}
-
-		if (caseSearchCriteria.getIsSummon() == null) {
-			caseSearchCriteria.setIsSummon(true);
+		
+		if (caseSearchCriteria.getEntryType() != null) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" LOWER(entrytype)= LOWER(?) ");
+			preparedStatementValues.add(caseSearchCriteria.getEntryType());
 		}
-
-		isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-		selectQuery.append(" issummon=? ");
-		preparedStatementValues.add(caseSearchCriteria.getIsSummon());
-
 	}
 
 	/**

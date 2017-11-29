@@ -49,10 +49,10 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
                 || letterOfAcceptanceSearchCriteria.getDepartment() != null && !letterOfAcceptanceSearchCriteria.getDepartment().isEmpty())
             tableName += LOA_ESTIMATESEARCH_EXTENTION;
 
-        String orderBy = "order by id";
+        String orderBy = "order by loa.id";
         if (letterOfAcceptanceSearchCriteria.getSortBy() != null
                 && !letterOfAcceptanceSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by " + letterOfAcceptanceSearchCriteria.getSortBy();
+            orderBy = "order by loa." + letterOfAcceptanceSearchCriteria.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -71,12 +71,12 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
         }
         if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() == 1) {
             addAnd(params);
-            params.append("loa.loaNumber like (:loaNumber)");
-            paramValues.put("loa.loaNumber", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers().get(0) + "%");
+            params.append("loa.loaNumber like (:loaNumbers)");
+            paramValues.put("loaNumbers", "%" + letterOfAcceptanceSearchCriteria.getLoaNumbers().get(0).toUpperCase() + "%");
         } else if (letterOfAcceptanceSearchCriteria.getLoaNumbers() != null && letterOfAcceptanceSearchCriteria.getLoaNumbers().size() > 1) {
             addAnd(params);
-            params.append("loa.loaNumber in(:loaNumber)");
-            paramValues.put("loaNumber", letterOfAcceptanceSearchCriteria.getLoaNumbers());
+            params.append("loa.loaNumber in(:loaNumbers)");
+            paramValues.put("loaNumbers", letterOfAcceptanceSearchCriteria.getLoaNumbers());
         }
         if (StringUtils.isNotBlank(letterOfAcceptanceSearchCriteria.getFileNumber())) {
             addAnd(params);
@@ -164,7 +164,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
                     .tenantId(letterOfAcceptance.getTenantId()).letterOfAcceptanceIds(Arrays.asList(letterOfAcceptance.getId())).build();
 
             letterOfAcceptance.setSecurityDeposits(securityDepositeJdbcRepository.searchSecurityDeposite(securityDepositeSearchCriteria));
-            letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria));
+            letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimateRepository.searchLOAs(letterOfAcceptanceEstimateSearchCriteria,requestInfo));
 
             loas.add(letterOfAcceptance);
 
@@ -181,7 +181,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             addAnd(params);
             params.append("upper(loa.contractor) like :contractorcode");
             paramValues.put("contractorcode", '%' + contractorCodes.get(0).toUpperCase() + '%');
-        } else if (contractorCodes.size() > 1) {
+        } else {
             addAnd(params);
             params.append("loa.contractor in :contractorcode");
             paramValues.put("contractorcode", contractorCodes);

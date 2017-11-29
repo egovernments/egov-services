@@ -13,7 +13,7 @@ import java.util.Objects;
  * An Object that holds Sanction Details of Abstract Estimate
  */
 @ApiModel(description = "An Object that holds Sanction Details of Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class AbstractEstimateSanctionDetail   {
   @JsonProperty("id")
@@ -30,6 +30,9 @@ public class AbstractEstimateSanctionDetail   {
 
   @JsonProperty("sanctionAuthority")
   private EstimateSanctionAuthority sanctionAuthority = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   public AbstractEstimateSanctionDetail id(String id) {
     this.id = id;
@@ -137,6 +140,26 @@ public class AbstractEstimateSanctionDetail   {
     this.sanctionAuthority = sanctionAuthority;
   }
 
+  public AbstractEstimateSanctionDetail deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
 
   @Override
   public boolean equals(Object o) {
@@ -151,12 +174,13 @@ public class AbstractEstimateSanctionDetail   {
         Objects.equals(this.tenantId, abstractEstimateSanctionDetail.tenantId) &&
         Objects.equals(this.abstractEstimate, abstractEstimateSanctionDetail.abstractEstimate) &&
         Objects.equals(this.sanctionType, abstractEstimateSanctionDetail.sanctionType) &&
-        Objects.equals(this.sanctionAuthority, abstractEstimateSanctionDetail.sanctionAuthority);
+        Objects.equals(this.sanctionAuthority, abstractEstimateSanctionDetail.sanctionAuthority) &&
+        Objects.equals(this.deleted, abstractEstimateSanctionDetail.deleted);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, abstractEstimate, sanctionType, sanctionAuthority);
+    return Objects.hash(id, tenantId, abstractEstimate, sanctionType, sanctionAuthority, deleted);
   }
 
   @Override
@@ -169,6 +193,7 @@ public class AbstractEstimateSanctionDetail   {
     sb.append("    abstractEstimate: ").append(toIndentedString(abstractEstimate)).append("\n");
     sb.append("    sanctionType: ").append(toIndentedString(sanctionType)).append("\n");
     sb.append("    sanctionAuthority: ").append(toIndentedString(sanctionAuthority)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("}");
     return sb.toString();
   }

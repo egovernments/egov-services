@@ -16,7 +16,7 @@ import java.util.Objects;
  * Hold the material receipt note material level information. This will show which material is received based on which purchase order.
  */
 @ApiModel(description = "Hold the material receipt note material level information. This will show which material is received based on which purchase order.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-18T03:45:26.890Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T08:19:19.563Z")
 
 public class MaterialReceiptDetail {
     @JsonProperty("id")
@@ -27,6 +27,9 @@ public class MaterialReceiptDetail {
 
     @JsonProperty("material")
     private Material material = null;
+
+    @JsonProperty("mrnNumber")
+    private String mrnNumber = null;
 
     @JsonProperty("orderNumber")
     private BigDecimal orderNumber = null;
@@ -132,6 +135,27 @@ public class MaterialReceiptDetail {
 
     public void setMaterial(Material material) {
         this.material = material;
+    }
+
+    public MaterialReceiptDetail mrnNumber(String mrnNumber) {
+        this.mrnNumber = mrnNumber;
+        return this;
+    }
+
+    /**
+     * mrn number reference from material receipt.
+     *
+     * @return mrnNumber
+     **/
+    @ApiModelProperty(readOnly = true, value = "mrn number reference from material receipt.")
+
+
+    public String getMrnNumber() {
+        return mrnNumber;
+    }
+
+    public void setMrnNumber(String mrnNumber) {
+        this.mrnNumber = mrnNumber;
     }
 
     public MaterialReceiptDetail orderNumber(BigDecimal orderNumber) {
@@ -451,6 +475,7 @@ public class MaterialReceiptDetail {
         return Objects.equals(this.id, materialReceiptDetail.id) &&
                 Objects.equals(this.tenantId, materialReceiptDetail.tenantId) &&
                 Objects.equals(this.material, materialReceiptDetail.material) &&
+                Objects.equals(this.mrnNumber, materialReceiptDetail.mrnNumber) &&
                 Objects.equals(this.orderNumber, materialReceiptDetail.orderNumber) &&
                 Objects.equals(this.batchNo, materialReceiptDetail.batchNo) &&
                 Objects.equals(this.uom, materialReceiptDetail.uom) &&
@@ -469,7 +494,7 @@ public class MaterialReceiptDetail {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, material, orderNumber, batchNo, uom, purchaseOrderDetail, receivedQty, acceptedQty, unitRate, openingRate, asset, voucherHeader, rejectionRemark, remarks, isScrapItem, receiptDetailsAddnInfo);
+        return Objects.hash(id, tenantId, material, mrnNumber, orderNumber, batchNo, uom, purchaseOrderDetail, receivedQty, acceptedQty, unitRate, openingRate, asset, voucherHeader, rejectionRemark, remarks, isScrapItem, receiptDetailsAddnInfo);
     }
 
     @Override
@@ -480,6 +505,7 @@ public class MaterialReceiptDetail {
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
         sb.append("    material: ").append(toIndentedString(material)).append("\n");
+        sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
         sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
         sb.append("    batchNo: ").append(toIndentedString(batchNo)).append("\n");
         sb.append("    uom: ").append(toIndentedString(uom)).append("\n");

@@ -54,8 +54,8 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 			@ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false) Integer pageNumber,
 			@ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc") @RequestParam(value = "sortBy", required = false) String sortBy) {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
-				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageSize, sortBy,
-				pageNumber);
+				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
+				pageSize);
 		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract);
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}

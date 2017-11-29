@@ -223,6 +223,9 @@ public class AssetValidator implements Validator {
 		if(revaluation.getOrderDate()!=null && revaluation.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_REVALUATION_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
 		
+		if(revaluation.getValueAfterRevaluation().longValue()<=0)
+			errorMap.put("EGASSET_REVALUATION_VALUEAFTERREVALUATION", "Negative Amount Cannot Be Accepted for value after revaluation");
+			
 		
 		if (asset != null) {
 			
@@ -265,6 +268,7 @@ public class AssetValidator implements Validator {
 
 		if (disposal.getOrderDate().compareTo(new Date().getTime()) > 0)
 			errorMap.put("EGASSET_DISPOSAL_ORDER_DATE", "Future Dates Cannot Be Given For Order Date");
+	
 
 		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
@@ -293,15 +297,10 @@ public class AssetValidator implements Validator {
 			if((!landDetailCode.isEmpty())&&(!landDetailCode.contains(landDetails.get(i).getCode())))
 			landDetailCode.add(landDetails.get(i).getCode());
 			else
-				errorMap.put("Asset_LandDetails", "Duplicate LandDetails cannot be given for a single asset");
+				errorMap.put("Asset_LandDetails", "Same landdetails cannot be attached multiple times to the asset");
 		}
 		}
 		
-       /*for (String ld : landDetailCode) {
-			System.err.println(ld);
-			
-		}
-      */
 	}
 	
   public void validateAssetId(AssetRequest assetRequest) {

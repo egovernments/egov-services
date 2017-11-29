@@ -157,36 +157,36 @@ public class VehicleMaintenanceJdbcRepository extends JdbcRepository {
             vehicleNos.append(vehicleNo);
 
         }
+        if (vehicleNos != null && vehicleNos.length() > 0) {
+            String tenantId = null;
+            Map<String, Vehicle> vehicleMap = new HashMap<>();
 
-        String tenantId = null;
-        Map<String, Vehicle> vehicleMap = new HashMap<>();
+            if (vehicleMaintenanceList != null && !vehicleMaintenanceList.isEmpty())
+                tenantId = vehicleMaintenanceList.get(0).getTenantId();
 
-        if (vehicleMaintenanceList != null && !vehicleMaintenanceList.isEmpty())
-            tenantId = vehicleMaintenanceList.get(0).getTenantId();
+            vehicleSearch = new VehicleSearch();
+            vehicleSearch.setTenantId(tenantId);
+            vehicleSearch.setRegNumbers(vehicleNos.toString());
 
-        vehicleSearch = new VehicleSearch();
-        vehicleSearch.setTenantId(tenantId);
-        vehicleSearch.setRegNumbers(vehicleNos.toString());
+            vehicles = vehicleService.search(vehicleSearch);
 
-        vehicles = vehicleService.search(vehicleSearch);
+            if (vehicles != null && vehicles.getPagedData() != null)
+                for (Vehicle v : vehicles.getPagedData()) {
 
-        if (vehicles != null && vehicles.getPagedData() != null)
-            for (Vehicle v : vehicles.getPagedData()) {
+                    vehicleMap.put(v.getRegNumber(), v);
 
-                vehicleMap.put(v.getRegNumber(), v);
+                }
+
+            for (VehicleMaintenance vfd : vehicleMaintenanceList) {
+
+                if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
+                        && !vfd.getVehicle().getRegNumber().isEmpty()) {
+
+                    vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
+                }
 
             }
-
-        for (VehicleMaintenance vfd : vehicleMaintenanceList) {
-
-            if (vfd.getVehicle() != null && vfd.getVehicle().getRegNumber() != null
-                    && !vfd.getVehicle().getRegNumber().isEmpty()) {
-
-                vfd.setVehicle(vehicleMap.get(vfd.getVehicle().getRegNumber()));
-            }
-
         }
-
     }
 
 }

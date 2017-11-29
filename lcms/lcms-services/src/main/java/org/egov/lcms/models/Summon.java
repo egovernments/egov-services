@@ -4,6 +4,9 @@ import java.util.List;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.egov.lcms.enums.EntryType;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -110,4 +113,7 @@ public class Summon {
 	
 	@JsonProperty("amountReceived")
 	private Double amountReceived = null;
+	
+	@JsonProperty("entryType")
+	private EntryType entryType = null;
 }

@@ -1,0 +1,52 @@
+ReportDefinitions:
+- reportName: DumpingGroundDetailReport
+  summary: Report regarding dumping ground details
+  version: 1.0.0
+  moduleName: swm
+  sourceColumns:
+  - name: dumpinggroundname
+    label: reports.swm.dumpinggroundname
+    type: string
+    source: mdms
+  - name: date
+    label: reports.swm.date
+    type: string
+    source: egswm_sourcesegregation    
+  - name: wetwastecollected
+    label: reports.swm.wetwaste
+    type: number
+    source: egswm_collectiondetails
+  - name: drywastecollected
+    label: reports.swm.drywaste
+    type: number
+    source: egswm_collectiondetails
+  searchParams:
+  - name: dumpinggroundcode
+    label: reports.swm.dumpinggroundname
+    type: string
+    source: mdms
+    isMandatory: true  
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.siteDetails.*.name
+  - name: collectiontypecode
+    label: reports.swm.collectiontypename
+    type: string
+    source: mdms
+    isMandatory: true  
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.SWM.CollectionType.*.code|$.MdmsRes.SWM.CollectionType.*.name    
+  - name: fromDate
+    label: reports.swm.datefrom
+    type: epoch
+    source: egswm_sourcesegregation
+    isMandatory: true
+  - name: toDate
+    label: reports.swm.dateto
+    type: epoch
+    source: egswm_sourcesegregation
+    isMandatory: true
+  - name: wastetypename
+    label: reports.swm.collectiontypename
+    type: string
+    source: mdms
+    isMandatory: false  
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=WasteType&tenantId=$tenantid|$.MdmsRes.SWM.WasteType.*.code|$.MdmsRes.SWM.WasteType.*.name
+  query: select ssg.dumpingground as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg where cd.sourcesegregation = ssg.code and cd.tenantid = 'default' and ssg.tenantid = 'default' and cd.collectiontype = $collectiontypecode and ssg.dumpingground = $dumpinggroundcode and ssg.sourcesegregationdate >= $fromDate and ssg.sourcesegregationdate <= toDate group by date, dumpinggroundname;

@@ -15,15 +15,13 @@ public class OfflineStatusSearchContract {
 
 	private String tenantId;
 
-	private List<String> objectIds;
-
 	private List<String> loaNumbers;
 
 	private List<String> workOrderNumbers;
 	
-	private List<String> detailedEstimateNumber;
+	private List<String> detailedEstimateNumbers;
 
-	private List<String> objectType;
+	private String objectType;
 	
 	private List<String> statuses;
 

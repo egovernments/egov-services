@@ -28,7 +28,7 @@ public class AbstractEstimateSearchContract {
 
 	private String sortBy;
 
-	private List<String> departmentCodes;
+	private List<String> departments;
 
 	private List<String> fundCodes;
 

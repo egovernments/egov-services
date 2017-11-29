@@ -1,5 +1,7 @@
 package org.egov.mdms.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -23,11 +25,8 @@ public class MasterMetaData {
 	
 	@JsonProperty("masterName")
 	public String masterName;
-	
-	@JsonProperty("isValidate")
-	public Boolean isValidate;
-	
+		
 	@JsonProperty("masterData")
-	public Object masterData;
+	public List<Object> masterData;
 
 }

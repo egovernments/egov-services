@@ -21,7 +21,10 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
     public static final String TABLE_NAME = "egw_letterofacceptanceestimate loaestimate";
 
 
-    public List<LetterOfAcceptanceEstimate> searchLOAs(final LetterOfAcceptanceEstimateSearchContract letterOfAcceptanceEstimateSearchCriteria) {
+    @Autowired
+    private EstimateRepository estimateRepository;
+
+    public List<LetterOfAcceptanceEstimate> searchLOAs(final LetterOfAcceptanceEstimateSearchContract letterOfAcceptanceEstimateSearchCriteria, final RequestInfo requestInfo) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -80,6 +83,11 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
         List<LetterOfAcceptanceEstimate> loaEstimates = new ArrayList<>();
         for (LetterOfAcceptanceEstimateHelper letterOfAcceptanceEstimateHelper : loaEstimatesList) {
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = letterOfAcceptanceEstimateHelper.toDomain();
+
+            DetailedEstimateSearchContract detailedEstimateSearchContract = new DetailedEstimateSearchContract();
+            detailedEstimateSearchContract.setDetailedEstimateNumbers(Arrays.asList(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber()));
+            detailedEstimateSearchContract.setStatuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()));
+            letterOfAcceptanceEstimate.setDetailedEstimate(estimateRepository.getDetailedEstimateById(detailedEstimateSearchContract,letterOfAcceptanceEstimateSearchCriteria.getTenantId(),requestInfo).getDetailedEstimates().get(0));
 
             AssetsForLoaSearchContract assetsForLoaSearchCriteria = AssetsForLoaSearchContract.builder()
                     .tenantId(letterOfAcceptanceEstimate.getTenantId())

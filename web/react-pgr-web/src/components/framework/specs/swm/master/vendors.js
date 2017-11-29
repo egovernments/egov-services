@@ -254,9 +254,9 @@ var dat = {
               "values": [
                 {  
                   "name":"Ward",
-                  "jsonPath":"vendors[0].myTable[0].location.ward",
+                  "jsonPath":"vendors[0].myTable[0].ward",
                   "label":"swm.collectionpoints.create.ward",
-                  "type":"text",
+                  "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
                   "maxLength":128,
@@ -264,48 +264,48 @@ var dat = {
                   "minLength":1,
                   "patternErrorMsg":"",
                   "depedants": [{
-                    "jsonPath": "vendors[0].myTable[0].location.zone",
+                    "jsonPath": "vendors[0].myTable[0].zone",
                     "type": "dropDown",
-                    "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.ward}|$.Boundary.*.id|$.Boundary.*.name"
+                    "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={vendors[0].myTable[0].ward}|$.Boundary.*.id|$.Boundary.*.name"
                   }]
                 },
                 {  
                   "name":"Zone",
-                  "jsonPath":"vendors[0].myTable[0].location.zone",
+                  "jsonPath":"vendors[0].myTable[0].zone",
                   "label":"swm.collectionpoints.create.zone",
-                  "type":"text",
+                  "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
                   "maxLength":128,
                   "minLength":1,
                   "patternErrorMsg":"",
                   "depedants": [{
-                    "jsonPath": "vendors[0].myTable[0].location.block",
+                    "jsonPath": "vendors[0].myTable[0].block",
                     "type": "dropDown",
-                    "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.code}|$.Boundary.*.id|$.Boundary.*.name"
+                    "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={vendors[0].myTable[0].zone}|$.Boundary.*.id|$.Boundary.*.name"
                   }]
                 },
                 {  
                   "name":"Road/Street",
-                  "jsonPath":"vendors[0].myTable[0].location.block",
+                  "jsonPath":"vendors[0].myTable[0].block",
                   "label":"swm.collectionpoints.create.block",
-                  "type":"text",
+                  "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
                   "maxLength":128,
                   "minLength":1,
                   "patternErrorMsg":"",
                   "depedants": [{
-                    "jsonPath": "vendors[0].myTable[0].location.code",
+                    "jsonPath": "vendors[0].myTable[0].code",
                     "type": "dropDown",
-                    "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={collectionPoints[0].location.block}|$.Boundary.*.id|$.Boundary.*.name"
+                    "pattern": "egov-location/boundarys/childLocationsByBoundaryId?tenantId=default&boundaryId={vendors[0].myTable[0].block}|$.Boundary.*.id|$.Boundary.*.name"
                   }]
                 },
                 {  
                   "name":"Colony",
-                  "jsonPath":"vendors[0].myTable[0].location.code",
+                  "jsonPath":"vendors[0].myTable[0].code",
                   "label":"swm.collectionpoints.create.colony",
-                  "type":"text",
+                  "type":"singleValueList",
                   "isRequired":true,
                   "isDisabled":false,
                   "maxLength":128,

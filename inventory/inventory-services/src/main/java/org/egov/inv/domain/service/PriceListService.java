@@ -2,7 +2,6 @@ package org.egov.inv.domain.service;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import org.egov.common.Constants;
@@ -12,14 +11,13 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
-import org.egov.inv.model.PriceListDetailsSearchRequest;
 import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
+import org.egov.inv.persistence.repository.MaterialJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListDetailJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListRepository;
@@ -56,6 +54,9 @@ public class PriceListService extends DomainService {
     
     @Autowired
     private PriceListDetailJdbcRepository priceListDetailsJdbcRepository;
+    
+    @Autowired
+    private MaterialJdbcRepository materialJdbcRepository;
     
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -240,9 +241,19 @@ public class PriceListService extends DomainService {
 				}
 			}
 			
-//			if(priceListJdbcRepository.isDuplicateContract(priceLists)){
-//				throw new CustomException("inv.0011", "A ratecontract already exists in the system for the given material in the specified time duration. Please select alternate duration for the contract.");
-//			}
+			for(PriceList pl:priceLists){
+				for(PriceListDetails pld:pl.getPriceListDetails()){
+					for(PriceListDetails plds:pl.getPriceListDetails()){
+						if(pld!=plds && pld.getMaterial().getCode().toString().equals(plds.getMaterial().getCode().toString())){
+							throw new CustomException("Material", "Duplicate material(s) " + "" + " found, please remove them and try creating pricelist");
+						}
+					}
+				}
+			}
+			
+			if(priceListJdbcRepository.isDuplicateContract(priceLists)){
+				throw new CustomException("inv.0011", "A ratecontract already exists in the system for the given material in the specified time duration. Please select alternate duration for the contract.");
+			}
 			
 		} catch (IllegalArgumentException e) {
 

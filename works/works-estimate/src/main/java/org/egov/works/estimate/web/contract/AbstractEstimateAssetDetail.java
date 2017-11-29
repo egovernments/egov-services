@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds Asset/Land Details of Abstract Estimate
  */
 @ApiModel(description = "An Object that holds Asset/Land Details of Abstract Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T12:00:56.847Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class AbstractEstimateAssetDetail   {
   @JsonProperty("id")
@@ -43,6 +43,9 @@ public class AbstractEstimateAssetDetail   {
 
   @JsonProperty("constructionArea")
   private Double constructionArea = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -115,10 +118,10 @@ public class AbstractEstimateAssetDetail   {
   }
 
    /**
-   * Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs and Addition'
+   * Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs or Addition'.
    * @return asset
   **/
-  @ApiModelProperty(value = "Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs and Addition'")
+  @ApiModelProperty(value = "Asset for which the Abstract Estimate is created. This field is required and to be shown if Nature of work is 'Repairs or Addition'.")
 
   @Valid
 
@@ -136,10 +139,10 @@ public class AbstractEstimateAssetDetail   {
   }
 
    /**
-   * Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs and Addition'
+   * Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs or Addition'
    * @return assetCondition
   **/
-  @ApiModelProperty(value = "Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs and Addition'")
+  @ApiModelProperty(value = "Present condition of the asset. This field is required and to be shown if Nature of work is 'Repairs or Addition'")
 
   @Valid
 
@@ -157,10 +160,10 @@ public class AbstractEstimateAssetDetail   {
   }
 
    /**
-   * Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs and Addition'
+   * Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs or Addition'
    * @return assetRemarks
   **/
-  @ApiModelProperty(value = "Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs and Addition'")
+  @ApiModelProperty(value = "Remarks of the asset. This field is required and to be shown if Nature of work is 'Repairs or Addition'")
 
  @Pattern(regexp="[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+") @Size(max=1024)
   public String getAssetRemarks() {
@@ -177,10 +180,10 @@ public class AbstractEstimateAssetDetail   {
   }
 
    /**
-   * Land Asset ID
+   * Land Asset ID. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
    * @return landAsset
   **/
-  @ApiModelProperty(value = "Land Asset ID")
+  @ApiModelProperty(value = "Land Asset ID. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.")
 
  @Pattern(regexp="[a-zA-Z0-9-\\\\]+")
   public String getLandAsset() {
@@ -232,6 +235,26 @@ public class AbstractEstimateAssetDetail   {
     this.constructionArea = constructionArea;
   }
 
+  public AbstractEstimateAssetDetail deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public AbstractEstimateAssetDetail auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -272,12 +295,13 @@ public class AbstractEstimateAssetDetail   {
         Objects.equals(this.landAsset, abstractEstimateAssetDetail.landAsset) &&
         Objects.equals(this.landAssetCondition, abstractEstimateAssetDetail.landAssetCondition) &&
         Objects.equals(this.constructionArea, abstractEstimateAssetDetail.constructionArea) &&
+        Objects.equals(this.deleted, abstractEstimateAssetDetail.deleted) &&
         Objects.equals(this.auditDetails, abstractEstimateAssetDetail.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, abstractEstimate, asset, assetCondition, assetRemarks, landAsset, landAssetCondition, constructionArea, auditDetails);
+    return Objects.hash(id, tenantId, abstractEstimate, asset, assetCondition, assetRemarks, landAsset, landAssetCondition, constructionArea, deleted, auditDetails);
   }
 
   @Override
@@ -294,6 +318,7 @@ public class AbstractEstimateAssetDetail   {
     sb.append("    landAsset: ").append(toIndentedString(landAsset)).append("\n");
     sb.append("    landAssetCondition: ").append(toIndentedString(landAssetCondition)).append("\n");
     sb.append("    constructionArea: ").append(toIndentedString(constructionArea)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

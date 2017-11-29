@@ -30,8 +30,9 @@ public interface KpiValue {
 	@PostMapping(value = "/_comparesearch")
     @ResponseBody
     public ResponseEntity<?> compareAndSearch(@RequestParam("tenantId") List<String> tenantIdList,
-			 @RequestParam("kpiCodes") List<String> kpiCodes,
-			 @RequestParam("finYear") List<String> finYearList,
+			 @RequestParam(value="departmentId", required = false) Long departmentId,
+			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCode,
+			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestBody RequestInfoWrapper requestInfo);
 	
 	@PostMapping(value = "/_search")

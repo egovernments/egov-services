@@ -52,7 +52,7 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
         String orderBy = "order by wo.workorderdate";
         if (workOrderSearchContract.getSortBy() != null
                 && !workOrderSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + workOrderSearchContract.getSortBy();
+            orderBy = "order by wo." + workOrderSearchContract.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);

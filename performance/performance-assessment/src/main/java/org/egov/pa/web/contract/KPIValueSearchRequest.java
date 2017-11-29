@@ -31,9 +31,22 @@ public class KPIValueSearchRequest   {
   @JsonProperty("finYear")
   private List<String> finYear = null;
   
+  @JsonProperty("graphType")
+  private String graphType = null;
+  
+  
+  
   
 
-  public Long getDepartmentId() {
+  public String getGraphType() {
+	return graphType;
+}
+
+public void setGraphType(String graphType) {
+	this.graphType = graphType;
+}
+
+public Long getDepartmentId() {
 	return departmentId;
 }
 

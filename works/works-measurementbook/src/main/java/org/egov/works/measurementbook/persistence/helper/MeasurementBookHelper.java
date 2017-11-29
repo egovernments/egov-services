@@ -1,10 +1,7 @@
 package org.egov.works.measurementbook.persistence.helper;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
+import lombok.*;
 import org.egov.works.measurementbook.web.contract.*;
 
 import java.math.BigDecimal;
@@ -13,6 +10,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class MeasurementBookHelper {
     @JsonProperty("id")

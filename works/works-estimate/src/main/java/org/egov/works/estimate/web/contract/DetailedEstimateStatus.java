@@ -1,7 +1,7 @@
 package org.egov.works.estimate.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonValue;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonValue;
 
 /**
  * Gets or Sets DetailedEstimateStatus
@@ -20,9 +20,9 @@ public enum DetailedEstimateStatus {
   
   APPROVED("APPROVED"),
   
-  TECHNICAL_SANCTIONED("TECHNICAL_SANCTIONED"),
+  CHECKED("CHECKED"),
   
-  CHECKED("CHECKED");
+  TECHNICAL_SANCTIONED("TECHNICAL_SANCTIONED");
 
   private String value;
 

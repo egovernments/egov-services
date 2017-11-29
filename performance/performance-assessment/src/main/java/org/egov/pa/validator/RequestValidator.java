@@ -69,9 +69,6 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class RequestValidator {
 	
-	@Autowired
-	private RestCallService restCallService; 
-	
 	@Autowired 
 	private KpiValueServiceImpl kpiValueService;
 	
@@ -262,10 +259,10 @@ public class RequestValidator {
 	}
 	
 	
-	public List<ErrorResponse> validateRequest(final KPIValueSearchRequest kpiValueSearchRequest) {
+	public List<ErrorResponse> validateRequest(final KPIValueSearchRequest kpiValueSearchRequest, Boolean compare) {
         final List<ErrorResponse> errorResponses = new ArrayList<>();
         final ErrorResponse errorResponse = new ErrorResponse();
-        final Error error = getError(kpiValueSearchRequest);
+        final Error error = getError(kpiValueSearchRequest, compare);
         errorResponse.setError(error);
         if (!errorResponse.getErrorFields().isEmpty())
             errorResponses.add(errorResponse);
@@ -273,43 +270,50 @@ public class RequestValidator {
         return errorResponses;
     }
 	
-	public Error getError(final KPIValueSearchRequest kpiValueSearchRequest) {
+	public Error getError(final KPIValueSearchRequest kpiValueSearchRequest, Boolean compare) {
 		final List<ErrorField> errorFields = new ArrayList<>();
-		
-		/*if(null == kpiValueSearchRequest.getFinYear()) { 
-			errorFields.add(buildErrorField(PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_CODE,  
-                    PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_ERROR_MESSAGE,
-                    PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_FIELD_NAME));
+
+		if (compare) {
+			if (null == kpiValueSearchRequest.getFinYear()) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_CODE,
+						PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_FIELD_NAME));
+			}
+			if (null == kpiValueSearchRequest.getKpiCodes()) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_CODE,
+						PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_FIELD_NAME));
+			}
+			if (null == kpiValueSearchRequest.getTenantId()) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_CODE,
+						PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_FIELD_NAME));
+			}
+
+			String tenantCount = DEFAULT_COUNT;
+			String kpiCount = DEFAULT_COUNT;
+			String finYearCount = DEFAULT_COUNT;
+			if (null != kpiValueSearchRequest.getFinYear() && kpiValueSearchRequest.getFinYear().size() > 0) {
+				finYearCount = (kpiValueSearchRequest.getFinYear().size() == 1
+						&& !kpiValueSearchRequest.getFinYear().get(0).equals("ALL")) ? "1" : "*";
+			}
+			if (null != kpiValueSearchRequest.getTenantId() && kpiValueSearchRequest.getTenantId().size() > 0) {
+				tenantCount = (kpiValueSearchRequest.getTenantId().size() == 1
+						&& !kpiValueSearchRequest.getTenantId().get(0).equals("ALL")) ? "1" : "*";
+			}
+			if (null != kpiValueSearchRequest.getKpiCodes() && kpiValueSearchRequest.getKpiCodes().size() > 0) {
+				kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1
+						&& !kpiValueSearchRequest.getKpiCodes().get(0).equals("ALL")) ? "1" : "*";
+			}
+			String check = kpiValueService.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
+			if (!check.split("_")[0].equals(SEARCH_POSSIBLE)) {
+				errorFields.add(buildErrorField(PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_CODE,
+						PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_ERROR_MESSAGE,
+						PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_FIELD_NAME));
+			} else {
+				kpiValueSearchRequest.setGraphType(check.split("_")[1]);
+			}
 		}
-		if(null == kpiValueSearchRequest.getKpiCodes()) { 
-			errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_CODE,  
-                    PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_ERROR_MESSAGE,
-                    PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_FIELD_NAME));
-		}
-		if(null == kpiValueSearchRequest.getTenantId()) { 
-			errorFields.add(buildErrorField(PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_CODE,  
-                    PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_ERROR_MESSAGE,
-                    PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_FIELD_NAME));
-		}
-		
-		String tenantCount = DEFAULT_COUNT;
-		String kpiCount = DEFAULT_COUNT;
-		String finYearCount = DEFAULT_COUNT; 
-		if(null != kpiValueSearchRequest.getFinYear() && kpiValueSearchRequest.getFinYear().size() > 0) { 
-			finYearCount = (kpiValueSearchRequest.getFinYear().size() == 1 && !kpiValueSearchRequest.getFinYear().get(0).equals("ALL")) ? "1" : "*" ;  	
-		}
-		if(null != kpiValueSearchRequest.getTenantId() && kpiValueSearchRequest.getTenantId().size() > 0) { 
-			tenantCount = (kpiValueSearchRequest.getTenantId().size() == 1 && !kpiValueSearchRequest.getTenantId().get(0).equals("ALL")) ? "1" : "*" ;  	
-		}
-		if(null != kpiValueSearchRequest.getKpiCodes() && kpiValueSearchRequest.getKpiCodes().size() > 0) { 
-			kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1 && !kpiValueSearchRequest.getKpiCodes().get(0).equals("ALL")) ? "1" : "*" ;  	
-		}
-		String check = kpiValueService.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
-		if(!check.equals(SEARCH_POSSIBLE)) { 
-			errorFields.add(buildErrorField(PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_CODE,  
-                    PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_ERROR_MESSAGE,
-                    PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_FIELD_NAME));
-		}*/
 		return Error.builder().code(HttpStatus.BAD_REQUEST.value())
 				.message(PerformanceAssessmentConstants.INVALID_REQUEST_MESSAGE).errorFields(errorFields).build();
 	}

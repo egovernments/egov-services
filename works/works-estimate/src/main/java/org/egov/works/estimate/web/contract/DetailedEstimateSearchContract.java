@@ -30,7 +30,7 @@ public class DetailedEstimateSearchContract {
 
 	private Long toAmount;
 	
-	private String department;
+	private String departments;
 	
 	private List<String> typeOfWork;
 	

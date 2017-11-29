@@ -11,7 +11,6 @@ import org.egov.swm.domain.model.CollectionPointSearch;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Route;
 import org.egov.swm.domain.model.RouteSearch;
-import org.egov.swm.domain.repository.CollectionPointRepository;
 import org.egov.swm.domain.repository.RouteRepository;
 import org.egov.swm.web.requests.RouteRequest;
 import org.egov.tracer.model.CustomException;
@@ -27,7 +26,7 @@ public class RouteService {
     private RouteRepository routeRepository;
 
     @Autowired
-    private CollectionPointRepository collectionPointRepository;
+    private CollectionPointService collectionPointService;
 
     @Autowired
     private CollectionTypeService collectionTypeService;
@@ -115,7 +114,7 @@ public class RouteService {
                 search.setTenantId(route.getTenantId());
                 search.setCode(route.getStartingCollectionPoint().getCode());
 
-                collectionPoints = collectionPointRepository.search(search);
+                collectionPoints = collectionPointService.search(search);
 
                 if (collectionPoints == null || collectionPoints.getPagedData() == null
                         || collectionPoints.getPagedData().isEmpty())
@@ -138,7 +137,7 @@ public class RouteService {
                 search.setTenantId(route.getTenantId());
                 search.setCode(route.getEndingCollectionPoint().getCode());
 
-                collectionPoints = collectionPointRepository.search(search);
+                collectionPoints = collectionPointService.search(search);
 
                 if (collectionPoints == null || collectionPoints.getPagedData() == null
                         || collectionPoints.getPagedData().isEmpty())
@@ -171,12 +170,12 @@ public class RouteService {
                         search.setTenantId(route.getTenantId());
                         search.setCode(cp.getCode());
 
-                        collectionPoints = collectionPointRepository.search(search);
+                        collectionPoints = collectionPointService.search(search);
 
                         if (collectionPoints == null || collectionPoints.getPagedData() == null
                                 || collectionPoints.getPagedData().isEmpty())
                             throw new CustomException("CollectionPoint",
-                                    "Given CollectionPoint is invalid: " + route.getEndingCollectionPoint().getName());
+                                    "Given CollectionPoint is invalid: " + cp.getName());
                         else
                             cp = collectionPoints.getPagedData().get(0);
                     }

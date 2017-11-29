@@ -7,7 +7,7 @@ ReportDefinitions:
   moduleName: inventory
   externalService:
   - entity: $.MdmsRes.inventory.Material
-    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?tenantId=$tenantid&moduleName=inventory&masterName=Material
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
     keyOrder: code,name,tenantId
     tableName: tbl_material
   sourceColumns:
@@ -465,22 +465,23 @@ ReportDefinitions:
     source: inventory
 
   searchParams:
-
   - name: supplierName
     label: inventory.supplierName
     pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     searchClause: AND pl.supplier = $supplierName
+    wrapper: true
     isMandatory: false
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     searchClause: AND pld.material = $materialName
     isMandatory: false
+    wrapper: true
 
 
   query: select pld.material as materialCode, 
@@ -489,19 +490,19 @@ ReportDefinitions:
           pl.ratetype as ratetype,
           pld.ratePerUnit as currentRate, 
           (select count(*) from pricelistdetails where material=pld.material 
-          and fromdate::bigint>=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','01','-','01')))) 
-          and todate::bigint<=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','03','-','01'))))) as currentYear, 
+          and fromdate::bigint >= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','01','-','01')))) 
+          and todate::bigint <= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now(),'YYYY')),'-','03','-','01'))))) as currentYear, 
           (select count(*) from pricelistdetails where material=pld.material 
-          and fromdate::bigint>=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','01','-','01')))) 
-          and todate::bigint<=(SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','12','-','31'))))) as previousYear 
+          and fromdate::bigint >= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','01','-','01')))) 
+          and todate::bigint <= (SELECT EXTRACT(EPOCH FROM timestamptz (CONCAT ((select to_char(now()- interval '1 year','YYYY')),'-','12','-','31'))))) as previousYear 
           from pricelist pl,pricelistdetails pld,supplier sup,material mat
-          where pl.tenantid=$tenantid
-          AND pld.tenantid=pl.tenantid
-          AND mat.tenantid=pld.tenantid
-          AND sup.tenantid=mat.tenantid
-          AND pld.material=mat.code
-          AND pl.supplier=sup.code 
-          AND mat.code=pld.material;
+          where pl.tenantid = $tenantid
+          AND pld.tenantid = pl.tenantid
+          AND mat.tenantid = pld.tenantid
+          AND sup.tenantid = mat.tenantid
+          AND pld.material = mat.code
+          AND pl.supplier = sup.code 
+          AND mat.code = pld.material
 
 # Comparison between different rates Report
 # Need to Change drop down Link based on report and Query
@@ -547,45 +548,48 @@ ReportDefinitions:
     source: inventory
 
   searchParams:
-
   - name: supplierName
     label: inventory.supplierName
     pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
-    isMandatory: false
     searchClause: AND pl.supplier = $supplierName
-    
+    wrapper: true
+    isMandatory: false
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://inventory-services:8080/inventory-services/materials/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid|$.MdmsRes.inventory.Material.*.code|$.MdmsRes.inventory.Material.*.name
     type: singlevaluelist
     source: inventory
     searchClause: AND pld.material = $materialName
     isMandatory: false
+    wrapper: true
+
 
   query: select pld.material as materialCode,
          mat.name as materialName,
-         pl.supplier as SupplierName,
-         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='Quotation'
-         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000)
+         sup.name as supplierName,
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType = 'Quotation'
+         AND fromdate::bigint <= (select extract(epoch from now())*1000) AND todate::bigint >= (select extract(epoch from now()))*1000)
          order by createdtime desc limit 1) as quotation,
-         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='DGSC Rate Contract' 
-         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000)
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType ='DGSC Rate Contract' 
+         AND fromdate::bigint <= (select extract(epoch from now())*1000) AND todate::bigint >= (select extract(epoch from now()))*1000)
          order by createdtime desc limit 1) as dgsnd,
-         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='ULB Rate Contract'
-         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000) 
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType = 'ULB Rate Contract'
+         AND fromdate::bigint <= (select extract(epoch from now())*1000) AND todate::bigint >= (select extract(epoch from now()))*1000) 
          order by createdtime desc limit 1) as dtt,
-         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType='One Time Tender' 
-         AND fromdate::bigint<=(select extract(epoch from now())*1000) AND todate::bigint>=(select extract(epoch from now()))*1000)
+         ((select  ratePerUnit from pricelistdetails where material=pld.material AND pl.rateType = 'One Time Tender' 
+         AND fromdate::bigint <= (select extract(epoch from now())*1000) AND todate::bigint >= (select extract(epoch from now()))*1000)
          order by createdtime desc limit 1) as tender
-         FROM pricelistdetails pld, pricelist pl, material mat
-         where  pld.tenantid=$tenantid
-         AND pl.tenantid=pld.tenantid
-         AND mat.tenantid=pl.tenantid
-         AND mat.code=pld.material 
-         AND pld.pricelist=pl.id ;
+         FROM pricelistdetails pld, pricelist pl, material mat, supplier sup
+         where  pld.tenantid = $tenantid
+         AND pl.tenantid = pld.tenantid
+         AND sup.tenantid=pl.tenantId
+         AND mat.tenantid = pl.tenantid
+         AND mat.code = pld.material 
+         AND sup.code = pl.supplier
+         AND pld.pricelist = pl.id 
 
 
 

@@ -124,8 +124,9 @@ public class OpinionRepository {
 
 	private void setAdvocates(List<Opinion> opinions, RequestInfoWrapper requestInfoWrapper) {
 
-		List<String> codes = opinions.stream().filter(
-				opinionData -> opinionData.getOpinionsBy() != null && opinionData.getOpinionsBy().getCode() != null)
+		List<String> codes = opinions.stream()
+				.filter(opinionData -> opinionData.getOpinionsBy() != null
+						&& opinionData.getOpinionsBy().getCode() != null)
 				.map(advocateCode -> advocateCode.getOpinionsBy().getCode()).collect(Collectors.toList());
 
 		AdvocateSearchCriteria advocateSearch = new AdvocateSearchCriteria();
@@ -150,19 +151,21 @@ public class OpinionRepository {
 		for (Opinion opinion : opinions) {
 			if (opinion.getCaseDetails() != null && opinion.getCaseDetails().getSummonReferenceNo() != null) {
 
-				final List<Object> preparedStatementValues = new ArrayList<Object>();
-				String searchQuery = opinionBuilder.getCaseNo(opinion.getCaseDetails().getSummonReferenceNo(),
-						opinion.getTenantId(), preparedStatementValues);
-				try {
+				if (!opinion.getCaseDetails().getSummonReferenceNo().isEmpty()) {
+					final List<Object> preparedStatementValues = new ArrayList<Object>();
+					String searchQuery = opinionBuilder.getCaseNo(opinion.getCaseDetails().getSummonReferenceNo(),
+							opinion.getTenantId(), preparedStatementValues);
+					try {
 
-					String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
-							String.class);
-					opinion.getCaseDetails().setCaseNo(caseNo);
-				} catch (Exception ex) {
+						String caseNo = jdbcTemplate.queryForObject(searchQuery, preparedStatementValues.toArray(),
+								String.class);
+						opinion.getCaseDetails().setCaseNo(caseNo);
+					} catch (Exception ex) {
 
-					log.info("the exception in opinion :" + ex.getMessage());
-					throw new CustomException(propertiesManager.getCaseNoErrorCode(),
-							propertiesManager.getCaseNoErrorMsg());
+						log.info("the exception in opinion :" + ex.getMessage());
+						throw new CustomException(propertiesManager.getCaseNoErrorCode(),
+								propertiesManager.getCaseNoErrorMsg());
+					}
 				}
 			}
 		}

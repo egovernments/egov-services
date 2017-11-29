@@ -3,11 +3,8 @@ package org.egov.inv.model;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
 import javax.validation.Valid;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
-
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
@@ -39,9 +36,7 @@ public class OpeningBalanceResponse   {
    * @return responseInfo
   **/
   @ApiModelProperty(value = "")
-
   @Valid
-
   public ResponseInfo getResponseInfo() {
     return responseInfo;
   }
@@ -68,9 +63,7 @@ public class OpeningBalanceResponse   {
    * @return materialReceipt
   **/
   @ApiModelProperty(value = "")
-
   @Valid
-
   public List<MaterialReceipt> getMaterialReceipt() {
     return materialReceipt;
   }
@@ -78,7 +71,6 @@ public class OpeningBalanceResponse   {
   public void setMaterialReceipt(List<MaterialReceipt> materialReceipt) {
     this.materialReceipt = materialReceipt;
   }
-
 
   @Override
   public boolean equals(java.lang.Object o) {
@@ -102,7 +94,6 @@ public class OpeningBalanceResponse   {
   public String toString() {
     StringBuilder sb = new StringBuilder();
     sb.append("class OpeningBalanceResponse {\n");
-    
     sb.append("    responseInfo: ").append(toIndentedString(responseInfo)).append("\n");
     sb.append("    materialReceipt: ").append(toIndentedString(materialReceipt)).append("\n");
     sb.append("}");

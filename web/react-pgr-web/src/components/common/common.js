@@ -2183,7 +2183,7 @@ var localization_EN_Data = {
 "swm.create.vehicleScheduledMaintenanceDate": "Vehicle Scheduled Maintenance Date",
 "swm.create.costIncurred": "Cost Incurred",
 "swm.create.vehicleDowntimeActual": "Vehicle Downtime Actual",
-"swm.create.vehicleDownTimeActualUom": "Hrs/Days", 
+"swm.create.vehicleDownTimeActualUom": "Hrs/Days",
 "swm.create.maintenanceType": "Maintenance Type",
 "swm.search.result.name": "Name",
 "swm.create.vehicleReadingDuringMaintenance": "Vehicle Reading during Maintenance",
@@ -2796,6 +2796,7 @@ var localization_EN_Data = {
 "perfManagement.update.KPIs.groups.updatekpiDocuments":"Document Required",
 "perfManagement.update.KPIs.groups.updatekpidoc":"Document Name",
 "perfManagement.update.KPIs.groups.updatekpidocMandatory":"Document Mandatory",
+"perfManagement.update.KPIs.groups.updatekpivalue":"KPI values submitted successfully",
 
 "referenceEvidence.update.document.title":"Reference Evidences",
 "referenceEvidence.create.group.title.addReferenceEvidences":"Add Reference Evidences",
@@ -2910,6 +2911,10 @@ var localization_EN_Data = {
 
 // Material Issue Lables
  "inventory.search.issueStore":"Issuing Store",
+ "inventory.search.issueNumber":"Issue Number",
+ "inventory.search.issuePurpose":"Issue Purpose",
+ "inventory.search.issueType": "Issue Type",
+ "inventory.search.indentingStore":"Indenting Store",
  "inventory.create.indentDateFrom":"Indent Date From",
  "inventory.create.indentDateTo":"Indent Date To",
  "inventory.create.indentRaisedBy":"Indent Raised By",
@@ -5022,7 +5027,7 @@ var localization_MR_Data = {
 "swm.create.vehicleScheduledMaintenanceDate": "Vehicle Scheduled Maintenance Date",
 "swm.create.costIncurred": "Cost Incurred",
 "swm.create.vehicleDowntimeActual": "Vehicle Downtime Actual",
-"swm.create.vehicleDownTimeActualUom": "Hrs/Days", 
+"swm.create.vehicleDownTimeActualUom": "Hrs/Days",
 "swm.create.maintenanceType": "Maintenance Type",
 "swm.search.result.name": "Name",
 "swm.create.vehicleReadingDuringMaintenance": "Vehicle Reading during Maintenance",

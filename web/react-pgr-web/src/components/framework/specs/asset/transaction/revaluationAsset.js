@@ -257,9 +257,9 @@ var dat = {
 	          "requiredErrMsg": "", //Remove required messages
 	          "patternErrMsg": ""
 	        },
-	        {
+					{
 	          "name": "OrderDate",
-	          "jsonPath": "Revaluation.orderDate",
+	          "jsonPath": "Disposal.orderDate",
 	          //"label": "ac.transaction.create.order.date",
 						"label": "Order Date",
 	          "pattern": "",
@@ -275,12 +275,12 @@ var dat = {
 	          "jsonPath": "Revaluation.valueAfterRevaluation",
 	          //"label": "ac.create.title",
 						"label": "Value After Revaluation",
-	          "pattern": "",
+	          "pattern": "^[0-9]{1,10}(\\.[0-9]{0,2})?$",
 	          "type": "text",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "", //Remove required messages
-	          "patternErrMsg": ""
+	          "patternErrMsg": "Please enter positive number (Decimal upto 2 digits)"
 	        },
 					{
 	          "name": "Addition/deductedAmount",

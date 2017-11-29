@@ -119,7 +119,7 @@ module.exports = {
                   if (response.response.data.Errors.length==1) {
                     _err+=common.translate(response.response.data.Errors[0].message) +".";
                   } else {
-                    for (var i = 0; i < response.response.data.Errors; i++) {
+                    for (var i = 0; i < response.response.data.Errors.length; i++) {
                       _err+=(i+1)+") " + common.translate(response.response.data.Errors[i].message) +".";
                     }
                   }

@@ -95,7 +95,7 @@ serviceMaps:
    description: create vehicle in egswm_vehicle
    fromTopic: swm-vehicle-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_vehicle(tenantid, vehicletype, fueltype, regnumber, enginesrnumber, chassissrnumber, vehiclecapacity, operatorsReq, model, driver, vendor, purchasedate, price, sourceofpurchase, remarks, insurancenumber, insurancevaliditydate, kilometers, endOfWarranty, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.vehicles.*
       jsonMaps:
        
@@ -117,6 +117,8 @@ serviceMaps:
        - jsonPath: $.vehicles.*.operatorsReq
 
        - jsonPath: $.vehicles.*.manufacturingDetails.model
+
+       - jsonPath: $.vehicles.*.driver.name
 
        - jsonPath: $.vehicles.*.vendor.name
 
@@ -179,7 +181,7 @@ serviceMaps:
    fromTopic: swm-vehicle-update-topic
    queryMaps: 
 
-    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, operatorsReq=?, model=?, vendor=?, purchasedate=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE regnumber=? AND tenantid=?;
+    - query: UPDATE egswm_vehicle SET vehicletype=?, fueltype=?, enginesrnumber=?, chassissrnumber=?, vehiclecapacity=?, operatorsReq=?, model=?, driver=?, vendor=?, purchasedate=?, price=?, sourceofpurchase=?, remarks=?, insurancenumber=?, insurancevaliditydate=?, kilometers=?, endOfWarranty=?, lastmodifiedby=?, lastmodifiedtime=? WHERE regnumber=? AND tenantid=?;
       basePath: $.vehicles.*
       jsonMaps:
 
@@ -197,6 +199,8 @@ serviceMaps:
        - jsonPath: $.vehicles.*.operatorsReq
 
        - jsonPath: $.vehicles.*.manufacturingDetails.model
+
+       - jsonPath: $.vehicles.*.driver.name
 
        - jsonPath: $.vehicles.*.vendor.name
 

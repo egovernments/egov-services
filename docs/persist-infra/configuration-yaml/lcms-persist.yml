@@ -6,7 +6,7 @@ serviceMaps:
     description: create summon
     fromTopic: lcms-create-summon-validated
     queryMaps: 
-    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,register,caseDetails,plantiffAddress,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
+    - query: INSERT INTO egov_lcms_case (code,isSummon,summonReferenceNo,caseNo,summonDate,year,caseType,plantiffName,defendant,caseCategory,courtName,departmentName,sectionApplied,hearingDate,hearingTime,ward,bench,side,register,caseDetails,plantiffAddress,entryType,createdBy,lastModifiedBy,createdTime,lastModifiedTime,tenantId,stateId,documents) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);
       basePath: $.summons.*
       jsonMaps:       
       - jsonPath: $.summons.*.code
@@ -70,7 +70,7 @@ serviceMaps:
       - jsonPath: $.summons.*.plantiffAddress
         type: JSON
         dbType: JSONB
-        
+      - jsonPath: $.summons.*.entryType
       - jsonPath: $.summons.*.auditDetails.createdBy
       
       - jsonPath: $.summons.*.auditDetails.lastModifiedBy

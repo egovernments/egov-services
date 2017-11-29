@@ -236,7 +236,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
-            "maxLength": 10,
+            "maxLength": 11,
             "patternErrorMsg": ""
           }, {
             "name": "cstNo",
@@ -245,7 +245,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
-            "maxLength": 10,
+            "maxLength": 11,
             "patternErrorMsg": ""
           }, {
             "name": "vatNo",
@@ -254,7 +254,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
-            "maxLength": 10,
+            "maxLength": 11,
             "patternErrorMsg": ""
           }, {
             "name": "gstNo",
@@ -263,7 +263,7 @@ var dat = {
             "type": "text",
             "isRequired": false,
             "isDisabled": false,
-            "maxLength": 10,
+            "maxLength": 15,
             "patternErrorMsg": ""
           }, {
             "name": "contactPerson",

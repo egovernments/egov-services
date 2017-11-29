@@ -1,21 +1,22 @@
 package org.egov.works.estimate.web.contract;
 
-import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonValue;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.ArrayList;
 import java.util.List;
-import javax.validation.Valid;
-import javax.validation.constraints.*;
+import java.util.Objects;
 
 /**
- * Categories defined under asset category type are shown in the drop down.
+ * Assets are calssified under various asset categories based on their properties. This master data is defined under MDMS.
  */
-@ApiModel(description = "Categories defined under asset category type are shown in the drop down.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-03T07:36:47.547Z")
+@ApiModel(description = "Assets are calssified under various asset categories based on their properties. This master data is defined under MDMS.")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
 
 public class AssetCategory   {
   @JsonProperty("tenantId")
@@ -399,10 +400,11 @@ public class AssetCategory   {
   }
 
    /**
-   * Options are from UOM.
+   * The unique cide of the unit of measurement that has to be used when referring any assets coming under this category. This will come from the UOM master in MDMS.
    * @return unitOfMeasurement
   **/
-  @ApiModelProperty(value = "Options are from UOM.")
+  @ApiModelProperty(required = true, value = "The unique cide of the unit of measurement that has to be used when referring any assets coming under this category. This will come from the UOM master in MDMS.")
+  @NotNull
 
 
   public String getUnitOfMeasurement() {
@@ -439,10 +441,10 @@ public class AssetCategory   {
   }
 
    /**
-   * Depreciation rate for a asset category. That will be always defined as percentage.
+   * Depreciation rate for a asset category. That will be always defined in percentage. This value is required for all categories other than  the Asset category type \"Land\".
    * @return depreciationRate
   **/
-  @ApiModelProperty(value = "Depreciation rate for a asset category. That will be always defined as percentage.")
+  @ApiModelProperty(value = "Depreciation rate for a asset category. That will be always defined in percentage. This value is required for all categories other than  the Asset category type \"Land\".")
 
 
   public Integer getDepreciationRate() {
@@ -484,7 +486,7 @@ public class AssetCategory   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -546,7 +548,7 @@ public class AssetCategory   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }

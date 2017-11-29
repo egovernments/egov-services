@@ -24,11 +24,6 @@ public class SiteDetails {
     @JsonProperty("code")
     private String code;
 
-    @JsonProperty("name")
-    @Length(min = 1, max = 128)
-    @NotNull
-    private String name;
-
     @JsonProperty("location")
     @NotNull
     private Boundary location;

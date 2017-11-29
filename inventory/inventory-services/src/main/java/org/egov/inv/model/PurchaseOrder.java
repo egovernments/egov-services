@@ -188,8 +188,8 @@ public class PurchaseOrder   {
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
 
-  @JsonProperty("indents")
-  private List<String> indents = null;
+  @JsonProperty("indentNumbers")
+  private List<String> indentNumbers = null;
   
   public PurchaseOrder id(String id) {
     this.id = id;
@@ -629,16 +629,16 @@ public class PurchaseOrder   {
     this.auditDetails = auditDetails;
   }
 
-  public PurchaseOrder indents(List<String> indents) {
-    this.indents = indents;
+  public PurchaseOrder indentNumbers(List<String> indents) {
+    this.indentNumbers = indents;
     return this;
   }
 
-  public PurchaseOrder addIndentsItem(String indentsItem) {
-    if (this.indents == null) {
-      this.indents = new ArrayList<String>();
+  public PurchaseOrder addIndentNumbersItem(String indentsItem) {
+    if (this.indentNumbers == null) {
+      this.indentNumbers = new ArrayList<String>();
     }
-    this.indents.add(indentsItem);
+    this.indentNumbers.add(indentsItem);
     return this;
   }
 
@@ -649,12 +649,12 @@ public class PurchaseOrder   {
   @ApiModelProperty(value = "Used for indent search result and used in indent purchase order creation")
 
 
-  public List<String> getIndents() {
-    return indents;
+  public List<String> getIndentNumbers() {
+    return indentNumbers;
   }
 
-  public void setIndents(List<String> indents) {
-    this.indents = indents;
+  public void setIndentNumbers(List<String> indents) {
+    this.indentNumbers = indents;
   }
 
 
@@ -688,12 +688,12 @@ public class PurchaseOrder   {
         Objects.equals(this.fileStoreId, purchaseOrder.fileStoreId) &&
         Objects.equals(this.designation, purchaseOrder.designation) &&
         Objects.equals(this.auditDetails, purchaseOrder.auditDetails) &&
-        Objects.equals(this.indents, purchaseOrder.indents);
+        Objects.equals(this.indentNumbers, purchaseOrder.indentNumbers);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, workFlowDetails, stateId, purchaseOrderDetails, fileStoreId, designation, auditDetails, indents);
+    return Objects.hash(id, tenantId, store, purchaseOrderNumber, purchaseOrderDate, purchaseType, rateType, supplier, advanceAmount, advancePercentage, expectedDeliveryDate, deliveryTerms, paymentTerms, remarks, status, workFlowDetails, stateId, purchaseOrderDetails, fileStoreId, designation, auditDetails, indentNumbers);
   }
 
   @Override
@@ -722,7 +722,7 @@ public class PurchaseOrder   {
     sb.append("    fileStoreId: ").append(toIndentedString(fileStoreId)).append("\n");
     sb.append("    designation: ").append(toIndentedString(designation)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-    sb.append("    indents: ").append(toIndentedString(indents)).append("\n");
+    sb.append("    indentNumbers: ").append(toIndentedString(indentNumbers)).append("\n");
     sb.append("}");
     return sb.toString();
   }

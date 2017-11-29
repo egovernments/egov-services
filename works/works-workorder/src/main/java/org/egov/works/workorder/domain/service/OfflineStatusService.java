@@ -3,6 +3,7 @@ package org.egov.works.workorder.domain.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.works.commons.utils.CommonConstants;
 import org.egov.works.commons.web.contract.DetailedEstimateOfflineStatus;
 import org.egov.works.commons.web.contract.LOAOfflineStatuses;
 import org.egov.works.workorder.domain.repository.OfflineStatusRepository;
@@ -24,10 +25,11 @@ public class OfflineStatusService {
 		OfflineStatusSearchContract offlineStatusSearchContract = new OfflineStatusSearchContract();
 		final List<String> detailedEstimateNumber = new ArrayList<>();
 		detailedEstimateNumber.add(detailedEstimate);
-		offlineStatusSearchContract.setDetailedEstimateNumber(detailedEstimateNumber);
+		offlineStatusSearchContract.setDetailedEstimateNumbers(detailedEstimateNumber);
 		List<String> statuses = new ArrayList<>();
 		statuses.add(DetailedEstimateOfflineStatus.L1_TENDER_FINALIZED.toString());
 		offlineStatusSearchContract.setStatuses(statuses);
+		offlineStatusSearchContract.setObjectType(CommonConstants.DETAILEDESTIMATE);
 		offlineStatusSearchContract.setTenantId(tenantId);
 		
 		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
@@ -44,10 +46,11 @@ public class OfflineStatusService {
 		List<String> statuses = new ArrayList<>();
 		statuses.add(LOAOfflineStatuses.AGREEMENT_ORDER_SIGNED.toString());
 		offlineStatusSearchContract.setStatuses(statuses);
+		offlineStatusSearchContract.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
 		offlineStatusSearchContract.setTenantId(tenantId);
 
 		final OfflineStatusResponse offlineStatusResponse = offlineStatusRepository
-				.getOfflineStatus(offlineStatusSearchContract, tenantId, requestInfo);
+				.getOfflineStatusByLoaNumber(offlineStatusSearchContract, tenantId, requestInfo);
 		return offlineStatusResponse;
 	}
 }

@@ -38,6 +38,8 @@ class Attendance extends React.Component {
     this.markBulkAttendance = this.markBulkAttendance.bind(this);
     this.save = this.save.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
+    this.isSecondSat = this.isSecondSat.bind(this);
+    this.isFourthSat = this.isFourthSat.bind(this);
   }
 
   save() {
@@ -155,14 +157,19 @@ class Attendance extends React.Component {
         }
 
         if(currentAttendance.length > 0) {
+          //console.log("Current Attendance");
             for (var j = 0; j < currentAttendance.length; j++) {
               if(employees[currentAttendance[j].employee] && employees[currentAttendance[j].employee]["attendance"]) {
                 employees[currentAttendance[j].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[j].attendanceDate.split("-")[2]}`]=currentAttendance[j].type.code;
+                //console.log(currentAttendance[j].type.code);
                 employees[currentAttendance[j].employee]["attendance"][`${parseInt(queryParam["month"])}-${currentAttendance[j].attendanceDate.split("-")[2]}` + "-id"] = currentAttendance[j].id;
               }
             }
-        } else {
-            //Merge employee with attendance
+        } 
+
+        console.log("before weekly holiday: ",employees);
+          
+        //Merge employee with attendance
             for(var emp in employees) {
                 // var daysOfYear = [];
                 // console.log(Object.assign({}, startDate));
@@ -174,25 +181,46 @@ class Attendance extends React.Component {
                   //  daysOfYear.push(new Date(d));
                       if(holidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y")
                         employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
-                      else
-                      employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0||d.getDay()===6)?"H":"";
+                      else if(d.getDay()===0||d.getDay()===6)
+                      employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]="H";
                       // console.log(employees[emp]);
                   }
                 }
-                else {
+                else if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week with 2nd Saturday holiday"){
                   for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
                   //  daysOfYear.push(new Date(d));
                       if(holidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y")
                         employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
-                      else
-                        employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]=(d.getDay()===0)?"H":"";
+                      else if(_this.isSecondSat(d) || d.getDay()===0)
+                        employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]="H";
+                      // console.log(employees[emp]);
+                  }
+                  //w more
+                }
+                else if(hrConfigurations["HRConfiguration"]["Weekly_holidays"][0]=="5-day week with 2nd and 4th Saturday holiday"){
+                  for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+                  //  daysOfYear.push(new Date(d));
+                      if(holidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y")
+                        employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
+                      else if(_this.isSecondSat(d) || _this.isFourthSat(d) || d.getDay()===0)
+                        employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]="H";
+                      // console.log(employees[emp]);
+                  }
+                  //w more
+                }
+                else{
+                  for (var d = startDate ; d <= endDate; d.setDate(d.getDate() + 1)) {
+                  //  daysOfYear.push(new Date(d));
+                      if(holidayList.indexOf(d.getTime()) > -1 && hrConfigurations["HRConfiguration"]["Include_enclosed_holidays"][0]=="Y")
+                        employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`] = "H";
+                      else if(d.getDay()===0)
+                        employees[emp].attendance[`${d.getMonth()}-${d.getDate().toString().length===1?"0"+d.getDate():d.getDate()}`]="H";
                       // console.log(employees[emp]);
                   }
                   //w more
                 }
                 // empTemp.push(emp);
             }
-
 
             for (var k = 0; k < empLeaveList.length; k++) {
               if (empLeaveList[k].fromDate==empLeaveList[k].toDate) {
@@ -212,9 +240,8 @@ class Attendance extends React.Component {
                 }
               }
             }
-
-        }
-
+  
+        
         _this.setState({
             month:parseInt(queryParam["month"]),
             year:parseInt(queryParam["year"]),
@@ -306,6 +333,14 @@ class Attendance extends React.Component {
 
   handleCheckAll(e,date,type) {
       this.markBulkAttendance(date,type);
+  }
+
+  isSecondSat (d) {
+    return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 2);
+  }
+  
+  isFourthSat (d) {
+    return (d.getDay() == 6 && Math.ceil(d.getDate()/7) == 4);
   }
 
   markBulkAttendance(oDate, type) {
@@ -512,7 +547,7 @@ class Attendance extends React.Component {
 
 
             <div className="text-center">
-                <button type="button" id="addEmployee" className="btn btn-submit" onClick={(e)=>{save()}}>Save</button>
+                <button type="button" id="addEmployee" className="btn btn-submit" onClick={(e)=>{save()}}>Save</button>&nbsp;&nbsp;
                 <button type="button" className="btn btn-close" onClick={(e)=>{this.close()}}>Close</button>
 
             </div>

@@ -232,7 +232,7 @@ componentDidMount() {
                           <label for="">No of day <span>*</span></label>
                       </div>
                       <div className="col-sm-6">
-                      <input type="number" name="noOfDays" value={noOfDays} id="noOfDays" min="0" onChange={(e)=>{
+                      <input type="number" name="noOfDays" value={noOfDays} id="noOfDays" min="0" max = "180" onChange={(e)=>{
                           handleChange(e,"noOfDays")}} required/>
 
                       </div>

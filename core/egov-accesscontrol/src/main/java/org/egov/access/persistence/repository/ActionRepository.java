@@ -41,7 +41,6 @@
 package org.egov.access.persistence.repository;
 
 import java.io.UnsupportedEncodingException;
-import java.net.URI;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;

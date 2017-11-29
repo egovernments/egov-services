@@ -419,11 +419,10 @@ ReportDefinitions:
        dep1.tenantid=depmax.tenantid AND dep1.createdtime=depmax.createdtime inner join 
        (select assetid,tenantid,sum(depreciationvalue) as totaldepreciationval from egasset_depreciation where tenantid = $tenantid group by assetid,tenantid) depsum 
        ON dep1.assetid=depsum.assetid AND dep1.tenantid=depsum.tenantid left outer join 
-       (select assetid,tenantid,sum(depreciationvalue) as prevtotaldepreciationval from egasset_depreciation where tenantid = $tenantid AND 
-       todate<=(select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) group by assetid,tenantid) prevdepsum 
+       (select assetid,tenantid,sum(depreciationvalue) as prevtotaldepreciationval from egasset_depreciation where tenantid = $tenantid AND todate<=(select startingDate::bigint from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) group by assetid,tenantid) prevdepsum 
        ON dep1.assetid=prevdepsum.assetid AND dep1.tenantid=prevdepsum.tenantid left outer join  (select assetid,tenantid,sum(depreciationvalue) as currtotaldepreciationval 
-       from egasset_depreciation where tenantid = $tenantid AND (todate BETWEEN (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) 
-       AND (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) ) group by assetid,tenantid) currdepsum 
+       from egasset_depreciation where tenantid = $tenantid AND (todate BETWEEN (select startingDate::bigint from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) 
+       AND (select endingDate::bigint from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) ) group by assetid,tenantid) currdepsum 
        ON dep1.assetid=currdepsum.assetid AND dep1.tenantid=currdepsum.tenantid) 
        depreciation ON asset.id=depreciation.assetid AND asset.tenantid=depreciation.tenantid 
        left outer join

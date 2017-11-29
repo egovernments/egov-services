@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -8,6 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
@@ -17,6 +19,7 @@ import org.egov.inv.model.MaterialIssueRequest;
 import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
+import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
@@ -37,16 +40,16 @@ public class MaterialIssuesService extends DomainService {
 
 	@Autowired
 	private MaterialIssuedFromReceiptsJdbcRepository materialIssuedFromReceiptsJdbcRepository;
-	
+
 	@Value("${inv.issues.save.topic}")
 	private String createTopic;
 
 	@Value("${inv.issues.save.key}")
 	private String createKey;
-	
+
 	@Value("${inv.issues.update.topic}")
 	private String updateTopic;
-	
+
 	@Value("${inv.issues.update.key}")
 	private String updateKey;
 
@@ -67,22 +70,24 @@ public class MaterialIssuesService extends DomainService {
 				materialIssue.setAuditDetails(mapAuditDetails(materialIssueRequest.getRequestInfo()));
 				i++;
 				int j = 0;
-				List<String> detailSequenceNos = materialIssueJdbcRepository.getSequence(
-						MaterialIssueDetail.class.getSimpleName(), materialIssue.getMaterialIssueDetails().size());
-				for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
-					materialIssueDetail.setId(detailSequenceNos.get(j));
-					materialIssueDetail.setTenantId(materialIssue.getTenantId());
-					j++;
-
-					int k = 0;
-					List<String> materialIssuedFromReceiptsSeqNos = materialIssueJdbcRepository.getSequence(
-							MaterialIssuedFromReceipt.class.getSimpleName(),
-							materialIssueDetail.getMaterialIssuedFromReceipts().size());
-					for (MaterialIssuedFromReceipt materialIssuedFromReceipts : materialIssueDetail
-							.getMaterialIssuedFromReceipts()) {
-						materialIssuedFromReceipts.setId(materialIssuedFromReceiptsSeqNos.get(k));
-						materialIssuedFromReceipts.setTenantId(materialIssueDetail.getTenantId());
-						k++;
+				if (!materialIssue.getMaterialIssueDetails().isEmpty()) {
+					List<String> detailSequenceNos = materialIssueDetailsJdbcRepository.getSequence(
+							MaterialIssueDetail.class.getSimpleName(), materialIssue.getMaterialIssueDetails().size());
+					for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+						materialIssueDetail.setId(detailSequenceNos.get(j));
+						materialIssueDetail.setTenantId(materialIssue.getTenantId());
+						convertToUom(materialIssueDetail);
+						j++;
+						int k = 0;
+						List<String> materialIssuedFromReceiptsSeqNos = materialIssuedFromReceiptsJdbcRepository
+								.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(),
+										materialIssueDetail.getMaterialIssuedFromReceipts().size());
+						for (MaterialIssuedFromReceipt materialIssuedFromReceipts : materialIssueDetail
+								.getMaterialIssuedFromReceipts()) {
+							materialIssuedFromReceipts.setId(materialIssuedFromReceiptsSeqNos.get(k));
+							materialIssuedFromReceipts.setTenantId(materialIssueDetail.getTenantId());
+							k++;
+						}
 					}
 				}
 			}
@@ -94,6 +99,16 @@ public class MaterialIssuesService extends DomainService {
 		} catch (CustomBindException e) {
 			throw e;
 		}
+	}
+
+	private void convertToUom(MaterialIssueDetail materialIssueDetail) {
+		Double quantityIssued = 0d;
+		Uom uom = getUom(materialIssueDetail.getTenantId(), materialIssueDetail.getUom().getCode(), new RequestInfo());
+		if (materialIssueDetail.getQuantityIssued() != null)
+			quantityIssued = getSaveConvertedQuantity(
+					Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
+					Double.valueOf(uom.getConversionFactor().toString()));
+		materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
 	}
 
 	private void validate(List<MaterialIssue> materialIssues, String method) {
@@ -112,7 +127,7 @@ public class MaterialIssuesService extends DomainService {
 				break;
 			case "update":
 				for (MaterialIssue materialIssue : materialIssues) {
-				if(StringUtils.isEmpty(materialIssue.getIssueNumber()))
+					if (StringUtils.isEmpty(materialIssue.getIssueNumber()))
 						throw new CustomBindException("Issue Number is not provided");
 				}
 			default:
@@ -124,31 +139,36 @@ public class MaterialIssuesService extends DomainService {
 	}
 
 	public MaterialIssueResponse update(final MaterialIssueRequest materialIssueRequest, String tenantId) {
-		validate(materialIssueRequest.getMaterialIssues(),Constants.ACTION_UPDATE);
+		validate(materialIssueRequest.getMaterialIssues(), Constants.ACTION_UPDATE);
 		List<MaterialIssue> materialIssues = materialIssueRequest.getMaterialIssues();
-		for(MaterialIssue materialIssue:materialIssues){
+		for (MaterialIssue materialIssue : materialIssues) {
 			List<String> materialIssueDetailsIds = new ArrayList<>();
-			if(StringUtils.isEmpty(materialIssue.getTenantId()))
+			if (StringUtils.isEmpty(materialIssue.getTenantId()))
 				materialIssue.setTenantId(tenantId);
-			materialIssue.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
-		for(MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()){
-			List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
-			if(StringUtils.isEmpty(materialIssueDetail.getTenantId()))
-				materialIssueDetail.setTenantId(tenantId);
-			if(StringUtils.isEmpty(materialIssueDetail.getId()))		
-				materialIssueDetail.setId(materialIssueDetailsJdbcRepository.getSequence(MaterialIssueDetail.class.getSimpleName(),1).get(0));
-			materialIssueDetailsIds.add(materialIssueDetail.getId());
-			for(MaterialIssuedFromReceipt mifr: materialIssueDetail.getMaterialIssuedFromReceipts())
-			{
-				if(StringUtils.isEmpty(mifr.getTenantId()))
-					mifr.setTenantId(tenantId);
-				if(StringUtils.isEmpty(mifr.getId()))
-					mifr.setId(materialIssuedFromReceiptsJdbcRepository.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(),1).get(0));
-				materialIssuedFromReceiptsIds.add(mifr.getId());
+			materialIssue
+					.setAuditDetails(getAuditDetails(materialIssueRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+			for (MaterialIssueDetail materialIssueDetail : materialIssue.getMaterialIssueDetails()) {
+				List<String> materialIssuedFromReceiptsIds = new ArrayList<>();
+				if (StringUtils.isEmpty(materialIssueDetail.getTenantId()))
+					materialIssueDetail.setTenantId(tenantId);
+				convertToUom(materialIssueDetail);
+				if (StringUtils.isEmpty(materialIssueDetail.getId()))
+					materialIssueDetail.setId(materialIssueDetailsJdbcRepository
+							.getSequence(MaterialIssueDetail.class.getSimpleName(), 1).get(0));
+				materialIssueDetailsIds.add(materialIssueDetail.getId());
+				for (MaterialIssuedFromReceipt mifr : materialIssueDetail.getMaterialIssuedFromReceipts()) {
+					if (StringUtils.isEmpty(mifr.getTenantId()))
+						mifr.setTenantId(tenantId);
+					if (StringUtils.isEmpty(mifr.getId()))
+						mifr.setId(materialIssuedFromReceiptsJdbcRepository
+								.getSequence(MaterialIssuedFromReceipt.class.getSimpleName(), 1).get(0));
+					materialIssuedFromReceiptsIds.add(mifr.getId());
+				}
+				materialIssuedFromReceiptsJdbcRepository.markDeleted(materialIssuedFromReceiptsIds, tenantId,
+						"materialissuedfromreceipt", "issuedetailid", materialIssueDetail.getId());
 			}
-			materialIssuedFromReceiptsJdbcRepository.markDeleted(materialIssuedFromReceiptsIds, tenantId, "materialissuedfromreceipt", "issuedetailid", materialIssueDetail.getId());
-		}
-		materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail", "materialissuenumber", materialIssue.getIssueNumber());
+			materialIssueDetailsJdbcRepository.markDeleted(materialIssueDetailsIds, tenantId, "materialissuedetail",
+					"materialissuenumber", materialIssue.getIssueNumber());
 
 		}
 		kafkaTemplate.send(updateTopic, updateKey, materialIssueRequest);
@@ -160,12 +180,26 @@ public class MaterialIssuesService extends DomainService {
 
 	public MaterialIssueResponse search(final MaterialIssueSearchContract searchContract) {
 		Pagination<MaterialIssue> materialIssues = materialIssueJdbcRepository.search(searchContract);
-		if(materialIssues.getPagedData().size() >0)
-		for(MaterialIssue materialIssue : materialIssues.getPagedData())
-		{
-			Pagination<MaterialIssueDetail> materialIssueDetails =	materialIssueDetailsJdbcRepository.search(materialIssue.getIssueNumber(), materialIssue.getTenantId());
-			materialIssue.setMaterialIssueDetails(materialIssueDetails.getPagedData());
-		}
+		if (materialIssues.getPagedData().size() > 0)
+			for (MaterialIssue materialIssue : materialIssues.getPagedData()) {
+				Pagination<MaterialIssueDetail> materialIssueDetails = materialIssueDetailsJdbcRepository
+						.search(materialIssue.getIssueNumber(), materialIssue.getTenantId());
+
+				if (materialIssueDetails.getPagedData().size() > 0) {
+					for (MaterialIssueDetail materialIssueDetail : materialIssueDetails.getPagedData()) {
+						Uom uom = null;
+						if (materialIssueDetail.getUom() != null && materialIssueDetail.getUom().getCode() != null)
+							uom = getUom(materialIssueDetail.getTenantId(), materialIssueDetail.getUom().getCode(),
+									new RequestInfo());
+						Double quantityIssued = getSearchConvertedQuantity(
+								Double.valueOf(materialIssueDetail.getQuantityIssued().toString()),
+								Double.valueOf(uom.getConversionFactor().toString()));
+						materialIssueDetail.setQuantityIssued(BigDecimal.valueOf(quantityIssued));
+					}
+					materialIssue.setMaterialIssueDetails(materialIssueDetails.getPagedData());
+				}
+			}
+
 		MaterialIssueResponse materialIssueResponse = new MaterialIssueResponse();
 		materialIssueResponse.setMaterialIssues(materialIssues.getPagedData());
 		return materialIssueResponse;

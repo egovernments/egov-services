@@ -39,8 +39,6 @@ public class MaterialIssueDetailEntity {
 	
 	private String indentDetailId;
 	
-	private Double quantityToBeIssued;
-	
 	private String materialId;
 	
 	private Double quantityIssued;
@@ -54,14 +52,13 @@ public class MaterialIssueDetailEntity {
 		detail.setOrderNumber(BigDecimal.valueOf(orderNumber));
 		detail.setValue(BigDecimal.valueOf(value));
 		Uom unit = new Uom();
-		unit.setId(uom);
+		unit.setCode(uom);
 		detail.setUom(unit);
 		detail.scrapValue(BigDecimal.valueOf(scrapValue));
 		detail.setVoucherHeader(voucherHeader);
 		IndentDetail indentDetail = new IndentDetail();
 		indentDetail.setId(indentDetailId);
 		detail.setIndentDetail(indentDetail);
-		detail.setQuantityToBeIssued(BigDecimal.valueOf(quantityToBeIssued));
 		Material material = new Material();
 		material.setId(materialId);
 		detail.setMaterial(material);

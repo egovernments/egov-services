@@ -542,8 +542,8 @@ serviceMaps:
               dbType: LONG
 
         - query: >-
-            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, quantitytobeissued, materialid, quantityissued,description)
-              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, materialid, quantityissued,description)
+              VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.id
@@ -557,7 +557,6 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
-            - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityToBeIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
@@ -609,11 +608,11 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.issueNumber
             - jsonPath: $.materialIssues.*.tenantId
         - query: >-
-                 INSERT INTO materialissuedetail(id, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, materialissuenumber, indentdetailid, quantitytobeissued,
-                   materialid, quantityissued, description) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 INSERT INTO materialissuedetail(id, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, materialissuenumber, indentdetailid,
+                   materialid, quantityissued, description) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  orderNumber = EXCLUDED.orderNumber, value  = EXCLUDED.value, uom = EXCLUDED.uom,
                  scrapvalue = EXCLUDED.scrapvalue, voucherheader = EXCLUDED.voucherheader, materialissuenumber = EXCLUDED.materialissuenumber,
-                 indentdetailid = EXCLUDED.indentdetailid, quantitytobeissued = EXCLUDED.quantitytobeissued, materialid = EXCLUDED.materialid, quantityissued = 
+                 indentdetailid = EXCLUDED.indentdetailid, materialid = EXCLUDED.materialid, quantityissued = 
                  EXCLUDED.quantityissued, description = EXCLUDED.description;
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
@@ -628,7 +627,6 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues[?({id} in @.materialIssueDetails[*].id)].issueNumber
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
-            - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityToBeIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
@@ -1087,4 +1085,5 @@ serviceMaps:
             - jsonPath: $.indents.*.indentDetails.*.remarks
             - jsonPath: $.indents.*.indentDetails.*.id
             - jsonPath: $.indents.*.indentDetails.*.tenantId
+
 

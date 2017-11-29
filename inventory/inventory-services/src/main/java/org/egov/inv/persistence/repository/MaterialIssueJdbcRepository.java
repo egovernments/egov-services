@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
@@ -144,16 +143,5 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
        return "select * from materialissuedetail where tenantId = :tenantId and materialissuenumber in (:materialissuenumber)";		
 	}
 
-	public void compareAndGenerateObjects(List<MaterialIssue> materialIssues,
-			List<MaterialIssueDetail> materialIssueDetails) {
-		List<MaterialIssueDetail> materialIssueDetail = new ArrayList<>();
-		for(MaterialIssue materialIssue :materialIssues ){
-			materialIssueDetail.addAll(materialIssue.getMaterialIssueDetails());
-		}
-		
-		
-		
 	
-		
-	}
 }

@@ -250,7 +250,7 @@ class UiTable extends Component {
 
 		                )
 		              })}
-									<th>{translate("Action")}</th>
+									{/*<th>{translate("Action")}</th>*/}
 		            </tr>
 		          </thead>
 		          <tbody>
@@ -258,7 +258,7 @@ class UiTable extends Component {
 		                {resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
 
 		                  return (
-		                    <tr key={i} >
+		                    <tr key={i}  onClick={() => {if(!resultList.disableRowClick){rowClickHandler(i)}}}>
 		                      {
 		                      	item.map((item2, i2)=>{
 			                        return (
@@ -266,7 +266,7 @@ class UiTable extends Component {
 			                        )
 		                      })}
 
-													<td style={{textAlign:"center",marginRight:"10px"}}><i style={{marginRight:"10px"}} onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"view")}}}  className="material-icons">remove_red_eye</i><i onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"update")}}} className="material-icons">edit</i></td>
+													{/*<td style={{textAlign:"center",marginRight:"10px"}}><i style={{marginRight:"10px"}} onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"view")}}}  className="material-icons">remove_red_eye</i><i onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"update")}}} className="material-icons">edit</i></td>*/}
 
 		                    </tr>
 		                    )

@@ -465,13 +465,11 @@ ReportDefinitions:
     source: inventory
 
   searchParams:
-
   - name: supplierName
     label: inventory.supplierName
     pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
-    wrapper: true
     searchClause: AND pl.supplier = $supplierName
     isMandatory: false
 
@@ -482,6 +480,7 @@ ReportDefinitions:
     source: inventory
     searchClause: AND pld.material = $materialName
     isMandatory: false
+    wrapper: true
 
 
   query: select pld.material as materialCode, 
@@ -555,7 +554,6 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     isMandatory: false
-    wrapper: true
     searchClause: AND pl.supplier = $supplierName
     
 
@@ -565,6 +563,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: inventory
     searchClause: AND pld.material = $materialName
+    wrapper: true
     isMandatory: false
 
   query: select pld.material as materialCode,

@@ -1613,7 +1613,7 @@ class Report extends Component {
 
 
 
-
+        {actionName == "update" && <UiBackButton/>}
         <form onSubmit={(e) => {
           create(e)
         }}>

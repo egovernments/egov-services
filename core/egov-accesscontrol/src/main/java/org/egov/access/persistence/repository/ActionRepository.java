@@ -593,7 +593,7 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 		List<Action> actionList = new ArrayList<Action>();
 		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
 		String actionFilter = "[?(@.id IN [$actionid] && @.enabled == $enabled)]";
-		url = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_search";
+		url = "http://egov-mdms-service:8080/egov-mdms-service/v1/_search";
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();
 		

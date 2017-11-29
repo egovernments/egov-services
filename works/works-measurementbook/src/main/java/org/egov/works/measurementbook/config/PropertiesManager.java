@@ -29,4 +29,7 @@ public class PropertiesManager {
     @Value("${egov.services.works.revision.detailed.estimate.create.update.topic}")
     private String worksRECreateUpdateTopic;
     
+    @Value("${egov.services.works.revision.loa.create.update.topic}")
+    private String worksRevisionLOACreateUpdateTopic;
+    
 }

@@ -1,0 +1,1 @@
+ALTER TABLE egw_detailedestimate alter nameofwork drop not null, alter description drop not null;

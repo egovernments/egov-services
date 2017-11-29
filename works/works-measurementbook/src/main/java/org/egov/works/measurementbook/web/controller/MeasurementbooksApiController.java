@@ -32,7 +32,7 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksCreatePost(
 			@ApiParam(value = "Details of new Measurement Book(s) + RequestInfo meta data.", required = true) @RequestBody MeasurementBookRequest measurementBookRequest) {
-		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.create(measurementBookRequest),
+		return new ResponseEntity<>(measurementBookService.create(measurementBookRequest),
 				HttpStatus.OK);
 	}
 
@@ -67,7 +67,7 @@ public class MeasurementbooksApiController implements MeasurementbooksApi {
 
 	public ResponseEntity<MeasurementBookResponse> measurementbooksUpdatePost(
 			@ApiParam(value = "Details of Measurement Book(s) + RequestInfo meta data.", required = true) @Valid @RequestBody MeasurementBookRequest measurementBookRequest) {
-		return new ResponseEntity<MeasurementBookResponse>(measurementBookService.update(measurementBookRequest),
+		return new ResponseEntity<>(measurementBookService.update(measurementBookRequest),
 				HttpStatus.OK);
 	}
 

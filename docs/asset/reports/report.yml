@@ -1052,23 +1052,23 @@ ReportDefinitions:
     endcurrentamount,plusrevalsum,minusrevalsum ,previousfynetblock+plusrevalsum-minusRevalsum as revaltotal,prevdepsum,currdepsum,
     prevdepsum+currdepsum as totaldepsum from egasset_current_value current inner join (select value.assetid,currentamount as
     endcurrentamount,value.tenantid,value.transactiondate,value.createdtime from egasset_current_value value inner join (select max(createdtime) as createdtime,
-    assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate))
+    assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint) 
     GROUP BY assetid,tenantid) as maxvalue ON value.assetid=maxvalue.assetid and value.tenantid=maxvalue.tenantid AND
     value.createdtime=maxvalue.createdtime) endcurrent ON current.assetid=endcurrent.assetid AND current.tenantid=
     endcurrent.tenantid AND current.createdtime=endcurrent.createdtime left outer join (select value.assetid,currentamount as
     previousfynetblock,value.tenantid,value.transactiondate,value.createdtime from egasset_current_value value inner join (select max(createdtime) as
-    createdtime,assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) GROUP BY assetid,tenantid ) as maxvalue ON value.assetid=maxvalue.assetid and
+    createdtime,assetid,tenantid from egasset_current_value where tenantid=$tenantid  AND transactiondate<=(select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint) GROUP BY assetid,tenantid ) as maxvalue ON value.assetid=maxvalue.assetid and
     value.tenantid=maxvalue.tenantid AND value.createdtime=maxvalue.createdtime) prevyearcurrent ON current.assetid=
     prevyearcurrent.assetid AND current.tenantid=prevyearcurrent.tenantid AND current.createdtime=prevyearcurrent.createdtime
     left outer join (select COALESCE(sum(revaluationamount),0.0) plusRevalsum,assetid,tenantid from egasset_revaluation where
-    tenantid=$tenantid AND  typeofchange='INCREASED' AND  (revaluationdate BETWEEN  (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) AND (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)))
+    tenantid=$tenantid AND  typeofchange='INCREASED' AND  (revaluationdate BETWEEN  (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint) AND (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint))
      GROUP BY assetid,tenantid ) plusreval ON current.assetid=plusreval.assetid AND current.tenantid=
     plusreval.tenantid left outer join (select sum(revaluationamount) minusRevalsum,assetid,tenantid from egasset_revaluation where
-    tenantid=$tenantid AND  typeofchange='DECREASED' AND (revaluationdate between (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) and (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate))) GROUP BY assetid,tenantid ) minusreval ON current.assetid=minusreval.assetid AND current.tenantid=
+    tenantid=$tenantid AND  typeofchange='DECREASED' AND (revaluationdate between (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint) and (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint)) GROUP BY assetid,tenantid ) minusreval ON current.assetid=minusreval.assetid AND current.tenantid=
     minusreval.tenantid  left outer join (select sum(depreciationvalue) prevdepsum,assetid,tenantid from egasset_depreciation where
     tenantid=$tenantid AND todate<(select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) GROUP BY assetid,tenantid ) prevdep ON current.assetid=prevdep.
     assetid AND current.tenantid=prevdep.tenantid left outer join (select sum(depreciationvalue) currdepsum,assetid,tenantid from
-    egasset_depreciation where tenantid=$tenantid AND (todate between (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate)) and (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate))) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=
+    egasset_depreciation where tenantid=$tenantid AND (todate between (select startingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint) and (select endingDate from (VALUES tbl_financialYears) as financialYears (startingDate,endingDate) ::bigint)) GROUP BY assetid,tenantid ) currdep ON current.assetid=currdep.assetid AND current.tenantid=
     currdep.tenantid) as transactions ON asset.id=transactions.assetid AND asset.tenantid=transactions.tenantid
     left outer join ( select assetSubcategory.name as assetsubcategoryname,assetSubcategory.depreciationrate as depreciationrate,
     assetSubcategory.parent as assetsubcategoryparent,assetSubcategory.tenantid as tenantid,assetSubcategory.id assetsubcategoryid,

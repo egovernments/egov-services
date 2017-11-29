@@ -30,6 +30,7 @@ public class EstimateRepository {
     public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
 
         String status = DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString();
+        String departments = String.join(",", departmentCodes);
         return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departmentCodes, status).getDetailedEstimates();
     }
 

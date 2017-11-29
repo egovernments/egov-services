@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.works.measurementbook.web.contract.AuditDetails;
 import org.egov.works.measurementbook.web.contract.LOAActivity;
 import org.egov.works.measurementbook.web.contract.MBMeasurementSheet;
@@ -14,6 +15,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class MeasurementBookDetailHelper {
     @JsonProperty("id")

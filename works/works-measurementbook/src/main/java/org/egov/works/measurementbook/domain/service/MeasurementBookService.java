@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.measurementbook.config.PropertiesManager;
+import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
 import org.egov.works.measurementbook.web.contract.AuditDetails;
 import org.egov.works.measurementbook.web.contract.DetailedEstimate;
@@ -39,6 +40,9 @@ public class MeasurementBookService {
 
 	@Autowired
 	private MeasurementBookUtils measurementBookUtils;
+
+    @Autowired
+    private MeasurementBookRepository measurementBookRepository;
 
 	public MeasurementBookResponse create(MeasurementBookRequest measurementBookRequest) {
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
@@ -103,7 +107,8 @@ public class MeasurementBookService {
 
 	public MeasurementBookResponse search(MeasurementBookSearchContract measurementBookSearchContract,
 			RequestInfo requestInfo) {
-		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
-		return measurementBookResponse;
+        MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
+        measurementBookResponse.setMeasurementBooks(measurementBookRepository.searchMeasurementBooks(measurementBookSearchContract,requestInfo));
+        return measurementBookResponse;
 	}
 }

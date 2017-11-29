@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.egov.works.measurementbook.web.contract.LOAMeasurementSheet;
 import org.egov.works.measurementbook.web.contract.MBMeasurementSheet;
 
@@ -11,6 +12,7 @@ import java.math.BigDecimal;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class MBMeasurementSheetHelper {
 

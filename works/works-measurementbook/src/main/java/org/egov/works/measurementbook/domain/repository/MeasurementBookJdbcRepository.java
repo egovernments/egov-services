@@ -24,8 +24,8 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
     @Autowired
     private WorkOrderRepository workOrderRepository;
 
-    public static final String TABLE_NAME = "egw_mb_measurementsheet mb";
-    public static final String MB_LOAESTIMATE_EXTENTION = "egw_letterofacceptanceestimate loaestimate";
+    public static final String TABLE_NAME = "egw_measurementbook mb";
+    public static final String MB_LOAESTIMATE_EXTENTION = ", egw_letterofacceptanceestimate loaestimate";
 
 
     public List<MeasurementBook> searchMeasurementBooks(final MeasurementBookSearchContract measurementBookSearchContract, final RequestInfo requestInfo) {
@@ -47,10 +47,10 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
                 || measurementBookSearchContract.getLoaNumbers() != null && !measurementBookSearchContract.getLoaNumbers().isEmpty())
             tableName += MB_LOAESTIMATE_EXTENTION;
 
-        String orderBy = "order by id";
+        String orderBy = "order by mb.id";
         if (measurementBookSearchContract.getSortProperty() != null
                 && !measurementBookSearchContract.getSortProperty().isEmpty()) {
-            orderBy = "order by " + measurementBookSearchContract.getSortProperty();
+            orderBy = "order by mb." + measurementBookSearchContract.getSortProperty();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -67,18 +67,18 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
             params.append("mb.id in(:ids) ");
             paramValues.put("ids", measurementBookSearchContract.getIds());
         }
-        if (measurementBookSearchContract.getLoaNumbers() != null && measurementBookSearchContract.getLoaNumbers().size() == 1) {
+        if (measurementBookSearchContract.getLoaNumbers() != null && !measurementBookSearchContract.getLoaNumbers().isEmpty()) {
             searchByLOANumbers(measurementBookSearchContract.getLoaNumbers(), params, paramValues);
         }
 
-        if (measurementBookSearchContract.getDetailedEstimateNumbers() != null && measurementBookSearchContract.getDetailedEstimateNumbers().size() == 1) {
+        if (measurementBookSearchContract.getDetailedEstimateNumbers() != null && !measurementBookSearchContract.getDetailedEstimateNumbers().isEmpty()) {
             searchByDetailedEstimateNumbers(measurementBookSearchContract.getDetailedEstimateNumbers(), params, paramValues);
         }
 
         if (measurementBookSearchContract.getCreatedBy() != null) {
             addAnd(params);
-            params.append("mb.createdBy =:createdBy");
-            paramValues.put("createdBy", measurementBookSearchContract.getCreatedBy());
+            params.append("upper(mb.createdBy) =:createdBy");
+            paramValues.put("createdBy", measurementBookSearchContract.getCreatedBy().toUpperCase());
         }
 
         if (measurementBookSearchContract.getFromDate() != null) {
@@ -94,8 +94,8 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
 
         if (measurementBookSearchContract.getMbRefNumbers() != null && measurementBookSearchContract.getMbRefNumbers().size() == 1) {
             addAnd(params);
-            params.append("mb.mbRefNo like (:mbRefNo)");
-            paramValues.put("mb.mbRefNo", "%" + measurementBookSearchContract.getMbRefNumbers().get(0) + "%");
+            params.append("upper(mb.mbRefNo) like (:mbRefNo)");
+            paramValues.put("mbRefNo", "%" + measurementBookSearchContract.getMbRefNumbers().get(0).toUpperCase() + "%");
         } else if (measurementBookSearchContract.getMbRefNumbers() != null && measurementBookSearchContract.getMbRefNumbers().size() > 1) {
             addAnd(params);
             params.append("mb.mbRefNo in(:mbRefNo)");
@@ -173,9 +173,9 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
     private void searchByLOANumbers(List<String> loaNumbers, StringBuilder params, Map<String, Object> paramValues) {
         if (loaNumbers.size() == 1) {
             addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance like (:loaNumber)");
-            paramValues.put("loaNumber", "%" + loaNumbers.get(0) + "%");
-        } else if (loaNumbers.size() > 1) {
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.letterOfAcceptance) like (:loaNumber)");
+            paramValues.put("loaNumber", "%" + loaNumbers.get(0).toUpperCase() + "%");
+        } else {
             addAnd(params);
             params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:loaNumber)");
             paramValues.put("loaNumber", loaNumbers);
@@ -186,9 +186,9 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
 
         if (detailedEstimateNumbers.size() == 1) {
             addAnd(params);
-            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.detailedEstimate like (:detailedEstimate)");
-            paramValues.put("detailedEstimate", "%" + detailedEstimateNumbers.get(0) + "%");
-        } else if (detailedEstimateNumbers.size() > 1) {
+            params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and upper(loaestimate.detailedEstimate) like (:detailedEstimate)");
+            paramValues.put("detailedEstimate", "%" + detailedEstimateNumbers.get(0).toUpperCase() + "%");
+        } else {
             addAnd(params);
             params.append("mb.letterOfAcceptanceEstimate = loaestimate.id and loaestimate.letterOfAcceptance in (:detailedEstimate)");
             paramValues.put("detailedEstimate", detailedEstimateNumbers);

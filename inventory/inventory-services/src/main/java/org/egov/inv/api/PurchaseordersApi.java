@@ -50,7 +50,7 @@ public interface PurchaseordersApi {
             produces = {"application/json"},
             consumes = {"application/json"},
             method = RequestMethod.POST)
-    ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Create  new") @Valid @RequestBody PurchaseOrderRequest purchaseOrderRequest);
+    ResponseEntity<PurchaseOrderResponse> purchaseordersPreparepofromindentsPost(@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId, @ApiParam(value = "Create  new") @RequestBody PurchaseOrderRequest purchaseOrderRequest);
 
     @ApiOperation(value = "Get the list of purchase orders", notes = "Purchase order is issued for indent material as well as for non-indent materials as well. This API restruns the list of Purchase oder, associated materials and indents(if any).", response = PurchaseOrderResponse.class, tags = {"Purchase Order",})
     @ApiResponses(value = {

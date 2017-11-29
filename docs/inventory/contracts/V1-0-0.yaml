@@ -2415,7 +2415,7 @@ definitions:
           maxLength: 128
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-        indents:
+        indentNumbers:
           description: Used for indent search result and used in indent purchase order creation
           type:  array
           items:

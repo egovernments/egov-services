@@ -11,12 +11,14 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.MaterialSearchRequest;
 import org.egov.inv.model.PriceList;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.persistence.entity.PriceListEntity;
+import org.egov.inv.persistence.repository.MaterialJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListDetailJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListRepository;
@@ -53,6 +55,9 @@ public class PriceListService extends DomainService {
     
     @Autowired
     private PriceListDetailJdbcRepository priceListDetailsJdbcRepository;
+    
+    @Autowired
+    private MaterialJdbcRepository materialJdbcRepository;
     
     @Autowired
     private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -241,7 +246,8 @@ public class PriceListService extends DomainService {
 				for(PriceListDetails pld:pl.getPriceListDetails()){
 					for(PriceListDetails plds:pl.getPriceListDetails()){
 						if(pld!=plds && pld.getMaterial().getCode().toString().equals(plds.getMaterial().getCode().toString())){
-							throw new CustomException("Material", "A duplicate material "+plds.getMaterial().toString() + " is found, please remove them");
+							MaterialSearchRequest msr = MaterialSearchRequest.builder().code(plds.getMaterial().getCode()).build();
+							throw new CustomException("Material", "A duplicate material "+ materialJdbcRepository.search(msr).getPagedData().get(0).getName() + " is found, please remove them and create pricelist");
 						}
 					}
 				}

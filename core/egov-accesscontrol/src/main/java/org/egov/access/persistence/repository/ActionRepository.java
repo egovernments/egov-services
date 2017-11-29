@@ -42,7 +42,6 @@ package org.egov.access.persistence.repository;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
-import java.net.URLEncoder;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -60,6 +59,10 @@ import org.egov.access.web.contract.action.ActionRequest;
 import org.egov.access.web.contract.action.ActionService;
 import org.egov.access.web.contract.action.Module;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.mdms.model.MasterDetail;
+import org.egov.mdms.model.MdmsCriteria;
+import org.egov.mdms.model.MdmsCriteriaReq;
+import org.egov.mdms.model.ModuleDetail;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.slf4j.Logger;
@@ -458,7 +461,7 @@ public class ActionRepository {
 		return actionList;
 	}
 	
-	public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONException, UnsupportedEncodingException {
+/*	public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONException, UnsupportedEncodingException {
 		
 		RestTemplate restTemplate = new RestTemplate();
 		String url;
@@ -468,8 +471,28 @@ public class ActionRepository {
 		List<Action> actionList = new ArrayList<Action>();
 		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
 		String actionFilter = "[?(@.id IN [$actionid] && @.enabled == $enabled)]";
-		url = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=roleactions&tenantId=$tenantid&filter=";
-		actionurl = "http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=ACCESSCONTROL&masterName=$actionmaster&tenantId=$tenantid&filter=";
+		url = "http://egov-micro-dev.egovernments.org/egov-mdms-service-test/v1/_search";
+		MdmsCriteriaReq mcq = new MdmsCriteriaReq();
+		List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
+		List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();
+		mcq.setRequestInfo(getRInfo());
+		MdmsCriteria mc = new MdmsCriteria();
+		mc.setTenantId(actionRequest.getTenantId());
+		ModuleDetail md = new ModuleDetail();
+		md.setModuleName("ACCESSCONTROL");
+		MasterDetail masterDetail = new MasterDetail();
+		masterDetail.setName("roleactions");
+		masterDetail.setFilter(roleFilter);
+		masterDetails.add(masterDetail);
+		md.setMasterDetails(masterDetails);
+		moduleDetail.add(md);
+		mc.setModuleDetails(moduleDetail);
+		mcq.setMdmsCriteria(mc);
+		
+		
+		actionurl = "http://egov-micro-dev.egovernments.org/egov-mdms-service-test/v1/_search";
+		
+		
 
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();
@@ -500,7 +523,7 @@ public class ActionRepository {
 		LOGGER.info("The URL is: "+url);
 		URI uri = URI.create(url);
 		try {
-		res = restTemplate.postForObject(uri, getRInfo(),String.class);
+		res = restTemplate.postForObject(uri, mcq,String.class);
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -539,6 +562,134 @@ public class ActionRepository {
 		 LOGGER.info("encoded url is: "+newactionuri);
 		URI actionuri = URI.create(newactionuri);
 		actionres = restTemplate.postForObject(actionuri, getRInfo(),String.class);
+		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions");
+		LOGGER.info("Actions from MDMS: "+action.toString());
+		
+		JSONArray actionsArray = new JSONArray(action.toString());
+		for (int i = 0; i < actionsArray.length(); i++) {
+			Action act = new Action();
+			act.setDisplayName(actionsArray.getJSONObject(i).getString("displayName"));
+			act.setUrl(actionsArray.getJSONObject(i).getString("url"));
+			act.setEnabled(actionsArray.getJSONObject(i).getBoolean("enabled"));
+			act.setId(actionsArray.getJSONObject(i).getLong("id"));
+			act.setName(actionsArray.getJSONObject(i).getString("name"));
+			act.setOrderNumber(actionsArray.getJSONObject(i).getInt("orderNumber"));
+			act.setParentModule(actionsArray.getJSONObject(i).get("parentModule").toString());
+			act.setPath(actionsArray.getJSONObject(i).getString("path"));
+			act.setQueryParams(actionsArray.getJSONObject(i).get("queryParams").toString());
+			act.setServiceCode(actionsArray.getJSONObject(i).getString("serviceCode"));
+			act.setTenantId(actionRequest.getTenantId());
+			actionList.add(act);
+		}
+ 
+         return actionList;
+	}*/
+public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONException, UnsupportedEncodingException {
+		
+		RestTemplate restTemplate = new RestTemplate();
+		String url;
+		String res = "";
+		String actionres = "";
+		List<Action> actionList = new ArrayList<Action>();
+		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
+		String actionFilter = "[?(@.id IN [$actionid] && @.enabled == $enabled)]";
+		url = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_search";
+		List<String> rolecodes = actionRequest.getRoleCodes();
+		StringBuffer rolecodelist = new StringBuffer();
+		
+		for(int i=0;i<rolecodes.size();i++) {
+			rolecodelist.append("'");
+			rolecodelist.append(rolecodes.get(i));
+			rolecodelist.append("'");
+			if(i != rolecodes.size()-1)
+				rolecodelist.append(",");
+			
+		}
+		String tenantid = actionRequest.getTenantId();
+		Boolean enabled = actionRequest.getEnabled();
+		
+		
+		roleFilter = roleFilter.replaceAll("\\$rolecode", rolecodelist.toString());
+		MdmsCriteriaReq mcq = new MdmsCriteriaReq();
+		List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
+		List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();
+		mcq.setRequestInfo(getRInfo());
+		MdmsCriteria mc = new MdmsCriteria();
+		mc.setTenantId(actionRequest.getTenantId());
+		ModuleDetail md = new ModuleDetail();
+		md.setModuleName("ACCESSCONTROL");
+		MasterDetail masterDetail = new MasterDetail();
+		masterDetail.setName("roleactions");
+		masterDetail.setFilter(roleFilter);
+		masterDetails.add(masterDetail);
+		md.setMasterDetails(masterDetails);
+		moduleDetail.add(md);
+		mc.setModuleDetails(moduleDetail);
+		mcq.setMdmsCriteria(mc);
+
+		
+		
+		
+		LOGGER.info("Role Filter: "+roleFilter.toString());
+		
+		LOGGER.info("The URL is: "+url);
+		
+		
+		try {
+		res = restTemplate.postForObject(url, mcq,String.class);
+		System.out.println("Response "+res);
+		System.out.println("tenant "+mcq.getMdmsCriteria().getTenantId());
+		System.out.println("Module Name "+mcq.getMdmsCriteria().getModuleDetails().get(0).getModuleName());
+		
+		} catch(Exception e){
+			e.printStackTrace();
+		}
+
+		Object jsonObject = JsonPath.read(res,"$.MdmsRes.ACCESSCONTROL.roleactions");
+		JSONArray mdmsArray = new JSONArray(jsonObject.toString());
+		LOGGER.info("Role Action ID from MDMS: "+jsonObject.toString());
+		StringBuffer actionids = new StringBuffer();
+		for (int i = 0; i < mdmsArray.length(); i++) {
+			
+			actionids.append(mdmsArray.getJSONObject(i).getInt("actionid"));
+			
+			if(i != mdmsArray.length()-1)
+				actionids.append(",");
+			
+			
+		}
+		LOGGER.info("Action Id is "+actionids.toString());
+		actionFilter = actionFilter.replaceAll("\\$actionid", actionids.toString());
+		actionFilter = actionFilter.replaceAll("\\$enabled", enabled.toString());
+		LOGGER.info("Action Filter is "+actionFilter);
+		
+		 MdmsCriteriaReq actionmcq = new MdmsCriteriaReq();
+			List<MasterDetail> actionmasterDetails = new ArrayList<MasterDetail>();
+			List<ModuleDetail> actionmoduleDetail = new ArrayList<ModuleDetail>();
+			actionmcq.setRequestInfo(getRInfo());
+			MdmsCriteria actionmc = new MdmsCriteria();
+			 if(tenantid.contains(".")){
+				 String[] stateid = tenantid.split("\\.");
+				 System.out.println("State IDs are :"+stateid);
+				 actionmc.setTenantId(stateid[0]);
+				 
+			 } else {
+				 actionmc.setTenantId(tenantid);
+				 
+			 }
+			
+			ModuleDetail actionmd = new ModuleDetail();
+			actionmd.setModuleName("ACCESSCONTROL");
+			MasterDetail actionmasterDetail = new MasterDetail();
+			actionmasterDetail.setName(actionRequest.getActionMaster());
+			actionmasterDetail.setFilter(actionFilter);
+			actionmasterDetails.add(actionmasterDetail);
+			actionmd.setMasterDetails(actionmasterDetails);
+			actionmoduleDetail.add(actionmd);
+			actionmc.setModuleDetails(actionmoduleDetail);
+			actionmcq.setMdmsCriteria(actionmc);
+		
+		actionres = restTemplate.postForObject(url, actionmcq,String.class);
 		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions");
 		LOGGER.info("Actions from MDMS: "+action.toString());
 		

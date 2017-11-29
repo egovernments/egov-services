@@ -2470,6 +2470,11 @@ definitions:
         material:
           $ref: "#/definitions/Material"
           format: autoComplete
+        purchaseOrderNumber:
+          type: string
+          readOnly: true
+          description: |
+            purchaseOrderNumber reference from purchase order
         orderNumber:
           type: number
           format: int32
@@ -2710,6 +2715,10 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
+        mrnNumber:
+          type: string
+          readOnly: true
+          description: mrn number reference from material receipt.
         orderNumber:
           type: number
           format: int32
@@ -2793,6 +2802,9 @@ definitions:
           description: The date on which the materials are received into system.
           format: int64
           x-displayformat: 'dd/MM/yyyy'
+        receiptDetailId:
+          type: string
+          description: id reference from receipt detail.
         oldReceiptNumber:
           type: string
           description: old receipt number. Field used in opening balance screen.

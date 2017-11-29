@@ -364,7 +364,7 @@ printer = () => {
               if(formData.Depreciation.DepreciationDetail.length >= 0){
                 for(var i=0; i<formData.Depreciation.DepreciationDetail.length; i++){
                   var ackCodeDetail = {};
-                  ackCodeDetail.assetId = formData.Depreciation.DepreciationDetail[i].assetId;
+                  ackCodeDetail.assetCode = formData.Depreciation.DepreciationDetail[i].assetCode;
                   ackCodeDetail.valueBeforeDepreciation = formData.Depreciation.DepreciationDetail[i].valueBeforeDepreciation;
                   ackCodeDetail.depreciationValue = formData.Depreciation.DepreciationDetail[i].depreciationValue;
                   ackCodeDetail.valueAfterDepreciation = formData.Depreciation.DepreciationDetail[i].valueAfterDepreciation;

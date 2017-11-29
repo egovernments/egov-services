@@ -1051,14 +1051,18 @@ definitions:
         format: singleValueList
         default: false
       noOfLands:
-          type: integer
-          description: No of Lands. This field needs to be shown if Nature of work is 'New'. If landAssetRequired=Yes then this field is mandatory.
-          maxLength: 10
+        type: integer
+        description: No of Lands. This field needs to be shown if Nature of work is 'New'. If landAssetRequired=Yes then this field is mandatory.
+        maxLength: 10
       otherAssetSpecificationRemarks:
         type: string
         pattern: "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+"
         description:  Other Specifications Remarks. This field needs to be shown if Nature of work is 'New'.
         maxLength: 1024
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       abstractEstimateDetails:
@@ -1140,6 +1144,10 @@ definitions:
       documentDetails:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/DocumentDetail'
         description: This object holds Budget any documents attached while creating Abstract Estimate or any documents generated from the system or any photographs captured for the Abstract Estimate.
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1189,6 +1197,10 @@ definitions:
           format: double
           maxLength: 12
           description: Construction area. If Is Land Asset required=Yes then this field is mandatory. This field needs to be shown if Nature of work is 'New'.
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1218,6 +1230,10 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/EstimateSanctionAuthority'
         description: Reference to Estimate Sanction Authority object 
         format: singleValueList
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
     required:
       - abstractEstimate
       - tenantId
@@ -1485,6 +1501,10 @@ definitions:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/financials/contracts/egf-master/v1-0-0.yml#/definitions/BudgetGroup'
         format: singleValueList
         description: Budget Group of the Detailed Estimate
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -1520,6 +1540,10 @@ definitions:
         detailedEstimate:
           type: string
           description: Reference of the Detailed Estimate for Overheads
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1552,6 +1576,10 @@ definitions:
         detailedEstimate:
           type: string
           description: Reference of the Detailed Estimate for Estimate and Assets linking
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1614,6 +1642,10 @@ definitions:
           description: Measurement sheet list for the Estimate Activity
           items:
             $ref: '#/definitions/EstimateMeasurementSheet'
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1681,6 +1713,10 @@ definitions:
         parent:
           type: string
           description: Parent Estimate Measurement sheet reference for change in quantity of Revision Estimate
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1712,6 +1748,10 @@ definitions:
           format: double
           maxLength: 6
           description: Percentage for the Multi Year Estimate
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1750,6 +1790,10 @@ definitions:
           type: string
           description: User who technical sanctioned Detailed Estimate
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-user/contracts/v1-0-0.yml#/definitions/User'
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1789,6 +1833,10 @@ definitions:
           maxLength: 12
           minLength: 1
           description: Amount for the Detailed Estimate Deduction
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -1842,6 +1890,10 @@ definitions:
           format: int64
           x-displayformat: 'dd/MM/yyyy'
           description: Epoch time for the project completion date
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:

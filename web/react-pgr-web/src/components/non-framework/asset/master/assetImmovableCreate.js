@@ -240,9 +240,9 @@ class assetImmovableCreate extends Component {
           assetCheck[response.Assets[0].assetAttributes[i].key]={[response.Assets[0].assetAttributes[i].type]:response.Assets[0].assetAttributes[i].value};
 
       }
-      if (response && response.Assets && response.Assets[0] && response.Assets[0].titleDocumentsAvalable) {
+      if (response && response.Assets && response.Assets[0] && response.Assets[0].titleDocumentsAvailable) {
 
-        response.Assets[0].titleDocumentsAvalable = response.Assets[0].titleDocumentsAvalable.join(",");
+        response.Assets[0].titleDocumentsAvailable = response.Assets[0].titleDocumentsAvailable.join(",");
       }
 
       response.Assets[0].assetAttributesCheck = assetCheck;
@@ -667,10 +667,10 @@ class assetImmovableCreate extends Component {
     self.props.setLoadingStatus('loading');
     var formData = JSON.parse(JSON.stringify(this.props.formData));
 
-    if (formData.Asset.titleDocumentsAvalable) {
-      formData.Asset.titleDocumentsAvalable = formData.Asset.titleDocumentsAvalable.split(",");
+    if (formData.Asset.titleDocumentsAvailable) {
+      formData.Asset.titleDocumentsAvailable = formData.Asset.titleDocumentsAvailable.split(",");
     } else {
-      formData.Asset.titleDocumentsAvalable = [];
+      formData.Asset.titleDocumentsAvailable = [];
     }
     if (formData.Asset.assetCategory.id) {
     formData.Asset.assetCategory = self.state.cateoryObject[formData.Asset.assetCategory.id];

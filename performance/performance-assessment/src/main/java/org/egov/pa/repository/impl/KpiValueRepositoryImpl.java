@@ -1,5 +1,7 @@
 package org.egov.pa.repository.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -10,11 +12,9 @@ import java.util.Map.Entry;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
-import org.egov.pa.model.KpiValueList;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
-import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIValueListRowMapper;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIValueRowMapper;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -76,12 +77,32 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 
 	@Override
-	public List<KpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+	public List<KpiValue> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-    	String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq,preparedStatementValues);
-    	KPIValueListRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueListRowMapper(); 
-    	List<KpiValueList> listOfValues = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
-    	return listOfValues;
+		String query = queryBuilder.getValueCompareSearchQuery(kpiValueSearchReq, preparedStatementValues);
+		KPIValueRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIValueRowMapper();
+		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+		List<KpiValue> listOfValues = new ArrayList<>(); 
+		Map<String, KpiValue> valueMap = mapper.valueMap; 
+		Iterator<Entry<String, KpiValue>> itr = valueMap.entrySet().iterator();
+
+		while(itr.hasNext()) { 
+			Entry<String, KpiValue> entry = itr.next();
+			String id = entry.getKey(); 
+			KpiValue value = entry.getValue();
+			
+			if(mapper.valueDetailMap.containsKey(id)) { 
+				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id); 
+				value.setValueList(valueDetailList);
+			} else { 
+				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId());
+				value.setValueList(defaultValueDetailList);
+			}
+			listOfValues.add(value);
+		}
+		log.info("Size of Kpi Value List :  " + listOfValues.size());
+		log.info("Kpi Value List :  " + listOfValues.toString());
+		return listOfValues;
 	}
 	
 	@Override
@@ -158,7 +179,11 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 		parametersMap.put("finYear", finYearCount);
 		String possibilityCheck = null;
 		try { 
-			possibilityCheck = namedParameterJdbcTemplate.queryForObject(query, parametersMap, String.class);			
+			possibilityCheck = namedParameterJdbcTemplate.queryForObject(query, parametersMap, new RowMapper<String>() {
+				@Override
+				public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+					return rs.getString("possibility").concat("_" + rs.getString("graphtype"));
+				}});			
 		} catch(EmptyResultDataAccessException exec) { 
 			log.info("Empty Data Set resulted - Code and Tenant ID does not have a record : " + exec);
 		} catch(Exception e) { 

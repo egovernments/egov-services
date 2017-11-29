@@ -119,21 +119,22 @@ public class KpiValueController implements KpiValue {
     @Override
     @ResponseBody
     public ResponseEntity<?> compareAndSearch(@RequestParam("tenantId") List<String> tenantIdList,
-									 @RequestParam("kpiCodes") List<String> kpiCodes,
-									 @RequestParam("finYear") List<String> finYearList,
-									 @RequestBody RequestInfoWrapper requestInfo) {
-    	log.info("Request Received for Compare and Search : " + tenantIdList + "\n" + kpiCodes + "\n" + finYearList + "\n" + kpiCodes);
+			 @RequestParam(value="departmentId", required = false) Long departmentId,
+			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
+			 @RequestParam(value="finYear", required = false) List<String> finYearList,
+			 @RequestBody RequestInfoWrapper requestInfo) {
+    	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
     	kpiValueSearchReq.setRequestInfo(requestInfo.getRequestInfo());
     	kpiValueSearchReq.setFinYear(finYearList);
+    	kpiValueSearchReq.setDepartmentId(departmentId);
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
-    	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
+    	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
-        List<KpiValueList> kpiValueList = kpiValueService.compareSearchKpiValue(kpiValueSearchReq); 
-        return getCompareSearchSuccessResponse(kpiValueList, kpiValueSearchReq.getRequestInfo());
-    	
+        List<ValueResponse> valueList = kpiValueService.compareSearchKpiValue(kpiValueSearchReq); 
+        return getSearchSuccessResponse(valueList, kpiValueSearchReq.getRequestInfo()); 
     }
     
     @Override
@@ -152,7 +153,7 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setDepartmentId(departmentId);
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
-    	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq);
+    	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
         List<ValueResponse> valueList = kpiValueService.searchKpiValue(kpiValueSearchReq); 

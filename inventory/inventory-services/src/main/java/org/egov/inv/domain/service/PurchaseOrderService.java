@@ -13,7 +13,6 @@ import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;
 import org.egov.inv.model.PurchaseOrder.PurchaseTypeEnum;
-import org.egov.inv.persistence.repository.PurchaseOrderDetailJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,7 +27,7 @@ public class PurchaseOrderService extends DomainService {
     private PurchaseOrderJdbcRepository purchaseOrderRepository;
 
     @Autowired
-    private PurchaseOrderDetailJdbcRepository purchaseOrderDetailJdbcRepository;
+    private PurchaseOrderDetailService purchaseOrderDetailService;
 
     @Value("${inv.purchaseorders.save.topic}")
     private String saveTopic;
@@ -137,7 +136,7 @@ public class PurchaseOrderService extends DomainService {
                 PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
                 purchaseOrderDetailSearch.setPurchaseOrder(purchaseOrder.getId());
                 purchaseOrderDetailSearch.setTenantId(purchaseOrder.getTenantId());
-                Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailJdbcRepository.search(purchaseOrderDetailSearch);
+                Pagination<PurchaseOrderDetail> detailPagination = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
                 purchaseOrder.setPurchaseOrderDetails(detailPagination.getPagedData().size() > 0 ? detailPagination.getPagedData() : Collections.EMPTY_LIST);
             }
         }

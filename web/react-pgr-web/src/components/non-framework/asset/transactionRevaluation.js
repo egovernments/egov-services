@@ -157,7 +157,16 @@ class Transaction extends Component {
   }
 
   componentDidMount() {
+    let self = this;
       this.initData();
+      
+      var defaultDate = new Date();
+      console.log(defaultDate);
+      let findefaultDate = ('0' + defaultDate.getDate()).slice(-2) + '/'
+             + ('0' + (defaultDate.getMonth()+1)).slice(-2) + '/'
+             + defaultDate.getFullYear();
+             console.log(defaultDate);
+      self.props.handleChange({target:{value:findefaultDate}}, "Revaluation.revaluationDate");
 
 
   }
@@ -701,7 +710,7 @@ class Transaction extends Component {
 
     if(formData.Revaluation["assetId"]){
       console.log(formData.Revaluation["assetId"]);
- 
+
     if(!(formData.Revaluation.valueAfterRevaluation) || formData.Revaluation.valueAfterRevaluation == null || formData.Revaluation.valueAfterRevaluation == ""){
       self.props.toggleSnackbarAndSetText(true, "Please enter Valuation Amount", false, true);
 

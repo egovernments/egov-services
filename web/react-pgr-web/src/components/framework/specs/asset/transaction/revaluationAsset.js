@@ -275,12 +275,12 @@ var dat = {
 	          "jsonPath": "Revaluation.valueAfterRevaluation",
 	          //"label": "ac.create.title",
 						"label": "Value After Revaluation",
-	          "pattern": "^[1-9]+[0-9]*$",
+	          "pattern": "^[0-9]{1,10}(\\.[0-9]{0,2})?$",
 	          "type": "text",
 	          "isRequired": true,
 	          "isDisabled": false,
 	          "requiredErrMsg": "", //Remove required messages
-	          "patternErrMsg": "Please enter positive number"
+	          "patternErrMsg": "Please enter positive number (Decimal upto 2 digits)"
 	        },
 					{
 	          "name": "Addition/deductedAmount",

@@ -108,6 +108,11 @@ paths:
           required: false
           description: either case search result data need fully or partially
           type: string
+        - name: entryType
+          in: query
+          required: false
+          description: either entry is SUMMON or WARRENT
+          type: string  
         
         
       responses:
@@ -1767,6 +1772,14 @@ definitions:
       nextHearingTime:
         type: string
         description: This field holds information about the case next hearing  time
+      currentHearingDate:
+        type: integer
+        format: int64
+        description: This field holds information about the case current hearing date(Epoch)
+        x-displayformat: 'dd/MM/yyyy'
+      currentHearingTime:
+        type: string
+        description: This field holds information about the case current hearing  time  
       attendees:
         type: array
         items:
@@ -1853,6 +1866,12 @@ definitions:
       ward:
         type: string
         description: This field holds information about the ward master name/code.TODO-need clarification on ward refernce object
+      entryType:
+        type: string
+        description: This field holds information about the entry type.
+        enum:
+            - SUMMON
+            - WARRENT
       bench:
         $ref: '#/definitions/Bench'
       side:

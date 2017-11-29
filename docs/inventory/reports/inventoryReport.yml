@@ -502,7 +502,7 @@ ReportDefinitions:
           AND sup.tenantid=mat.tenantid
           AND pld.material=mat.code
           AND pl.supplier=sup.code 
-          AND mat.code=pld.material;
+          AND mat.code=pld.material
 
 # Comparison between different rates Report
 # Need to Change drop down Link based on report and Query
@@ -587,7 +587,7 @@ ReportDefinitions:
          AND pl.tenantid=pld.tenantid
          AND mat.tenantid=pl.tenantid
          AND mat.code=pld.material 
-         AND pld.pricelist=pl.id ;
+         AND pld.pricelist=pl.id 
 
 
 

@@ -31,7 +31,7 @@ class WorkFlow extends Component {
   // }
   initCall = () => {
 
-    console.log('came to initcall');
+    // console.log('came to initcall');
 
     let initCall = [];
 

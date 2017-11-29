@@ -145,20 +145,25 @@ export default (state = defaultState, action) => {
 function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
   let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
+  // console.log(requiredFields);
   for(var i=0; i<requiredFields.length; i++) {
     if(typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === "") {
+      // console.log(requiredFields[i], _.get(form, requiredFields[i]));
       isFormValid = false;
       break;
     }
   }
 
   if(pattern && _.get(form, property) && !new RegExp(pattern).test(_.get(form, property))) {
+    // console.log(property, _.get(form, property));
     errorText = patErrMsg ? translate(patErrMsg) : translate('ui.framework.patternMessage');
     isFormValid = false;
   }
 
+  // console.log(fieldErrors);
   for(let key in fieldErrors) {
     if(fieldErrors[key] && key != property) {
+        // console.log(key, property, fieldErrors, fieldErrors[key]);
         isFormValid = false;
         break;
     }
@@ -183,12 +188,14 @@ function checkIfHasAllReqFields(reqFields, form) {
 function reValidate(form, fieldErrors, requiredFields) {
     for(var key in fieldErrors) {
         if(fieldErrors[key]) {
+            // console.log(fieldErrors[key]);
             return false;
         }
     }
 
     for(var i=0; i<requiredFields.length; i++) {
-        if(!_.get(form, requiredFields[i])) {
+        if(typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === ""){
+            // console.log(requiredFields[i], _.get(form, requiredFields[i]));
             return false;
         }
     }

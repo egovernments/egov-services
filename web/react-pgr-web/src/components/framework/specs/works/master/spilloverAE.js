@@ -10,6 +10,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.estandadminsanction",
 				"name": "Abstract Estimate",
+				"stepIndex":0,
 				"fields": [
 						{
 							"name": "abstractEstimateNumber",
@@ -29,6 +30,7 @@ var dat = {
               "label": "works.create.groups.fields.dateOfProposal",
               "pattern": "",
               "type": "datePicker",
+							"maxDate":"today",
               "url": "",
               "isRequired": true,
               "isDisabled": false,
@@ -329,7 +331,7 @@ var dat = {
 							],
 							"showHideFields": [
 								{
-									"ifValue": "true",
+									"ifValue": true,
 									"hide": [],
 									"show": [
 										{
@@ -355,7 +357,7 @@ var dat = {
               "patternErrMsg": "",
 							"showHideFields": [
 								{
-									"ifValue": "1",
+									"ifValue": 1,
 									"hide": [],
 									"show": [
 										{
@@ -385,6 +387,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.assetdetails",
 				"name": "Asset Details",
+				"stepIndex":0,
 				"hide":true,
 				"fields":[
 					{
@@ -427,6 +430,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.asssetsland",
 				"name": "Assets - Land",
+				"stepIndex":0,
 				"hide":true,
 				"fields":[
 					{
@@ -452,10 +456,10 @@ var dat = {
 						],
 						"checkMandatory":[
 							{
-								"ifValue": "true",
+								"ifValue": true,
 								"required": [
 									{
-										"jpath": "abstractEstimates[0].noOfLands",
+										"jpath": "abstractEstimates[0].noOfLands"
 									}
 								],
 								"notRequired":[
@@ -463,10 +467,11 @@ var dat = {
 								]
 							},
 							{
-								"ifValue": "false",
+								"ifValue": false,
 								"notRequired": [
 									{
 										"jpath": "abstractEstimates[0].noOfLands",
+										"clear":true
 									}
 								]
 							}
@@ -580,6 +585,7 @@ var dat = {
 			{
 			  "label": "works.create.groups.label.workdetails",
 			  "name": "Work Details",
+				"stepIndex":0,
 			  "fields":[
 					{
 						 "name":"detailedEstimateCreated",
@@ -691,6 +697,7 @@ var dat = {
 			{
 			  "label": "works.create.groups.label.sanctionDetails",
 			  "name": "Sanction Details",
+				"stepIndex":0,
 			  "fields":[
 					{
 						"name": "adminSanctionNumber",
@@ -772,6 +779,7 @@ var dat = {
 			{
 			  "label": "works.create.groups.label.financialDetails",
 			  "name": "Financial Details",
+				"stepIndex":1,
 			  "fields":[
 					{
 						"name": "fund",
@@ -853,6 +861,7 @@ var dat = {
 			{
 				"label": "works.create.groups.label.uploadDocs",
 				"name": "Documents",
+				"stepIndex":0,
 				"fields":[
 					{
 						"name": "File",

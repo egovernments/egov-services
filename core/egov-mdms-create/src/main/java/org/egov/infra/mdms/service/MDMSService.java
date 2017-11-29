@@ -72,7 +72,7 @@ public class MDMSService {
 		
 		//push the contents
 		logger.info("Step 5: Pushing the Contents to git......");
-		//pushTheContents(newCommitSHA);
+		pushTheContents(newCommitSHA);
 		
 		updateCache(MDMSConstants.READ_FILE_PATH_APPEND + filePath);
 
@@ -80,8 +80,9 @@ public class MDMSService {
 		
 		Map<String, Map<String, JSONArray>> response = new HashMap<>();
 		Map<String, JSONArray> entry = new HashMap<>();
-		JSONArray data = JsonPath.read(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData()), 
-				MDMSConstants.MASTERDATA_JSONPATH);
+		JSONArray data = new JSONArray();
+		data.add(JsonPath.read(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData()), 
+				MDMSConstants.MASTERDATA_JSONPATH));
 		entry.put(mDMSCreateRequest.getMasterMetaData().getMasterName(), data);
 		response.put(mDMSCreateRequest.getMasterMetaData().getModuleName(), entry);
 
@@ -136,20 +137,25 @@ public class MDMSService {
 			}
 			logger.info("conditionMap: "+conditionMap);
             ListIterator<Object> iterator = masterData.listIterator();
+            int counter = 0;
             while(iterator.hasNext()){
             	Object master = iterator.next();
-            	int counter = 0;
+            	counter = 0;
 				for(int i = 0; i < keys.size(); i++){
 					if(JsonPath.read(master, keys.get(i).toString()).equals(conditionMap.get(keys.get(i)))){
 						counter++;
 					}else{
 						break;
 					}
-					if(counter == keys.size()){
-						iterator.remove();
-						iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0));
-					}
+				  }
+				if(counter == keys.size()){
+					iterator.remove();
+					iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0));
+					break;
 				}
+            }
+            if(counter != keys.size()){
+            	throw new CustomException("400", "Invalid Request");
             }
             logger.info("moduleContentJson: "+moduleContentJson);
 	    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
@@ -169,6 +175,9 @@ public class MDMSService {
 		
 	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest){
 		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() +"-"+ mDMSCreateRequest.getMasterMetaData().getModuleName());
+		if(null == fileName){
+			throw new CustomException("400", "No data available for this master");
+		}
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(MDMSConstants.DATA_ROOT_FOLDER);
 		String[] tenantArray = mDMSCreateRequest.getMasterMetaData().getTenantId().split("[.]");

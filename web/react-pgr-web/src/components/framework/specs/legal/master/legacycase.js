@@ -148,7 +148,7 @@ var dat = {
             jsonPath: "cases[0].summon.hearingTime",
             label: "legal.create.hearingTime",
             type: "timePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },

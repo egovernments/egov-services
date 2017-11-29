@@ -17,7 +17,7 @@ var dat = {
             jsonPath: "cases[0].referenceEvidences[0].referenceType",
             label: "referenceEvidence.create.typeOfReference",
             type: "text",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },
@@ -26,7 +26,7 @@ var dat = {
             jsonPath: "cases[0].referenceEvidences[0].referenceDate",
             label: "referenceEvidence.create.referenceDate",
             type: "datePicker",
-            isRequired: false,
+            isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
           },

@@ -364,7 +364,7 @@ printer = () => {
               if(formData.Depreciation.DepreciationDetail.length >= 0){
                 for(var i=0; i<formData.Depreciation.DepreciationDetail.length; i++){
                   var ackCodeDetail = {};
-                  ackCodeDetail.assetId = formData.Depreciation.DepreciationDetail[i].assetId;
+                  ackCodeDetail.assetCode = formData.Depreciation.DepreciationDetail[i].assetCode;
                   ackCodeDetail.valueBeforeDepreciation = formData.Depreciation.DepreciationDetail[i].valueBeforeDepreciation;
                   ackCodeDetail.depreciationValue = formData.Depreciation.DepreciationDetail[i].depreciationValue;
                   ackCodeDetail.valueAfterDepreciation = formData.Depreciation.DepreciationDetail[i].valueAfterDepreciation;
@@ -381,7 +381,7 @@ printer = () => {
                     <Table  bordered responsive className="table-striped">
                     <thead>
                       <tr>
-                        <th>Asset Id No</th>
+                        <th>Asset Code</th>
                         <th>Value Before Depreciation</th>
                         <th>Depreciation Value</th>
                         <th>Value After Depreciation</th>
@@ -393,7 +393,7 @@ printer = () => {
                       {ackCode.map(function(item, index) {
                         return(
                           <tr key={index}>
-                            <td>{item.assetId}</td>
+                            <td>{item.assetCode}</td>
                             <td>{item.valueBeforeDepreciation}</td>
                             <td>{item.depreciationValue}</td>
                             <td>{item.valueAfterDepreciation}</td>

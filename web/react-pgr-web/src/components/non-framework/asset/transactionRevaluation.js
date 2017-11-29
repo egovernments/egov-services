@@ -158,17 +158,17 @@ class Transaction extends Component {
 
   componentDidMount() {
     let self = this;
-      this.initData(); 
+      this.initData();
 
-      var defaultDate = new Date();
-      console.log(defaultDate);
-      let findefaultDate = ('0' + defaultDate.getDate()).slice(-2) + '/'
-             + ('0' + (defaultDate.getMonth()+1)).slice(-2) + '/'
-             + defaultDate.getFullYear();
-             console.log(defaultDate);
-      self.props.handleChange({target:{value:findefaultDate}}, "Revaluation.revaluationDate");
-
-
+      // var defaultDate = new Date();
+      // console.log(defaultDate);
+      // let findefaultDate = ('0' + defaultDate.getDate()).slice(-2) + '/'
+      //        + ('0' + (defaultDate.getMonth()+1)).slice(-2) + '/'
+      //        + defaultDate.getFullYear();
+      //        console.log(defaultDate);
+      var d = new Date();
+      var n = d.getTime();
+      self.props.handleChange({target:{value:n}}, "Revaluation.revaluationDate");
   }
 
 
@@ -734,8 +734,6 @@ class Transaction extends Component {
     var amountValidation=true;
     var amountValidationMsg="";
       console.log(formData);
-
-
 
       if(formData && formData.hasOwnProperty("Revaluation") && formData.Revaluation.hasOwnProperty("revaluationAmount")){
         var negNumber = formData.Revaluation.revaluationAmount;

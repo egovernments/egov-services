@@ -58,5 +58,6 @@ public class BoundarySearchRequest {
 	private List<Long> hierarchyTypeIds;
 	private String hierarchyTypeName;
 	private List<Long> boundaryIds;
+	private String boundaryTypeName;
 
 }

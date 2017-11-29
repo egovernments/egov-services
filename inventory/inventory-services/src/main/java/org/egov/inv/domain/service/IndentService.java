@@ -1,5 +1,6 @@
 package org.egov.inv.domain.service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -11,6 +12,7 @@ import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.Indent;
+import org.egov.inv.model.Indent.IndentPurposeEnum;
 import org.egov.inv.model.Indent.IndentStatusEnum;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentRequest;
@@ -19,10 +21,15 @@ import org.egov.inv.model.IndentSearch;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
+import org.egov.tracer.model.CustomException;
+import org.joda.time.DateTime;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.egov.inv.model.Error;
 
 @Service
 @Transactional(readOnly = true)
@@ -48,12 +55,14 @@ public class IndentService extends DomainService {
 	@Autowired
 	private IndentDetailJdbcRepository indentDetailJdbcRepository;
 
+	private static final Logger LOG = LoggerFactory.getLogger(IndentService.class);
+
 	@Transactional
 	public IndentResponse create(IndentRequest indentRequest) {
 
 		try {
 			List<Indent> indents = fetchRelated(indentRequest.getIndents());
-		//	validate(indents, Constants.ACTION_CREATE);
+			validate(indents, Constants.ACTION_CREATE);
 			List<String> sequenceNos = indentRepository.getSequence(Indent.class.getSimpleName(), indents.size());
 			int i = 0;
 			for (Indent b : indents) {
@@ -67,7 +76,7 @@ public class IndentService extends DomainService {
 				b.setIndentStatus(IndentStatusEnum.APPROVED);
 				b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_CREATE));
 				List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),
-						indents.size());
+						b.getIndentDetails().size());
 				for (IndentDetail d : b.getIndentDetails()) {
 					d.setId(detailSequenceNos.get(j));
 					d.setTenantId(b.getTenantId());
@@ -96,9 +105,9 @@ public class IndentService extends DomainService {
 			List<String> ids=new ArrayList<String>();
 			validate(indents, Constants.ACTION_UPDATE);
 			for (Indent b : indents) {
-			 int j=0;
-			 if(!indentNumber.isEmpty())
-				 indentNumber=b.getIndentNumber();
+				int j=0;
+				if(!indentNumber.isEmpty())
+					indentNumber=b.getIndentNumber();
 				b.setAuditDetails(getAuditDetails(indentRequest.getRequestInfo(), Constants.ACTION_UPDATE));
 				for (IndentDetail d : b.getIndentDetails()) {
 					if(d.getId()==null)
@@ -110,9 +119,9 @@ public class IndentService extends DomainService {
 					j++;
 				}
 			}
-			
+
 			kafkaQue.send(saveTopic, saveKey, indentRequest);
-            indentDetailJdbcRepository.markDeleted(ids,tenantId,"indentdetail","indentNumber",indentNumber);
+			indentDetailJdbcRepository.markDeleted(ids,tenantId,"indentdetail","indentNumber",indentNumber);
 			IndentResponse response = new IndentResponse();
 			response.setIndents(indentRequest.getIndents());
 			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
@@ -151,35 +160,89 @@ public class IndentService extends DomainService {
 	}
 
 	private void validate(List<Indent> indents, String method) {
-
+		InvalidDataException	errors=	  new InvalidDataException();
 		try {
-			Long currentDate=	new Date().getTime();
+			Long currentDate= currentEpochWithoutTime();
+			currentDate=currentDate+(24*60*60)-1; 
+			LOG.info("CurrentDate is "+			toDateStr(currentDate));
+
+			Long ll=new Date().getTime();
 			switch (method) {
-			
+
 			case Constants.ACTION_CREATE: {
 				if (indents == null) {
-					throw new InvalidDataException("indents", ErrorCode.NOT_NULL.getCode(), null);
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(),"indents","null");  
 				}
 				for(Indent indent: indents)
 				{
-					if(indent.getIndentDate().compareTo(currentDate) > 0)
+					LOG.info("indentDate is "+			toDateStr(indent.getIndentDate()));
+					LOG.info("compare  "+indent.getIndentDate().compareTo(currentDate));
+					LOG.info("compare  "+ll.compareTo(currentDate));
+
+					if(indent.getIndentDate().compareTo(currentDate) >= 0)
 					{
-						//throw new CustomException( "" "the IndentDate should be Less than or Equal to Current Date.");	
+						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "indentDate",indent.getIndentDate().toString());	
 					}
-					
-					if(indent.getExpectedDeliveryDate().compareTo(currentDate) < 0)
+                   // commeneted as of now to support the past dated entries
+					/*if(indent.getExpectedDeliveryDate().compareTo(currentDate) < 0)
 					{
-						//throw new CustomException(ErrorCode.DATE_GE_CURRENTDATE.getCode(), indent.getIndentDate().toString());	
+						errors.addDataError(ErrorCode.DATE_GE_CURRENTDATE.getCode(), "expectedDeliveryDate",indent.getExpectedDeliveryDate().toString());		
+					}*/
+					if(indent.getIndentDate().compareTo(indent.getExpectedDeliveryDate())>0)
+					{
+						LOG.info("expectedDeliveryDate="+toDateStr(indent.getExpectedDeliveryDate()));
+						LOG.info("indentDate="+toDateStr(indent.getIndentDate()));
+						errors.addDataError( ErrorCode.DATE1_GE_DATE2.getCode(), "expectedDeliveryDate", "indentDate",
+								indent.getExpectedDeliveryDate().toString(),indent.getIndentDate().toString());	
+					}
+					List<String> materialCodes=new ArrayList<>();
+					int i=0;
+					for(IndentDetail detail:indent.getIndentDetails())
+					{
+						++i;
+						if(materialCodes.isEmpty())
+						{
+
+							materialCodes.add(detail.getMaterial().getCode());
+
+						}else
+						{	
+							if(materialCodes.indexOf(detail.getMaterial().getCode())==-1)
+							{
+								materialCodes.add(detail.getMaterial().getCode());
+							}
+
+							else
+							{
+								errors.addDataError(ErrorCode.REPEATED_VALUE.getCode(), "material",detail.getMaterial().getCode(),
+										" at serial no. "+i+" and "+ (materialCodes.indexOf(detail.getMaterial().getCode())+1));
+							}
+						}
+
+						if(indent.getIndentPurpose().equals(IndentPurposeEnum.CAPITAL))
+						{
+							if(detail.getProjectCode()==null || detail.getProjectCode().getCode()==null)
+								errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "projectCode" ,"indentPurpose=Capital","at serail no. "+i);
+						}
+						if(indent.getIndentPurpose().equals(IndentPurposeEnum.REPAIRSANDMAINTENANCE))
+						{
+							if(detail.getAsset()==null || detail.getAsset().getCode()==null)
+								errors.addDataError(ErrorCode.MANDATORY_BASED_ON.getCode(), "assetCode" ,
+										"indentPurpose=Repairs and Maintenance" ,"at seraill no. "+i);
+						}
+
 					}
 				}
-				
+
 			}
-				break;
+			break;
 
 			}
 		} catch (IllegalArgumentException e) {
 
 		}
+		if(errors.getValidationErrors().size()>0)
+			throw errors;
 
 	}
 

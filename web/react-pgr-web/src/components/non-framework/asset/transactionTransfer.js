@@ -160,11 +160,13 @@ class Transaction extends Component {
     let self = this;
     this.initData();
 
-    var defaultDate = new Date();
-    let findefaultDate = ('0' + defaultDate.getDate()).slice(-2) + '/'
-             + ('0' + (defaultDate.getMonth()+1)).slice(-2) + '/'
-             + defaultDate.getFullYear();
-    self.props.handleChange({target:{value:findefaultDate}}, "Disposal.disposalDate");
+    // var defaultDate = new Date();
+    // let findefaultDate = ('0' + defaultDate.getDate()).slice(-2) + '/'
+    //          + ('0' + (defaultDate.getMonth()+1)).slice(-2) + '/'
+    //          + defaultDate.getFullYear();
+    var d = new Date();
+    var n = d.getTime();
+    self.props.handleChange({target:{value:n}}, "Disposal.disposalDate");
 
   }
 

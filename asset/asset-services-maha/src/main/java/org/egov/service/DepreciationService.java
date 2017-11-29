@@ -164,6 +164,8 @@ public class DepreciationService {
 			BigDecimal amtToBeDepreciated = null;
 			BigDecimal valueAfterDep = null;
 			ReasonForFailure reason = null;
+			BigDecimal valueAfterDepRounded=null;
+			BigDecimal amtToBeDepreciatedRounded=null;
 			
 			// getting the indvidual fromDate
 			Long invidualFromDate = getFromDateForIndvidualAsset(a, fromDate);;
@@ -177,20 +179,27 @@ public class DepreciationService {
 
 				// getting the amt to be depreciated
 				amtToBeDepreciated = getAmountToBeDepreciated(a, invidualFromDate, toDate);
+				
+				amtToBeDepreciatedRounded=new BigDecimal(amtToBeDepreciated.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+				System.err.println("amtToBeDepreciatedRounded------------"+amtToBeDepreciatedRounded);
 
-				// calculating the valueAfterDepreciation
+				// calculating the valueAfterDepreciation 
 				valueAfterDep = a.getCurrentValue().subtract(amtToBeDepreciated);
+				
+				valueAfterDepRounded=new BigDecimal(valueAfterDep.setScale(2, BigDecimal.ROUND_HALF_UP).toString());
+				System.err.println("valueAfterDepRounded------------"+valueAfterDepRounded);
+	
 
 				// adding currval to the currval list
 				currValList.add(CurrentValue.builder().assetId(a.getAssetId())
-						.assetTranType(TransactionType.DEPRECIATION).currentAmount(valueAfterDep)
+						.assetTranType(TransactionType.DEPRECIATION).currentAmount(valueAfterDepRounded)
 						.transactionDate(toDate).tenantId(a.getTenantId()).build());
 			}
 
 			// adding the depreciation detail object to list
 			depDetList.add(DepreciationDetail.builder().assetId(a.getAssetId()).reasonForFailure(reason).assetCode(a.getAssetCode())
-					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciated).fromDate(invidualFromDate)
-					.valueAfterDepreciation(valueAfterDep).valueBeforeDepreciation(a.getCurrentValue()).status(status)
+					.depreciationRate(a.getDepreciationRate()).depreciationValue(amtToBeDepreciatedRounded).fromDate(invidualFromDate)
+					.valueAfterDepreciation(valueAfterDepRounded).valueBeforeDepreciation(a.getCurrentValue()).status(status)
 					.build());
 		});
 	}

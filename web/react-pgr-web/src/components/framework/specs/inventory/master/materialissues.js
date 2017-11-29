@@ -4,7 +4,7 @@ name = JSON.parse(localStorage.getItem("userRequest")).name;
 
 var dat =
 {
-   "inventory.search": {
+   "inventory.indents.search": {
       "numCols": 4,
       "useTimestamp": true,
       "objectName": "",
@@ -116,6 +116,80 @@ var dat =
          "rowClickUrlCreate": "/create/materialissues/{indentNumber}"
       }
    },
+   "inventory.search": {
+      "numCols": 4,
+      "useTimestamp": true,
+      "objectName": "",
+      "title":"inventory.common.searchcriteria",
+      "url": "/inventory-services/materialissues/_search",
+      "groups": [
+         {
+            "name": "search",
+            "label": "inventory.search.materialIssue.title",
+            "fields": [
+               {
+                  "name": "fromStore",
+                  "jsonPath": "fromStore",
+                  "label": "inventory.search.issueStore",
+                  "type": "singleValueList",
+                  "url": "inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name",
+                  "isDisabled": false,
+                  "patternErrorMsg": "inventory.create.field.message.issueStore"
+               },
+               {
+                  "name": "issueDate",
+                  "jsonPath": "issueDate",
+                  "label": "inventory.create.issueDate",
+                  "pattern": "",
+                  "type": "datePicker",
+                  "maxDate":"today",
+                  "isRequired": false,
+                  "isDisabled": false,
+                  "defaultValue": "",
+            "patternErrorMsg": ""
+               },
+               {
+                  "name": "issueNumber",
+                  "jsonPath":"issueNoteNumber",
+                  "label": "inventory.search.issueNumber",
+                  "type": "text",
+                  "isDisabled": false,
+                  "patternErrorMsg": "inventory.create.field.message.issueNumber"
+               }
+            ]
+         }
+      ],
+      "result": {
+         "header": [
+            {
+               "label": "inventory.search.issueNumber"
+            },
+            {
+               "label": "inventory.create.issueDate"
+            },
+            {
+               "label": "inventory.search.issuePurpose"
+            },
+            {
+               "label": "inventory.common.status"
+            },
+            {
+               "label": "inventory.search.issueType"
+             }
+
+         ],
+         "values": [
+            "issueNumber",
+            "issueDate",
+            "issuePurpose",
+            "materialIssueStatus",
+            "issueType"
+         ],
+         "resultPath": "materialIssues",
+         "rowClickUrlUpdate": "/update/inventory/materialissues/{issueNumber}",
+         "rowClickUrlView": "/view/inventory/materialissues/{issueNumber}"
+      }
+   },
    "inventory.create": {
       "numCols": 4,
       "useTimestamp": true,
@@ -156,14 +230,14 @@ var dat =
                   "jsonPath": "materialIssues[0].indent.indentStore.name",
                   "label": "inventory.indenting.store",
                   "pattern": "^[a-zA-Z ]+$",
-                  "type": "autoCompelete",
+                  "type": "singleValueList",
                   "isRequired": false,
                   "isDisabled": true,
                   "defaultValue": "",
                   "maxLength": 50,
                   "minLength": 5,
                   "patternErrorMsg": "",
-                  "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentStore.name"
+                  "url": ""
                },
                {
                   "name": "departmentname",
@@ -177,7 +251,7 @@ var dat =
                   "maxLength": 64,
                   "minLength": 8,
                   "patternErrorMsg": "",
-                  "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].department.name"
+                  "url":""
                },
                {
                   "name": "indentNumber",
@@ -209,8 +283,8 @@ var dat =
                                "valExp":"getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')"
                              }
 		  ]
-                 /* "autoCompleteDependancy": {
-                     "autoCompleteUrl": "/hr-masters/designations/_search?&id=",
+                 /* "autoCompeleteDependancy": {
+                     "autoCompeleteUrl": "/hr-masters/designations/_search?&id=",
                      "autoFillFields": {
                         "materialIssues[0].issuedToDesignation": "materialIssues[0].issuedToDesignation"
                      }
@@ -341,7 +415,7 @@ var dat =
                   "name": "materialName",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.material.name",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": false,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name"
@@ -350,7 +424,7 @@ var dat =
                   "name": "totalIndentQtyRequired",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity"
@@ -376,7 +450,7 @@ var dat =
                   "name": "uom",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.uom.name",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name"
@@ -411,7 +485,7 @@ var dat =
                   "name": "assetCode",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.asset.code",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code"
@@ -420,7 +494,7 @@ var dat =
                   "name": "projectCode",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code"
@@ -603,8 +677,8 @@ var dat =
                                "valExp":"getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')"
                              }
 		  ]
-                 /* "autoCompleteDependancy": {
-                     "autoCompleteUrl": "/hr-masters/designations/_search?&id=",
+                 /* "autoCompeleteDependancy": {
+                     "autoCompeleteUrl": "/hr-masters/designations/_search?&id=",
                      "autoFillFields": {
                         "materialIssues[0].issuedToDesignation": "materialIssues[0].issuedToDesignation"
                      }
@@ -735,7 +809,7 @@ var dat =
                   "name": "materialName",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.material.name",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": false,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name"
@@ -744,7 +818,7 @@ var dat =
                   "name": "totalIndentQtyRequired",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity"
@@ -770,7 +844,7 @@ var dat =
                   "name": "uom",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.uom.name",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name"
@@ -805,7 +879,7 @@ var dat =
                   "name": "assetCode",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.asset.code",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code"
@@ -814,7 +888,7 @@ var dat =
                   "name": "projectCode",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code"
@@ -997,8 +1071,8 @@ var dat =
                                "valExp":"getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')"
                              }
 		  ]
-                 /* "autoCompleteDependancy": {
-                     "autoCompleteUrl": "/hr-masters/designations/_search?&id=",
+                 /* "autoCompeleteDependancy": {
+                     "autoCompeleteUrl": "/hr-masters/designations/_search?&id=",
                      "autoFillFields": {
                         "materialIssues[0].issuedToDesignation": "materialIssues[0].issuedToDesignation"
                      }
@@ -1129,7 +1203,7 @@ var dat =
                   "name": "materialName",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.material.name",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": false,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name"
@@ -1138,7 +1212,7 @@ var dat =
                   "name": "totalIndentQtyRequired",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity"
@@ -1164,7 +1238,7 @@ var dat =
                   "name": "uom",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.uom.name",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url": "inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name"
@@ -1199,7 +1273,7 @@ var dat =
                   "name": "assetCode",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.asset.code",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code"
@@ -1208,7 +1282,7 @@ var dat =
                   "name": "projectCode",
                   "jsonPath": "materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code",
                   "pattern": "",
-                  "type": "autoComplete",
+                  "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
                   "url":"inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code"

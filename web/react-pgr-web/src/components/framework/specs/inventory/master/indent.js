@@ -378,7 +378,7 @@ var dat = {
                   "isDisabled":false,
                   "defaultValue":"",
                   "patternErrorMsg":"",
-									"url":"/asset-services-maha/assets/_search?&|$.Assets..code|$.Assets..name"
+									"url":"/asset-services-maha/assets/_search?&|$.Assets.*.code|$.Assets.*.name"
                }, {
                   "name":"projectcode",
                   "jsonPath":"indents[0].indentDetails[0].projectCode.code",

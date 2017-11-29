@@ -18,6 +18,10 @@ public enum ErrorCode {
 					"non.unique.value",
 					"the field {0} must be unique in the system",
 					"The  value  {1} for the field {0} already exists in the system. Please provide different value"),
+	REPEATED_VALUE(
+			"repeated.value",
+			"the field {0} must be unique ",
+			"The  value  {1} for the field {0} {2}  repeated"),
 	NULL_VALUE("null.value",
 			  "the field {0} must be not be null",
 			  "The  value  {1} for the field {0} not allowed in the system. Please provide correct value"),
@@ -30,12 +34,24 @@ public enum ErrorCode {
 	INVALID_REF_VALUE("invalid.ref.value",
 			  "the field {0} should have a valid value which exists in the system. ",
 			  "The  value  {1} for the field {0} does exist in system. Please provide correct value"), 
-	DATE_LE_CURRENTDATE("invalid.date.value",
+	DATE_LE_CURRENTDATE("date.should.be.le.currentdate",
 			  "the field {0} should be Less than or Equal to Current Date. ",
 			  "The  value  {1} for the field {0} should be Less than or Equal to Current Date."), 
-	DATE_GE_CURRENTDATE("invalid.date.value",
+	DATE_GE_CURRENTDATE("date.should.be.ge.currentdate",
 					  "the field {0} should be Greater than or Equal to Current Date. ",
-					  "The  value  {1} for the field {0} should be Greater than or Equal to Current Date."); 
+					  "The  value  {1} for the field {0} should be Greater than or Equal to Current Date."),
+	DATE1_LE_DATE2("date1.should.be.le.date2",
+			  "the date {0} should be less than or Equal to {1} Date. ",
+			  "The  value  {1} for the field {0} should be Greater than or Equal to Current Date."),
+	DATE1_GT_DATE2("date2.should.be.gt.date1",
+			  "the date {0} should be greater than {1} Date. ",
+			  "The  value  {2} for the field {0} should be Greater than value  {3} for the field {1} ."),
+	DATE1_GE_DATE2("date2.should.be.ge.date1",
+			  "the date {0} should be greater than {1} Date. ",
+			  "The  value  {2} for the field {0} should be Greater than value  {3} for the field {1} ."),
+	MANDATORY_BASED_ON("value2.manadatory.if.value1",
+			  "the field {0} is mandatory if  {1}  is selected. ",
+			  "The field {0} should be provided if the {1} is selected {2}."); 
 
 	
 	private final String code;

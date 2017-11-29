@@ -289,6 +289,7 @@ var dat ={
                   "pattern": "",
                   "type": "text",
                   "jsonPath": "cases[0].hearingDetails[0].judges[0].mobileNumber",
+                  "maxLength": "10",
                   "isRequired": true,
                   "isDisabled": false
                 },

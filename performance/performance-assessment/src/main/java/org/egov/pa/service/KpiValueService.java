@@ -2,7 +2,6 @@ package org.egov.pa.service;
 
 import java.util.List;
 
-import org.egov.pa.model.KpiValueList;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.egov.pa.web.contract.ValueResponse;
@@ -49,7 +48,7 @@ public interface KpiValueService {
 	 * @param kpiValueSearchReq
 	 * @return
 	 */
-	public List<KpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+	public List<ValueResponse> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
 	
 	
 	

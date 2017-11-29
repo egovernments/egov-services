@@ -49,52 +49,71 @@ class UiMultiFieldTable extends Component {
  	componentDidMount() {
 
     let values = [this.props.item.tableList.values];
-    // console.log('came to did mount');
+    // console.log('came to did mount:',this.props.item.jsonPath);
+    // console.log(_.get(this.props.formData,this.props.item.jsonPath));
     // console.log(values);
-    this.addMandatoryOnLoad(this.props.item.tableList.values, 1);
-
- 		this.setState({
- 			values,
- 			list: Object.assign([], this.props.item.tableList.values),
- 			jsonPath: this.props.item.jsonPath
- 		});
+    if(_.get(this.props.formData,this.props.item.jsonPath)){
+      // console.log('did mount load if loop:',this.props.item.jsonPath);
+      this.renderOnLoad(this.props);
+    }
+    else{
+      // console.log('did mount load else loop:',this.props.item.jsonPath);
+      this.addMandatoryOnLoad(this.props.item.tableList.values, 1);
+      this.setState({
+        values,
+        list: Object.assign([], this.props.item.tableList.values),
+        jsonPath: this.props.item.jsonPath
+      });
+    }
 
    }
 
 	componentWillReceiveProps(nextProps){
-    // console.log('will receive props');
-		var valuesArray=[];
-		let {isintialLoad }=this.state;
-    // console.log(this.props, nextProps, _.isEqual(this.props, nextProps));
+    // console.log('will receive props:', this.props.item.jsonPath);
+    // console.log(this.props, nextProps, !_.isEqual(this.props, nextProps));
 		if(!(_.isEqual(this.props, nextProps)))
     {
-      // console.log('receive props condition succeeded');
-			var numberOfRowsArray= _.get(nextProps.formData,this.props.item.jsonPath);
-      // console.log(numberOfRowsArray.length);
-			var listValues = _.cloneDeep(this.props.item.tableList.values);
-      // console.log(this.state.jsonPath);
-			if(numberOfRowsArray && numberOfRowsArray.length>0 && !isintialLoad){
-            for(var i=0;i<numberOfRowsArray.length;i++){
-      				var listValuesArray=_.cloneDeep(listValues);
-      				for(var j=0; j<listValuesArray.length; j++) {
-                //  console.log(listValuesArray[j].jsonPath);
-      					 listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(this.props.item.jsonPath + "[" + 0 + "]",this.props.item.jsonPath + "[" +i+ "]");
-      				}
-      				valuesArray.push(listValuesArray);
-		        }
-      			this.setState({
-      				values:valuesArray,
-      				index:(numberOfRowsArray)?(numberOfRowsArray.length-1):0,
-      				isintialLoad:true
-      			})
-			}else if(numberOfRowsArray && numberOfRowsArray.length == 0){
-              this.setState({
-      				 isintialLoad:true
-      			  })
-			}
-      this.addMandatoryOnLoad(nextProps.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
+      // console.log('receive props condition succeeded', nextProps.item.jsonPath);
+			this.renderOnLoad(nextProps);
 		}
 	}
+
+  renderOnLoad = (props) => {
+    var valuesArray=[];
+		let {isintialLoad }=this.state;
+    var numberOfRowsArray= _.get(props.formData,props.item.jsonPath);
+    // console.log(props.item.jsonPath);
+    // console.log(this.state.values, numberOfRowsArray, props.item.tableList.values);
+    var listValues = _.cloneDeep(props.item.tableList.values);
+    // console.log(listValues);
+    if(numberOfRowsArray && numberOfRowsArray.length>0 && !isintialLoad){
+        var regexp = new RegExp(`${this.escapeRegExp(props.item.jsonPath)}\\[\\d+\\]`);
+          for(var i=0;i<numberOfRowsArray.length;i++){
+            var listValuesArray=_.cloneDeep(listValues);
+            for(var j=0; j<listValuesArray.length; j++) {
+              //  console.log(listValuesArray[j].jsonPath);
+               listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(regexp,`${props.item.jsonPath}[${i}]`);
+            }
+            valuesArray.push(listValuesArray);
+          }
+          // console.log(valuesArray);
+          this.setState({
+            values:valuesArray,
+            index:(numberOfRowsArray)?(numberOfRowsArray.length-1):0,
+            isintialLoad:true
+          })
+    }else if(numberOfRowsArray && numberOfRowsArray.length == 0){
+            this.setState({
+             isintialLoad:true
+            })
+    }
+    this.addMandatoryOnLoad(props.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
+  }
+
+  // shouldComponentUpdate(nextProps, nextState){
+  //   console.log(!(_.isEqual(this.props.formData, nextProps.formData) && _.isEqual(this.state, nextState)));
+  //   return !(_.isEqual(this.props.formData, nextProps.formData) && _.isEqual(this.state, nextState));
+  // }
 
   addMandatoryOnLoad = (values,length) => {
     // console.log(values, '<--->', length, this.props.item.jsonPath);
@@ -144,9 +163,9 @@ class UiMultiFieldTable extends Component {
     // console.log('remove mandatory');
     let {delRequiredFields} = this.props;
     let req=[];
-    var regexp = new RegExp(`${this.escapeRegExp(this.state.jsonPath)}\\[\\d+\\]`);
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
     this.props.item.tableList.values.map((item)=>{
-      item.jsonPath = item.jsonPath.replace(regexp, `${this.state.jsonPath}[${idx}]`);
+      item.jsonPath = item.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${idx}]`);
       req.push(item.jsonPath);
     })
     delRequiredFields(req);
@@ -154,16 +173,17 @@ class UiMultiFieldTable extends Component {
 
 	addNewRow() {
    		var val = JSON.parse(JSON.stringify(this.state.list));
-   		var regexp = new RegExp(this.state.jsonPath + "\\[\\d{1}\\]", "g");
+   		var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
    		this.setState({
    			index: this.state.index + 1
    		}, () => {
    			for(var i=0; i<val.length; i++) {
-				 val[i].jsonPath = val[i].jsonPath.replace(this.state.jsonPath + "[" + 0 + "]", this.state.jsonPath + "[" + this.state.index + "]");
+				  val[i].jsonPath = val[i].jsonPath.replace(regexp, `${this.props.item.jsonPath}[${this.state.index}]`);
         }
         this.addMandatoryforAdd(val);
   			let values = [...this.state.values];
   			values.push(val);
+        // console.log(values);
   			this.setState({
   				values
   			});
@@ -183,10 +203,10 @@ class UiMultiFieldTable extends Component {
 		let values = Object.assign([], this.state.values);
     this.removeMandatoryForDelete(values.length-1);
 		values.splice(ind, 1);
-		var regexp = new RegExp(`${this.escapeRegExp(this.state.jsonPath)}\\[\\d+\\]`);
+		var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
 		for(var i=0; i<values.length; i++) {
 			for(var j=0; j<values[i].length; j++) {
-				values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, `${this.state.jsonPath}[${i}]`);
+				values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
 				if(values[i][j].dependency)//Changes to handle dependency sum
 					{
 						dependencyFlag =1;
@@ -198,14 +218,14 @@ class UiMultiFieldTable extends Component {
 		this.setState({
 			values,
 			index: this.state.index-1,
-			isintialLoad:false
+			// isintialLoad:false
 		}, () => {
 			let formData = JSON.parse(JSON.stringify(this.props.formData));
-			let formDataArray =_.get(formData,this.state.jsonPath)
+			let formDataArray =_.get(formData,this.props.item.jsonPath)
 			if(formDataArray && formDataArray.length) {
 				formDataArray.splice(ind, 1);
 				var newArray=_.cloneDeep(formDataArray);
-				var newFormData=_.set(formData,this.state.jsonPath,formDataArray);
+				var newFormData=_.set(formData,this.props.item.jsonPath,formDataArray);
 				this.props.setFormData(newFormData);
 			}
 		})
@@ -293,7 +313,7 @@ class UiMultiFieldTable extends Component {
 	}
 
 	renderTable = (item) => {
-		// console.log(item.tableList.hasFooter, item.tableList.footer);
+    // console.log(this.props.item.jsonPath, this.state.values, this.state.values && this.state.values.length);
 		let {formData} = this.props;
 		let footerArray=[];
 
@@ -414,6 +434,7 @@ class UiMultiFieldTable extends Component {
 	}
 
 	render () {
+    // console.log(this.props.item.jsonPath, this.state.values, this.state.index);
 		return (
 			<div>
 				{this.renderTable(this.props.item)}

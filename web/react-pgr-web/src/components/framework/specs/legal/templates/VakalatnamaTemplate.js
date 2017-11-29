@@ -23,7 +23,6 @@ export default class VakalatnamaTemplate extends Component{
   }
 
   doInitialStuffs = ()=>{
-    debugger;
     var ulbLogoPromise = getBase64FromImageUrl("./temp/images/headerLogo.png");
     var stateLogoPromise = getBase64FromImageUrl("./temp/images/AS.png");
 
@@ -67,6 +66,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
 
     console.log(data.witness);
     console.log(data);
+
     var d = new Date(data.vakalatnamaGenerationDate);
     var monthNames = ["January", "February", "March", "April", "May", "June",
   "July", "August", "September", "October", "November", "December"
@@ -80,9 +80,18 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
      var vit = data.witness;
      var witnessObj = {ul: []};
       for(var i = 0; i<vit.length; i++){
-        witnessObj.ul.push(vit[i]);
+       // witnessObj.ul.push(vit[i]);
+       witnessObj.ul = vit[i].split(',');
       }
     
+      var fonts = {
+        Roboto: {
+                    normal: 'fonts/Roboto-Regular.ttf',
+                    bold: 'fonts/Roboto-Medium.ttf',
+                    italics: 'fonts/Roboto-Italic.ttf',
+                    bolditalics: 'fonts/Roboto-Italic.ttf'
+            }
+    };
 
     //document defintion
     var docDefinition = {
@@ -99,36 +108,47 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
           {
             width: 100,
             columns: [
-          [{
-            width: 70,
-            fit:[60,80],
-            image : ulbLogo,
-            alignment:'left',
+          [{ canvas:
+            [{
+                type: 'rect',
+                x: 5, 
+                y: 0,
+                w: 70,
+                h: 140,
+                lineWidth: 1,
+                lineColor: '#000000',
+            }],
+            margin:[10, 0, 10, 10]
+          },
+          { canvas:
+            [{
+                type: 'rect',
+                x: 5, 
+                y: 0,
+                w: 70,
+                h: 140,
+                lineWidth: 1,
+                lineColor: '#000000',
+            }],
             margin:[10, 10, 10, 10]
-              },{
-                width: 70,
-                  fit:[60,80],
-                  image : stateLogo,
-                  alignment:'left',
-                  margin:[10, 10, 10, 10]
-              }]
+          }
+         ]
         ]
           },
           [{
         text:[
               {text: "IN THE COURT OF "},
-              {text: (data.summon.courtName.name ? data.summon.courtName.name : "           ."), alignment:'left', decoration: 'underline'},
-              {text: " AT ", alignment:'left'},
+              {text: (data.summon.courtName.name ? data.summon.courtName.name: "           ."), alignment:'left', decoration: 'underline'},
+              {text: "    AT   ", alignment:'left'},
               {text: (addres), alignment:'left', decoration: 'underline'},
               {text: " No. ", alignment:'left'},
               {text: data.summon.caseNo+".", alignment:'left', decoration: 'underline'},
               {text: " OF ", alignment:'left'}
-              
             ],
-            margin:[20,0, 0,0]
+            margin:[20,0,0,5]
       },
       {text: (data.summon.plantiffName ? data.summon.plantiffName :  "           ."), alignment:'left', decoration: 'underline',margin:[20,0, 0,0]},
-      {text: " Versus ",margin:[20,0, 0,0]},
+      {text: " Versus ",margin:[20,10, 10,10]},
       {text: (data.summon.defendant ? data.summon.defendant : "           ."), decoration: 'underline',margin:[20,0, 0,0]},
      {
         text:[
@@ -140,7 +160,10 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
             ],
             margin:[20,20, 0, 0]
       },
-      {text: ((data.advocateDetails && data.advocateDetails.length) ? `${getAdvocateNames(data.advocateDetails) }` : "           ."), alignment:'left', decoration: 'underline',margin:[20,5, 0, 0]},
+      {text:[
+      {text: ((data.advocateDetails && data.advocateDetails.length) ? `${getAdvocateNames(data.advocateDetails) }` : "           ."), alignment:'left', decoration: 'underline'},
+      {text:", "}
+     ],margin:[20,5, 0, 0]},
       {text: (addres), alignment:'left', decoration: 'underline',margin:[20,5, 0, 0]},
       {text: " to appear and plead for me /us as my/ our Advocate/s in the matter.",alignment:'left',margin:[20,5, 0, 0]},
       {
@@ -152,23 +175,22 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
               {text: ', '},
               {text: year, alignment:'left'}
             ],
-            margin:[20, 10, 5, 5]
+            margin:[20, 60, 5, 20]
       },
       {
         text:[
-        {text: "Witness  "},
-        
-        ],margin:[20, 0, 0, 0]
+        {text: "Witness  ",bold:true}
+        ],margin:[20, 0, 0,10]
       },
         {
         ul: witnessObj.ul
-      ,margin:[20, 5, 5, 5]},
+      ,margin:[20, 5, 5, 60]},
       {
         text:[
               {text: "Accepted and Filed on  ", alignment:'left'},
               {text: `${epochToDate(data.vakalatnamaGenerationDate)}`, alignment:'left', decoration: 'underline'}
             ],
-            margin:[20, 5, 5, 5]
+            margin:[20, 5, 5,25]
       },{
         text:[
               {text: "Signature of Advocate/s  ", alignment:'left'}
@@ -178,15 +200,14 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
       ]
         }
       ],
-      styles: {
-        title: {
-          fontSize: 15,
-          bold:true,
-          lineHeight:1.1
-        }
-      },
       defaultStyle: {
-        fontSize: 11
+        fontSize: 11,
+        bold:false
+      },
+      styles:{
+        test:{
+          bold:true
+        }
       }
     }
 
@@ -230,7 +251,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
 
   render(){
     return(
-      <PdfViewer pdfData={this.state.pdfData} title="LegalCase-Vakalatnama">
+      <PdfViewer pdfData={this.state.pdfData}>
         <div className="text-center">
           <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true}/>
         </div>

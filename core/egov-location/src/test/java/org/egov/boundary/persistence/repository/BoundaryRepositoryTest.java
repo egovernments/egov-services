@@ -27,9 +27,13 @@ public class BoundaryRepositoryTest {
 	@Autowired
 	private JdbcTemplate jdbcTemplate;
 	
+	@Autowired
+	private MdmsRepository mdmsRepository;
+	
+	
 	@Before
 	public void before() {
-		boundaryRepository = new BoundaryRepository(namedParameterJdbcTemplate,jdbcTemplate);
+		boundaryRepository = new BoundaryRepository(namedParameterJdbcTemplate,jdbcTemplate,mdmsRepository);
 	}
 
 	@Test

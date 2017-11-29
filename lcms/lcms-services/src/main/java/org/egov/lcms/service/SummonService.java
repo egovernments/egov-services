@@ -1,7 +1,9 @@
 package org.egov.lcms.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
@@ -62,17 +64,17 @@ public class SummonService {
 	public SummonResponse createSummon(SummonRequest summonRequest) throws Exception {
 
 		for (Summon summon : summonRequest.getSummons()) {
-			
+
 			if (summon.getIsUlbinitiated() == null) {
 				summon.setIsUlbinitiated(Boolean.FALSE);
 			}
-	
+
 			if (summon.getIsSummon()) {
 				summon.setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
 			} else {
 				summon.setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
-			}				
-		}		
+			}
+		}
 		generateSummonReferenceNumber(summonRequest);
 
 		kafkaTemplate.send(propertiesManager.getCreateSummonvalidated(), summonRequest);
@@ -210,7 +212,7 @@ public class SummonService {
 	 * @param caseSearchCriteria
 	 * @param requestInfo
 	 * @return {@link CaseResponse}
-	 * @throws Exception 
+	 * @throws Exception
 	 */
 	public CaseResponse caseSearch(CaseSearchCriteria caseSearchCriteria, RequestInfo requestInfo) throws Exception {
 
@@ -235,6 +237,8 @@ public class SummonService {
 						propertiesManager.getAdvocateDetailsMandatoryMessage());
 			}
 
+			validateDuplicateAdvocates(caseObj);
+
 			for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
 
 				if (advocateDetails.getAdvocate() == null) {
@@ -257,6 +261,19 @@ public class SummonService {
 						propertiesManager.getAdvocateDetailsSizeMessage());
 
 			}
+		}
+
+	}
+
+	private void validateDuplicateAdvocates(Case caseObj) {
+		List<String> advocateCodes = new ArrayList<String>();
+		for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
+			advocateCodes.add(advocateDetails.getAdvocate().getCode());
+		}
+		Set<String> advocateCodeSet = new HashSet<String>(advocateCodes);
+		if (advocateCodeSet.size() < advocateCodes.size()) {
+			throw new CustomException(propertiesManager.getDuplicateAdvocate(),
+					propertiesManager.getDuplicateAdvocateMessage());
 		}
 
 	}

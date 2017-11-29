@@ -57,6 +57,8 @@ import org.egov.boundary.persistence.repository.BoundaryRepository;
 import org.egov.boundary.util.BoundaryConstants;
 import org.egov.boundary.web.contract.BoundaryRequest;
 import org.egov.boundary.web.contract.BoundaryType;
+import org.egov.boundary.web.contract.MdmsTenantBoundary;
+import org.egov.common.contract.request.RequestInfo;
 import org.geotools.data.DataStore;
 import org.geotools.data.DataStoreFinder;
 import org.geotools.feature.FeatureCollection;
@@ -331,5 +333,19 @@ public class BoundaryService {
 			BoundarySearchRequest boundarySearchRequest) {
 
 		return boundaryRepository.getAllBoundariesByIdsAndTypeAndNumberAndCodeAndTenant(boundarySearchRequest);
+	}
+	
+	public List<MdmsTenantBoundary> getBoundariesByTenantAndHierarchyType(BoundarySearchRequest boundarySearchRequest,RequestInfo requestInfo){
+		List<MdmsTenantBoundary> list= boundaryRepository.getBoundariesByTenantAndHierarchyType(boundarySearchRequest,requestInfo);
+		List<MdmsTenantBoundary> list2 = new ArrayList<MdmsTenantBoundary>();
+		if(boundarySearchRequest.getHierarchyTypeName() == null || boundarySearchRequest.getHierarchyTypeName().isEmpty()){
+			for(MdmsTenantBoundary mdmsBndry: list){
+				if(!mdmsBndry.getBoundary().isEmpty()){
+					list2.add(mdmsBndry);
+				}
+			}
+			return list2;
+		}
+		return list;
 	}
 }

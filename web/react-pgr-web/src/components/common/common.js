@@ -2331,7 +2331,7 @@ var localization_EN_Data = {
 
 
 "legal.create.group.title.eventDetails":"My Events",
-"legal.create.group.title.CaseType" : "ENTRY TYPE",
+"legal.create.group.title.CaseType" : "Entry Type",
 "legal.create.isSummon" :"Entry Type",
 "legal.create.isActive":"Summon",
 "legal.create.isNotActive":"Warrant",
@@ -2547,7 +2547,7 @@ var localization_EN_Data = {
 "legal.parawisecomments.create.summonWarrantDetails": "Case Details",
 "legal.parawisecomments.create.group.title.parawiseComment": "Parawise Comment",
 "legal.parawisecomments.create.dateOfCommentsAsked": "Date of Parawise Comments asked",
-"legal.parawisecomments.create.dateOfCommentsReceived": "Date of Parawise Comments Rcvd immediately at Dept",
+"legal.parawisecomments.create.dateOfCommentsReceived": "Date of Parawise Comments Rcvd at Dept",
 "legal.parawisecomments.create.dateOfInfoProvidedByHod": "Date of Information provided by HOD",
 "legal.parawisecomments.create.resolutionDate": "Resolution Date",
 "legal.parawisecomments.create.caseReferenceNo": "Case Reference No.",
@@ -2911,6 +2911,10 @@ var localization_EN_Data = {
 
 // Material Issue Lables
  "inventory.search.issueStore":"Issuing Store",
+ "inventory.search.issueNumber":"Issue Number",
+ "inventory.search.issuePurpose":"Issue Purpose",
+ "inventory.search.issueType": "Issue Type",
+ "inventory.search.indentingStore":"Indenting Store",
  "inventory.create.indentDateFrom":"Indent Date From",
  "inventory.create.indentDateTo":"Indent Date To",
  "inventory.create.indentRaisedBy":"Indent Raised By",
@@ -4600,7 +4604,7 @@ var localization_MR_Data = {
 //legal module
 
 "legal.create.group.title.eventDetails":"My Events-Marathi",
-"legal.create.group.title.CaseType" : "ENTRY TYPE-Marathi",
+"legal.create.group.title.CaseType" : "Entry Type-Marathi",
 "legal.create.isSummon" :"Entry Type-Marathi",
 "legal.create.isActive":"Summon-Marathi",
 "legal.create.isNotActive":"Warrant-Marathi",
@@ -4815,7 +4819,7 @@ var localization_MR_Data = {
 "legal.parawisecomments.create.summonWarrantDetails": "Case Details-marathi",
 "legal.parawisecomments.create.group.title.parawiseComment": "Parawise Comment-marathi",
 "legal.parawisecomments.create.dateOfCommentsAsked": "Date of Parawise Comments asked-marathi",
-"legal.parawisecomments.create.dateOfCommentsReceived": "Date of Parawise Comments Rcvd immediately at Dept-marathi",
+"legal.parawisecomments.create.dateOfCommentsReceived": "Date of Parawise Comments Rcvd at Dept-marathi",
 "legal.parawisecomments.create.dateOfInfoProvidedByHod": "Date of Information provided by HOD-marathi",
 "legal.parawisecomments.create.resolutionDate": "Resolution Date-marathi",
 "legal.parawisecomments.create.caseReferenceNo": "Case Reference No.-marathi",

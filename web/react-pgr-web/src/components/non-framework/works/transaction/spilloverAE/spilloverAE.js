@@ -268,7 +268,7 @@ class SpilloverAE extends Component {
       })
     }else{
       //create
-      console.log('came to create spill over abstractEstimates');
+      // console.log('came to create spill over abstractEstimates');
       setActionName("create");
       var formData = {};
       if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
@@ -276,6 +276,7 @@ class SpilloverAE extends Component {
 
       // handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
       handleChange (true, `${obj.objectName}[0].spillOverFlag`, false);
+      handleChange (false, `${obj.objectName}[0].pmcRequired`, false);
 
       var sanctionType=[
         {key:'FINANCIAL_SANCTION',value:"FINANCIAL SANCTION"},
@@ -818,6 +819,7 @@ class SpilloverAE extends Component {
   }
 
   checkMandatory = (jsonPath, val) => {
+    let {handleChange, setFormData} = this.props;
     let _mockData = {...this.props.mockData};
     let {moduleName, actionName, setMockData, addRequiredFields, delRequiredFields} = this.props;
     for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
@@ -850,25 +852,29 @@ class SpilloverAE extends Component {
             let notReqFields=[];
             let temp = _mockData['works.create']['groups'];
             for(let k=0;k<obj.notRequired.length;k++){
-                for(var key in obj.notRequired[k]){
-                  notReqFields.push(obj.notRequired[k][key]);
-                  //Remove Asterisk symbol in floating label text - update mockdata
-                  for(let a=0;a<temp.length;a++){
-                    for(let b=0;b<temp[a].fields.length;b++){
-                      for(let mockkey in temp[a].fields[b]){
-                        if(mockkey == 'jsonPath' && temp[a].fields[b][mockkey] == obj.notRequired[k][key]){
-                          temp[a].fields[b]['isRequired']=false;
-                        }
-                      }
+              notReqFields.push(obj.notRequired[k]['jpath']);
+              if(obj.notRequired[k]['clear'] == true){
+                handleChange('',obj.notRequired[k]['jpath'], false);
+              }
+              //Remove Asterisk symbol in floating label text - update mockdata
+              for(let a=0;a<temp.length;a++){
+                for(let b=0;b<temp[a].fields.length;b++){
+                  for(let mockkey in temp[a].fields[b]){
+                    if(mockkey == 'jsonPath' && temp[a].fields[b][mockkey] == obj.notRequired[k]['jpath']){
+                      temp[a].fields[b]['isRequired']=false;
                     }
                   }
                 }
+              }
             }
             delRequiredFields(notReqFields);
           }
         }
       }
     }
+    //ended
+    // console.log(_mockData);
+    setMockData(_mockData);
   }
 
   checkIfHasShowHideFields = (jsonPath, val) => {

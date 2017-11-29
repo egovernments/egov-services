@@ -44,7 +44,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "rateType",
-            "label": "inventory.rateType", 
+            "label": "inventory.rateType",
             "type": "singleValueList",
             "isDisabled": false,
             "patternErrorMsg": "purchaseorder.create.field.message.rateType"
@@ -140,7 +140,7 @@ var dat = {
           {
             "name": "rateType",
             "jsonPath": "purchaseOrders[0].rateType",
-            "label": "inventory.rateType", 
+            "label": "inventory.rateType",
             "pattern": "",
             "type": "singleValueList",
             "defaultValue":[
@@ -281,7 +281,7 @@ var dat = {
                   "label": "inventory.totalindent.quantity"
                 },
                 {
-                  "label": "inventory.Uom" 
+                  "label": "inventory.Uom"
                 },
                 {
                   "label": "inventory.ratecontract"
@@ -324,7 +324,7 @@ var dat = {
                     {
                       "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].uom.code",
                       "type": "textField",
-                      "valExp": "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].material.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].material.code'), 'others[1]')"	
+                      "valExp": "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].material.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].material.code'), 'others[1]')"
                     }
                     // {
                     //   "jsonPath": "purchaseOrders[0].purchaseOrderDetails[0].uom.conversionFactor",
@@ -455,6 +455,7 @@ var dat = {
       }
     ],
     "url": "/inventory-services/v110/purchaseorders/_create",
+    "onloadFetchUrl":"/inventory-services/purchaseorders/_preparepofromindents",
     "tenantIdRequired": true
   },
   "inventory.view": {

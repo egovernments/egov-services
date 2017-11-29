@@ -317,7 +317,7 @@ var dat = {
 							],
 							"showHideFields": [
 								{
-									"ifValue": "true",
+									"ifValue": true,
 									"hide": [],
 									"show": [
 										{
@@ -343,7 +343,7 @@ var dat = {
               "patternErrMsg": "",
 							"showHideFields": [
 								{
-									"ifValue": "1",
+									"ifValue": 1,
 									"hide": [],
 									"show": [
 										{

@@ -654,6 +654,15 @@ var dat = {
                 label: "legal.create.group.title.CaseTypeDetails",
                 fields: [
                     {
+                        name: "CaseType",
+                        jsonPath: "cases[0].summon.type",
+                        label: "legal.create.group.title.CaseType",
+                        type: "text",
+                        isRequired: false,
+                        isDisabled: false,
+                        patternErrorMsg: ""
+                    },
+                    {
                         name: "referenceNo",
                         jsonPath: "cases[0].summon.summonReferenceNo",
                         label: "legal.create.referenceNo",

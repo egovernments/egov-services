@@ -2331,7 +2331,7 @@ var localization_EN_Data = {
 
 
 "legal.create.group.title.eventDetails":"My Events",
-"legal.create.group.title.CaseType" : "ENTRY TYPE",
+"legal.create.group.title.CaseType" : "Entry Type",
 "legal.create.isSummon" :"Entry Type",
 "legal.create.isActive":"Summon",
 "legal.create.isNotActive":"Warrant",
@@ -4599,7 +4599,7 @@ var localization_MR_Data = {
 //legal module
 
 "legal.create.group.title.eventDetails":"My Events-Marathi",
-"legal.create.group.title.CaseType" : "ENTRY TYPE-Marathi",
+"legal.create.group.title.CaseType" : "Entry Type-Marathi",
 "legal.create.isSummon" :"Entry Type-Marathi",
 "legal.create.isActive":"Summon-Marathi",
 "legal.create.isNotActive":"Warrant-Marathi",

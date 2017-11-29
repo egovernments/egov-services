@@ -6,39 +6,19 @@ var dat = {
     objectName: "cases",
     url: "/lcms-services/legalcase/case/_search",
     groups: [
-        {
-        name: "CaseType",
-        label: "legal.create.group.title.CaseType",
-        fields: [
-          {
-            name: "isSummon",
-            jsonPath: "isSummon",
-            label: "legal.create.isSummon",
-            type: "radio",
-            styleObj:{
-              "display": "-webkit-box"
-            },
-            isRequired: true,
-            isDisabled: false,
-            patternErrorMsg: "",
-            values: [
-              {
-                label: "legal.create.Summon",
-                value: true
-              },
-              {
-                label: "legal.create.Warrant",
-                value: false
-              }
-            ],
-            defaultValue: true
-          }
-        ]
-      },
       {
         name: "search",
         label: "legal.search.case.title",
         fields: [
+          {
+            name: "CaseType",
+            jsonPath: "entryType",
+            label: "legal.create.group.title.CaseType",
+            type: "singleValueList",
+            isRequired: false,
+            isDisabled: false,
+            defaultValue:[{ key:"summon",value:"summon"},{ key:"warrant",value:"warrant"}]
+          },
            {
             name: "fromDate",
             jsonPath: "fromDate",

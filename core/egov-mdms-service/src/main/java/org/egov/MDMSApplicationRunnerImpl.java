@@ -3,6 +3,7 @@ package org.egov;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,11 +19,11 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonGenerationException;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 
-import ch.qos.logback.classic.Logger;
 import lombok.extern.slf4j.Slf4j;
 
 @Component
@@ -36,9 +37,6 @@ public class MDMSApplicationRunnerImpl {
 	public String mdmsFileDirectory;
 	
 	private static Map<String, List<Object>> tenantMap = new HashMap<>();
-	//private static Map<String, String> filePathMap = new HashMap<>();
-	//private static Map<String, Map<String, Object>> validationMap = new HashMap<>();
-
 
 	@PostConstruct
 	public void run() {
@@ -72,9 +70,7 @@ public class MDMSApplicationRunnerImpl {
 					try {
 						Map<String, Object> obj = yamlReader.readValue(file, Map.class);
 						filterMaster(obj);
-						//buildFilePathMap(obj, file.getName());
-						//buildValidationMap(obj);
-						//System.out.println("yaml obj:" + obj);
+						System.out.println("yaml obj:" + obj);
 
 					} catch (Exception e) {
 						log.error("Exception while fetching service map for: ");
@@ -84,11 +80,8 @@ public class MDMSApplicationRunnerImpl {
 					log.info("Reading json file....:- "+name);
 					try {
 						Map<String, Object> jsonStr = jsonReader.readValue(file, Map.class);
-						//log.info("Map: "+jsonStr);
 						filterMaster(jsonStr);
-						//buildFilePathMap(jsonStr, file.getName());
-						//buildValidationMap(jsonStr);
-						//System.out.println(jsonStr);
+						System.out.println(jsonStr);
 					} catch (JsonGenerationException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -110,17 +103,11 @@ public class MDMSApplicationRunnerImpl {
 				readDirectory(listOfFiles[i].getAbsolutePath());
 			}
 		}
-		
-		/*log.debug("tenantMap: "+tenantMap);
-		log.info("filePathMap: "+filePathMap);
-		log.info("validationMap: "+validationMap);
-*/
-
 
 	}
 
 	public void readUrl(String path) {
-		ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
+		//ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
 		ObjectMapper jsonReader = new ObjectMapper();
 		List<String> ymlUrlS = Arrays.asList(path.split(","));
 		for(String yamlLocation : ymlUrlS){
@@ -140,7 +127,7 @@ public class MDMSApplicationRunnerImpl {
 	}
 	
 	private void filterMaster(Map<String, Object> map) {
-		//ObjectMapper objectMapper = new ObjectMapper();
+	//	ObjectMapper objectMapper = new ObjectMapper();
 		try {
 			List<Object> list = null;
 			if (!tenantMap.containsKey(map.get("tenantId").toString())) {
@@ -160,37 +147,9 @@ public class MDMSApplicationRunnerImpl {
 		}
 
 	}
-	
-	/*private void buildFilePathMap(Map<String, Object> map, String filePath){
-		StringBuilder key = new StringBuilder();
-		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
-		
-		filePathMap.put(key.toString(), filePath);
-	}
-	
-	private void buildValidationMap(Map<String, Object> map){
-		StringBuilder key = new StringBuilder();
-		key.append(map.get("tenantId")).append("-").append(map.get("moduleName"));
-		
-		validationMap.put(key.toString(), map);
-	}*/
 
 	public static Map<String, List<Object>> getTenantMap(){
 		return tenantMap;
 	}
-	
-	/*public static void setTenantMap(Map<String, List<Object>> tenantIdMap){
-		tenantMap = tenantIdMap;
-	} 
-	
-	public static Map<String, String> getFilePathMap(){
-		return filePathMap;
-	
-	}
-	
-	public static Map<String, Map<String, Object>> getValidationMap(){
-		return validationMap;
-	
-	} */
 	
 }

@@ -49,6 +49,6 @@ public class CommonConstants {
     public static final String SPILLOVER_WORKFLOW_MANDATORY = "Spillover_Workflow_Mandatory";
 
     public static  final String TENANT_MODULENAME = "tenant";
-    public static  final String TENANT_OBJECTNAME = "tenant";
+    public static  final String TENANT_OBJECTNAME = "tenants";
 
 }

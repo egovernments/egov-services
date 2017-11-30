@@ -1,7 +1,9 @@
 package org.egov.infra.mdms.service;
 
 import java.io.IOException;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +16,7 @@ import org.egov.infra.mdms.utils.MDMSConstants;
 import org.egov.infra.mdms.utils.MDMSUtils;
 import org.egov.mdms.model.MDMSCreateRequest;
 import org.egov.tracer.model.CustomException;
+import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +25,8 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -63,28 +68,24 @@ public class MDMSService {
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
     	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
     	
-		//get the head of the branch
 		logger.info("Step 1: Getting branch head......");
 		startTime = new Date().getTime();
 		String branchHeadSHA = getBranchHead();
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
-		//get the latest commit to that branch and save its sha
 		logger.info("Step 2: Getting Base Tree......");
 		startTime = new Date().getTime();
 		String baseTreeSHA = getBaseTree(branchHeadSHA);
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
-		//create a tree with base_tree as last commit and contents to be written
 		logger.info("Step 3: Creating a New Tree......");
 		startTime = new Date().getTime();
 		String newTreeSHA = createTree(baseTreeSHA, filePath, content);
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
-		//create a commit for this tree
 		logger.info("Step 4: Creating a New Commit......");
 		startTime = new Date().getTime();
 		String commitMessage = "commit by "+userName+" at epoch time: "+new Date().getTime();
@@ -92,7 +93,6 @@ public class MDMSService {
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
-		//push the contents
 		logger.info("Step 5: Pushing the Contents to git......");
 		startTime = new Date().getTime();
 		pushTheContents(newCommitSHA);
@@ -131,14 +131,14 @@ public class MDMSService {
 	}
 	
 	public String getContentForPush(Object fileContents, 
-			MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws IOException{
+			MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
 		Object moduleContent = fileContents;
 		if(null == moduleContent){
 			throw new CustomException("400", "There is no master data available for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());
 		}
 		String moduleContentString = mapper.writeValueAsString(moduleContent);
-		Map<String, Object> moduleDataMap = mapper.readValue(moduleContentString.toString(), Map.class);
+		Map<String, Object> moduleDataMap = mapper.readValue(moduleContentString, Map.class);		
 		List<Object> masterData = (List<Object>) moduleDataMap.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
 		String moduleContentJson = mapper.writeValueAsString(moduleContent);
 		if(isCreate){
@@ -180,7 +180,7 @@ public class MDMSService {
 						  }
 						if(counter == keys.size()){
 							iterator.remove();
-							iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0));
+							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0)));
 							break;
 						}
 		            }
@@ -263,7 +263,6 @@ public class MDMSService {
     	documentContext.put("$.tree.*", "path", filePath);
     	documentContext.put("$.tree.*", "mode", MDMSConstants.GIT_BLOB_MODE);
     	documentContext.put("$.tree.*", "content", contents);
-
     	String body = documentContext.jsonString().toString();
 
 		Object createTreeResponse = mDMSCreateRepository.

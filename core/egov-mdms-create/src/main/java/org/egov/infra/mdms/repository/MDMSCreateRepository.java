@@ -39,7 +39,7 @@ public class MDMSCreateRepository {
            auth.getBytes(Charset.forName("US-ASCII")) );
         String authHeader = "Basic " + new String( encodedAuth );
         headers.set( "Authorization", authHeader );
-        logger.info("Generated authHeader: "+authHeader);
+        logger.debug("Generated authHeader: "+authHeader);
 		HttpEntity<String> entity = new HttpEntity<String>(headers);
 		ResponseEntity<String> res = null;
 		try{
@@ -61,7 +61,7 @@ public class MDMSCreateRepository {
            auth.getBytes(Charset.forName("US-ASCII")) );
         String authHeader = "Basic " + new String( encodedAuth );
         headers.set( "Authorization", authHeader );
-        logger.info("Generated authHeader: "+authHeader);
+        logger.debug("Generated authHeader: "+authHeader);
 		HttpEntity<String> entity = new HttpEntity<String>(body, headers);
 		ResponseEntity<String> res = null;
 		try{
@@ -85,7 +85,7 @@ public class MDMSCreateRepository {
 			logger.error("Exception while fetching data for: "+filePath+" = ",e);
 			throw new CustomException("400", "No data avaialble for this master");
 		}
-		logger.info("Parsed to object: "+result);
+		logger.debug("Parsed to object: "+result);
 		
 		return result;
 	}

@@ -495,7 +495,7 @@ class Dashboard extends Component {
         if(localStorage.getItem('type') === constants.ROLE_EMPLOYEE){
 
         //old menu item api access/v1/actions/_get
-        Api.commonApiPost("access/v1/actions/mdms/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+        Api.commonApiPost("access/v1/actions/mdms/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true,actionMaster:"actions-test"}).then(function(response){
           var actions = response.actions;
           var roles = JSON.parse(localStorage.userRequest).roles;
           actions.unshift({
@@ -518,7 +518,32 @@ class Dashboard extends Component {
           localStorage.setItem("actions", JSON.stringify(actions));
           self.props.setActionList(actions);
         }, function(err) {
-            console.log(err);
+          //old menu item api access/v1/actions/_get
+          Api.commonApiPost("access/v1/actions/_get",{},{tenantId:localStorage.tenantId, roleCodes, enabled:true}).then(function(response){
+            var actions = response.actions;
+            var roles = JSON.parse(localStorage.userRequest).roles;
+            actions.unshift({
+              "id": 12299,
+              "name": "SearchRequest",
+              "url": "/search/service/requests",
+              "displayName": "Search Service Requests",
+              "orderNumber": 35,
+              "queryParams": "",
+              "parentModule": 75,
+              "enabled": true,
+              "serviceCode": "",
+              "tenantId": null,
+              "createdDate": null,
+              "createdBy": null,
+              "lastModifiedDate": null,
+              "lastModifiedBy": null,
+              "path": "Service Request.Requests.Search"
+            });
+            localStorage.setItem("actions", JSON.stringify(actions));
+            self.props.setActionList(actions);
+          }, function(err) {
+              console.log(err);
+          });
         });
       }
 

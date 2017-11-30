@@ -271,7 +271,7 @@ class Login extends Component {
           roleCodes.push(response.data.UserRequest.roles[i].code);
         }
         //old menu item api access/v1/actions/_get
-        Api.commonApiPost("access/v1/actions/_get",{},{tenantId:response.data.UserRequest.tenantId,roleCodes,enabled:true}).then(function(response){
+        Api.commonApiPost("access/v1/actions/mdms/_get",{},{tenantId:response.data.UserRequest.tenantId,roleCodes,enabled:true,actionMaster:"actions-test"}).then(function(response){
           var actions = response.actions;
           var roles = JSON.parse(localStorage.userRequest).roles;
           actions.unshift({
@@ -315,7 +315,53 @@ class Login extends Component {
           localStorage.setItem("actions", JSON.stringify(actions));
           setActionList(actions);
         }, function(err) {
-            console.log(err);
+          //old menu item api access/v1/actions/_get
+          Api.commonApiPost("access/v1/actions/_get",{},{tenantId:response.data.UserRequest.tenantId,roleCodes,enabled:true}).then(function(response){
+            var actions = response.actions;
+            var roles = JSON.parse(localStorage.userRequest).roles;
+            actions.unshift({
+              "id": 12299,
+              "name": "SearchRequest",
+              "url": "/search/service/requests",
+              "displayName": "Search Service Requests",
+              "orderNumber": 35,
+              "queryParams": "",
+              "parentModule": 75,
+              "enabled": true,
+              "serviceCode": "",
+              "tenantId": null,
+              "createdDate": null,
+              "createdBy": null,
+              "lastModifiedDate": null,
+              "lastModifiedBy": null,
+              "path": "Service Request.Requests.Search"
+            });
+
+            // $.ajax({
+            //     url: "https://raw.githubusercontent.com/abhiegov/test/master/reportList.json?timestamp="+new Date().getTime(),
+            //     success: function(res) {
+            //         var list = JSON.parse(res);
+            //         if(list.length == 0) {
+            //           for(var i=0; i<actions.length; i++) {
+            //             // if(actions[i].path == "Grievance Redressal.Reports.Ageing Report") {
+            //             //   actions.splice(i, 1);
+            //             //   break;
+            //             // }
+            //           }
+            //         }
+            //         localStorage.setItem("actions", JSON.stringify(actions));
+            //         setActionList(actions);
+            //     },
+            //     error: function() {
+            //         localStorage.setItem("actions", JSON.stringify(actions));
+            //         setActionList(actions);
+            //     }
+            // })
+            localStorage.setItem("actions", JSON.stringify(actions));
+            setActionList(actions);
+          }, function(err) {
+              console.log(err);
+          })
         });
 
       }).catch(function(response) {

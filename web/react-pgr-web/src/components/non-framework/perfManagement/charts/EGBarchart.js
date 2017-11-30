@@ -23,7 +23,7 @@ export default class EGBarChart extends Component {
         // if ((this.props.FY.length == 1) && (this.props.ULB.length == 1) && (this.props.KPI.length > 1)) {
         //     chartdata   = this.formatChartData(this.parseWhenSingleFYSingleULBMultiKPI(this.props.data))
         // }
-        chartData   = this.formatChartData(this.parseWhenSingleFYSingleULBMultiKPI(this.props.data))
+        chartData       = this.formatChartData(this.parseWhenSingleFYSingleULBMultiKPI(this.props.data))
         let chartLegend = this.formatChartLegends(chartData)
 
         this.setState({

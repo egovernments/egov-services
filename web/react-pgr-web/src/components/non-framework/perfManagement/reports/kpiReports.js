@@ -119,8 +119,14 @@ class KPIReports extends Component {
         console.log("Selected KPIs = %s", JSON.stringify(this.state.kpiIndexValues))
         console.log("Selected ULBs = %s", JSON.stringify(this.state.ULBIndexValues))
         console.log("Selected FY = %s", JSON.stringify(this.state.financialYearIndexValues))
-        
-        Api.commonApiPost("perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=MKO,MKT", [], {}, false, true).then(function(res) {
+
+        let finYears    = this.state.financialYearIndexValues.map((item, index) => self.state.financialYears[item]['finYearRange']).join(',')
+        let ulbs        = this.state.ULBIndexValues.map((item, index) => self.state.ULBs[item]['code']).join(',')
+        let kpis        = this.state.kpiIndexValues.map((item, index)=> self.state.kpis[item]['code']).join(',')
+        let url         = `perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`
+        console.log(`querying URL ${url}`)
+        url              = "perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=MKO,MKT"
+        Api.commonApiPost(url, [], {}, false, true).then(function(res) {
             if (res && res.kpiValues) {
                 self.setState({
                     kpiReportResponse: res,

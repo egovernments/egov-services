@@ -23,11 +23,8 @@ public class PropertiesManager {
 	@Value("${egov.services.works.estimate.pagesize.max}")
 	private String pageSizeMax;
 	
-	@Value("${egov.services.works.abstract.estimate.create.topic}")
-	private String worksAbstractEstimateCreateTopic;
-	
-	@Value("${egov.services.works.abstract.estimate.update.topic}")
-	private String worksAbstractEstimateUpdateTopic;
+	@Value("${egov.services.works.abstract.estimate.createandupdate.topic}")
+	private String worksAbstractEstimateCreateAndUpdateTopic;
 	
 	@Value("${egov.services.works.projectcode.create.topic}")
 	private String worksProjectCodeCreateTopic;
@@ -35,11 +32,8 @@ public class PropertiesManager {
 	@Value("${egov.services.works.projectcode.update.topic}")
 	private String worksProjectCodeUpdateTopic;
 
-    @Value("${egov.services.works.detailed.estimate.create.topic}")
-    private String worksDetailedEstimateCreateTopic;
-
-    @Value("${egov.services.works.detailed.estimate.update.topic}")
-    private String worksDetailedEstimateUpdateTopic;
+    @Value("${egov.services.works.detailed.estimate.createandupdate.topic}")
+    private String worksDetailedEstimateCreateAndUpdateTopic;
 
     @Value("${works.abstractestimatenumber}")
     private String worksAbstractEstimateNumber;

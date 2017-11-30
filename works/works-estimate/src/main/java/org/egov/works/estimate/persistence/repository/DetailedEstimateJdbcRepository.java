@@ -128,6 +128,7 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 			paramValues.put("ward", detailedEstimateSearchContract.getWards());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

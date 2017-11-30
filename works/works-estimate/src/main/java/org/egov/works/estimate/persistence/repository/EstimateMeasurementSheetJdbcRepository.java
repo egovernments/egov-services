@@ -59,6 +59,7 @@ public class EstimateMeasurementSheetJdbcRepository extends JdbcRepository {
 			paramValues.put("estimateActivityIds", estimateMeasurementSheetSearchContract.getEstimateActivityIds());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

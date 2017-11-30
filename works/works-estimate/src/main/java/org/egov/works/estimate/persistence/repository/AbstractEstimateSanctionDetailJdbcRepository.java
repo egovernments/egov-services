@@ -58,7 +58,8 @@ public class AbstractEstimateSanctionDetailJdbcRepository  extends JdbcRepositor
             params.append("abstractEstimate in(:abstractEstimateIds) ");
             paramValues.put("abstractEstimateIds", abstractEstimateSanctionSearchContract.getAbstractEstimateIds());
         }
-        
+
+        params.append(" and deleted = false");
         if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

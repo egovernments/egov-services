@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that hold Estimate Appropriation for a given Abstract Estimate Details
  */
 @ApiModel(description = "An Object that hold Estimate Appropriation for a given Abstract Estimate Details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T10:41:14.685Z")
 
 public class EstimateAppropriation   {
   @JsonProperty("id")
@@ -31,6 +31,9 @@ public class EstimateAppropriation   {
 
   @JsonProperty("budgetRefNumber")
   private String budgetRefNumber = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -139,6 +142,26 @@ public class EstimateAppropriation   {
     this.budgetRefNumber = budgetRefNumber;
   }
 
+  public EstimateAppropriation deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public EstimateAppropriation auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -175,12 +198,13 @@ public class EstimateAppropriation   {
         Objects.equals(this.objectNumber, estimateAppropriation.objectNumber) &&
         Objects.equals(this.objectType, estimateAppropriation.objectType) &&
         Objects.equals(this.budgetRefNumber, estimateAppropriation.budgetRefNumber) &&
+        Objects.equals(this.deleted, estimateAppropriation.deleted) &&
         Objects.equals(this.auditDetails, estimateAppropriation.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, objectNumber, objectType, budgetRefNumber, auditDetails);
+    return Objects.hash(id, tenantId, objectNumber, objectType, budgetRefNumber, deleted, auditDetails);
   }
 
   @Override
@@ -193,6 +217,7 @@ public class EstimateAppropriation   {
     sb.append("    objectNumber: ").append(toIndentedString(objectNumber)).append("\n");
     sb.append("    objectType: ").append(toIndentedString(objectType)).append("\n");
     sb.append("    budgetRefNumber: ").append(toIndentedString(budgetRefNumber)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

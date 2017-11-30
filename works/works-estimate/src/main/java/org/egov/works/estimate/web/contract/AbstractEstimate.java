@@ -305,7 +305,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Reference Type of the Abstract Estimate")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public ReferenceType getReferenceType() {
     return referenceType;
@@ -369,7 +369,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "Department for which Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public Department getDepartment() {
     return department;
@@ -390,7 +390,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Status of the Abstract Estimate")
 
-  @Valid
+//  @Valid
 
   public AbstractEstimateStatus getStatus() {
     return status;
@@ -412,7 +412,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Beneficiary of this work")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public Beneficiary getBeneficiary() {
     return beneficiary;
@@ -434,7 +434,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Recommended Mode of Allotment of the work")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public ModeOfAllotment getModeOfAllotment() {
     return modeOfAllotment;
@@ -456,7 +456,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Type of work for which this Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public TypeOfWork getTypeOfWork() {
     return typeOfWork;
@@ -478,7 +478,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Sub Type of work for which this Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public TypeOfWork getSubTypeOfWork() {
     return subTypeOfWork;
@@ -500,7 +500,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Nature of work for which this Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public NatureOfWork getNatureOfWork() {
     return natureOfWork;
@@ -522,7 +522,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Admin Ward for which this Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public Boundary getWard() {
     return ward;
@@ -544,7 +544,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Locality in which the Abstract Estimate belongs to")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public Boundary getLocality() {
     return locality;
@@ -566,7 +566,7 @@ public class AbstractEstimate   {
   @ApiModelProperty(required = true, value = "The Work Category of the Abstract Estimate")
   @NotNull
 
-  @Valid
+//  @Valid
 
   public WorkCategory getWorkCategory() {
     return workCategory;
@@ -787,7 +787,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "User who admin sanctioned")
 
-  @Valid
+//  @Valid
 
   public User getAdminSanctionBy() {
     return adminSanctionBy;
@@ -848,7 +848,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "The user who Financial sanctioned the Abstract Estimate")
 
-  @Valid
+//  @Valid
 
   public User getFinancialSanctionBy() {
     return financialSanctionBy;
@@ -869,7 +869,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+//  @Valid
 
   public WorkFlowDetails getWorkFlowDetails() {
     return workFlowDetails;
@@ -930,7 +930,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Fund of the Abstract Estimate. This data comes from financials.")
 
-  @Valid
+//  @Valid
 
   public Fund getFund() {
     return fund;
@@ -951,7 +951,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Function of the Abstract Estimate. This data comes from financials.")
 
-  @Valid
+//  @Valid
 
   public Function getFunction() {
     return function;
@@ -972,7 +972,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Budget head of the Abstract Estimate. This data comes from financials.")
 
-  @Valid
+//  @Valid
 
   public BudgetGroup getBudgetGroup() {
     return budgetGroup;
@@ -1013,7 +1013,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Scheme of the Abstract Estimate. This data comes from financials.")
 
-  @Valid
+//  @Valid
 
   public Scheme getScheme() {
     return scheme;
@@ -1034,7 +1034,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Sub scheme of the Abstract Estimate. This data comes from financials.")
 
-  @Valid
+//  @Valid
 
   public SubScheme getSubScheme() {
     return subScheme;
@@ -1333,7 +1333,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of Abstract Estimate Sanction Details")
 
-  @Valid
+//  @Valid
 
   public List<AbstractEstimateSanctionDetail> getSanctionDetails() {
     return sanctionDetails;
@@ -1362,7 +1362,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of Asset/Land details")
 
-  @Valid
+//  @Valid
 
   public List<AbstractEstimateAssetDetail> getAssetDetails() {
     return assetDetails;
@@ -1391,7 +1391,7 @@ public class AbstractEstimate   {
   **/
   @ApiModelProperty(value = "Array of document details")
 
-  @Valid
+//  @Valid
 
   public List<DocumentDetail> getDocumentDetails() {
     return documentDetails;

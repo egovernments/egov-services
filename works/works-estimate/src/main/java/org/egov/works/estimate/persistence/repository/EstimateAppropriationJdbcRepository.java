@@ -61,6 +61,7 @@ public class EstimateAppropriationJdbcRepository extends JdbcRepository {
 			paramValues.put("objecttype", estimateAppropriationSearchContract.getObjectType());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

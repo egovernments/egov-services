@@ -85,13 +85,16 @@ public class AbstractEstimateService {
 				details.setId(commonUtils.getUUID());
 				details.setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
 			}
+            if(estimate.getSanctionDetails() != null)
 			for (final AbstractEstimateSanctionDetail sanctionDetail : estimate.getSanctionDetails())
 				sanctionDetail.setId(commonUtils.getUUID());
-			for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails()) {
-				assetDetail.setId(commonUtils.getUUID());
-				assetDetail.setAuditDetails(
-						estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
-			}
+            if(estimate.getAssetDetails() != null) {
+                for (final AbstractEstimateAssetDetail assetDetail : estimate.getAssetDetails()) {
+                    assetDetail.setId(commonUtils.getUUID());
+                    assetDetail.setAuditDetails(
+                            estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
+                }
+            }
 
 			if (!estimate.getSpillOverFlag()) {
 				String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(
@@ -100,13 +103,15 @@ public class AbstractEstimateService {
 				estimate.setAbstractEstimateNumber(estimateUtils.getCityCode(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()) + "/" + propertiesManager.getEstimateNumberPrefix() + "/"
 						+ estimate.getDepartment().getCode() + abstractEstimateNumber);
 			}
-			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
-				documentDetail.setId(commonUtils.getUUID());
-				documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
-				documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
-				documentDetail.setAuditDetails(
-						estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
-			}
+            if(estimate.getDocumentDetails() != null) {
+                for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {
+                    documentDetail.setId(commonUtils.getUUID());
+                    documentDetail.setObjectId(estimate.getAbstractEstimateNumber());
+                    documentDetail.setObjectType(CommonConstants.ABSTRACT_ESTIMATE_BUSINESSKEY);
+                    documentDetail.setAuditDetails(
+                            estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
+                }
+            }
 			if(estimate.getSpillOverFlag()) {
 				for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
 					projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
@@ -129,7 +134,7 @@ public class AbstractEstimateService {
 			}
 
 		}
-		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateTopic(), abstractEstimateRequest);
+		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateAndUpdateTopic(), abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimateRequest.getAbstractEstimates());
 		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));
@@ -177,7 +182,7 @@ public class AbstractEstimateService {
 				}
 			}
 		}
-		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateUpdateTopic(), abstractEstimateRequest);
+		kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateAndUpdateTopic(), abstractEstimateRequest);
 		final AbstractEstimateResponse response = new AbstractEstimateResponse();
 		response.setAbstractEstimates(abstractEstimateRequest.getAbstractEstimates());
 		response.setResponseInfo(estimateUtils.getResponseInfo(abstractEstimateRequest.getRequestInfo()));

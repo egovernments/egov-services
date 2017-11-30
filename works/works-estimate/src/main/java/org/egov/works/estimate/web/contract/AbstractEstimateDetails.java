@@ -186,7 +186,7 @@ public class AbstractEstimateDetails   {
   **/
   @ApiModelProperty(value = "Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.")
 
-  @Valid
+//  @Valid
 
   public ProjectCode getProjectCode() {
     return projectCode;

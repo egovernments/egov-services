@@ -116,7 +116,8 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public ScheduleOfRate getScheduleOfRate() {
     return scheduleOfRate;
@@ -137,7 +138,8 @@ public class EstimateActivity   {
   **/
   @ApiModelProperty(value = "Schedule Of Rate reference of the Estimate Activity. Either Schedule Of Rate or Non SOR is mandatory for any activity.")
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public NonSOR getNonSor() {
     return nonSor;
@@ -159,7 +161,8 @@ public class EstimateActivity   {
   @ApiModelProperty(required = true, value = "UOM for the Estimate Activity")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO only code is required
 
   public UOM getUom() {
     return uom;
@@ -305,7 +308,7 @@ public class EstimateActivity   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Estimate Activity")
-  @NotNull
+  //@NotNull
 
 
   public String getDetailedEstimate() {

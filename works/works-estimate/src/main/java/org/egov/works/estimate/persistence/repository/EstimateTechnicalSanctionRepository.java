@@ -73,6 +73,7 @@ public class EstimateTechnicalSanctionRepository  extends JdbcRepository
             paramValues.put("technicalsanctionnumbers", technicalSanctionSearchContract.getTechnicalSanctionNumbers());
         }
 
+        params.append(" and deleted = false");
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(EstimateTechnicalSanctionHelper.class);
 
         List<EstimateTechnicalSanctionHelper> estimateTechnicalSanctionHelpers = namedParameterJdbcTemplate

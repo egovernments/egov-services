@@ -410,7 +410,7 @@ public class EstimateValidator {
 			validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
 			validateOverheads(detailedEstimate, requestInfo, messages);
 			validateDocuments(detailedEstimate, requestInfo, messages);
-			if (detailedEstimate.getId() != null)
+			if (StringUtils.isNotBlank(detailedEstimate.getId()))
 				validateIsModified(detailedEstimate, requestInfo, messages);
 
 		}
@@ -724,33 +724,34 @@ public class EstimateValidator {
 		}
 
 		Asset asset = null;
-		for (final AbstractEstimateAssetDetail abstractEstimateAssetDetail : abstractEstimate.getAssetDetails())
-			if (abstractEstimateAssetDetail != null) {
-				if (abstractEstimate.getNatureOfWork() != null
-						&& abstractEstimate.getNatureOfWork().getExpenditureType() != null) {
-					mdmsArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT,
-							CommonConstants.EXPENDITURETYPE,
-							abstractEstimate.getNatureOfWork().getExpenditureType().toString(),
-							abstractEstimate.getTenantId(), requestInfo, CommonConstants.MODULENAME_WORKS);
-					if (mdmsArray != null && !mdmsArray.isEmpty()) {
-						Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
-						if (jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE.toString())
-								&& abstractEstimateAssetDetail.getAsset() == null)
-							messages.put(Constants.KEY_ESTIMATE_ASSET_REQUIRED,
-									Constants.MESSAGE_ESTIMATE_ASSET_REQUIRED);
+        if(abstractEstimate.getAssetDetails() != null) {
+            for (final AbstractEstimateAssetDetail abstractEstimateAssetDetail : abstractEstimate.getAssetDetails())
+                if (abstractEstimateAssetDetail != null) {
+                    if (abstractEstimate.getNatureOfWork() != null
+                            && abstractEstimate.getNatureOfWork().getExpenditureType() != null) {
+                        mdmsArray = estimateUtils.getMDMSData(Constants.NATUREOFWORK_OBJECT,
+                                CommonConstants.EXPENDITURETYPE,
+                                abstractEstimate.getNatureOfWork().getExpenditureType().toString(),
+                                abstractEstimate.getTenantId(), requestInfo, CommonConstants.MODULENAME_WORKS);
+                        if (mdmsArray != null && !mdmsArray.isEmpty()) {
+                            Map<String, Object> jsonMap = (Map<String, Object>) mdmsArray.get(0);
+                            if (jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.REVENUE.toString())
+                                    && abstractEstimateAssetDetail.getAsset() == null)
+                                messages.put(Constants.KEY_ESTIMATE_ASSET_REQUIRED,
+                                        Constants.MESSAGE_ESTIMATE_ASSET_REQUIRED);
 
-						else if (jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.CAPITAL.toString())
-								&& StringUtils.isBlank(abstractEstimateAssetDetail.getLandAsset())
-								&& abstractEstimate != null && abstractEstimate.getLandAssetRequired() != null
-								&& abstractEstimate.getLandAssetRequired())
-							messages.put(Constants.KEY_ESTIMATE_LAND_ASSET_REQUIRED,
-									Constants.MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED);
-					}
+                            else if (jsonMap.get(CommonConstants.EXPENDITURETYPE).equals(ExpenditureType.CAPITAL.toString())
+                                    && StringUtils.isBlank(abstractEstimateAssetDetail.getLandAsset())
+                                    && abstractEstimate != null && abstractEstimate.getLandAssetRequired() != null
+                                    && abstractEstimate.getLandAssetRequired())
+                                messages.put(Constants.KEY_ESTIMATE_LAND_ASSET_REQUIRED,
+                                        Constants.MESSAGE_ESTIMATE_LAND_ASSET_REQUIRED);
+                        }
 
-				}
+                    }
 
-				// TODO FIX aset code validation getting deserialization error
-				// for AttributeDefinition["columns"]
+                    // TODO FIX aset code validation getting deserialization error
+                    // for AttributeDefinition["columns"]
 				/*
 				 * if( assetsForEstimate.getAsset() != null &&
 				 * StringUtils.isNotBlank(assetsForEstimate.getAsset().getCode()
@@ -761,11 +762,12 @@ public class EstimateValidator {
 				 * messages.put(Constants.KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID,
 				 * Constants.MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID); }
 				 */
-				if (asset != null && asset.getCode().equals(abstractEstimateAssetDetail.getAsset().getCode()))
-					messages.put(Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS,
-							Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
-				asset = abstractEstimateAssetDetail.getAsset();
-			}
+                    if (asset != null && asset.getCode().equals(abstractEstimateAssetDetail.getAsset().getCode()))
+                        messages.put(Constants.KEY_DUPLICATE_ESTIMATE_ASSET_DETAILS,
+                                Constants.MESSAGE_DUPLICATE_ESTIMATE_ASSET_DETAILS);
+                    asset = abstractEstimateAssetDetail.getAsset();
+                }
+        }
 
 	}
 

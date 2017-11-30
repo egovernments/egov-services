@@ -142,6 +142,7 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 			paramValues.put("workIdentificationNumbers", abstractEstimateSearchContract.getWorkIdentificationNumbers());
 		}
 
+        params.append(" and estimate.deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

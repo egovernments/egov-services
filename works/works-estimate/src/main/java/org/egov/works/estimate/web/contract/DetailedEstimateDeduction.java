@@ -94,7 +94,8 @@ public class DetailedEstimateDeduction   {
   @ApiModelProperty(required = true, value = "Chart Of Accounts of the Detailed Estimate Deduction from Financials")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO Only code is required
 
   public ChartOfAccount getChartOfAccounts() {
     return chartOfAccounts;

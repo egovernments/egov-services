@@ -147,7 +147,7 @@ public class DetailedEstimateService {
 			detailedEstimate.setStateId(workFlowResponse.get("id"));
 			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
 		}
-		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateTopic(), detailedEstimateRequest);
+		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
 		final DetailedEstimateResponse response = new DetailedEstimateResponse();
 		response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
 		response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
@@ -219,7 +219,7 @@ public class DetailedEstimateService {
 			detailedEstimate.setStateId(workFlowResponse.get("id"));
 			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
 		}
-		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateUpdateTopic(), detailedEstimateRequest);
+		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
 		final DetailedEstimateResponse response = new DetailedEstimateResponse();
 		response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
 		response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));

@@ -57,6 +57,7 @@ public class EstimateAssetJdbcRepository extends JdbcRepository {
 			paramValues.put("detailedEstimateIds", assetSearchContract.getDetailedEstimateIds());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

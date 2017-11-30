@@ -57,6 +57,7 @@ public class MultiYearEstimateJdbcRepository extends JdbcRepository {
 			paramValues.put("detailedEstimateIds", multiYearEstimateSearchContract.getDetailedEstimateIds());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

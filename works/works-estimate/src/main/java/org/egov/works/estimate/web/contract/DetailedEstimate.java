@@ -327,7 +327,7 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "Department for which Detailed Estimate belongs to")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public Department getDepartment() {
     return department;
@@ -616,7 +616,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "The Recommended Mode of Allotment of the work")
 
-  @Valid
+  //@Valid
+  //Only code is required
 
   public ModeOfAllotment getModeOfAllotment() {
     return modeOfAllotment;
@@ -638,7 +639,8 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "The Type of work for which this Detailed Estimate belongs to")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO Handle only code validation
 
   public TypeOfWork getWorksType() {
     return worksType;
@@ -659,7 +661,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "The Sub Type of work for which this Detailed Estimate belongs to")
 
-  @Valid
+  //@Valid
+  //TODO Handle only code validation
 
   public TypeOfWork getWorksSubtype() {
     return worksSubtype;
@@ -681,7 +684,7 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "The Nature of work for which this Detailed Estimate belongs to")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public NatureOfWork getNatureOfWork() {
     return natureOfWork;
@@ -703,7 +706,8 @@ public class DetailedEstimate   {
   @ApiModelProperty(required = true, value = "Ward of the Detailed Estimate")
   @NotNull
 
-  @Valid
+  //@Valid
+  //TODO code is required
 
   public Boundary getWard() {
     return ward;
@@ -805,7 +809,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "The Locality in which the Detailed Estimate belongs to")
 
-  @Valid
+    //@Valid
 
   public Boundary getLocality() {
     return locality;
@@ -1008,7 +1012,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "")
 
-  @Valid
+  //@Valid
+  //TODO Only id is required
 
   public AbstractEstimateDetails getAbstractEstimateDetail() {
     return abstractEstimateDetail;
@@ -1124,7 +1129,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Detailed Estimate Deduction list for the Abstract Estimate")
 
-  @Valid
+  //@Valid
 
   public List<DetailedEstimateDeduction> getDetailedEstimateDeductions() {
     return detailedEstimateDeductions;
@@ -1182,7 +1187,7 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Asset Referencs for the Detailed Estimate")
 
-  @Valid
+  //@Valid
 
   public List<AssetsForEstimate> getAssets() {
     return assets;
@@ -1273,7 +1278,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Fund of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only fund code is required based on configuration
 
   public Fund getFund() {
     return fund;
@@ -1294,7 +1300,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Function of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only function code is required based on configuration
 
   public Function getFunction() {
     return function;
@@ -1315,7 +1322,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Functionary of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only functionary code is required based on configuration
 
   public Functionary getFunctionary() {
     return functionary;
@@ -1336,7 +1344,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Scheme of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only scheme code is required based on configuration
 
   public Scheme getScheme() {
     return scheme;
@@ -1357,7 +1366,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Sub Scheme of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  //TODO Only subscheme code is required based on configuration
 
   public SubScheme getSubScheme() {
     return subScheme;
@@ -1378,7 +1388,8 @@ public class DetailedEstimate   {
   **/
   @ApiModelProperty(value = "Budget Group of the Detailed Estimate")
 
-  @Valid
+  //@Valid
+  ////TODO Only budgetgroup name is required based on configuration
 
   public BudgetGroup getBudgetGroup() {
     return budgetGroup;

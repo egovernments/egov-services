@@ -2716,9 +2716,6 @@ definitions:
           minLength: 4
         material:
           $ref: "#/definitions/Material"
-        batchNo:
-          type: string
-          description: batch number of material receipt detail.
         mrnNumber:
           type: string
           readOnly: true
@@ -2801,6 +2798,9 @@ definitions:
           type: string
           description: Serial number of the materials that are received.
           format: varchar
+        batchNo:
+          type: string
+          description: batch number of material receipt detail.
         manufactureDate:
           type: integer
           description: The date on which the materials are received into system.

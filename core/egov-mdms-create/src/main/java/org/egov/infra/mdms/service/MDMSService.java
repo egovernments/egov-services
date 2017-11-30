@@ -184,9 +184,12 @@ public class MDMSService {
 						  }
 						if(counter == keys.size()){
 							iterator.remove();
+							logger.info("adding master to file: "+mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(j)));
 							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(j)));
-				            if(j < mDMSCreateRequest.getMasterMetaData().getMasterData().size())
+				            if(j < mDMSCreateRequest.getMasterMetaData().getMasterData().size()){
 				            	j++;
+								logger.info("j: "+j);
+				            }
 							break;
 						}
 		            }

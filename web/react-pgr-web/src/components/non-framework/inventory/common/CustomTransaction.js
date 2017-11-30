@@ -569,6 +569,10 @@ export default class Transaction extends Component {
     this.props.setFormData(formData);
   }
 
+  getRequiredFields = () => {
+    return this.props.requiredFields;
+  }
+
   getValFromDropdownData = (fieldJsonPath, key, path) => {
     let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
     let _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
@@ -1419,6 +1423,7 @@ export default class Transaction extends Component {
                                     setVal={setVal}
                                     getVal={getVal}
                                     fieldErrors={fieldErrors}
+                                    getRequiredFields={this.getRequiredFields}
                                     useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                                     addNewCard={addNewCard}
                                     removeCard={removeCard}

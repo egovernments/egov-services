@@ -265,7 +265,7 @@ class Report extends Component {
        }
      }
 
-     
+
       self.props.setLoadingStatus('loading');
       Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`].useTimestamp).then(function(res){
           self.props.setLoadingStatus('hide');
@@ -331,7 +331,7 @@ class Report extends Component {
     }
     console.log(this.props.moduleName);
     var res = self.handleMasterData(specifications, this.props.moduleName);
-    
+
     this.setState({
       pathname:this.props.history.location.pathname
     })
@@ -365,12 +365,12 @@ class Report extends Component {
         moduleDetails: moduleDetails
       }
     }
-    
+
     console.log(_body);
-    
+
     Api.commonApiPost('/egov-mdms-service/v1/_search','', _body,{},true,true).then((res)=>{
       this.setState({
-        mdmsData: res.MdmsRes 
+        mdmsData: res.MdmsRes
       })
 
       //set dropdowndata
@@ -398,7 +398,7 @@ class Report extends Component {
                 }
               }
             }
-            setDropDownData(obj.groups[i].fields[j].jsonPath, dropDownData)            
+            setDropDownData(obj.groups[i].fields[j].jsonPath, dropDownData)
           }
         }
       }
@@ -420,7 +420,7 @@ class Report extends Component {
       } catch(e) {
         console.log(e);
       }
-    
+
       self.displayUI(specifications);
 
   }
@@ -686,6 +686,11 @@ class Report extends Component {
     _.set(formData, jsonPath, value);
     this.props.setFormData(formData);
   }
+
+  getRequiredFields = () => {
+    return this.props.requiredFields;
+  }
+
 
   getValFromDropdownData = (fieldJsonPath, key, path) => {
     let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
@@ -1617,6 +1622,7 @@ class Report extends Component {
                                     makeAjaxCall = {this.makeAPICallGetResponse}
                                     addRequiredFields={this.props.addRequiredFields}
                                     delRequiredFields={this.props.delRequiredFields}
+                                    getRequiredFields={this.getRequiredFields}
                                     setVal={setVal}
                                     getVal={getVal}
                                     fieldErrors={fieldErrors}

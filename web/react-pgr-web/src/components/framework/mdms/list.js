@@ -37,22 +37,36 @@ class MdmsComponent extends Component {
 			}
 		};
 
+		let formData = {
+			MasterMetaData: {
+				moduleName: module,
+				masterName: master,
+				masterData: []
+			}
+		};
+
 		self.props.setLoadingStatus('loading');
+
 		//Fetch specs from specs service
 		Api.commonApiPost("/specs/yaml/_search", {
 			module,
 			master
 		}).then(function(res) {
 			//Fetch data from MDMS service
-			Api.commonApiPost("/egov-mdms-service/v1/_search", {}, data, false, true).then(function(res) {
-				let arr = _.get(res, "$.MdmsRes." + module + "." + master);
+			Api.commonApiPost("/egov-mdms-service/v1/_search", {}, data, false, true).then(function(res2) {
+				let arr = _.get(res2, "$.MdmsRes." + module + "." + master);
 				if(arr && arr.length) {
-					let formData = _.get(res, "$.MdmsRes");
 					self.props.setFormData(formData);
+					for(let i=0; i<arr.length; i++) {
+						arr[i].modify = true;
+					}
+					
 					self.setState({
 						valueList: arr
 					})
-				}
+				} 
+
+				self.props.setFormData(formData);
 			}).catch(function(err) {
 				self.props.setLoadingStatus('hide');
 				self.props.toggleSnackbarAndSetText(true, err.message);

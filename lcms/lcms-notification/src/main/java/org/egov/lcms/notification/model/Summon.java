@@ -110,4 +110,7 @@ public class Summon {
 	
 	@JsonProperty("amountReceived")
 	private Double amountReceived = null;
+	
+	@JsonProperty("entryType")
+	private EntryType entryType = null;
 }

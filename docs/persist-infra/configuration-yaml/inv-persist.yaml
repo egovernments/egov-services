@@ -784,7 +784,8 @@ serviceMaps:
                  INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, batchno, serialno)
                  VALUES ( ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  receiptDetailId = EXCLUDED.receiptdetailid, manufacturedate = EXCLUDED.manufacturedate,
-                 lotNo = EXCLUDED.lotno, expiryDate = EXCLUDED.expirydate, serialno = EXCLUDED.serialno ;
+                 lotNo = EXCLUDED.lotno, batchNo = EXCLUDED.batchno,
+                 expiryDate = EXCLUDED.expirydate, serialno = EXCLUDED.serialno ;
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id

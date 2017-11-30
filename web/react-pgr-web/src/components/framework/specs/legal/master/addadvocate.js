@@ -260,7 +260,7 @@ var dat = {
               }
             ],
             "defaultValue": "active",
-            "enableDiasableFields": [
+            "enableDisableFields": [
               {
                 "ifValue": "active",
                 "enable": [],
@@ -274,7 +274,7 @@ var dat = {
                   "reasonOfTermination"
                 ],
                 "disable": [
-                  "terminationDate",
+                  "terminationDate"
                 ]
               },
               {

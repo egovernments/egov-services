@@ -1861,13 +1861,13 @@ var dat ={
               }
             ],
             "defaultValue": "active",
-            "enableDiasableFields": [
+            "enableDisableFields": [
               {
                 "ifValue": "active",
                  "enable": [],
                 "disable": [
-                  "terminationDate",
                   "inActivationDate",
+                  "terminationDate",
                   "reasonOfTermination"
                 ]
               },
@@ -1878,14 +1878,14 @@ var dat ={
                   "reasonOfTermination"
                 ],
                 "disable": [
-                  "terminationDate",
-                  "reasonOfTermination"
+                  "terminationDate"
                 ]
               },
               {
                 "ifValue": "terminate",
                 "enable": [
-                  "terminationDate"
+                  "terminationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "inActivationDate"
@@ -1964,7 +1964,7 @@ var dat ={
               }
             ],
             "defaultValue": "active",
-            "enableDiasableFields": [
+            "enableDisableFields": [
               {
                 "ifValue": "active",
                  "enable": [],

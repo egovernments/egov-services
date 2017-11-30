@@ -736,7 +736,7 @@ var dat = {
             "isDisabled": false,
             patternErrorMsg: "",
             "url": ""
-          
+
           },
           {
             "name": "bankAcc",
@@ -800,7 +800,7 @@ var dat = {
               }
             ],
             "defaultValue": "active",
-            "enableDiasableFields": [
+            "enableDisableFields": [
               {
                 "ifValue": "active",
                  "enable": [],
@@ -893,7 +893,7 @@ var dat = {
               }
             ],
             "defaultValue": "active",
-            "enableDiasableFields": [
+            "enableDisableFields": [
               {
                 "ifValue": "active",
                  "enable": [],

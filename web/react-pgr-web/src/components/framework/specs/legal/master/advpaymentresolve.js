@@ -188,6 +188,7 @@ var dat = {
                 type: "tableList",
                 jsonPath: "advocatePayments[0].advocateCharges",
                 tableList: {
+                  actionsNotRequired: true,
                   header: [
                     {
                       label: "legal.create.charge"

@@ -4,7 +4,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -13,9 +12,11 @@ import java.util.Map;
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.AuditDetails;
+import org.egov.inv.persistence.entity.IndentEntity;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -602,5 +603,26 @@ public abstract class JdbcRepository {
         // paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
 
     }
+    
+	 
+	public Object findById(Object entity,String entityName) {
+		List<String> list = allIdentitiferFields.get(entityName);
+
+		Map<String, Object> paramValues = new HashMap<>();
+
+		for (String s : list) {
+			paramValues.put(s, getValue(getField(entity, s), entity));
+		}
+
+		List<Object> indents = namedParameterJdbcTemplate.query(
+				getByIdQuery.get(entityName), paramValues,
+				new BeanPropertyRowMapper(entity.getClass()));
+		if (indents.isEmpty()) {
+			return null;
+		} else {
+			return indents.get(0);
+		}
+
+	}
 
 }

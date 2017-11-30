@@ -73,7 +73,7 @@ public class MdmsRepository {
 
     public JSONArray getByCriteria(final String tenantId, final String moduleName, final String masterName,
             final String filterFieldName,
-            final String filterFieldValue, final RequestInfo requestInfo) {
+            final String filterFieldValue, final org.egov.inv.model.RequestInfo info) {
 
         List<MasterDetail> masterDetails;
         List<ModuleDetail> moduleDetails;
@@ -89,7 +89,7 @@ public class MdmsRepository {
 
         request = MdmsCriteriaReq.builder()
                 .mdmsCriteria(MdmsCriteria.builder().moduleDetails(moduleDetails).tenantId(tenantId).build())
-                .requestInfo(requestInfo).build();
+                .requestInfo(getRequestInfo(info)).build();
         response = restTemplate.postForObject(mdmsBySearchCriteriaUrl, request, MdmsResponse.class);
         if (response == null || response.getMdmsRes() == null || !response.getMdmsRes().containsKey(moduleName)
                 || response.getMdmsRes().get(moduleName) == null
@@ -98,5 +98,20 @@ public class MdmsRepository {
             return null;
         else
             return response.getMdmsRes().get(moduleName).get(masterName);
+    }
+    
+   public  RequestInfo getRequestInfo(org.egov.inv.model.RequestInfo requestInfo)
+    {
+	   RequestInfo info=new RequestInfo();
+	 return  info.builder().action(requestInfo.getAction())
+	   .apiId(requestInfo.getApiId())
+	   .authToken(requestInfo.getAuthToken())
+	   .correlationId(requestInfo.getCorrelationId())
+	   .did(requestInfo.getDid())
+	   .key(requestInfo.getKey())
+	   .msgId(requestInfo.getMsgId())
+	   .ts(requestInfo.getTs())
+	   //.userInfo(requestInfo.getUserInfo())
+	   .ver(requestInfo.getVer()).build();
     }
 }

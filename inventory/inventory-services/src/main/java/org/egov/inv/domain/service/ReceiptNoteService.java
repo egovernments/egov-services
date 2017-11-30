@@ -3,7 +3,7 @@ package org.egov.inv.domain.service;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.model.RequestInfo;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.*;

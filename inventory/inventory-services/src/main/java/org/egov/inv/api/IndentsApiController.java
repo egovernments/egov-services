@@ -38,7 +38,7 @@ public class IndentsApiController implements IndentsApi {
     }
 
     public ResponseEntity<IndentResponse> indentsSearchPost( @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo RequestInfo,
+        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo RequestInfo,
          @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
         @ApiParam(value = "issue store of the Indent ") @RequestParam(value = "issueStore", required = false) String issueStore,
         @ApiParam(value = "indent date of the Indent ") @RequestParam(value = "indentDate", required = false) Long indentDate,
@@ -53,7 +53,7 @@ public class IndentsApiController implements IndentsApi {
        
     	IndentSearch is=	new IndentSearch(tenantId,ids,issueStore,indentDate,indentNumber,
     			indentPurpose,description,indentStatus,totalIndentValue,pageSize,pageNumber,null, null, null, null, null, null,null);
-    	 IndentResponse response = indentService.search(is);
+    	 IndentResponse response = indentService.search(is,RequestInfo);
          return   new ResponseEntity(response,HttpStatus.OK);
     }
 
@@ -74,7 +74,7 @@ public class IndentsApiController implements IndentsApi {
             @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
  	IndentSearch is=	new IndentSearch(tenantId,ids,issueStore,indentDate,indentNumber,
     			indentPurpose,null,indentStatus,totalIndentValue,pageSize,pageNumber,null, null, null, null, null, null,searchPurpose);
-    	 IndentResponse response = indentService.search(is);
+    	 IndentResponse response = indentService.search(is,requestInfo);
          return   new ResponseEntity(response,HttpStatus.OK);
     }
 

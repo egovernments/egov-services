@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.model.RequestInfo;
 import org.egov.inv.domain.service.UomService;
 import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListDetailsSearchRequest;

@@ -10,7 +10,7 @@ import java.util.List;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.model.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;

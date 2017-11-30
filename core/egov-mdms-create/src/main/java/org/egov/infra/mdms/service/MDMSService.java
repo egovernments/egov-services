@@ -185,11 +185,11 @@ public class MDMSService {
 						if(counter == keys.size()){
 							iterator.remove();
 							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(j)));
+				            if(j < mDMSCreateRequest.getMasterMetaData().getMasterData().size())
+				            	j++;
 							break;
 						}
 		            }
-		            if(j < mDMSCreateRequest.getMasterMetaData().getMasterData().size())
-		            	j++;
 		            if(counter != keys.size()){
 		            	throw new CustomException("400", "Invalid Request");
 		            }

@@ -14,7 +14,7 @@ class CancellationAgreement extends React.Component {
         allottee: {
           id: "",
           name: "",
-          pemovementrmanentAddress: "",
+          permanentAddress: "",
           mobileNumber: "",
           aadhaarNumber: "",
           pan: "",
@@ -98,7 +98,7 @@ class CancellationAgreement extends React.Component {
         source: "",
         legacyDemands: "",
         cancellation: {
-          orderNumber: "",
+          orderNo: "",
           orderDate: "",
           terminationDate: "",
           reasonForCancellation: "",
@@ -123,6 +123,7 @@ class CancellationAgreement extends React.Component {
 
     }
     this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
+    this.handleChange = this.handleChange.bind(this);
     this.addOrUpdate = this.addOrUpdate.bind(this);
     this.setInitialState = this.setInitialState.bind(this);
     this.getUsersFun = this.getUsersFun.bind(this);
@@ -231,27 +232,9 @@ class CancellationAgreement extends React.Component {
   }
 
 
-  handleChangeTwoLevel(e, pName, name) {
+  handleChange(e, name) {
 
     var _this = this;
-
-    switch (name) {
-      case "department":
-        _this.state.agreement.workflowDetails.assignee = "";
-        if (this.state.agreement.workflowDetails.designation) {
-          var _designation = this.state.agreement.workflowDetails.designation;
-          _this.getUsersFun(e.target.value, _designation);
-        }
-        break;
-      case "designation":
-        _this.state.agreement.workflowDetails.assignee = "";
-        if (this.state.agreement.workflowDetails.department) {
-          var _department = this.state.agreement.workflowDetails.department;
-          _this.getUsersFun(_department, e.target.value);
-        }
-        break;
-
-    }
 
     if (name === "documents") {
 
@@ -289,17 +272,54 @@ class CancellationAgreement extends React.Component {
 
 
     } else {
+
       _this.setState({
         ..._this.state,
         agreement: {
           ..._this.state.agreement,
-          [pName]: {
-            ..._this.state.agreement[pName],
-            [name]: e.target.value
-          }
+          [name]: e.target.value
         }
       })
     }
+  }
+
+
+  handleChangeTwoLevel(e, pName, name) {
+
+    var _this = this;
+
+    switch (name) {
+      case "department":
+        _this.state.agreement.workflowDetails.assignee = "";
+        if (this.state.agreement.workflowDetails.designation) {
+          var _designation = this.state.agreement.workflowDetails.designation;
+          if (e.target.value != "" && e.target.value != null)
+            _this.getUsersFun(e.target.value, _designation);
+        }
+        break;
+      case "designation":
+        _this.state.agreement.workflowDetails.assignee = "";
+        if (this.state.agreement.workflowDetails.department) {
+          var _department = this.state.agreement.workflowDetails.department;
+          if (e.target.value != "" && e.target.value != null)
+            _this.getUsersFun(_department, e.target.value);
+        }
+        break;
+
+    }
+
+
+    _this.setState({
+      ..._this.state,
+      agreement: {
+        ..._this.state.agreement,
+        [pName]: {
+          ..._this.state.agreement[pName],
+          [name]: e.target.value
+        }
+      }
+    })
+
   }
 
 
@@ -380,12 +400,12 @@ class CancellationAgreement extends React.Component {
     }
 
 
-    var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", {code: tenantId}).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
+    var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
 
     var agreementType = "Cancel Municipality Agreement";
-     if (cityGrade.toLowerCase() === 'corp') {
-       agreementType = "Cancel Corporation Agreement";
-     }
+    if (cityGrade.toLowerCase() === 'corp') {
+      agreementType = "Cancel Corporation Agreement";
+    }
 
     getDesignations(null, function (designations) {
       _this.setState({
@@ -402,7 +422,7 @@ class CancellationAgreement extends React.Component {
         agreementNumber: getUrlVars()["agreementNumber"],
         tenantId
       }).responseJSON["Agreements"][0] || {};
-    
+
     console.log(agreement);
 
     if (!agreement.cancellation) {
@@ -472,7 +492,7 @@ class CancellationAgreement extends React.Component {
     let { handleChange, handleChangeTwoLevel, addOrUpdate } = this;
     let { agreement, cancelReasons } = this.state;
     let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
-      renewal, eviction, objection, judgement, remission } = this.state.agreement;
+      renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
     let { assetCategory, locationDetails } = this.state.agreement.asset;
 
     const renderOption = function (data) {
@@ -801,11 +821,11 @@ class CancellationAgreement extends React.Component {
               <div className="col-sm-6">
                 <div className="row">
                   <div className="col-sm-6 label-text">
-                    <label htmlFor="orderNumber"> Order Number<span>*</span> </label>
+                    <label htmlFor="orderNo"> Order Number<span>*</span> </label>
                   </div>
                   <div className="col-sm-6">
-                    <input type="text" name="orderNumber" id="orderNumber" value={cancellation.orderNumber}
-                      onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNumber") }} required />
+                    <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo}
+                      onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNo") }} required />
                   </div>
                 </div>
               </div>
@@ -866,7 +886,7 @@ class CancellationAgreement extends React.Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="styled-file">
-                      <input id="documents" name="documents" type="file" onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "documents") }} multiple />
+                      <input id="documents" name="documents" type="file" onChange={(e) => { handleChange(e, "documents") }} multiple />
                     </div>
                   </div>
                 </div>
@@ -877,8 +897,8 @@ class CancellationAgreement extends React.Component {
                     <label htmlFor="remarks">Remarks </label>
                   </div>
                   <div className="col-sm-6">
-                    <textarea rows="4" cols="50" id="remarks" name="remarks" value={cancellation.remarks}
-                      onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "remarks") }} ></textarea>
+                    <textarea rows="4" cols="50" id="remarks" name="remarks" value={remarks}
+                      onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                   </div>
                 </div>
               </div>

@@ -782,7 +782,7 @@ serviceMaps:
               dbType: LONG
         - query: >-
                  INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, batchno, serialno)
-                 VALUES ( ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  receiptDetailId = EXCLUDED.receiptdetailid, manufacturedate = EXCLUDED.manufacturedate,
                  lotNo = EXCLUDED.lotno, batchNo = EXCLUDED.batchno,
                  expiryDate = EXCLUDED.expirydate, serialno = EXCLUDED.serialno ;

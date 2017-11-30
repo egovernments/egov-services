@@ -83,7 +83,7 @@ public class DetailedEstimateService {
 				if (abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated()) {
 					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(
 							detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-					detailedEstimate.setEstimateNumber(propertiesManager.getDetailedEstimateNumberPrefix() + '/'
+					detailedEstimate.setEstimateNumber(estimateUtils.getCityCode(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) + "/" + propertiesManager.getDetailedEstimateNumberPrefix() + '/'
 							+ detailedEstimate.getDepartment().getCode() + estimateNumber);
 				}
 			}

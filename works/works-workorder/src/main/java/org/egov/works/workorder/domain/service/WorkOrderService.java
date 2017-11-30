@@ -42,7 +42,7 @@ public class WorkOrderService {
 
     public WorkOrderResponse create(final WorkOrderRequest workOrderRequest) {
 
-        workOrderValidator.validateWorkOrder(workOrderRequest,Boolean.FALSE);
+//        workOrderValidator.validateWorkOrder(workOrderRequest,Boolean.FALSE);
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
         String departmentCode;
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
@@ -56,10 +56,11 @@ public class WorkOrderService {
 
             if (!workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
                 departmentCode = workOrderValidator.getLetterOfAcceptanceResponse(workOrderRequest, workOrder).getLetterOfAcceptances().get(0).getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate().getDepartment().getCode();
-                String workOrderNumber = idGenerationRepository.generateLOANumber(workOrder.getTenantId(),
+                String workOrderNumber = idGenerationRepository.generateWorkOrderNumber(workOrder.getTenantId(),
                         workOrderRequest.getRequestInfo());
+
                 // TODO: check idgen to accept values to generate
-                workOrder.setWorkOrderNumber(propertiesManager.getLoaNumberPrefix() + "/"
+                workOrder.setWorkOrderNumber(workOrderUtils.getCityCode(workOrder.getTenantId(), workOrderRequest.getRequestInfo()) + "/" + propertiesManager.getWorkOrderNumberPrefix() + "/"
                         + departmentCode + workOrderNumber);
             }
 

@@ -97,7 +97,7 @@ public class AbstractEstimateService {
 				String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(
 						estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
 				// TODO: check idgen to accept values to generate
-				estimate.setAbstractEstimateNumber(propertiesManager.getEstimateNumberPrefix() + "/"
+				estimate.setAbstractEstimateNumber(estimateUtils.getCityCode(estimate.getTenantId(), abstractEstimateRequest.getRequestInfo()) + "/" + propertiesManager.getEstimateNumberPrefix() + "/"
 						+ estimate.getDepartment().getCode() + abstractEstimateNumber);
 			}
 			for (final DocumentDetail documentDetail : estimate.getDocumentDetails()) {

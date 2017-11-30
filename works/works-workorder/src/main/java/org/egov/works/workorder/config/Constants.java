@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 public class Constants {
 
     public static final String LOA_NUMBER_GENERATION_ERROR = "LOA numebr can not be generated";
+    public static final String WORKORDER_NUMBER_GENERATION_ERROR = "Work order numebr can not be generated";
 
     public static final String APPROVE = "Approve";
     public static final String SUBMIT = "Submit";
@@ -60,8 +61,5 @@ public class Constants {
 
     public static final String KEY_WORKORDER_WORKORDERNUMBER_REQUIRED= "INVALID_WORKORDER_WORKORDER";
     public static final String MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED= "Work order number is required when LOA is spillover";
-
-
-
 
 }

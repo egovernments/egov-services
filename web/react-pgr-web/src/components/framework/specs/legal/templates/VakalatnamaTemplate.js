@@ -31,7 +31,6 @@ export default class VakalatnamaTemplate extends Component{
       stateLogoPromise,
       Api.commonApiGet("https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json",{timestamp:new Date().getTime()},{}, false, true),
     ]).then((response) => {
-      debugger;
       var cityName = response[2]["details"][this.getTenantId()]['name'];
       this.generatePdf(response[0].image, response[1].image, cityName);
     }).catch(function(err) {
@@ -84,14 +83,6 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
        witnessObj.ul = vit[i].split(',');
       }
     
-      var fonts = {
-        Roboto: {
-                    normal: 'fonts/Roboto-Regular.ttf',
-                    bold: 'fonts/Roboto-Medium.ttf',
-                    italics: 'fonts/Roboto-Italic.ttf',
-                    bolditalics: 'fonts/Roboto-Italic.ttf'
-            }
-    };
 
     //document defintion
     var docDefinition = {
@@ -179,7 +170,7 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
       },
       {
         text:[
-        {text: "Witness  ",bold:true}
+        {text: "Witness  "}
         ],margin:[20, 0, 0,10]
       },
         {

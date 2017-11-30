@@ -3131,7 +3131,7 @@
       "branch": "Andheri East Rajmata Jijabai Road",
       "ifscCode": "UTIB0001531",
       "MICRCode": "400211095",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3141,7 +3141,7 @@
       "branch": "Anjur Phata Bhiwandi",
       "ifscCode": "UTIB0003387",
       "MICRCode": "400211174",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3151,7 +3151,7 @@
       "branch": "Bhuleshwar",
       "ifscCode": "UTIB0002622",
       "MICRCode": "400211144",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3161,7 +3161,7 @@
       "branch": "Bombay Mercantile Co Op Bank Ltd",
       "ifscCode": "UTIB0SBMCB1",
       "MICRCode": "NA",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3171,7 +3171,7 @@
       "branch": "Charkop Kandivali West",
       "ifscCode": "UTIB0003388",
       "MICRCode": "400211173",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3181,7 +3181,7 @@
       "branch": "Chembur Currency Chest",
       "ifscCode": "UTIB0002709",
       "MICRCode": "NA",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3191,7 +3191,7 @@
       "branch": "Chowpatty Mumbai",
       "ifscCode": "UTIB0001004",
       "MICRCode": "400211070",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3201,7 +3201,7 @@
       "branch": "Churni Road",
       "ifscCode": "UTIB0002274",
       "MICRCode": "400211135",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3211,7 +3211,7 @@
       "branch": "Corporate Banking Branch",
       "ifscCode": "UTIB0NPSKRV",
       "MICRCode": "NA",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3221,7 +3221,7 @@
       "branch": "Dattapada Road",
       "ifscCode": "UTIB0002517",
       "MICRCode": "400211140",
-      "bankCode": "AXIS",
+      "bankName": "AXIS BANK",
       "tenantId": "default"
     },
     {
@@ -3231,7 +3231,7 @@
       "branch": "Bkc G Block",
       "ifscCode": "ICIC0003449",
       "MICRCode": "400299271",
-      "bankCode": "ICICI",
+      "bankName": "ICICI BANK LTD",
       "tenantId": "default"
     },
     {
@@ -3241,7 +3241,7 @@
       "branch": "Chunabhatti",
       "ifscCode": "ICIC0003450",
       "MICRCode": "400229232",
-      "bankCode": "ICICI",
+      "bankName": "ICICI BANK LTD",
       "tenantId": "default"
     },
     {
@@ -3251,7 +3251,7 @@
       "branch": "City Park Powai",
       "ifscCode": "ICIC0001956",
       "MICRCode": "400229220",
-      "bankCode": "ICICI",
+      "bankName": "ICICI BANK LTD",
       "tenantId": "default"
     },
     {
@@ -3261,7 +3261,7 @@
       "branch": "Fino Payments Bank Ltd",
       "ifscCode": "ICIC00FINPY",
       "MICRCode": "NA",
-      "bankCode": "ICICI",
+      "bankName": "ICICI BANK LTD",
       "tenantId": "default"
     },
     {
@@ -3271,7 +3271,7 @@
       "branch": "H N Hospital",
       "ifscCode": "ICIC0003611",
       "MICRCode": "400229237",
-      "bankCode": "ICICI",
+      "bankName": "ICICI BANK LTD",
       "tenantId": "default"
     },
     {
@@ -3281,7 +3281,7 @@
       "branch": "Bombay Mercantile Co Op Bank Ltd",
       "ifscCode": "HDFC0CBMC01",
       "MICRCode": "400069001",
-      "bankCode": "HDFC",
+      "bankName": "HDFC BANK",
       "tenantId": "default"
     },
     {
@@ -3291,7 +3291,7 @@
       "branch": "Excellent Co Op Bank Ltd Mumbai",
       "ifscCode": "HDFC0CECBL2",
       "MICRCode": "400108002",
-      "bankCode": "HDFC",
+      "bankName": "HDFC BANK",
       "tenantId": "default"
     },
     {
@@ -3301,7 +3301,7 @@
       "branch": "Jui Nagar",
       "ifscCode": "HDFC0003953",
       "MICRCode": "400240187",
-      "bankCode": "HDFC",
+      "bankName": "HDFC BANK",
       "tenantId": "default"
     },
     {
@@ -3311,7 +3311,7 @@
       "branch": "Kailash Corp Lounge Vikhroli W",
       "ifscCode": "HDFC0004417",
       "MICRCode": "400240194",
-      "bankCode": "HDFC",
+      "bankName": "HDFC BANK",
       "tenantId": "default"
     },
     {
@@ -3321,7 +3321,7 @@
       "branch": "Kanjurmarg West",
       "ifscCode": "HDFC0004272",
       "MICRCode": "400240196",
-      "bankCode": "HDFC",
+      "bankName": "HDFC BANK",
       "tenantId": "default"
     },
     {
@@ -3331,7 +3331,7 @@
       "branch": "Kharghar Sector Xii",
       "ifscCode": "HDFC0003650",
       "MICRCode": "400240188",
-      "bankCode": "HDFC",
+      "bankName": "HDFC BANK",
       "tenantId": "default"
     },
     {
@@ -3341,7 +3341,7 @@
       "branch": "Bharat Diamond Bourse",
       "ifscCode": "SBIN0016654",
       "MICRCode": "NA",
-      "bankCode": "SBI",
+      "bankName": "STATE BANK OF INDIA",
       "tenantId": "default"
     },
     {
@@ -3351,7 +3351,7 @@
       "branch": "Bhuleshwar Mumbai",
       "ifscCode": "SBIN0030001",
       "MICRCode": "400005003",
-      "bankCode": "SBI",
+      "bankName": "STATE BANK OF INDIA",
       "tenantId": "default"
     },
     {
@@ -3361,7 +3361,7 @@
       "branch": "Bullion Branch Mumbai",
       "ifscCode": "SBIN0012002",
       "MICRCode": "400002232",
-      "bankCode": "SBI",
+      "bankName": "STATE BANK OF INDIA",
       "tenantId": "default"
     },
     {
@@ -3371,7 +3371,7 @@
       "branch": "Cac Andheri E",
       "ifscCode": "SBIN0010296",
       "MICRCode": "NA",
-      "bankCode": "SBI",
+      "bankName": "STATE BANK OF INDIA",
       "tenantId": "default"
     },
     {
@@ -3381,7 +3381,7 @@
       "branch": "Cag Branch Ii Mumbai",
       "ifscCode": "SBIN0016376",
       "MICRCode": "NA",
-      "bankCode": "SBI",
+      "bankName": "STATE BANK OF INDIA",
       "tenantId": "default"
     },
     {
@@ -3391,7 +3391,7 @@
       "branch": "Chinchpokli East",
       "ifscCode": "SBIN0017594",
       "MICRCode": "NA",
-      "bankCode": "SBI",
+      "bankName": "STATE BANK OF INDIA",
       "tenantId": "default"
     },
     {
@@ -3401,7 +3401,7 @@
       "branch": "Andheri Seepz",
       "ifscCode": "MAHB0001756",
       "MICRCode": "400014165",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3411,7 +3411,7 @@
       "branch": "Ashokvan Dahisar",
       "ifscCode": "MAHB0001421",
       "MICRCode": "400014138",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3421,7 +3421,7 @@
       "branch": "Asset Recovery Branch",
       "ifscCode": "MAHB0001450",
       "MICRCode": "400014997",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3431,7 +3431,7 @@
       "branch": "Corporate Finance Branch",
       "ifscCode": "MAHB0001504",
       "MICRCode": "400014145",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3441,7 +3441,7 @@
       "branch": "Jogeshwari West",
       "ifscCode": "MAHB0001588",
       "MICRCode": "400014158",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3451,7 +3451,7 @@
       "branch": "Kalina Mumbai",
       "ifscCode": "MAHB0001767",
       "MICRCode": "400014170",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3461,7 +3461,7 @@
       "branch": "Kandivali East",
       "ifscCode": "MAHB0001757",
       "MICRCode": "400014166",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     },
     {
@@ -3471,7 +3471,7 @@
       "branch": "Retail Asset Branch",
       "ifscCode": "MAHB0001447",
       "MICRCode": "411014996",
-      "bankCode": "BOM",
+      "bankName": "BANK OF MAHARASHTRA",
       "tenantId": "default"
     }
   ]

@@ -53,7 +53,7 @@ var dat = {
   						"label": "ac.create.asset.sub.categroy",
 							"pattern": "",
 							"type": "singleValueList",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
@@ -133,7 +133,7 @@ var dat = {
 							"label": "ac.create.additional.field.name",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -145,7 +145,7 @@ var dat = {
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": true,
+  						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",
@@ -218,12 +218,23 @@ var dat = {
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
 						},
+						{
+							"name": "additionalValue",
+							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].url",
+							"label": "ac.create.additional.field.url",
+							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
+							"type": "text",
+							"isRequired": false,
+							"isDisabled": false,
+							"requiredErrMsg": "",
+							"patternErrMsg": ""
+						}
             {
 							"name": "additionalValue",
 							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].values",
 							"label": "ac.create.additional.field.value",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
-							"type": "text",
+							"type": "textarea",
 							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",

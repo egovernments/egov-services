@@ -2015,6 +2015,7 @@ var localization_EN_Data = {
     "ac.create.asset.asset.category": "Asset Category",
     "ac.create.depreciationRate": "Depreciation Rate (%)",
     "reports.asset.assetcategorytype": "Asset Category Type",
+    "ac.create.additional.field.url":"Url",
 
 //swm
 "vehiclefuellingdetails.create.transactionId": "Transaction No",

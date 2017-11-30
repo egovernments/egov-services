@@ -45,36 +45,83 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.egov.commons.config.ApplicationProperties;
 import org.egov.commons.model.CalendarYear;
 import org.egov.commons.repository.CalendarYearRepository;
 import org.egov.commons.web.contract.CalendarYearGetRequest;
+import org.egov.commons.web.contract.CalendarYearRequest;
+import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Service
+@Slf4j
 public class CalendarYearService {
 
-	@Autowired
-	private CalendarYearRepository calendarYearRepository;
+    @Autowired
+    private CalendarYearRepository calendarYearRepository;
 
-	public List<CalendarYear> getCalendarYears(CalendarYearGetRequest calendarYearGetRequest) {
-		return calendarYearRepository.findForCriteria(calendarYearGetRequest);
-	}
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    
+    @Autowired
+    private ApplicationProperties applicationProperties;
 
-	public List<CalendarYear> getFutureYears(CalendarYearGetRequest calendarYearGetRequest) {
-		Date date = new Date();
-		Calendar calendar = new GregorianCalendar();
-		calendar.setTime(date);
-		int year = calendar.get(Calendar.YEAR);
-		return calendarYearRepository.findFutureYear(calendarYearGetRequest,year);
-	}
 
-	public boolean getYearByNameAndDate(final int name, final Date givenDate, final String tenantId) {
-		return calendarYearRepository.checkYearByNameAndDate(name, givenDate, tenantId);
-	}
+    public CalendarYear pushCreateToQueue(final CalendarYearRequest calendarYearRequest) {
+        try {
+            kafkaTemplate.send(applicationProperties.getCreateCalendarYearTopicName(), calendarYearRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
 
-	public boolean getYearByName(final int name, final String tenantId) {
-		return calendarYearRepository.checkYearByName(name, tenantId);
-	}
+        return calendarYearRequest.getCalendarYear();
+    }
+    
+    public CalendarYear pushUpdateToQueue(final CalendarYearRequest calendarYearRequest) {
+        try {
+            kafkaTemplate.send(applicationProperties.getUpdateCalendarYearTopicName(), calendarYearRequest);
+        } catch (final Exception ex) {
+            log.error("Exception Encountered : " + ex);
+        }
+
+        return calendarYearRequest.getCalendarYear();
+    }
+
+    public CalendarYearRequest create(final CalendarYearRequest calendarYearRequest) {
+        return calendarYearRepository.create(calendarYearRequest);
+
+    }
+    
+    public CalendarYearRequest update(final CalendarYearRequest calendarYearRequest) {
+        return calendarYearRepository.update(calendarYearRequest);
+
+    }
+
+    public List<CalendarYear> getCalendarYears(final CalendarYearGetRequest calendarYearGetRequest) {
+        return calendarYearRepository.findForCriteria(calendarYearGetRequest);
+    }
+
+    public List<CalendarYear> getFutureYears(final CalendarYearGetRequest calendarYearGetRequest) {
+        final Date date = new Date();
+        final Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        final int year = calendar.get(Calendar.YEAR);
+        return calendarYearRepository.findFutureYear(calendarYearGetRequest, year);
+    }
+
+    public boolean getYearByNameAndDate(final int name, final Date givenDate, final String tenantId) {
+        return calendarYearRepository.checkYearByNameAndDate(name, givenDate, tenantId);
+    }
+
+    public boolean getYearByName(final int name, final String tenantId) {
+        return calendarYearRepository.checkYearByName(name, tenantId);
+    }
+    
+    public boolean getYearByNameAndId(final Long id,final int name, final String tenantId) {
+        return calendarYearRepository.checkYearByNameAndId(id,name, tenantId);
+    }
 
 }

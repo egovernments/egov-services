@@ -38,31 +38,48 @@
  *  In case of any queries, you can reach eGovernments Foundation at contact@egovernments.org.
  */
 
-package org.egov.commons.util;
+package org.egov.commons.consumers;
 
+import java.util.Map;
+
+import org.egov.commons.config.ApplicationProperties;
+import org.egov.commons.service.CalendarYearService;
+import org.egov.commons.web.contract.CalendarYearRequest;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.annotation.Order;
-import org.springframework.core.env.Environment;
+import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.kafka.support.KafkaHeaders;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.stereotype.Service;
 
-@Configuration
-@PropertySource(value = { "classpath:messages/messages.properties",
-		"classpath:messages/errors.properties" }, ignoreResourceNotFound = true)
-@Order(0)
-public class ApplicationConstants {
+import com.fasterxml.jackson.databind.ObjectMapper;
 
-	public static final String MSG_HOLIDAY_PRESENT = "holiday.present";
-	public static final String MSG_HOLIDAY_CALENDARYEAR_EXISTS = "holiday.invalid.calendaryear";
-	public static final String MSG_HOLIDAY_NAME_YEAR_APPLICABLE_MANDATORY = "holiday.name.year.applicableon.mandatory";
-	public static final String MSG_HOLIDAY_DATERANGE = "holiday.daterange";
-	public static final String MSG_CALENDARYEAR_EXISTS = "calendar.year.name";
-	public static final String MSG_CALENDARYEAR_NAME_START_END_DATE_ACTIVE_MANDATORY = "calendar.name.startdate.enddate.active.tenantid.mandatory";
+import lombok.extern.slf4j.Slf4j;
 
-	@Autowired
-	private Environment environment;
+@Service
+@Slf4j
+public class CalendarYearConsumer {
 
-	public String getErrorMessage(final String property) {
-		return environment.getProperty(property);
-	}
+    @Autowired
+    private ObjectMapper objectMapper;
+
+    @Autowired
+    private ApplicationProperties applicationProperties;
+
+    @Autowired
+    private CalendarYearService calendarYearService;
+
+    @KafkaListener(topics = { "${kafka.topics.calendaryear.create.name}", "${kafka.topics.calendaryear.update.name}" })
+    public void listen(final Map<String, Object> record, @Header(KafkaHeaders.RECEIVED_TOPIC) final String topic) {
+        log.info("record :: " + record);
+        try {
+            if (applicationProperties.getCreateCalendarYearTopicName().equals(topic))
+                calendarYearService.create(objectMapper.convertValue(record, CalendarYearRequest.class));
+            else if (applicationProperties.getUpdateCalendarYearTopicName().equals(topic))
+                calendarYearService.update(objectMapper.convertValue(record, CalendarYearRequest.class));
+        } catch (final Exception exception) {
+            log.debug("processMessage:" + exception);
+            throw exception;
+        }
+
+    }
 }

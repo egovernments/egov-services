@@ -41,6 +41,7 @@
 package org.egov.commons.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.core.annotation.Order;
@@ -51,23 +52,37 @@ import org.springframework.core.env.Environment;
 @Order(0)
 public class ApplicationProperties {
 
-	private static final String COMMONS_SEARCH_PAGESIZE_DEFAULT = "egov.services.egov.commons.search.pagesize.default";
-	public static final String COMMONS_SEARCH_PAGENO_MAX = "egov.services.egov.commons.search.pageno.max";
-	public static final String COMMONS_SEARCH_PAGESIZE_MAX = "egov.services.egov.commons.search.pagesize.max";
+    private static final String COMMONS_SEARCH_PAGESIZE_DEFAULT = "egov.services.egov.commons.search.pagesize.default";
+    public static final String COMMONS_SEARCH_PAGENO_MAX = "egov.services.egov.commons.search.pageno.max";
+    public static final String COMMONS_SEARCH_PAGESIZE_MAX = "egov.services.egov.commons.search.pagesize.max";
 
-	@Autowired
-	private Environment environment;
+    @Autowired
+    private Environment environment;
 
-	public String commonsSearchPageSizeDefault() {
-		return this.environment.getProperty(COMMONS_SEARCH_PAGESIZE_DEFAULT);
-	}
+    @Value("${kafka.topics.calendaryear.create.name}")
+    private String createCalendarYearTopicName;
 
-	public String commonsSearchPageNumberMax() {
-		return this.environment.getProperty(COMMONS_SEARCH_PAGENO_MAX);
-	}
+    @Value("${kafka.topics.calendaryear.update.name}")
+    private String updateCalendarYearTopicName;
 
-	public String commonsSearchPageSizeMax() {
-		return this.environment.getProperty(COMMONS_SEARCH_PAGESIZE_MAX);
-	}
-	
+    public String commonsSearchPageSizeDefault() {
+        return environment.getProperty(COMMONS_SEARCH_PAGESIZE_DEFAULT);
+    }
+
+    public String commonsSearchPageNumberMax() {
+        return environment.getProperty(COMMONS_SEARCH_PAGENO_MAX);
+    }
+
+    public String commonsSearchPageSizeMax() {
+        return environment.getProperty(COMMONS_SEARCH_PAGESIZE_MAX);
+    }
+
+    public String getCreateCalendarYearTopicName() {
+        return createCalendarYearTopicName;
+    }
+
+    public String getUpdateCalendarYearTopicName() {
+        return updateCalendarYearTopicName;
+    }
+
 }

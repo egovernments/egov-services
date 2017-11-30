@@ -25,8 +25,6 @@ import org.springframework.stereotype.Service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 import com.jayway.jsonpath.DocumentContext;
 import com.jayway.jsonpath.JsonPath;
 
@@ -138,8 +136,13 @@ public class MDMSService {
 			throw new CustomException("400", "There is no master data available for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());
 		}
 		String moduleContentString = mapper.writeValueAsString(moduleContent);
-		Map<String, Object> moduleDataMap = mapper.readValue(moduleContentString, Map.class);		
-		List<Object> masterData = (List<Object>) moduleDataMap.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
+		Map<String, Object> moduleDataMap = mapper.readValue(moduleContentString, Map.class);	
+		List<Object> masterData = new ArrayList<>();
+		try{
+		     masterData = (List<Object>) moduleDataMap.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
+		}catch(Exception e){
+			throw new CustomException("500","Couldn't fetch master data due to a parse exception");
+		}
 		String moduleContentJson = mapper.writeValueAsString(moduleContent);
 		if(isCreate){
 			masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
@@ -168,6 +171,7 @@ public class MDMSService {
 					logger.info("conditionMap: "+conditionMap);
 		            ListIterator<Object> iterator = masterData.listIterator();
 		            int counter = 0;
+		            int j = 0;
 		            while(iterator.hasNext()){
 		            	Object master = iterator.next();
 		            	counter = 0;
@@ -180,10 +184,12 @@ public class MDMSService {
 						  }
 						if(counter == keys.size()){
 							iterator.remove();
-							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0)));
+							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(j)));
 							break;
 						}
 		            }
+		            if(j < mDMSCreateRequest.getMasterMetaData().getMasterData().size())
+		            	j++;
 		            if(counter != keys.size()){
 		            	throw new CustomException("400", "Invalid Request");
 		            }
@@ -193,7 +199,7 @@ public class MDMSService {
 	    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
 	    	try{
 		    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
-		    			masterData.toString());
+		    			masterData);
 	    	}catch(Exception e){
 	    		logger.error("master data couldn't be added to the master list: ",e);
 				throw new CustomException("400", "There is no master data available for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());

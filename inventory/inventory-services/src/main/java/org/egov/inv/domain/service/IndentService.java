@@ -214,10 +214,10 @@ public class IndentService extends DomainService {
 					LOG.info("compare  " + indent.getIndentDate().compareTo(currentDate));
 					LOG.info("compare  " + ll.compareTo(currentDate));
 
-					if (indent.getIndentDate().compareTo(currentDate) >= 0) {
+					/*if (indent.getIndentDate().compareTo(currentDate) >= 0) {
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "indentDate",
 								indent.getIndentDate().toString());
-					}
+					}*/
 					// commeneted as of now to support the past dated entries
 					/*
 					 * if(indent.getExpectedDeliveryDate().compareTo(

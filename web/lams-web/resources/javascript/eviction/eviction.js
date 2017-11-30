@@ -206,15 +206,16 @@ console.log("Documents",agreement);
             'auth-token': authToken
           },
           success: function(res) {
-
-            showSuccess("Forwarded successfully");
-
+            if(window.opener){
+              window.opener.location.reload();
+              window.location.href = "app/acknowledgement/common-ack.html?wftype=Eviction&name=" + getNameById(employees, agreement["approverPositionId"]) + "&ackNo=" + response.responseJSON["Agreements"][0]["acknowledgementNumber"];
+          }
           },
           error: function(err) {
             if(err.responseJSON.Error && err.responseJSON.Error.message)
               showError(err.responseJSON.Error.message);
             else
-              showError("Something went wrong. Please contact Administrator");
+              showError("Something went wrong.");
           }
 
         })
@@ -232,6 +233,7 @@ console.log("Documents",agreement);
           _this.state.agreement.workflowDetails.assignee = "";
           if (this.state.agreement.workflowDetails.designation) {
             var _designation = this.state.agreement.workflowDetails.designation;
+            if(e.target.value!="" && e.target.value!=null)
             _this.getUsersFun(e.target.value, _designation);
           }
           break;
@@ -239,6 +241,7 @@ console.log("Documents",agreement);
           _this.state.agreement.workflowDetails.assignee = "";
           if (this.state.agreement.workflowDetails.department) {
             var _department = this.state.agreement.workflowDetails.department;
+            if(e.target.value!="" && e.target.value!=null)
             _this.getUsersFun(_department, e.target.value);
           }
           break;
@@ -278,9 +281,15 @@ console.log("Documents",agreement);
             }
           })
         }
-
-
-      }else {
+      }else if(pName==="agreement"){
+        _this.setState({
+          ..._this.state,
+          agreement: {
+            ..._this.state.agreement,
+              [name]: e.target.value
+          }
+        })
+      } else {
       _this.setState({
         ..._this.state,
         agreement: {
@@ -766,13 +775,13 @@ console.log("Documents",agreement);
                           <div className="col-sm-6">
                               <div className="row">
                                   <div className="col-sm-6 label-text">
-                                      <label for="evictionProceedingNumber">Eviction Proceeding Number
+                                      <label for="evictionProceedingNo">Eviction Proceeding Number
                                        <span>*</span>
                                       </label>
                                   </div>
                                   <div className="col-sm-6">
-                                      <input type="text" name="evictionProceedingNumber" id="evictionProceedingNumber" value= {eviction.evictionProceedingNumber}
-                                          onChange={(e)=>{handleChangeTwoLevel(e, "eviction", "evictionProceedingNumber")}} required/>
+                                      <input type="text" name="evictionProceedingNo" id="evictionProceedingNo" value= {eviction.evictionProceedingNo}
+                                          onChange={(e)=>{handleChangeTwoLevel(e, "eviction", "evictionProceedingNo")}} required/>
                                   </div>
                               </div>
                           </div>
@@ -818,7 +827,7 @@ console.log("Documents",agreement);
                                  <div className="col-sm-6">
                                          <select name="reasonForEviction" id="reasonForEviction" className="selectStyle" value= {eviction.reasonForEviction}
                                              onChange={(e)=>{handleChangeTwoLevel(e, "eviction", "reasonForEviction")}} required>
-                                       <option>Select Reason for Eviction</option>
+                                       <option value="">---Select Reason---</option>
                                         {renderOption(evictionReasons)}
                                      </select>
                                  </div>
@@ -850,8 +859,8 @@ console.log("Documents",agreement);
                                      <label for="remarks">Remarks </label>
                                  </div>
                                  <div className="col-sm-6">
-                                     <textarea name="remarks" id="remarks" value= {eviction.remarks}
-                                         onChange={(e)=>{handleChangeTwoLevel(e, "eviction", "remarks")}}></textarea>
+                                     <textarea name="remarks" id="remarks" value= {agreement.remarks}
+                                         onChange={(e)=>{handleChangeTwoLevel(e, "agreement", "remarks")}}></textarea>
                                  </div>
                              </div>
                          </div>
@@ -927,7 +936,6 @@ console.log("Documents",agreement);
           );
 
         }
-
 
     return(
       <div>

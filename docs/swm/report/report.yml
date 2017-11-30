@@ -23,15 +23,19 @@ ReportDefinitions:
   searchParams:
   - name: dumpinggroundcode
     label: reports.swm.dumpinggroundname
-    type: string
+    type: singlevaluelist
     source: mdms
-    isMandatory: true  
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.siteDetails.*.name
+    isMandatory: true
+    stateData: true
+    wrapper: true
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.*.name
   - name: collectiontypecode
     label: reports.swm.collectiontypename
-    type: string
+    type: singlevaluelist
     source: mdms
     isMandatory: true  
+    stateData: true
+    wrapper: true
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.SWM.CollectionType.*.code|$.MdmsRes.SWM.CollectionType.*.name    
   - name: fromDate
     label: reports.swm.datefrom
@@ -44,9 +48,11 @@ ReportDefinitions:
     source: egswm_sourcesegregation
     isMandatory: true
   - name: wastetypename
-    label: reports.swm.collectiontypename
-    type: string
+    label: reports.swm.wastetypename
+    type: singlevaluelist
     source: mdms
     isMandatory: false  
+    stateData: true
+    wrapper: true
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=WasteType&tenantId=$tenantid|$.MdmsRes.SWM.WasteType.*.code|$.MdmsRes.SWM.WasteType.*.name
   query: select ssg.dumpingground as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid and cd.collectiontype = $collectiontypecode and ssg.dumpingground = $dumpinggroundcode and ssg.sourcesegregationdate >= $fromDate and ssg.sourcesegregationdate <= toDate group by date, dumpinggroundname;

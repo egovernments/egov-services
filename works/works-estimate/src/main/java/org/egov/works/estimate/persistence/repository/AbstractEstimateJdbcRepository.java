@@ -158,7 +158,11 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		BeanPropertyRowMapper row = new BeanPropertyRowMapper(AbstractEstimateHelper.class);
 		
 		List<AbstractEstimateHelper> abstractEstimateEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-		
+
+		System.out.print("Search Query" + searchQuery.toString());
+		System.out.print("paramValues" + paramValues.get("tenantId"));
+		System.out.print("paramValues" + paramValues.get("abstractEstimateNumbers"));
+
 		List<AbstractEstimate> abstractEstimates = new ArrayList<>();
 		
 		AbstractEstimate abstractEstimate;

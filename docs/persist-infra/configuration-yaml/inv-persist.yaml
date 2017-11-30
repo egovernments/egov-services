@@ -705,7 +705,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedBy
             - type: CURRENTDATE
               dbType: LONG
-        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, batchno, serialno )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
           jsonMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id

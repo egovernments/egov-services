@@ -1612,6 +1612,11 @@ class Report extends Component {
         </Row>
 
 
+
+
+        <form onSubmit={(e) => {
+          create(e)
+        }}>
         <Row>
           <Col xs={6} md={6}>
             <div style={{marginLeft: "16px"
@@ -1631,10 +1636,6 @@ class Report extends Component {
           </div>
           </Col>
         </Row>
-
-        <form onSubmit={(e) => {
-          create(e)
-        }}>
         {!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && <ShowFields
                                     groups={mockData[`${moduleName}.${actionName}`].groups}
                                     noCols={mockData[`${moduleName}.${actionName}`].numCols}

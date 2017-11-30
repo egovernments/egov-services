@@ -47,6 +47,8 @@ public class MDMSService {
 	public Map<String, Map<String, JSONArray>> gitPush(MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws Exception{
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
+		Long startTime = null;
+		Long endTime = null;
 		Object fileContents = getFileContents(filePathMap, mDMSCreateRequest);
 		if(null == fileContents) 
 			throw new CustomException("400","Invalid Tenant Id");
@@ -55,26 +57,44 @@ public class MDMSService {
     	
 		//get the head of the branch
 		logger.info("Step 1: Getting branch head......");
+		startTime = new Date().getTime();
 		String branchHeadSHA = getBranchHead();
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
 		//get the latest commit to that branch and save its sha
 		logger.info("Step 2: Getting Base Tree......");
+		startTime = new Date().getTime();
 		String baseTreeSHA = getBaseTree(branchHeadSHA);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
 		//create a tree with base_tree as last commit and contents to be written
 		logger.info("Step 3: Creating a New Tree......");
+		startTime = new Date().getTime();
 		String newTreeSHA = createTree(baseTreeSHA, filePath, content);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
 		//create a commit for this tree
 		logger.info("Step 4: Creating a New Commit......");
+		startTime = new Date().getTime();
 		String commitMessage = "commit by "+userName+" at epoch time: "+new Date().getTime();
 		String newCommitSHA = createCommit(branchHeadSHA, newTreeSHA, commitMessage);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
 		//push the contents
 		logger.info("Step 5: Pushing the Contents to git......");
+		startTime = new Date().getTime();
 		pushTheContents(newCommitSHA);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
+		startTime = new Date().getTime();
 		updateCache(MDMSConstants.READ_FILE_PATH_APPEND + filePath);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 
 		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
 		
@@ -128,35 +148,39 @@ public class MDMSService {
 		}else{
 			List<Object> configs = getConfigs(mDMSCreateRequest.getMasterMetaData().getTenantId(),
 					mDMSCreateRequest.getMasterMetaData().getModuleName(), mDMSCreateRequest.getMasterMetaData().getMasterName());
-			List<String> keys = JsonPath.read(configs.get(0).toString(), MDMSConstants.UNIQUEKEYS_JSONPATH);
-			logger.info("keys: "+keys.toString());
-			Map<String, Object> conditionMap = new HashMap<>();
-			for(String key: keys){
-				conditionMap.put(key, JsonPath.read(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0),
-						key));
-			}
-			logger.info("conditionMap: "+conditionMap);
-            ListIterator<Object> iterator = masterData.listIterator();
-            int counter = 0;
-            while(iterator.hasNext()){
-            	Object master = iterator.next();
-            	counter = 0;
-				for(int i = 0; i < keys.size(); i++){
-					if(JsonPath.read(master, keys.get(i).toString()).equals(conditionMap.get(keys.get(i)))){
-						counter++;
-					}else{
-						break;
+			if(!configs.isEmpty()){
+				List<String> keys = JsonPath.read(configs.get(0).toString(), MDMSConstants.UNIQUEKEYS_JSONPATH);
+				logger.info("keys: "+keys.toString());
+				if(null != keys){
+					Map<String, Object> conditionMap = new HashMap<>();
+					for(String key: keys){
+						conditionMap.put(key, JsonPath.read(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0),
+								key));
 					}
-				  }
-				if(counter == keys.size()){
-					iterator.remove();
-					iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0));
-					break;
+					logger.info("conditionMap: "+conditionMap);
+		            ListIterator<Object> iterator = masterData.listIterator();
+		            int counter = 0;
+		            while(iterator.hasNext()){
+		            	Object master = iterator.next();
+		            	counter = 0;
+						for(int i = 0; i < keys.size(); i++){
+							if(JsonPath.read(master, keys.get(i).toString()).equals(conditionMap.get(keys.get(i)))){
+								counter++;
+							}else{
+								break;
+							}
+						  }
+						if(counter == keys.size()){
+							iterator.remove();
+							iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0));
+							break;
+						}
+		            }
+		            if(counter != keys.size()){
+		            	throw new CustomException("400", "Invalid Request");
+		            }
 				}
-            }
-            if(counter != keys.size()){
-            	throw new CustomException("400", "Invalid Request");
-            }
+			}
             logger.info("moduleContentJson: "+moduleContentJson);
 	    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
 	    	try{
@@ -291,15 +315,17 @@ public class MDMSService {
 	@SuppressWarnings("unchecked")
 	public List<Object> getConfigs(String tenantId, String module, String master) throws JsonProcessingException{
 		Map<String, Map<String, Object>> validationMap = MDMSApplicationRunnerImpl.getValidationMap();
-		logger.info("validationMap: "+validationMap);
 		Map<String, Object> allMasters = 
 				validationMap.get(tenantId+"-"+module);
 		if(null == allMasters){
 			throw new CustomException("400", "No data avaialble for this module and for this tenant");
 		}
-		logger.info("masterData: "+allMasters);
 		List<Object> allmasterConfigs = new ArrayList<>();
 		allmasterConfigs = (List<Object>) allMasters.get(MDMSConstants.CONFIG_ARRAY_KEY);
+		if(null == allmasterConfigs || allmasterConfigs.isEmpty()){
+			logger.info("There is no mdms-config for this module: "+master);
+			return new ArrayList<>();
+		}
 		if(null != master){
 			List<Object> masterConfig = mDMSUtils.filter(allmasterConfigs, MDMSConstants.MASTERNAME_JSONPATH, master);
 			return masterConfig;

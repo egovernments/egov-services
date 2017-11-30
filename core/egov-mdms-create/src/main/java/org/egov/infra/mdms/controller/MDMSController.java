@@ -98,7 +98,7 @@ public class MDMSController {
 				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
 				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
 					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-				mDMSCreateErrorResponse.setMessage("Following records dont exist hence cannot be updated, Please rectify and retry");
+				mDMSCreateErrorResponse.setMessage("Following records dont exist and  hence cannot be updated, Please rectify and retry");
 				mDMSCreateErrorResponse.setData(mDMSCreateRequest.getMasterMetaData().getMasterData());
 				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
 			}

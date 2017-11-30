@@ -37,7 +37,7 @@ public class PurchaseordersApiController implements PurchaseordersApi {
     }
 
     public ResponseEntity<PurchaseOrderResponse> purchaseordersSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
+        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
          @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
         @ApiParam(value = "store of the PurchaseOrder ") @RequestParam(value = "store", required = false) String store,
         @ApiParam(value = "purchaseOrderNumber  Auto generated number, read only ") @RequestParam(value = "purchaseOrderNumber", required = false) String purchaseOrderNumber,

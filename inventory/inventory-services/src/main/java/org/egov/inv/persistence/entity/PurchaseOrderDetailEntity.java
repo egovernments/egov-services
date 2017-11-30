@@ -36,8 +36,8 @@ public class PurchaseOrderDetailEntity  {
 		PurchaseOrderDetail poDetails = new PurchaseOrderDetail();
 		poDetails.setId(this.id);
 		poDetails.setTenantId(this.tenantId);
-		poDetails.setMaterial(new Material().id(material));
-		poDetails.setUom(new Uom().id(uom));
+		poDetails.setMaterial(new Material().code(material));
+		poDetails.setUom(new Uom().code(uom));
 		poDetails.setOrderNumber(this.orderNumber);
 		poDetails.setPriceList(new PriceList().id(priceList));
 		poDetails.setOrderQuantity(orderQuantity);

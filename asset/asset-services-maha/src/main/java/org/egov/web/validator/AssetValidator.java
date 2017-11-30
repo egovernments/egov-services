@@ -302,16 +302,21 @@ public class AssetValidator implements Validator {
 		}
 		
 	}
-	
-  public void validateAssetId(AssetRequest assetRequest) {
-		
+
+	public void validateAssetId(AssetRequest assetRequest) {
+
 		Map<String, String> errorMap = new HashMap<>();
-		Asset asset = assetService.getAsset(assetRequest.getAsset().getTenantId(),
-				assetRequest.getAsset().getId(), assetRequest.getRequestInfo());
-		
-		if(asset == null)
-			errorMap.put("EGASSET_ASSET", "Given AssetId For Update Cannot Be Found");
-		if(!errorMap.isEmpty())
+		if (assetRequest.getAsset().getId() == null) {
+			errorMap.put("EGASSET_ASSET", " asset id cannot be null");
+
+		} else {
+			Asset asset = assetService.getAsset(assetRequest.getAsset().getTenantId(), assetRequest.getAsset().getId(),
+					assetRequest.getRequestInfo());
+			if (asset == null)
+				errorMap.put("EGASSET_ASSET_MODIFY", "No records found to modify");
+		}
+
+		if (!errorMap.isEmpty())
 			throw new CustomException(errorMap);
 	}
 }

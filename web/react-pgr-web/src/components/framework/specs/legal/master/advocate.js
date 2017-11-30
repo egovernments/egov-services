@@ -521,7 +521,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Aadhar Number Is Not Valid"
           },
           {
             "name": "gender",
@@ -586,7 +586,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Mobile Number Is Not Valid"
           },
           {
             "name": "contactNumber",
@@ -597,7 +597,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Phone Number Is Not Valid"
           },
           {
             "name": "email",
@@ -608,7 +608,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "Email Id Is Not Valid"
           },
           {
             "name": "panNumber",
@@ -619,7 +619,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "PAN Number Is Not Valid"
           },
           {
             "name": "VATTinNumber",
@@ -704,22 +704,31 @@ var dat ={
             "jsonPath": "agencies[0].advocates[0].bankName",
             "label": "advocates.create.bankName",
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name",
+            depedants: [
+              {
+                jsonPath: "agencies[0].advocates[0].bankBranch",
+                type: "dropDown",
+                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankName%3D%3D'{agencies[0].advocates[0].bankName}'%29%5D|$..branch|$..branch"
+              }
+            ]
           },
           {
             "name": "bankBranch",
             "jsonPath": "agencies[0].advocates[0].bankBranch",
             "label": "advocates.create.bankBranch",
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":""
           },
           {
             "name": "bankAcc",
@@ -766,22 +775,31 @@ var dat ={
             "jsonPath": "agencies[0].bankName",
             "label": "advocates.create.bankName",
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name",
+            depedants: [
+              {
+                jsonPath: "agencies[0].bankBranch",
+                type: "dropDown",
+                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankName%3D%3D'{agencies[0].bankName}'%29%5D|$..branch|$..branch"
+              }]
           },
           {
             "name": "bankBranch",
             "jsonPath": "agencies[0].bankBranch",
             "label": "advocates.create.bankBranch",
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":""
+            //"url":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch|$..branch|$..branch"
           },
           {
             "name": "bankAcc",
@@ -1694,22 +1712,30 @@ var dat ={
             "jsonPath": "agencies[0].advocates[0].bankName",
             "label": "advocates.create.bankName",
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name",
+            depedants: [
+              {
+                jsonPath: "agencies[0].advocates[0].bankBranch",
+                type: "dropDown",
+                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankName%3D%3D'{agencies[0].advocates[0].bankName}'%29%5D|$..branch|$..branch"
+              }]
           },
           {
             "name": "bankBranch",
             "jsonPath": "agencies[0].advocates[0].bankBranch",
             "label": "advocates.create.bankBranch",
             "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "",
+            "url":""
           },
           {
             "name": "bankAcc",
@@ -1838,19 +1864,22 @@ var dat ={
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                 "enable": [
-                   "terminationDate",
-                  "inActivationDate"
-                 ],
-                "disable": []
+                 "enable": [],
+                "disable": [
+                  "terminationDate",
+                  "inActivationDate",
+                  "reasonOfTermination"
+                ]
               },
               {
                 "ifValue": "inactive",
                 "enable": [
-                  "inActivationDate"
+                  "inActivationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
-                  "terminationDate"
+                  "terminationDate",
+                  "reasonOfTermination"
                 ]
               },
               {
@@ -1871,7 +1900,7 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1882,19 +1911,30 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].advocates[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "reasonOfTermination",
+            jsonPath: "agencies[0].advocates[0].reasonOfTermination",
+            label: "advocates.create.reasonOfTerminationOrDeactivation",
+            type: "textarea",
+            fullWidth: true,
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
+          // {
+          //   "name": "reasonOfTerminationOrDeactivation",
+          //   "jsonPath": "agencies[0].advocates[0].reasonOfTerminationOrDeactivation",
+          //   "label": "advocates.create.reasonOfTerminationOrDeactivation",
+          //   "type": "textArea",
+          //   fullWidth: true,
+          //   "isRequired": false,
+          //   "isDisabled": false,
+          //   "patternErrorMsg": ""
+          // }
         ]
       },
       {
@@ -1927,16 +1967,18 @@ var dat ={
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                 "enable": [ 
-                 "terminationDate",
-                  "inActivationDate"
-                  ],
-                "disable": []
+                 "enable": [],
+                "disable": [
+                  "terminationDate",
+                  "inActivationDate",
+                  "reasonOfTermination"
+                ]
               },
               {
                 "ifValue": "inactive",
                 "enable": [
-                  "inActivationDate"
+                  "inActivationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "terminationDate"
@@ -1945,7 +1987,8 @@ var dat ={
               {
                 "ifValue": "terminate",
                 "enable": [
-                  "terminationDate"
+                  "terminationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "inActivationDate"
@@ -1960,7 +2003,7 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -1971,18 +2014,19 @@ var dat ={
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "reasonOfTermination",
+            jsonPath: "agencies[0].reasonOfTermination",
+            label: "advocates.create.reasonOfTerminationOrDeactivation",
+            type: "textarea",
+            fullWidth: true,
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
         ]
       },

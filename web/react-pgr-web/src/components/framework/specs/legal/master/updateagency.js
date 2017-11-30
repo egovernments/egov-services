@@ -715,23 +715,28 @@ var dat = {
             "name": "bankName",
             "jsonPath": "agencies[0].bankName",
             "label": "advocates.create.bankName",
-            "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "url":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name",
+            depedants: [
+              {
+                jsonPath: "agencies[0].bankBranch",
+                type: "dropDown",
+                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankName%3D%3D'{agencies[0].bankName}'%29%5D|$..branch|$..branch"
+              }]
           },
           {
             "name": "bankBranch",
             "jsonPath": "agencies[0].bankBranch",
             "label": "advocates.create.bankBranch",
-            "pattern": "",
-            "type": "text",
+            "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,
-            "requiredErrMsg": "",
-            "patternErrMsg": ""
+            patternErrorMsg: "",
+            "url": ""
+          
           },
           {
             "name": "bankAcc",
@@ -798,16 +803,18 @@ var dat = {
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                 "enable": [
-                   "terminationDate",
-                  "inActivationDate"
-                 ],
-                "disable": []
+                 "enable": [],
+                "disable": [
+                  "terminationDate",
+                  "inActivationDate",
+                  "reasonOfTermination"
+                ]
               },
               {
                 "ifValue": "inactive",
                 "enable": [
-                  "inActivationDate"
+                  "inActivationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "terminationDate"
@@ -816,7 +823,8 @@ var dat = {
               {
                 "ifValue": "terminate",
                 "enable": [
-                  "terminationDate"
+                  "terminationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "inActivationDate"
@@ -831,7 +839,7 @@ var dat = {
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -842,18 +850,19 @@ var dat = {
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].advocates[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "reasonOfTermination",
+            jsonPath: "agencies[0].reasonOfTermination",
+            label: "advocates.create.reasonOfTerminationOrDeactivation",
+            type: "textarea",
+            fullWidth: true,
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
         ]
       },
@@ -887,16 +896,18 @@ var dat = {
             "enableDiasableFields": [
               {
                 "ifValue": "active",
-                 "enable": [ 
-                 "terminationDate",
-                  "inActivationDate"
-                  ],
-                "disable": []
+                 "enable": [],
+                "disable": [
+                  "terminationDate",
+                  "inActivationDate",
+                  "reasonOfTermination"
+                ]
               },
               {
                 "ifValue": "inactive",
                 "enable": [
-                  "inActivationDate"
+                  "inActivationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "terminationDate"
@@ -905,7 +916,8 @@ var dat = {
               {
                 "ifValue": "terminate",
                 "enable": [
-                  "terminationDate"
+                  "terminationDate",
+                  "reasonOfTermination"
                 ],
                 "disable": [
                   "inActivationDate"
@@ -920,7 +932,7 @@ var dat = {
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
@@ -931,18 +943,19 @@ var dat = {
             "pattern": "",
             "type": "datePicker",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "requiredErrMsg": "",
             "patternErrMsg": ""
           },
           {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "reasonOfTermination",
+            jsonPath: "agencies[0].reasonOfTermination",
+            label: "advocates.create.reasonOfTerminationOrDeactivation",
+            type: "textarea",
+            fullWidth: true,
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
         ]
       },

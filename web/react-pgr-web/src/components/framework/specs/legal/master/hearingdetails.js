@@ -32,13 +32,15 @@ var dat ={
               "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name"
           },
           {
-            "name": "year",
-            "jsonPath": "cases[0].summon.year",
-            "label": "legal.create.year",
-            "type": "text",
-            "isRequired": false,
-            "isDisabled": true,
-            "patternErrorMsg": ""
+            name: "caseType",
+            jsonPath: "cases[0].summon.caseCategory.code",
+            label: "legal.create.caseCategory",
+            type: "singleValueList",
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: "",
+            url:
+              "/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name"
           },
          {
             name: "courtName",
@@ -287,9 +289,8 @@ var dat ={
                 {
                   "name": "mobileNo",
                   "pattern": "",
-                  "type": "text",
+                  "type": "mobileNumber",
                   "jsonPath": "cases[0].hearingDetails[0].judges[0].mobileNumber",
-                  "maxLength": "10",
                   "isRequired": true,
                   "isDisabled": false
                 },

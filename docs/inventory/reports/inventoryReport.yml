@@ -422,7 +422,6 @@ ReportDefinitions:
   query: select * from material;
 
 # Rates comparison with history data Report
-# Need to Change drop down Link based on report and Query
 - reportName: ratesComparisonWithHistory
   summary: Rates comparison with history data
   version: 1.0.0
@@ -511,7 +510,6 @@ ReportDefinitions:
           AND mat.code = pld.material
 
 # Comparison between different rates Report
-# Need to Change drop down Link based on report and Query
 - reportName: comparisonBetweenDifferentRates
   summary: Comparison between different rates
   version: 1.0.0
@@ -659,6 +657,106 @@ ReportDefinitions:
     isMandatory: true
 
   query: select * from material;
+
+# Supplier wise Purchase Order History Report
+- reportName: SupplierwisesPurchaseOrderHistoryReport
+  summary: Supplier wise Purchase Order History Report
+  version: 1.0.0
+  moduleName: inventory
+  externalService:
+  - entity: $.MdmsRes.inventory.Material
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    keyOrder: code,name,tenantId
+    tableName: tbl_material
+  sourceColumns:
+
+  - name: supplierName
+    label: inventory.supplierName
+    type: string
+    source: inventory
+
+  - name: supplierCompanyName
+    label: inventory.supplierCompanyName
+    type: string
+    source: inventory
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+
+  - name: poStatus
+    label: inventory.poStatus
+    type: string
+    source: inventory
+
+  - name: expectedDeliveryDate
+    label: inventory.expecteddeliverydate
+    type: epoch
+    source: inventory
+
+  - name: paymentDueDate
+    label: inventory.paymentDueDate
+    type: epoch
+    source: inventory
+
+  - name: qtyOrdered
+    label: inventory.qtyOrdered
+    type: string
+    source: inventory
+
+  - name: poTotal
+    label: inventory.poTotal
+    type: string
+    source: inventory
+
+  - name: amountPaid
+    label: inventory.amountPaid
+    type: string
+    source: inventory
+
+  - name: balanceDue
+    label: inventory.balanceDue
+    type: string
+    source: inventory
+
+  searchParams:
+
+  - name: supplierName
+    label: inventory.supplierName
+    pattern: http://egov-micro-dev.egovernments.org/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
+    type: singlevaluelist
+    source: inventory
+    searchClause: AND pl.supplier = $supplierName
+    wrapper: true
+    isMandatory: false
+
+  - name: supplierCompanyName
+    label: inventory.supplierCompanyName
+    type: string
+    source: inventory
+    isMandatory: false
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+    searchClause: AND pld.material = $materialName
+    isMandatory: false
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+    searchClause: AND pld.material = $materialName
+    isMandatory: false
+
+  query: select * from supplier
 
 
 

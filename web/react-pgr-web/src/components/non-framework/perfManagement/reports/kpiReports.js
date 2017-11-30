@@ -1,15 +1,12 @@
 import React, {Component} from 'react';
-import {connect} from 'react-redux';
-import {Card, CardActions, CardHeader, CardText} from 'material-ui/Card';
-import {Grid, Row, Col, Table, DropdownButton} from 'react-bootstrap';
+import {Card, CardText} from 'material-ui/Card';
+import {Grid, Row, Col} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
-import DropDownMenu from 'material-ui/DropDownMenu';
-import MenuItem from 'material-ui/MenuItem';
-import SelectField from 'material-ui/SelectField';
 import {EGSelectField} from '../hoc/kpiHOC'
-import {Bar} from 'react-chartjs-2';
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Api from '../../../../api/api'
+import EGBarChart from '../charts/EGBarchart'
+
 var jp = require('jsonpath');
 
 const style = {
@@ -37,21 +34,6 @@ const kpiTypes = [
         code: "OBJECTIVE"
     }
 ]
-const data = {
-    labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
-    datasets: [
-      {
-        label: 'My First dataset',
-        backgroundColor: 'rgba(255,99,132,0.2)',
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 1,
-        hoverBackgroundColor: 'rgba(255,99,132,0.4)',
-        hoverBorderColor: 'rgba(255,99,132,1)',
-        data: [65, 59, 80, 81, 56, 55, 40]
-      }
-    ]
-  };
-
 
 class KPIReports extends Component {
     constructor(props) {
@@ -70,9 +52,10 @@ class KPIReports extends Component {
             
             departmentIndexValue: 0,
             kpiTypeIndexValue: 0,
-            kpiIndexValue: 0,
-            ULBIndexValue: 0,
-            financialYearIndexValue: 0
+            kpiIndexValues: [0],
+            ULBIndexValues: [],
+            financialYearIndexValues: [],
+            kpiReportResponse: {}
         };
         this.onSelectDepartment     = this.onSelectDepartment.bind(this)
         this.onSelectKPIType        = this.onSelectKPIType.bind(this)
@@ -89,7 +72,6 @@ class KPIReports extends Component {
         })
 
         Api.commonApiPost("perfmanagement/v1/kpimaster/_search?departmentId=" + this.state.departments[index]['id'], [], {}, false, true).then(function(res) {
-            console.log(res)
             self.setState({
                 valueKPIs:jp.query(res, '$.KPIs[?(@.targetType=="VALUE")]'),
                 textKPIs: jp.query(res, '$.KPIs[?(@.targetType=="TEXT")]'),
@@ -103,36 +85,50 @@ class KPIReports extends Component {
             kpiTypeIndexValue: value
         })
         let kpis = []
-        if (kpiTypes[index]['name'] == 'VALUE') {
+        if (kpiTypes[index]['name'] === 'VALUE') {
             kpis = this.state.valueKPIs
         }
-        if (kpiTypes[index]['name'] == 'TEXT') {
+        if (kpiTypes[index]['name'] === 'TEXT') {
             kpis =  this.state.textKPIs
         }
-        if (kpiTypes[index]['name'] == 'OBJECTIVE') {
+        if (kpiTypes[index]['name'] === 'OBJECTIVE') {
             kpis =  this.state.objeciveKPIs
         }
         this.setState({
             kpis:kpis
         })
     }
-    onSelectKPI(event, index, value) {
+    onSelectKPI(event, index, values) {
         this.setState({
-            kpiIndexValue: value
+            kpiIndexValues: values
         })
     }
-    onSelectULB(event, index, value) {
+    onSelectULB(event, index, values) {
         this.setState({
-            ULBIndexValue: value
+            ULBIndexValues: values
         })
     }
-    onSelectFinancialYear(event, index, value) {
+    onSelectFinancialYear(event, index, values) {
         this.setState({
-            financialYearIndexValue: value
+            financialYearIndexValues: values
         })
     }
+
     onClickedViewReport() {
-        this.setState({startViewReport: true})
+        let self = this;
+        console.log("Selected KPIs = %s", JSON.stringify(this.state.kpiIndexValues))
+        console.log("Selected ULBs = %s", JSON.stringify(this.state.ULBIndexValues))
+        console.log("Selected FY = %s", JSON.stringify(this.state.financialYearIndexValues))
+        
+        Api.commonApiPost("perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=MKO,MKT", [], {}, false, true).then(function(res) {
+            if (res && res.kpiValues) {
+                self.setState({
+                    kpiReportResponse: res,
+                    startViewReport: true
+                })
+            }
+        }, function(err) {
+        });
     }
 
     componentWillMount() {
@@ -140,12 +136,24 @@ class KPIReports extends Component {
         Api.commonApiPost("egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department", [], {}, false, false).then(function(res) {
             if (res.MdmsRes && res.MdmsRes['common-masters'].Department) {
                 self.setState({departments:res.MdmsRes['common-masters'].Department});
+                if (self.state.departments[0]['id']) {
+                    Api.commonApiPost("perfmanagement/v1/kpimaster/_search?departmentId=" + self.state.departments[0]['id'], [], {}, false, true).then(function(res) {
+                        if (res && res.KPIs) {
+                            self.setState({
+                                valueKPIs:jp.query(res, '$.KPIs[?(@.targetType=="VALUE")]'),
+                                textKPIs: jp.query(res, '$.KPIs[?(@.targetType=="TEXT")]'),
+                                objeciveKPIs: jp.query(res, '$.KPIs[?(@.targetType=="OBJECTIVE")]')
+                            })
+                        }
+                    }, function(err) {
+                    });
+                }
             }
         }, function(err) {
         });
 
         Api.commonApiPost("egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant", [], {}, false, false).then(function(res) {
-            if (res.MdmsRes && res.MdmsRes.tenant && res.MdmsRes.tenant.tenants) {
+            if (res.MdmsRes && res.MdmsRes['tenant'] && res.MdmsRes['tenant'].tenants) {
                 self.setState({ULBs:res.MdmsRes['tenant'].tenants});
             }
         }, function(err) {
@@ -167,13 +175,13 @@ class KPIReports extends Component {
                         <CardText>
                             <Row>
                                 <Col xs={12} sm={4} md={4} >
-                                    {EGSelectField("Department", true, this.state.departmentIndexValue, this.state.departments, "name", this.onSelectDepartment)}
+                                    {EGSelectField("Department", true, false, this.state.departmentIndexValue, this.state.departments, "name", this.onSelectDepartment)}
                                 </Col>
                                 <Col  xs={12} sm={4} md={4}>
-                                    {EGSelectField("KPI Type", true, this.state.kpiTypeIndexValue, this.state.kpiTypes, "name", this.onSelectKPIType)}
+                                    {EGSelectField("KPI Type", true, false, this.state.kpiTypeIndexValue, this.state.kpiTypes, "name", this.onSelectKPIType)}
                                 </Col>
                                 <Col  xs={12} sm={4} md={4}>
-                                    {EGSelectField("KPIs", true, this.state.kpiIndexValue, this.state.kpis, "name", this.onSelectKPI)}
+                                    {EGSelectField("KPIs", true, true, this.state.kpiIndexValues, this.state.kpis, "name", this.onSelectKPI)}
                                 </Col>
                             </Row>
                         </CardText>
@@ -184,10 +192,10 @@ class KPIReports extends Component {
                         <CardText>
                             <Row>
                                 <Col xs={12} sm={6} md={6} >
-                                    {EGSelectField("ULBs", true, this.state.ULBIndexValue, this.state.ULBs, "name", this.onSelectULB)}
+                                    {EGSelectField("ULBs", true, true, this.state.ULBIndexValues, this.state.ULBs, "name", this.onSelectULB)}
                                 </Col>
                                 <Col  xs={12} sm={6} md={6}>
-                                    {EGSelectField("Financial Year", true, this.state.financialYearIndexValue, this.state.financialYears, "finYearRange", this.onSelectFinancialYear)}
+                                    {EGSelectField("Financial Year", true, true, this.state.financialYearIndexValues, this.state.financialYears, "finYearRange", this.onSelectFinancialYear)}
                                 </Col>
                             </Row>
                         </CardText>
@@ -199,7 +207,7 @@ class KPIReports extends Component {
                 </div>
 
                 { this.state.startViewReport ? <Card className="uiCard">
-                    <Bar data={data} />
+                    <EGBarChart data = {this.state.kpiReportResponse} FY={this.state.financialYearIndexValues} ULB={this.state.ULBIndexValues} KPI={this.state.kpiIndexValues} />
                     </Card> : <div></div>
                 }
 

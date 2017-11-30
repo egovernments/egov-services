@@ -2923,7 +2923,7 @@ var localization_EN_Data = {
  "inventory.search.result.indentStatus":"Indent Status",
  "inventory.create.fromStore.name":"Issuing Store Name",
  "inventory.create.issueDate":"Issue Date",
- "inventory.create.department.name":"Indenting Department Name",
+ "inventory.create.department.name":"Issuing Department Name",
  "inventory.create.issuedToEmployee":"Issued To Employee",
  "inventory.create.designation":"Designation",
  "inventory.create.description":"Remarks",

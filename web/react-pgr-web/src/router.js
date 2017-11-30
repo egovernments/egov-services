@@ -179,6 +179,8 @@ import MaterialSearch from './components/non-framework/inventory/master/material
 import PriceListSearch from './components/non-framework/inventory/transaction/pricelist/PriceListSearch';
 import MaterialReceiptNote from './components/non-framework/inventory/transaction/material-receipt-note/MaterialReceiptNote';
 import SearchIndent from './components/non-framework/inventory/transaction/po/SearchIndent';
+import SearchIndentMaterialIssue from './components/non-framework/inventory/transaction/materialissue/SearchIndentMaterialIssue';
+
 
 import NoMatch from './components/common/NoMatch';
 
@@ -382,7 +384,7 @@ const Main = () => {
 	    <Route exact path= {base + '/non-framework/inventory/transaction/pricelist'} component={PriceListSearch}/>
       <Route exact path= {base + '/non-framework/inventory/transaction/materialReceiptNote'} component={MaterialReceiptNote}/>
       <Route exact path= {base + '/non-framework/inventory/transaction/po/searchIndent'} component={SearchIndent}/>
-      {/*<Route exact path= {base + '/non-framework/inventory/transaction/materialissue/searchIndent'} component={SearchIndentIssue}/>*/}
+      <Route exact path= {base + '/non-framework/inventory/transaction/materialissue/SearchIndentMaterialIssue'} component={SearchIndentMaterialIssue}/>
       {/* works */}
       <Route exact path= {base + '/non-framework/works/transaction/:action/abstractEstimate/:code?'} component={abstractEstimate}/>
       <Route exact path= {base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate}/>

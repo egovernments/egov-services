@@ -86,7 +86,7 @@ var dat = {
         "inventoryType",
         "issueStore.name"
       ],
-      "isMultipleSelection":true,
+      "isMultipleSelection":false,
       "resultIdKey":"indentNumber",
       "resultPath": "indents",
       "rowClickUrlUpdate": "/update/inventory/indent/{indentNumber}",

@@ -1,0 +1,61 @@
+UIInfo:
+- referencePath: "/inventory-services"
+  searchUrl: "/openingbalance/_search?tenantId={tenantId}"
+  groups:
+    Group1:
+      fields:
+      - materialReceipt[0].receivingStore.code
+      - materialReceipt[0].financialYear
+      
+  tables:
+    materialReceipt[0].receiptDetails:
+      group: Opening Balance Detail
+      columns:
+      - materialName
+      - Unit of Measure
+      - Quantity
+      - Rate
+      - Receipt Number
+      - Lot Number
+      - Receivd Date
+      - expiry Date
+      values:
+      - materialReceipt[0].receiptDetails[0].material.code
+      - materialReceipt[0].receiptDetails[0].uom.code
+      - materialReceipt[0].receiptDetails[0].receivedQty
+      - materialReceipt[0].receiptDetails[0].unitRate
+      - materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber
+      - materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo
+      - materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate
+      - materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate
+      -  
+  externalData:
+  - fieldName: materialReceipt[0].financialYear
+    url: "/inventory-services/stores/_search"
+    keyPath: "$..code"
+    valPath: "$..name"
+  - fieldName: materialReceipt[0].receivingStore.code
+    url: "/inventory-services/stores/_search"
+    keyPath: "$..code"
+    valPath: "$..name"
+  - fieldName: materialReceipt[0].receiptDetails[0].material.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material"
+    keyPath: "$..code"
+    valPath: "$..name"
+  - fieldName: materialReceipt[0].receiptDetails[0].uom.code
+    url: "/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom"
+    keyPath: "$..code"
+    valPath: "$..description"
+  searchResult:
+    rowClickUrlUpdate: "/update/inventory/openingbalance/{id}"
+    rowClickUrlView: "/view/inventory/openingbalance/{id}"
+    columns:
+    - financialYear
+    - storeName
+    - mrnNumber
+    values:
+    - materialReceipt[0].financialYear
+    - materialReceipt[0].receivingStore.code
+    - materialReceipt[0].mrnNumber
+    resultObjectName: openingbalance
+

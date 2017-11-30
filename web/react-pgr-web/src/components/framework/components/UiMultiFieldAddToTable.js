@@ -53,7 +53,7 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   componentDidMount() {
-    let {item} = this.props;
+    let {item, valueList} = this.props;
     let requiredFields = [];
     for(let i=0; i<item.values.length; i++) {
       if(item.values[i].isRequired)
@@ -64,6 +64,26 @@ class UiMultiFieldAddToTable extends Component {
       requiredFields,
       isInlineEdit: item.values.length < 5
     });
+
+    if(valueList && valueList.length) {
+      this.setState({
+        valueList: _.cloneDeep(valueList)
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if(!_.isEqual(nextProps, this.props)) {
+      this.updateValueList(nextProps);
+    }
+  }
+
+  updateValueList = (nProps) => {
+    if(nProps.valueList && nProps.valueList.length && !_.isEqual(nProps.valueList, this.state.valueList)) {
+      this.setState({
+        valueList: _.cloneDeep(nProps.valueList)
+      })
+    }
   }
 
   handler = (e, property, isRequired, pattern, requiredErrMsg = "Required", patternErrMsg = "Pattern Missmatch", expression, expErr, isDate) => {
@@ -122,8 +142,6 @@ class UiMultiFieldAddToTable extends Component {
 
     if(typeof ind != 'undefined') {
       indexes = _.cloneDeep(this.state.indexes);
-      console.log(indexes);
-      console.log(ind);
       for(let i=0;i<indexes.length;i++){
         if(indexes[i] == ind) {
           indexes.splice(i, 1);

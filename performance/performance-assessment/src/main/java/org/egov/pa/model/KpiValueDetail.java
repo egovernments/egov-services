@@ -1,5 +1,7 @@
 package org.egov.pa.model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class KpiValueDetail {
@@ -15,6 +17,19 @@ public class KpiValueDetail {
 	
 	@JsonProperty("value")
 	private String value = null;
+	
+	@JsonProperty("documents")
+	private List<ValueDocument> documentList = null; 
+	
+	
+
+	public List<ValueDocument> getDocumentList() {
+		return documentList;
+	}
+
+	public void setDocumentList(List<ValueDocument> documentList) {
+		this.documentList = documentList;
+	}
 
 	public String getId() {
 		return id;

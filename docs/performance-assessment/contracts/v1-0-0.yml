@@ -21,7 +21,7 @@ schemes:
 basePath: '/perfmanagement/v1'
 
 paths:
-  /kpi/_create:
+  /kpimaster/_create:
     post:
       summary: Creates a KPI Record with KPI Detailing
       description: KPI which is applicable for all the ULBs are created with a description to it. This provides a detail on KPI and its base attributes
@@ -44,7 +44,7 @@ paths:
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
-  /kpi/_update:
+  /kpimaster/_update:
       post:
         summary: API to update the values of the KPI Master
         description: Updates the existing values of the KPI Master (Code cannot be updated)
@@ -67,7 +67,7 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
   
-  /kpi/_search:
+  /kpimaster/_search:
     post:
       summary: Fetch the KPI Master Record
       description: Search the KPI Record based on the different parameters such as code, name
@@ -171,7 +171,7 @@ paths:
           200: 
             description: Successful response
             schema:
-              $ref: "#/definitions/KPIValueResponse"
+              $ref: "#/definitions/KPIValueSearchResponse"
           400:
             description: Invalid input
             schema:
@@ -212,35 +212,58 @@ paths:
           200: 
             description: Successful response
             schema:
-              $ref: "#/definitions/KPIValueSearchResponse"
+              $ref: "#/definitions/KPIValueCompareSearchResponse"
           400:
             description: Invalid input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
               
-  /v2/kpi/_search:
+  /kpitarget/_create:
     post:
-      summary: Fetch the KPI Master Record
-      description: Search the KPI Record based on the different parameters such as code, name
+      summary: Creates a Target Entry for a particular KPI Records
+      description: This API sets the Target for the KPI which has already been created. Based on the Target Type selected while creating the KPI, Target Value is entered either as a Value or as Objectives or as a Text
       tags:
-        - KPI Master
+        - KPI Target
       parameters:
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo"
-        - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
-        - $ref: "#/parameters/name"
-        - $ref: "#/parameters/code"
-        - $ref: "#/parameters/pageSize"
-        - $ref: "#/parameters/pageNumber"
-        - $ref: "#/parameters/sortResult"
-      responses:
-        200: 
-          description: Successful response
+        - name: KPITarget
+          in: body
+          description: required parameters have to be populated
+          required: true
           schema:
-            $ref: "#/definitions/DepartmentKpiResponse"
-        400:
-          description: Invalid input
+            $ref: '#/definitions/KPITargetRequest'
+      responses:
+        '201':
+          description: Acknowledgment on successful creation of new KPI
+          schema:
+            $ref: "#/definitions/KPITargetResponse"
+        '400':
+          description: Creating a new KPI Request has failed
           schema:
             $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+  /kpitarget/_update:
+      post:
+        summary: Updates the already existing target entries for the KPI Records
+        description: The Target which has already been set for the KPI Records can be updated or modified through this API
+        tags:
+          - KPI Target
+        parameters:
+          - name: KPITarget
+            in: body
+            description: required parameters have to be populated
+            required: true
+            schema:
+              $ref: '#/definitions/KPITargetRequest'
+        responses:
+          '200':
+            description: KPI Master Record has been updated successfully 
+            schema:
+              $ref: "#/definitions/KPITargetResponse"
+          '400':
+            description: Request failed
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
 
 definitions:
   
@@ -248,15 +271,12 @@ definitions:
     type: object
     description: This is the object for KPI Details not specific to any ULB
     properties:
-      tenantIdCustom:
-        type: string
-        description: Unique teanntid for the ULB - if the KPI is defined at state level use only state part of the namespaced tenantid
-      department:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
       departmentId: 
         type: integer
         format: int64
         description: Unique identifier of Department Object
+      department:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
       id:
         type: string
         pattern: ^[0-9]+$
@@ -273,10 +293,18 @@ definitions:
         type: string
         pattern: ^[a-zA-Z0-9]+$
         description: Unique Code in remote system if the KPI is from remote
-      targetValue: 
-        type: number
-        format: float
-        description: Value for the KPI Target
+      periodicity: 
+        type: string
+        pattern: ^[a-zA-Z0-9 ]+$
+        description: The period to which the KPI has been created. MONTH, WEEK etc., 
+      targetType: 
+        type: string
+        pattern: ^[a-zA-Z0-9]+$
+        description: Enumeration of Type of Target for which KPI is getting created. 
+        enum:
+          - TEXT
+          - VALUE
+          - OBJECTIVE
       instructions: 
         type: string
         pattern: ^[a-zA-Z0-9 ]+$
@@ -291,23 +319,35 @@ definitions:
           $ref: "#/definitions/Document"
     required:
       - name
+      - code
       - id
       - financialYear
+      - departmentId
+      - targetType
       
   KpiValue:
     type: object
     description: Object which holds the mapping for KPI and its actual values entered by ULBs
     properties:
+      id:
+        type: string
+        pattern: ^[0-9]+$
+        description: Unique KPI Value ID to identify the Value Record
+        readOnly: true
       kpi:
         $ref: "#/definitions/KPI"
-      resultValue: 
-        type: integer
-        format: int64
-        description: Actual Value at ULB Level for the KPI Target
+      kpiCode:
+        type: string
+        pattern: ^[a-zA-Z0-9._]+$
+        description: Unique Identifier of the KPI through its code
       tenantId:
         type: string
         pattern: ^[a-zA-Z0-9.]+$
         description: Unique Identifier of the tenant
+      valueList:
+        type: array
+        items:
+          $ref: "#/definitions/KpiValueDetail"
       documents:
         type: array
         items:
@@ -316,8 +356,38 @@ definitions:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
       - kpi
-      - resultValue
       - tenantId
+      
+  KpiValueDetail:
+    type: object
+    description: Object which holds detailed values for each month or week for a value record
+    properties:
+      id:
+        type: string
+        pattern: ^[0-9]+$
+        description: Unique identifier for KPI Value Detail Record
+        readOnly: true 
+      valueid:
+        type: string
+        pattern: ^[0-9]+$
+        description: Unique identifier for KPI Value Record
+        readOnly: true
+      period:
+        type: string
+        pattern: ^[a-zA-Z0-9._]+$
+        description: Defines the period for which the value is specifically entered. JAN, FEB, MAR, WEEK1, MONDAY, SUNDAY etc., 
+      value:
+        type: string
+        pattern: ^[a-zA-Z0-9]+$
+        description: The value which has been entered will be passed here. The actual value for the KPI
+      documents:
+        type: array
+        items:
+          $ref: "#/definitions/ValueDocument"
+    required:
+      - valueid
+      - period
+      - value
       
   KpiValueList:
     type: object
@@ -339,19 +409,62 @@ definitions:
         maximum: 500
         items:
           $ref: '#/definitions/KpiValue'
-          
-  DepartmentKpiList:
+      
+  KpiTarget:
     type: object
-    description: Object which holds the list of KPI Values against each Department 
+    description: Object which holds the targets for a specific KPI Record
     properties:
-      department:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/Department'
-      kpiList:
+      id:
+        type: string
+        pattern: ^[0-9]+$
+        description: Unique KPI Target ID to identify the Target Record
+        readOnly: true
+      kpiCode:
+        type: string
+        pattern: ^[a-zA-Z0-9._]+$
+        description: Unique Identifier of the KPI through its code
+      targetValue:
+        type: string
+        pattern: ^[a-zA-Z0-9]+$
+        description: Target Value for the KPI based on the Target Type which has been selected while creating the KPI
+      targetDescription:
+        type: string
+        pattern: ^[a-zA-Z0-9.]+$
+        readOnly: true
+        description: Target Value as a meaningful information used to display the Target on View Screen
+      tenantId:
+        type: string
+        pattern: ^[a-zA-Z0-9.]+$
+        description: Unique Identifier of the tenant
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+    required:
+      - kpiCode
+      - tenantId
+      - targetValue
+          
+  ValueResponse:
+    type: object
+    description: Object which holds the list of KPI Value and KPI Detail for each tenant 
+    properties:
+      tenantId:
+        type: string
+        readOnly: true
+        pattern: ^[a-zA-Z0-9]+$
+        description: Unique Identifier of the tenant
+      kpi:
+        $ref: "#/definitions/KPI"
+      kpiValue:
         type: array
         maximum: 500
         items:
-          $ref: '#/definitions/KPI'
-      
+          $ref: '#/definitions/KpiValue'
+      graphType: 
+        type: string
+        readOnly: true
+        pattern: ^[a-zA-Z]+$
+        description: Defines the graph that has to be plotted in the report screen for the value list
+
   Document:
     type: object
     description: documents required under respective KPI 
@@ -420,6 +533,31 @@ definitions:
       - requestInfo
       - KPIs
       
+  KPITargetRequest:
+    type: object
+    properties:
+      RequestInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo'
+      kpiTargets:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/KpiTarget'
+    required:
+      - kpiTargets
+      - RequestInfo
+      
+  KPITargetResponse:
+    type: object
+    properties:
+      ResponseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      kpiTargets:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/KpiTarget'
+      
   KPIResponse:
     type: object
     properties:
@@ -431,16 +569,6 @@ definitions:
         items:
           $ref: '#/definitions/KPI'
           
-  DepartmentKpiResponse:
-    type: object
-    properties:
-      responseInfo:
-        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
-      KPIs:
-        type: array
-        maximum: 500
-        items:
-          $ref: '#/definitions/DepartmentKpiList'
       
   KPIValueRequest:
     type: object
@@ -465,7 +593,7 @@ definitions:
         type: array
         maximum: 500
         items:
-          $ref: '#/definitions/KpiValue'
+          $ref: '#/definitions/ValueResponse'
           
   KPIValueSearchResponse:
     type: object
@@ -476,8 +604,19 @@ definitions:
         type: array
         maximum: 500
         items:
-          $ref: '#/definitions/KpiValueList'
-       
+          $ref: '#/definitions/ValueResponse'
+  
+  KPIValueCompareSearchResponse:
+    type: object
+    properties:
+      responseInfo:
+        $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ResponseInfo'
+      kpiValues:
+        type: array
+        maximum: 500
+        items:
+          $ref: '#/definitions/KpiValueList'       
+
 parameters:
 
   name:

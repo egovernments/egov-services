@@ -9,7 +9,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class KPITargetResponse {
 
-	@JsonProperty("responseInfo")
+	@JsonProperty("ResponseInfo")
 	private ResponseInfo responseInfo = null;
 
 	@JsonProperty("kpiTargets")

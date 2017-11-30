@@ -2,7 +2,6 @@ package org.egov.pa.web.contract;
 
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
-import org.postgresql.util.GT;
 
 public class ValueResponse {
 	

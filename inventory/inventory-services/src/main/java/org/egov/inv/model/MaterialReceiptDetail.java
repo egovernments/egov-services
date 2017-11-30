@@ -34,9 +34,6 @@ public class MaterialReceiptDetail {
     @JsonProperty("orderNumber")
     private BigDecimal orderNumber = null;
 
-    @JsonProperty("batchNo")
-    private String batchNo = null;
-
     @JsonProperty("uom")
     private Uom uom = null;
 
@@ -178,27 +175,6 @@ public class MaterialReceiptDetail {
 
     public void setOrderNumber(BigDecimal orderNumber) {
         this.orderNumber = orderNumber;
-    }
-
-    public MaterialReceiptDetail batchNo(String batchNo) {
-        this.batchNo = batchNo;
-        return this;
-    }
-
-    /**
-     * batch number .
-     *
-     * @return batchNo
-     **/
-    @ApiModelProperty(value = "batch number .")
-
-    @Size(max = 50)
-    public String getBatchNo() {
-        return batchNo;
-    }
-
-    public void setBatchNo(String batchNo) {
-        this.batchNo = batchNo;
     }
 
     public MaterialReceiptDetail uom(Uom uom) {
@@ -477,7 +453,6 @@ public class MaterialReceiptDetail {
                 Objects.equals(this.material, materialReceiptDetail.material) &&
                 Objects.equals(this.mrnNumber, materialReceiptDetail.mrnNumber) &&
                 Objects.equals(this.orderNumber, materialReceiptDetail.orderNumber) &&
-                Objects.equals(this.batchNo, materialReceiptDetail.batchNo) &&
                 Objects.equals(this.uom, materialReceiptDetail.uom) &&
                 Objects.equals(this.purchaseOrderDetail, materialReceiptDetail.purchaseOrderDetail) &&
                 Objects.equals(this.receivedQty, materialReceiptDetail.receivedQty) &&
@@ -494,7 +469,7 @@ public class MaterialReceiptDetail {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, material, mrnNumber, orderNumber, batchNo, uom, purchaseOrderDetail, receivedQty, acceptedQty, unitRate, openingRate, asset, voucherHeader, rejectionRemark, remarks, isScrapItem, receiptDetailsAddnInfo);
+        return Objects.hash(id, tenantId, material, mrnNumber, orderNumber, uom, purchaseOrderDetail, receivedQty, acceptedQty, unitRate, openingRate, asset, voucherHeader, rejectionRemark, remarks, isScrapItem, receiptDetailsAddnInfo);
     }
 
     @Override
@@ -507,7 +482,6 @@ public class MaterialReceiptDetail {
         sb.append("    material: ").append(toIndentedString(material)).append("\n");
         sb.append("    mrnNumber: ").append(toIndentedString(mrnNumber)).append("\n");
         sb.append("    orderNumber: ").append(toIndentedString(orderNumber)).append("\n");
-        sb.append("    batchNo: ").append(toIndentedString(batchNo)).append("\n");
         sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
         sb.append("    purchaseOrderDetail: ").append(toIndentedString(purchaseOrderDetail)).append("\n");
         sb.append("    receivedQty: ").append(toIndentedString(receivedQty)).append("\n");

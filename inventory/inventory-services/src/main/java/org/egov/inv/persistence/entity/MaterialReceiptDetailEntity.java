@@ -22,8 +22,6 @@ public class MaterialReceiptDetailEntity {
 
     private String mrnNumber;
 
-    private String batchNo;
-
     private String uomNo;
 
     private String orderNumber;
@@ -71,8 +69,7 @@ public class MaterialReceiptDetailEntity {
                 .voucherHeader(voucherHeader)
                 .rejectionRemark(rejectionRemark)
                 .isScrapItem(isScrapItem)
-                .remarks(remarks)
-                .batchNo(batchNo);
+                .remarks(remarks);
     }
 
     private Material buildMaterial() {

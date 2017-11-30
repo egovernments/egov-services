@@ -221,7 +221,8 @@ var dat ={
                   "type": "mobileNumber",
                   "jsonPath": "cases[0].hearingDetails[0].attendees[0].mobileNumber",
                   "isRequired": true,
-                  "isDisabled": false
+                  "isDisabled": false,
+                  "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
                 },
                 {
                   "name": "address",
@@ -292,7 +293,8 @@ var dat ={
                   "type": "mobileNumber",
                   "jsonPath": "cases[0].hearingDetails[0].judges[0].mobileNumber",
                   "isRequired": true,
-                  "isDisabled": false
+                  "isDisabled": false,
+                  "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
                 },
                 {
                   "name": "address",

@@ -74,7 +74,7 @@ var dat = {
             type: "text",
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: "The PAN structure is as follows: AAAPL1234C ."
             // defaultValue: [],
             // url: ""
           },

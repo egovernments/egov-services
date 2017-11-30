@@ -204,7 +204,7 @@ var dat =  {
             type: "text",
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: "The PAN structure is as follows: AAAPL1234C ."
           },
           {
             name: "bankBranch",
@@ -430,7 +430,7 @@ var dat =  {
             type: "text",
             isRequired: false,
             isDisabled: true,
-            patternErrorMsg: ""
+            patternErrorMsg: "The PAN structure is as follows: AAAPL1234C ."
           },
           {
             name: "bankBranch",

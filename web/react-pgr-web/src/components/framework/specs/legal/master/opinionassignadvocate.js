@@ -11,14 +11,14 @@ var dat = {
             "label": "opinionrequest.update.group.title.OpinionRequest",
             "name": "entryType",
             "fields": [
-                {
-            name: "opinionRequestDate",
-            jsonPath: "opinions[0].opinionRequestDate",
-            label: "opinionrequest.update.opinionRequestDate",
-            type: "datePicker",
-            isRequired: true,
-            isDisabled: true,
-            patternErrorMsg: ""
+              {
+                name: "opinionRequestDate",
+                jsonPath: "opinions[0].opinionRequestDate",
+                label: "opinionrequest.update.opinionRequestDate",
+                type: "datePicker",
+                isRequired: true,
+                isDisabled: true,
+                patternErrorMsg: ""
           },{
                 "name": "departmentName",
                 "jsonPath": "opinions[0].departmentName.code",

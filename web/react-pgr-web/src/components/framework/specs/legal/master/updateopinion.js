@@ -159,6 +159,8 @@ var dat = {
           "name":"UploadDocument1",
           "jsonPath": "opinions[0].documents",
           "label": "legal.create.sectionApplied",
+          "screenView":true,
+          "showDocfile": true,
            "type": "fileTable",
             "isRequired": false,
             "isDisabled": false,

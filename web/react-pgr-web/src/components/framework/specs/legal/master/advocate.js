@@ -335,7 +335,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The UID number is as follows:412521475850 : all 12 digits"
           },
           {
             "name": "gender",
@@ -400,7 +400,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "contactNumber",
@@ -411,7 +411,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "email",
@@ -422,7 +422,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": " Email should be in format e.g - abc@abc.com"
           },
           {
             "name": "panNumber",
@@ -433,7 +433,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg":"",
-            "patternErrMsg": ""
+            "patternErrMsg": " The PAN structure is as follows: AAAPL1234C ."
           },
           {
             "name": "VATTinNumber",
@@ -521,7 +521,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Aadhar Number Is Not Valid"
+            "patternErrMsg": "The UID number is as follows:412521475850 : all 12 digits"
           },
           {
             "name": "gender",
@@ -586,7 +586,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Mobile Number Is Not Valid"
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "contactNumber",
@@ -597,7 +597,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Phone Number Is Not Valid"
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "email",
@@ -608,7 +608,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "Email Id Is Not Valid"
+            "patternErrMsg": " Email should be in format e.g - abc@abc.com"
           },
           {
             "name": "panNumber",
@@ -619,7 +619,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": "PAN Number Is Not Valid"
+            "patternErrMsg": " The PAN structure is as follows: AAAPL1234C ."
           },
           {
             "name": "VATTinNumber",
@@ -1343,7 +1343,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The UID number is as follows:412521475850 : all 12 digits"
           },
           {
             "name": "gender",
@@ -1408,7 +1408,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "contactNumber",
@@ -1419,7 +1419,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "email",
@@ -1430,7 +1430,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": " Email should be in format e.g - abc@abc.com"
           },
           {
             "name": "panNumber",
@@ -1441,7 +1441,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": " The PAN structure is as follows: AAAPL1234C ."
           },
           {
             "name": "VATTinNumber",
@@ -1529,7 +1529,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The UID number is as follows:412521475850 : all 12 digits"
           },
           {
             "name": "gender",
@@ -1594,7 +1594,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "contactNumber",
@@ -1605,7 +1605,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": "The Phone number structure is as follows: 999XXXX999 "
           },
           {
             "name": "email",
@@ -1616,7 +1616,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": " Email should be in format e.g - abc@abc.com"
           },
           {
             "name": "panNumber",
@@ -1627,7 +1627,7 @@ var dat ={
             "isRequired": true,
             "isDisabled": false,
             "requiredErrMsg": "",
-            "patternErrMsg": ""
+            "patternErrMsg": " The PAN structure is as follows: AAAPL1234C ."
           },
           {
             "name": "VATTinNumber",

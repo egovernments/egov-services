@@ -52,7 +52,6 @@ class MdmsComponent extends Component {
 			module,
 			master
 		}).then(function(res) {
-			//Fetch data from MDMS service
 			Api.commonApiPost("/egov-mdms-service/v1/_search", {}, data, false, true).then(function(res2) {
 				let arr = _.get(res2, "$.MdmsRes." + module + "." + master);
 				if(arr && arr.length) {
@@ -60,7 +59,7 @@ class MdmsComponent extends Component {
 					for(let i=0; i<arr.length; i++) {
 						arr[i].modify = true;
 					}
-					
+
 					self.setState({
 						valueList: arr
 					})

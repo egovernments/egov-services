@@ -658,6 +658,8 @@ export default class SearchForCreate extends Component {
     //let isEnableUpdateViewBtn = tableSelectionData && tableSelectionData.length === 1 || false;
     let isEnableCustomButtons = tableSelectionData && tableSelectionData.length > 0 || false;
 
+    console.log('isEnableCustomButtons', isEnableCustomButtons);
+
     let customButtons = mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].customButtons;
 
     return (

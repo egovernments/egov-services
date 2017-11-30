@@ -5,7 +5,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {EGSelectField} from '../hoc/kpiHOC'
 import RefreshIndicator from 'material-ui/RefreshIndicator';
 import Api from '../../../../api/api'
-import EGBarChart from '../charts/EGBarchart'
+import EGBarChart from '../charts/kpiBarchart'
 
 var jp = require('jsonpath');
 

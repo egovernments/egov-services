@@ -435,7 +435,7 @@ serviceMaps:
             - jsonPath: $.priceLists.*.auditDetails.lastModifiedTime
               dbType: LONG
 
-        - query: INSERT INTO pricelistdetails(id, pricelist, material, fromDate, toDate, ratePerUnit, quantity, uom, active, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
+        - query: INSERT INTO pricelistdetails(id, pricelist, material, fromDate, toDate, ratePerUnit, quantity, uom, tenantid, createdby, lastmodifiedby, createdtime, lastmodifiedtime ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.priceLists.*.priceListDetails.*
           jsonMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.id
@@ -446,8 +446,6 @@ serviceMaps:
             - jsonPath: $.priceLists.*.priceListDetails.*.ratePerUnit
             - jsonPath: $.priceLists.*.priceListDetails.*.quantity
             - jsonPath: $.priceLists.*.priceListDetails.*.uom.code
-            - jsonPath: $.priceLists.*.priceListDetails.*.active
-              dbType: BOOLEAN
             - jsonPath: $.priceLists[?({id} in @.priceListDetails[*].id)].tenantId
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.createdBy
             - jsonPath: $.priceLists.*.priceListDetails.*.auditDetails.lastModifiedBy

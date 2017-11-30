@@ -2238,6 +2238,15 @@ var localization_EN_Data = {
 "vendorcontracts.create.group.title.VendorContractDetails": "Vendor Contract Details",
 
 
+"reports.swm.dumpingground": "Dumping Ground",
+"reports.swm.collectiontype": "Collection Type",
+"reports.swm.datefrom": "From Date",
+"reports.swm.dateto": "To Date",
+"reports.swm.date" : "Date",
+"reports.swm.wetwaste" : "Wet Waste",
+"reports.swm.drywaste" : "Dry Waste",
+
+
 "pgr.dashboard.gis.registered.title":"Registered",
 "pgr.dashboard.gis.redressed.title":"Redressed",
 "pgr.grievanceno":"Grievance No.",

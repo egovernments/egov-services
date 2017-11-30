@@ -283,9 +283,9 @@ public class RequestValidator {
 				finYearCount = (kpiValueSearchRequest.getFinYear().size() == 1
 						&& !kpiValueSearchRequest.getFinYear().get(0).equals("ALL")) ? "1" : "*";
 			}
-			if (null != kpiValueSearchRequest.getTenantId() && kpiValueSearchRequest.getTenantId().size() > 0) {
-				ulbCount = (kpiValueSearchRequest.getTenantId().size() == 1
-						&& !kpiValueSearchRequest.getTenantId().get(0).equals("ALL")) ? "1" : "*";
+			if (null != kpiValueSearchRequest.getUlbList() && kpiValueSearchRequest.getUlbList().size() > 0) {
+				ulbCount = (kpiValueSearchRequest.getUlbList().size() == 1
+						&& !kpiValueSearchRequest.getUlbList().get(0).equals("ALL")) ? "1" : "*";
 			}
 			if (null != kpiValueSearchRequest.getKpiCodes() && kpiValueSearchRequest.getKpiCodes().size() > 0) {
 				kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1

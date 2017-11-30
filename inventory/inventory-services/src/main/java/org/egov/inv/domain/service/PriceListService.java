@@ -235,8 +235,14 @@ public class PriceListService extends DomainService {
 				}
 				
 				for(PriceListDetails priceListDetail : pl.getPriceListDetails()){
+					if(priceListDetail.getQuantity()!=null)
 					if(priceListDetail.getQuantity().doubleValue()<0){
 						throw new CustomException("quantity", "Material "+ priceListDetail.getMaterial().getCode() + "'s quantity should be positive");
+					}
+					if(pl.getRateType().name().equals(PriceList.RateTypeEnum.ONE_TIME_TENDER.name())){
+						if(priceListDetail.getQuantity()==null){
+							throw new CustomException("quantity", "Material "+ priceListDetail.getMaterial().getCode() + "'s quantity should be provided incase of Tender");
+						}
 					}
 				}
 			}

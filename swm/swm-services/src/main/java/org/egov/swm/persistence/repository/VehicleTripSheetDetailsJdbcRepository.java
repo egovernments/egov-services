@@ -56,17 +56,24 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
         if (searchRequest.getSortBy() != null && !searchRequest.getSortBy().isEmpty())
             orderBy = "order by " + searchRequest.getSortBy();
 
-        if (searchRequest.getTripNos() != null) {
-            addAnd(params);
-            params.append("tripNo in(:tripNo) ");
-            paramValues.put("tripNo", new ArrayList<>(Arrays.asList(searchRequest.getTripNos().split(","))));
-        }
-
         if (searchRequest.getTenantId() != null) {
             addAnd(params);
             params.append("tenantId =:tenantId");
             paramValues.put("tenantId", searchRequest.getTenantId());
         }
+
+        if (searchRequest.getTripNos() != null) {
+            addAnd(params);
+            params.append("tripNo in(:tripNos) ");
+            paramValues.put("tripNos", new ArrayList<>(Arrays.asList(searchRequest.getTripNos().split(","))));
+        }
+
+        if (searchRequest.getTripNo() != null) {
+            addAnd(params);
+            params.append("tripNo =:tripNo");
+            paramValues.put("tripNo", searchRequest.getTripNo());
+        }
+
         if (searchRequest.getRegNumber() != null) {
             addAnd(params);
             params.append("vehicle =:vehicle");
@@ -168,7 +175,7 @@ public class VehicleTripSheetDetailsJdbcRepository extends JdbcRepository {
 
         }
         if (routeCodes != null && routeCodes.length() > 0) {
-            
+
             String tenantId = null;
             Map<String, Route> routeMap = new HashMap<>();
 

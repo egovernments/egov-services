@@ -197,6 +197,8 @@ public class MDMSService {
 		            	throw new CustomException("400", "Invalid Request");
 		            }
 				}
+			}else{
+				masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
 			}
             logger.info("moduleContentJson: "+moduleContentJson);
 	    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);

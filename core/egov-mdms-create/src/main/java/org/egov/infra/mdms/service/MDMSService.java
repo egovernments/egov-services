@@ -49,10 +49,18 @@ public class MDMSService {
 		ObjectMapper mapper = new ObjectMapper();
 		Long startTime = null;
 		Long endTime = null;
+		
+		startTime = new Date().getTime();
 		Object fileContents = getFileContents(filePathMap, mDMSCreateRequest);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		if(null == fileContents) 
 			throw new CustomException("400","Invalid Tenant Id");
+		
+		startTime = new Date().getTime();
 		String content = getContentForPush(fileContents, mDMSCreateRequest, isCreate);
+		endTime = new Date().getTime();
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
     	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
     	
 		//get the head of the branch
@@ -225,7 +233,6 @@ public class MDMSService {
 				get(getBranchHeadUri.toString(), userName, password);
 		
 		String branchHeadSHA = JsonPath.read(branchHeadResponse.toString(), MDMSConstants.BRANCHHEADSHA_JSONPATH);
-		logger.info("branchHeadSHA: "+branchHeadSHA);
 		
 		return branchHeadSHA;
 		
@@ -240,7 +247,7 @@ public class MDMSService {
 				get(getBaseTreeUri.toString(), userName, password);
 		
 		String baseTreeSHA = JsonPath.read(baseTreeResponse.toString(), MDMSConstants.BASETREESHA_JSONPATH);
-		logger.info("baseTreeSHA: "+branchHeadSHA);
+		logger.debug("baseTreeSHA: "+branchHeadSHA);
 		
 		return baseTreeSHA;
 		
@@ -258,13 +265,12 @@ public class MDMSService {
     	documentContext.put("$.tree.*", "content", contents);
 
     	String body = documentContext.jsonString().toString();
-    	logger.info("Body: "+body);
 
 		Object createTreeResponse = mDMSCreateRepository.
 				post(getCreateTreeUri.toString(), body, userName, password);
 		
 		String newTreeSHA = JsonPath.read(createTreeResponse.toString(), MDMSConstants.CREATETREESHA_JSONPATH);
-		logger.info("newTreeSHA: "+newTreeSHA);
+		logger.debug("newTreeSHA: "+newTreeSHA);
 		
 		return newTreeSHA;
 		
@@ -281,13 +287,12 @@ public class MDMSService {
     	documentContext.put("$", "message", message);
     	documentContext.put("$", "tree", newTreeSHA);
     	String body = documentContext.jsonString().toString().replace(":sha", branchHeadSHA);
-    	logger.info("Body: "+body);
 
 		Object createCommitResponse = mDMSCreateRepository.
 				post(getCreateTreeUri.toString(), body, userName, password);
 		
 		String newCommitSHA = JsonPath.read(createCommitResponse.toString(), MDMSConstants.CREATECOMMITSHA_JSONPATH);
-		logger.info("newCommitSHA: "+newCommitSHA);
+		logger.debug("newCommitSHA: "+newCommitSHA);
 		
 		return newCommitSHA;
 		

@@ -1131,10 +1131,13 @@ definitions:
         type: number
         format: BigDecimal
         description: Estimate amount for the Abstract Estimate
+        maxLength: 20
+        minLength: 1
       grossAmountBilled:
         type: number
         format: double
         description: Gross Billed amount of the Abstract Estimate Details. This attribute is required only if billsCreated flag is true for Abstract Estimate.
+        maxLength: 20
       projectCode:
         $ref: '#/definitions/ProjectCode'
         description: Project code object refernce for the Abstract Estimate. If the work is spillover then the project code/Work Identification number is user entered. Otherwise it is auto generated at the time of Admin Sanction.
@@ -2007,5 +2010,4 @@ tags:
     description: APIs required for Revision Estimate.
   - name: Project Code
     description: APIs required for Project Code.
-
 

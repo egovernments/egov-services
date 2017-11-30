@@ -309,8 +309,10 @@ class assetImmovableView extends Component {
    }
 
   Api.commonApiPost(url, query, {}, false, specifications["asset.view"].useTimestamp).then(function(res){
+    if (res && res.Assets && res.Assets[0] && res.Assets[0].titleDocumentsAvailable) {
 
-      console.log(res);
+      res.Assets[0].titleDocumentsAvailable = res.Assets[0].titleDocumentsAvailable.join(",");
+    }
       self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"asset", "view", specifications["asset.view"].objectName);
       self.props.setFormData(res);
     }, function(err){
@@ -393,18 +395,16 @@ printer = () => {
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
     let self = this;
     var mappingObject;
+    console.log(this.props.formData);
 
     const renderOpeningValues = function() {
       let self = this;
       if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("openingDate")) {
-        console.log(formData.Assets[0].openingDate);
         var varopeningDate = new Date(formData.Assets[0].openingDate);
         var vargrossValue = formData.Assets[0].grossValue;
-        console.log(varopeningDate);
         let finOpeningDate = ('0' + varopeningDate.getDate()).slice(-2) + '/'
                + ('0' + (varopeningDate.getMonth()+1)).slice(-2) + '/'
                + varopeningDate.getFullYear();
-               console.log(finOpeningDate);
         return(
         <CardText>
           <Col xs={12} md={3}>
@@ -449,7 +449,6 @@ printer = () => {
         if(!self.state.responseHolder)
           Api.commonApiPost("/asset-services-maha/assets/_search",{"id":formData.Assets[0].id, "isTransactionHistoryRequired": true}).then(function(response)
           {
-              console.log(response);
               if(response && response.hasOwnProperty("Assets") && response.Assets[0].hasOwnProperty("transactionHistory") && response.Assets[0].transactionHistory != null){
                 self.setState({
                   responseHolder: response.Assets[0].transactionHistory
@@ -459,7 +458,6 @@ printer = () => {
             console.log(err);
           });
         mappingObject = self.state.responseHolder;
-        console.log(mappingObject);
         if(mappingObject != null){
         return(
           <div>
@@ -502,7 +500,6 @@ printer = () => {
     }
           const renderBody = function() {
               if(formData && formData.hasOwnProperty("Assets") && formData.Assets[0].hasOwnProperty("assetAttributes")){
-                // console.log(formData.Assets[0].assetAttributes);
                   var createCustomObject = formData.Assets[0].assetAttributes;
                   var disArray = [];
                   _.forEach(createCustomObject, function(value, key) {

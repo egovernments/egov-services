@@ -305,6 +305,10 @@ class assetMovableView extends Component {
    }
 
   Api.commonApiPost(url, query, {}, false, specifications["asset.view"].useTimestamp).then(function(res){
+    if (res && res.Assets && res.Assets[0] && res.Assets[0].titleDocumentsAvailable) {
+
+      res.Assets[0].titleDocumentsAvailable = res.Assets[0].titleDocumentsAvailable.join(",");
+    }
       self.props.setFormData(res);
       console.log(res);
       //self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)),"tl", "view", specifications["tl.view"].objectName);

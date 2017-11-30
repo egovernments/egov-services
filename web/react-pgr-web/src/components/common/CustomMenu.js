@@ -383,7 +383,8 @@ const menuConvention={
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",
 "Inventory.Inventory Report.Rates Comparison With History Data":"/report/inventory/ratesComparisonWithHistory",
 "Inventory.Inventory Report.Comparison Between Different Rates":"/report/inventory/comparisonBetweenDifferentRates",
-
+"Inventory.Inventory Report.Material wise Purchase Order History":"/report/inventory/MaterialwisePurchaseOrderHistoryReport",
+"Inventory.Inventory Report.Supplier wise Purchase Order History":"/report/inventory/SupplierwisesPurchaseOrderHistoryReport",
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/create/abstractEstimate",
 "Works Management.Abstract Estimate.Estimate Search":"/search/works/abstractEstimate/view",

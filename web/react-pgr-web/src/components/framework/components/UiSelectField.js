@@ -112,7 +112,6 @@ class UiSelectField extends Component {
    }
 
    shouldComponentUpdate(nextProps, nextState){
-    //  console.log('shouldComponentUpdate:', !(_.isEqual(this.props, nextProps)));
      return !(_.isEqual(this.props, nextProps));
    }
 
@@ -133,8 +132,6 @@ class UiSelectField extends Component {
 
    renderSelect =(item) => {
       let {dropDownData, value}=this.props;
-      // if(item.jsonPath == 'abstractEstimates[0].natureOfWork.code' || item.jsonPath == 'abstractEstimates[0].pmcName' || item.jsonPath == 'abstractEstimates[0].department.code')
-      // console.log(item.jsonPath, '<--->', value, typeof(value) );
 
       switch (this.props.ui) {
          case 'google':
@@ -149,11 +146,11 @@ class UiSelectField extends Component {
                      id={item.jsonPath.split(".").join("-")}
                      floatingLabelStyle={{"color": item.isDisabled ? "#A9A9A9" : "#696969", "fontSize": "20px", "white-space": "nowrap"}}
                      labelStyle={{"color": "#5F5C57"}}
-                     dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                     dropDownMenuProps={{animated: item.animated || false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
                      style={{"display": (item.hide ? 'none' : 'inline-block')}}
                      errorStyle={{"float":"left"}}
                      fullWidth={true}
-                     value={value}
+                     value={item.fromProps ? this.props.getVal(item.jsonPath) : value}
                      underlineDisabledStyle={{backgroundColor:'#eee!important'}}
                      {...labelProperty}
                      onChange={(event, key, value) =>{

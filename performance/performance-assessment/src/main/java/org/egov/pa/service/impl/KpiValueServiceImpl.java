@@ -10,6 +10,7 @@ import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
+import org.egov.pa.model.ULBKpiValueList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiValueService;
@@ -62,9 +63,9 @@ public class KpiValueServiceImpl implements KpiValueService {
 	}
 
 	@Override
-	public List<ValueResponse> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
-		List<KpiValue> kpiValueList = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
-		List<String> kpiCodeList = new ArrayList<>();
+	public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
+		List<ULBKpiValueList> list = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
+		/*List<String> kpiCodeList = new ArrayList<>();
 		for (int i = 0; i < kpiValueList.size(); i++) {
 			for (int j = 0; j < kpiValueList.get(i).getValueList().size(); j++) {
 				kpiValueList.get(i).getValueList().get(j).setValueid(kpiValueList.get(i).getId());
@@ -75,7 +76,8 @@ public class KpiValueServiceImpl implements KpiValueService {
 		if (kpiCodeList.size() > 0) {
 			kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList);
 		}
-		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);
+		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);*/
+		return list;
 	}
 
 	@Override
@@ -98,23 +100,24 @@ public class KpiValueServiceImpl implements KpiValueService {
 	private List<ValueResponse> sortKpiAndValues(KPIValueSearchRequest kpiValueSearchReq, List<KpiValue> kpiValueList,
 			List<KPI> kpiList) {
 		List<ValueResponse> list = new ArrayList<>();
+		List<ValueResponse> deptList = new ArrayList<>();
 		for (int i = 0; i < kpiValueList.size(); i++) {
 			for (int j = 0; j < kpiList.size(); j++) {
 				if (kpiValueList.get(i).getKpiCode().equals(kpiList.get(j).getCode())) {
 					if (null != kpiValueSearchReq.getDepartmentId()
 							&& kpiList.get(j).getDepartmentId() == kpiValueSearchReq.getDepartmentId()) {
-						if (null != kpiValueSearchReq.getKpiCodes() && kpiValueSearchReq.getKpiCodes().size() > 0
-								&& kpiValueSearchReq.getKpiCodes().contains(kpiList.get(j).getCode())) {
-							list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
-									kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
-						} else if (null == kpiValueSearchReq.getKpiCodes()) {
-							list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
-									kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
-						}
-
+						deptList.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
+								kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
+					} else {
+						list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
+								kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
 					}
 				}
 			}
+		}
+		if (null != kpiValueSearchReq.getDepartmentId()) { 
+			log.info("After sorting KPI and Value List : " + deptList.toString());
+			return deptList; 
 		}
 		log.info("After sorting KPI and Value List : " + list.toString());
 		return list;

@@ -119,6 +119,73 @@ public class PerformanceAssessmentRowMapper {
 			return valueList;
 		}
 	}
+	
+	public class KPIValueReportMapper implements RowMapper<KpiValueList> {
+		public Map<String, Map<String, Map<String, KpiValue>>> reportMap = new HashMap<>();
+		public Map<String, KPI> kpiMap = new HashMap<>();
+		@Override
+		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			
+			if(reportMap.containsKey(rs.getString("valueTenantId"))) {
+				Map<String, Map<String, KpiValue>> secondMap = reportMap.get(rs.getString("valueTenantId"));
+				if(secondMap.containsKey(rs.getString("finYear"))) { 
+					Map<String, KpiValue> thirdMap = secondMap.get(rs.getString("finYear"));
+					if(!thirdMap.containsKey(rs.getString("code"))) { 
+						thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
+					}
+				} else { 
+					Map<String, KpiValue> thirdMap = new HashMap<>();
+					thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
+					secondMap.put(rs.getString("finYear"), thirdMap);
+				}
+			} else { 
+				Map<String, KpiValue> thirdMap = new HashMap<>();
+				thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
+				Map<String, Map<String, KpiValue>> secondMap = new HashMap<>();
+				secondMap.put(rs.getString("finYear"), thirdMap);
+				reportMap.put(rs.getString("valueTenantId"), secondMap);
+			}
+			if(!kpiMap.containsKey(rs.getString("code"))) { 
+				
+				kpiMap.put(rs.getString("code"), addKpi(rs)); 
+			}
+			return null;
+		}
+		
+		private KPI addKpi(ResultSet rs) { 
+			KPI kpi = new KPI(); 
+			try { 
+				kpi.setName(rs.getString("name"));
+				kpi.setCode(rs.getString("code")); 
+				kpi.setId(rs.getString("id"));
+				kpi.setInstructions(rs.getString("instructions"));
+				kpi.setPeriodicity(rs.getString("periodicity"));
+				kpi.setTargetType(rs.getString("targettype"));
+				kpi.setFinancialYear(rs.getString("finyear"));
+				KpiTarget target = new KpiTarget(); 
+				target.setId(rs.getString("targetId"));
+				target.setKpiCode(rs.getString("targetKpiCode"));
+				target.setTargetValue(rs.getString("targetvalue"));
+				kpi.setKpiTarget(target);
+			} 
+			catch (Exception e) { 
+				log.error("Encountered an exception while creating KPI Object " + e);
+			}
+			return kpi;
+		}
+		
+		private KpiValue addKpiValue(ResultSet rs) {
+			KpiValue value = new KpiValue(); 
+			try { 
+				value.setConsolidatedValue(String.valueOf(rs.getLong("consolidatedValue")));
+				value.setTenantId(rs.getString("valueTenantId"));
+				value.setKpiCode(rs.getString("valueKpiCode"));
+			} catch (Exception e) { 
+				log.error("Encountered an exception while creating KpiValue Object " + e);
+			}
+			return value;
+		}
+	}
 
 	public class KPIValueRowMapper implements RowMapper<KpiValue> {
 		public Map<String, KpiValue> valueMap = new HashMap<>();

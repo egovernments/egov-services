@@ -75,7 +75,7 @@ public class RequestValidator {
 	@Autowired
 	private KpiMasterServiceImpl kpiMasterService; 
 	
-	private static final String DEFAULT_COUNT = "0"; 
+	private static final String DEFAULT_COUNT = "*"; 
 	private static final String SEARCH_POSSIBLE = "YES"; 
 	
 	
@@ -274,23 +274,9 @@ public class RequestValidator {
 		final List<ErrorField> errorFields = new ArrayList<>();
 
 		if (compare) {
-			if (null == kpiValueSearchRequest.getFinYear()) {
-				errorFields.add(buildErrorField(PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_CODE,
-						PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_ERROR_MESSAGE,
-						PerformanceAssessmentConstants.FINYEAR_SEARCH_MANDATORY_FIELD_NAME));
-			}
-			if (null == kpiValueSearchRequest.getKpiCodes()) {
-				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_CODE,
-						PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_ERROR_MESSAGE,
-						PerformanceAssessmentConstants.KPICODE_SEARCH_MANDATORY_FIELD_NAME));
-			}
-			if (null == kpiValueSearchRequest.getTenantId()) {
-				errorFields.add(buildErrorField(PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_CODE,
-						PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_ERROR_MESSAGE,
-						PerformanceAssessmentConstants.TENANTID_SEARCH_MANDATORY_FIELD_NAME));
-			}
+			
 
-			String tenantCount = DEFAULT_COUNT;
+			String ulbCount = DEFAULT_COUNT;
 			String kpiCount = DEFAULT_COUNT;
 			String finYearCount = DEFAULT_COUNT;
 			if (null != kpiValueSearchRequest.getFinYear() && kpiValueSearchRequest.getFinYear().size() > 0) {
@@ -298,19 +284,21 @@ public class RequestValidator {
 						&& !kpiValueSearchRequest.getFinYear().get(0).equals("ALL")) ? "1" : "*";
 			}
 			if (null != kpiValueSearchRequest.getTenantId() && kpiValueSearchRequest.getTenantId().size() > 0) {
-				tenantCount = (kpiValueSearchRequest.getTenantId().size() == 1
+				ulbCount = (kpiValueSearchRequest.getTenantId().size() == 1
 						&& !kpiValueSearchRequest.getTenantId().get(0).equals("ALL")) ? "1" : "*";
 			}
 			if (null != kpiValueSearchRequest.getKpiCodes() && kpiValueSearchRequest.getKpiCodes().size() > 0) {
 				kpiCount = (kpiValueSearchRequest.getKpiCodes().size() == 1
 						&& !kpiValueSearchRequest.getKpiCodes().get(0).equals("ALL")) ? "1" : "*";
 			}
-			String check = kpiValueService.searchPossibilityCheck(tenantCount, kpiCount, finYearCount);
-			if (!check.split("_")[0].equals(SEARCH_POSSIBLE)) {
+			log.info("Search Possibility Check :: ULB Count : " + ulbCount + " KPI Count : " + kpiCount + " Fin Year Count : " + finYearCount);
+			String check = kpiValueService.searchPossibilityCheck(ulbCount, kpiCount, finYearCount);
+			log.info("Search Possibility says Search is : " + check);
+			if (StringUtils.isNotBlank(check) && !check.split("_")[0].equals(SEARCH_POSSIBLE)) {
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_CODE,
 						PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_ERROR_MESSAGE,
 						PerformanceAssessmentConstants.SEARCH_PARAMETERS_INVALID_FIELD_NAME));
-			} else {
+			} else if(StringUtils.isNotBlank(check)) {
 				kpiValueSearchRequest.setGraphType(check.split("_")[1]);
 			}
 		}

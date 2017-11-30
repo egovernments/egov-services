@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
+import org.egov.pa.model.ULBKpiValueList;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 
@@ -17,7 +18,7 @@ public interface KpiValueRepository {
 
     public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
     
-    public List<KpiValue> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+    public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
 
     public List<KPI> checkKpiExists(String kpiCode); 
     

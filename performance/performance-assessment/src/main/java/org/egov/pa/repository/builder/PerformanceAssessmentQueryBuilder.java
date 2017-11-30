@@ -71,9 +71,17 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE master.id IS NOT NULL " ;*/
     
-    public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT value.id, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
-    		+ " detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value FROM "  
-    		+ " egpa_kpi_value value LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE value.id IS NOT NULL " ;
+    public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
+    		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, " 
+    		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
+    		+ " SUM(NULLIF(detail.value, '')::int) as consolidatedValue FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
+    		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode  "
+    		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid " 
+    		+ " WHERE master.targettype = 'VALUE' " ; 
+    
+    public static final String COMPARE_GROUP_BY = " GROUP BY master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
+    		+ " target.id, target.kpicode, target.targetvalue, target.tenantid, "  
+    		+ " value.id, value.kpicode, value.tenantid, detail.valueid" ;
     
     public static String persistKpiQuery() { 
     	return "INSERT INTO egpa_kpi_master (id, name, code, finyear, createdby, createddate) " 
@@ -141,7 +149,7 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getValueCompareSearchQuery(KPIValueSearchRequest kpiValueSearchReq, final List preparedStatementValues) { 
     	final StringBuilder selectQuery = new StringBuilder(COMPARE_SEARCH_BASE_QUERY); 
-		addKpiValueWhereClause(selectQuery, preparedStatementValues, kpiValueSearchReq);
+    	addCompareWhereClause(selectQuery, preparedStatementValues, kpiValueSearchReq);
 		LOGGER.info("Query : " + selectQuery);
 		return selectQuery.toString();
     }
@@ -210,6 +218,42 @@ public class PerformanceAssessmentQueryBuilder {
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(kpiValueSearchReq.getDepartmentId());
 		}*/
+	}
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void addCompareWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
+			final KPIValueSearchRequest kpiValueSearchReq) {
+		if(null == kpiValueSearchReq.getFinYear() && null == kpiValueSearchReq.getKpiCodes() 
+				&& null == kpiValueSearchReq.getUlbList() && null == kpiValueSearchReq.getDepartmentId()) { 
+			selectQuery.append(COMPARE_GROUP_BY); 
+			return;
+		}
+		
+		selectQuery.append(" AND ");
+		boolean isAppendAndClause = false;
+		List<String> parameterList = kpiValueSearchReq.getUlbList(); 
+		
+		if (null != parameterList && parameterList.size() > 0 ) {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" value.tenantid IN " + getStringQuery(parameterList));
+		}
+		
+		parameterList = kpiValueSearchReq.getKpiCodes(); 
+		
+		if (null != parameterList && parameterList.size() > 0 ) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" master.code IN " + getStringQuery(parameterList));
+		}
+		
+		parameterList = kpiValueSearchReq.getFinYear(); 
+		
+		if (null != parameterList && parameterList.size() > 0 ) {
+			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+			selectQuery.append(" master.finyear IN " + getStringQuery(parameterList));
+		}
+		
+		selectQuery.append(COMPARE_GROUP_BY);
+		
 	}
     
     @SuppressWarnings({ "unchecked", "rawtypes" })

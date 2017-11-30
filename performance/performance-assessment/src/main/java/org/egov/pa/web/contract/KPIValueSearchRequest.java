@@ -27,6 +27,9 @@ public class KPIValueSearchRequest   {
   
   @JsonProperty("tenantId")
   private List<String> tenantId = null;
+  
+  @JsonProperty("ulbs")
+  private List<String> ulbList=null;
 
   @JsonProperty("finYear")
   private List<String> finYear = null;
@@ -38,7 +41,15 @@ public class KPIValueSearchRequest   {
   
   
 
-  public String getGraphType() {
+  public List<String> getUlbList() {
+	return ulbList;
+}
+
+public void setUlbList(List<String> ulbList) {
+	this.ulbList = ulbList;
+}
+
+public String getGraphType() {
 	return graphType;
 }
 

@@ -28,6 +28,12 @@ public class KpiValue {
 
 	@JsonProperty("tenantId")
 	private String tenantId = null;
+	
+	@JsonProperty("consolidatedValue")
+	private String consolidatedValue = null;
+	
+	@JsonProperty("finYear")
+	private String finYear=null; 
 
 	@JsonProperty("valueList")
 	private List<KpiValueDetail> valueList = null;
@@ -37,6 +43,24 @@ public class KpiValue {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+
+	
+	
+	public String getFinYear() {
+		return finYear;
+	}
+
+	public void setFinYear(String finYear) {
+		this.finYear = finYear;
+	}
+
+	public String getConsolidatedValue() {
+		return consolidatedValue;
+	}
+
+	public void setConsolidatedValue(String consolidatedValue) {
+		this.consolidatedValue = consolidatedValue;
+	}
 
 	public String getKpiCode() {
 		return kpiCode;

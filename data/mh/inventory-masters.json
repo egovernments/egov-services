@@ -128,7 +128,9 @@
       "stockingUom": {
         "code": "NOS",
         "uomCategory": "QUANTITY"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT2",
@@ -156,7 +158,9 @@
       "stockingUom": {
         "code": "NOS",
         "uomCategory": "QUANTITY"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT3",
@@ -185,7 +189,9 @@
         "code": "LTR",
         "uomCategory": "VOLUME"
         
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT4",
@@ -213,7 +219,9 @@
       "stockingUom": {
         "code": "NOS",
         "uomCategory": "QUANTITY"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT5",
@@ -241,7 +249,9 @@
       "stockingUom": {
         "code": "KGS",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT6",
@@ -269,7 +279,9 @@
       "stockingUom": {
         "code": "MTR",
         "uomCategory": "LENGTH"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT7",
@@ -297,7 +309,9 @@
       "stockingUom": {
         "code": "GMS",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT8",
@@ -328,7 +342,9 @@
         "code": "LTR",
         "uomCategory": "VOLUME"
         
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT9",
@@ -356,7 +372,9 @@
       "stockingUom": {
         "code": "KGS",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT10",
@@ -384,7 +402,9 @@
       "stockingUom": {
         "code": "HP",
         "uomCategory": "POWER"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT11",
@@ -412,7 +432,9 @@
       "stockingUom": {
         "code": "NOS",
         "uomCategory": "QUANTITY"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MA12",
@@ -441,7 +463,9 @@
       "stockingUom": {
         "code": "MTR",
         "uomCategory": "LENGTH"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT13",
@@ -469,7 +493,9 @@
       "stockingUom": {
         "code": "KW",
         "uomCategory": "POWER"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT14",
@@ -497,7 +523,9 @@
       "stockingUom": {
         "code": "KVA",
         "uomCategory": "POWER"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT15",
@@ -525,7 +553,9 @@
       "stockingUom": {
         "code": "KGS",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT16",
@@ -553,7 +583,9 @@
       "stockingUom": {
         "code": "SFT",
         "uomCategory": "AREA"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT17",
@@ -581,7 +613,9 @@
       "stockingUom": {
         "code": "SFT",
         "uomCategory": "AREA"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT18",
@@ -609,7 +643,9 @@
       "stockingUom": {
         "code": "TON",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":false
     },
     {
       "code": "MAT19",
@@ -637,7 +673,9 @@
       "stockingUom": {
         "code": "TON",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":false,
+      "shelfLifeControl":true
     },
     {
       "code": "MAT20",
@@ -665,7 +703,9 @@
       "stockingUom": {
         "code": "TON",
         "uomCategory": "WEIGHT"
-      }
+      },
+      "lotControl":true,
+      "shelfLifeControl":false
     }
   ],
   "MaterialControlType": [

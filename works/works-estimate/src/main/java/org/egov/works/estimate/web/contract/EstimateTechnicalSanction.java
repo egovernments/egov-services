@@ -157,7 +157,7 @@ public class EstimateTechnicalSanction   {
   @ApiModelProperty(required = true, value = "User who technical sanctioned Detailed Estimate")
   @NotNull
 
-  @Valid
+  //@Valid
 
   public User getTechnicalSanctionBy() {
     return technicalSanctionBy;

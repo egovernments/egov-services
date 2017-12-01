@@ -181,9 +181,9 @@ public class ReceiptNoteService extends DomainService {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         materialReceipts.stream().forEach(materialReceipt -> {
-                            checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), tenantId);
-                            checkMaterial(materialReceipt.getReceiptDetails(), tenantId);
+                            validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                            validatePurchaseOrder(materialReceipt.getReceiptDetails(), tenantId);
+                            validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
                         });
                     }
                 }
@@ -195,9 +195,9 @@ public class ReceiptNoteService extends DomainService {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         materialReceipts.stream().forEach(materialReceipt -> {
-                            checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), tenantId);
-                            checkMaterial(materialReceipt.getReceiptDetails(), tenantId);
+                            validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+                            validatePurchaseOrder(materialReceipt.getReceiptDetails(), tenantId);
+                            validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
                         });
                     }
                 }
@@ -210,29 +210,49 @@ public class ReceiptNoteService extends DomainService {
 
     }
 
-    private void checkMaterial(List<MaterialReceiptDetail> receiptDetails, String tenantId) {
+    private void validateMaterialReceiptDetail(List<MaterialReceiptDetail> receiptDetails, String tenantId) {
         receiptDetails.stream().forEach(materialReceiptDetail -> {
-            if (null != materialReceiptDetail.getMaterial()) {
-                Material material = materialService.fetchMaterial(tenantId, materialReceiptDetail.getMaterial().getCode(), new RequestInfo());
-
-                materialReceiptDetail.getReceiptDetailsAddnInfo().stream().forEach(
-                        materialReceiptDetailAddnlinfo -> {
-                            if (true == material.getLotControl() && isEmpty(materialReceiptDetailAddnlinfo.getLotNo())) {
-                                throw new CustomException("inv.0020", "Lot number is required");
-                            }
-
-                            if (true == material.getShelfLifeControl() && (isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) ||
-                                    (!isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) && !(materialReceiptDetailAddnlinfo.getExpiryDate().doubleValue() > 0)))) {
-                                throw new CustomException("inv.0020", "Expiry date is required");
-                            }
-                        }
-                );
-            } else
-                throw new CustomException("inv.0021", "material is not present");
+            validateMaterial(materialReceiptDetail, tenantId);
+            /*if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
+                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
+            }*/
         });
     }
 
-    private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
+    private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId) {
+
+        if (null != receiptDetail.getMaterial()) {
+            Material material = materialService.fetchMaterial(tenantId, receiptDetail.getMaterial().getCode(), new RequestInfo());
+
+            receiptDetail.getReceiptDetailsAddnInfo().stream().forEach(
+                    materialReceiptDetailAddnlinfo -> {
+                        if (true == material.getLotControl() && isEmpty(materialReceiptDetailAddnlinfo.getLotNo())) {
+                            throw new CustomException("inv.0020", "Lot number is required");
+                        }
+
+                        if (true == material.getShelfLifeControl() && (isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) ||
+                                (!isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) && !(materialReceiptDetailAddnlinfo.getExpiryDate().doubleValue() > 0)))) {
+                            throw new CustomException("inv.0020", "Expiry date is required");
+                        }
+                    }
+            );
+        } else
+            throw new CustomException("inv.0021", "material is not present");
+    }
+
+/*    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId) {
+        Long currentTime =  System.currentTimeMillis();
+        materialReceiptDetailAddnlinfos.stream().forEach(materialReceiptDetailAddnlinfo ->
+                {
+                    if (null != materialReceiptDetailAddnlinfo.getExpiryDate()
+                            && Long.valueOf(materialReceiptDetailAddnlinfo.getExpiryDate()) < currentTime) {
+                        throw new CustomException("inv.0022", "Expiry Date  Must Be Greater Than Or Equal To Today's Date");
+                    }
+                }
+        );
+    }*/
+
+    private void validateDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
         HashSet<String> hashSet = new HashSet<>();
         materialReceiptDetails.stream().forEach(materialReceiptDetail ->
         {
@@ -244,7 +264,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void checkPurchaseOrderPresent(List<MaterialReceiptDetail> materialReceiptDetails, String tenantId) {
+    private void validatePurchaseOrder(List<MaterialReceiptDetail> materialReceiptDetails, String tenantId) {
 
         for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
             if (null != materialReceiptDetail.getPurchaseOrderDetail()) {

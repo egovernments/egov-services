@@ -63,7 +63,7 @@ class ClosureNote extends Component{
     //document defintion
     var docDefinition = {
       pageSize: 'A4',
-      pageMargins: [ 30, 30, 30, 30 ],
+      pageMargins: [ 50, 30, 50, 30 ],
       content: [
         //Pdf header
         {
@@ -124,17 +124,17 @@ class ClosureNote extends Component{
 
         {
           text : `Subject : Ticket No. ${grievance[0].serviceRequestId}`,
-          margin:[0, 0, 0, 2]
+          margin:[15, 0, 0, 2]
         },
 
         {
           text : `Dear Citizen,`,
-          margin:[0, 10, 0, 2]
+          margin:[15, 10, 0, 2]
         },
 
         {
           text :writeMultiLanguageText(`Your Ticket No: ${grievance[0].serviceRequestId} dated ${grievance[0].requestedDatetime.split(' ')[0]} for ${grievance[0].serviceName} is resolved.`),
-          margin:[0, 5, 0, 2]
+          margin:[40, 5, 0, 2]
         },
 
         {

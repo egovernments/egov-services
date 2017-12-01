@@ -20,7 +20,7 @@ const style = {
     }
 };
 
-const kpiTypes = [
+const kpiTypeEnums = [
     {
         name: "VALUE",
         code: "VALUE"
@@ -39,23 +39,26 @@ class KPIReports extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            valueKPIs: [],
-            textKPIs:[],
-            objeciveKPIs: [],
             departments: [],
-            kpiTypes: kpiTypes,
-            kpis: [],
+            departmentKPIs: [],
+            kpiTypes: [],
             ULBs: [],
             financialYears: [],
-            startViewReport: false,
-            isAPIInProgress: false,
             
-            departmentIndexValue: 0,
-            kpiTypeIndexValue: 0,
-            kpiIndexValues: [0],
-            ULBIndexValues: [],
-            financialYearIndexValues: [],
-            kpiReportResponse: {}
+            selectedDepartmentIndex: 0,
+            selectedKPITypeIndex: 0,
+            selectedKPIIndices: [0],
+            selectedULBIndices: [],
+            selectedfinancialYearIndices: [],
+
+            kpiReportResponse: {},
+
+            multiSelectKPIs: true,
+            multiSelectULBs: true,
+            multiSelectFYs: true,
+            disableKPISelection: false,
+            disableULBSelection: true,
+            disableFinancialYearSelection: true
         };
         this.onSelectDepartment     = this.onSelectDepartment.bind(this)
         this.onSelectKPIType        = this.onSelectKPIType.bind(this)
@@ -64,53 +67,133 @@ class KPIReports extends Component {
         this.onSelectFinancialYear  = this.onSelectFinancialYear.bind(this)
         this.onClickedViewReport    = this.onClickedViewReport.bind(this)
     }
+
+    /**
+     * render the view.
+     */
+    render() {
+        console.log('in render')
+        console.log(this.state.multiSelectKPIs)
+        console.log(this.state.multiSelectFYs)
+        console.log(this.state.multiSelectULBs)
+        return (
+            <div>
+                <Card className="uiCard">
+                    <Grid fluid>
+                        <CardText>
+                            <Row>
+                                <Col xs={12} sm={4} md={4} >
+                                    {EGSelectField("Department", true, false, false, this.state.selectedDepartmentIndex, this.parseDepartmentResponse(), "name", this.onSelectDepartment)}
+                                </Col>
+                                <Col  xs={12} sm={4} md={4}>
+                                    {EGSelectField("KPI Type", true, false, false, this.state.selectedKPITypeIndex, this.state.kpiTypes, "name", this.onSelectKPIType)}
+                                </Col>
+                                <Col  xs={12} sm={4} md={4}>
+                                    {EGSelectField("KPIs", true, this.state.multiSelectKPIs, this.state.disableKPISelection, this.state.selectedKPIIndices, 
+                                                    this.parseDepartmentKPIsAsPerKPIType(this.state.selectedKPITypeIndex), "name", this.onSelectKPI)}
+                                </Col>
+                            </Row>
+                        </CardText>
+                    </Grid>
+                </Card>
+
+                <Card className="uiCard">
+                    <Grid fluid>
+                        <CardText>
+                            <Row>
+                                <Col xs={12} sm={6} md={6} >
+                                    {EGSelectField("ULBs", true, this.state.multiSelectULBs, this.state.disableULBSelection, 
+                                                    this.state.selectedULBIndices, this.parseULBResponse(), "name", this.onSelectULB)}
+                                </Col>
+                                <Col  xs={12} sm={6} md={6}>
+                                    {EGSelectField("Financial Year", true, this.state.multiSelectFYs, this.state.disableFinancialYearSelection, 
+                                                    this.state.selectedfinancialYearIndices, this.parseFinancialYearResponse(), "name", this.onSelectFinancialYear)}
+                                </Col>
+                            </Row>
+                        </CardText>
+                    </Grid>
+                </Card>
+
+                <div style={{"textAlign": "center"}}>
+                    <br/>
+                    <RaisedButton label="View" style={style} primary={true} type="button" onClick={this.onClickedViewReport} />
+                </div>
+            </div>
+        )
+    }
     
     onSelectDepartment(event, index, value) {
-        let self = this;
-        self.setState({
-            departmentIndexValue: value
+        this.showProgressIndicator(true)
+        this.fetchDepartmentKPIs(this.parseDepartmentResponse()[index]['id'], (err, res) => {
+            if (err) {
+                this.showProgressIndicator(false)
+                this.showAPIError(err)
+            } else {
+                this.showProgressIndicator(false)
+                this.setState({
+                    selectedDepartmentIndex: index,
+                    departmentKPIs: res
+                })
+                if ((this.state.selectedKPITypeIndex !== undefined) && this.parseDepartmentKPIsAsPerKPIType(this.state.selectedKPITypeIndex).length > 0) {
+                    this.setState({
+                        disableULBSelection: false
+                    })
+                }
+            }
         })
-
-        Api.commonApiPost("perfmanagement/v1/kpimaster/_search?departmentId=" + this.state.departments[index]['id'], [], {}, false, true).then(function(res) {
-            self.setState({
-                valueKPIs:jp.query(res, '$.KPIs[?(@.targetType=="VALUE")]'),
-                textKPIs: jp.query(res, '$.KPIs[?(@.targetType=="TEXT")]'),
-                objeciveKPIs: jp.query(res, '$.KPIs[?(@.targetType=="OBJECTIVE")]')
-            })
-        }, function(err) {
-        });
     }
+
     onSelectKPIType(event, index, value) {
         this.setState({
-            kpiTypeIndexValue: value
-        })
-        let kpis = []
-        if (kpiTypes[index]['name'] === 'VALUE') {
-            kpis = this.state.valueKPIs
-        }
-        if (kpiTypes[index]['name'] === 'TEXT') {
-            kpis =  this.state.textKPIs
-        }
-        if (kpiTypes[index]['name'] === 'OBJECTIVE') {
-            kpis =  this.state.objeciveKPIs
-        }
-        this.setState({
-            kpis:kpis
+            selectedKPITypeIndex: index
         })
     }
     onSelectKPI(event, index, values) {
+        let selectedValues  = []
+        if ((values instanceof Array)) {
+            selectedValues  = [...values]
+        } else {
+            selectedValues.push(values)
+        }
+
+        console.log(selectedValues)
         this.setState({
-            kpiIndexValues: values
+            selectedKPIIndices: selectedValues,
+            disableULBSelection: false,
+            multiSelectULBs:    (selectedValues.length > 1) ? false : true,
+            multiSelectFYs:     (selectedValues.length > 1) ? false : true
         })
     }
     onSelectULB(event, index, values) {
+        let selectedValues  = []
+        if ((values instanceof Array)) {
+            selectedValues  = [...values]
+        } else {
+            selectedValues.push(values)
+        }
+
+        console.log(selectedValues)
         this.setState({
-            ULBIndexValues: values
+            selectedULBIndices: selectedValues,
+            disableFinancialYearSelection: false,
+            multiSelectKPIs: (selectedValues.length > 1) ? false : true,
+            multiSelectFYs: (selectedValues.length > 1) ? false : true
         })
     }
+
     onSelectFinancialYear(event, index, values) {
+        let selectedValues  = []
+        if ((values instanceof Array)) {
+            selectedValues  = [...values]
+        } else {
+            selectedValues.push(values)
+        }
+
+        console.log(selectedValues)
         this.setState({
-            financialYearIndexValues: values
+            selectedfinancialYearIndices: selectedValues,
+            multiSelectKPIs: (selectedValues.length > 1) ? false : true,
+            multiSelectULBs: (selectedValues.length > 1) ? false : true
         })
     }
 
@@ -123,7 +206,7 @@ class KPIReports extends Component {
         let finYears    = this.state.financialYearIndexValues.map((item, index) => self.state.financialYears[item]['finYearRange']).join(',')
         let ulbs        = this.state.ULBIndexValues.map((item, index) => self.state.ULBs[item]['code']).join(',')
         let kpis        = this.state.kpiIndexValues.map((item, index)=> self.state.kpis[item]['code']).join(',')
-        let url         = `perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`
+        let url         = `perfmanagement/v1/kpivalue/_comparesearch?departmentId=2&finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`
         console.log(`querying URL ${url}`)
         url             = "perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=MKO,MKT"
         Api.commonApiPost(url, [], {}, false, true).then(function(res) {
@@ -137,99 +220,222 @@ class KPIReports extends Component {
         });
     }
 
-    componentWillMount() {
-        let self = this;
-        Api.commonApiPost("egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department", [], {}, false, false).then(function(res) {
-            if (res.MdmsRes && res.MdmsRes['common-masters'].Department) {
-                self.setState({departments:res.MdmsRes['common-masters'].Department});
-                if (self.state.departments && self.state.departments[0]['id']) {
-                    Api.commonApiPost("perfmanagement/v1/kpimaster/_search?departmentId=" + self.state.departments[0]['id'], [], {}, false, true).then(function(res) {
-                        if (res && res.KPIs) {
-                            self.setState({
-                                valueKPIs:jp.query(res, '$.KPIs[?(@.targetType=="VALUE")]'),
-                                textKPIs: jp.query(res, '$.KPIs[?(@.targetType=="TEXT")]'),
-                                objeciveKPIs: jp.query(res, '$.KPIs[?(@.targetType=="OBJECTIVE")]')
-                            })
-                        }
-                    }, function(err) {
-                    });
-                }
+    /**
+     * popup api error
+     */
+    showAPIError(err) {
+        console.log(err)
+    }
+
+    /**
+     * show/hide progress indication
+     */
+    showProgressIndicator(status) {
+        (status) ? console.log(`loading in progress`) : console.log(`loading completed`)
+    }
+
+    /**
+     * fetch data for screen
+     */
+    componentDidMount() {
+
+        let rspDepartments      = {}
+        let rspDepartmentKPIs   = {}
+        let rspFinancialYears   = {}
+        let rspULBs             = {}
+        
+        this.showProgressIndicator(true)
+        this.fetchDepartment((err, res) => {
+            if (err) {
+                this.showAPIError(err)
+                this.showProgressIndicator(false)
+            } else {
+                rspDepartments  = res
+                this.fetchDepartmentKPIs(res.MdmsRes['common-masters'].Department[0]['id'], (err, res) => {
+                    if (err) {
+                        this.showAPIError(err)
+                        this.showProgressIndicator(false)
+                    } else {
+                        rspDepartmentKPIs   = res
+                        this.fetchFinancialYears((err, res) => {
+                            if (err) {
+                                this.showAPIError(err)
+                                this.showProgressIndicator(false)
+                            } else {
+                                rspFinancialYears   = res
+                                this.fetchULBs((err, res) => {
+                                    if (err) {
+                                        this.showAPIError(err)
+                                        this.showProgressIndicator(false)
+                                    } else {
+                                        rspULBs   = res
+                                        this.showProgressIndicator(false)
+
+                                        /**
+                                         * feed data to screen so that it can render
+                                         */
+                                        this.setState({
+                                            departments: rspDepartments,
+                                            kpiTypes: kpiTypeEnums,
+                                            departmentKPIs: rspDepartmentKPIs,
+                                            ULBs: rspULBs,
+                                            financialYears: rspFinancialYears
+                                        })
+
+                                        if ((this.state.selectedKPITypeIndex !== undefined) && this.parseDepartmentKPIsAsPerKPIType(this.state.selectedKPITypeIndex).length > 0) {
+                                            this.setState({
+                                                disableULBSelection: false
+                                            })
+                                        }
+                                    }
+                                })
+                            }
+                        })
+                    }
+                })
+            }
+        })
+    }
+
+    /**
+     * API required here. 
+     */
+    fetchDepartment(cb) {
+        Api.commonApiPost("egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department", [], {}, false, true).then(function(res) {
+            if (res && res.MdmsRes && res.MdmsRes['common-masters'] && res.MdmsRes['common-masters'].Department && res.MdmsRes['common-masters'].Department[0]) {
+                cb (null, res)
             }
         }, function(err) {
+            cb (err, null)
         });
-
+    }
+    fetchDepartmentKPIs(departmentId, cb) {
+        console.log(`fetchDepartmentKPIs for departmentId ${departmentId}`)
+        Api.commonApiPost(`perfmanagement/v1/kpimaster/_search?departmentId=${departmentId}`, [], {}, false, true).then(function(res) {
+            if (res && res.KPIs) {
+                cb (null, res)
+            }
+        }, function(err) {
+            cb (err, null)
+        });
+    }
+    fetchULBs(cb) {
         Api.commonApiPost("egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant", [], {}, false, false).then(function(res) {
             if (res.MdmsRes && res.MdmsRes['tenant'] && res.MdmsRes['tenant'].tenants) {
-                self.setState({ULBs:res.MdmsRes['tenant'].tenants});
+                cb (null, res)
             }
         }, function(err) {
+            cb (err, null)
         });
-   
+    }
+    fetchFinancialYears(cb) {
         Api.commonApiPost("egf-master/financialyears/_search", [], {}, false, false).then(function(res) {
-            if (res) {
-                self.setState({financialYears:res.financialYears});
+            if (res.financialYears) {
+                cb (null, res)
             }
         }, function(err) {
+            cb (err, null)
         });
     }
 
-    render() {
-        return (
-            <div>
-                <Card className="uiCard">
-                    <Grid fluid>
-                        <CardText>
-                            <Row>
-                                <Col xs={12} sm={4} md={4} >
-                                    {EGSelectField("Department", true, false, this.state.departmentIndexValue, this.state.departments, "name", this.onSelectDepartment)}
-                                </Col>
-                                <Col  xs={12} sm={4} md={4}>
-                                    {EGSelectField("KPI Type", true, false, this.state.kpiTypeIndexValue, this.state.kpiTypes, "name", this.onSelectKPIType)}
-                                </Col>
-                                <Col  xs={12} sm={4} md={4}>
-                                    {EGSelectField("KPIs", true, true, this.state.kpiIndexValues, this.state.kpis, "name", this.onSelectKPI)}
-                                </Col>
-                            </Row>
-                        </CardText>
-                    </Grid>
-                </Card>
-                <Card className="uiCard">
-                    <Grid fluid>
-                        <CardText>
-                            <Row>
-                                <Col xs={12} sm={6} md={6} >
-                                    {EGSelectField("ULBs", true, true, this.state.ULBIndexValues, this.state.ULBs, "name", this.onSelectULB)}
-                                </Col>
-                                <Col  xs={12} sm={6} md={6}>
-                                    {EGSelectField("Financial Year", true, true, this.state.financialYearIndexValues, this.state.financialYears, "finYearRange", this.onSelectFinancialYear)}
-                                </Col>
-                            </Row>
-                        </CardText>
-                    </Grid>
-                </Card>
-                <div style={{"textAlign": "center"}}>
-                    <br/>
-                    <RaisedButton label="View" style={style} primary={true} type="button" onClick={this.onClickedViewReport} />
-                </div>
-
-                { this.state.startViewReport ? <Card className="uiCard">
-                    <EGBarChart data = {this.state.kpiReportResponse} FY={this.state.financialYearIndexValues} ULB={this.state.ULBIndexValues} KPI={this.state.kpiIndexValues} />
-                    </Card> : <div></div>
-                }
-
-                <div>
-                    <RefreshIndicator
-                        size={40}
-                        left={10}
-                        top={0}
-                        loadingColor="#FF9800"
-                        status={this.state.isAPIInProgress ? "loading" : "hide"}
-                        style={style.refresh}
-                    />
-                </div>
-            </div>
-        )
+    /**
+     * functions to format api response that will be used during rendering
+     */
+    parseDepartmentResponse() {
+        return jp.query(this.state.departments, '$.MdmsRes["common-masters"].Department[*]').map((department, index) => {
+            return {
+                code: department.code,
+                name: department.name,
+                id: department.id
+            }
+        });
     }
+
+    parseULBResponse() {
+        return jp.query(this.state.ULBs, '$.MdmsRes["tenant"].tenants[*]').map((tenant, index) => {
+            return {
+                code: tenant.code,
+                name: tenant.name
+            }
+        });
+    }
+
+    parseFinancialYearResponse() {
+        return jp.query(this.state.financialYears, '$.financialYears[*]').map((finYear, index) => {
+            return {
+                code: finYear.finYearRange,
+                name: finYear.finYearRange
+            }
+        });
+    }
+
+    parseDepartmentKPIsAsPerKPIType(type) {
+        return jp.query(this.state.departmentKPIs, `$.KPIs[?(@.targetType==\"${kpiTypeEnums[type].name}\")]`).map((kpi, index) => {
+            return {
+                code: kpi.code,
+                name: kpi.name,
+                type: kpi.targetType
+            }
+        });
+    }
+
+    // render() {
+    //     return (
+    //         <div>
+    //             <Card className="uiCard">
+    //                 <Grid fluid>
+    //                     <CardText>
+    //                         <Row>
+    //                             <Col xs={12} sm={4} md={4} >
+    //                                 {EGSelectField("Department", true, false, this.state.departmentIndexValue, this.state.departments, "name", this.onSelectDepartment)}
+    //                             </Col>
+    //                             <Col  xs={12} sm={4} md={4}>
+    //                                 {EGSelectField("KPI Type", true, false, this.state.kpiTypeIndexValue, this.state.kpiTypes, "name", this.onSelectKPIType)}
+    //                             </Col>
+    //                             <Col  xs={12} sm={4} md={4}>
+    //                                 {EGSelectField("KPIs", true, true, this.state.kpiIndexValues, this.state.kpis, "name", this.onSelectKPI)}
+    //                             </Col>
+    //                         </Row>
+    //                     </CardText>
+    //                 </Grid>
+    //             </Card>
+    //             <Card className="uiCard">
+    //                 <Grid fluid>
+    //                     <CardText>
+    //                         <Row>
+    //                             <Col xs={12} sm={6} md={6} >
+    //                                 {EGSelectField("ULBs", true, true, this.state.ULBIndexValues, this.state.ULBs, "name", this.onSelectULB)}
+    //                             </Col>
+    //                             <Col  xs={12} sm={6} md={6}>
+    //                                 {EGSelectField("Financial Year", true, true, this.state.financialYearIndexValues, this.state.financialYears, "finYearRange", this.onSelectFinancialYear)}
+    //                             </Col>
+    //                         </Row>
+    //                     </CardText>
+    //                 </Grid>
+    //             </Card>
+    //             <div style={{"textAlign": "center"}}>
+    //                 <br/>
+    //                 <RaisedButton label="View" style={style} primary={true} type="button" onClick={this.onClickedViewReport} />
+    //             </div>
+
+    //             { this.state.startViewReport ? <Card className="uiCard">
+    //                 <EGBarChart data = {this.state.kpiReportResponse} FY={this.state.financialYearIndexValues} ULB={this.state.ULBIndexValues} KPI={this.state.kpiIndexValues} />
+    //                 </Card> : <div></div>
+    //             }
+
+    //             <div>
+    //                 <RefreshIndicator
+    //                     size={40}
+    //                     left={10}
+    //                     top={0}
+    //                     loadingColor="#FF9800"
+    //                     status={this.state.isAPIInProgress ? "loading" : "hide"}
+    //                     style={style.refresh}
+    //                 />
+    //             </div>
+    //         </div>
+    //     )
+    // }
 }
 
 export default KPIReports;

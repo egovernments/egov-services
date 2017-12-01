@@ -365,9 +365,7 @@ class Report extends Component {
         moduleDetails: moduleDetails
       }
     }
-
-    console.log(_body);
-
+    
     Api.commonApiPost('/egov-mdms-service/v1/_search','', _body,{},true,true).then((res)=>{
       this.setState({
         mdmsData: res.MdmsRes

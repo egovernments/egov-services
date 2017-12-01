@@ -661,7 +661,7 @@ ReportDefinitions:
 
 # Supplier wise Purchase Order History Report
 - reportName: SupplierwisesPurchaseOrderHistoryReport
-  summary: Supplier wise Purchase Order History Report
+  summary: Supplier wise Purchase Order History
   version: 1.0.0
   moduleName: inventory
   sourceColumns:
@@ -779,7 +779,7 @@ ReportDefinitions:
 
 # Material wise Purchase Order History Report
 - reportName: MaterialwisePurchaseOrderHistoryReport
-  summary: Material wise Purchase Order History Report
+  summary: Material wise Purchase Order History
   version: 1.0.0
   moduleName: inventory
   externalService:

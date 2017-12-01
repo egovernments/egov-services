@@ -84,6 +84,36 @@ public class SummonService {
 
 	}
 	
+	/**
+	 * This API will update the summon
+	 * 
+	 * @param summonRequest
+	 * @return {@link SummonResponse}
+	 */
+	public SummonResponse updateSummon(SummonRequest summonRequest) throws Exception {
+
+		for (Summon summon : summonRequest.getSummons()) {
+
+			if (summon.getIsUlbinitiated() == null) {
+				summon.setIsUlbinitiated(Boolean.FALSE);
+			}
+
+			if (summon.getIsSummon()) {
+				summon.setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
+			} else {
+				summon.setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
+			}
+		}
+
+		kafkaTemplate.send(propertiesManager.getUpdateSummonvalidated(), summonRequest);
+
+		pushSummonToIndexer(summonRequest);
+		return new SummonResponse(
+				responseInfoFactory.getResponseInfo(summonRequest.getRequestInfo(), HttpStatus.CREATED),
+				summonRequest.getSummons());
+
+	}
+	
 	private void pushSummonToIndexer(SummonRequest summonRequest) {
 
 		for (Summon summon : summonRequest.getSummons()) {

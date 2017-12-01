@@ -54,6 +54,9 @@ public class PropertiesManager {
 
 	@Value("${egov.lcms.create.summon.validated}")
 	private String createSummonvalidated;
+	
+	@Value("${egov.lcms.update.summon.validated}")
+	private String updateSummonvalidated;
 
 	@Value("${egov.lcms.search.opinion.error.code}")
 	private String opinionSearchErrorCode;

@@ -130,13 +130,15 @@ serviceMaps:
    description: Insert actual value for a KPI Master Record
    fromTopic: egov.pa.kpivalue-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_value (id, kpicode, tenantid, createdby, createddate) VALUES (nextval('seq_egpa_kpi_value'), ?, ? ,? ,?) ; 
+    - query: INSERT INTO egpa_kpi_value (id, kpicode, tenantid, finyear, createdby, createddate) VALUES (nextval('seq_egpa_kpi_value'), ?, ? ,? ,?, ?) ; 
       basePath: $.kpiValues.*
       jsonMaps:
                
        - jsonPath: $.kpiValues.*.kpi.code
          
        - jsonPath: $.kpiValues.*.tenantId
+       
+       - jsonPath: $.kpiValues.*.finYear
          
        - jsonPath: $.kpiValues.*.kpiValue.auditDetails.createdBy
          type: LONG
@@ -176,13 +178,15 @@ serviceMaps:
    description: Create and Set the target for a particular KPI Record
    fromTopic: egov.pa.kpitarget-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master_target (id, kpicode, targetvalue, tenantid, createdby, createddate) values (nextval('seq_egpa_kpi_master_target'), ?, ?, ?, ?, ?)   
+    - query: INSERT INTO egpa_kpi_master_target (id, kpicode, targetvalue, finyear, tenantid, createdby, createddate) values (nextval('seq_egpa_kpi_master_target'), ?, ?, ?, ?, ?, ?)   
       basePath: $.kpiTargets.*
       jsonMaps:
        
        - jsonPath: $.kpiTargets.*.kpiCode
          
-       - jsonPath: $.kpiTargets.*.targetValue  
+       - jsonPath: $.kpiTargets.*.targetValue
+       
+       - jsonPath: $.kpiTargets.*.finYear    
        
        - jsonPath: $.kpiTargets.*.tenantId
          
@@ -197,11 +201,13 @@ serviceMaps:
    description: Update the value of the target for a particular KPI Record
    fromTopic: egov.pa.kpitarget-update
    queryMaps: 
-    - query: UPDATE egpa_kpi_master_target set targetvalue = ? , lastmodifiedby = ?, lastmodifieddate = ? WHERE id = ? and kpicode = ?  
+    - query: UPDATE egpa_kpi_master_target set targetvalue = ?, finyear = ?,  lastmodifiedby = ?, lastmodifieddate = ? WHERE id = ? and kpicode = ?  
       basePath: $.kpiTargets.*
       jsonMaps:
        
        - jsonPath: $.kpiTargets.*.targetValue  
+       
+       - jsonPath: $.kpiTargets.*.finYear
          
        - jsonPath: $.RequestInfo.userInfo.id
          type: LONG  

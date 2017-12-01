@@ -18,6 +18,9 @@ public class KpiTarget   {
 
   @JsonProperty("kpiCode")
   private String kpiCode = null;
+  
+  @JsonProperty("finYear")
+  private String finYear = null;
 
   @JsonProperty("targetValue")
   private String targetValue = null;
@@ -43,7 +46,15 @@ public class KpiTarget   {
   
   
 
-  public String getTargetDescription() {
+  public String getFinYear() {
+	return finYear;
+}
+
+public void setFinYear(String finYear) {
+	this.finYear = finYear;
+}
+
+public String getTargetDescription() {
 	return targetDescription;
 }
 

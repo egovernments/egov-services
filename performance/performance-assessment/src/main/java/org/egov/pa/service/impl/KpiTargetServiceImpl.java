@@ -13,6 +13,7 @@ import org.egov.pa.repository.KpiTargetRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiTargetService;
 import org.egov.pa.validator.RestCallService;
+import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPITargetRequest;
 import org.egov.pa.web.contract.KPIValueRequest;
 import org.egov.pa.web.contract.ValueResponse;
@@ -63,6 +64,7 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 				kpi.setCode(target.getKpiCode());
 				ValueResponse vr = new ValueResponse(); 
 				vr.setTenantId(target.getTenantId());
+				vr.setFinYear(target.getFinYear());
 				vr.setKpi(kpi);
 				AuditDetails audit = new AuditDetails(); 
 				audit.setCreatedBy(targetRequest.getRequestInfo().getUserInfo().getId());
@@ -78,6 +80,7 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 					kpi.setCode(target.getKpiCode());
 					ValueResponse vr = new ValueResponse(); 
 					vr.setTenantId(tenant.getCode());
+					vr.setFinYear(target.getFinYear());
 					vr.setKpi(kpi);
 					AuditDetails audit = new AuditDetails(); 
 					audit.setCreatedBy(targetRequest.getRequestInfo().getUserInfo().getId());
@@ -102,5 +105,10 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 			target.setCreatedDate(new java.util.Date().getTime());
 			target.setLastModifiedDate(new java.util.Date().getTime());
 		}
+	}
+
+	@Override
+	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq) {
+		return kpiTargetRepository.searchKpiTargets(getReq);  
 	}
 }

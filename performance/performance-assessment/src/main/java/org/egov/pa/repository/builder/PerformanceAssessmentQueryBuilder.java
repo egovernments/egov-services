@@ -154,6 +154,11 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
+    public String getTargetSearchQuery() { 
+    	return "SELECT id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, finyear as finYear " 
+    			+ " FROM egpa_kpi_master_target target WHERE target.kpicode IN (:kpiCode) "; 
+    }
+    
     public String getDocumentForKpiValue() { 
     	return " SELECT documentcode as code, kpicode as kpiCode, filestoreid as fileStoreId, id, valueid as valueId " 
     			+ " FROM egpa_kpi_value_documents WHERE valueid = :vid " ; 

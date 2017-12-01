@@ -1,11 +1,14 @@
 package org.egov.pa.web.controller;
 
+import java.util.List;
+
 import javax.validation.Valid;
 
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.pa.service.KpiTargetService;
 import org.egov.pa.validator.RequestValidator;
-import org.egov.pa.web.contract.KPIGetRequest;
+import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPITargetRequest;
 import org.egov.pa.web.contract.KPITargetResponse;
 import org.egov.pa.web.contract.RequestInfoWrapper;
@@ -18,6 +21,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -64,6 +68,8 @@ public class KpiTargetController implements KpiTarget{
         kpiTargetService.updateNewTarget(kpiTargetRequest); 
         return getCreateUpdateSuccessResponse(kpiTargetRequest);
 	}
+	
+	
 
 	@Override
 	public ResponseEntity<?> delete(KPITargetRequest kpiTargetRequest, BindingResult errors) {
@@ -72,10 +78,15 @@ public class KpiTargetController implements KpiTarget{
 	}
 
 	@Override
-	public ResponseEntity<?> search(KPIGetRequest kpiGetRequest, BindingResult errors,
-			RequestInfoWrapper requestInfoWrapper, BindingResult requestBodyBindingResult) {
-		// TODO Auto-generated method stub
-		return null;
+	public ResponseEntity<?> search(@RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
+			 @RequestParam(value="finYear", required = false) List<String> finYearList,
+			 @RequestBody RequestInfoWrapper requestInfo) {
+		log.info("KPI Get Target Request as recieved in Controller : " + kpiCodes + finYearList);
+		KPITargetGetRequest getReq = new KPITargetGetRequest(); 
+		getReq.setFinYear(finYearList);
+		getReq.setKpiCode(kpiCodes);
+		List<org.egov.pa.model.KpiTarget> targetList = kpiTargetService.searchKpiTarget(getReq); 
+		return getSearchSuccessResponse(targetList, requestInfo.getRequestInfo());
 	}
 	
 	public ResponseEntity<?> getCreateUpdateSuccessResponse(final KPITargetRequest kpiTargetRequest) {
@@ -84,6 +95,15 @@ public class KpiTargetController implements KpiTarget{
         responseInfo.setStatus(HttpStatus.OK.toString());
         response.setResponseInfo(responseInfo);
         response.setKpiTargets(kpiTargetRequest.getKpiTargets());
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+	
+	public ResponseEntity<?> getSearchSuccessResponse(List<org.egov.pa.model.KpiTarget> targetList, RequestInfo rInfo) {
+        KPITargetResponse response = new KPITargetResponse(); 
+        final ResponseInfo responseInfo = responseInfoFactory.createResponseInfoFromRequestInfo(rInfo,true);
+        responseInfo.setStatus(HttpStatus.OK.toString());
+        response.setResponseInfo(responseInfo);
+        response.setKpiTargets(targetList);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 

@@ -73,7 +73,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?&active=true&tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
     wrapper: true
@@ -639,7 +639,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?$active=true&tenantId=$tenantid|$..code|$..name
     source: inventory
     isMandatory: true
 
@@ -665,7 +665,7 @@ ReportDefinitions:
   moduleName: inventory
   externalService:
   - entity: $.MdmsRes.inventory.Material
-    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
     keyOrder: code,name,tenantId
     tableName: tbl_material
   sourceColumns:
@@ -729,7 +729,7 @@ ReportDefinitions:
 
   - name: supplierName
     label: inventory.supplierName
-    pattern: http://egov-micro-dev.egovernments.org/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     searchClause: AND pl.supplier = $supplierName
@@ -739,6 +739,13 @@ ReportDefinitions:
   - name: supplierCompanyName
     label: inventory.supplierCompanyName
     type: string
+    source: inventory
+    isMandatory: false
+
+  - name: storeName
+    label: inventory.storeName
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?$active=true&tenantId=$tenantid|$..code|$..name
+    type: singlevaluelist
     source: inventory
     isMandatory: false
 
@@ -756,7 +763,122 @@ ReportDefinitions:
     searchClause: AND pld.material = $materialName
     isMandatory: false
 
-  query: select * from supplier
+  query: select sup.name as suppliername,
+        (select name  from supplier where type = 'COMPANY' And tenantid ='default') as supplierCompanyName,
+        po.purchaseorderNumber as PoNo,
+        po.purchaseorderdate as PoDate,
+        po.status as postatus,
+        po.expecteddeliverydate as expecteddeliverydate,
+        pod.orderquantity as qtyOrdered
+        from supplier sup,purchaseorder po,purchaseorderdetail pod
+        where po.tenantid = $tenantid
+        And pod.tenantid = po.tenantid
+        AND pod.tenantid = sup.tenantid
+        And po.purchaseordernumber = pod.purchaseorder
+        AND po.supplier = sup.code
+
+# Material wise Purchase Order History Report
+- reportName: MaterialwisePurchaseOrderHistoryReport
+  summary: Material wise Purchase Order History Report
+  version: 1.0.0
+  moduleName: inventory
+  externalService:
+  - entity: $.MdmsRes.inventory.Material
+    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    keyOrder: code,name,tenantId
+    tableName: tbl_material
+  sourceColumns:
+
+  - name: materialName
+    label: inventory.materialName
+    type: string
+    source: inventory
+
+  - name: materialdescription
+    label: inventory.materialdescription
+    type: string
+    source: inventory
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+
+  - name: poStatus
+    label: inventory.poStatus
+    type: string
+    source: inventory
+
+  - name: expectedDeliveryDate
+    label: inventory.expecteddeliverydate
+    type: epoch
+    source: inventory
+
+  - name: paymentDueDate
+    label: inventory.paymentDueDate
+    type: epoch
+    source: inventory
+
+  - name: qtyOrdered
+    label: inventory.qtyOrdered
+    type: string
+    source: inventory
+
+  - name: poTotal
+    label: inventory.poTotal
+    type: string
+    source: inventory
+
+  searchParams:
+
+  - name: materialName
+    label: inventory.materialName
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    type: singlevaluelist
+    source: inventory
+    searchClause: AND pl.supplier = $materialName
+    wrapper: true
+    isMandatory: false
+
+  - name: storeName
+    label: inventory.storeName
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?$active=true&tenantId=$tenantid|$..code|$..name
+    type: singlevaluelist
+    source: inventory
+    isMandatory: false
+
+  - name: poNo
+    label: inventory.poNo
+    type: string
+    source: inventory
+    searchClause: AND pld.material = $materialName
+    isMandatory: false
+
+  - name: poDate
+    label: inventory.poDate
+    type: epoch
+    source: inventory
+    searchClause: AND pld.material = $materialName
+    isMandatory: false
+
+  query: select mat.name as materialName,
+        mat .description as materialdescription,
+        po.purchaseorderNumber as PoNo,
+        po.purchaseorderdate as PoDate,
+        po.status as postatus,
+        po.expecteddeliverydate as expecteddeliverydate,
+        pod.orderquantity as qtyOrdered
+        from tbl_material mat,purchaseorder po,purchaseorderdetail pod
+        where po.tenantid = $tenantid
+        And pod.tenantid = po.tenantid
+        AND pod.tenantid = mat.tenantid
+        And po.purchaseordernumber = pod.purchaseorder
+        AND pod.material = mat.code
 
 
 

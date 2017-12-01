@@ -5,6 +5,12 @@ var dat = {
 		"tenantIdRequired": true,
 		"idJsonPath": "",
 		"objectName": "Asset",
+		"customActionsAndUrl":[
+			{
+				"actionName":"Add",
+				"url":"/non-framework/asset/master/assetMovableCreate"
+			}
+		],
 		"groups": [
 			{
 				"label": "ac.create.movable.Header.Details",

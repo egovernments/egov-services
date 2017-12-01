@@ -775,7 +775,7 @@ var dat = {
 		"customActionsAndUrl":[
 			{
 				"actionName":"Add",
-				"url":"/non-framework/asset/master/assetMovableCreate"
+				"url":"/non-framework/asset/master/assetImmovableCreate"
 			}
 		],
 		"groups": [

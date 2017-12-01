@@ -189,7 +189,9 @@ import spilloverAE from './components/non-framework/works/transaction/spilloverA
 import viewSpilloverAE from './components/non-framework/works/transaction/spilloverAE/viewSpilloverAE';
 import detailedEstimate from './components/non-framework/works/transaction/detailedEstimate';
 
+// Performance Management
 import kpivalues from './components/non-framework/perfManagement/master/kpivalues';
+import kpiReports from './components/non-framework/perfManagement/reports/kpiReports'
 
 const base = "";
 
@@ -390,8 +392,9 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/works/transaction/viewSpilloverAE/:id'} component={viewSpilloverAE}/>
       <Route exact path= {base + '/non-framework/works/transaction/detailedEstimate'} component={detailedEstimate}/>
 
+      {/* performance management */}
       <Route exact path= {base + '/list/perfManagement/actualKpiCreate'} component={kpivalues}/>
-
+      <Route exact path= {base + '/non-framework/perfManagement/reports/kpiReports'} component={kpiReports}/>
 
       <Route component={NoMatch}/>
 

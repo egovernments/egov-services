@@ -246,16 +246,17 @@
   "DumpingGround": [
     {
       "code": "Fake Dumping Ground Code 1",
-      "name": "Fake Dumping Ground Code 1",
+      "name": "Fake Dumping Ground 1",
       "tenantId": "default"
     },
     {
      "code": "Fake Dumping Ground Code 2",
-     "name": "Fake Dumping Ground Code 1",
+     "name": "Fake Dumping Ground 2",
      "tenantId": "default"
     },
     {
       "code": "Fake Dumping Ground Code 3",
+      "name": "Fake Dumping Ground 3",
       "tenantId": "default"
     }
   ],

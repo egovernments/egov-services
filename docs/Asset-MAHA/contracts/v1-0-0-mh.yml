@@ -135,6 +135,11 @@ paths:
           description: Door No of the asset.
           required: false
           type: string
+        - name: isTransactionHistoryRequired
+          in: query
+          description: isTransactionHistoryRequired when true return the transaction history of the asset used only in asset search.
+          required: false
+          type: boolean
         - name: status
           in: query
           description: Asset status description.
@@ -793,6 +798,13 @@ definitions:
         description: One asset can be located in one or more land. These land are assets captured in the same entity.
         items:
           $ref: '#/definitions/LandDetails'
+      transactionHistory:
+        type: array
+        format: varchar
+        description: This field is required to capture transaction history of the asset thisfield is used only in search.
+        items:
+          $ref: '#/definitions/TransactionHistory'      
+    
 
     required:
       - name
@@ -1018,6 +1030,38 @@ definitions:
       - depreciationRate
       - financialYear
       - assetId
+      
+  TransactionHistory:
+    description: Transaction  details of asset
+    type: object
+    properties:
+      transactionDate:
+        type: integer
+        format: int64
+        description: 'transaction date of the asset'
+      transactionAmount:
+        type: number
+        format: bigdecimal
+        description: 'transaction amount of the asset'
+      valueBeforeTransaction:
+        type: number
+        format: bigdecimal
+        description: 'value of the asset before transaction'
+      valueAfterTransaction:
+        type: number
+        format: bigdecimal
+        description: 'value of the asset after transaction'
+      transactionType:
+        type: string
+        description: >-
+          Transaction type revaluation or depreciation.
+          value as .
+        enum:
+          - REVALUATION
+          - DEPRECIATION     
+        
+  
+  
   DefectLiability:
     description: Hold the asset defect liability related information. Defect liability can be measured in years, months and days.
     type: object

@@ -34,7 +34,7 @@ ReportDefinitions:
     isMandatory: true
     stateData: true
     wrapper: true
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.*.code
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=SWM&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.*.name
   - name: collectiontypecode
     label: reports.swm.collectiontype
     type: singlevaluelist

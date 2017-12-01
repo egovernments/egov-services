@@ -95,7 +95,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name"
           }
         ]
       },
@@ -285,7 +285,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name"
           },
           {
             "name":"mrnNumber",
@@ -490,7 +490,7 @@ var dat = {
             "maxLength": 50,
             "minLength": 5,
             "patternErrorMsg": "inventory.create.field.message.code",
-            "url":"inventory-services/stores/_search?active=true|$.stores[*].code|$.stores[*].name"
+            "url":"inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name"
           },
           {
             "name":"mrnNumber",

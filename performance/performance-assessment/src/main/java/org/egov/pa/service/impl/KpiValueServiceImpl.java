@@ -88,7 +88,9 @@ public class KpiValueServiceImpl implements KpiValueService {
 			for (int j = 0; j < kpiValueList.get(i).getValueList().size(); j++) {
 				kpiValueList.get(i).getValueList().get(j).setValueid(kpiValueList.get(i).getId());
 			}
-			kpiCodeList.add(kpiValueList.get(i).getKpiCode());
+			if(kpiValueSearchReq.getKpiCodes().contains(kpiValueList.get(i).getKpiCode())) { 
+				kpiCodeList.add(kpiValueList.get(i).getKpiCode());
+			}
 		}
 		List<KPI> kpiList = new ArrayList<>();
 		if (kpiCodeList.size() > 0) {

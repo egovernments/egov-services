@@ -140,7 +140,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id); 
 				value.setValueList(valueDetailList);
 			} else { 
-				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId());
+				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId()+"_"+value.getFinYear());
 				value.setValueList(defaultValueDetailList);
 			}
 			listOfValues.add(value);

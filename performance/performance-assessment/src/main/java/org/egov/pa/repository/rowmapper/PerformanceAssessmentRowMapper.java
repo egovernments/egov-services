@@ -53,7 +53,6 @@ import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
-import org.egov.pa.model.TargetType;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -78,7 +77,7 @@ public class PerformanceAssessmentRowMapper {
 			kpi.setPeriodicity(rs.getString("periodicity"));
 			kpi.setTargetType(rs.getString("targetType"));
 			kpi.setAuditDetails(addAuditDetails(rs));
-			if(StringUtils.isNotBlank(rs.getString("targetId"))) { 
+			/*if(StringUtils.isNotBlank(rs.getString("targetId"))) { 
 				KpiTarget target = new KpiTarget();
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("kpiCode"));
@@ -96,7 +95,7 @@ public class PerformanceAssessmentRowMapper {
 				target.setTenantId(rs.getString("tenantId"));
 				target.setFinYear(rs.getString("targetFinYear"));
 				kpi.setKpiTarget(target);
-			}
+			}*/
 			return kpi;
 		}
 	}
@@ -200,6 +199,7 @@ public class PerformanceAssessmentRowMapper {
 				value.setId(rs.getString("id"));
 				value.setKpiCode(rs.getString("kpiCode"));
 				value.setTenantId(rs.getString("tenantId"));
+				value.setFinYear(rs.getString("valueFinYear"));
 				value.setAuditDetails(addAuditDetails(rs));
 				valueMap.put(rs.getString("id"), value); 
 			}
@@ -220,7 +220,7 @@ public class PerformanceAssessmentRowMapper {
 					detail.setValue("");
 					valueDetailList.add(detail);
 				}
-				valueDetailMap.put(rs.getString("kpiCode").concat("_" + rs.getString("tenantId")), valueDetailList); 
+				valueDetailMap.put(rs.getString("kpiCode").concat("_" + rs.getString("tenantId")).concat("_"+ rs.getString("valueFinYear")), valueDetailList); 
 			}
 			return null; 
 		}

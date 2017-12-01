@@ -772,6 +772,12 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Asset",
+		"customActionsAndUrl":[
+			{
+				"actionName":"Add",
+				"url":"/non-framework/asset/master/assetMovableCreate"
+			}
+		],
 		"groups": [
 			{
 				"label": "ac.search.asset.title",

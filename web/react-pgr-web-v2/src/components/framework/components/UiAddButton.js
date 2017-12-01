@@ -14,10 +14,15 @@ class UiAddButton extends Component {
 
 	 add=(e)=>
 	 {
+         let {customUrl}=this.props;
 				 let {setRoute,match}=this.props;
          let {params}=match;
          // console.log(`/create/${params.moduleName}`+ (params.master && "/"+params.master));
-         setRoute(`/create/${params.moduleName}`+ (params.master && "/"+params.master));
+         if (customUrl) {
+           setRoute(customUrl);
+         } else {
+           setRoute(`/create/${params.moduleName}`+ (params.master && "/"+params.master));
+         }
 	 }
 
    render () {

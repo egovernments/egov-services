@@ -642,6 +642,7 @@ class Search extends Component {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {search, handleChange, getVal, addNewCard, removeCard, rowClickHandler,rowButtonClickHandler,rowCheckboxClickHandler,rowIconClickHandler} = this;
     let {showResult, resultList,selectedRecordId} = this.state;
+    let customActionsAndUrl=!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty("customActionsAndUrl")?mockData[`${moduleName}.${actionName}`]["customActionsAndUrl"][0].url:"";
     // console.log(formData);
     // console.log(this.props.dropDownData);
     return (
@@ -653,7 +654,7 @@ class Search extends Component {
           </Col>
           <Col xs={6} md={6} >
             <div style={{"textAlign": "right",marginRight:"16px",marginTop:"16px"}}>
-              <UiAddButton />
+              <UiAddButton customUrl={customActionsAndUrl}/>
             </div>
           </Col>
         </Row>

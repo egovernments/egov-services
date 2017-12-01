@@ -10,10 +10,11 @@ import java.util.List;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.inv.model.RequestInfo;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceipt.ReceiptTypeEnum;
 import org.egov.inv.model.MaterialReceiptDetail;
@@ -46,13 +47,16 @@ public class OpeningBalanceService extends DomainService {
 
 	@Autowired
 	private MaterialReceiptJdbcRepository jdbcRepository;
+	
+	@Autowired
+	private MaterialService materialService;
 
 	@Autowired
 	private MaterialReceiptService materialReceiptService;
 
 	public List<MaterialReceipt> create(OpeningBalanceRequest openBalReq, String tenantId) {
 		try {
-			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE);
+			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE,tenantId);
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
 				materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
 				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
@@ -93,7 +97,7 @@ public class OpeningBalanceService extends DomainService {
 
 	public List<MaterialReceipt> update(OpeningBalanceRequest openBalReq, String tenantId) {
 		try {
-			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_UPDATE);
+			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_UPDATE,tenantId);
 			List<String> materialReceiptDetailIds = new ArrayList<>();
 			List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
@@ -146,7 +150,7 @@ public class OpeningBalanceService extends DomainService {
 		return mrnNumber;
 	}
 
-	private void validate(List<MaterialReceipt> receipt, String method) {
+	private void validate(List<MaterialReceipt> receipt, String method, String tenantId) {
 
 		try {
 			switch (method) {
@@ -207,9 +211,22 @@ public class OpeningBalanceService extends DomainService {
 							if (isEmpty(detail.getUnitRate())) {
 								throw new CustomException("unitRate", "UnitRate Is Required In Row " + detailIndex);
 							}
+							Material material = materialService.fetchMaterial(tenantId, detail.getMaterial().getCode(), new org.egov.inv.model.RequestInfo());
+
 							if (null != detail.getReceiptDetailsAddnInfo()) {
 								for (MaterialReceiptDetailAddnlinfo addInfo : detail.getReceiptDetailsAddnInfo()) {
 
+									
+									if(null != material && material.getLotControl() == true && isEmpty(addInfo.getLotNo())){
+										throw new CustomException("lotControl","Lot Number Is Required In Row " + detailIndex);
+									}
+									
+									if(null != material && material.getShelfLifeControl() == true && isEmpty(addInfo.getExpiryDate()) ||
+											(!isEmpty(addInfo.getExpiryDate()) && !(addInfo.getExpiryDate().doubleValue() > 0))){
+										throw new CustomException("shelfLifeControl","Expiry Date Is Required In Row " + detailIndex);
+									}
+									
+									
 									if (null != addInfo.getReceivedDate()
 											&& Long.valueOf(addInfo.getReceivedDate()) >= currentMilllis) {
 										throw new CustomException("ReceiptDate",
@@ -252,7 +269,7 @@ public class OpeningBalanceService extends DomainService {
 	}
 
 	private void setQuantity(String tenantId, MaterialReceiptDetail detail) {
-		Uom uom = getUom(tenantId, detail.getUom().getCode(), new RequestInfo());
+		Uom uom = getUom(tenantId, detail.getUom().getCode(), new org.egov.inv.model.RequestInfo());
 		detail.setUom(uom);
 
 		if (null != detail.getReceivedQty() && null != uom.getConversionFactor()) {

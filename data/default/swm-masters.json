@@ -136,7 +136,7 @@
     {
       "id": 1,
       "tenantId": "default",
-      "vehicleType": "Fake Vehicle Type 1",
+      "vehicleType": "Fake Vehicle Type Code 1",
       "regNumber": "Fake registration Number 1",
       "engineSrNumber": "Fake engine Sr Number 1",
       "chassisSrNumber": "Fake chassis Sr Number Number 1",
@@ -157,7 +157,7 @@
     {
       "id": 2,
       "tenantId": "default",
-      "vehicleType": "Fake Vehicle Type 2",
+      "vehicleType": "Fake Vehicle Type Code 2",
       "regNumber": "Fake registration Number 2",
       "engineSrNumber": "Fake engine Sr Number 2",
       "chassisSrNumber": "Fake chassis Sr Number Number 2",
@@ -178,7 +178,7 @@
     {
       "id": 3,
       "tenantId": "default",
-      "vehicleType": "Fake Vehicle Type 3",
+      "vehicleType": "Fake Vehicle Type Code 3",
       "regNumber": "Fake registration Number 3",
       "engineSrNumber": "Fake engine Sr Number 3",
       "chassisSrNumber": "Fake chassis Sr Number Number 3",

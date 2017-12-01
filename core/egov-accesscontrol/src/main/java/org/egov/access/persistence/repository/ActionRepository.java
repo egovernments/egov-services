@@ -79,6 +79,8 @@ import com.jayway.jsonpath.JsonPath;
 public class ActionRepository {
 
 	public static final Logger LOGGER = LoggerFactory.getLogger(ActionRepository.class);
+	
+	
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -592,7 +594,7 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 		List<Action> actionList = new ArrayList<Action>();
 		String roleFilter = "[?(@.rolecode IN [$rolecode])]";
 		String actionFilter = "[?(@.id IN [$actionid] && @.enabled == $enabled)]";
-		url = "http://egov-mdms-service:8080/egov-mdms-service/v1/_search";
+		url = "http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_search";
 		List<String> rolecodes = actionRequest.getRoleCodes();
 		StringBuffer rolecodelist = new StringBuffer();
 		
@@ -609,37 +611,11 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 		
 		
 		roleFilter = roleFilter.replaceAll("\\$rolecode", rolecodelist.toString());
-		MdmsCriteriaReq mcq = new MdmsCriteriaReq();
-		List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
-		List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();
-		mcq.setRequestInfo(getRInfo());
-		MdmsCriteria mc = new MdmsCriteria();
-		mc.setTenantId(actionRequest.getTenantId());
-		ModuleDetail md = new ModuleDetail();
-		md.setModuleName("ACCESSCONTROL");
-		MasterDetail masterDetail = new MasterDetail();
-		masterDetail.setName("roleactions");
-		masterDetail.setFilter(roleFilter);
-		masterDetails.add(masterDetail);
-		md.setMasterDetails(masterDetails);
-		moduleDetail.add(md);
-		mc.setModuleDetails(moduleDetail);
-		mcq.setMdmsCriteria(mc);
-
-		
-		
-		
+		MdmsCriteriaReq mcq = getRoleActionMDMSCriteria(actionRequest, roleFilter);
 		LOGGER.info("Role Filter: "+roleFilter.toString());
-		
 		LOGGER.info("The URL is: "+url);
-		
-		
 		try {
 		res = restTemplate.postForObject(url, mcq,String.class);
-		System.out.println("Response "+res);
-		System.out.println("tenant "+mcq.getMdmsCriteria().getTenantId());
-		System.out.println("Module Name "+mcq.getMdmsCriteria().getModuleDetails().get(0).getModuleName());
-		
 		} catch(Exception e){
 			e.printStackTrace();
 		}
@@ -654,7 +630,6 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 			
 			if(i != mdmsArray.length()-1)
 				actionids.append(",");
-			
 			
 		}
 		LOGGER.info("Action Id is "+actionids.toString());
@@ -677,40 +652,71 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 				 
 			 }
 			
-			ModuleDetail actionmd = new ModuleDetail();
-			actionmd.setModuleName("ACCESSCONTROL");
-			MasterDetail actionmasterDetail = new MasterDetail();
-			actionmasterDetail.setName(actionRequest.getActionMaster());
-			actionmasterDetail.setFilter(actionFilter);
-			actionmasterDetails.add(actionmasterDetail);
-			actionmd.setMasterDetails(actionmasterDetails);
-			actionmoduleDetail.add(actionmd);
-			actionmc.setModuleDetails(actionmoduleDetail);
-			actionmcq.setMdmsCriteria(actionmc);
+			getMdmsActionCriteria(actionRequest, actionFilter, actionmcq, actionmasterDetails, actionmoduleDetail,
+					actionmc);
 		
 		actionres = restTemplate.postForObject(url, actionmcq,String.class);
 		Object action  = JsonPath.read(actionres,"$.MdmsRes.ACCESSCONTROL.actions-test");
 		LOGGER.info("Actions from MDMS: "+action.toString());
 		
 		JSONArray actionsArray = new JSONArray(action.toString());
-		for (int i = 0; i < actionsArray.length(); i++) {
-			Action act = new Action();
-			act.setDisplayName(actionsArray.getJSONObject(i).getString("displayName"));
-			act.setUrl(actionsArray.getJSONObject(i).getString("url"));
-			act.setEnabled(actionsArray.getJSONObject(i).getBoolean("enabled"));
-			act.setId(actionsArray.getJSONObject(i).getLong("id"));
-			act.setName(actionsArray.getJSONObject(i).getString("name"));
-			act.setOrderNumber(actionsArray.getJSONObject(i).getInt("orderNumber"));
-			act.setParentModule(actionsArray.getJSONObject(i).get("parentModule").toString());
-			act.setPath(actionsArray.getJSONObject(i).getString("path"));
-			act.setQueryParams(actionsArray.getJSONObject(i).get("queryParams").toString());
-			act.setServiceCode(actionsArray.getJSONObject(i).getString("serviceCode"));
-			act.setTenantId(actionRequest.getTenantId());
-			actionList.add(act);
-		}
- 
-         return actionList;
+		return convertToAction(actionRequest, actionList, actionsArray);
 	}
+
+private MdmsCriteriaReq getRoleActionMDMSCriteria(ActionRequest actionRequest, String roleFilter) {
+	MdmsCriteriaReq mcq = new MdmsCriteriaReq();
+	List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
+	List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();
+	mcq.setRequestInfo(getRInfo());
+	MdmsCriteria mc = new MdmsCriteria();
+	mc.setTenantId(actionRequest.getTenantId());
+	ModuleDetail md = new ModuleDetail();
+	md.setModuleName("ACCESSCONTROL");
+	MasterDetail masterDetail = new MasterDetail();
+	masterDetail.setName("roleactions");
+	masterDetail.setFilter(roleFilter);
+	masterDetails.add(masterDetail);
+	md.setMasterDetails(masterDetails);
+	moduleDetail.add(md);
+	mc.setModuleDetails(moduleDetail);
+	mcq.setMdmsCriteria(mc);
+	return mcq;
+}
+
+private void getMdmsActionCriteria(ActionRequest actionRequest, String actionFilter, MdmsCriteriaReq actionmcq,
+		List<MasterDetail> actionmasterDetails, List<ModuleDetail> actionmoduleDetail, MdmsCriteria actionmc) {
+	ModuleDetail actionmd = new ModuleDetail();
+	actionmd.setModuleName("ACCESSCONTROL");
+	MasterDetail actionmasterDetail = new MasterDetail();
+	actionmasterDetail.setName(actionRequest.getActionMaster());
+	actionmasterDetail.setFilter(actionFilter);
+	actionmasterDetails.add(actionmasterDetail);
+	actionmd.setMasterDetails(actionmasterDetails);
+	actionmoduleDetail.add(actionmd);
+	actionmc.setModuleDetails(actionmoduleDetail);
+	actionmcq.setMdmsCriteria(actionmc);
+}
+
+private List<Action> convertToAction(ActionRequest actionRequest, List<Action> actionList, JSONArray actionsArray)
+		throws JSONException {
+	for (int i = 0; i < actionsArray.length(); i++) {
+		Action act = new Action();
+		act.setDisplayName(actionsArray.getJSONObject(i).getString("displayName"));
+		act.setUrl(actionsArray.getJSONObject(i).getString("url"));
+		act.setEnabled(actionsArray.getJSONObject(i).getBoolean("enabled"));
+		act.setId(actionsArray.getJSONObject(i).getLong("id"));
+		act.setName(actionsArray.getJSONObject(i).getString("name"));
+		act.setOrderNumber(actionsArray.getJSONObject(i).getInt("orderNumber"));
+		act.setParentModule(actionsArray.getJSONObject(i).get("parentModule").toString());
+		act.setPath(actionsArray.getJSONObject(i).getString("path"));
+		act.setQueryParams(actionsArray.getJSONObject(i).get("queryParams").toString());
+		act.setServiceCode(actionsArray.getJSONObject(i).getString("serviceCode"));
+		act.setTenantId(actionRequest.getTenantId());
+		actionList.add(act);
+	}
+ 
+	 return actionList;
+}
     
 	public static RequestInfo getRInfo()
 	{

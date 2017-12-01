@@ -2624,7 +2624,7 @@ var localization_EN_Data = {
 "opinion.search.document.title":"Search Opinion",
 "parawisecomments.create.document.title":"Create Parawise Comments",
 "register.create.document.title":"Create Stamp/Register",
-"register.search.document.title":"Search Register",
+"register.search.document.title":"Search Stamp/Register",
 "register.update.document.title":"Update Register",
 "summon.create.document.title":"Create Summon/Warrant",
 "summon.search.document.title":"Search Case",

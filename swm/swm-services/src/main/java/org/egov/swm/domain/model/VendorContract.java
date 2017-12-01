@@ -56,7 +56,7 @@ public class VendorContract {
     @JsonProperty("paymentTerms")
     private PaymentTerms paymentTerms = null;
 
-    @Size(min = 15, max = 500)
+    @Size(min = 0, max = 500)
     @JsonProperty("remarks")
     private String remarks = null;
 

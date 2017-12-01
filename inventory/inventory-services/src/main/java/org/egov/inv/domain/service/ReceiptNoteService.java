@@ -289,8 +289,6 @@ public class ReceiptNoteService extends DomainService {
         }
     }
 
-}
-
 
     private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String tenantId) {
 

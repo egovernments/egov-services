@@ -655,7 +655,7 @@ var dat = {
                 fields: [
                     {
                         name: "CaseType",
-                        jsonPath: "cases[0].summon.type",
+                        jsonPath: "cases[0].summon.entryType",
                         label: "legal.create.group.title.CaseType",
                         type: "text",
                         isRequired: false,

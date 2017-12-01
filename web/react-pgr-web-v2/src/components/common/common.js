@@ -2401,7 +2401,7 @@ var localization_EN_Data = {
 "advocates.create.inactive":"Inactive",
 "advocates.create.terminate":"Terminate",
 "advocates.create.group.title.action":"Action",
-"advocates.create.reasonOfTerminationOrDeactivation":"Reason Of Termination/Deactivation",
+"advocates.create.reasonOfTerminationOrDeactivation":"Reason Of Termination/Inactivation",
 "advocates.create.terminationDate":"Termination Date",
 "advocates.create.inActivationDate":"InActivation Date",
 "advocates.create.group.title.agencyDetails":"Agency Owner Details",

@@ -47,23 +47,24 @@ export default class UiNestedTablesInputs extends Component {
     //   //  this.addMandatoryFields(list);
     // }
 
-
-    let {setVal, getVal, item} = this.props;
-    let tableDatas = getVal(item.jsonPath);
-    //modifiedTbl.tableList.values = this.cloneRowObject(tableJsonPath, parentTblIdx, [...modifiedTbl.tableList.values]);
-
-    if(!tableDatas || tableDatas.length === 0){
-      setVal(item.jsonPath, [undefined]);
-      let list = [...this.state.list];
-      list.push(this.cloneRowObject(item.jsonPath, 0, [...this.props.item.tableList.values]));
-      let childTables = item.tableList.tables && [[...item.tableList.tables]] || [];
-      this.setState({list, childTables});
-      this.addMandatoryFields(list);
+    try{
+      let {setVal, getVal, item} = this.props;
+      let tableDatas = getVal(item.jsonPath);
+      //modifiedTbl.tableList.values = this.cloneRowObject(tableJsonPath, parentTblIdx, [...modifiedTbl.tableList.values]);
+      if(!tableDatas || tableDatas.length === 0){
+        setVal(item.jsonPath, [undefined]);
+        let list = [...this.state.list];
+        list.push(this.cloneRowObject(item.jsonPath, 0, [...this.props.item.tableList.values]));
+        let childTables = item.tableList.tables && [[...item.tableList.tables]] || [];
+        this.setState({list, childTables});
+        this.addMandatoryFields(list);
+      }
+      else{
+          this.addMultipleRow(item.jsonPath, tableDatas.length, item.tableList.values);
+      }
     }
-    else{
-      this.addMultipleRow(item.jsonPath, tableDatas.length, item.tableList.values);
-      //  for(let idx=0;idx<tableDatas.length;idx++)
-      //    this.addRow(item.jsonPath);
+    catch(e){
+      console.log('error', e);
     }
 
   }
@@ -341,7 +342,6 @@ export default class UiNestedTablesInputs extends Component {
     // }
 
     const renderNestedTables = (childTables)=>{
-      console.log('childTables', childTables);
       let nestedTables = childTables && [...childTables];
       if(nestedTables && nestedTables.length > 0){
         try{

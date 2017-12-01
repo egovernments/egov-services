@@ -326,6 +326,11 @@ export default class Transaction extends Component {
       this.initData();
   }
 
+  // shouldComponentUpdate(nextProps, nextState){
+  //   console.log('FORM DATA -->',this.props.formData, nextProps.formData);
+  //   return true;
+  // }
+
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
       this.initData();
@@ -1095,6 +1100,10 @@ export default class Transaction extends Component {
       });
   }
 
+  escapeRegExp = (str) => {
+     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, "\\$&");
+  }
+
   handleChange = (e, property, isRequired, pattern, requiredErrMsg="Required", patternErrMsg="Pattern Missmatch", expression, expErr, isDate) => {
       let {getVal} = this.props;
       let {handleChange,mockData,setDropDownData, formData, actionKey} = this.props;
@@ -1143,6 +1152,44 @@ export default class Transaction extends Component {
       this.checkIfHasEnDisFields(property, e.target.value);
       handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
       this.affectDependants(obj, e, property);
+
+
+      debugger;
+
+      let onChangeField = obj.events.find(
+        (field) => {
+          //console.log('fieldJsonPath', field.JsonPath);
+          //console.log('RegExp', this.escapeRegExp(field.jsonPath.replace("*", '')));
+          //console.log('RegExpCompiled', new RegExp(this.escapeRegExp(field.jsonPath.replace("*", '')).replace(/\\\[\\\]/, "\\[(.*?)\\]")));
+
+          return field.jsonPath === property ||
+          field.jsonPath.match(new RegExp(this.escapeRegExp(field.jsonPath.replace("*", '')).replace(/\\\[\\\]/, "\\[(.*?)\\]")));
+        }
+      );
+
+      console.log('onChangeField', onChangeField);
+
+      if(onChangeField && onChangeField.onChange){
+        onChangeField.onChange({
+          value:e.target.value, getVal:this.getVal, setVal:this.setVal,
+          mockData:specifications, actionKey: actionKey, jsonPath:property,
+          setMockData:this.props.setMockData, dropDownData: this.props.dropDownData,
+          getValFromDropdownData:this.getValFromDropdownData, setValDropDown:this.props.setDropDownData
+        });
+      }
+
+      // let changedField;
+      // //console.log('mockData', obj, property);
+      // for(let i=0;i<obj.groups.length;i++)
+      // {
+      //   console.log('groups', obj.groups[i]);
+      //   changedField = obj.groups[i].fields.find((field)=>field.jsonPath === property);
+      //   if(changedField)
+      //    break;
+      // }
+      //
+      // console.log('changedField', changedField);
+
   }
 
   incrementIndexValue = (group, jsonPath) => {

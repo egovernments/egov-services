@@ -1,3 +1,18 @@
+var events = [
+  {
+    jsonPath:"materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[*].lotNo",
+    onChange:function({jsonPath, value, setVal, getVal}){
+      //setVal('materialReceipt[0].paymentTerms', 'Test Dummy Data Description');
+    }
+  },
+  {
+    jsonPath:"materialReceipt[0].receivingStore.code",
+    onChange:function({jsonPath, value}){
+      //console.log('changed', jsonPath, value);
+    }
+  }
+]
+
 var dat = {
   "inventory.search": {
     "numCols": 4,
@@ -96,6 +111,7 @@ var dat = {
     "useTimestamp": true,
     "title":"Material Receipt Note",
     "objectName": "materialReceipt",
+    "events":events,
     "groups": [{
       "name": "Material Receipt Note",
       "label": "inventory.create.group.title.Material Receipt Note",
@@ -298,7 +314,7 @@ var dat = {
           "jsonPath": "materialReceipt[0].receiptDetails",
           "type":"nestedTableList",
           "tableList":{
-             "colsWeight":{0:0.3, 11:0.3}, // columnIndex : weightValue (Integer)
+             "colsWeight":{0:0.3, 2:2 , 11:0.3}, // columnIndex : weightValue (Integer)
              "mandatoryCols":[0, 2, 4],
              "isEditMode":true,
              "tables":[

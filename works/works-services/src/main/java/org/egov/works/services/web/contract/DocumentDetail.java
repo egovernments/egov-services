@@ -1,22 +1,20 @@
 package org.egov.works.services.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that hold Document Details (Uploaded files/documents) for all the objects
  */
 @ApiModel(description = "An Object that hold Document Details (Uploaded files/documents) for all the objects")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-14T08:04:53.611Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-01T10:17:40.984Z")
 
 public class DocumentDetail   {
   @JsonProperty("id")
@@ -51,6 +49,9 @@ public class DocumentDetail   {
 
   @JsonProperty("workProgress")
   private WorkProgress workProgress = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -281,6 +282,26 @@ public class DocumentDetail   {
     this.workProgress = workProgress;
   }
 
+  public DocumentDetail deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public DocumentDetail auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -304,7 +325,7 @@ public class DocumentDetail   {
 
 
   @Override
-  public boolean equals(java.lang.Object o) {
+  public boolean equals(Object o) {
     if (this == o) {
       return true;
     }
@@ -323,12 +344,13 @@ public class DocumentDetail   {
         Objects.equals(this.description, documentDetail.description) &&
         Objects.equals(this.dateOfCapture, documentDetail.dateOfCapture) &&
         Objects.equals(this.workProgress, documentDetail.workProgress) &&
+        Objects.equals(this.deleted, documentDetail.deleted) &&
         Objects.equals(this.auditDetails, documentDetail.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, objectId, objectType, fileStore, documentType, tenantId, latitude, longitude, description, dateOfCapture, workProgress, auditDetails);
+    return Objects.hash(id, objectId, objectType, fileStore, documentType, tenantId, latitude, longitude, description, dateOfCapture, workProgress, deleted, auditDetails);
   }
 
   @Override
@@ -347,6 +369,7 @@ public class DocumentDetail   {
     sb.append("    description: ").append(toIndentedString(description)).append("\n");
     sb.append("    dateOfCapture: ").append(toIndentedString(dateOfCapture)).append("\n");
     sb.append("    workProgress: ").append(toIndentedString(workProgress)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();
@@ -356,10 +379,11 @@ public class DocumentDetail   {
    * Convert the given object to string with each line indented by 4 spaces
    * (except the first line).
    */
-  private String toIndentedString(java.lang.Object o) {
+  private String toIndentedString(Object o) {
     if (o == null) {
       return "null";
     }
     return o.toString().replace("\n", "\n    ");
   }
 }
+

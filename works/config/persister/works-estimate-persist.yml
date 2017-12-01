@@ -3,7 +3,7 @@ serviceMaps:
  mappings:
  - version: 1.0
    name: AbstractEstimate Create
-   description: Persists abstract estimate  in egw_abstractestimate table
+   description: Persists and update abstract estimate  in egw_abstractestimate table
    fromTopic: works-abstract-estimate-createandupdate
    isTransaction: true
    queryMaps:
@@ -351,7 +351,7 @@ serviceMaps:
        
  - version: 1.0
    name: Detailed AbstractEstimate Create
-   description: Persists detailed abstract estimate  in egw_detailed_estimate table
+   description: Persists and updates detailed abstract estimate  in egw_detailed_estimate table
    fromTopic: works-detailed-estimate-createandupdate
    isTransaction: true
    queryMaps:

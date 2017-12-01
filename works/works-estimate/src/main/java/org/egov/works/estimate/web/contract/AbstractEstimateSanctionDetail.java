@@ -85,7 +85,7 @@ public class AbstractEstimateSanctionDetail   {
    * @return abstractEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference to Sanction Details of Abstract Estimate Object")
-  @NotNull
+  //@NotNull
 
 
   public String getAbstractEstimate() {

@@ -55,7 +55,7 @@ public class OfflineStatusService {
 			offlineStatus.setAuditDetails(serviceUtils
 					.setAuditDetails(offlineStatusRequest.getRequestInfo(), false));
 		}
-		kafkaTemplate.send(propertiesManager.getWorksServiceOfflineStatusCreateValidatedTopic(), offlineStatusRequest);
+		kafkaTemplate.send(propertiesManager.getWorksServiceOfflineStatusUpdateValidatedTopic(), offlineStatusRequest);
 		response.setOfflineStatuses(offlineStatusRequest.getOfflineStatuses());
 		response.setResponseInfo(
 				serviceUtils.createResponseInfoFromRequestInfo(offlineStatusRequest.getRequestInfo(), true));

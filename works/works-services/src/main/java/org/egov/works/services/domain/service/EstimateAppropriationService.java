@@ -68,7 +68,7 @@ public class EstimateAppropriationService {
 					.setAuditDetails(estimateAppropriationRequest.getRequestInfo(), true));
 
 		}
-		kafkaTemplate.send(propertiesManager.getEstimateAppropriationsUpdateTopic(), estimateAppropriationRequest);
+		kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
 		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
 		estimateAppropriationResponse
 				.setEstimateAppropriations(estimateAppropriationRequest.getEstimateAppropriations());

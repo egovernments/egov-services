@@ -58,7 +58,7 @@ public class DocumentDetailsService {
 			document.setAuditDetails(serviceUtils
 					.setAuditDetails(documentDetailRequest.getRequestInfo(), true));
 		}
-		kafkaTemplate.send(propertiesManager.getDocumentDetailsUpdateTopic(), documentDetailRequest);
+		kafkaTemplate.send(propertiesManager.getDocumentDetailsCreateTopic(), documentDetailRequest);
 		return documentDetailRequest.getDocumentDetails();
 	}
 

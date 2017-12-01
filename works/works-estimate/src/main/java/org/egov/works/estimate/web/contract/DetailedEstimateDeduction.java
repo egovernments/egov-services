@@ -115,7 +115,7 @@ public class DetailedEstimateDeduction   {
    * @return detailedEstimate
   **/
   @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
-  @NotNull
+  //@NotNull
 
 
   public String getDetailedEstimate() {

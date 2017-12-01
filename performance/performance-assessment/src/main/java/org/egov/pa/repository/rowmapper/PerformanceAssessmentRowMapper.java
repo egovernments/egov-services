@@ -94,6 +94,7 @@ public class PerformanceAssessmentRowMapper {
 					target.setTargetDescription(rs.getString("targetValue"));
 				}
 				target.setTenantId(rs.getString("tenantId"));
+				target.setFinYear(rs.getString("targetFinYear"));
 				kpi.setKpiTarget(target);
 			}
 			return kpi;
@@ -128,21 +129,21 @@ public class PerformanceAssessmentRowMapper {
 			
 			if(reportMap.containsKey(rs.getString("valueTenantId"))) {
 				Map<String, Map<String, KpiValue>> secondMap = reportMap.get(rs.getString("valueTenantId"));
-				if(secondMap.containsKey(rs.getString("finYear"))) { 
-					Map<String, KpiValue> thirdMap = secondMap.get(rs.getString("finYear"));
+				if(secondMap.containsKey(rs.getString("targetFinYear"))) { 
+					Map<String, KpiValue> thirdMap = secondMap.get(rs.getString("targetFinYear"));
 					if(!thirdMap.containsKey(rs.getString("code"))) { 
 						thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
 					}
 				} else { 
 					Map<String, KpiValue> thirdMap = new HashMap<>();
 					thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
-					secondMap.put(rs.getString("finYear"), thirdMap);
+					secondMap.put(rs.getString("targetFinYear"), thirdMap);
 				}
 			} else { 
 				Map<String, KpiValue> thirdMap = new HashMap<>();
 				thirdMap.put(rs.getString("code"), addKpiValue(rs)); 
 				Map<String, Map<String, KpiValue>> secondMap = new HashMap<>();
-				secondMap.put(rs.getString("finYear"), thirdMap);
+				secondMap.put(rs.getString("targetFinYear"), thirdMap);
 				reportMap.put(rs.getString("valueTenantId"), secondMap);
 			}
 			if(!kpiMap.containsKey(rs.getString("code"))) { 
@@ -180,6 +181,7 @@ public class PerformanceAssessmentRowMapper {
 				value.setConsolidatedValue(String.valueOf(rs.getLong("consolidatedValue")));
 				value.setTenantId(rs.getString("valueTenantId"));
 				value.setKpiCode(rs.getString("valueKpiCode"));
+				value.setFinYear(rs.getString("targetFinYear"));
 			} catch (Exception e) { 
 				log.error("Encountered an exception while creating KpiValue Object " + e);
 			}

@@ -56,7 +56,7 @@ public class PerformanceAssessmentQueryBuilder {
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "
     		+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
     		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, "
-    		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId " 
+    		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear " 
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.id, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
@@ -72,7 +72,7 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE master.id IS NOT NULL " ;*/
     
     public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
-    		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, " 
+    		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, target.finyear as targetFinYear, " 
     		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
     		+ " SUM(NULLIF(detail.value, '')::int) as consolidatedValue FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode  "
@@ -176,7 +176,7 @@ public class PerformanceAssessmentQueryBuilder {
     	return "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "  
     			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
     			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate,  " 
-    			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId "  
+    			+ " target.finyear as targetFinYear, target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId "  
     			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target  ON " 
     			+ " master.code = target.kpicode WHERE master.code IN (:kpiCodeList)" ;  
     }

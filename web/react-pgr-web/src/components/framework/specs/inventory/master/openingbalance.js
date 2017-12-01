@@ -407,7 +407,7 @@ var dat = {
                   "pattern":"",
                   "type":"text",
                   "isRequired":false,
-                  "isDisabled":false,
+                  "isDisabled":true,
                   "defaultValue":"0",
                   "maxLength":100,
                   "patternErrorMsg":"inventory.create.field.message.code"
@@ -419,7 +419,7 @@ var dat = {
             "type": "datePicker",
             "maxDate":"today",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "patternErrorMsg": ""
           },

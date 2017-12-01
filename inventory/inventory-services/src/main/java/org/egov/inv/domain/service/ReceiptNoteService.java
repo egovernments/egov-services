@@ -53,6 +53,9 @@ public class ReceiptNoteService extends DomainService {
     @Autowired
     private MaterialService materialService;
 
+    HashMap<String, String> errors = new HashMap<>();
+
+
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
 
@@ -180,11 +183,12 @@ public class ReceiptNoteService extends DomainService {
                     if (materialReceipts == null) {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
-                        materialReceipts.stream().forEach(materialReceipt -> {
-                            validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                            validatePurchaseOrder(materialReceipt.getReceiptDetails(), tenantId);
+                        for (MaterialReceipt materialReceipt : materialReceipts) {
                             validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
-                        });
+                            if (errors.size() > 0) {
+                                throw new CustomException(errors);
+                            }
+                        }
                     }
                 }
 
@@ -194,29 +198,53 @@ public class ReceiptNoteService extends DomainService {
                     if (materialReceipts == null) {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
-                        materialReceipts.stream().forEach(materialReceipt -> {
-                            validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                            validatePurchaseOrder(materialReceipt.getReceiptDetails(), tenantId);
+                        for (MaterialReceipt materialReceipt : materialReceipts) {
                             validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
-                        });
+                            if (errors.size() > 0) {
+                                throw new CustomException(errors);
+                            }
+                        }
                     }
                 }
 
                 break;
             }
-        } catch (IllegalArgumentException e) {
+        } catch (
+                IllegalArgumentException e)
+
+        {
 
         }
 
     }
 
     private void validateMaterialReceiptDetail(List<MaterialReceiptDetail> receiptDetails, String tenantId) {
-        receiptDetails.stream().forEach(materialReceiptDetail -> {
+        validateDuplicateMaterialDetails(receiptDetails);
+        for (MaterialReceiptDetail materialReceiptDetail : receiptDetails) {
+            validatePurchaseOrder(materialReceiptDetail, tenantId);
             validateMaterial(materialReceiptDetail, tenantId);
+            validateQuantity(materialReceiptDetail);
             if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
                 validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
             }
-        });
+        }
+    }
+
+    private void validateQuantity(MaterialReceiptDetail materialReceiptDetail) {
+
+
+        if (isEmpty(materialReceiptDetail.getReceivedQty())) {
+            errors.put("inv.0023", "Received quantity is required");
+        }
+
+        if (!isEmpty(materialReceiptDetail.getReceivedQty()) && materialReceiptDetail.getReceivedQty().doubleValue() <= 0) {
+            errors.put("inv.0024", "Received quantity should be greater than zero");
+        }
+
+        if (!isEmpty(materialReceiptDetail.getAcceptedQty()) && materialReceiptDetail.getAcceptedQty().doubleValue() <= 0) {
+            errors.put("inv.0025", "Accepted quantity should be greater than zero");
+        }
+
     }
 
     private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId) {
@@ -224,76 +252,73 @@ public class ReceiptNoteService extends DomainService {
         if (null != receiptDetail.getMaterial()) {
             Material material = materialService.fetchMaterial(tenantId, receiptDetail.getMaterial().getCode(), new RequestInfo());
 
-            receiptDetail.getReceiptDetailsAddnInfo().stream().forEach(
-                    materialReceiptDetailAddnlinfo -> {
-                        if (true == material.getLotControl() && isEmpty(materialReceiptDetailAddnlinfo.getLotNo())) {
-                            throw new CustomException("inv.0020", "Lot number is required");
-                        }
+            for (MaterialReceiptDetailAddnlinfo addnlinfo : receiptDetail.getReceiptDetailsAddnInfo()) {
+                if (true == material.getLotControl() && isEmpty(addnlinfo.getLotNo())) {
+                    errors.put("inv.0020", "Lot number is required");
+                }
 
-                        if (true == material.getShelfLifeControl() && (isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) ||
-                                (!isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) && !(materialReceiptDetailAddnlinfo.getExpiryDate().doubleValue() > 0)))) {
-                            throw new CustomException("inv.0020", "Expiry date is required");
-                        }
-                    }
-            );
+                if (true == material.getShelfLifeControl() && (isEmpty(addnlinfo.getExpiryDate()) ||
+                        (!isEmpty(addnlinfo.getExpiryDate()) && !(addnlinfo.getExpiryDate().doubleValue() > 0)))) {
+                    errors.put("inv.0021", "Expiry date is required");
+                }
+            }
         } else
-            throw new CustomException("inv.0021", "material is not present");
+            errors.put("inv.0022", "material is not present");
     }
 
     private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId) {
         Long currentDate = currentEpochWithoutTime() + (24 * 60 * 60) - 1;
 
-        materialReceiptDetailAddnlinfos.stream().forEach(materialReceiptDetailAddnlinfo ->
-                {
-                    if (null != materialReceiptDetailAddnlinfo.getExpiryDate()
-                            &&  currentDate > materialReceiptDetailAddnlinfo.getExpiryDate()) {
-                        throw new CustomException("inv.0022", "Expiry date must br greater than today's date");
-                    }
+        for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
+            {
+                if (null != addnlinfo.getExpiryDate()
+                        && currentDate > addnlinfo.getExpiryDate()) {
+                    errors.put("inv.0023", "Expiry date must br greater than today's date");
                 }
-        );
+            }
+        }
     }
 
     private void validateDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
         HashSet<String> hashSet = new HashSet<>();
-        materialReceiptDetails.stream().forEach(materialReceiptDetail ->
-        {
+        for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
             if (false == hashSet.add(materialReceiptDetail.getPurchaseOrderDetail().getId() + "-" + materialReceiptDetail.getMaterial().getCode())) {
-                throw new CustomException("inv.0015", materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                errors.put("inv.0015", materialReceiptDetail.getPurchaseOrderDetail().getId() +
                         " and " + materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
             }
-        });
+        }
     }
 
+}
 
-    private void validatePurchaseOrder(List<MaterialReceiptDetail> materialReceiptDetails, String tenantId) {
 
-        for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
-            if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
-                PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
-                purchaseOrderDetailSearch.setTenantId(tenantId);
-                purchaseOrderDetailSearch.setIds(Collections.singletonList(materialReceiptDetail.getPurchaseOrderDetail().getId()));
+    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String tenantId) {
 
-                Pagination<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
+        if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
+            PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
+            purchaseOrderDetailSearch.setTenantId(tenantId);
+            purchaseOrderDetailSearch.setIds(Collections.singletonList(materialReceiptDetail.getPurchaseOrderDetail().getId()));
 
-                if (purchaseOrderDetails.getPagedData().size() > 0) {
-                    for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
+            Pagination<PurchaseOrderDetail> purchaseOrderDetails = purchaseOrderDetailService.search(purchaseOrderDetailSearch);
 
-                        PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
-                        purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
-                        purchaseOrderSearch.setTenantId(purchaseOrderDetail.getTenantId());
+            if (purchaseOrderDetails.getPagedData().size() > 0) {
+                for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
 
-                        PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
+                    PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
+                    purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
+                    purchaseOrderSearch.setTenantId(purchaseOrderDetail.getTenantId());
 
-                        if (purchaseOrders.getPurchaseOrders().size() > 0) {
-                            return;
-                        } else
-                            throw new CustomException("inv.0015", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
-                                    " is not present");
-                    }
-                } else
-                    throw new CustomException("inv.0015", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
-                            " is not present");
-            }
+                    PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
+
+                    if (purchaseOrders.getPurchaseOrders().size() > 0) {
+                        return;
+                    } else
+                        errors.put("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                                " is not present");
+                }
+            } else
+                errors.put("inv.0017", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                        " is not present");
         }
     }
 

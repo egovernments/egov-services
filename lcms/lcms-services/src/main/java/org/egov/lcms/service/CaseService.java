@@ -590,6 +590,8 @@ public class CaseService {
 			if (caseObj.getSummon().getIsSummon() == null) {
 				caseObj.getSummon().setIsSummon(Boolean.FALSE);
 			}
+			
+			summonValidator.validateDuplicateAdvocates(caseObj);
 
 			String summonCode = uniqueCodeGeneration.getUniqueCode(caseObj.getTenantId(), caseRequest.getRequestInfo(),
 					propertiesManager.getSummonCodeFormat(), propertiesManager.getSummonName(), Boolean.FALSE, null,

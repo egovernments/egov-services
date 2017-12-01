@@ -1,6 +1,12 @@
 package org.egov.lcms.utility;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import org.egov.lcms.config.PropertiesManager;
+import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.Case;
 import org.egov.lcms.models.CaseRequest;
 import org.egov.lcms.models.Summon;
@@ -74,5 +80,18 @@ public class SummonValidator {
 			}
 
 		}
+	}
+	
+	public void validateDuplicateAdvocates(Case caseObj) {
+		List<String> advocateCodes = new ArrayList<String>();
+		for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
+			advocateCodes.add(advocateDetails.getAdvocate().getCode());
+		}
+		Set<String> advocateCodeSet = new HashSet<String>(advocateCodes);
+		if (advocateCodeSet.size() < advocateCodes.size()) {
+			throw new CustomException(propertiesManager.getDuplicateAdvocate(),
+					propertiesManager.getDuplicateAdvocateMessage());
+		}
+
 	}
 }

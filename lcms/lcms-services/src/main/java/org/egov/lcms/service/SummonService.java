@@ -1,9 +1,7 @@
 package org.egov.lcms.service;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.lcms.config.PropertiesManager;
@@ -85,7 +83,7 @@ public class SummonService {
 				summonRequest.getSummons());
 
 	}
-
+	
 	private void pushSummonToIndexer(SummonRequest summonRequest) {
 
 		for (Summon summon : summonRequest.getSummons()) {
@@ -237,7 +235,7 @@ public class SummonService {
 						propertiesManager.getAdvocateDetailsMandatoryMessage());
 			}
 
-			validateDuplicateAdvocates(caseObj);
+			summonValidator.validateDuplicateAdvocates(caseObj);
 
 			for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
 
@@ -265,17 +263,6 @@ public class SummonService {
 
 	}
 
-	private void validateDuplicateAdvocates(Case caseObj) {
-		List<String> advocateCodes = new ArrayList<String>();
-		for (AdvocateDetails advocateDetails : caseObj.getAdvocateDetails()) {
-			advocateCodes.add(advocateDetails.getAdvocate().getCode());
-		}
-		Set<String> advocateCodeSet = new HashSet<String>(advocateCodes);
-		if (advocateCodeSet.size() < advocateCodes.size()) {
-			throw new CustomException(propertiesManager.getDuplicateAdvocate(),
-					propertiesManager.getDuplicateAdvocateMessage());
-		}
-
-	}
+	
 
 }

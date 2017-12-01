@@ -198,6 +198,7 @@ var dat = {
           "jsonPath": "cases[0].summon.documents",
           "label": "legal.create.sectionApplied",
            "type": "fileTable",
+           "configlabel" : true,
             "isRequired": false,
             "isDisabled": false,
             "screenView":true,

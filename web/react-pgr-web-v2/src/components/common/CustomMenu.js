@@ -321,8 +321,8 @@ const menuConvention={
 "Legal Case Management.Legal Case Masters.Advocate.Advocate Search":"/search/legal/advocate/view",
 "Legal Case Management.Legal Case Masters.Advocate.Agency Search":"/search/legal/agency/view",
 
-"Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create":"/search/legal/register/view",
-// "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create":"/create/legal/register",
+//"Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create":"/search/legal/register/view",
+ "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create":"/create/legal/register",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Search":"/search/legal/register/view",
 "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Update":"/update/legal/register",
 

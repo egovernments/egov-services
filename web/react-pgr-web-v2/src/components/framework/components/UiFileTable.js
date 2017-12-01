@@ -106,9 +106,8 @@ import _ from 'lodash';
 							<tr>
 								<th>#</th>
 								<th>{translate("tl.create.license.table.documentName")}</th>
-								<th>{translate("wc.create.groups.fileDetails.title")}</th>
+								{this.props.item.configlabel? <th>{"Download / View"}</th>:<th>{translate("wc.create.groups.fileDetails.title")}</th> }
 								{this.props.readonly?"":<th>{translate("reports.common.action")}</th>}
-								
 							</tr>
 						</thead>
 						{this.renderRowList(item)}

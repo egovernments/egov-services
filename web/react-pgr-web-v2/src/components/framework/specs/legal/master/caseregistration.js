@@ -205,6 +205,7 @@ var dat = {
             name: "File",
             jsonPath: "cases[0].summon.documents",
             type: "fileTable",
+            "configlabel" : true,
             isRequired: false,
             isDisabled: false,
             screenView:true,

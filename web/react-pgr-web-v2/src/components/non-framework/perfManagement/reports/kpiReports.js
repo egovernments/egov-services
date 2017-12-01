@@ -55,10 +55,7 @@ class KPIReports extends Component {
 
             multiSelectKPIs: true,
             multiSelectULBs: true,
-            multiSelectFYs: true,
-            disableKPISelection: false,
-            disableULBSelection: true,
-            disableFinancialYearSelection: true
+            multiSelectFYs: true
         };
         this.onSelectDepartment     = this.onSelectDepartment.bind(this)
         this.onSelectKPIType        = this.onSelectKPIType.bind(this)
@@ -72,10 +69,6 @@ class KPIReports extends Component {
      * render the view.
      */
     render() {
-        console.log('in render')
-        console.log(this.state.multiSelectKPIs)
-        console.log(this.state.multiSelectFYs)
-        console.log(this.state.multiSelectULBs)
         return (
             <div>
                 <Card className="uiCard">
@@ -149,52 +142,50 @@ class KPIReports extends Component {
         })
     }
     onSelectKPI(event, index, values) {
-        let selectedValues  = []
-        if ((values instanceof Array)) {
-            selectedValues  = [...values]
+        if (values.length > 1) {
+            if (this.state.selectedULBIndices.length > 1 || this.state.selectedfinancialYearIndices.length > 1) {
+                this.showQueryError('You have already selected multiple ULBs or Financial Years values')
+            } else {
+                this.setState({
+                    selectedKPIIndices: values
+                })
+            }
         } else {
-            selectedValues.push(values)
+            this.setState({
+                selectedKPIIndices: values
+            })
         }
-
-        console.log(selectedValues)
-        this.setState({
-            selectedKPIIndices: selectedValues,
-            disableULBSelection: false,
-            multiSelectULBs:    (selectedValues.length > 1) ? false : true,
-            multiSelectFYs:     (selectedValues.length > 1) ? false : true
-        })
     }
     onSelectULB(event, index, values) {
-        let selectedValues  = []
-        if ((values instanceof Array)) {
-            selectedValues  = [...values]
+        if (values.length > 1) {
+            if (this.state.selectedKPIIndices.length > 1 || this.state.selectedfinancialYearIndices.length > 1) {
+                this.showQueryError('You have already selected multiple KPIs or Financial Years values')
+            } else {
+                this.setState({
+                    selectedULBIndices: values
+                })
+            }
         } else {
-            selectedValues.push(values)
+            this.setState({
+                selectedULBIndices: values
+            })
         }
-
-        console.log(selectedValues)
-        this.setState({
-            selectedULBIndices: selectedValues,
-            disableFinancialYearSelection: false,
-            multiSelectKPIs: (selectedValues.length > 1) ? false : true,
-            multiSelectFYs: (selectedValues.length > 1) ? false : true
-        })
     }
 
     onSelectFinancialYear(event, index, values) {
-        let selectedValues  = []
-        if ((values instanceof Array)) {
-            selectedValues  = [...values]
+        if (values.length > 1) {
+            if (this.state.selectedKPIIndices.length > 1 || this.state.selectedULBIndices.length > 1) {
+                this.showQueryError('You have already selected multiple KPIs or ULBs values')
+            } else {
+                this.setState({
+                    selectedfinancialYearIndices: values
+                })
+            }
         } else {
-            selectedValues.push(values)
+            this.setState({
+                selectedfinancialYearIndices: values
+            })
         }
-
-        console.log(selectedValues)
-        this.setState({
-            selectedfinancialYearIndices: selectedValues,
-            multiSelectKPIs: (selectedValues.length > 1) ? false : true,
-            multiSelectULBs: (selectedValues.length > 1) ? false : true
-        })
     }
 
     onClickedViewReport() {
@@ -225,6 +216,10 @@ class KPIReports extends Component {
      */
     showAPIError(err) {
         console.log(err)
+    }
+
+    showQueryError(msg) {
+        console.log(msg)
     }
 
     /**

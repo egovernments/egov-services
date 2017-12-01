@@ -18,6 +18,8 @@ import ViewSRN from '../../common/PGR/viewSRN';
 import EmployeeDocs from '../../common/PGR/employeeDocs';
 import WorkFlow from '../../common/PGR/workflow';
 import styles from '../../../styles/material-ui';
+import ClosureNote from './notice/ClosureNote';
+import RejectionLetter from './notice/RejectionLetter';
 var Rating = require('react-rating');
 const constants = require('../../common/constants');
 
@@ -82,7 +84,7 @@ class grievanceView extends Component{
         if(localStorage.getItem('type') === 'CITIZEN' && (currentThis.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED')){
           currentThis.props.ADD_MANDATORY('systemRating');
           if(currentThis.state.systemRating){
-            handleChange(currentThis.state.systemRating, "systemRating", true, "");
+            handleChange(Number(currentThis.state.systemRating), "systemRating", true, "");
             currentThis.commentsTrigger('',false);
           }
         }
@@ -418,6 +420,12 @@ class grievanceView extends Component{
       this.setState({commentsMandat : false});
     }
   }
+  printClosureNote = () => {
+    this.setState({printClosure:true})
+  }
+  printRejectionLetter = () => {
+    this.setState({rejectionLetter:true})
+  }
   render(){
     let
     {
@@ -448,181 +456,195 @@ class grievanceView extends Component{
         onTouchTap={this.handleClose}
       />
     ];
-    return(
-      <div>
-      <form autoComplete="off">
-        <h3 className="application-title">{translate('pgr.lbl.crnformat')} : {this.state.serviceRequestId}</h3>
-        <ViewSRN srn={this.state} />
-        <EmployeeDocs srn={this.state.srn}/>
-        <WorkFlow workflowdetails={this.state.workflow} />
-        { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.systemStatus !== 'REJECTED' && this.state.systemStatus !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.systemStatus !== 'WITHDRAWN') ?
+    if(this.state.printClosure){
+      return(
+        <ClosureNote grievance={this.state.srn} />
+      )
+    }else if(this.state.rejectionLetter){
+      return(
+        <RejectionLetter grievance={this.state.srn} />
+      )
+    }else{
+      return(
         <div>
-          <Card style={styles.cardMargin}>
-            <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
-             {translate('pgr.lbl.actions')}
-            < /div>}/>
-            <CardText style={{padding:'8px 16px 0'}}>
-              <Row>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus}
-                    dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                    onChange={(event, key, value) => {
-                      handleStatusChange(value, "systemStatus", false, "")
-                      if(localStorage.getItem('type') === constants.ROLE_CITIZEN && (value === 'REOPENED' || value === 'WITHDRAWN')){
+        <form autoComplete="off">
+          <h3 className="application-title">{translate('pgr.lbl.crnformat')} : {this.state.serviceRequestId}</h3>
+          <ViewSRN srn={this.state} />
+          <EmployeeDocs srn={this.state.srn}/>
+          <WorkFlow workflowdetails={this.state.workflow} />
+          { (this.state.isUpdateAllowed && localStorage.getItem('type') === 'EMPLOYEE' && this.state.systemStatus !== 'REJECTED' && this.state.systemStatus !== 'COMPLETED') ||  (localStorage.getItem('type') === 'CITIZEN' && this.state.systemStatus !== 'WITHDRAWN') ?
+          <div>
+            <Card style={styles.cardMargin}>
+              <CardHeader style={{paddingBottom:0}} title={< div style = {styles.headerStyle} >
+               {translate('pgr.lbl.actions')}
+              < /div>}/>
+              <CardText style={{padding:'8px 16px 0'}}>
+                <Row>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.status')+' *'} maxHeight={200} value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus}
+                      dropDownMenuProps={{targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                      onChange={(event, key, value) => {
+                        handleStatusChange(value, "systemStatus", false, "")
+                        if(localStorage.getItem('type') === constants.ROLE_CITIZEN && (value === 'REOPENED' || value === 'WITHDRAWN')){
+                          this.commentsTrigger(this.props.grievanceView.systemApprovalComments,true);
+                        }else if(localStorage.getItem('type') === constants.ROLE_CITIZEN){
+                          this.commentsTrigger(this.props.grievanceView.systemApprovalComments,false);
+                        }
+                    }}>
+                      {localStorage.getItem('type') === constants.ROLE_CITIZEN ? <MenuItem value={this.state.systemStatus} primaryText="Select" /> : ''}
+                      {this.state.nextStatus !== undefined ?
+                      this.state.nextStatus.map((status, index) => (
+                          <MenuItem value={status.code} key={index} primaryText={status.name} />
+                      )) : ''}
+                    </SelectField>
+                  </Col>
+                  { localStorage.getItem('type') === 'EMPLOYEE' ?
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
+                      handleChange(value, "serviceCode", false, "")}}>
+                      {this.state.complaintTypes !== undefined ?
+                      this.state.complaintTypes.map((ctype, index) => (
+                          <MenuItem value={ctype.serviceCode} key={index} primaryText={ctype.serviceName} />
+                      )) : ''}
+                    </SelectField>
+                  </Col> : "" }
+                  { localStorage.getItem('type') === 'EMPLOYEE' ?
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Ward')+' *'} maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
+                      handleWard(value, "systemLocationId", false, "")}}>
+                      {this.state.ward !== undefined ?
+                      this.state.ward.map((ward, index) => (
+                          <MenuItem value={ward.id} key={index} primaryText={ward.name} />
+                      )) : ''}
+                    </SelectField>
+                  </Col>: ""}
+                  { localStorage.getItem('type') === 'EMPLOYEE' ?
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}  onChange={(event, key, value) => {
+                      handleLocality(value, "systemChildLocationId", true, "")}}>
+                      {this.state.locality !== undefined ?
+                      this.state.locality.map((locality, index) => (
+                          <MenuItem value={locality.id} key={index} primaryText={locality.name} />
+                      )) : ''}
+                    </SelectField>
+                  </Col> : "" }
+                </Row>
+                { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.systemStatus === 'FORWARDED' ?
+                <Row>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
+                      handleDesignation(value, "departmentId", false, ""); }
+                    }>
+                      <MenuItem value={0} primaryText="Select Department" />
+                      {this.state.department !== undefined ?
+                      this.state.department.map((department, index) => (
+                          <MenuItem value={department.id} key={index} primaryText={department.name} />
+                      )) : ''}
+                    </SelectField>
+                  </Col>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwddesgn')} maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
+                      handlePosition(grievanceView.departmentId, value, "designationId", true, "") }}>
+                      <MenuItem value={0} primaryText="Select Designation" />
+                      {this.state.designation !== undefined ?
+                      this.state.designation.map((designation, index) => (
+                          <MenuItem value={designation.id} key={index} primaryText={designation.name} />
+                      )) : ''}
+                    </SelectField>
+                  </Col>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <SelectField
+                      className="custom-form-control-for-select" hintText="Select"
+                      fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.systemPositionId} onChange={(event, key, value) => {
+                      handleChange(value, "systemPositionId", true, ""); }}>
+                      <MenuItem value={0} primaryText="Select Position" />
+                      {this.state.position !== undefined ?
+                      this.state.position.map((position, index) => (
+                          <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
+                      )) : ''}
+                    </SelectField>
+                  </Col>
+                </Row>
+                : "" }
+                { localStorage.getItem('type') === 'EMPLOYEE' ?
+                <Row>
+                  {loadServiceDefinition()}
+                </Row> : ''}
+                { localStorage.getItem('type') === 'CITIZEN' && (this.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED') ?
+                <Row>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <h4>Feedback</h4>
+                    <Rating className="rating" empty="glyphicon glyphicon-star-empty" full="glyphicon glyphicon-star" initialRate={grievanceView.systemRating}
+                    onClick={(rate, event) => {
+                      let {systemStatus} = this.props.grievanceView;
+                      handleChange(rate,"systemRating", true,"");
+                      if(systemStatus === 'WITHDRAWN' || systemStatus === 'REOPENED'){
                         this.commentsTrigger(this.props.grievanceView.systemApprovalComments,true);
-                      }else if(localStorage.getItem('type') === constants.ROLE_CITIZEN){
+                      }else{
                         this.commentsTrigger(this.props.grievanceView.systemApprovalComments,false);
                       }
-                  }}>
-                    {localStorage.getItem('type') === constants.ROLE_CITIZEN ? <MenuItem value={this.state.systemStatus} primaryText="Select" /> : ''}
-                    {this.state.nextStatus !== undefined ?
-                    this.state.nextStatus.map((status, index) => (
-                        <MenuItem value={status.code} key={index} primaryText={status.name} />
-                    )) : ''}
-                  </SelectField>
-                </Col>
+                    }}/>
+                  </Col>
+                </Row> : ''}
+                <Row>
+                  <Col xs={12} sm={12} md={12} lg={12}>
+                    <TextField className="custom-form-control-for-textarea" floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4}
+                      value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500"
+                      onChange={(event, newValue) => {
+                        handleChange(newValue, "systemApprovalComments", this.state.commentsMandat, /^.[^]{0,500}$/)
+                      }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
+                  </Col>
+                </Row>
                 { localStorage.getItem('type') === 'EMPLOYEE' ?
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.change.grievancetype')+' *'} maxHeight={200} value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode} onChange={(event, key, value) => {
-                    handleChange(value, "serviceCode", false, "")}}>
-                    {this.state.complaintTypes !== undefined ?
-                    this.state.complaintTypes.map((ctype, index) => (
-                        <MenuItem value={ctype.serviceCode} key={index} primaryText={ctype.serviceName} />
-                    )) : ''}
-                  </SelectField>
-                </Col> : "" }
-                { localStorage.getItem('type') === 'EMPLOYEE' ?
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('Ward')+' *'} maxHeight={200} value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}  onChange={(event, key, value) => {
-                    handleWard(value, "systemLocationId", false, "")}}>
-                    {this.state.ward !== undefined ?
-                    this.state.ward.map((ward, index) => (
-                        <MenuItem value={ward.id} key={index} primaryText={ward.name} />
-                    )) : ''}
-                  </SelectField>
-                </Col>: ""}
-                { localStorage.getItem('type') === 'EMPLOYEE' ?
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.location')+' *'} maxHeight={200} value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}  onChange={(event, key, value) => {
-                    handleLocality(value, "systemChildLocationId", true, "")}}>
-                    {this.state.locality !== undefined ?
-                    this.state.locality.map((locality, index) => (
-                        <MenuItem value={locality.id} key={index} primaryText={locality.name} />
-                    )) : ''}
-                  </SelectField>
-                </Col> : "" }
-              </Row>
-              { localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.systemStatus === 'FORWARDED' ?
-              <Row>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwddept')} maxHeight={200} value={grievanceView.departmentId} onChange={(event, key, value) => {
-                    handleDesignation(value, "departmentId", false, ""); }
-                  }>
-                    <MenuItem value={0} primaryText="Select Department" />
-                    {this.state.department !== undefined ?
-                    this.state.department.map((department, index) => (
-                        <MenuItem value={department.id} key={index} primaryText={department.name} />
-                    )) : ''}
-                  </SelectField>
-                </Col>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwddesgn')} maxHeight={200} value={grievanceView.designationId} onChange={(event, key, value) => {
-                    handlePosition(grievanceView.departmentId, value, "designationId", true, "") }}>
-                    <MenuItem value={0} primaryText="Select Designation" />
-                    {this.state.designation !== undefined ?
-                    this.state.designation.map((designation, index) => (
-                        <MenuItem value={designation.id} key={index} primaryText={designation.name} />
-                    )) : ''}
-                  </SelectField>
-                </Col>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <SelectField
-                    className="custom-form-control-for-select" hintText="Select"
-                    fullWidth={true} floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('pgr.lbl.frwdpos')} maxHeight={200} value={grievanceView.systemPositionId} onChange={(event, key, value) => {
-                    handleChange(value, "systemPositionId", true, ""); }}>
-                    <MenuItem value={0} primaryText="Select Position" />
-                    {this.state.position !== undefined ?
-                    this.state.position.map((position, index) => (
-                        <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
-                    )) : ''}
-                  </SelectField>
-                </Col>
-              </Row>
-              : "" }
-              { localStorage.getItem('type') === 'EMPLOYEE' ?
-              <Row>
-                {loadServiceDefinition()}
-              </Row> : ''}
-              { localStorage.getItem('type') === 'CITIZEN' && (this.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED') ?
-              <Row>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <h4>Feedback</h4>
-                  <Rating className="rating" empty="glyphicon glyphicon-star-empty" full="glyphicon glyphicon-star" initialRate={grievanceView.systemRating}
-                  onClick={(rate, event) => {
-                    let {systemStatus} = this.props.grievanceView;
-                    handleChange(rate,"systemRating", true,"");
-                    if(systemStatus === 'WITHDRAWN' || systemStatus === 'REOPENED'){
-                      this.commentsTrigger(this.props.grievanceView.systemApprovalComments,true);
-                    }else{
-                      this.commentsTrigger(this.props.grievanceView.systemApprovalComments,false);
-                    }
-                  }}/>
-                </Col>
-              </Row> : ''}
-              <Row>
-                <Col xs={12} sm={12} md={12} lg={12}>
-                  <TextField className="custom-form-control-for-textarea" floatingLabelStyle={styles.floatingLabelStyle} floatingLabelFixed={true} floatingLabelText={translate('core.lbl.comments')+' *'} fullWidth={true} multiLine={true} rows={2} rowsMax={4}
-                    value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''} maxLength="500"
-                    onChange={(event, newValue) => {
-                      handleChange(newValue, "systemApprovalComments", this.state.commentsMandat, /^.[^]{0,500}$/)
-                    }} errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ""}/>
-                </Col>
-              </Row>
-              { localStorage.getItem('type') === 'EMPLOYEE' ?
-              <Row>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <h4>{translate('core.documents')}</h4>
-                </Col>
-                <Col xs={12} sm={4} md={3} lg={3}>
-                  <div className="input-group">
-                      <input type="file" className="form-control" ref="file" onChange={(e)=>handleUploadValidation(e, ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'])}/>
-                      {files.length > 0 ?
-                      <span className="input-group-addon" style={{cursor:'pointer'}} onClick={() => {this.refs.file.value = ''; this.props.handleFileEmpty();}}><i className="glyphicon glyphicon-trash specific"></i></span>
-                      : ''}
-                  </div>
-                </Col>
-              </Row> : ""}
-              <div style={{textAlign: 'center'}}>
-                <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" primary={true}/>
-              </div>
-            </CardText>
-          </Card>
+                <Row>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <h4>{translate('core.documents')}</h4>
+                  </Col>
+                  <Col xs={12} sm={4} md={3} lg={3}>
+                    <div className="input-group">
+                        <input type="file" className="form-control" ref="file" onChange={(e)=>handleUploadValidation(e, ['doc','docx','xls','xlsx','rtf','pdf','jpeg','jpg','png','txt','zip','dxf'])}/>
+                        {files.length > 0 ?
+                        <span className="input-group-addon" style={{cursor:'pointer'}} onClick={() => {this.refs.file.value = ''; this.props.handleFileEmpty();}}><i className="glyphicon glyphicon-trash specific"></i></span>
+                        : ''}
+                    </div>
+                  </Col>
+                </Row> : ""}
+                <div style={{textAlign: 'center'}}>
+                  <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => search(e)} disabled={!isFormValid} label="Submit" primary={true}/>
+                </div>
+              </CardText>
+            </Card>
+          </div>
+          : ''
+          }
+          <div style={{textAlign: 'center'}}>
+            {this.state.systemStatus === 'COMPLETED' ? <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => this.printClosureNote()} label={translate('pgr.print.ClosureNote')} primary={true}/> : ''}
+            {this.state.systemStatus === 'REJECTED' ? <RaisedButton style={{margin:'15px 5px'}} onTouchTap={(e) => this.printRejectionLetter() } label={translate('pgr.print.rejectionLetter')} primary={true}/> : ''}
+          </div>
+        </form>
+        <Dialog
+          actions={actions}
+          modal={true}
+          open={this.state.open}
+          onRequestClose={this.handleClose}
+        >
+          {translate('pgr.msg.success.grievanceupdated')}
+        </Dialog>
         </div>
-        : ''
-        }
-      </form>
-      <Dialog
-        actions={actions}
-        modal={true}
-        open={this.state.open}
-        onRequestClose={this.handleClose}
-      >
-        {translate('pgr.msg.success.grievanceupdated')}
-      </Dialog>
-      </div>
-    )
+      )
+    }
   }
 }
 

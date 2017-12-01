@@ -741,7 +741,7 @@ ReportDefinitions:
     isMandatory: false
 
   - name: storeName
-    label: inventory.storeName
+    label: inventory.store.name
     pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     searchClause: AND po.store = $storeName
@@ -795,7 +795,7 @@ ReportDefinitions:
     source: inventory
 
   - name: materialdescription
-    label: inventory.materialdescription
+    label: inventory.material.description
     type: string
     source: inventory
 
@@ -846,7 +846,7 @@ ReportDefinitions:
     isMandatory: false
 
   - name: storeName
-    label: inventory.storeName
+    label: inventory.store.name
     pattern: http://inventory-services:8080/inventory-services/stores/_search?&active=true&tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory

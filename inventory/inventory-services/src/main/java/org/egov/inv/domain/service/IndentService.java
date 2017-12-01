@@ -203,7 +203,7 @@ public class IndentService extends DomainService {
 		InvalidDataException errors = new InvalidDataException();
 		try {
 			Long currentDate = currentEpochWithoutTime();
-			currentDate = currentDate + (24 * 60 * 60) - 1;
+			currentDate = currentDate + (24 * 60 * 60 * 1000) - 1;
 			LOG.info("CurrentDate is " + toDateStr(currentDate));
 
 			Long ll = new Date().getTime();
@@ -214,14 +214,18 @@ public class IndentService extends DomainService {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indents", "null");
 				}
 				for (Indent indent : indents) {
+				LOG.info("-----------------------------------------------------------");
+					LOG.info("CurrentDate is " + toDateStr(currentDate));
 					LOG.info("indentDate is " + toDateStr(indent.getIndentDate()));
-					LOG.info("compare  " + indent.getIndentDate().compareTo(currentDate));
+					LOG.info("now is " + toDateStr(ll));
 					LOG.info("compare  " + ll.compareTo(currentDate));
+					LOG.info("compare  " + ll.compareTo(currentDate));
+				LOG.info("-----------------------------------------------------------");
 
-					/*if (indent.getIndentDate().compareTo(currentDate) >= 0) {
+					if (indent.getIndentDate().compareTo(currentDate) >= 0) {
 						errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "indentDate",
 								indent.getIndentDate().toString());
-					}*/
+					}
 					// commeneted as of now to support the past dated entries
 					/*
 					 * if(indent.getExpectedDeliveryDate().compareTo(

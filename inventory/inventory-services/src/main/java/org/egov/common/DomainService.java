@@ -103,9 +103,9 @@ public class DomainService {
     
     public  String 	toDateStr(Long epoch)
   	{
-  		Date date=new Date(epoch*1000);
+  		Date date=new Date(epoch);
   		String dateStr = ddMMYYYYHHMMSS.format(date);
-  		//LOG.info("date for epoch "+epoch+" is: "+dateStr);
+  		LOG.info("date for epoch "+epoch+" is: "+dateStr);
   		return dateStr;
   	}
     
@@ -114,7 +114,7 @@ public class DomainService {
   	  try {
   		  String dateStr = ddMMYYYY.format(new Date());
   		  Date date = ddMMYYYY.parse(dateStr);
-  		  return date.getTime()/1000;
+  		  return date.getTime();
   	} catch (ParseException e) {
   		// TODO Auto-generated catch block
   		e.printStackTrace();

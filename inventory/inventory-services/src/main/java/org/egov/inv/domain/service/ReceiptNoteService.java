@@ -17,7 +17,6 @@ import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static org.springframework.util.StringUtils.isEmpty;
 
@@ -51,10 +50,13 @@ public class ReceiptNoteService extends DomainService {
     @Autowired
     private PurchaseOrderDetailService purchaseOrderDetailService;
 
+    @Autowired
+    private MaterialService materialService;
+
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
 
-        validate(materialReceipts, Constants.ACTION_CREATE);
+        validate(materialReceipts, tenantId, Constants.ACTION_CREATE);
 
         materialReceipts.forEach(materialReceipt ->
         {
@@ -169,7 +171,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void validate(List<MaterialReceipt> materialReceipts, String method) {
+    private void validate(List<MaterialReceipt> materialReceipts, String tenantId, String method) {
 
         try {
             switch (method) {
@@ -180,7 +182,8 @@ public class ReceiptNoteService extends DomainService {
                     } else {
                         materialReceipts.stream().forEach(materialReceipt -> {
                             checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), materialReceipt.getTenantId());
+                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), tenantId);
+                            checkMaterial(materialReceipt.getReceiptDetails(), tenantId);
                         });
                     }
                 }
@@ -193,7 +196,8 @@ public class ReceiptNoteService extends DomainService {
                     } else {
                         materialReceipts.stream().forEach(materialReceipt -> {
                             checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
-                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), materialReceipt.getTenantId());
+                            checkPurchaseOrderPresent(materialReceipt.getReceiptDetails(), tenantId);
+                            checkMaterial(materialReceipt.getReceiptDetails(), tenantId);
                         });
                     }
                 }
@@ -204,6 +208,28 @@ public class ReceiptNoteService extends DomainService {
 
         }
 
+    }
+
+    private void checkMaterial(List<MaterialReceiptDetail> receiptDetails, String tenantId) {
+        receiptDetails.stream().forEach(materialReceiptDetail -> {
+            if (null != materialReceiptDetail.getMaterial()) {
+                Material material = materialService.fetchMaterial(tenantId, materialReceiptDetail.getMaterial().getCode(), new RequestInfo());
+
+                materialReceiptDetail.getReceiptDetailsAddnInfo().stream().forEach(
+                        materialReceiptDetailAddnlinfo -> {
+                            if (true == material.getLotControl() && isEmpty(materialReceiptDetailAddnlinfo.getLotNo())) {
+                                throw new CustomException("inv.0020", "Lot number is required");
+                            }
+
+                            if (true == material.getShelfLifeControl() && (isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) ||
+                                    (!isEmpty(materialReceiptDetailAddnlinfo.getExpiryDate()) && !(materialReceiptDetailAddnlinfo.getExpiryDate().doubleValue() > 0)))) {
+                                throw new CustomException("inv.0020", "Expiry date is required");
+                            }
+                        }
+                );
+            } else
+                throw new CustomException("inv.0021", "material is not present");
+        });
     }
 
     private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {

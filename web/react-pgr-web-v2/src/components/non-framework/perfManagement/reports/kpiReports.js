@@ -51,7 +51,8 @@ class KPIReports extends Component {
             selectedULBIndices: [],
             selectedfinancialYearIndices: [],
 
-            kpiReportResponse: {},
+            compareSearch: {},
+            showBarChart: false,
 
             multiSelectKPIs: true,
             multiSelectULBs: true,
@@ -111,6 +112,13 @@ class KPIReports extends Component {
                     <br/>
                     <RaisedButton label="View" style={style} primary={true} type="button" onClick={this.onClickedViewReport} />
                 </div>
+
+                {
+                    this.state.showBarChart ? 
+                    <Card className="uiCard">
+                        <EGBarChart data = {this.state.compareSearch} />
+                    </Card> : <div></div>
+                }
             </div>
         )
     }
@@ -189,26 +197,19 @@ class KPIReports extends Component {
     }
 
     onClickedViewReport() {
-        let self = this;
-        console.log("Selected KPIs = %s", JSON.stringify(this.state.kpiIndexValues))
-        console.log("Selected ULBs = %s", JSON.stringify(this.state.ULBIndexValues))
-        console.log("Selected FY = %s", JSON.stringify(this.state.financialYearIndexValues))
+        let finYears    = this.state.selectedfinancialYearIndices.map((item, index) => jp.query(self.state.financialYears, `$.financialYears[${item}].finYearRange`)).join(',')
+        let ulbs        = this.state.selectedULBIndices.map((item, index) => jp.query(self.state.ULBs, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',')
+        let kpis        = this.state.selectedKPIIndices.map((item, index)=> jp.query(self.state.departmentKPIs, `$.KPIs[${item}].code`)).join(',')
+        
+        this.fetchCompareSearch(finYears, kpis, ulbs, (err, res) => {
+            if (err || !res) {
 
-        let finYears    = this.state.financialYearIndexValues.map((item, index) => self.state.financialYears[item]['finYearRange']).join(',')
-        let ulbs        = this.state.ULBIndexValues.map((item, index) => self.state.ULBs[item]['code']).join(',')
-        let kpis        = this.state.kpiIndexValues.map((item, index)=> self.state.kpis[item]['code']).join(',')
-        let url         = `perfmanagement/v1/kpivalue/_comparesearch?departmentId=2&finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`
-        console.log(`querying URL ${url}`)
-        url             = "perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=MKO,MKT"
-        Api.commonApiPost(url, [], {}, false, true).then(function(res) {
-            if (res && res.kpiValues) {
-                self.setState({
-                    kpiReportResponse: res,
-                    startViewReport: true
+            } else {
+                this.setState({
+                    compareSearch: res
                 })
             }
-        }, function(err) {
-        });
+        })
     }
 
     /**
@@ -241,25 +242,25 @@ class KPIReports extends Component {
         
         this.showProgressIndicator(true)
         this.fetchDepartment((err, res) => {
-            if (err) {
+            if (err || !res) {
                 this.showAPIError(err)
                 this.showProgressIndicator(false)
             } else {
                 rspDepartments  = res
                 this.fetchDepartmentKPIs(res.MdmsRes['common-masters'].Department[0]['id'], (err, res) => {
-                    if (err) {
+                    if (err || !res) {
                         this.showAPIError(err)
                         this.showProgressIndicator(false)
                     } else {
                         rspDepartmentKPIs   = res
                         this.fetchFinancialYears((err, res) => {
-                            if (err) {
+                            if (err || !res) {
                                 this.showAPIError(err)
                                 this.showProgressIndicator(false)
                             } else {
                                 rspFinancialYears   = res
                                 this.fetchULBs((err, res) => {
-                                    if (err) {
+                                    if (err || !res) {
                                         this.showAPIError(err)
                                         this.showProgressIndicator(false)
                                     } else {
@@ -299,16 +300,19 @@ class KPIReports extends Component {
         Api.commonApiPost("egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department", [], {}, false, true).then(function(res) {
             if (res && res.MdmsRes && res.MdmsRes['common-masters'] && res.MdmsRes['common-masters'].Department && res.MdmsRes['common-masters'].Department[0]) {
                 cb (null, res)
+            } else {
+                cb (null, null)
             }
         }, function(err) {
             cb (err, null)
         });
     }
     fetchDepartmentKPIs(departmentId, cb) {
-        console.log(`fetchDepartmentKPIs for departmentId ${departmentId}`)
         Api.commonApiPost(`perfmanagement/v1/kpimaster/_search?departmentId=${departmentId}`, [], {}, false, true).then(function(res) {
             if (res && res.KPIs) {
                 cb (null, res)
+            } else {
+                cb (null, null)
             }
         }, function(err) {
             cb (err, null)
@@ -318,6 +322,8 @@ class KPIReports extends Component {
         Api.commonApiPost("egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant", [], {}, false, false).then(function(res) {
             if (res.MdmsRes && res.MdmsRes['tenant'] && res.MdmsRes['tenant'].tenants) {
                 cb (null, res)
+            } else {
+                cb (null, null)
             }
         }, function(err) {
             cb (err, null)
@@ -327,6 +333,19 @@ class KPIReports extends Component {
         Api.commonApiPost("egf-master/financialyears/_search", [], {}, false, false).then(function(res) {
             if (res.financialYears) {
                 cb (null, res)
+            } else {
+                cb (null, null)
+            }
+        }, function(err) {
+            cb (err, null)
+        });
+    }
+    fetchCompareSearch(finYears, kpis, ulbs, cb) {
+        Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
+            if (res && res.kpiValues) {
+                cb (null, res)
+            } else {
+                cb (null, null)
             }
         }, function(err) {
             cb (err, null)

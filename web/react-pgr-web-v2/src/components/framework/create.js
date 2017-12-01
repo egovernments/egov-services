@@ -444,8 +444,11 @@ class Report extends Component {
         } else if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore){
              var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl;
              var obj = _.get(response,self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].passResToLocalStore);
+            if(obj.isVakalatnamaGenerated){
              localStorage.setItem(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].localStoreResponseKey,JSON.stringify(obj));
               self.props.setRoute(hash);
+            }
+
 
         }
       }, 1500);

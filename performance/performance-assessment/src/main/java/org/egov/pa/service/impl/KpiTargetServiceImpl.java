@@ -9,6 +9,7 @@ import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.Tenant;
+import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiTargetRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiTargetService;
@@ -34,6 +35,10 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 	@Autowired 
 	@Qualifier("kpiValueRepo")
 	private KpiValueRepository kpiValueRepository;
+	
+	@Autowired
+	@Qualifier("kpiMasterRepo")
+	private KpiMasterRepository kpiMasterRepository;
 	
 	@Autowired
 	private RestCallService restCallService; 
@@ -109,6 +114,23 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 
 	@Override
 	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq) {
-		return kpiTargetRepository.searchKpiTargets(getReq);  
+		List<KpiTarget> targetList = kpiTargetRepository.searchKpiTargets(getReq);
+		List<String> kpiCodeList = new ArrayList<>();
+		for(KpiTarget target : targetList) { 
+			kpiCodeList.add(target.getKpiCode());
+		}
+		List<KPI> kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList);
+		sortKpisToTarget(targetList, kpiList);
+		return targetList;
+	}
+	
+	private void sortKpisToTarget(List<KpiTarget> targetList, List<KPI> kpiList) { 
+		for(KpiTarget target : targetList) { 
+			for(KPI kpi : kpiList) { 
+				if(target.getKpiCode().equals(kpi.getCode())) { 
+					target.setKpi(kpi);
+				}
+			}
+		}
 	}
 }

@@ -19,8 +19,8 @@ public class KpiTarget   {
   @JsonProperty("kpiCode")
   private String kpiCode = null;
   
-  @JsonProperty("kpiName")
-  private String kpiName = null; 
+  @JsonProperty("kpi")
+  private KPI kpi = null; 
   
   @JsonProperty("finYear")
   private String finYear = null;
@@ -49,12 +49,12 @@ public class KpiTarget   {
   
   
 
-  public String getKpiName() {
-	return kpiName;
+public KPI getKpi() {
+	return kpi;
 }
 
-public void setKpiName(String kpiName) {
-	this.kpiName = kpiName;
+public void setKpi(KPI kpi) {
+	this.kpi = kpi;
 }
 
 public String getFinYear() {

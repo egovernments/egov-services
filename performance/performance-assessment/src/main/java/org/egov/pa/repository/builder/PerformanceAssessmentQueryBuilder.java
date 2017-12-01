@@ -154,7 +154,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public String getTargetSearchQuery() { 
-    	return "SELECT id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, finyear as finYear, (select distinct name from egpa_kpi_master where code = target.kpicode) as kpiName, (select distinct name from egpa_kpi_master where code = target.kpicode) as kpiName  " 
+    	return "SELECT id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, finyear as finYear, (select distinct name from egpa_kpi_master where code = target.kpicode) as kpiName " 
     			+ " FROM egpa_kpi_master_target target WHERE target.kpicode IN (:kpiCode) "; 
     }
     

@@ -30,7 +30,7 @@ public class MDMSRequestValidator {
 	private MDMSService mDMSService;
 	
 	@SuppressWarnings("unchecked")
-	public ArrayList<Object> validateCreateRequest(MDMSCreateRequest mDMSCreateRequest) throws Exception{
+	public ArrayList<Object> validateRequest(MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws Exception{
 		ArrayList<Object> result = new ArrayList<>();
 		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
 		ObjectMapper mapper = new ObjectMapper();
@@ -38,64 +38,51 @@ public class MDMSRequestValidator {
 		if(null == fileContents) 
 			throw new CustomException("400","Invalid Tenant Id");
 		fileContents = mapper.writeValueAsString(fileContents);		
+		List<Object> masterData = new ArrayList<>();
 		Map<String, Object> allMasters = mapper.readValue(fileContents.toString(), Map.class);
+		masterData = (List<Object>) allMasters.get(mDMSCreateRequest.getMasterMetaData().getMasterName());	
 		Object requestMasterData = mDMSCreateRequest.getMasterMetaData().getMasterData();
 		JSONArray masterDataArray = new JSONArray(mapper.writeValueAsString(requestMasterData));
-		List<Object> masterData = new ArrayList<>();
-		List<Object> allmasterConfigs = new ArrayList<>();
-		masterData = (List<Object>) allMasters.get(mDMSCreateRequest.getMasterMetaData().getMasterName());
-		logger.info(mDMSCreateRequest.getMasterMetaData().getMasterName() + " master data: ");
-		logger.info(masterData.toString());
-		allmasterConfigs = (List<Object>) allMasters.get("mdms-config");
-		if(null == allmasterConfigs || allmasterConfigs.isEmpty()){
-			logger.info("There is no mdms-config for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());
-			for(int i = 0; i < masterDataArray.length() ; i++){
-				Object arrayElement = masterDataArray.get(i);
-				List<Object> filterResult = mDMSUtils.filter(masterData, arrayElement);			
-				if(!filterResult.isEmpty())
-					result.add(masterDataArray.get(i));
-			}
-			logger.info("Validation result, List of error objects: "+result);
-			return result;	
-		}
-		List<Object> masterConfig = mDMSUtils.filter(allmasterConfigs, "$.masterName", mDMSCreateRequest.getMasterMetaData().getMasterName());		
-		if(masterConfig.size() > 1){
+		List<String> uniqueKeys = mDMSUtils.getUniqueKeys(mDMSCreateRequest, allMasters);
+		if(null == uniqueKeys){
 			throw new CustomException("400", "There are duplicate mdms-configs for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
-		}else if(masterConfig.isEmpty()){
-			logger.info("There is no mdms-config for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
+		}else if(uniqueKeys.isEmpty()){
+			logger.info("Skipping Validation....");
 			for(int i = 0; i < masterDataArray.length() ; i++){
 				Object arrayElement = masterDataArray.get(i);
 				List<Object> filterResult = mDMSUtils.filter(masterData, arrayElement);			
 				if(!filterResult.isEmpty())
 					result.add(masterDataArray.get(i));
 			}
-			logger.info("Validation result, List of error objects: "+result);
-			return result;		
-		}
-		logger.info("Master Name: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
-		logger.info("Master Data: "+masterData);
-		logger.info("MDMS Config: "+masterConfig.get(0).toString());
-		
-		List<String> uniqueKeys = JsonPath.read(masterConfig.get(0).toString(), "$.uniqueKeys");
-		logger.info("uniqueKeys: "+uniqueKeys);
-		for(int i = 0; i < masterDataArray.length() ; i++){
-			List<Object> filterResult = new ArrayList<>();			
-			for(String key: uniqueKeys){
-				logger.info("key: "+key);
-				Object value;
-				value = JsonPath.read(masterDataArray.get(i).toString(), key.toString());
-				filterResult = mDMSUtils.filter(masterData, key, value);
-				masterData = filterResult;
-				logger.info("filterResult: "+filterResult);				
-
+			return result;
+		}else {
+			logger.info("uniqueKeys: "+uniqueKeys);
+			List<Object> masters = masterData;
+			for(int i = 0; i < masterDataArray.length() ; i++){
+				List<Object> filterResult = new ArrayList<>();
+				masterData = masters;
+				for(String key: uniqueKeys){
+					Object value;
+					value = JsonPath.read(masterDataArray.get(i).toString(), key.toString());
+					filterResult = mDMSUtils.filter(masterData, key, value);
+					masterData = filterResult;
+					logger.info("filterResult: "+filterResult);				
+	
+				}
+				logger.info("filterResult: "+filterResult);	
+				
+				if(isCreate){
+		     		if(!filterResult.isEmpty())
+						result.add(masterDataArray.get(i));
+				}else{
+		     		if(filterResult.isEmpty())
+						result.add(masterDataArray.get(i));
+				}
+	
 			}
-			logger.info("filterResult: "+filterResult);				
-			if(!filterResult.isEmpty())
-				result.add(masterDataArray.get(i));
-
+			logger.info("Validation result, List of error objects: "+result);
+			return result;
 		}
-		logger.info("Validation result, List of error objects: "+result);
-		return result;
 	}
 	
 }

@@ -50,7 +50,7 @@ public class MDMSController {
 	private ResponseEntity<?> create(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		try{
-			ArrayList<Object> validationError = mDMSRequestValidator.validateCreateRequest(mDMSCreateRequest);
+			ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, true);
 			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
 			Gson gson = new Gson();
 			Object errorData = gson.fromJson(validationError.toString(), type);
@@ -81,23 +81,24 @@ public class MDMSController {
 	private ResponseEntity<?> update(@RequestBody @Valid MDMSCreateRequest mDMSCreateRequest) throws Exception {
 		log.info("MDMSController mDMSCreateRequest:" + mDMSCreateRequest);
 		try{
+			ArrayList<Object> validationError = mDMSRequestValidator.validateRequest(mDMSCreateRequest, false);
+			Type type = new TypeToken<ArrayList<Map<String, Object>>>() {}.getType();
+			Gson gson = new Gson();
+			Object errorData = gson.fromJson(validationError.toString(), type);
+			if(!validationError.isEmpty()){
+				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
+				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
+					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
+				mDMSCreateErrorResponse.setMessage("Following records dont exist and  hence cannot be updated, Please rectify and retry");
+				mDMSCreateErrorResponse.setData(errorData);
+				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
+			}
 			Map<String, Map<String, JSONArray>> response = mdmsService.gitPush(mDMSCreateRequest, false);
 			MdmsResponse mdmsResponse = new MdmsResponse();
 			mdmsResponse.setMdmsRes(response);
 			mdmsResponse.setResponseInfo(responseInfoFactory.
 					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), true));
 			return new ResponseEntity<>(mdmsResponse, HttpStatus.OK);
-		}catch(CustomException e){
-			log.error("Error: ",e);
-			if((e.getMessage()).equals("Invalid Request")){
-				MDMSCreateErrorResponse mDMSCreateErrorResponse = new MDMSCreateErrorResponse();
-				mDMSCreateErrorResponse.setResponseInfo(responseInfoFactory.
-					createResponseInfoFromRequestInfo(mDMSCreateRequest.getRequestInfo(), false));
-				mDMSCreateErrorResponse.setMessage("Following records dont exist and  hence cannot be updated, Please rectify and retry");
-				mDMSCreateErrorResponse.setData(mDMSCreateRequest.getMasterMetaData().getMasterData());
-				return new ResponseEntity<>(mDMSCreateErrorResponse, HttpStatus.BAD_REQUEST);
-			}
-			throw e;
 		}catch(Exception e){
 			log.error("Error: ",e);
 			throw e;
@@ -115,7 +116,7 @@ public class MDMSController {
 			List<Object> response = mdmsService.getConfigs(tenantId, module, master);
 			return new ResponseEntity<>(response, HttpStatus.OK);		
 		}catch(Exception e){
-			log.error("Error at controller level: ",e);
+			log.error("Error ",e);
 			throw e;
 		}
 

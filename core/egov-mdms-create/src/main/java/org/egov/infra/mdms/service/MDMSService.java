@@ -1,22 +1,20 @@
 package org.egov.infra.mdms.service;
 
-import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
+import java.util.WeakHashMap;
 
 import org.egov.MDMSApplicationRunnerImpl;
 import org.egov.infra.mdms.repository.MDMSCreateRepository;
 import org.egov.infra.mdms.utils.MDMSConstants;
 import org.egov.infra.mdms.utils.MDMSUtils;
 import org.egov.mdms.model.MDMSCreateRequest;
+import org.egov.mdms.model.MasterMetaData;
 import org.egov.tracer.model.CustomException;
-import org.json.JSONException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -131,6 +129,7 @@ public class MDMSService {
 	public String getContentForPush(Object fileContents, 
 			MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws Exception{
 		ObjectMapper mapper = new ObjectMapper();
+		String result = null;
 		Object moduleContent = fileContents;
 		if(null == moduleContent){
 			throw new CustomException("400", "There is no master data available for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());
@@ -146,74 +145,69 @@ public class MDMSService {
 		String moduleContentJson = mapper.writeValueAsString(moduleContent);
 		if(isCreate){
 			masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
-            logger.info("moduleContentJson: "+moduleContentJson);
-	    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
-	    	try{
-		    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
-		    			masterData);
-	    	}catch(Exception e){
-				throw new CustomException("400", "There is no master data available for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
-	    	}
-	    	moduleContentJson = documentContext.jsonString().toString();
-	    	logger.info("Updated contents: "+moduleContentJson);
+	    	result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 		}else{
-			List<Object> configs = getConfigs(mDMSCreateRequest.getMasterMetaData().getTenantId(),
-					mDMSCreateRequest.getMasterMetaData().getModuleName(), mDMSCreateRequest.getMasterMetaData().getMasterName());
-			if(!configs.isEmpty()){
-				List<String> keys = JsonPath.read(configs.get(0).toString(), MDMSConstants.UNIQUEKEYS_JSONPATH);
-				logger.info("keys: "+keys.toString());
+			List<String> keys = mDMSUtils.getUniqueKeys(mDMSCreateRequest, moduleDataMap);
+			if(null == keys){
+				throw new CustomException("400", "There are duplicate mdms-configs for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
+			}else if(keys.isEmpty()){
+				logger.info("Skipping Validation.....");
+				masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
+			}else{
+				logger.debug("keys: "+keys.toString());
 				if(null != keys){
-					Map<String, Object> conditionMap = new HashMap<>();
-					for(String key: keys){
-						conditionMap.put(key, JsonPath.read(mDMSCreateRequest.getMasterMetaData().getMasterData().get(0),
-								key));
+					Map<String, Integer> inputDataMap = new WeakHashMap<>();
+					for(int i = 0; i < mDMSCreateRequest.getMasterMetaData().getMasterData().size(); i++){
+						StringBuilder mapKey = new StringBuilder();
+						for(String key: keys){
+							String element = mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(i));
+							mapKey.append(JsonPath.read(element, key).toString());
+						}
+						inputDataMap.put(mapKey.toString(), i);
 					}
-					logger.info("conditionMap: "+conditionMap);
+					logger.debug("inputDataMap: "+inputDataMap);
 		            ListIterator<Object> iterator = masterData.listIterator();
-		            int counter = 0;
-		            int j = 0;
 		            while(iterator.hasNext()){
 		            	Object master = iterator.next();
-		            	counter = 0;
-						for(int i = 0; i < keys.size(); i++){
-							if(JsonPath.read(master, keys.get(i).toString()).equals(conditionMap.get(keys.get(i)))){
-								counter++;
-							}else{
-								break;
-							}
-						  }
-						if(counter == keys.size()){
+						StringBuilder mapKey = new StringBuilder();
+						for(String key: keys){
+							String element = mapper.writeValueAsString(master);
+							mapKey.append(JsonPath.read(element, key).toString());
+						}
+						Integer index = inputDataMap.get(mapKey.toString());
+						if(null == index){
+							continue;
+						}else{
 							iterator.remove();
-							logger.info("adding master to file: "+mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(j)));
-							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(j)));
-				            if(j < mDMSCreateRequest.getMasterMetaData().getMasterData().size()){
-				            	j++;
-								logger.info("j: "+j);
-				            }
-							break;
+							logger.debug("adding master to file: "+mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
+							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
 						}
 		            }
-		            if(counter != keys.size()){
-		            	throw new CustomException("400", "Invalid Request");
-		            }
+		 		   result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 				}
-			}else{
-				masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
 			}
-            logger.info("moduleContentJson: "+moduleContentJson);
-	    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
-	    	try{
-		    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
-		    			masterData);
-	    	}catch(Exception e){
-	    		logger.error("master data couldn't be added to the master list: ",e);
-				throw new CustomException("400", "There is no master data available for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
-	    	}
-	    	moduleContentJson = documentContext.jsonString().toString();
-	    	logger.info("Updated contents: "+moduleContentJson);    
 		}
-    	
+		
+      	return result;
+
+	}
+	
+	public String buildPushContent(String moduleContentJson, MDMSCreateRequest mDMSCreateRequest,
+			List<Object> masterData){
+        logger.info("moduleContentJson: "+moduleContentJson);
+    	DocumentContext documentContext = JsonPath.parse(moduleContentJson);
+    	try{
+	    	documentContext.put("$", mDMSCreateRequest.getMasterMetaData().getMasterName(),
+	    			masterData);
+    	}catch(Exception e){
+    		logger.error("master data couldn't be added to the master list: ",e);
+			throw new CustomException("400", "There is no master data available for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
+    	}
+    	moduleContentJson = documentContext.jsonString().toString();
+    	logger.info("Updated contents: "+moduleContentJson);    
+	
     	return moduleContentJson;
+		
 	}
 		
 	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest){
@@ -328,10 +322,22 @@ public class MDMSService {
 	
 	
 	@SuppressWarnings("unchecked")
-	public List<Object> getConfigs(String tenantId, String module, String master) throws JsonProcessingException{
-		Map<String, Map<String, Object>> validationMap = MDMSApplicationRunnerImpl.getValidationMap();
-		Map<String, Object> allMasters = 
-				validationMap.get(tenantId+"-"+module);
+	public List<Object> getConfigs(String tenantId, String module, String master) throws Exception{
+		Map<String, String> filePathMap = MDMSApplicationRunnerImpl.getFilePathMap();
+
+		MDMSCreateRequest mDMSCreateRequest = new MDMSCreateRequest();
+		MasterMetaData masterMetaData = new MasterMetaData();
+		masterMetaData.setTenantId(tenantId);
+		masterMetaData.setModuleName(module);
+		masterMetaData.setMasterName(master);
+		mDMSCreateRequest.setMasterMetaData(masterMetaData);
+		
+		Object fileContents = getFileContents(filePathMap, mDMSCreateRequest);
+		ObjectMapper mapper = new ObjectMapper();
+		if(null == fileContents) 
+			throw new CustomException("400","Invalid Tenant Id");
+		fileContents = mapper.writeValueAsString(fileContents);		
+		Map<String, Object> allMasters = mapper.readValue(fileContents.toString(), Map.class);
 		if(null == allMasters){
 			throw new CustomException("400", "No data avaialble for this module and for this tenant");
 		}

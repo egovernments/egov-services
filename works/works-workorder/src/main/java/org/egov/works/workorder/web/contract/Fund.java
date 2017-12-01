@@ -1,304 +1,296 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
- * Fund is a defining concept in municipal accounting – where it is required to
- * segregate all accounting transactions into designated funds. Each fund needs
- * to be treated as an independent accounting entity – in other words, all
- * vouchers within a fund must be self-balancing and balance sheets and
- * IncomeExpenditure reports must be generated for each fund. A hierarchy of
- * funds may be defined – i.e. each fund can have multiple sub-funds and so on.
+ * Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on.
  */
 @ApiModel(description = "Fund is a defining concept in municipal accounting – where it is required to segregate all accounting transactions into designated funds. Each fund needs to be treated as an independent accounting entity – in other words, all vouchers within a fund must be self-balancing and balance sheets and IncomeExpenditure reports must be generated for each fund. A hierarchy of funds may be defined – i.e. each fund can have multiple sub-funds and so on. ")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class Fund {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@JsonProperty("identifier")
-	private String identifier = null;
+    @JsonProperty("identifier")
+    private String identifier = null;
 
-	@JsonProperty("parent")
-	private Long parent = null;
+    @JsonProperty("parent")
+    private Long parent = null;
 
-	@JsonProperty("active")
-	private Boolean active = null;
+    @JsonProperty("active")
+    private Boolean active = null;
 
-	@JsonProperty("isParent")
-	private Boolean isParent = null;
+    @JsonProperty("isParent")
+    private Boolean isParent = null;
 
-	@JsonProperty("level")
-	private Long level = null;
+    @JsonProperty("level")
+    private Long level = null;
 
-	@JsonProperty("auditDetails")
-	private Auditable auditDetails = null;
+    @JsonProperty("auditDetails")
+    private Auditable auditDetails = null;
 
-	public Fund id(String id) {
-		this.id = id;
-		return this;
-	}
+    public Fund id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * identifier appears as prefix in all the vouchers accounted in the books
-	 * of the Fund. Each fund must have an identifier – each voucher belonging
-	 * to a fund must have the identifier embedded in the voucher number for
-	 * easy identification. Fund is taken at a voucher head level for each
-	 * voucher transaction.
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "identifier appears as prefix in all the vouchers accounted in the books of the Fund. Each fund must have an identifier – each voucher belonging to a fund must have the identifier embedded in the voucher number for easy identification. Fund is taken at a voucher head level for each voucher transaction. ")
+    /**
+     * identifier appears as prefix in all the vouchers accounted in the books of the Fund. Each fund must have an identifier – each voucher belonging to a fund must have the identifier embedded in the voucher number for easy identification. Fund is taken at a voucher head level for each voucher transaction.
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "identifier appears as prefix in all the vouchers accounted in the books of the Fund. Each fund must have an identifier – each voucher belonging to a fund must have the identifier embedded in the voucher number for easy identification. Fund is taken at a voucher head level for each voucher transaction. ")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public Fund name(String name) {
-		this.name = name;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * name is the name of the fund . Example :Municipal Fund,Capital Fund. Also
-	 * name is unique.
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "name is the name of the fund . Example :Municipal Fund,Capital Fund. Also name is unique. ")
-	@NotNull
+    public Fund name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Size(min = 2, max = 50)
-	public String getName() {
-		return name;
-	}
+    /**
+     * name is the name of the fund . Example :Municipal Fund,Capital Fund. Also name is unique.
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "name is the name of the fund . Example :Municipal Fund,Capital Fund. Also name is unique. ")
+    @NotNull
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Size(min = 2, max = 50)
+    public String getName() {
+        return name;
+    }
 
-	public Fund code(String code) {
-		this.code = code;
-		return this;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * code is a unique number given to each fund . ULB may refer this for the
-	 * short name
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(required = true, value = "code is a unique number given to each fund . ULB may refer this for the short name ")
-	@NotNull
+    public Fund code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	@Size(min = 2, max = 50)
-	public String getCode() {
-		return code;
-	}
+    /**
+     * code is a unique number given to each fund . ULB may refer this for the short name
+     *
+     * @return code
+     **/
+    @ApiModelProperty(required = true, value = "code is a unique number given to each fund . ULB may refer this for the short name ")
+    @NotNull
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @Size(min = 2, max = 50)
+    public String getCode() {
+        return code;
+    }
 
-	public Fund identifier(String identifier) {
-		this.identifier = identifier;
-		return this;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * identifier of the Fund
-	 * 
-	 * @return identifier
-	 **/
-	@ApiModelProperty(required = true, value = "identifier of the Fund ")
-	@NotNull
+    public Fund identifier(String identifier) {
+        this.identifier = identifier;
+        return this;
+    }
 
-	public String getIdentifier() {
-		return identifier;
-	}
+    /**
+     * identifier of the Fund
+     *
+     * @return identifier
+     **/
+    @ApiModelProperty(required = true, value = "identifier of the Fund ")
+    @NotNull
 
-	public void setIdentifier(String identifier) {
-		this.identifier = identifier;
-	}
 
-	public Fund parent(Long parent) {
-		this.parent = parent;
-		return this;
-	}
+    public String getIdentifier() {
+        return identifier;
+    }
 
-	/**
-	 * parent adding a parent will create the fund as a sub-fund (child) of a
-	 * fund already created (parent fund).
-	 * 
-	 * @return parent
-	 **/
-	@ApiModelProperty(value = "parent adding a parent will create the fund as a sub-fund (child) of a fund already created (parent fund). ")
+    public void setIdentifier(String identifier) {
+        this.identifier = identifier;
+    }
 
-	public Long getParent() {
-		return parent;
-	}
+    public Fund parent(Long parent) {
+        this.parent = parent;
+        return this;
+    }
 
-	public void setParent(Long parent) {
-		this.parent = parent;
-	}
+    /**
+     * parent adding a parent will create the fund as a sub-fund (child) of a fund already created (parent fund).
+     *
+     * @return parent
+     **/
+    @ApiModelProperty(value = "parent adding a parent will create the fund as a sub-fund (child) of a fund already created (parent fund). ")
 
-	public Fund active(Boolean active) {
-		this.active = active;
-		return this;
-	}
 
-	/**
-	 * active is a boolean value which says whether fund is in use or not . If
-	 * Fund is active, then accounting of transactions under the fund is
-	 * enabled. If Fund becomes inactive, and no transactions can be accounted
-	 * under the Fund.
-	 * 
-	 * @return active
-	 **/
-	@ApiModelProperty(required = true, value = "active is a boolean value which says whether fund is in use or not . If Fund is active, then accounting of transactions under the fund is enabled. If Fund becomes inactive, and no transactions can be accounted under the Fund. ")
-	@NotNull
+    public Long getParent() {
+        return parent;
+    }
 
-	public Boolean getActive() {
-		return active;
-	}
+    public void setParent(Long parent) {
+        this.parent = parent;
+    }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    public Fund active(Boolean active) {
+        this.active = active;
+        return this;
+    }
 
-	public Fund isParent(Boolean isParent) {
-		this.isParent = isParent;
-		return this;
-	}
+    /**
+     * active is a boolean value which says whether fund is in use or not . If Fund is active, then accounting of transactions under the fund is enabled. If Fund becomes inactive, and no transactions can be accounted under the Fund.
+     *
+     * @return active
+     **/
+    @ApiModelProperty(required = true, value = "active is a boolean value which says whether fund is in use or not . If Fund is active, then accounting of transactions under the fund is enabled. If Fund becomes inactive, and no transactions can be accounted under the Fund. ")
+    @NotNull
 
-	/**
-	 * isParent is updated internally so that system can identify whether the
-	 * fund is parent or child. Only child which is not parent for any other
-	 * fund can only participate in transaction .
-	 * 
-	 * @return isParent
-	 **/
-	@ApiModelProperty(value = "isParent is updated internally so that system can identify whether the fund is parent or child. Only child which is not parent for any other fund can only participate in transaction . ")
 
-	public Boolean getIsParent() {
-		return isParent;
-	}
+    public Boolean getActive() {
+        return active;
+    }
 
-	public void setIsParent(Boolean isParent) {
-		this.isParent = isParent;
-	}
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	public Fund level(Long level) {
-		this.level = level;
-		return this;
-	}
+    public Fund isParent(Boolean isParent) {
+        this.isParent = isParent;
+        return this;
+    }
 
-	/**
-	 * level identifies what is the level of the fund in the tree structure. Top
-	 * most parent will have level 0 and its child will have level as 1
-	 * 
-	 * @return level
-	 **/
-	@ApiModelProperty(required = true, value = "level identifies what is the level of the fund in the tree structure. Top most parent will have level 0 and its child will have level as 1 ")
-	@NotNull
+    /**
+     * isParent is updated internally so that system can identify whether the fund is parent or child. Only child which is not parent for any other fund can only participate in transaction .
+     *
+     * @return isParent
+     **/
+    @ApiModelProperty(value = "isParent is updated internally so that system can identify whether the fund is parent or child. Only child which is not parent for any other fund can only participate in transaction . ")
 
-	public Long getLevel() {
-		return level;
-	}
 
-	public void setLevel(Long level) {
-		this.level = level;
-	}
+    public Boolean getIsParent() {
+        return isParent;
+    }
 
-	public Fund auditDetails(Auditable auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    public void setIsParent(Boolean isParent) {
+        this.isParent = isParent;
+    }
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    public Fund level(Long level) {
+        this.level = level;
+        return this;
+    }
 
-	@Valid
+    /**
+     * level identifies what is the level of the fund in the tree structure. Top most parent will have level 0 and its child will have level as 1
+     *
+     * @return level
+     **/
+    @ApiModelProperty(required = true, value = "level identifies what is the level of the fund in the tree structure. Top most parent will have level 0 and its child will have level as 1 ")
+    @NotNull
 
-	public Auditable getAuditDetails() {
-		return auditDetails;
-	}
 
-	public void setAuditDetails(Auditable auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    public Long getLevel() {
+        return level;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Fund fund = (Fund) o;
-		return Objects.equals(this.id, fund.id) && Objects.equals(this.name, fund.name)
-				&& Objects.equals(this.code, fund.code) && Objects.equals(this.identifier, fund.identifier)
-				&& Objects.equals(this.parent, fund.parent) && Objects.equals(this.active, fund.active)
-				&& Objects.equals(this.isParent, fund.isParent) && Objects.equals(this.level, fund.level)
-				&& Objects.equals(this.auditDetails, fund.auditDetails);
-	}
+    public void setLevel(Long level) {
+        this.level = level;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, code, identifier, parent, active, isParent, level, auditDetails);
-	}
+    public Fund auditDetails(Auditable auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class Fund {\n");
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
-		sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
-		sb.append("    active: ").append(toIndentedString(active)).append("\n");
-		sb.append("    isParent: ").append(toIndentedString(isParent)).append("\n");
-		sb.append("    level: ").append(toIndentedString(level)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Valid
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    public Auditable getAuditDetails() {
+        return auditDetails;
+    }
+
+    public void setAuditDetails(Auditable auditDetails) {
+        this.auditDetails = auditDetails;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Fund fund = (Fund) o;
+        return Objects.equals(this.id, fund.id) &&
+                Objects.equals(this.name, fund.name) &&
+                Objects.equals(this.code, fund.code) &&
+                Objects.equals(this.identifier, fund.identifier) &&
+                Objects.equals(this.parent, fund.parent) &&
+                Objects.equals(this.active, fund.active) &&
+                Objects.equals(this.isParent, fund.isParent) &&
+                Objects.equals(this.level, fund.level) &&
+                Objects.equals(this.auditDetails, fund.auditDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, code, identifier, parent, active, isParent, level, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Fund {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("    identifier: ").append(toIndentedString(identifier)).append("\n");
+        sb.append("    parent: ").append(toIndentedString(parent)).append("\n");
+        sb.append("    active: ").append(toIndentedString(active)).append("\n");
+        sb.append("    isParent: ").append(toIndentedString(isParent)).append("\n");
+        sb.append("    level: ").append(toIndentedString(level)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

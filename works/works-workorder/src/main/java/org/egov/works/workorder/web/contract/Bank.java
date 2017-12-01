@@ -1,238 +1,243 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
- * 
+ *
  */
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class Bank {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("active")
-	private Boolean active = null;
+    @JsonProperty("active")
+    private Boolean active = null;
 
-	@JsonProperty("type")
-	private String type = null;
+    @JsonProperty("type")
+    private String type = null;
 
-	@JsonProperty("auditDetails")
-	private Auditable auditDetails = null;
+    @JsonProperty("auditDetails")
+    private Auditable auditDetails = null;
 
-	public Bank id(String id) {
-		this.id = id;
-		return this;
-	}
+    public Bank id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * id is unique identifier . It is generated internally
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "id is unique identifier . It is generated internally ")
+    /**
+     * id is unique identifier . It is generated internally
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "id is unique identifier . It is generated internally ")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public Bank code(String code) {
-		this.code = code;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * code is the code of the bank
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(required = true, value = "code is the code of the bank ")
-	@NotNull
+    public Bank code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	@Size(min = 1, max = 50)
-	public String getCode() {
-		return code;
-	}
+    /**
+     * code is the code of the bank
+     *
+     * @return code
+     **/
+    @ApiModelProperty(required = true, value = "code is the code of the bank ")
+    @NotNull
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @Size(min = 1, max = 50)
+    public String getCode() {
+        return code;
+    }
 
-	public Bank name(String name) {
-		this.name = name;
-		return this;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * name is the Bank Name .
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "name is the Bank Name . ")
-	@NotNull
+    public Bank name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Size(min = 2, max = 100)
-	public String getName() {
-		return name;
-	}
+    /**
+     * name is the Bank Name .
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "name is the Bank Name . ")
+    @NotNull
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Size(min = 2, max = 100)
+    public String getName() {
+        return name;
+    }
 
-	public Bank description(String description) {
-		this.description = description;
-		return this;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * description more detailed description of the bank
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(value = "description more detailed description of the bank ")
+    public Bank description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	@Size(max = 250)
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * description more detailed description of the bank
+     *
+     * @return description
+     **/
+    @ApiModelProperty(value = "description more detailed description of the bank ")
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Size(max = 250)
+    public String getDescription() {
+        return description;
+    }
 
-	public Bank active(Boolean active) {
-		this.active = active;
-		return this;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * active states whether the bank is active in the system or not .
-	 * 
-	 * @return active
-	 **/
-	@ApiModelProperty(required = true, value = "active states whether the bank is active in the system or not . ")
-	@NotNull
+    public Bank active(Boolean active) {
+        this.active = active;
+        return this;
+    }
 
-	public Boolean getActive() {
-		return active;
-	}
+    /**
+     * active states whether the bank is active in the system or not .
+     *
+     * @return active
+     **/
+    @ApiModelProperty(required = true, value = "active states whether the bank is active in the system or not . ")
+    @NotNull
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
 
-	public Bank type(String type) {
-		this.type = type;
-		return this;
-	}
+    public Boolean getActive() {
+        return active;
+    }
 
-	/**
-	 * type of the Bank
-	 * 
-	 * @return type
-	 **/
-	@ApiModelProperty(required = true, value = "type of the Bank ")
-	@NotNull
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	@Size(max = 50)
-	public String getType() {
-		return type;
-	}
+    public Bank type(String type) {
+        this.type = type;
+        return this;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    /**
+     * type of the Bank
+     *
+     * @return type
+     **/
+    @ApiModelProperty(required = true, value = "type of the Bank ")
+    @NotNull
 
-	public Bank auditDetails(Auditable auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    @Size(max = 50)
+    public String getType() {
+        return type;
+    }
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    public void setType(String type) {
+        this.type = type;
+    }
 
-	@Valid
+    public Bank auditDetails(Auditable auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
 
-	public Auditable getAuditDetails() {
-		return auditDetails;
-	}
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
 
-	public void setAuditDetails(Auditable auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    @Valid
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Bank bank = (Bank) o;
-		return Objects.equals(this.id, bank.id) && Objects.equals(this.code, bank.code)
-				&& Objects.equals(this.name, bank.name) && Objects.equals(this.description, bank.description)
-				&& Objects.equals(this.active, bank.active) && Objects.equals(this.type, bank.type)
-				&& Objects.equals(this.auditDetails, bank.auditDetails);
-	}
+    public Auditable getAuditDetails() {
+        return auditDetails;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, code, name, description, active, type, auditDetails);
-	}
+    public void setAuditDetails(Auditable auditDetails) {
+        this.auditDetails = auditDetails;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class Bank {\n");
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    active: ").append(toIndentedString(active)).append("\n");
-		sb.append("    type: ").append(toIndentedString(type)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        Bank bank = (Bank) o;
+        return Objects.equals(this.id, bank.id) &&
+                Objects.equals(this.code, bank.code) &&
+                Objects.equals(this.name, bank.name) &&
+                Objects.equals(this.description, bank.description) &&
+                Objects.equals(this.active, bank.active) &&
+                Objects.equals(this.type, bank.type) &&
+                Objects.equals(this.auditDetails, bank.auditDetails);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, name, description, active, type, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class Bank {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    active: ").append(toIndentedString(active)).append("\n");
+        sb.append("    type: ").append(toIndentedString(type)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

@@ -8,31 +8,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum AdvanceRequisitionType {
 
-	CONTRACTOR("CONTRACTOR"),
+    CONTRACTOR("CONTRACTOR"),
 
-	SUPPLIER("SUPPLIER"),
+    SUPPLIER("SUPPLIER"),
 
-	SALARY("SALARY");
+    SALARY("SALARY");
 
-	private String value;
+    private String value;
 
-	AdvanceRequisitionType(String value) {
-		this.value = value;
-	}
+    AdvanceRequisitionType(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static AdvanceRequisitionType fromValue(String text) {
+        for (AdvanceRequisitionType b : AdvanceRequisitionType.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static AdvanceRequisitionType fromValue(String text) {
-		for (AdvanceRequisitionType b : AdvanceRequisitionType.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

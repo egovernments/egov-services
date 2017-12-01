@@ -1,241 +1,242 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
- * 
+ *
  */
 @ApiModel(description = "")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class AccountDetailType {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("tableName")
-	private String tableName = null;
+    @JsonProperty("tableName")
+    private String tableName = null;
 
-	@JsonProperty("active")
-	private Boolean active = null;
+    @JsonProperty("active")
+    private Boolean active = null;
 
-	@JsonProperty("fullyQualifiedName")
-	private String fullyQualifiedName = null;
+    @JsonProperty("fullyQualifiedName")
+    private String fullyQualifiedName = null;
 
-	@JsonProperty("auditDetails")
-	private Auditable auditDetails = null;
+    @JsonProperty("auditDetails")
+    private Auditable auditDetails = null;
 
-	public AccountDetailType id(String id) {
-		this.id = id;
-		return this;
-	}
+    public AccountDetailType id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the AccountDetailType
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the AccountDetailType ")
+    /**
+     * Unique Identifier of the AccountDetailType
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the AccountDetailType ")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public AccountDetailType name(String name) {
-		this.name = name;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * name of the AccountDetailType
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "name of the AccountDetailType ")
-	@NotNull
+    public AccountDetailType name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	@Size(min = 1, max = 50)
-	public String getName() {
-		return name;
-	}
+    /**
+     * name of the AccountDetailType
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "name of the AccountDetailType ")
+    @NotNull
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    @Size(min = 1, max = 50)
+    public String getName() {
+        return name;
+    }
 
-	public AccountDetailType description(String description) {
-		this.description = description;
-		return this;
-	}
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	/**
-	 * description of the AccountDetailType
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(required = true, value = "description of the AccountDetailType ")
-	@NotNull
+    public AccountDetailType description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	@Size(min = 1, max = 50)
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * description of the AccountDetailType
+     *
+     * @return description
+     **/
+    @ApiModelProperty(required = true, value = "description of the AccountDetailType ")
+    @NotNull
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Size(min = 1, max = 50)
+    public String getDescription() {
+        return description;
+    }
 
-	public AccountDetailType tableName(String tableName) {
-		this.tableName = tableName;
-		return this;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * table name of the AccountDetailType
-	 * 
-	 * @return tableName
-	 **/
-	@ApiModelProperty(value = "table name of the AccountDetailType ")
+    public AccountDetailType tableName(String tableName) {
+        this.tableName = tableName;
+        return this;
+    }
 
-	@Size(max = 25)
-	public String getTableName() {
-		return tableName;
-	}
+    /**
+     * table name of the AccountDetailType
+     *
+     * @return tableName
+     **/
+    @ApiModelProperty(value = "table name of the AccountDetailType ")
 
-	public void setTableName(String tableName) {
-		this.tableName = tableName;
-	}
+    @Size(max = 25)
+    public String getTableName() {
+        return tableName;
+    }
 
-	public AccountDetailType active(Boolean active) {
-		this.active = active;
-		return this;
-	}
+    public void setTableName(String tableName) {
+        this.tableName = tableName;
+    }
 
-	/**
-	 * Whether AccountDetailType is Active or not. If the value is TRUE, then
-	 * AccountDetailType is active,If the value is FALSE then AccountDetailType
-	 * is inactive,Default value is TRUE
-	 * 
-	 * @return active
-	 **/
-	@ApiModelProperty(required = true, value = "Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive,Default value is TRUE ")
-	@NotNull
+    public AccountDetailType active(Boolean active) {
+        this.active = active;
+        return this;
+    }
 
-	public Boolean getActive() {
-		return active;
-	}
+    /**
+     * Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive,Default value is TRUE
+     *
+     * @return active
+     **/
+    @ApiModelProperty(required = true, value = "Whether AccountDetailType is Active or not. If the value is TRUE, then AccountDetailType is active,If the value is FALSE then AccountDetailType is inactive,Default value is TRUE ")
+    @NotNull
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
 
-	public AccountDetailType fullyQualifiedName(String fullyQualifiedName) {
-		this.fullyQualifiedName = fullyQualifiedName;
-		return this;
-	}
+    public Boolean getActive() {
+        return active;
+    }
 
-	/**
-	 * fully qualified name of the AccountDetailType
-	 * 
-	 * @return fullyQualifiedName
-	 **/
-	@ApiModelProperty(value = "fully qualified name of the AccountDetailType ")
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	@Size(min = 1, max = 250)
-	public String getFullyQualifiedName() {
-		return fullyQualifiedName;
-	}
+    public AccountDetailType fullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+        return this;
+    }
 
-	public void setFullyQualifiedName(String fullyQualifiedName) {
-		this.fullyQualifiedName = fullyQualifiedName;
-	}
+    /**
+     * fully qualified name of the AccountDetailType
+     *
+     * @return fullyQualifiedName
+     **/
+    @ApiModelProperty(value = "fully qualified name of the AccountDetailType ")
 
-	public AccountDetailType auditDetails(Auditable auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    @Size(min = 1, max = 250)
+    public String getFullyQualifiedName() {
+        return fullyQualifiedName;
+    }
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    public void setFullyQualifiedName(String fullyQualifiedName) {
+        this.fullyQualifiedName = fullyQualifiedName;
+    }
 
-	@Valid
+    public AccountDetailType auditDetails(Auditable auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
 
-	public Auditable getAuditDetails() {
-		return auditDetails;
-	}
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
 
-	public void setAuditDetails(Auditable auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    @Valid
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		AccountDetailType accountDetailType = (AccountDetailType) o;
-		return Objects.equals(this.id, accountDetailType.id) && Objects.equals(this.name, accountDetailType.name)
-				&& Objects.equals(this.description, accountDetailType.description)
-				&& Objects.equals(this.tableName, accountDetailType.tableName)
-				&& Objects.equals(this.active, accountDetailType.active)
-				&& Objects.equals(this.fullyQualifiedName, accountDetailType.fullyQualifiedName)
-				&& Objects.equals(this.auditDetails, accountDetailType.auditDetails);
-	}
+    public Auditable getAuditDetails() {
+        return auditDetails;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, name, description, tableName, active, fullyQualifiedName, auditDetails);
-	}
+    public void setAuditDetails(Auditable auditDetails) {
+        this.auditDetails = auditDetails;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class AccountDetailType {\n");
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    tableName: ").append(toIndentedString(tableName)).append("\n");
-		sb.append("    active: ").append(toIndentedString(active)).append("\n");
-		sb.append("    fullyQualifiedName: ").append(toIndentedString(fullyQualifiedName)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        AccountDetailType accountDetailType = (AccountDetailType) o;
+        return Objects.equals(this.id, accountDetailType.id) &&
+                Objects.equals(this.name, accountDetailType.name) &&
+                Objects.equals(this.description, accountDetailType.description) &&
+                Objects.equals(this.tableName, accountDetailType.tableName) &&
+                Objects.equals(this.active, accountDetailType.active) &&
+                Objects.equals(this.fullyQualifiedName, accountDetailType.fullyQualifiedName) &&
+                Objects.equals(this.auditDetails, accountDetailType.auditDetails);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, description, tableName, active, fullyQualifiedName, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class AccountDetailType {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    tableName: ").append(toIndentedString(tableName)).append("\n");
+        sb.append("    active: ").append(toIndentedString(active)).append("\n");
+        sb.append("    fullyQualifiedName: ").append(toIndentedString(fullyQualifiedName)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

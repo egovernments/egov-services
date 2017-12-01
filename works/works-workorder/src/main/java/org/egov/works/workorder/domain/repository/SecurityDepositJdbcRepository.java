@@ -61,6 +61,8 @@ public class SecurityDepositJdbcRepository extends JdbcRepository{
             paramValues.put("letterofacceptance", securityDepositeSearchCriteria.getLetterOfAcceptanceIds());
         }
 
+        params.append(" and deleted = false");
+
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

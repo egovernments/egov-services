@@ -1,160 +1,164 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * An Object that holds NON SOR details for a given Estimate template.
  */
 @ApiModel(description = "An Object that holds NON SOR details for a given Estimate template.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class NonSOR {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("uom")
-	private String uom = null;
+    @JsonProperty("uom")
+    private String uom = null;
 
-	public NonSOR id(String id) {
-		this.id = id;
-		return this;
-	}
+    public NonSOR id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the Non SOR
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Non SOR")
+    /**
+     * Unique Identifier of the Non SOR
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Non SOR")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public NonSOR tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Tenant id of the Non SOR
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Non SOR")
-	@NotNull
+    public NonSOR tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    /**
+     * Tenant id of the Non SOR
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Non SOR")
+    @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public NonSOR description(String description) {
-		this.description = description;
-		return this;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Description of the Non SOR
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(required = true, value = "Description of the Non SOR")
-	@NotNull
+    public NonSOR description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	@Size(min = 1, max = 1024)
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Description of the Non SOR
+     *
+     * @return description
+     **/
+    @ApiModelProperty(required = true, value = "Description of the Non SOR")
+    @NotNull
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
+    @Size(min = 1, max = 1024)
+    public String getDescription() {
+        return description;
+    }
 
-	public NonSOR uom(String uom) {
-		this.uom = uom;
-		return this;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
-	 * 
-	 * @return uom
-	 **/
-	@ApiModelProperty(required = true, value = "UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.")
-	@NotNull
+    public NonSOR uom(String uom) {
+        this.uom = uom;
+        return this;
+    }
 
-	public String getUom() {
-		return uom;
-	}
+    /**
+     * UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
+     *
+     * @return uom
+     **/
+    @ApiModelProperty(required = true, value = "UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.")
+    @NotNull
 
-	public void setUom(String uom) {
-		this.uom = uom;
-	}
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		NonSOR nonSOR = (NonSOR) o;
-		return Objects.equals(this.id, nonSOR.id) && Objects.equals(this.tenantId, nonSOR.tenantId)
-				&& Objects.equals(this.description, nonSOR.description) && Objects.equals(this.uom, nonSOR.uom);
-	}
+    public String getUom() {
+        return uom;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, description, uom);
-	}
+    public void setUom(String uom) {
+        this.uom = uom;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class NonSOR {\n");
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        NonSOR nonSOR = (NonSOR) o;
+        return Objects.equals(this.id, nonSOR.id) &&
+                Objects.equals(this.tenantId, nonSOR.tenantId) &&
+                Objects.equals(this.description, nonSOR.description) &&
+                Objects.equals(this.uom, nonSOR.uom);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, description, uom);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class NonSOR {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

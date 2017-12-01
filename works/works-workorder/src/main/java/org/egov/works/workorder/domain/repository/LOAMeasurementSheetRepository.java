@@ -61,6 +61,8 @@ public class LOAMeasurementSheetRepository  extends JdbcRepository {
             paramValues.put("loaactivity", loaMeasurementSheetSearchCriteria.getLoaActivity());
         }
 
+        params.append(" and deleted = false");
+
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

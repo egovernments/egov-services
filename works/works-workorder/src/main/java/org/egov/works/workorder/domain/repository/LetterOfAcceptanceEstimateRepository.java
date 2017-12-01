@@ -67,6 +67,8 @@ public class LetterOfAcceptanceEstimateRepository extends JdbcRepository {
             paramValues.put("letterofacceptance", letterOfAcceptanceEstimateSearchCriteria.getLetterOfAcceptanceIds());
         }
 
+        params.append(" and deleted = false");
+
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

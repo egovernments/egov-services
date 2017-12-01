@@ -42,7 +42,7 @@ public class WorkOrderService {
 
     public WorkOrderResponse create(final WorkOrderRequest workOrderRequest) {
 
-//        workOrderValidator.validateWorkOrder(workOrderRequest,Boolean.FALSE);
+        workOrderValidator.validateWorkOrder(workOrderRequest,Boolean.FALSE);
         LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
         String departmentCode;
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
@@ -62,6 +62,7 @@ public class WorkOrderService {
                 // TODO: check idgen to accept values to generate
                 workOrder.setWorkOrderNumber(workOrderUtils.getCityCode(workOrder.getTenantId(), workOrderRequest.getRequestInfo()) + "/" + propertiesManager.getWorkOrderNumberPrefix() + "/"
                         + departmentCode + workOrderNumber);
+
             }
 
         }

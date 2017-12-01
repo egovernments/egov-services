@@ -1,220 +1,222 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds Contractor Class details
  */
 @ApiModel(description = "An Object that holds Contractor Class details")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class ContractorClass {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("class")
-	private String propertyClass = null;
+    @JsonProperty("class")
+    private String propertyClass = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("minAmount")
-	private BigDecimal minAmount = null;
+    @JsonProperty("minAmount")
+    private BigDecimal minAmount = null;
 
-	@JsonProperty("maxAmount")
-	private BigDecimal maxAmount = null;
+    @JsonProperty("maxAmount")
+    private BigDecimal maxAmount = null;
 
-	public ContractorClass id(String id) {
-		this.id = id;
-		return this;
-	}
+    public ContractorClass id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique Identifier of the Contractor Class.
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Contractor Class.")
+    /**
+     * Unique Identifier of the Contractor Class.
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Contractor Class.")
 
-	public String getId() {
-		return id;
-	}
 
-	public void setId(String id) {
-		this.id = id;
-	}
+    public String getId() {
+        return id;
+    }
 
-	public ContractorClass tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	/**
-	 * Tenant id of the Contractor Class.
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Contractor Class.")
-	@NotNull
+    public ContractorClass tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    /**
+     * Tenant id of the Contractor Class.
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Contractor Class.")
+    @NotNull
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	public ContractorClass propertyClass(String propertyClass) {
-		this.propertyClass = propertyClass;
-		return this;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	/**
-	 * Class of the Contractor
-	 * 
-	 * @return propertyClass
-	 **/
-	@ApiModelProperty(required = true, value = "Class of the Contractor")
-	@NotNull
+    public ContractorClass propertyClass(String propertyClass) {
+        this.propertyClass = propertyClass;
+        return this;
+    }
 
-	@Size(min = 1, max = 100)
-	public String getPropertyClass() {
-		return propertyClass;
-	}
+    /**
+     * Class of the Contractor
+     *
+     * @return propertyClass
+     **/
+    @ApiModelProperty(required = true, value = "Class of the Contractor")
+    @NotNull
 
-	public void setPropertyClass(String propertyClass) {
-		this.propertyClass = propertyClass;
-	}
+    @Size(min = 1, max = 100)
+    public String getPropertyClass() {
+        return propertyClass;
+    }
 
-	public ContractorClass description(String description) {
-		this.description = description;
-		return this;
-	}
+    public void setPropertyClass(String propertyClass) {
+        this.propertyClass = propertyClass;
+    }
 
-	/**
-	 * Description of the Contractor Class
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(required = true, value = "Description of the Contractor Class")
-	@NotNull
+    public ContractorClass description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	@Size(min = 1, max = 1024)
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * Description of the Contractor Class
+     *
+     * @return description
+     **/
+    @ApiModelProperty(required = true, value = "Description of the Contractor Class")
+    @NotNull
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
+    @Size(min = 1, max = 1024)
+    public String getDescription() {
+        return description;
+    }
 
-	public ContractorClass minAmount(BigDecimal minAmount) {
-		this.minAmount = minAmount;
-		return this;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * Minimum Amount of the Contractor Class.
-	 * 
-	 * @return minAmount
-	 **/
-	@ApiModelProperty(required = true, value = "Minimum Amount of the Contractor Class.")
-	@NotNull
+    public ContractorClass minAmount(BigDecimal minAmount) {
+        this.minAmount = minAmount;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Minimum Amount of the Contractor Class.
+     *
+     * @return minAmount
+     **/
+    @ApiModelProperty(required = true, value = "Minimum Amount of the Contractor Class.")
+    @NotNull
 
-	public BigDecimal getMinAmount() {
-		return minAmount;
-	}
+    @Valid
 
-	public void setMinAmount(BigDecimal minAmount) {
-		this.minAmount = minAmount;
-	}
+    public BigDecimal getMinAmount() {
+        return minAmount;
+    }
 
-	public ContractorClass maxAmount(BigDecimal maxAmount) {
-		this.maxAmount = maxAmount;
-		return this;
-	}
+    public void setMinAmount(BigDecimal minAmount) {
+        this.minAmount = minAmount;
+    }
 
-	/**
-	 * Maximum Amount of the Contractor Class.
-	 * 
-	 * @return maxAmount
-	 **/
-	@ApiModelProperty(required = true, value = "Maximum Amount of the Contractor Class.")
-	@NotNull
+    public ContractorClass maxAmount(BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Maximum Amount of the Contractor Class.
+     *
+     * @return maxAmount
+     **/
+    @ApiModelProperty(required = true, value = "Maximum Amount of the Contractor Class.")
+    @NotNull
 
-	public BigDecimal getMaxAmount() {
-		return maxAmount;
-	}
+    @Valid
 
-	public void setMaxAmount(BigDecimal maxAmount) {
-		this.maxAmount = maxAmount;
-	}
+    public BigDecimal getMaxAmount() {
+        return maxAmount;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		ContractorClass contractorClass = (ContractorClass) o;
-		return Objects.equals(this.id, contractorClass.id) && Objects.equals(this.tenantId, contractorClass.tenantId)
-				&& Objects.equals(this.propertyClass, contractorClass.propertyClass)
-				&& Objects.equals(this.description, contractorClass.description)
-				&& Objects.equals(this.minAmount, contractorClass.minAmount)
-				&& Objects.equals(this.maxAmount, contractorClass.maxAmount);
-	}
+    public void setMaxAmount(BigDecimal maxAmount) {
+        this.maxAmount = maxAmount;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, propertyClass, description, minAmount, maxAmount);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class ContractorClass {\n");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ContractorClass contractorClass = (ContractorClass) o;
+        return Objects.equals(this.id, contractorClass.id) &&
+                Objects.equals(this.tenantId, contractorClass.tenantId) &&
+                Objects.equals(this.propertyClass, contractorClass.propertyClass) &&
+                Objects.equals(this.description, contractorClass.description) &&
+                Objects.equals(this.minAmount, contractorClass.minAmount) &&
+                Objects.equals(this.maxAmount, contractorClass.maxAmount);
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    propertyClass: ").append(toIndentedString(propertyClass)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    minAmount: ").append(toIndentedString(minAmount)).append("\n");
-		sb.append("    maxAmount: ").append(toIndentedString(maxAmount)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, propertyClass, description, minAmount, maxAmount);
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ContractorClass {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    propertyClass: ").append(toIndentedString(propertyClass)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    minAmount: ").append(toIndentedString(minAmount)).append("\n");
+        sb.append("    maxAmount: ").append(toIndentedString(maxAmount)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

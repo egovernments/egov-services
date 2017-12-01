@@ -8,41 +8,42 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum DetailedEstimateStatus {
 
-	NEW("NEW"),
+    NEW("NEW"),
 
-	CREATED("CREATED"),
+    CREATED("CREATED"),
 
-	REJECTED("REJECTED"),
+    REJECTED("REJECTED"),
 
-	RESUBMITTED("RESUBMITTED"),
+    RESUBMITTED("RESUBMITTED"),
 
-	CANCELLED("CANCELLED"),
+    CANCELLED("CANCELLED"),
 
-	APPROVED("APPROVED"),
+    APPROVED("APPROVED"),
 
-	CHECKED("CHECKED"),
+    CHECKED("CHECKED"),
 
-	TECHNICAL_SANCTIONED("TECHNICAL_SANCTIONED");
+    TECHNICAL_SANCTIONED("TECHNICAL_SANCTIONED");
 
-	private String value;
+    private String value;
 
-	DetailedEstimateStatus(String value) {
-		this.value = value;
-	}
+    DetailedEstimateStatus(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static DetailedEstimateStatus fromValue(String text) {
+        for (DetailedEstimateStatus b : DetailedEstimateStatus.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static DetailedEstimateStatus fromValue(String text) {
-		for (DetailedEstimateStatus b : DetailedEstimateStatus.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

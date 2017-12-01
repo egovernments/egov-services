@@ -1,243 +1,272 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data of Detailed Estimate Deductions
  */
 @ApiModel(description = "An Object that holds the basic data of Detailed Estimate Deductions")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class DetailedEstimateDeduction {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("chartOfAccounts")
-	private ChartOfAccount chartOfAccounts = null;
+    @JsonProperty("chartOfAccounts")
+    private ChartOfAccount chartOfAccounts = null;
 
-	@JsonProperty("detailedEstimate")
-	private String detailedEstimate = null;
+    @JsonProperty("detailedEstimate")
+    private String detailedEstimate = null;
 
-	@JsonProperty("percentage")
-	private Double percentage = null;
+    @JsonProperty("percentage")
+    private Double percentage = null;
 
-	@JsonProperty("amount")
-	private BigDecimal amount = null;
+    @JsonProperty("amount")
+    private BigDecimal amount = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("deleted")
+    private Boolean deleted = false;
 
-	public DetailedEstimateDeduction id(String id) {
-		this.id = id;
-		return this;
-	}
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
-	/**
-	 * Unique Identifier of the Detailed Estimate Deduction
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Detailed Estimate Deduction")
+    public DetailedEstimateDeduction id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getId() {
-		return id;
-	}
+    /**
+     * Unique Identifier of the Detailed Estimate Deduction
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Detailed Estimate Deduction")
 
-	public void setId(String id) {
-		this.id = id;
-	}
 
-	public DetailedEstimateDeduction tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Tenant id of the Detailed Estimate Deduction
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Detailed Estimate Deduction")
-	@NotNull
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    public DetailedEstimateDeduction tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    /**
+     * Tenant id of the Detailed Estimate Deduction
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Detailed Estimate Deduction")
+    @NotNull
 
-	public DetailedEstimateDeduction chartOfAccounts(ChartOfAccount chartOfAccounts) {
-		this.chartOfAccounts = chartOfAccounts;
-		return this;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	/**
-	 * Chart Of Accounts of the Detailed Estimate Deduction from Financials
-	 * 
-	 * @return chartOfAccounts
-	 **/
-	@ApiModelProperty(required = true, value = "Chart Of Accounts of the Detailed Estimate Deduction from Financials")
-	@NotNull
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	@Valid
+    public DetailedEstimateDeduction chartOfAccounts(ChartOfAccount chartOfAccounts) {
+        this.chartOfAccounts = chartOfAccounts;
+        return this;
+    }
 
-	public ChartOfAccount getChartOfAccounts() {
-		return chartOfAccounts;
-	}
+    /**
+     * Chart Of Accounts of the Detailed Estimate Deduction from Financials
+     *
+     * @return chartOfAccounts
+     **/
+    @ApiModelProperty(required = true, value = "Chart Of Accounts of the Detailed Estimate Deduction from Financials")
+    @NotNull
 
-	public void setChartOfAccounts(ChartOfAccount chartOfAccounts) {
-		this.chartOfAccounts = chartOfAccounts;
-	}
+    @Valid
 
-	public DetailedEstimateDeduction detailedEstimate(String detailedEstimate) {
-		this.detailedEstimate = detailedEstimate;
-		return this;
-	}
+    public ChartOfAccount getChartOfAccounts() {
+        return chartOfAccounts;
+    }
 
-	/**
-	 * Reference of the Detailed Estimate for Multi Year Estimate
-	 * 
-	 * @return detailedEstimate
-	 **/
-	@ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
-	@NotNull
+    public void setChartOfAccounts(ChartOfAccount chartOfAccounts) {
+        this.chartOfAccounts = chartOfAccounts;
+    }
 
-	public String getDetailedEstimate() {
-		return detailedEstimate;
-	}
+    public DetailedEstimateDeduction detailedEstimate(String detailedEstimate) {
+        this.detailedEstimate = detailedEstimate;
+        return this;
+    }
 
-	public void setDetailedEstimate(String detailedEstimate) {
-		this.detailedEstimate = detailedEstimate;
-	}
+    /**
+     * Reference of the Detailed Estimate for Multi Year Estimate
+     *
+     * @return detailedEstimate
+     **/
+    @ApiModelProperty(required = true, value = "Reference of the Detailed Estimate for Multi Year Estimate")
+    @NotNull
 
-	public DetailedEstimateDeduction percentage(Double percentage) {
-		this.percentage = percentage;
-		return this;
-	}
 
-	/**
-	 * Percentage for the Detailed Estimate Deduction
-	 * 
-	 * @return percentage
-	 **/
-	@ApiModelProperty(value = "Percentage for the Detailed Estimate Deduction")
+    public String getDetailedEstimate() {
+        return detailedEstimate;
+    }
 
-	public Double getPercentage() {
-		return percentage;
-	}
+    public void setDetailedEstimate(String detailedEstimate) {
+        this.detailedEstimate = detailedEstimate;
+    }
 
-	public void setPercentage(Double percentage) {
-		this.percentage = percentage;
-	}
+    public DetailedEstimateDeduction percentage(Double percentage) {
+        this.percentage = percentage;
+        return this;
+    }
 
-	public DetailedEstimateDeduction amount(BigDecimal amount) {
-		this.amount = amount;
-		return this;
-	}
+    /**
+     * Percentage for the Detailed Estimate Deduction
+     *
+     * @return percentage
+     **/
+    @ApiModelProperty(value = "Percentage for the Detailed Estimate Deduction")
 
-	/**
-	 * Amount for the Detailed Estimate Deduction
-	 * 
-	 * @return amount
-	 **/
-	@ApiModelProperty(required = true, value = "Amount for the Detailed Estimate Deduction")
-	@NotNull
 
-	@Valid
+    public Double getPercentage() {
+        return percentage;
+    }
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
+    }
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+    public DetailedEstimateDeduction amount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
 
-	public DetailedEstimateDeduction auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    /**
+     * Amount for the Detailed Estimate Deduction
+     *
+     * @return amount
+     **/
+    @ApiModelProperty(required = true, value = "Amount for the Detailed Estimate Deduction")
+    @NotNull
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    @Valid
 
-	@Valid
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    public DetailedEstimateDeduction deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		DetailedEstimateDeduction detailedEstimateDeduction = (DetailedEstimateDeduction) o;
-		return Objects.equals(this.id, detailedEstimateDeduction.id)
-				&& Objects.equals(this.tenantId, detailedEstimateDeduction.tenantId)
-				&& Objects.equals(this.chartOfAccounts, detailedEstimateDeduction.chartOfAccounts)
-				&& Objects.equals(this.detailedEstimate, detailedEstimateDeduction.detailedEstimate)
-				&& Objects.equals(this.percentage, detailedEstimateDeduction.percentage)
-				&& Objects.equals(this.amount, detailedEstimateDeduction.amount)
-				&& Objects.equals(this.auditDetails, detailedEstimateDeduction.auditDetails);
-	}
+    /**
+     * Boolean value to identify whether the object is deleted or not from UI.
+     *
+     * @return deleted
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, chartOfAccounts, detailedEstimate, percentage, amount, auditDetails);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class DetailedEstimateDeduction {\n");
+    public Boolean getDeleted() {
+        return deleted;
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    chartOfAccounts: ").append(toIndentedString(chartOfAccounts)).append("\n");
-		sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
-		sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
-		sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    public DetailedEstimateDeduction auditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
+
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public AuditDetails getAuditDetails() {
+        return auditDetails;
+    }
+
+    public void setAuditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        DetailedEstimateDeduction detailedEstimateDeduction = (DetailedEstimateDeduction) o;
+        return Objects.equals(this.id, detailedEstimateDeduction.id) &&
+                Objects.equals(this.tenantId, detailedEstimateDeduction.tenantId) &&
+                Objects.equals(this.chartOfAccounts, detailedEstimateDeduction.chartOfAccounts) &&
+                Objects.equals(this.detailedEstimate, detailedEstimateDeduction.detailedEstimate) &&
+                Objects.equals(this.percentage, detailedEstimateDeduction.percentage) &&
+                Objects.equals(this.amount, detailedEstimateDeduction.amount) &&
+                Objects.equals(this.deleted, detailedEstimateDeduction.deleted) &&
+                Objects.equals(this.auditDetails, detailedEstimateDeduction.auditDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, chartOfAccounts, detailedEstimate, percentage, amount, deleted, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class DetailedEstimateDeduction {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    chartOfAccounts: ").append(toIndentedString(chartOfAccounts)).append("\n");
+        sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
+        sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
+        sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
+        sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

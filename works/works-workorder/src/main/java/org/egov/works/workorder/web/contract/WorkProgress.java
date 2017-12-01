@@ -8,31 +8,32 @@ import com.fasterxml.jackson.annotation.JsonValue;
  */
 public enum WorkProgress {
 
-	BEFORE("BEFORE"),
+    BEFORE("BEFORE"),
 
-	DURING("DURING"),
+    DURING("DURING"),
 
-	AFTER("AFTER");
+    AFTER("AFTER");
 
-	private String value;
+    private String value;
 
-	WorkProgress(String value) {
-		this.value = value;
-	}
+    WorkProgress(String value) {
+        this.value = value;
+    }
 
-	@Override
-	@JsonValue
-	public String toString() {
-		return String.valueOf(value);
-	}
+    @JsonCreator
+    public static WorkProgress fromValue(String text) {
+        for (WorkProgress b : WorkProgress.values()) {
+            if (String.valueOf(b.value).equals(text)) {
+                return b;
+            }
+        }
+        return null;
+    }
 
-	@JsonCreator
-	public static WorkProgress fromValue(String text) {
-		for (WorkProgress b : WorkProgress.values()) {
-			if (String.valueOf(b.value).equals(text)) {
-				return b;
-			}
-		}
-		return null;
-	}
+    @Override
+    @JsonValue
+    public String toString() {
+        return String.valueOf(value);
+    }
 }
+

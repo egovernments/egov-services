@@ -61,6 +61,8 @@ public class WorkOrderDetailRepository extends JdbcRepository {
             paramValues.put("workOrders", workOrderDetailSearchContract.getWorkOrders());
         }
 
+        params.append(" and deleted = false");
+
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

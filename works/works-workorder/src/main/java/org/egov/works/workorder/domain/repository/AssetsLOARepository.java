@@ -60,6 +60,8 @@ public class AssetsLOARepository extends JdbcRepository {
             paramValues.put("letterofacceptanceestimate", assetsForLoaSearchCriteria.getLetterOfAcceptanceEstimateIds());
         }
 
+        params.append(" and deleted = false");
+
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

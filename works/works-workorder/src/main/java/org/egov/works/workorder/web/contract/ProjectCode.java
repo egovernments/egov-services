@@ -1,324 +1,353 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds the basic data for a Project Code
  */
 @ApiModel(description = "An Object that holds the basic data for a Project Code")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class ProjectCode {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@JsonProperty("name")
-	private String name = null;
+    @JsonProperty("name")
+    private String name = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("status")
-	private ProjectCodeStatus status = null;
+    @JsonProperty("status")
+    private ProjectCodeStatus status = null;
 
-	@JsonProperty("active")
-	private Boolean active = false;
+    @JsonProperty("active")
+    private Boolean active = false;
 
-	@JsonProperty("projectValue")
-	private BigDecimal projectValue = null;
+    @JsonProperty("projectValue")
+    private BigDecimal projectValue = null;
 
-	@JsonProperty("completionDate")
-	private Long completionDate = null;
+    @JsonProperty("completionDate")
+    private Long completionDate = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("deleted")
+    private Boolean deleted = false;
 
-	public ProjectCode id(String id) {
-		this.id = id;
-		return this;
-	}
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
-	/**
-	 * Unique Identifier of the Project Code
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique Identifier of the Project Code")
+    public ProjectCode id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getId() {
-		return id;
-	}
+    /**
+     * Unique Identifier of the Project Code
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique Identifier of the Project Code")
 
-	public void setId(String id) {
-		this.id = id;
-	}
 
-	public ProjectCode tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * Tenant id of the Project Code
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Project Code")
-	@NotNull
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    public ProjectCode tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    /**
+     * Tenant id of the Project Code
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Project Code")
+    @NotNull
 
-	public ProjectCode code(String code) {
-		this.code = code;
-		return this;
-	}
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	/**
-	 * Code of the Project
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(value = "Code of the Project")
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	@Pattern(regexp = "[a-zA-Z0-9-\\\\]+")
-	@Size(max = 100)
-	public String getCode() {
-		return code;
-	}
+    public ProjectCode code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    /**
+     * Code of the Project
+     *
+     * @return code
+     **/
+    @ApiModelProperty(value = "Code of the Project")
 
-	public ProjectCode name(String name) {
-		this.name = name;
-		return this;
-	}
+    @Pattern(regexp = "[a-zA-Z0-9-/]+")
+    @Size(max = 100)
+    public String getCode() {
+        return code;
+    }
 
-	/**
-	 * Name of the Project
-	 * 
-	 * @return name
-	 **/
-	@ApiModelProperty(required = true, value = "Name of the Project")
-	@NotNull
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	@Size(min = 1, max = 1024)
-	public String getName() {
-		return name;
-	}
+    public ProjectCode name(String name) {
+        this.name = name;
+        return this;
+    }
 
-	public void setName(String name) {
-		this.name = name;
-	}
+    /**
+     * Name of the Project
+     *
+     * @return name
+     **/
+    @ApiModelProperty(required = true, value = "Name of the Project")
+    @NotNull
 
-	public ProjectCode description(String description) {
-		this.description = description;
-		return this;
-	}
+    @Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
+    @Size(min = 1, max = 1024)
+    public String getName() {
+        return name;
+    }
 
-	/**
-	 * Description of the Project
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(value = "Description of the Project")
+    public void setName(String name) {
+        this.name = name;
+    }
 
-	@Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
-	@Size(max = 1024)
-	public String getDescription() {
-		return description;
-	}
+    public ProjectCode description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    /**
+     * Description of the Project
+     *
+     * @return description
+     **/
+    @ApiModelProperty(value = "Description of the Project")
 
-	public ProjectCode status(ProjectCodeStatus status) {
-		this.status = status;
-		return this;
-	}
+    @Pattern(regexp = "[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+")
+    @Size(max = 1024)
+    public String getDescription() {
+        return description;
+    }
 
-	/**
-	 * Enum representing the list of possible values for Project code status
-	 * 
-	 * @return status
-	 **/
-	@ApiModelProperty(required = true, value = "Enum representing the list of possible values for Project code status")
-	@NotNull
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	@Valid
+    public ProjectCode status(ProjectCodeStatus status) {
+        this.status = status;
+        return this;
+    }
 
-	public ProjectCodeStatus getStatus() {
-		return status;
-	}
+    /**
+     * Enum representing the list of possible values for Project code status
+     *
+     * @return status
+     **/
+    @ApiModelProperty(required = true, value = "Enum representing the list of possible values for Project code status")
+    @NotNull
 
-	public void setStatus(ProjectCodeStatus status) {
-		this.status = status;
-	}
+    @Valid
 
-	public ProjectCode active(Boolean active) {
-		this.active = active;
-		return this;
-	}
+    public ProjectCodeStatus getStatus() {
+        return status;
+    }
 
-	/**
-	 * The active/inactive status of the project which refresents the boolean
-	 * value True/False. By default the boolean value will be True.
-	 * 
-	 * @return active
-	 **/
-	@ApiModelProperty(value = "The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.")
+    public void setStatus(ProjectCodeStatus status) {
+        this.status = status;
+    }
 
-	public Boolean getActive() {
-		return active;
-	}
+    public ProjectCode active(Boolean active) {
+        this.active = active;
+        return this;
+    }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    /**
+     * The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.
+     *
+     * @return active
+     **/
+    @ApiModelProperty(value = "The active/inactive status of the project which refresents the boolean value True/False. By default the boolean value will be True.")
 
-	public ProjectCode projectValue(BigDecimal projectValue) {
-		this.projectValue = projectValue;
-		return this;
-	}
 
-	/**
-	 * The cost of the Project. This value will be updated on Project closure
-	 * which will include the complete expenditure on the project.
-	 * 
-	 * @return projectValue
-	 **/
-	@ApiModelProperty(value = "The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.")
+    public Boolean getActive() {
+        return active;
+    }
 
-	@Valid
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	public BigDecimal getProjectValue() {
-		return projectValue;
-	}
+    public ProjectCode projectValue(BigDecimal projectValue) {
+        this.projectValue = projectValue;
+        return this;
+    }
 
-	public void setProjectValue(BigDecimal projectValue) {
-		this.projectValue = projectValue;
-	}
+    /**
+     * The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.
+     *
+     * @return projectValue
+     **/
+    @ApiModelProperty(value = "The cost of the Project. This value will be updated on Project closure which will include the complete expenditure on the project.")
 
-	public ProjectCode completionDate(Long completionDate) {
-		this.completionDate = completionDate;
-		return this;
-	}
+    @Valid
 
-	/**
-	 * Epoch time for the project completion date
-	 * 
-	 * @return completionDate
-	 **/
-	@ApiModelProperty(value = "Epoch time for the project completion date")
+    public BigDecimal getProjectValue() {
+        return projectValue;
+    }
 
-	public Long getCompletionDate() {
-		return completionDate;
-	}
+    public void setProjectValue(BigDecimal projectValue) {
+        this.projectValue = projectValue;
+    }
 
-	public void setCompletionDate(Long completionDate) {
-		this.completionDate = completionDate;
-	}
+    public ProjectCode completionDate(Long completionDate) {
+        this.completionDate = completionDate;
+        return this;
+    }
 
-	public ProjectCode auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    /**
+     * Epoch time for the project completion date
+     *
+     * @return completionDate
+     **/
+    @ApiModelProperty(value = "Epoch time for the project completion date")
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
 
-	@Valid
+    public Long getCompletionDate() {
+        return completionDate;
+    }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+    public void setCompletionDate(Long completionDate) {
+        this.completionDate = completionDate;
+    }
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    public ProjectCode deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		ProjectCode projectCode = (ProjectCode) o;
-		return Objects.equals(this.id, projectCode.id) && Objects.equals(this.tenantId, projectCode.tenantId)
-				&& Objects.equals(this.code, projectCode.code) && Objects.equals(this.name, projectCode.name)
-				&& Objects.equals(this.description, projectCode.description)
-				&& Objects.equals(this.status, projectCode.status) && Objects.equals(this.active, projectCode.active)
-				&& Objects.equals(this.projectValue, projectCode.projectValue)
-				&& Objects.equals(this.completionDate, projectCode.completionDate)
-				&& Objects.equals(this.auditDetails, projectCode.auditDetails);
-	}
+    /**
+     * Boolean value to identify whether the object is deleted or not from UI.
+     *
+     * @return deleted
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, tenantId, code, name, description, status, active, projectValue, completionDate,
-				auditDetails);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class ProjectCode {\n");
+    public Boolean getDeleted() {
+        return deleted;
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("    name: ").append(toIndentedString(name)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    status: ").append(toIndentedString(status)).append("\n");
-		sb.append("    active: ").append(toIndentedString(active)).append("\n");
-		sb.append("    projectValue: ").append(toIndentedString(projectValue)).append("\n");
-		sb.append("    completionDate: ").append(toIndentedString(completionDate)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    public ProjectCode auditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
+
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public AuditDetails getAuditDetails() {
+        return auditDetails;
+    }
+
+    public void setAuditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        ProjectCode projectCode = (ProjectCode) o;
+        return Objects.equals(this.id, projectCode.id) &&
+                Objects.equals(this.tenantId, projectCode.tenantId) &&
+                Objects.equals(this.code, projectCode.code) &&
+                Objects.equals(this.name, projectCode.name) &&
+                Objects.equals(this.description, projectCode.description) &&
+                Objects.equals(this.status, projectCode.status) &&
+                Objects.equals(this.active, projectCode.active) &&
+                Objects.equals(this.projectValue, projectCode.projectValue) &&
+                Objects.equals(this.completionDate, projectCode.completionDate) &&
+                Objects.equals(this.deleted, projectCode.deleted) &&
+                Objects.equals(this.auditDetails, projectCode.auditDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, tenantId, code, name, description, status, active, projectValue, completionDate, deleted, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class ProjectCode {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("    name: ").append(toIndentedString(name)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    status: ").append(toIndentedString(status)).append("\n");
+        sb.append("    active: ").append(toIndentedString(active)).append("\n");
+        sb.append("    projectValue: ").append(toIndentedString(projectValue)).append("\n");
+        sb.append("    completionDate: ").append(toIndentedString(completionDate)).append("\n");
+        sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

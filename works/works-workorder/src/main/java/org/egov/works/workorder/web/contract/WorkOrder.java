@@ -3,7 +3,6 @@ package org.egov.works.workorder.web.contract;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import org.egov.works.commons.web.contract.WorkOrderStatus;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
@@ -17,7 +16,7 @@ import java.util.Objects;
  * An Object that holds the basic data for a Work Order
  */
 @ApiModel(description = "An Object that holds the basic data for a Work Order")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-27T13:43:59.796Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class WorkOrder {
     @JsonProperty("id")
@@ -312,7 +311,7 @@ public class WorkOrder {
 
 
     @Override
-    public boolean equals(java.lang.Object o) {
+    public boolean equals(Object o) {
         if (this == o) {
             return true;
         }
@@ -362,10 +361,11 @@ public class WorkOrder {
      * Convert the given object to string with each line indented by 4 spaces
      * (except the first line).
      */
-    private String toIndentedString(java.lang.Object o) {
+    private String toIndentedString(Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
+

@@ -1,243 +1,272 @@
 package org.egov.works.workorder.web.contract;
 
-import java.math.BigDecimal;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.math.BigDecimal;
+import java.util.Objects;
 
 /**
  * An Object that holds Security deposit collection Details for the given LOA.
  */
 @ApiModel(description = "An Object that holds Security deposit collection Details for the given LOA.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-24T06:27:19.470Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class SecurityDeposit {
-	@JsonProperty("id")
-	private String id = null;
+    @JsonProperty("id")
+    private String id = null;
 
-	@JsonProperty("letterOfAcceptance")
-	private String letterOfAcceptance = null;
+    @JsonProperty("letterOfAcceptance")
+    private String letterOfAcceptance = null;
 
-	@JsonProperty("tenantId")
-	private String tenantId = null;
+    @JsonProperty("tenantId")
+    private String tenantId = null;
 
-	@JsonProperty("collectionMode")
-	private String collectionMode = null;
+    @JsonProperty("collectionMode")
+    private String collectionMode = null;
 
-	@JsonProperty("percentage")
-	private Double percentage = null;
+    @JsonProperty("percentage")
+    private Double percentage = null;
 
-	@JsonProperty("amount")
-	private BigDecimal amount = null;
+    @JsonProperty("amount")
+    private BigDecimal amount = null;
 
-	@JsonProperty("auditDetails")
-	private AuditDetails auditDetails = null;
+    @JsonProperty("deleted")
+    private Boolean deleted = false;
 
-	public SecurityDeposit id(String id) {
-		this.id = id;
-		return this;
-	}
+    @JsonProperty("auditDetails")
+    private AuditDetails auditDetails = null;
 
-	/**
-	 * Unique Identifier of the Security Deposit.
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(required = true, value = "Unique Identifier of the Security Deposit.")
-	@NotNull
+    public SecurityDeposit id(String id) {
+        this.id = id;
+        return this;
+    }
 
-	public String getId() {
-		return id;
-	}
+    /**
+     * Unique Identifier of the Security Deposit.
+     *
+     * @return id
+     **/
+    @ApiModelProperty(required = true, value = "Unique Identifier of the Security Deposit.")
+    @NotNull
 
-	public void setId(String id) {
-		this.id = id;
-	}
 
-	public SecurityDeposit letterOfAcceptance(String letterOfAcceptance) {
-		this.letterOfAcceptance = letterOfAcceptance;
-		return this;
-	}
+    public String getId() {
+        return id;
+    }
 
-	/**
-	 * reference of 'LetterOfAcceptance'. Pimary key is reference here.
-	 * 
-	 * @return letterOfAcceptance
-	 **/
-	@ApiModelProperty(value = "reference of 'LetterOfAcceptance'. Pimary key is reference here.")
+    public void setId(String id) {
+        this.id = id;
+    }
 
-	public String getLetterOfAcceptance() {
-		return letterOfAcceptance;
-	}
+    public SecurityDeposit letterOfAcceptance(String letterOfAcceptance) {
+        this.letterOfAcceptance = letterOfAcceptance;
+        return this;
+    }
 
-	public void setLetterOfAcceptance(String letterOfAcceptance) {
-		this.letterOfAcceptance = letterOfAcceptance;
-	}
+    /**
+     * reference of 'LetterOfAcceptance'. Pimary key is reference here.
+     *
+     * @return letterOfAcceptance
+     **/
+    @ApiModelProperty(value = "reference of 'LetterOfAcceptance'. Pimary key is reference here.")
 
-	public SecurityDeposit tenantId(String tenantId) {
-		this.tenantId = tenantId;
-		return this;
-	}
 
-	/**
-	 * Tenant id of the Security Deposit
-	 * 
-	 * @return tenantId
-	 **/
-	@ApiModelProperty(required = true, value = "Tenant id of the Security Deposit")
-	@NotNull
+    public String getLetterOfAcceptance() {
+        return letterOfAcceptance;
+    }
 
-	@Size(min = 2, max = 128)
-	public String getTenantId() {
-		return tenantId;
-	}
+    public void setLetterOfAcceptance(String letterOfAcceptance) {
+        this.letterOfAcceptance = letterOfAcceptance;
+    }
 
-	public void setTenantId(String tenantId) {
-		this.tenantId = tenantId;
-	}
+    public SecurityDeposit tenantId(String tenantId) {
+        this.tenantId = tenantId;
+        return this;
+    }
 
-	public SecurityDeposit collectionMode(String collectionMode) {
-		this.collectionMode = collectionMode;
-		return this;
-	}
+    /**
+     * Tenant id of the Security Deposit
+     *
+     * @return tenantId
+     **/
+    @ApiModelProperty(required = true, value = "Tenant id of the Security Deposit")
+    @NotNull
 
-	/**
-	 * Enum value from 'CollectionMode'Enum value from 'CollectionMode'
-	 * 
-	 * @return collectionMode
-	 **/
-	@ApiModelProperty(required = true, value = "Enum value from 'CollectionMode'Enum value from 'CollectionMode'")
-	@NotNull
+    @Size(min = 2, max = 128)
+    public String getTenantId() {
+        return tenantId;
+    }
 
-	@Size(min = 1, max = 50)
-	public String getCollectionMode() {
-		return collectionMode;
-	}
+    public void setTenantId(String tenantId) {
+        this.tenantId = tenantId;
+    }
 
-	public void setCollectionMode(String collectionMode) {
-		this.collectionMode = collectionMode;
-	}
+    public SecurityDeposit collectionMode(String collectionMode) {
+        this.collectionMode = collectionMode;
+        return this;
+    }
 
-	public SecurityDeposit percentage(Double percentage) {
-		this.percentage = percentage;
-		return this;
-	}
+    /**
+     * Enum value from 'CollectionMode'Enum value from 'CollectionMode'
+     *
+     * @return collectionMode
+     **/
+    @ApiModelProperty(required = true, value = "Enum value from 'CollectionMode'Enum value from 'CollectionMode'")
+    @NotNull
 
-	/**
-	 * Percentage for the given mode
-	 * 
-	 * @return percentage
-	 **/
-	@ApiModelProperty(required = true, value = "Percentage for the given mode")
-	@NotNull
+    @Size(min = 1, max = 50)
+    public String getCollectionMode() {
+        return collectionMode;
+    }
 
-	public Double getPercentage() {
-		return percentage;
-	}
+    public void setCollectionMode(String collectionMode) {
+        this.collectionMode = collectionMode;
+    }
 
-	public void setPercentage(Double percentage) {
-		this.percentage = percentage;
-	}
+    public SecurityDeposit percentage(Double percentage) {
+        this.percentage = percentage;
+        return this;
+    }
 
-	public SecurityDeposit amount(BigDecimal amount) {
-		this.amount = amount;
-		return this;
-	}
+    /**
+     * Percentage for the given mode
+     *
+     * @return percentage
+     **/
+    @ApiModelProperty(required = true, value = "Percentage for the given mode")
+    @NotNull
 
-	/**
-	 * Amount of Security Deposit should be calculated as per percentage
-	 * 
-	 * @return amount
-	 **/
-	@ApiModelProperty(required = true, value = "Amount of Security Deposit should be calculated as per percentage")
-	@NotNull
 
-	@Valid
+    public Double getPercentage() {
+        return percentage;
+    }
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+    public void setPercentage(Double percentage) {
+        this.percentage = percentage;
+    }
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+    public SecurityDeposit amount(BigDecimal amount) {
+        this.amount = amount;
+        return this;
+    }
 
-	public SecurityDeposit auditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-		return this;
-	}
+    /**
+     * Amount of Security Deposit should be calculated as per percentage
+     *
+     * @return amount
+     **/
+    @ApiModelProperty(required = true, value = "Amount of Security Deposit should be calculated as per percentage")
+    @NotNull
 
-	/**
-	 * Get auditDetails
-	 * 
-	 * @return auditDetails
-	 **/
-	@ApiModelProperty(value = "")
+    @Valid
 
-	@Valid
+    public BigDecimal getAmount() {
+        return amount;
+    }
 
-	public AuditDetails getAuditDetails() {
-		return auditDetails;
-	}
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
+    }
 
-	public void setAuditDetails(AuditDetails auditDetails) {
-		this.auditDetails = auditDetails;
-	}
+    public SecurityDeposit deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		SecurityDeposit securityDeposit = (SecurityDeposit) o;
-		return Objects.equals(this.id, securityDeposit.id)
-				&& Objects.equals(this.letterOfAcceptance, securityDeposit.letterOfAcceptance)
-				&& Objects.equals(this.tenantId, securityDeposit.tenantId)
-				&& Objects.equals(this.collectionMode, securityDeposit.collectionMode)
-				&& Objects.equals(this.percentage, securityDeposit.percentage)
-				&& Objects.equals(this.amount, securityDeposit.amount)
-				&& Objects.equals(this.auditDetails, securityDeposit.auditDetails);
-	}
+    /**
+     * Boolean value to identify whether the object is deleted or not from UI.
+     *
+     * @return deleted
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, letterOfAcceptance, tenantId, collectionMode, percentage, amount, auditDetails);
-	}
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class SecurityDeposit {\n");
+    public Boolean getDeleted() {
+        return deleted;
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    letterOfAcceptance: ").append(toIndentedString(letterOfAcceptance)).append("\n");
-		sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
-		sb.append("    collectionMode: ").append(toIndentedString(collectionMode)).append("\n");
-		sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
-		sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
-		sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    public SecurityDeposit auditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+        return this;
+    }
+
+    /**
+     * Get auditDetails
+     *
+     * @return auditDetails
+     **/
+    @ApiModelProperty(value = "")
+
+    @Valid
+
+    public AuditDetails getAuditDetails() {
+        return auditDetails;
+    }
+
+    public void setAuditDetails(AuditDetails auditDetails) {
+        this.auditDetails = auditDetails;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        SecurityDeposit securityDeposit = (SecurityDeposit) o;
+        return Objects.equals(this.id, securityDeposit.id) &&
+                Objects.equals(this.letterOfAcceptance, securityDeposit.letterOfAcceptance) &&
+                Objects.equals(this.tenantId, securityDeposit.tenantId) &&
+                Objects.equals(this.collectionMode, securityDeposit.collectionMode) &&
+                Objects.equals(this.percentage, securityDeposit.percentage) &&
+                Objects.equals(this.amount, securityDeposit.amount) &&
+                Objects.equals(this.deleted, securityDeposit.deleted) &&
+                Objects.equals(this.auditDetails, securityDeposit.auditDetails);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, letterOfAcceptance, tenantId, collectionMode, percentage, amount, deleted, auditDetails);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class SecurityDeposit {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    letterOfAcceptance: ").append(toIndentedString(letterOfAcceptance)).append("\n");
+        sb.append("    tenantId: ").append(toIndentedString(tenantId)).append("\n");
+        sb.append("    collectionMode: ").append(toIndentedString(collectionMode)).append("\n");
+        sb.append("    percentage: ").append(toIndentedString(percentage)).append("\n");
+        sb.append("    amount: ").append(toIndentedString(amount)).append("\n");
+        sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+        sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

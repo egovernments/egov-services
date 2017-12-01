@@ -1,339 +1,346 @@
 package org.egov.works.workorder.web.contract;
 
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import io.swagger.annotations.ApiModelProperty;
+import org.joda.time.LocalDate;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
-
-import org.joda.time.LocalDate;
-
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-import io.swagger.annotations.ApiModelProperty;
+import java.util.Objects;
 
 /**
  * UOM
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-21T10:42:18.195Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
 
 public class UOM {
-	@JsonProperty("id")
-	private Long id = null;
+    @JsonProperty("id")
+    private Long id = null;
 
-	@JsonProperty("code")
-	private String code = null;
+    @JsonProperty("code")
+    private String code = null;
 
-	@JsonProperty("description")
-	private String description = null;
+    @JsonProperty("description")
+    private String description = null;
 
-	@JsonProperty("category")
-	private Object category = null;
+    @JsonProperty("category")
+    private Object category = null;
 
-	@JsonProperty("active")
-	private Boolean active = true;
+    @JsonProperty("active")
+    private Boolean active = true;
 
-	@JsonProperty("coversionFactor")
-	private Float coversionFactor = null;
+    @JsonProperty("coversionFactor")
+    private Float coversionFactor = null;
 
-	@JsonProperty("baseuom")
-	private Boolean baseuom = false;
+    @JsonProperty("baseuom")
+    private Boolean baseuom = false;
 
-	@JsonProperty("createdBy")
-	private String createdBy = null;
+    @JsonProperty("createdBy")
+    private String createdBy = null;
 
-	@JsonProperty("createdDate")
-	private LocalDate createdDate = null;
+    @JsonProperty("createdDate")
+    private LocalDate createdDate = null;
 
-	@JsonProperty("lastModifiedBy")
-	private String lastModifiedBy = null;
+    @JsonProperty("lastModifiedBy")
+    private String lastModifiedBy = null;
 
-	@JsonProperty("lastModifiedDate")
-	private LocalDate lastModifiedDate = null;
+    @JsonProperty("lastModifiedDate")
+    private LocalDate lastModifiedDate = null;
 
-	public UOM id(Long id) {
-		this.id = id;
-		return this;
-	}
+    public UOM id(Long id) {
+        this.id = id;
+        return this;
+    }
 
-	/**
-	 * Unique identifier of the UOM.
-	 * 
-	 * @return id
-	 **/
-	@ApiModelProperty(value = "Unique identifier of the UOM.")
+    /**
+     * Unique identifier of the UOM.
+     *
+     * @return id
+     **/
+    @ApiModelProperty(value = "Unique identifier of the UOM.")
 
-	public Long getId() {
-		return id;
-	}
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+    public Long getId() {
+        return id;
+    }
 
-	public UOM code(String code) {
-		this.code = code;
-		return this;
-	}
+    public void setId(Long id) {
+        this.id = id;
+    }
 
-	/**
-	 * The code of the uom.
-	 * 
-	 * @return code
-	 **/
-	@ApiModelProperty(required = true, value = "The code of the uom.")
-	@NotNull
+    public UOM code(String code) {
+        this.code = code;
+        return this;
+    }
 
-	@Size(min = 1, max = 30)
-	public String getCode() {
-		return code;
-	}
+    /**
+     * The code of the uom.
+     *
+     * @return code
+     **/
+    @ApiModelProperty(required = true, value = "The code of the uom.")
+    @NotNull
 
-	public void setCode(String code) {
-		this.code = code;
-	}
+    @Size(min = 1, max = 30)
+    public String getCode() {
+        return code;
+    }
 
-	public UOM description(String description) {
-		this.description = description;
-		return this;
-	}
+    public void setCode(String code) {
+        this.code = code;
+    }
 
-	/**
-	 * The description of the unit of measurement.
-	 * 
-	 * @return description
-	 **/
-	@ApiModelProperty(value = "The description of the unit of measurement.")
+    public UOM description(String description) {
+        this.description = description;
+        return this;
+    }
 
-	@Size(max = 250)
-	public String getDescription() {
-		return description;
-	}
+    /**
+     * The description of the unit of measurement.
+     *
+     * @return description
+     **/
+    @ApiModelProperty(value = "The description of the unit of measurement.")
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @Size(max = 250)
+    public String getDescription() {
+        return description;
+    }
 
-	public UOM category(Object category) {
-		this.category = category;
-		return this;
-	}
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-	/**
-	 * category to which this unit of measurement belongs.
-	 * 
-	 * @return category
-	 **/
-	@ApiModelProperty(required = true, value = "category to which this unit of measurement belongs.")
-	@NotNull
+    public UOM category(Object category) {
+        this.category = category;
+        return this;
+    }
 
-	public Object getCategory() {
-		return category;
-	}
+    /**
+     * category to which this unit of measurement belongs.
+     *
+     * @return category
+     **/
+    @ApiModelProperty(required = true, value = "category to which this unit of measurement belongs.")
+    @NotNull
 
-	public void setCategory(Object category) {
-		this.category = category;
-	}
 
-	public UOM active(Boolean active) {
-		this.active = active;
-		return this;
-	}
+    public Object getCategory() {
+        return category;
+    }
 
-	/**
-	 * TRUE for active languages and FALSE for inactive languages.
-	 * 
-	 * @return active
-	 **/
-	@ApiModelProperty(required = true, value = "TRUE for active languages and FALSE for inactive languages.")
-	@NotNull
+    public void setCategory(Object category) {
+        this.category = category;
+    }
 
-	public Boolean getActive() {
-		return active;
-	}
+    public UOM active(Boolean active) {
+        this.active = active;
+        return this;
+    }
 
-	public void setActive(Boolean active) {
-		this.active = active;
-	}
+    /**
+     * TRUE for active languages and FALSE for inactive languages.
+     *
+     * @return active
+     **/
+    @ApiModelProperty(required = true, value = "TRUE for active languages and FALSE for inactive languages.")
+    @NotNull
 
-	public UOM coversionFactor(Float coversionFactor) {
-		this.coversionFactor = coversionFactor;
-		return this;
-	}
 
-	/**
-	 * What is the conversion factor of this unit of measurement with the base
-	 * UOM. For Base UOM the conversion factor will be 1.
-	 * 
-	 * @return coversionFactor
-	 **/
-	@ApiModelProperty(value = "What is the conversion factor of this unit of measurement with the base UOM. For Base UOM the conversion factor will be 1.")
+    public Boolean getActive() {
+        return active;
+    }
 
-	public Float getCoversionFactor() {
-		return coversionFactor;
-	}
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
 
-	public void setCoversionFactor(Float coversionFactor) {
-		this.coversionFactor = coversionFactor;
-	}
+    public UOM coversionFactor(Float coversionFactor) {
+        this.coversionFactor = coversionFactor;
+        return this;
+    }
 
-	public UOM baseuom(Boolean baseuom) {
-		this.baseuom = baseuom;
-		return this;
-	}
+    /**
+     * What is the conversion factor of this unit of measurement with the base UOM. For Base UOM the conversion factor will be 1.
+     *
+     * @return coversionFactor
+     **/
+    @ApiModelProperty(value = "What is the conversion factor of this unit of measurement with the base UOM. For Base UOM the conversion factor will be 1.")
 
-	/**
-	 * TRUE if this particular UOM is the base UOM and FALSE if it not the base
-	 * UOM.
-	 * 
-	 * @return baseuom
-	 **/
-	@ApiModelProperty(value = "TRUE if this particular UOM is the base UOM and FALSE if it not the base UOM.")
 
-	public Boolean getBaseuom() {
-		return baseuom;
-	}
+    public Float getCoversionFactor() {
+        return coversionFactor;
+    }
 
-	public void setBaseuom(Boolean baseuom) {
-		this.baseuom = baseuom;
-	}
+    public void setCoversionFactor(Float coversionFactor) {
+        this.coversionFactor = coversionFactor;
+    }
 
-	public UOM createdBy(String createdBy) {
-		this.createdBy = createdBy;
-		return this;
-	}
+    public UOM baseuom(Boolean baseuom) {
+        this.baseuom = baseuom;
+        return this;
+    }
 
-	/**
-	 * Id of the user who created the record.
-	 * 
-	 * @return createdBy
-	 **/
-	@ApiModelProperty(value = "Id of the user who created the record.")
+    /**
+     * TRUE if this particular UOM is the base UOM and FALSE if it not the base UOM.
+     *
+     * @return baseuom
+     **/
+    @ApiModelProperty(value = "TRUE if this particular UOM is the base UOM and FALSE if it not the base UOM.")
 
-	public String getCreatedBy() {
-		return createdBy;
-	}
 
-	public void setCreatedBy(String createdBy) {
-		this.createdBy = createdBy;
-	}
+    public Boolean getBaseuom() {
+        return baseuom;
+    }
 
-	public UOM createdDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
-		return this;
-	}
+    public void setBaseuom(Boolean baseuom) {
+        this.baseuom = baseuom;
+    }
 
-	/**
-	 * Date on which the uom master data was added into the system.
-	 * 
-	 * @return createdDate
-	 **/
-	@ApiModelProperty(value = "Date on which the uom master data was added into the system.")
+    public UOM createdBy(String createdBy) {
+        this.createdBy = createdBy;
+        return this;
+    }
 
-	@Valid
+    /**
+     * Id of the user who created the record.
+     *
+     * @return createdBy
+     **/
+    @ApiModelProperty(value = "Id of the user who created the record.")
 
-	public LocalDate getCreatedDate() {
-		return createdDate;
-	}
 
-	public void setCreatedDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
-	}
+    public String getCreatedBy() {
+        return createdBy;
+    }
 
-	public UOM lastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-		return this;
-	}
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
 
-	/**
-	 * Id of the user who last modified the record.
-	 * 
-	 * @return lastModifiedBy
-	 **/
-	@ApiModelProperty(value = "Id of the user who last modified the record.")
+    public UOM createdDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+        return this;
+    }
 
-	public String getLastModifiedBy() {
-		return lastModifiedBy;
-	}
+    /**
+     * Date on which the uom master data was added into the system.
+     *
+     * @return createdDate
+     **/
+    @ApiModelProperty(value = "Date on which the uom master data was added into the system.")
 
-	public void setLastModifiedBy(String lastModifiedBy) {
-		this.lastModifiedBy = lastModifiedBy;
-	}
+    @Valid
 
-	public UOM lastModifiedDate(LocalDate lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-		return this;
-	}
+    public LocalDate getCreatedDate() {
+        return createdDate;
+    }
 
-	/**
-	 * Date on which the uom master data was last modified.
-	 * 
-	 * @return lastModifiedDate
-	 **/
-	@ApiModelProperty(value = "Date on which the uom master data was last modified.")
+    public void setCreatedDate(LocalDate createdDate) {
+        this.createdDate = createdDate;
+    }
 
-	@Valid
+    public UOM lastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+        return this;
+    }
 
-	public LocalDate getLastModifiedDate() {
-		return lastModifiedDate;
-	}
+    /**
+     * Id of the user who last modified the record.
+     *
+     * @return lastModifiedBy
+     **/
+    @ApiModelProperty(value = "Id of the user who last modified the record.")
 
-	public void setLastModifiedDate(LocalDate lastModifiedDate) {
-		this.lastModifiedDate = lastModifiedDate;
-	}
 
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		UOM UOM = (UOM) o;
-		return Objects.equals(this.id, UOM.id) && Objects.equals(this.code, UOM.code)
-				&& Objects.equals(this.description, UOM.description) && Objects.equals(this.category, UOM.category)
-				&& Objects.equals(this.active, UOM.active) && Objects.equals(this.coversionFactor, UOM.coversionFactor)
-				&& Objects.equals(this.baseuom, UOM.baseuom) && Objects.equals(this.createdBy, UOM.createdBy)
-				&& Objects.equals(this.createdDate, UOM.createdDate)
-				&& Objects.equals(this.lastModifiedBy, UOM.lastModifiedBy)
-				&& Objects.equals(this.lastModifiedDate, UOM.lastModifiedDate);
-	}
+    public String getLastModifiedBy() {
+        return lastModifiedBy;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id, code, description, category, active, coversionFactor, baseuom, createdBy, createdDate,
-				lastModifiedBy, lastModifiedDate);
-	}
+    public void setLastModifiedBy(String lastModifiedBy) {
+        this.lastModifiedBy = lastModifiedBy;
+    }
 
-	@Override
-	public String toString() {
-		StringBuilder sb = new StringBuilder();
-		sb.append("class UOM {\n");
+    public UOM lastModifiedDate(LocalDate lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+        return this;
+    }
 
-		sb.append("    id: ").append(toIndentedString(id)).append("\n");
-		sb.append("    code: ").append(toIndentedString(code)).append("\n");
-		sb.append("    description: ").append(toIndentedString(description)).append("\n");
-		sb.append("    category: ").append(toIndentedString(category)).append("\n");
-		sb.append("    active: ").append(toIndentedString(active)).append("\n");
-		sb.append("    coversionFactor: ").append(toIndentedString(coversionFactor)).append("\n");
-		sb.append("    baseuom: ").append(toIndentedString(baseuom)).append("\n");
-		sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
-		sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");
-		sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
-		sb.append("    lastModifiedDate: ").append(toIndentedString(lastModifiedDate)).append("\n");
-		sb.append("}");
-		return sb.toString();
-	}
+    /**
+     * Date on which the uom master data was last modified.
+     *
+     * @return lastModifiedDate
+     **/
+    @ApiModelProperty(value = "Date on which the uom master data was last modified.")
 
-	/**
-	 * Convert the given object to string with each line indented by 4 spaces
-	 * (except the first line).
-	 */
-	private String toIndentedString(java.lang.Object o) {
-		if (o == null) {
-			return "null";
-		}
-		return o.toString().replace("\n", "\n    ");
-	}
+    @Valid
+
+    public LocalDate getLastModifiedDate() {
+        return lastModifiedDate;
+    }
+
+    public void setLastModifiedDate(LocalDate lastModifiedDate) {
+        this.lastModifiedDate = lastModifiedDate;
+    }
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        UOM UOM = (UOM) o;
+        return Objects.equals(this.id, UOM.id) &&
+                Objects.equals(this.code, UOM.code) &&
+                Objects.equals(this.description, UOM.description) &&
+                Objects.equals(this.category, UOM.category) &&
+                Objects.equals(this.active, UOM.active) &&
+                Objects.equals(this.coversionFactor, UOM.coversionFactor) &&
+                Objects.equals(this.baseuom, UOM.baseuom) &&
+                Objects.equals(this.createdBy, UOM.createdBy) &&
+                Objects.equals(this.createdDate, UOM.createdDate) &&
+                Objects.equals(this.lastModifiedBy, UOM.lastModifiedBy) &&
+                Objects.equals(this.lastModifiedDate, UOM.lastModifiedDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, code, description, category, active, coversionFactor, baseuom, createdBy, createdDate, lastModifiedBy, lastModifiedDate);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class UOM {\n");
+
+        sb.append("    id: ").append(toIndentedString(id)).append("\n");
+        sb.append("    code: ").append(toIndentedString(code)).append("\n");
+        sb.append("    description: ").append(toIndentedString(description)).append("\n");
+        sb.append("    category: ").append(toIndentedString(category)).append("\n");
+        sb.append("    active: ").append(toIndentedString(active)).append("\n");
+        sb.append("    coversionFactor: ").append(toIndentedString(coversionFactor)).append("\n");
+        sb.append("    baseuom: ").append(toIndentedString(baseuom)).append("\n");
+        sb.append("    createdBy: ").append(toIndentedString(createdBy)).append("\n");
+        sb.append("    createdDate: ").append(toIndentedString(createdDate)).append("\n");
+        sb.append("    lastModifiedBy: ").append(toIndentedString(lastModifiedBy)).append("\n");
+        sb.append("    lastModifiedDate: ").append(toIndentedString(lastModifiedDate)).append("\n");
+        sb.append("}");
+        return sb.toString();
+    }
+
+    /**
+     * Convert the given object to string with each line indented by 4 spaces
+     * (except the first line).
+     */
+    private String toIndentedString(Object o) {
+        if (o == null) {
+            return "null";
+        }
+        return o.toString().replace("\n", "\n    ");
+    }
 }
+

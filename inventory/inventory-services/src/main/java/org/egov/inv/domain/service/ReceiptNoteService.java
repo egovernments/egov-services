@@ -53,8 +53,6 @@ public class ReceiptNoteService extends DomainService {
     @Autowired
     private MaterialService materialService;
 
-    HashMap<String, String> errors = new HashMap<>();
-
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -175,7 +173,6 @@ public class ReceiptNoteService extends DomainService {
 
 
     private void validate(List<MaterialReceipt> materialReceipts, String tenantId, String method) {
-
         try {
             switch (method) {
 
@@ -185,9 +182,6 @@ public class ReceiptNoteService extends DomainService {
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
                             validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
-                            if (errors.size() > 0) {
-                                throw new CustomException(errors);
-                            }
                         }
                     }
                 }
@@ -200,9 +194,6 @@ public class ReceiptNoteService extends DomainService {
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
                             validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
-                            if (errors.size() > 0) {
-                                throw new CustomException(errors);
-                            }
                         }
                     }
                 }
@@ -234,15 +225,15 @@ public class ReceiptNoteService extends DomainService {
 
 
         if (isEmpty(materialReceiptDetail.getReceivedQty())) {
-            errors.put("inv.0023", "Received quantity is required");
+            throw new CustomException("inv.0023", "Received quantity is required");
         }
 
         if (!isEmpty(materialReceiptDetail.getReceivedQty()) && materialReceiptDetail.getReceivedQty().doubleValue() <= 0) {
-            errors.put("inv.0024", "Received quantity should be greater than zero");
+            throw new CustomException("inv.0024", "Received quantity should be greater than zero");
         }
 
         if (!isEmpty(materialReceiptDetail.getAcceptedQty()) && materialReceiptDetail.getAcceptedQty().doubleValue() <= 0) {
-            errors.put("inv.0025", "Accepted quantity should be greater than zero");
+            throw new CustomException("inv.0025", "Accepted quantity should be greater than zero");
         }
 
     }
@@ -254,16 +245,16 @@ public class ReceiptNoteService extends DomainService {
 
             for (MaterialReceiptDetailAddnlinfo addnlinfo : receiptDetail.getReceiptDetailsAddnInfo()) {
                 if (true == material.getLotControl() && isEmpty(addnlinfo.getLotNo())) {
-                    errors.put("inv.0020", "Lot number is required");
+                    throw new CustomException("inv.0020", "Lot number is required");
                 }
 
                 if (true == material.getShelfLifeControl() && (isEmpty(addnlinfo.getExpiryDate()) ||
                         (!isEmpty(addnlinfo.getExpiryDate()) && !(addnlinfo.getExpiryDate().doubleValue() > 0)))) {
-                    errors.put("inv.0021", "Expiry date is required");
+                    throw new CustomException("inv.0021", "Expiry date is required");
                 }
             }
         } else
-            errors.put("inv.0022", "material is not present");
+            throw new CustomException("inv.0022", "material is not present");
     }
 
     private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId) {
@@ -273,7 +264,7 @@ public class ReceiptNoteService extends DomainService {
             {
                 if (null != addnlinfo.getExpiryDate()
                         && currentDate > addnlinfo.getExpiryDate()) {
-                    errors.put("inv.0023", "Expiry date must br greater than today's date");
+                    throw new CustomException("inv.0023", "Expiry date must br greater than today's date");
                 }
             }
         }
@@ -283,7 +274,7 @@ public class ReceiptNoteService extends DomainService {
         HashSet<String> hashSet = new HashSet<>();
         for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
             if (false == hashSet.add(materialReceiptDetail.getPurchaseOrderDetail().getId() + "-" + materialReceiptDetail.getMaterial().getCode())) {
-                errors.put("inv.0015", materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                throw new CustomException("inv.0015", materialReceiptDetail.getPurchaseOrderDetail().getId() +
                         " and " + materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
             }
         }
@@ -311,11 +302,11 @@ public class ReceiptNoteService extends DomainService {
                     if (purchaseOrders.getPurchaseOrders().size() > 0) {
                         return;
                     } else
-                        errors.put("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                        throw new CustomException("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
                                 " is not present");
                 }
             } else
-                errors.put("inv.0017", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
+                throw new CustomException("inv.0017", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
                         " is not present");
         }
     }

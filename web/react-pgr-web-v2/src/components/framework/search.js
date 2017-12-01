@@ -518,11 +518,17 @@ class Search extends Component {
       });
   }
    rowButtonClickHandler = (buttonUrl, id) => {
+    let {formData}=this.props;
      if(id){
+      localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
+      localStorage.setItem("formData",JSON.stringify(formData));      
       this.props.setRoute(buttonUrl+id);
+      
      }else{
          let {selectedRecordId} =this.state;
       if(selectedRecordId){
+        localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]); 
+        localStorage.setItem("formData",JSON.stringify(formData));        
        this.props.setRoute(buttonUrl+selectedRecordId);
       }
      }

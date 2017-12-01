@@ -73,7 +73,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?&active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: store
     isMandatory: true
     wrapper: true
@@ -639,7 +639,7 @@ ReportDefinitions:
   - name: storeName
     label: inventory.store.name
     type: singlevaluelist
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?$active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     source: inventory
     isMandatory: true
     wrapper: true
@@ -734,7 +734,7 @@ ReportDefinitions:
 
   - name: supplierCompanyName
     label: inventory.supplierCompanyName
-    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid&type='COMPANY'|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/suppliers/_search?tenantId=$tenantid&type=COMPANY|$..code|$..name
     type: singlevaluelist
     source: inventory
     searchClause: AND sup.name = $supplierCompanyName
@@ -847,7 +847,7 @@ ReportDefinitions:
 
   - name: storeName
     label: inventory.store.name
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?&active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?active=true&tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     searchClause: AND po.store = $storeName

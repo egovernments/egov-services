@@ -349,7 +349,7 @@ var dat = {
                   "jsonPath": "materialReceipt[0].receiptDetails[0].material.code",
                   "displayJsonPath":"materialReceipt[0].receiptDetails[0].material.name",
                   "isRequired": true,
-                  "isDisabled": false,
+                  "isDisabled": true,
                   "url": "/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].baseUom.code",
                   "depedants": [
                     {

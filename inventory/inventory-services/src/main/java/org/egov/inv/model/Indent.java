@@ -389,7 +389,7 @@ public class Indent   {
    * @return indentType
   **/
   @ApiModelProperty(required = true, value = "There are 2 types of indent namely Indent Note and Transfer Indent ")
-  @NotNull
+ 
 
 
   public IndentTypeEnum getIndentType() {

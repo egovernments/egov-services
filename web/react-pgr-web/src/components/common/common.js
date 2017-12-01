@@ -2900,6 +2900,9 @@ var localization_EN_Data = {
 // indent
 
 "inventory.create.group.title.indent":"Add Indent",
+"inventory.update.group.title.indent":"Update Indent",
+"inventory.view.group.title.indent":"View Indent",
+"inventory.update.group.title.indent" :"Update Indent",
 "inventory.store.name":"Store Name",
 "inventory.indent.date": "Indent Date",
 "inventory.indent.number":"Indent Number",

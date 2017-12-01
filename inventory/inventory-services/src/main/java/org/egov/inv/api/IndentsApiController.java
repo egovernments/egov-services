@@ -38,9 +38,10 @@ public class IndentsApiController implements IndentsApi {
     }
 
     public ResponseEntity<IndentResponse> indentsSearchPost( @NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo RequestInfo,
+        @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody org.egov.common.contract.request.RequestInfo RequestInfo,
          @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
         @ApiParam(value = "issue store of the Indent ") @RequestParam(value = "issueStore", required = false) String issueStore,
+        @RequestParam(value = "inventoryType", required = false) String inventoryType,
         @ApiParam(value = "indent date of the Indent ") @RequestParam(value = "indentDate", required = false) Long indentDate,
         @ApiParam(value = "indentNumber  Auto generated number, read only <ULB short code><Store Code><fin. Year><serial No.> ") @RequestParam(value = "indentNumber", required = false) String indentNumber,
         @ApiParam(value = "indent purpose of the Indent ", allowableValues = "Consumption, RepairsAndMaintenance, Capital, MaterialTransferNote") @RequestParam(value = "indentPurpose", required = false) String indentPurpose,
@@ -51,16 +52,23 @@ public class IndentsApiController implements IndentsApi {
         @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
         @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
        
-    	IndentSearch is=	new IndentSearch(tenantId,ids,issueStore,indentDate,indentNumber,
-    			indentPurpose,description,indentStatus,totalIndentValue,pageSize,pageNumber,null, null, null, null, null, null,null);
-    	 IndentResponse response = indentService.search(is,RequestInfo);
+    	IndentSearch is=	new IndentSearch().builder()
+    						.tenantId(tenantId)
+    						.ids(ids)
+    						.indentDate(indentDate)
+    						.indentNumber(indentNumber)
+    						.indentPurpose(indentPurpose)
+    						.inventoryType(inventoryType)
+    						.issueStore(issueStore)
+    						.build();
+    	 IndentResponse response = indentService.search(is,new RequestInfo());
          return   new ResponseEntity(response,HttpStatus.OK);
     }
 
     
 
     public ResponseEntity<IndentResponse> indentsSearchindentforpoPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-            @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
+            @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo RequestInfo,
              @Size(max=50)@ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
             @ApiParam(value = "issue store of the Indent ") @RequestParam(value = "issueStore", required = false) String issueStore,
             @ApiParam(value = "indent date of the Indent ") @RequestParam(value = "indentDate", required = false) Long indentDate,
@@ -74,7 +82,7 @@ public class IndentsApiController implements IndentsApi {
             @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
  	IndentSearch is=	new IndentSearch(tenantId,ids,issueStore,indentDate,indentNumber,
     			indentPurpose,null,indentStatus,totalIndentValue,pageSize,pageNumber,null, null, null, null, null, null,searchPurpose);
-    	 IndentResponse response = indentService.search(is,requestInfo);
+    	 IndentResponse response = indentService.search(is,RequestInfo);
          return   new ResponseEntity(response,HttpStatus.OK);
     }
 

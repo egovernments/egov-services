@@ -19,6 +19,7 @@ import org.egov.inv.domain.util.InventoryUtilities;
 import org.egov.inv.model.Indent;
 import org.egov.inv.model.Indent.IndentPurposeEnum;
 import org.egov.inv.model.Indent.IndentStatusEnum;
+import org.egov.inv.model.Indent.IndentTypeEnum;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
@@ -104,7 +105,7 @@ public class IndentService extends DomainService {
 				}
 			}
 			kafkaQue.send(saveTopic, saveKey, indentRequest);
-			for (Indent b : indentRequest.getIndents()) {
+			/*for (Indent b : indentRequest.getIndents()) {
 			for (IndentDetail d : b.getIndentDetails()) {
 				//save quantity in base uom
 				
@@ -113,7 +114,7 @@ public class IndentService extends DomainService {
 				 
 			}
 			}
-
+*/
 			IndentResponse response = new IndentResponse();
 			response.setIndents(indentRequest.getIndents());
 			response.setResponseInfo(getResponseInfo(indentRequest.getRequestInfo()));
@@ -134,6 +135,7 @@ public class IndentService extends DomainService {
 			List<String> ids = new ArrayList<String>();
 			validate(indentRequest.getIndents(), Constants.ACTION_UPDATE);
 			for (Indent b : indentRequest.getIndents()) {
+				b.setIndentType(IndentTypeEnum.INDENTNOTE);
 				int j = 0;
 				if (!indentNumber.isEmpty()) {
 					indentNumber = b.getIndentNumber();
@@ -143,6 +145,8 @@ public class IndentService extends DomainService {
 					if (d.getId() == null)
 						d.setId(indentRepository.getSequence(IndentDetail.class.getSimpleName(), 1).get(0));
 					ids.add(d.getId());
+					BigDecimal quantityInBaseUom = InventoryUtilities.getQuantityInBaseUom(d.getIndentQuantity(),d.getUom().getConversionFactor());
+					d.setIndentQuantity(quantityInBaseUom);
 					d.setTenantId(b.getTenantId());
 					if (tenantId.isEmpty())
 						tenantId = b.getTenantId();

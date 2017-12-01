@@ -213,9 +213,9 @@ public class ReceiptNoteService extends DomainService {
     private void validateMaterialReceiptDetail(List<MaterialReceiptDetail> receiptDetails, String tenantId) {
         receiptDetails.stream().forEach(materialReceiptDetail -> {
             validateMaterial(materialReceiptDetail, tenantId);
-            /*if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
+            if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
                 validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
-            }*/
+            }
         });
     }
 
@@ -240,17 +240,18 @@ public class ReceiptNoteService extends DomainService {
             throw new CustomException("inv.0021", "material is not present");
     }
 
-/*    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId) {
-        Long currentTime =  System.currentTimeMillis();
+    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId) {
+        Long currentDate = currentEpochWithoutTime() + (24 * 60 * 60) - 1;
+
         materialReceiptDetailAddnlinfos.stream().forEach(materialReceiptDetailAddnlinfo ->
                 {
                     if (null != materialReceiptDetailAddnlinfo.getExpiryDate()
-                            && Long.valueOf(materialReceiptDetailAddnlinfo.getExpiryDate()) < currentTime) {
-                        throw new CustomException("inv.0022", "Expiry Date  Must Be Greater Than Or Equal To Today's Date");
+                            &&  currentDate > materialReceiptDetailAddnlinfo.getExpiryDate()) {
+                        throw new CustomException("inv.0022", "Expiry date must br greater than today's date");
                     }
                 }
         );
-    }*/
+    }
 
     private void validateDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
         HashSet<String> hashSet = new HashSet<>();

@@ -102,13 +102,13 @@ public class AssetValidator implements Validator {
 		/*else if((asset.getAcquisitionDate().compareTo(asset.getDateOfCreation())<0))
 			errorMap.put("Asset_AcquisitionDate", "AcquisitionDate cannot be less than Dateofcreation");*/
 			
-		if(asset.getOriginalValue()!=null && asset.getOriginalValue().longValue()<=0)
+		if(asset.getOriginalValue()!=null && asset.getOriginalValue().longValue()<0)
 			errorMap.put("Asset_OriginalValue", "Negative  Amount Cannot Be Accepted for OriginalValue");
 		
 		if(asset.getGrossValue()!=null && asset.getGrossValue().longValue()<=0)
 			errorMap.put("Asset_GrossValue", "Negative  Amount Cannot Be Accepted for GrossValue");
 				
-		if(asset.getAccumulatedDepreciation()!=null && asset.getAccumulatedDepreciation().longValue()<=0)
+		if(asset.getAccumulatedDepreciation()!=null && asset.getAccumulatedDepreciation().longValue()<0)
 			errorMap.put("Asset_AccumulatedDepreciation", "Negative  Amount Cannot Be Accepted for AccumulatedDepreciation");
 		
 
@@ -313,7 +313,7 @@ public class AssetValidator implements Validator {
 			Asset asset = assetService.getAsset(assetRequest.getAsset().getTenantId(), assetRequest.getAsset().getId(),
 					assetRequest.getRequestInfo());
 			if (asset == null)
-				errorMap.put("EGASSET_ASSET_MODIFY", "No records found to modify");
+				errorMap.put("EGASSET_ASSET_MODIFY", "No Asset found to modify");
 		}
 
 		if (!errorMap.isEmpty())

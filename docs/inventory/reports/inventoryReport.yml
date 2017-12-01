@@ -663,11 +663,6 @@ ReportDefinitions:
   summary: Supplier wise Purchase Order History Report
   version: 1.0.0
   moduleName: inventory
-  externalService:
-  - entity: $.MdmsRes.inventory.Material
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
-    keyOrder: code,name,tenantId
-    tableName: tbl_material
   sourceColumns:
 
   - name: supplierName
@@ -764,7 +759,7 @@ ReportDefinitions:
     isMandatory: false
 
   query: select sup.name as suppliername,
-        (select name  from supplier where type = 'COMPANY' And tenantid ='default') as supplierCompanyName,
+        (select name  from supplier where type = 'COMPANY' And tenantid =$tenantid) as supplierCompanyName,
         po.purchaseorderNumber as PoNo,
         po.purchaseorderdate as PoDate,
         po.status as postatus,
@@ -784,7 +779,7 @@ ReportDefinitions:
   moduleName: inventory
   externalService:
   - entity: $.MdmsRes.inventory.Material
-    apiURL: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    apiURL: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
     keyOrder: code,name,tenantId
     tableName: tbl_material
   sourceColumns:
@@ -838,7 +833,7 @@ ReportDefinitions:
 
   - name: materialName
     label: inventory.materialName
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
+    pattern: http://egov-micro-dev.egovernments.org/egov-mdms-service/v1/_get?moduleName=inventory&masterName=Material&tenantId=$tenantid
     type: singlevaluelist
     source: inventory
     searchClause: AND pl.supplier = $materialName
@@ -847,7 +842,7 @@ ReportDefinitions:
 
   - name: storeName
     label: inventory.storeName
-    pattern: http://inventory-services:8080/inventory-services/stores/_search?$active=true&tenantId=$tenantid|$..code|$..name
+    pattern: http://inventory-services:8080/inventory-services/stores/_search?&active=true&tenantId=$tenantid|$..code|$..name
     type: singlevaluelist
     source: inventory
     isMandatory: false
@@ -873,7 +868,7 @@ ReportDefinitions:
         po.status as postatus,
         po.expecteddeliverydate as expecteddeliverydate,
         pod.orderquantity as qtyOrdered
-        from tbl_material mat,purchaseorder po,purchaseorderdetail pod
+        from (VALUES tbl_material) as mat (code, name, tenantid),purchaseorder po,purchaseorderdetail pod
         where po.tenantid = $tenantid
         And pod.tenantid = po.tenantid
         AND pod.tenantid = mat.tenantid

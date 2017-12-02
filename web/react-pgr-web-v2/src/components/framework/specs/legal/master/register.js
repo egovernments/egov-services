@@ -4,6 +4,7 @@ var dat = {
     title:"register.search.document.title",
     useTimestamp: true,
     objectName: "",
+    "searchUrl": "/lcms-services/legalcase/register/_search?register={name}",
       groups: [
       {
        // label: "legal.parawisecomments.create.group.title.viewDetails",
@@ -15,7 +16,7 @@ var dat = {
             label: "createstamp.create.createStampName",
             type: "text",
            // fullWidth:true,
-            pattern: "^[a-zA-Z0-9_.-]*$",
+             pattern: "^[a-zA-Z 0-9]*$",
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: ""
@@ -25,12 +26,21 @@ var dat = {
     ],
      result: {
       header: [
-        { label: "Name" }
+
+
+
+        { 
+          label: "Name" }
       ],
-      values: ["register"],
+      values: [
+      
+      "register"
+     
+      ],
       resultPath: "registers",
-      rowClickUrlUpdate: "/update/register/{id}",
-      rowClickUrlView: "/update/legal/register/{register}"
+      "resultIdKey":"code",
+      rowClickUrlUpdate: "/update/legal/register/{code}",
+      rowClickUrlView: "/view/legal/register/{code}"
     },
     url: "/lcms-services/legalcase/register/_search",
     tenantIdRequired: true
@@ -52,7 +62,7 @@ var dat = {
             type: "text",
             maxLength:"100",
            // fullWidth:true,
-            pattern: "^[a-zA-Z0-9_.-]*$",
+            pattern: "^[a-zA-Z 0-9]*$",
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
@@ -78,7 +88,7 @@ var dat = {
     title:"register.update.document.title",
     useTimestamp: true,
     objectName: "registers",
-    "searchUrl": "/lcms-services/legalcase/register/_search?register={name}",
+    "searchUrl": "/lcms-services/legalcase/register/_search?code={code}",
       groups: [
       {
        // label: "legal.parawisecomments.create.group.title.viewDetails",
@@ -91,7 +101,7 @@ var dat = {
             type: "text",
             maxLength:"100",
            // fullWidth:true,
-            pattern: "^[a-zA-Z0-9_.-]*$",
+            pattern: "^[a-zA-Z 0-9]*$",
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: ""
@@ -110,6 +120,47 @@ var dat = {
         }
     ],
     url: "/lcms-services/legalcase/register/_update",
+    tenantIdRequired: true
+  },
+    "legal.view": {
+    numCols: 4,
+  /*  title:"register.update.document.title",*/
+    useTimestamp: true,
+    objectName: "registers",
+    "searchUrl": "/lcms-services/legalcase/register/_search?code={code}",
+      groups: [
+      {
+       // label: "legal.parawisecomments.create.group.title.viewDetails",
+        name: "viewDetails",
+        fields: [
+          {
+            name: "updateRegisterName",
+            jsonPath: "registers[0].register",
+            label: "createstamp.create.createStampName",
+            type: "text",
+            maxLength:"100",
+           // fullWidth:true,
+            pattern: "^[a-zA-Z 0-9]*$",
+            isRequired: true,
+            isDisabled: false,
+            patternErrorMsg: ""
+          },
+          {
+              name: "updateRegisterIsActive",
+              jsonPath: "registers[0].isActive",
+              label: "createstamp.create.isActive",
+              pattern: "",
+              type: "checkbox",
+              isRequired: false,
+              isDisabled: false,
+              defaultValue:true,
+              requiredErrMsg: "",
+              patternErrMsg: ""
+            }
+            ]
+        }
+    ],
+    url: "/lcms-services/legalcase/register/_search?code={code}",
     tenantIdRequired: true
   },
 };

@@ -132,16 +132,7 @@ var dat = {
               label: "Ref Evidence",
               url:"/update/legal/referenceevidence/"
             }
-            //,
-            // {
-            //   label: "Update",
-            //   url:"/update/legal/casedetails/"
-            // }
-            //,
-            // {
-            //   label: "View",
-            //   url:"/view/legal/casedetails/"
-            // }
+           
           ],
       header: [
         {
@@ -192,8 +183,8 @@ var dat = {
         "advocateDetails[0].advocate.name"
       ],
       resultPath: "cases",
-      rowClickUrlUpdate: "/update/legalcase/case/{id}",
-      rowClickUrlView: "/view/legalcase/case/{id}"
+      rowClickUrlUpdate: "/update/legal/casedetails/{code}",
+      rowClickUrlView: "/view/legal/casedetails/{code}"
     }
   },
   "legal.create": {
@@ -695,7 +686,7 @@ var dat = {
     title: "summon.update.document.title",
     useTimestamp: true,
     objectName: "summons",
-    searchUrl: "legalcase/_search?id={id}",
+    searchUrl: "lcms-services/legalcase/case/_search?code={id}",
     groups: [
       {
         name: "CaseType",
@@ -904,9 +895,7 @@ var dat = {
           }
         ]
       }
-    ],
-    url: "/legalcase/_update",
-    tenantIdRequired: true
+    ]
   }
 };
 export default dat;

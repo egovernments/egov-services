@@ -36,9 +36,9 @@ public class SummonController {
 	}
 	
 	@RequestMapping(path = "summon/_update", method = RequestMethod.POST)
-	public ResponseEntity<?> updateSummon(@RequestBody @Valid SummonRequest summonRequest) throws Exception {
-		SummonResponse summonResponse = summonService.updateSummon(summonRequest);
-		return new ResponseEntity<>(summonResponse, HttpStatus.CREATED);
+	public ResponseEntity<?> updateSummon(@RequestBody @Valid CaseRequest caseRequest) throws Exception {
+		CaseResponse caseResponse = summonService.updateSummon(caseRequest);
+		return new ResponseEntity<>(caseResponse, HttpStatus.CREATED);
 	}
 
 	@RequestMapping(path = "/summon/_assignadvocate", method = RequestMethod.POST)

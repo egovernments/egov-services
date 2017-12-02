@@ -54,15 +54,8 @@ var dat =  {
             {
               label: "Make Payment",
               url: "/update/legal/advmakepayment/"
-            },
-            // {
-            //   label: "Update",
-            //   url: "/update/legal/advpaymentdetails/"
-            // },
-            {
-              label: "View",
-              url: "/view/legal/advpaymentdetails/"
             }
+            
           ],
       header: [
         {

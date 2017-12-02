@@ -83,37 +83,40 @@ public class SummonService {
 				summonRequest.getSummons());
 
 	}
-	
+
 	/**
 	 * This API will update the summon
 	 * 
 	 * @param summonRequest
 	 * @return {@link SummonResponse}
 	 */
-	public SummonResponse updateSummon(SummonRequest summonRequest) throws Exception {
+	public CaseResponse updateSummon(CaseRequest caseRequest) throws Exception {
+		for (Case caseObj : caseRequest.getCases()) {
 
-		for (Summon summon : summonRequest.getSummons()) {
+			SummonRequest summonRequest = new SummonRequest();
 
-			if (summon.getIsUlbinitiated() == null) {
-				summon.setIsUlbinitiated(Boolean.FALSE);
+			if (caseObj.getSummon().getIsUlbinitiated() == null) {
+				caseObj.getSummon().setIsUlbinitiated(Boolean.FALSE);
 			}
 
-			if (summon.getIsSummon()) {
-				summon.setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
+			if (caseObj.getSummon().getIsSummon()) {
+				caseObj.getSummon().setEntryType(EntryType.fromValue(propertiesManager.getSummonType()));
 			} else {
-				summon.setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
+				caseObj.getSummon().setEntryType(EntryType.fromValue(propertiesManager.getWarrantType()));
 			}
+			List<Summon> summons = new ArrayList<Summon>();
+			summons.add(caseObj.getSummon());
+			summonRequest.setSummons(summons);
+			summonRequest.setRequestInfo(caseRequest.getRequestInfo());
+			kafkaTemplate.send(propertiesManager.getUpdateSummonvalidated(), summonRequest);
+
+			pushSummonToIndexer(summonRequest);
 		}
-
-		kafkaTemplate.send(propertiesManager.getUpdateSummonvalidated(), summonRequest);
-
-		pushSummonToIndexer(summonRequest);
-		return new SummonResponse(
-				responseInfoFactory.getResponseInfo(summonRequest.getRequestInfo(), HttpStatus.CREATED),
-				summonRequest.getSummons());
+		return new CaseResponse(responseInfoFactory.getResponseInfo(caseRequest.getRequestInfo(), HttpStatus.CREATED),
+				caseRequest.getCases());
 
 	}
-	
+
 	private void pushSummonToIndexer(SummonRequest summonRequest) {
 
 		for (Summon summon : summonRequest.getSummons()) {
@@ -292,7 +295,5 @@ public class SummonService {
 		}
 
 	}
-
-	
 
 }

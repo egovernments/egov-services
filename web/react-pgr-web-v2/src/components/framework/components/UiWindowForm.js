@@ -17,7 +17,7 @@ import {
 //import $ from "jquery";
 
 var specifications = {};
-let reqRequired = [];
+var reqRequired = [];
 class UiWindowForm extends Component {
   constructor(props) {
     super(props);
@@ -25,7 +25,10 @@ class UiWindowForm extends Component {
       open: false,
       mockData: null,
       valuesObj: {},
-      index: -1
+      index: -1,
+      fieldErrors:{
+      },
+      isFormValid:false
     };
     this.handleChange = this.handleChange.bind(this);
     this.getValueFn = this.getValueFn.bind(this);
@@ -210,10 +213,12 @@ class UiWindowForm extends Component {
     var result =
       typeof results == "string" ? JSON.parse(specifications) : specifications;
     let obj = specifications[this.props.item.modulepath];
-    self.setLabelAndReturnRequired(obj);
 
+    self.setLabelAndReturnRequired(obj);
+     var allReqRequired = (reqRequired)?reqRequired:[];
     this.setState({
-      mockData: JSON.parse(JSON.stringify(specifications))
+      mockData: JSON.parse(JSON.stringify(specifications)),
+      reqRequired:allReqRequired
     });
   }
 
@@ -386,7 +391,7 @@ class UiWindowForm extends Component {
               actions={[
                 <FlatButton
                   label={translate("pt.create.groups.ownerDetails.fields.add")}
-                  disabled={_.isEmpty(this.state.valuesObj)}
+                  disabled={!this.state.isFormValid}
                   secondary={true}
                   style={{ marginTop: 5 }}
                   onClick={e => {
@@ -451,7 +456,7 @@ class UiWindowForm extends Component {
                     ui="google"
                     handler={handleChange}
                     getVal={getValueFn}
-                    fieldErrors={fieldErrors}
+                    fieldErrors={this.state.fieldErrors}
                     useTimestamp={
                       mockData[this.props.item.modulepath].useTimestamp || false
                     }
@@ -466,6 +471,39 @@ class UiWindowForm extends Component {
         );
     }
   };
+ 
+  checkValidations =(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg)=> {
+  let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
+  let isFormValid = true;
+  // console.log(requiredFields);
+  for(var i=0; i<requiredFields.length; i++) {
+    if(typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === "") {
+      // console.log(requiredFields[i], _.get(form, requiredFields[i]));
+      isFormValid = false;
+      break;
+    }
+  }
+
+  if(pattern && _.get(form, property) && !new RegExp(pattern).test(_.get(form, property))) {
+    // console.log(property, _.get(form, property));
+    errorText = patErrMsg ? translate(patErrMsg) : translate('ui.framework.patternMessage');
+    isFormValid = false;
+  }
+
+  // console.log(fieldErrors);
+  for(let key in fieldErrors) {
+    if(fieldErrors[key] && key != property) {
+        // console.log(key, property, fieldErrors, fieldErrors[key]);
+        isFormValid = false;
+        break;
+    }
+  }
+
+  return {
+    isFormValid,
+    errorText
+  }
+}
 
   handleChange = (
     e,
@@ -475,13 +513,26 @@ class UiWindowForm extends Component {
     requiredErrMsg,
     patternErrMsg
   ) => {
-    var newObj = _.set(this.state.valuesObj, property, e.target.value);
-    this.setState({
-      valuesObj: newObj
-    });
+    var currentState = this.state;
+    var newObj = _.set(currentState.valuesObj, property, e.target.value);
+    // this.setState({
+    //   valuesObj: newObj
+    // });
 //$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
 //$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
     // dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
+    var validationDat = this.checkValidations(currentState.fieldErrors, property, e.target.value, isRequired, currentState.valuesObj, currentState.reqRequired, pattern, patternErrMsg)
+    
+       this.setState({
+         valuesObj: newObj,
+         isFormValid:validationDat.isFormValid,
+         fieldErrors:{
+              ...currentState.fieldErrors,
+              [property]: validationDat.errorText
+            }
+       })
+
+
   };
 
   getValueFn = path => {

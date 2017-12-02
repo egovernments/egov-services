@@ -5,6 +5,12 @@ var dat = {
     useTimestamp: true,
     objectName: "cases",
     documentsPath:"cases[0].summon",
+    "customActionsAndUrl":[
+      {
+        "actionName":"Back",
+        "url":"/search/legal/summon/view"
+      }
+    ],
     groups: [
       {
         name: "CaseTypeDetails",

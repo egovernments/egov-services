@@ -16,12 +16,18 @@ class UiBackButton extends Component {
 	 {
 				 let {setRoute,match}=this.props;
          let {params,path}=match;
+         let {customUrl}=this.props;
+         if(customUrl){
+             setRoute(customUrl);
+         }
+         else{
          if (path.split("/")[1]=="create") {
            setRoute(`/search/${params.moduleName}`+ (params.master && "/"+params.master)+"/view");
          }
          else {
            setRoute("/"+localStorage.getItem("returnUrl"));
          }
+       }
 
 	 }
 

@@ -5,6 +5,12 @@ var dat ={
     "useTimestamp": true,
     "objectName": "events",
     "searchUrl": "/lcms-services/legalcase/event/_get?id={id}",
+    "customActionsAndUrl":[
+      {
+        "actionName":"Back",
+        "url":"/search/legal/summon/view"
+      }
+    ],
     "groups": [
        {
         "name": "eventDetails",

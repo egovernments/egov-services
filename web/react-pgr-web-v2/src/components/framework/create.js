@@ -1599,7 +1599,7 @@ class Report extends Component {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors, isFormValid} = this.props;
     let {create, handleChange, setVal, getVal, addNewCard, removeCard, autoComHandler, initiateWF} = this;
-
+let customActionsAndUrl=!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty("customActionsAndUrl")?mockData[`${moduleName}.${actionName}`]["customActionsAndUrl"][0].url:"";
     //let isUpdateDataFetched = actionName==='update'? !_.isEmpty(formData) : true;
   //  console.log({...this.props.formData})
     return (
@@ -1624,7 +1624,7 @@ class Report extends Component {
           <Col xs={6} md={6}>
             <div style={{marginLeft: "16px"
             }}>
-                <UiBackButton/>
+                <UiBackButton  customUrl={customActionsAndUrl}/>
             </div>
           </Col>
           <Col xs={6} md={6}>

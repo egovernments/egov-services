@@ -5,6 +5,12 @@ var dat = {
     useTimestamp: true,
     objectName: "",
     url: "/lcms-services/legalcase/advocate/agency/_search?isIndividual=false",
+    "customActionsAndUrl":[
+      {
+        "actionName":"Add",
+        "url":"/create/legal/advocate"
+      }
+    ],
     groups: [
       {
         name: "applicantType",

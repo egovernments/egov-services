@@ -1,6 +1,6 @@
 var events = [
   {
-    jsonPath:"materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[*].lotNo",
+    jsonPath:"materialReceipt[0].receiptDetails[*].receiptDetailsAddnInfo[*].lotNo",
     onChange:function({jsonPath, value, setVal, getVal}){
       //setVal('materialReceipt[0].paymentTerms', 'Test Dummy Data Description');
     }

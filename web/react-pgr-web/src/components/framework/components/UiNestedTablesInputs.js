@@ -157,8 +157,6 @@ export default class UiNestedTablesInputs extends Component {
 
     let childTables = [...this.state.childTables];
 
-    debugger;
-
     if(item.tableList.tables){
       const nestedTables = item.tableList.tables && [...item.tableList.tables] || [];
       let parentTblIdx  = idx;

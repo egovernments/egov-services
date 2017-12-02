@@ -179,13 +179,13 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: "",
-            url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..code|$..name",
-            depedants: [
-              {
-                jsonPath: "bankBranch",
-                type: "dropDown",
-                "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankCode%3D%3D'{bankName}'%29%5D|$..branch|$..branch"
-              }]
+            url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..code|$..name"
+            // depedants: [
+            //   {
+            //     jsonPath: "bankBranch",
+            //     type: "dropDown",
+            //     "pattern":"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch&filter=%5B%3F%28%40.bankCode%3D%3D'{bankName}'%29%5D|$..branch|$..branch"
+            //   }]
           },
           {
             name: "bankBranch",
@@ -197,8 +197,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: "",
             patternErrMsg: "",
-            "url":""
-            //url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch|$..branch|$..branch"
+            url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bankBranch|$..branch|$..branch"
           },
           {
             name: "bankAcc",

@@ -58,7 +58,6 @@ var dat ={
         // }
       ],
       "values": [
-        "code",
         "name",
         "emailId",
         "mobileNumber"

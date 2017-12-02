@@ -213,7 +213,7 @@ class UiWindowForm extends Component {
     var result =
       typeof results == "string" ? JSON.parse(specifications) : specifications;
     let obj = specifications[this.props.item.modulepath];
-
+    reqRequired=[];
     self.setLabelAndReturnRequired(obj);
      var allReqRequired = (reqRequired)?reqRequired:[];
     this.setState({
@@ -429,7 +429,10 @@ class UiWindowForm extends Component {
                       self.setState({
                         valuesObj: {},
                         open: false,
-                        index: -1
+                        index: -1,
+                        fieldErrors:{
+                        },
+                        isFormValid:false
                       });
                     }
                   }}
@@ -550,7 +553,10 @@ class UiWindowForm extends Component {
 
   handleClose = () => {
     this.setState({
-      open: false
+      open: false,
+      fieldErrors:{
+      },
+      isFormValid:false
     });
   };
 

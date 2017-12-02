@@ -36,8 +36,8 @@ import _ from 'lodash';
 			  })
 		  }
 	}
-   	renderFileObject = (item, i,idValue) => {
-   		if(this.props.readonly) {
+   	renderFileObject = (item, i,idValue,readOnly) => {
+   		if(readOnly) {
    			return (
 				<a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + this.props.getVal(item.jsonPath + "[" + i + "]." + item.fileList.id)} target="_blank">{translate("wc.craete.file.Download")}</a>
 			);
@@ -49,10 +49,31 @@ import _ from 'lodash';
    	}
     
    	renderRowList = (item) => {
+		
 		   let {fileRowCount}=this.state;
+		   var fileRowCountValue = fileRowCount;
+		   console.log("testval:", this.props.readonly);
+		   let documentListArray =this.props.getVal(item.jsonPath);
+		   if(_.isArray(documentListArray) && documentListArray.length>0){
+			   var documentsLenth=0;
+			   documentListArray.map((item,index)=>{
+				   if(item.fileStoreId==="string" && item.fileStoreId.length>0){
+					documentsLenth=documentsLenth+1;
+				   }
+			   });
 			
-   		let arr = [...Array(fileRowCount).keys()];
-   		let value = "";
+			   if(this.props.readonly){
+                fileRowCountValue = documentsLenth;	
+			   }else{
+				fileRowCountValue = documentsLenth+fileRowCount;	
+			   }
+		    	   
+		   }
+		   
+		   let arr = [...Array(fileRowCountValue).keys()];
+		   //console.log("2222222",arr.length)
+		   let value = "";
+		   let readOnly = false;		   
    		
    		return (
    			<tbody>
@@ -62,7 +83,13 @@ import _ from 'lodash';
    						let fileStoreId = item.jsonPath + "[" + i + "]." + item.fileList.id;
 
    		 value=this.props.getVal(fileListName);
-   		let idValue = this.props.getVal(fileStoreId);
+		   let idValue = this.props.getVal(fileStoreId);
+		   if(typeof idValue =="string" && idValue.length>0){
+			readOnly=true;
+		   }else{
+			   readOnly=false;
+		   }		  
+		   
    		if(value || idValue || !this.props.readonly){
 								return (<tr key={i}> 
 											<td>{i+1}</td>
@@ -73,14 +100,14 @@ import _ from 'lodash';
 													inputStyle={{"color": "#5F5C57"}}
 													errorStyle={{"float":"left"}}
 													fullWidth={true}
-													disabled={this.props.readonly}
+													disabled={readOnly}
 													value={value}
 													onChange={(e) => {
 														this.props.handler(e, fileListName, item.isRequired, '', item.requiredErrMsg, item.patternErrMsg)
 													}} />
 											</td>
 											<td>
-												{this.renderFileObject(item, i,idValue)}
+												{this.renderFileObject(item, i,idValue,readOnly)}
 											</td>
 											{this.props.readonly?"":(
 											<td>
@@ -106,8 +133,9 @@ import _ from 'lodash';
 							<tr>
 								<th>#</th>
 								<th>{translate("tl.create.license.table.documentName")}</th>
-								{this.props.item.configlabel? <th>{"Download / View"}</th>:<th>{translate("wc.create.groups.fileDetails.title")}</th> }
+								<th>{translate("wc.create.groups.fileDetails.title")}</th>
 								{this.props.readonly?"":<th>{translate("reports.common.action")}</th>}
+								
 							</tr>
 						</thead>
 						{this.renderRowList(item)}

@@ -457,6 +457,7 @@ class UiWindowForm extends Component {
                     }
                     addNewCard={""}
                     removeCard={""}
+                    valuesObj={this.state.valuesObj}
                   />
                 )}
               </div>

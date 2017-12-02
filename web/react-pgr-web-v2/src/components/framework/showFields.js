@@ -39,6 +39,8 @@ import UiCalendar from './components/UiCalendar';
 import UiImage from './components/UiImage';
 import UiMultiFieldAddToTable from './components/UiMultiFieldAddToTable';
 import UiNestedTablesInputs from './components/UiNestedTablesInputs';
+import UiWindowSelectField from './components/UiWindowSelectField';
+
 
 
 let styles={
@@ -52,6 +54,8 @@ export default class ShowFields extends Component {
   constructor(props) {
        super(props);
        this.state = {};
+       this.renderField=this.renderField.bind(this);
+       this.renderGroups=this.renderGroups.bind(this);
   }
 
   changeExpanded = (name) => {
@@ -59,7 +63,7 @@ export default class ShowFields extends Component {
       [name]: !this.state[name]
     })
   }
-
+     
   renderCard = (group, groupIndex, noCols, jsonPath, uiFramework, groups, isMultiple) => {
     let self = this;
     let {addNewCard, removeCard} = this.props;
@@ -233,6 +237,8 @@ export default class ShowFields extends Component {
         return <UiWindowForm tabIndex={index} ui={this.props.ui}
         getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors}
         handler={this.props.handler} screen={screen}/>;
+      case 'windowsSingleValueList':
+       return <UiWindowSelectField tabIndex={index} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} valuesObj={this.props.valuesObj}/>
       case 'calendar':
         return <UiCalendar ui={this.props.ui} getVal={this.props.getVal}
         item={item} fieldErrors={this.props.fieldErrors}

@@ -112,8 +112,8 @@ var dat =  {
         "amountRecived"
       ],
       resultPath: "advocatePayments",
-      rowClickUrlUpdate: "/update/legal/advocatepayment/{code}",
-      rowClickUrlView: "/update/legal/advocatepayment/{code}"
+      rowClickUrlUpdate: "/update/legal/advpaymentdetails/{code}",
+      rowClickUrlView: "/view/legal/advpaymentdetails/{code}"
     }
   },
   "legal.create": {

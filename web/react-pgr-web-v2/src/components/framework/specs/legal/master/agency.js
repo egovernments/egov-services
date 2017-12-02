@@ -25,14 +25,14 @@ var dat = {
       }
     ],
     "result": {
-       "disableRowClick" : true,
+       "disableRowClick" : false,
        isAction: true,
-          actionItems: [
+         /* actionItems: [
             {
               label: "Update Agency",
               url: "/update/legal/updateagency/"
             }
-          ],
+          ],*/
       "header": [
          {
           label: "legal.search.result.actionLabels",
@@ -41,7 +41,8 @@ var dat = {
             jsonPath:"checkedRow",
             label:"",
           }
-        },{
+        },
+        {
            "label": "legal.search.result.agencyName"
         },
         {
@@ -54,6 +55,9 @@ var dat = {
         "agencyAddress"
       ],
       "resultPath": "agencies",
+      "resultIdKey":"code",
+      "rowClickUrlUpdate":"/update/legal/updateagency/{code}",
+      "rowClickUrlView":"/view/legal/updateagency/{code}",
       //"rowClickUrlUpdate": "/update/legalcase/{id}",
       //"rowClickUrlView": "/view/legalcase/{id}"
     }

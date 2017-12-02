@@ -89,64 +89,63 @@ serviceMaps:
         type: JSON
         dbType: JSONB
   - version: 1.0
-      name: lcms summon update
-      description: update summon
-      fromTopic: lcms-update-summon-validated
-      queryMaps:
-        - query: >-
-            UPDATE egov_lcms_case SET isSummon=?, summonReferenceNo=?, caseNo=?, summonDate=?, year=?, caseType=?, plantiffName=?, defendant=?, caseCategory=?, courtName=?, departmentName=?, sectionApplied=?, hearingDate=?, hearingTime=?, ward=?, bench=?, side=?, register=?, caseDetails=?, plantiffAddress=?, entryType=?, stateId=?, documents=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId=?;
-          basePath: $.summons.*
-          jsonMaps:
-            - jsonPath: $.summons.*.isSummon
-              type: BOOLEAN
-            - jsonPath: $.summons.*.summonReferenceNo
-            - jsonPath: $.summons.*.caseNo
-            - jsonPath: $.summons.*.summonDate
-              type: LONG
-            - jsonPath: $.summons.*.year
-            - jsonPath: $.summons.*.caseType
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.plantiffName
-            - jsonPath: $.summons.*.defendant
-            - jsonPath: $.summons.*.caseCategory
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.courtName
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.departmentName
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.sectionApplied
-            - jsonPath: $.summons.*.hearingDate
-              type: LONG
-            - jsonPath: $.summons.*.hearingTime
-            - jsonPath: $.summons.*.ward
-              type: LONG
-            - jsonPath: $.summons.*.bench
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.side
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.register
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.caseDetails
-            - jsonPath: $.summons.*.plantiffAddress
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.entryType
-            - jsonPath: $.summons.*.stateId
-            - jsonPath: $.summons.*.documents
-              type: JSON
-              dbType: JSONB
-            - jsonPath: $.summons.*.auditDetails.lastModifiedBy
-            - jsonPath: $.summons.*.auditDetails.lastModifiedTime
-              type: LONG
-            - jsonPath: $.summons.*.code
-            - jsonPath: $.summons.*.tenantId
+    name: lcms summon update
+    description: update summon
+    fromTopic: lcms-update-summon-validated
+    queryMaps:
+    - query: UPDATE egov_lcms_case SET isSummon=?, summonReferenceNo=?, caseNo=?, summonDate=?, year=?, caseType=?, plantiffName=?, defendant=?, caseCategory=?, courtName=?, departmentName=?, sectionApplied=?, hearingDate=?, hearingTime=?, ward=?, bench=?, side=?, register=?, caseDetails=?, plantiffAddress=?, entryType=?, stateId=?, documents=?, lastModifiedBy=?, lastModifiedTime=? WHERE code=? AND tenantId=?;
+      basePath: $.summons.*
+      jsonMaps:
+      - jsonPath: $.summons.*.isSummon
+        type: BOOLEAN
+      - jsonPath: $.summons.*.summonReferenceNo
+      - jsonPath: $.summons.*.caseNo
+      - jsonPath: $.summons.*.summonDate
+        type: LONG
+      - jsonPath: $.summons.*.year
+      - jsonPath: $.summons.*.caseType
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.plantiffName
+      - jsonPath: $.summons.*.defendant
+      - jsonPath: $.summons.*.caseCategory
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.courtName
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.departmentName
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.sectionApplied
+      - jsonPath: $.summons.*.hearingDate
+        type: LONG
+      - jsonPath: $.summons.*.hearingTime
+      - jsonPath: $.summons.*.ward
+        type: LONG
+      - jsonPath: $.summons.*.bench
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.side
+        type: JSON
+        dbType: JSONB      
+      - jsonPath: $.summons.*.register
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.caseDetails
+      - jsonPath: $.summons.*.plantiffAddress
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.entryType
+      - jsonPath: $.summons.*.stateId
+      - jsonPath: $.summons.*.documents
+        type: JSON
+        dbType: JSONB
+      - jsonPath: $.summons.*.auditDetails.lastModifiedBy
+      - jsonPath: $.summons.*.auditDetails.lastModifiedTime
+        type: LONG
+      - jsonPath: $.summons.*.code
+      - jsonPath: $.summons.*.tenantId               
 
   - version: 1.0
     name:  lcms-create-case

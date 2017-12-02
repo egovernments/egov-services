@@ -12,7 +12,7 @@ class UiWindowSelectField extends Component {
   constructor(props) {
       super(props);
       this.state={
-          value:-1
+          value:false
       }
   }
 
@@ -140,6 +140,9 @@ class UiWindowSelectField extends Component {
       // if(item.jsonPath == 'abstractEstimates[0].natureOfWork.code' || item.jsonPath == 'abstractEstimates[0].pmcName' || item.jsonPath == 'abstractEstimates[0].department.code')
       // console.log(item.jsonPath, '<--->', value, typeof(value) );
       let value = getVal(item.jsonPath);
+      if(this.state.value){
+        value=this.state.value;
+      }
       switch (this.props.ui) {
          case 'google':
             let labelProperty = !item.isHideLabel && {
@@ -156,7 +159,7 @@ class UiWindowSelectField extends Component {
                      style={{"display": (item.hide ? 'none' : 'inline-block')}}
                      errorStyle={{"float":"left"}}
                      fullWidth={true}
-                     value={this.state.value}
+                     value={value}
                      underlineDisabledStyle={{backgroundColor:'#eee!important'}}
                      {...labelProperty}
                      onChange={(event, key, value) =>{

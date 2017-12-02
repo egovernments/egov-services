@@ -60,7 +60,7 @@ var dat = {
       }
     ],
     result: {
-      "disableRowClick" : true,
+      "disableRowClick" : false,
        isAction: true,
       actionItems: [
             {
@@ -70,16 +70,8 @@ var dat = {
             {
               label: "Update Opinion",
               url: "/update/legal/updateopinion/"
-            },
-            // {
-            //   label: "Update",
-            //   url: "/update/legal/opiniondetails/"
-            // },
-             {
-              label: "View",
-              url: "/view/legal/opiniondetails/"
             }
-          ],
+            ],
       header: [
          {
           label: "legal.search.result.actionLabels",
@@ -95,8 +87,8 @@ var dat = {
       ],
       values: ["code","code", "departmentName.name", "opinionOn"],
       resultPath: "opinions",
-      rowClickUrlUpdate: "/update/opinion/{id}",
-      rowClickUrlView: "/view/opinion/{id}"
+      rowClickUrlUpdate: "/update/legal/opiniondetails/{code}",
+      rowClickUrlView: "/view/legal/opiniondetails/{code}"
     }
   },
   "legal.create": {

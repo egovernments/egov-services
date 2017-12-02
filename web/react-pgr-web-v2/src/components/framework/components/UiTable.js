@@ -266,7 +266,7 @@ class UiTable extends Component {
 			                        )
 		                      })}
 
-													<td style={{textAlign:"center",marginRight:"10px"}}><i style={{marginRight:"10px"}} onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"view")}}}  className="material-icons">remove_red_eye</i><i onClick={() => { if(!resultList.disableRowClick){rowIconClickHandler(i,"update")}}} className="material-icons">edit</i></td>
+													<td style={{textAlign:"center",marginRight:"10px"}}><i style={{marginRight:"10px"}} onClick={() => { rowIconClickHandler(i,"view")}}  className="material-icons">remove_red_eye</i><i onClick={() => { rowIconClickHandler(i,"update")}} className="material-icons">edit</i></td>
 
 		                    </tr>
 		                    )

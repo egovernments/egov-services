@@ -12,7 +12,7 @@ var request = require('request');
 
 
 
-app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/'))
 app.use(bodyParser.json());
 
  // SwaggerParser.dereference('https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml')
@@ -235,7 +235,7 @@ var getFieldsFromInnerObject = function(properties, module, jPath, isArray, requ
 	}
 
 
-app.post('/:module/:master', function(req, res, next) {
+app.post('/spec-directory/:module/:master', function(req, res, next) {
 
 	console.log(req.params);
 	console.log(req.params.master);
@@ -254,11 +254,11 @@ app.post('/:module/:master', function(req, res, next) {
 	next();
 });
 
-
-
-app.on('listening',function(){
-    console.log('ok, server is running');
+app.get('/spec-directory', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
 });
+
+
 
 
 // request.get('https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml', function (error, response, body) {

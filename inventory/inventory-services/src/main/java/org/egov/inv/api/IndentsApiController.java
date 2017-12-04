@@ -52,6 +52,9 @@ public class IndentsApiController implements IndentsApi {
         @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
         @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
        
+    	System.out.println("RequestInfo...................."+RequestInfo);
+    	System.out.println("RequestInfo....................");
+    	
     	IndentSearch is=	new IndentSearch().builder()
     						.tenantId(tenantId)
     						.ids(ids)

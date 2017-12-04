@@ -45,20 +45,7 @@ class ViewDCB extends React.Component {
       }
     render() {
         var _this = this;
-        {/*let {agreement} = this.state;
-        let {allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
-              renewal, eviction, objection, judgement, remission} = this.state.agreement;
-        let {assetCategory, locationDetails} = this.state.agreement.asset;*/}
         let {agreement,demandDetails} = this.state;
-        const renderOption = function(data) {
-            if (data) {
-              return data.map((item, ind) => {
-                  return (<option key = {ind} value = {typeof item == "object" ? item.id : item}>
-                              {typeof item == "object" ? item.name : item}
-                          </option>)
-                  })
-              }
-            }
             const renderAgreementDetails = function () {
               return (
                 <div className="form-section" id="agreementDetailsBlock">
@@ -228,11 +215,16 @@ class ViewDCB extends React.Component {
                             <th>S.Tax</th>
                         </tr>
                     </thead>
-                    <tbody id="agreementSearchResultTableBody">
+                    <tbody id="demandDetailsTableBody">
                         {
                             renderBody()
                         }
                     </tbody>
+                    <tfoot>
+                        {
+                          renderTotalFooter()
+                        }
+                    </tfoot>
                 </table>
                     Note: Advance tax will be adjusted to last installment.
                   </div>
@@ -241,7 +233,6 @@ class ViewDCB extends React.Component {
         }
         const renderBody=function()
         {
-          console.log(demandDetails);
           if (demandDetails.length>0) {
 
             return demandDetails.map((item,index)=>
@@ -264,6 +255,37 @@ class ViewDCB extends React.Component {
           }
 
         }
+
+        const renderTotalFooter=function()
+        {
+          var totalRent=0;
+          var totalCollection=0;
+          if (demandDetails.length>0) {
+           demandDetails.forEach(function(item){
+             totalRent += item.taxAmount;
+             totalCollection+=item.collectionAmount;
+           });
+          return [<tr>
+              <td> Total</td>
+              <td>  {totalRent}    </td>
+              <td>   {0}   </td>
+              <td>   {0}   </td>
+              <td>   {totalCollection}   </td>
+              <td>   {0}   </td>
+              <td>   {0}   </td>
+              <td>   {totalRent-totalCollection}   </td>
+              <td>   {0}   </td>
+              <td>   {0}   </td>
+            </tr>,
+           <tr>
+           <td colSpan='8'></td>
+           <td>Total Balance</td>
+           <td>{totalRent-totalCollection}</td>
+           </tr>
+          ]
+          }
+        }
+
 function trim(value){
   return(value.replace("LAMS_",""))
 }

@@ -622,7 +622,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "SUPPLIER MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Supplier Master.Supplier Create"
@@ -635,7 +635,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "SUPPLIER MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Supplier Master.Supplier Update"
@@ -674,7 +674,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "STORE MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Store Master.Store Create"
@@ -687,7 +687,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "STORE MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Store Master.Store Update"
@@ -713,7 +713,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Material Master.Material Create"
@@ -726,7 +726,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Material Master.Material Update"
@@ -752,7 +752,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "PRICE LIST MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Price List Master.PriceList Create"
@@ -765,7 +765,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "PRICE LIST MASTER",
     "code": "null",
     "path": "Inventory.Inventory Masters.Price List Master.PriceList Update"
@@ -791,7 +791,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "INDENT",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Indent.Indent Create"
@@ -804,7 +804,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "INDENT",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Indent.Indent Update"
@@ -830,7 +830,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "OPENING BALANCE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Opening Balance.Opening Balance Create"
@@ -843,7 +843,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "OPENING BALANCE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Opening Balance.Opening Balance Update"

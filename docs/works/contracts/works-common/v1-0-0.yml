@@ -272,15 +272,13 @@ definitions:
         maxLength: 4000
         minLength: 1
       scheduleCategory:
-        format: singleValueList
-        items:
-          $ref: '#/definitions/ScheduleCategory'
+        $ref: '#/definitions/ScheduleCategory'
         description: Schedule Category of the SOR. unique reference from 'ScheduleCategory'. Code is ref. here.
-      uom:
         format: singleValueList
-        items:
-          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
+      uom:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
         description: Unit Of Measurement of the SOR. unique reference from 'UOM'. Code is ref. here.
+        format: singleValueList
       sorRates:
         type: array
         description: Array of Rate Details.
@@ -1285,3 +1283,4 @@ parameters:
     description: This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc
     type: string
     default: id
+

@@ -32,7 +32,7 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	private MaterialIssuesService materialIssueService;
 
 	@Override
-	public ResponseEntity<MaterialIssueResponse> materailIssuesCreatePost(
+	public ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
 		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest);
@@ -61,10 +61,17 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 	}
 
 	@Override
-	public ResponseEntity<MaterialIssueResponse> materailIssuesUpdatePost(
+	public ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
 		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId);
 		return new ResponseEntity(materialIssueResponse,HttpStatus.OK);
+	}
+	
+	public ResponseEntity<MaterialIssueResponse> materiallIssuesPreparemiFromIndents(
+			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
+			@ApiParam(value = "Create  new")  @RequestBody MaterialIssueRequest indentIssueRequest) {
+		MaterialIssueResponse materialIssueResponse = materialIssueService.prepareMIFromIndents(indentIssueRequest, tenantId);
+		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 }

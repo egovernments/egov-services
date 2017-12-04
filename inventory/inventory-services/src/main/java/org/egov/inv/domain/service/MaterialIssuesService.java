@@ -2,16 +2,25 @@ package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
+import org.egov.inv.model.Department;
+import org.egov.inv.model.IndentDetail;
+import org.egov.inv.model.IndentResponse;
+import org.egov.inv.model.IndentSearch;
+import org.egov.inv.model.Material;
 import org.egov.inv.model.MaterialIssue;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueRequest;
@@ -19,8 +28,11 @@ import org.egov.inv.model.MaterialIssueResponse;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.model.MaterialIssuedFromReceipt;
 import org.egov.inv.model.RequestInfo;
+import org.egov.inv.model.Store;
+import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
+import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssueJdbcRepository;
 import org.egov.inv.persistence.repository.MaterialIssuedFromReceiptsJdbcRepository;
@@ -29,6 +41,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import net.minidev.json.JSONArray;
+
 @Service
 public class MaterialIssuesService extends DomainService {
 
@@ -36,10 +52,22 @@ public class MaterialIssuesService extends DomainService {
 	private MaterialIssueJdbcRepository materialIssueJdbcRepository;
 
 	@Autowired
+	private IndentService indentService;
+	
+	@Autowired
+	private MdmsRepository mdmsRepository;
+	
+	@Autowired
+	private StoreService storeService;
+
+	@Autowired
 	private MaterialIssueDetailsJdbcRepository materialIssueDetailsJdbcRepository;
 
 	@Autowired
 	private MaterialIssuedFromReceiptsJdbcRepository materialIssuedFromReceiptsJdbcRepository;
+
+	@Autowired
+	private DepartmentService departmentService;
 
 	@Value("${inv.issues.save.topic}")
 	private String createTopic;
@@ -103,6 +131,8 @@ public class MaterialIssuesService extends DomainService {
 
 	private void convertToUom(MaterialIssueDetail materialIssueDetail) {
 		Double quantityIssued = 0d;
+		if (materialIssueDetail.getIndentDetail() != null && materialIssueDetail.getIndentDetail().getUom() != null)
+			materialIssueDetail.setUom(materialIssueDetail.getIndentDetail().getUom());
 		Uom uom = getUom(materialIssueDetail.getTenantId(), materialIssueDetail.getUom().getCode(), new RequestInfo());
 		if (materialIssueDetail.getQuantityIssued() != null)
 			quantityIssued = getSaveConvertedQuantity(
@@ -205,5 +235,84 @@ public class MaterialIssuesService extends DomainService {
 		return materialIssueResponse;
 
 	}
+
+	public MaterialIssueResponse prepareMIFromIndents(MaterialIssueRequest materialIssueRequest, String tenantId) {
+		for (MaterialIssue materialIssue : materialIssueRequest.getMaterialIssues()) {
+			
+			if (materialIssue.getIndent() != null
+					&& StringUtils.isNotBlank(materialIssue.getIndent().getIndentNumber())) {
+				IndentSearch indentSearch = new IndentSearch();
+				indentSearch.setIndentNumber(materialIssue.getIndent().getIndentNumber());
+				indentSearch.setTenantId(tenantId);
+				materialIssue.setIndent(indentService.search(indentSearch, new RequestInfo()).getIndents().get(0));
+				if (materialIssue.getIndent().getIssueStore() != null && StringUtils.isNotEmpty(materialIssue.getIndent().getIssueStore().getCode()))
+				{
+					StoreGetRequest storeGetRequest =StoreGetRequest.builder().code(Arrays.asList(materialIssue.getIndent().getIssueStore().getCode())).tenantId(tenantId).build();
+					Store store = storeService.search(storeGetRequest).getStores().get(0);
+					if(store != null && store.getDepartment() != null && StringUtils.isNotBlank(store.getDepartment().getCode())){
+						Department department = departmentService.getDepartment(tenantId,
+								store.getDepartment().getCode(), new RequestInfo());
+						store.setDepartment(department);
+					}
+					materialIssue.getIndent().setIssueStore(store);
+				}
+				 ObjectMapper mapper = new ObjectMapper();
+				if (!materialIssue.getIndent().getIndentDetails().isEmpty()) {
+					Map<String, Uom> uomMap = getUoms(tenantId, mapper, new RequestInfo());
+					Map<String, Material> materialMap = getMaterials(tenantId, mapper, new RequestInfo());
+					List<MaterialIssueDetail> materialIssueDetail = new ArrayList<>();
+					for (IndentDetail indentDetail : materialIssue.getIndent().getIndentDetails()) {
+						MaterialIssueDetail materialIssueDet = new MaterialIssueDetail();
+						if (indentDetail.getMaterial() != null
+								&& StringUtils.isNotBlank(indentDetail.getMaterial().getCode())) {
+						/*	Material material = materialService.fetchMaterial(tenantId,
+									indentDetail.getMaterial().getCode(), new RequestInfo());*/
+							indentDetail.setMaterial(materialMap.get(indentDetail.getMaterial().getCode()));
+						}
+						if (indentDetail.getUom() != null && StringUtils.isNotBlank(indentDetail.getUom().getCode())) {
+							indentDetail.setUom(uomMap.get(indentDetail.getUom().getCode()));
+						}
+						materialIssueDet.setIndentDetail(indentDetail);
+						materialIssueDetail.add(materialIssueDet);
+					}
+					materialIssue.setMaterialIssueDetails(materialIssueDetail);
+				}
+			}
+		}
+		MaterialIssueResponse materialIssueResponse = new MaterialIssueResponse();
+		materialIssueResponse.setMaterialIssues(materialIssueRequest.getMaterialIssues());
+		return materialIssueResponse;
+	}
+	
+	private Map<String, Uom> getUoms(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
+		JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "common-masters", "Uom", null, null,
+				requestInfo);
+		Map<String, Uom> uomMap = new HashMap<>();
+
+		if (responseJSONArray != null && responseJSONArray.size() > 0) {
+			for (int i = 0; i < responseJSONArray.size(); i++) {
+				Uom uom = mapper.convertValue(responseJSONArray.get(i), Uom.class);
+				uomMap.put(uom.getCode(), uom);
+			}
+
+		}
+		return uomMap;
+	}
+	
+	private Map<String, Material> getMaterials(String tenantId, final ObjectMapper mapper, RequestInfo requestInfo) {
+		JSONArray responseJSONArray = mdmsRepository.getByCriteria(tenantId, "inventory",
+                "Material", null, null, requestInfo);
+		Map<String, Material> materialMap = new HashMap<>();
+
+		if (responseJSONArray != null && responseJSONArray.size() > 0) {
+			for (int i = 0; i < responseJSONArray.size(); i++) {
+				Material material = mapper.convertValue(responseJSONArray.get(i), Material.class);
+				materialMap.put(material.getCode(), material);
+			}
+
+		}
+		return materialMap;
+	}
+
 
 }

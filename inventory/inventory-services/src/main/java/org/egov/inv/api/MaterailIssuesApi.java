@@ -36,7 +36,21 @@ public interface MaterailIssuesApi {
 	@RequestMapping(value = "/materialissues/_create", produces = {
 			"application/json" }, consumes = {
 					"application/json" }, method = RequestMethod.POST)
-	ResponseEntity<MaterialIssueResponse> materailIssuesCreatePost(
+	ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
+			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
+			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest);
+	
+	
+	@ApiOperation(value = "Prepare Material Issues From Indents.", notes = "This API is invoked when we create material issues from indent.", response = MaterialIssueResponse.class, tags = {
+			"Indent Issue", })
+	@ApiResponses(value = {
+			@ApiResponse(code = 200, message = "IndentIssue created Successfully", response = MaterialIssueResponse.class),
+			@ApiResponse(code = 400, message = "Invalid Input", response = ErrorRes.class) })
+
+	@RequestMapping(value = "/materialissues/_preparemifromindents", produces = {
+			"application/json" }, consumes = {
+					"application/json" }, method = RequestMethod.POST)
+	ResponseEntity<MaterialIssueResponse> materiallIssuesPreparemiFromIndents(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest);
 
@@ -62,7 +76,7 @@ public interface MaterailIssuesApi {
 	@RequestMapping(value = "/materialissues/_update", produces = {
 			"application/json" }, consumes = {
 					"application/json" }, method = RequestMethod.POST)
-	ResponseEntity<MaterialIssueResponse> materailIssuesUpdatePost(
+	ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
 			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest);
 

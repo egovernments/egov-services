@@ -7,7 +7,6 @@ import java.util.List;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
@@ -16,6 +15,7 @@ import org.egov.inv.model.PriceListDetails;
 import org.egov.inv.model.PriceListRequest;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
+import org.egov.inv.model.RequestInfo;
 import org.egov.inv.persistence.entity.PriceListEntity;
 import org.egov.inv.persistence.repository.MaterialJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListDetailJdbcRepository;
@@ -192,6 +192,15 @@ public class PriceListService extends DomainService {
         response.setPriceLists(searchPriceLists.getPagedData().size() > 0 ? searchPriceLists.getPagedData() : Collections.emptyList());
 		return response;
 	}
+	public PriceListResponse searchPriceList(
+			PriceListSearchRequest priceListSearchRequest, RequestInfo requestInfo) {
+
+		List <PriceList> searchPriceLists = priceListRepository.searchPriceList(priceListSearchRequest);
+		
+        PriceListResponse response = new PriceListResponse();
+        response.setPriceLists(searchPriceLists.size() > 0 ? searchPriceLists : Collections.emptyList());
+		return response;
+	} 
 	
 	private void validate(List<PriceList> priceLists, String method) {
 

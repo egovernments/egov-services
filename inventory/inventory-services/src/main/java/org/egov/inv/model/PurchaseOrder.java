@@ -262,9 +262,8 @@ public class PurchaseOrder   {
    * purchaseOrderNumber  Auto generated number, read only 
    * @return purchaseOrderNumber
   **/
-  @ApiModelProperty(required = true, readOnly = true, value = "purchaseOrderNumber  Auto generated number, read only ")
-  @NotNull
-
+  @ApiModelProperty(readOnly = true, value = "purchaseOrderNumber  Auto generated number, read only ")
+ 
 
   public String getPurchaseOrderNumber() {
     return purchaseOrderNumber;

@@ -7,10 +7,13 @@ var events = [
   },
   {
     jsonPath:"materialReceipt[0].receivingStore.code",
-    onChange:function({jsonPath, value}){
+    onChange:function({jsonPath, value, setVal}){
       //console.log('changed', jsonPath, value);
+      setVal('materialReceipt[0].paymentTerms', 'Test Dummy Data Description');
     }
   }
+
+  
 ]
 
 var dat = {

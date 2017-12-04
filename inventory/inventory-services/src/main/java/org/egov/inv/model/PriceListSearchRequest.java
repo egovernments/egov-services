@@ -1,14 +1,19 @@
 package org.egov.inv.model;
 
+import java.math.BigDecimal;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
+@Setter
 public class PriceListSearchRequest {
 
     private String tenantId;
@@ -44,5 +49,7 @@ public class PriceListSearchRequest {
     private Integer offSet;
 
     private String sortBy;
+    
+    private String materialCode;
 
 }

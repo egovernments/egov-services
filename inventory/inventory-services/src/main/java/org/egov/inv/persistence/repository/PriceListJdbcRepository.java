@@ -82,6 +82,119 @@ public class PriceListJdbcRepository extends JdbcRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+
+    public List <PriceList> searchPriceList(PriceListSearchRequest priceListSearchRequest)
+   	{
+   		Map<String, Object> paramValues = new HashMap<>();
+   		StringBuffer params = new StringBuffer();
+
+   		/*
+   		 * select * from pricelist where id in ( select pricelist from
+   		 * pricelistdetails where material='MAT1' and 1509474600000 between
+   		 * fromdate::bigint and todate::bigint ) and supplier='supp1' and
+   		 * ratetype='DGSC Rate Contract' and active=true
+   		 */
+
+   		String searchQuery = "select * from pricelist   :condition  :orderby ";
+   		String orderBy = " order by supplier asc, rateType asc, rateContractDate desc";
+
+   					params.append(" active=true  ");		 
+   		if (priceListSearchRequest.getTenantId() != null) {
+   			if (params.length() > 0) {
+   				params.append(" and ");
+   			}
+   			params.append("tenantid =:tenantId");
+   			paramValues.put("tenantId", priceListSearchRequest.getTenantId());
+   		}
+   		if (priceListSearchRequest.getMaterialCode() != null || priceListSearchRequest.getRateContractDate() != null) {
+   			// TODO: APPEND IS ACTIVE AT DETAIL LEVEL ALSO.
+   			if (priceListSearchRequest.getMaterialCode() != null
+   					&& priceListSearchRequest.getRateContractDate() != null) {
+   				params.append(" and  id in ( select pricelist from pricelistdetails "
+   						+ "where material=:materialCode  and :rateContractDate between fromdate::bigint and todate::bigint  )  ");
+   				paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
+   				paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
+   			} else if (priceListSearchRequest.getMaterialCode() != null) {
+   				params.append(
+   						"  and id in ( select pricelist from pricelistdetails " + "where material=:materialCode )  ");
+   				paramValues.put("materialCode", priceListSearchRequest.getMaterialCode());
+   			} else if (priceListSearchRequest.getRateContractDate() != null) {
+   				params.append(" and id in ( select pricelist from pricelistdetails "
+   						+ "where  :rateContractDate between fromdate::bigint and todate::bigint  )  ");
+   				paramValues.put("rateContractDate", priceListSearchRequest.getRateContractDate());
+
+   			}
+
+   		}
+   		if (priceListSearchRequest.getId() != null) {
+   			if (params.length() > 0) {
+   				params.append(" and ");
+   			}
+   			params.append("id =:id");
+   			paramValues.put("id", priceListSearchRequest.getId());
+   		}
+
+   		if (priceListSearchRequest.getIds() != null) {
+   			if (params.length() > 0) {
+   				params.append(" and ");
+   			}
+   			params.append("id in(:ids) ");
+   			paramValues.put("ids", new ArrayList<String>(Arrays.asList(priceListSearchRequest.getIds().split(","))));
+   		}
+
+   		if (priceListSearchRequest.getSupplierName() != null) {
+   			if (params.length() > 0) {
+   				params.append(" and ");
+   			}
+   			params.append("supplier =:supplierName");
+   			paramValues.put("supplierName", priceListSearchRequest.getSupplierName());
+   		}
+
+   		if (priceListSearchRequest.getRateType() != null) {
+   			if (params.length() > 0) {
+   				params.append(" and ");
+   			}
+   			params.append("rateType =:rateType");
+   			paramValues.put("rateType", priceListSearchRequest.getRateType());
+   		}
+
+   		if (params.length() > 0) {
+
+   			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+
+   		} else
+
+   			searchQuery = searchQuery.replace(":condition", "");
+
+           searchQuery = searchQuery.replace(":orderby", orderBy);
+   		BeanPropertyRowMapper row = new BeanPropertyRowMapper(PriceListEntity.class);
+
+   		List<PriceListEntity> priceListEntities = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+   				row);
+
+   		List<PriceList> priceListList = new ArrayList<>();
+
+   		PriceList pl;
+   		PriceListDetailsSearchRequest pdlsr;
+   		SupplierGetRequest sgr;
+
+   		for (PriceListEntity priceListEntity : priceListEntities) {
+   			pl = priceListEntity.toDomain();
+   			String supCode = priceListEntity.getSupplier();
+   			pdlsr = new PriceListDetailsSearchRequest();
+   			sgr = new SupplierGetRequest();
+   			pdlsr.setPriceList(priceListEntity.getId());
+   			pdlsr.setDeleted(false);
+   			pdlsr.setActive(true);
+   			sgr.setCode(Arrays.asList(supCode));
+   			pdlsr.setTenantId(priceListEntity.getTenantId());
+   			pl.setPriceListDetails(priceListDetailJdbcRepository.search(pdlsr).getPagedData());
+   			pl.setSupplier(supplierJdbcRepository.search(sgr).getPagedData().get(0));
+   			priceListList.add(pl);
+   		}
+
+   		return priceListList;
+   	}
     public Pagination<PriceList> search(PriceListSearchRequest priceListSearchRequest) {
         String searchQuery = "select * from pricelist :condition  :orderby ";
 

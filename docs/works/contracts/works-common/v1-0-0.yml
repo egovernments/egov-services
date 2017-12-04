@@ -273,11 +273,13 @@ definitions:
         minLength: 1
       scheduleCategory:
         format: singleValueList
-        type: string
+        items:
+          $ref: '#/definitions/ScheduleCategory'
         description: Schedule Category of the SOR. unique reference from 'ScheduleCategory'. Code is ref. here.
       uom:
         format: singleValueList
-        type: string
+        items:
+          $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-common-masters/contracts/v1-0-0.yml#/definitions/UOM"
         description: Unit Of Measurement of the SOR. unique reference from 'UOM'. Code is ref. here.
       sorRates:
         type: array
@@ -292,6 +294,10 @@ definitions:
         items:
           $ref: '#/definitions/MarketRate'
         maximum: 50
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -331,7 +337,10 @@ definitions:
         type: number
         format: BigDecimal
         description: SOR Rate which is applicable for given date range
-
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -368,7 +377,10 @@ definitions:
         type: number
         format: BigDecimal
         description: Market Rate which is applicable for given date range
-
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -733,6 +745,10 @@ definitions:
         description: Array of Estimate Template Activities
         items:
           $ref: '#/definitions/EstimateTemplateActivities'
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       
@@ -773,6 +789,10 @@ definitions:
         type: number
         format: BigDecimal
         description: Unit Rate for Estimate Template Activitie
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
     required:
@@ -801,6 +821,10 @@ definitions:
         type: string
         description: UOM for the Non SOR. Unique reference from 'UOM'. Code is ref. here.
         format: singleValueList
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - description

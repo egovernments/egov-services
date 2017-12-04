@@ -49,7 +49,6 @@ import _ from 'lodash';
    	}
     
    	renderRowList = (item) => {
-		
 		   let {fileRowCount}=this.state;
 		   var fileRowCountValue = fileRowCount;
 		   console.log("testval:", this.props.readonly);
@@ -63,11 +62,10 @@ import _ from 'lodash';
 			   });
 			
 			   if(this.props.readonly){
-                fileRowCountValue = documentsLenth;	
+                fileRowCountValue = documentListArray.length;	
 			   }else{
 				fileRowCountValue = documentsLenth+fileRowCount;	
 			   }
-		    	   
 		   }
 		   
 		   let arr = [...Array(fileRowCountValue).keys()];

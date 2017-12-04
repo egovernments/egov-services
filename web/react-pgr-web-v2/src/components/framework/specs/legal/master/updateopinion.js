@@ -167,8 +167,8 @@ var dat = {
             "fileList":{
                 "name":"documentName",
                 "id":"fileStoreId"
-            },
-              "fileCount":3
+            }
+              //"fileCount":3
 
 
 

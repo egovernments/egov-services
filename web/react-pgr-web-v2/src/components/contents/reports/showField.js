@@ -59,7 +59,7 @@ export default class ShowField extends Component
       case "string":
         return (
           <Col xs={12} sm={4} md={3} lg={3}>
-            <TextField className="custom-form-control-for-textfield" id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
+            <TextField value={this.props.value} className="custom-form-control-for-textfield" id={obj.label.split(".").join("-")} fullWidth={true} floatingLabelFixed={true} floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>} onChange={(e) => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')} />
           </Col>
         );
       case "number":

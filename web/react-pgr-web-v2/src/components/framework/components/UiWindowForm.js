@@ -547,6 +547,7 @@ class UiWindowForm extends Component {
   };
   handleOpen = () => {
     this.setState({
+      valuesObj:{},
       open: true
     });
   };

@@ -157,7 +157,7 @@ class ShowForm extends Component {
       {
         item["value"]=_.isEmpty(searchForm)?"":searchForm[item.name];
         return (
-          <ShowField key={index} obj={item} dateField={this.state.datefield} dateError={this.state.dateError} handler={this.handleChange}/>
+          <ShowField value={item["value"]} key={index} obj={item} dateField={this.state.datefield} dateError={this.state.dateError} handler={this.handleChange}/>
         );
       })
     }

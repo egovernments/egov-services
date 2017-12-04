@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import TextField from 'material-ui/TextField';
 import RaisedButton from 'material-ui/RaisedButton';
 import FileDownload from 'material-ui/svg-icons/action/get-app';
+import RemoveFile from 'material-ui/svg-icons/action/highlight-off';
 import Api from '../../../api/api';
 import _ from "lodash";
 import {translate} from '../../common/common';
@@ -20,6 +21,7 @@ class UiDocuments extends Component {
     this.initData(this.props)
   }
   componentWillReceiveProps(nextProps){
+    // console.log('receive props');
     this.initData(nextProps)
   }
   initData(props){
@@ -84,19 +86,44 @@ class UiDocuments extends Component {
   }
   uploadDocs = () => {
     return _.times(this.state.allowedMax, idx=>{
-      return (<Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
+      if(_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`)){
+        //file exists from client side
+        let fileName=_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`).name;
+        return(
+          <Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
+            <RaisedButton
+              download
+              label={fileName.length > 15 ? fileName.substr(0, 12)+'...' : fileName}
+              style={{marginBottom:15}}
+              primary={true}
+              fullWidth = {true}
+              labelPosition="before"
+              icon={<RemoveFile />}
+              onTouchTap={event => {this.removeFile(`${this.props.item.jsonPath}[${idx}]`)}}
+            />
+          </Col>
+        )
+      }else{
+        //allow them to upload file
+        return (<Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx<this.state.fileCount?'':'hide'}>
           <div className="input-group">
-            <input type="file" id={`file${idx}`} ref={`file${idx}`} className="form-control" onChange= {(e) => {this.props.handler({target:{value: e.target.files[0]}},`${this.props.item.jsonPath}[${idx}]`,false)}}/>
-            <span className="input-group-addon" style={{cursor:'pointer'}} onClick={() => {document.getElementById(`file${idx}`).value = null; this.props.handler({target:{value: ''}},`${this.props.item.jsonPath}[${idx}]`,false)}}><i className="glyphicon glyphicon-trash specific"></i></span>
+            <input type="file" id={`file${idx}`} ref={`file${idx}`} className="form-control"
+              onChange= {(e) => {this.props.handler({target:{value: e.target.files[0]}},`${this.props.item.jsonPath}[${idx}]`,false)}}
+            />
           </div>
           <br/>
         </Col>)
+      }
+
     })
+  }
+  removeFile = (jp) => {
+    this.props.handler({target:{value: ''}},jp,false);
   }
   render(){
     let {showDocs, uploadDocs, addFile} = this;
     let {item} = this.props;
-    return(
+    return (
       <Row>
         {showDocs()}
         {item.addRequired ? uploadDocs() : ''}

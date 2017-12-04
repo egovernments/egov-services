@@ -5,13 +5,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import org.egov.infra.mdms.service.MDMSService;
 import org.egov.mdms.model.MDMSCreateRequest;
-import org.egov.tracer.model.CustomException;
-import org.json.JSONArray;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -24,9 +20,6 @@ public class MDMSUtils {
 	
 	public static final Logger logger = LoggerFactory.getLogger(MDMSUtils.class);
 	
-	@Autowired
-	private MDMSService mDMSService;
-
 	public List<Object> filter(List<Object> list, String key, Object value) throws JsonProcessingException{
 		List<Object> filteredList = new ArrayList<>();
 		ObjectMapper mapper = new ObjectMapper();
@@ -76,12 +69,12 @@ public class MDMSUtils {
 	
 	public List<String> getUniqueKeys(MDMSCreateRequest mDMSCreateRequest, Map<String, Object> allMasters) throws Exception{
 		List<String> uniqueKeys = new ArrayList<>();
-		List<Object> allmasterConfigs = (List<Object>) allMasters.get("mdms-config");
+		List<Object> allmasterConfigs = (List<Object>) allMasters.get(MDMSConstants.CONFIG_ARRAY_KEY);
 		if(null == allmasterConfigs || allmasterConfigs.isEmpty()){
 			logger.info("There is no mdms-config for this module: "+mDMSCreateRequest.getMasterMetaData().getModuleName());
 			return uniqueKeys;
 		}
-		List<Object> masterConfig = filter(allmasterConfigs, "$.masterName", mDMSCreateRequest.getMasterMetaData().getMasterName());		
+		List<Object> masterConfig = filter(allmasterConfigs, MDMSConstants.MASTERNAME_JSONPATH, mDMSCreateRequest.getMasterMetaData().getMasterName());		
 		if(masterConfig.size() > 1){
 			logger.info("There are duplicate mdms-configs for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
 			uniqueKeys = null;
@@ -90,7 +83,7 @@ public class MDMSUtils {
 			logger.info("There is no mdms-config for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
 			return uniqueKeys;	
 		}		
-		uniqueKeys = JsonPath.read(masterConfig.get(0).toString(), "$.uniqueKeys");
+		uniqueKeys = JsonPath.read(masterConfig.get(0).toString(), MDMSConstants.UNIQUEKEYS_JSONPATH);
 		
 		return uniqueKeys;
 	}

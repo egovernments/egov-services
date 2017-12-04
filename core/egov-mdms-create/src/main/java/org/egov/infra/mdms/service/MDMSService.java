@@ -115,6 +115,7 @@ public class MDMSService {
 	}
 	
 	public Object getFileContents(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest) throws Exception{
+		logger.info("Getting file contents from git repo.....");
 		String filePath = getFilePath(filePathMap, mDMSCreateRequest);
 		filePath = MDMSConstants.READ_FILE_PATH_APPEND + filePath;
 		Object fileContents = mDMSCreateRepository.getFileContents(filePath);
@@ -128,6 +129,7 @@ public class MDMSService {
 	
 	public String getContentForPush(Object fileContents, 
 			MDMSCreateRequest mDMSCreateRequest, Boolean isCreate) throws Exception{
+		logger.info("Building content for git push.....");
 		ObjectMapper mapper = new ObjectMapper();
 		String result = null;
 		Object moduleContent = fileContents;

@@ -123,9 +123,9 @@ public class PerformanceAssessmentRowMapper {
 	public class KPIValueReportMapper implements RowMapper<KpiValueList> {
 		public Map<String, Map<String, Map<String, KpiValue>>> reportMap = new HashMap<>();
 		public Map<String, KPI> kpiMap = new HashMap<>();
+		
 		@Override
 		public KpiValueList mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-			
 			if(reportMap.containsKey(rs.getString("valueTenantId"))) {
 				Map<String, Map<String, KpiValue>> secondMap = reportMap.get(rs.getString("valueTenantId"));
 				if(secondMap.containsKey(rs.getString("targetFinYear"))) { 

@@ -51,8 +51,8 @@ class KPIReports extends Component {
             selectedULBIndices: [],
             selectedfinancialYearIndices: [],
 
-            compareSearch: {},
-            showBarChart: false,
+            compareSearchRes: {},
+            showChart: false,
 
             multiSelectKPIs: true,
             multiSelectULBs: true,
@@ -114,9 +114,9 @@ class KPIReports extends Component {
                 </div>
 
                 {
-                    this.state.showBarChart ? 
+                    this.state.showChart ? 
                     <Card className="uiCard">
-                        <EGBarChart data = {this.state.compareSearch} />
+                        <EGBarChart data = {this.state.compareSearchRes} />
                     </Card> : <div></div>
                 }
             </div>
@@ -197,16 +197,20 @@ class KPIReports extends Component {
     }
 
     onClickedViewReport() {
-        let finYears    = this.state.selectedfinancialYearIndices.map((item, index) => jp.query(self.state.financialYears, `$.financialYears[${item}].finYearRange`)).join(',')
-        let ulbs        = this.state.selectedULBIndices.map((item, index) => jp.query(self.state.ULBs, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',')
-        let kpis        = this.state.selectedKPIIndices.map((item, index)=> jp.query(self.state.departmentKPIs, `$.KPIs[${item}].code`)).join(',')
+        let finYears    = this.state.selectedfinancialYearIndices.map((item, index) => jp.query(this.state.financialYears, `$.financialYears[${item}].finYearRange`)).join(',')
+        let ulbs        = this.state.selectedULBIndices.map((item, index) => jp.query(this.state.ULBs, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',')
+        let kpis        = this.state.selectedKPIIndices.map((item, index)=> jp.query(this.state.departmentKPIs, `$.KPIs[${item}].code`)).join(',')
         
+        finYears        = '2017-18'
+        ulbs            = 'default,mh.roha,panavel'
+        kpis            = 'PFP'
         this.fetchCompareSearch(finYears, kpis, ulbs, (err, res) => {
             if (err || !res) {
-
+                this.showAPIError(err)
             } else {
                 this.setState({
-                    compareSearch: res
+                    compareSearchRes: res,
+                    showChart: true
                 })
             }
         })
@@ -341,8 +345,9 @@ class KPIReports extends Component {
         });
     }
     fetchCompareSearch(finYears, kpis, ulbs, cb) {
-        Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
-            if (res && res.kpiValues) {
+        Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18,2018-19&ulbs=default&kpiCodes=PFP`, [], {}, false, true).then(function(res) {
+        // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
+            if (res && res.ulbs) {
                 cb (null, res)
             } else {
                 cb (null, null)
@@ -392,64 +397,6 @@ class KPIReports extends Component {
             }
         });
     }
-
-    // render() {
-    //     return (
-    //         <div>
-    //             <Card className="uiCard">
-    //                 <Grid fluid>
-    //                     <CardText>
-    //                         <Row>
-    //                             <Col xs={12} sm={4} md={4} >
-    //                                 {EGSelectField("Department", true, false, this.state.departmentIndexValue, this.state.departments, "name", this.onSelectDepartment)}
-    //                             </Col>
-    //                             <Col  xs={12} sm={4} md={4}>
-    //                                 {EGSelectField("KPI Type", true, false, this.state.kpiTypeIndexValue, this.state.kpiTypes, "name", this.onSelectKPIType)}
-    //                             </Col>
-    //                             <Col  xs={12} sm={4} md={4}>
-    //                                 {EGSelectField("KPIs", true, true, this.state.kpiIndexValues, this.state.kpis, "name", this.onSelectKPI)}
-    //                             </Col>
-    //                         </Row>
-    //                     </CardText>
-    //                 </Grid>
-    //             </Card>
-    //             <Card className="uiCard">
-    //                 <Grid fluid>
-    //                     <CardText>
-    //                         <Row>
-    //                             <Col xs={12} sm={6} md={6} >
-    //                                 {EGSelectField("ULBs", true, true, this.state.ULBIndexValues, this.state.ULBs, "name", this.onSelectULB)}
-    //                             </Col>
-    //                             <Col  xs={12} sm={6} md={6}>
-    //                                 {EGSelectField("Financial Year", true, true, this.state.financialYearIndexValues, this.state.financialYears, "finYearRange", this.onSelectFinancialYear)}
-    //                             </Col>
-    //                         </Row>
-    //                     </CardText>
-    //                 </Grid>
-    //             </Card>
-    //             <div style={{"textAlign": "center"}}>
-    //                 <br/>
-    //                 <RaisedButton label="View" style={style} primary={true} type="button" onClick={this.onClickedViewReport} />
-    //             </div>
-
-    //             { this.state.startViewReport ? <Card className="uiCard">
-    //                 <EGBarChart data = {this.state.kpiReportResponse} FY={this.state.financialYearIndexValues} ULB={this.state.ULBIndexValues} KPI={this.state.kpiIndexValues} />
-    //                 </Card> : <div></div>
-    //             }
-
-    //             <div>
-    //                 <RefreshIndicator
-    //                     size={40}
-    //                     left={10}
-    //                     top={0}
-    //                     loadingColor="#FF9800"
-    //                     status={this.state.isAPIInProgress ? "loading" : "hide"}
-    //                     style={style.refresh}
-    //                 />
-    //             </div>
-    //         </div>
-    //     )
-    // }
 }
 
 export default KPIReports;

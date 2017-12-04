@@ -6,138 +6,123 @@ export default class EGBarChart extends Component {
     constructor(props) {
         super(props)
         this.state  = {
-            barChartData: [],
-            barChartLegend: []
+            data: [],
+            dataKey: null
         }
     }
 
-    componentWillMount() {
+    componentDidMount() {
         let chartData = []
-        // if ((this.props.FY.length == 1) && (this.props.ULB.length == 1) && (this.props.KPI.length == 1)) {
-        //     chartdata   = this.formatChartData(this.parseWhenSingleFYSingleULBSingleKPI(this.props.data))
-        // }
-        // if ((this.props.FY.length == 1) && (this.props.ULB.length == 1) && (this.props.KPI.length > 1)) {
-        //     chartdata   = this.formatChartData(this.parseWhenSingleFYSingleULBMultiKPI(this.props.data))
-        // }
-        chartData       = this.formatChartData(this.parseWhenSingleFYSingleULBMultiKPI(this.props.data))
-        let chartLegend = this.formatChartLegends(chartData)
+        console.log(this.props.data)
+        this.formatParsedChartData(this.parseCompareSearchResponse(this.props.data), (data, dataKey) => {
+            if (!data || !dataKey) {
 
-        this.setState({
-            barChartData: chartData,
-            barChartLegend: chartLegend
+            } else {
+                this.setState({
+                    data: data,
+                    dataKey: dataKey
+                })
+            }
         })
     }
 
-    getMonth(month) {
-        switch(month) {
-            case '1':
-                return 'JANUARY'
-            case '2':
-                return 'FEBRUARY'
-            case '3':
-                return 'MARCH'
-            case '4':
-                return 'APRIL'
-            case '5':
-                return 'MAY'
-            case '6':
-                return 'JUNE'
-            case '7':
-                return 'JULY'
-            case '8':
-                return 'AUGUST'
-            case '9':
-                return 'SEPTEMBER'
-            case '10':
-                return 'OCTOBER'
-            case '11':
-                return 'NOVEMBER'
-            case '12':
-                return 'DECEMBER'
-            default:
-                return 'JANUARY'
-        }
+    /**
+     * parsing and arranging search response
+     */
+    flattenArray(array) {
+        let self = this
+        return array.reduce(function(memo, el) {
+          var items = Array.isArray(el) ? self.flattenArray(el) : [el];
+          return memo.concat(items);
+        }, []);
     }
 
-    parseWhenSingleFYSingleULBSingleKPI(data) {
-
-    }
-
-    parseWhenSingleFYSingleULBMultiKPI(data) {
-        let finalData = jp.query(data, '$.kpiValues[*]').map((item, index) => {
-            let obj     = {}
-            if (jp.query(item, '$.kpi.name').length > 0) {
-                obj.name    = jp.query(item, '$.kpi.name')[0]
-            }
-            if (jp.query(item, '$.kpi.kpiTarget.targetValue').length > 0) {
-                obj.amt     = parseInt(jp.query(item, '$.kpi.kpiTarget.targetValue')[0])
-            }
-            obj.values      = jp.query(item, '$.kpiValue.valueList[*]').sort((obj1, obj2)=> {
-                if (parseInt(obj1.period) > parseInt(obj2.period)) {
-                    return 1;
-                }
-                if (parseInt(obj1.period) < parseInt(obj2.period)) {
-                    return -1;
-                }
-                return 0;
-            }).map((value, index) => {
-                return {
-                    dataKey: this.getMonth(value.period),
-                    value: value.value === '' ? 0:  parseInt(value.value)
-                }
+    parseCompareSearchResponse(res) {
+        return this.flattenArray(jp.query(res, '$.ulbs[*]').map((ulbs, index) => {
+            return jp.query(ulbs, '$.finYears[*]').map((finYears, index) => {
+                return jp.query(finYears, '$.kpiValues[*]').map((kpis, index) => {
+                    return {
+                        ulbName: jp.query(ulbs, '$.ulbName').join(''),
+                        finYear:jp.query(finYears, '$.finYear').join(''),
+                        kpiName:jp.query(kpis, '$.kpi.name').join(''),
+                        target: parseInt(jp.query(kpis, '$.kpi.kpiTarget.targetValue').join('')),
+                        value: parseInt(jp.query(kpis, '$.consolidatedValue').join(''))
+                    }
+                })
             })
-            return obj
-        })
-        return finalData
+        }))
     }
 
-    formatChartData(data) {
-        return data.map((item, index) => {
-            let obj     = {}
-            obj.name    = item.name
-            obj.amt     = item.amt
-    
-            for (let index = 0; index < item.values.length; index++) {
-                obj[item.values[index].dataKey]     = item.values[index].value
-            }
-            return obj;
-        })
-    }
-
-    formatChartLegends(data) {
-        if (data && data.length > 0) {
-            let items   = Object.keys(data[0])
-            items       = items.filter(item => item !== 'name')
-            items       = items.filter(item => item !== 'amt')
-                    
-            return items.map((item, index) => {
-                return (
-                    {
-                        dataKey: item,
-                        fill: '#'+(Math.random()*0xFFFFFF<<0).toString(16)
-                    }            
-                )
-            })
+    formatParsedChartData(data, cb) {
+        let parsed = {
+            data: data
         }
+        let chartData       = [];
+        let chartDataKey    = "";
+        let ulbs        = [...new Set(jp.query(parsed, '$.data[*].ulbName'))];
+        let finYears    = [...new Set(jp.query(parsed, '$.data[*].finYear'))];
+        let kpis        = [...new Set(jp.query(parsed, '$.data[*].kpiName'))];
+
+        console.log(kpis)
+        if (kpis.length == 1) {
+            if (finYears.length > 1 && ulbs.length > 1) {
+                chartData       = data.filter((el) => el.ulbName === ulbs[0])
+                chartDataKey    = "finYear"
+                return cb(chartData, chartDataKey)
+            }
+            if (finYears.length > 1 && ulbs.length == 1) {
+                chartData       = data;
+                chartDataKey    = "finYear"
+                return cb(chartData, chartDataKey)
+            }
+            if (finYears.length == 1 && ulbs.length > 1) {
+                chartData       = data;
+                chartDataKey    = "ulbName"
+                return cb(chartData, chartDataKey)
+            }
+            if (finYears.length == 1 && ulbs.length == 1) {
+                chartData       = data;
+                chartDataKey    = "finYear"
+                return cb(chartData, chartDataKey)
+            }
+        }
+
+        if (kpis.length > 1) {
+            if (finYears.length > 1 && ulbs.length > 1) {
+                chartData       = data.filter((el) => el.ulbName === ulbs[0])
+                chartDataKey    = "finYear"
+                return cb(chartData, chartDataKey)
+            }
+            if (finYears.length > 1 && ulbs.length == 1) {
+                chartData       = data.filter((el) => el.finYear ===finYears[0])
+                chartDataKey    = "finYear"
+                return cb(chartData, chartDataKey)
+            }
+            if (finYears.length == 1 && ulbs.length > 1) {
+                chartData       = data.filter((el) => el.ulbName === ulbs[0])
+                chartDataKey    = "finYear"
+                return cb(chartData, chartDataKey)
+            }
+            if (finYears.length == 1 && ulbs.length == 1) {
+                chartData       = data;
+                chartDataKey    = "kpiName"
+                return cb(chartData, chartDataKey)
+            }
+        }
+        return cb(null, null)
     }
 
     render () {
         return (
-            <div style={{"textAlign": "center"}}>
-                <BarChart width={600} height={600} data={this.state.barChartData}
-                    margin={{top: 5, right: 30, left: 20, bottom: 5}}>
-                    <XAxis dataKey="name"/>
-                    <YAxis/>
-                    <CartesianGrid strokeDasharray="3 3"/>
-                    <Tooltip/>
-                    <Legend />
-                        {
-                            this.state.barChartLegend.map((item, index) => {
-                                return <Bar key={index} dataKey={item.dataKey} fill={item.fill} />
-                            })
-                        }
-                </BarChart>
-            </div>
+            <BarChart width={600} height={700} data={this.state.data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                <XAxis dataKey={this.state.dataKey}/>
+                <YAxis yAxisId="left" orientation="left" stroke="#8884d8"/>
+                <YAxis yAxisId="right" orientation="right" stroke="#82ca9d"/>
+                <Tooltip/>
+                <Legend />
+                <Bar yAxisId="left" dataKey="target" fill="#8884d8" />
+                <Bar yAxisId="right" dataKey="value" fill="#82ca9d" />
+            </BarChart>
         );
     }
 }

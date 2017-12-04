@@ -135,6 +135,7 @@ public class PriceListDetailJdbcRepository extends JdbcRepository {
         
         for(PriceListDetails pld: priceListDetailsList){
         	pld.setUom(uomService.getUom(priceListDetailsSearchRequest.getTenantId(), pld.getUom().getCode(), new RequestInfo()));
+        	if(pld.getQuantity()!=null)
         	pld.setQuantity(pld.getQuantity()/pld.getUom().getConversionFactor().doubleValue());
         }
 

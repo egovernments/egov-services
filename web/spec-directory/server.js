@@ -9,19 +9,9 @@ var $RefParser = require('json-schema-ref-parser');
 const app = express();
 var request = require('request');
 
-
-
-
 app.use(express.static(__dirname + '/'))
 app.use(bodyParser.json());
 
- // SwaggerParser.dereference('https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml')
- //        .then(function(yamlJSON) {
- //        	console.log(yamlJSON);
- //        })
- //        .catch(function(err) {
- //            console.log(err);
- //        });
 
 function getType(type) {
     switch (type) {
@@ -104,139 +94,66 @@ var getFieldsFromInnerObject = function(properties, module, jPath, isArray, requ
     };
 }
 
+var mainObj = {};
+var completed_requests = 0;
+var finalSpecs = {};
 
+for(let i = 0; i < config.data.length; i++){
 
-	var urls = [];
-	var masters = [];
-	var moduleName = [];
-	var urlData = [];
-	var urlDataFull = [];
-	var completed_requests = 0;
-	var definitions = [];
-	var filteredDefinitions = [];
-	var filteredSpecs = [];
-	var finalSpecObj = {};
-	var finalModuleData = {};
-	var finalSpecs = {};
-	
-	for(module in config.data){
-		// console.log(module);
-		urls.push(config.data[module].yamlURL);
-		masters.push(config.data[module].masters);
-		moduleName.push(module);
-	}
-
-	// console.log(masters);
-
-	for (i in urls) {
-
-		SwaggerParser.dereference(urls[i])
+	SwaggerParser.dereference(config.data[i])
         .then(function(yamlJSON) {
-        	// console.log(yamlJSON.definitions)
-        	urlData.push(yamlJSON.definitions);
+        	// console.log(yamlJSON)
+        	let basePath = [];
+        	basePath = yamlJSON.basePath.split("-")[0].split("");
+        	let index = basePath.indexOf("/");
+        	if(index > -1){
+        		basePath.splice(index, 1);
+        	}
+
+        	mainObj[basePath.join("")] = yamlJSON.definitions;
+        	
         	completed_requests++;
 
-        	if (completed_requests == urls.length) {
-	            // All download done, process responses array
-	            for(var j = 0; j < urlData.length; j++){
-	            	for(definition in urlData[j]){
-		            	definitions.push(definition);
-		            }
-	            }
+        	if (completed_requests == config.data.length) {
+	            // All downloads done, process responses array
+	            // console.log(mainObj);
 
-	            // console.log(definitions);
-
-
-	            
-
-
-	            for(var k = 0; k < urlData.length; k++){
-	            	for(var l = 0; l < masters[k].length; l++){
-	            		for(var m = 0; m < definitions.length; m++){
-	            			if(masters[k][l] === definitions[m]){
-
-	            				filteredDefinitions.push(definitions[m]);
-	            				
-	            			}
-	            		}
-
-	            	}
-	            }
-
-	            // console.log(filteredDefinitions);
-	            for(var j = 0; j < urlData.length; j++){
-	            	for(key in urlData[j]){
-		            	console.log(key);
-		            	for(var k = 0; k < filteredDefinitions.length; k++){
-		            		if(key == filteredDefinitions[k]){
-		            			filteredSpecs.push(urlData[j][key]);
-		            		}
-		            	}
-		            }
-		        }
-
-	            // console.log(filteredSpecs.length);
-	            // console.log(filteredSpecs);
-
-	            for(var i = 0; i < filteredDefinitions.length; i++){
-	            	finalSpecObj[filteredDefinitions[i]] = filteredSpecs[i];
-	            }
-
-	            // console.log(finalSpecObj);
-
-
-	            // console.log(filteredDefinitions);
-	            for(var i = 0; i < urlData.length; i++){
-	            	finalModuleData[moduleName[i]] = {};
-	            	// finalModuleData[i].moduleName = moduleName[i];
-	            	for(var j = 0; j < masters[i].length; j++){
-	            		for(key in finalSpecObj){
-	            			if(key === masters[i][j]){
-	            				if(!finalModuleData[moduleName[i]].masters) finalModuleData[moduleName[i]].masters = {};
-	            				finalModuleData[moduleName[i]].masters[key] = finalSpecObj[key];
-	            			}
-		            	}
-	            	}
-		            	
-	            }
-
-	            console.log(finalModuleData);
-	            // console.log(getFieldsFromInnerObject(finalModuleData.swm.masters.Vendor.properties, "swm",'MdmsMetadata.masterData', true, finalModuleData.swm.masters.Vendor.required || []))
-	            for(key in finalModuleData){
-	            	// console.log(key);
-	            	finalSpecs[key] = {};
-	            	for(property in finalModuleData[key].masters){
+	            for(key in mainObj){
+	            	finalSpecs[key.toLowerCase()] = {};
+	            	for(property in mainObj[key.toLowerCase()]){
 	            		// console.log(property);
 	            		if(!finalSpecs[key].masters) finalSpecs[key].masters = {};
 
-	            		if(!finalSpecs[key].masters[property]) finalSpecs[key].masters[property] = {};
-	            		if(!finalSpecs[key].masters[property]) finalSpecs[key].masters[property] = {};
+	            		if(!finalSpecs[key.toLowerCase()].masters[property.toLowerCase()]) finalSpecs[key.toLowerCase()].masters[property.toLowerCase()] = {};
+	            		if(!finalSpecs[key.toLowerCase()].masters[property.toLowerCase()]) finalSpecs[key.toLowerCase()].masters[property.toLowerCase()] = {};
 	            		
 
-	            		finalSpecs[key].masters[property].name = "";
-	            		finalSpecs[key].masters[property].label = "";
-	            		finalSpecs[key].masters[property].type = "multiFieldAddToTable";
-	            		finalSpecs[key].masters[property].jsonPath = "";
-	            		finalSpecs[key].masters[property].header = (getFieldsFromInnerObject(finalModuleData[key].masters[property].properties, key,'MdmsMetadata.masterData', true, finalModuleData[key].masters[property].required || [])).header;
-	            		finalSpecs[key].masters[property].values = (getFieldsFromInnerObject(finalModuleData[key].masters[property].properties, key,'MdmsMetadata.masterData', true, finalModuleData[key].masters[property].required || [])).fields;
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].name = "";
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].label = "";
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].type = "multiFieldAddToTable";
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].jsonPath = "";
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].header = (getFieldsFromInnerObject(mainObj[key][property].properties, key,'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).header;
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].values = (getFieldsFromInnerObject(mainObj[key][property].properties, key,'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).fields;
 	            		// console.log("Break-------------------------------------------");
 	            		// console.log(finalSpecs.swm.masters.CollectionPoint);
 	            	}
 	            	
 	            }
 
-	            
-	        }        	
-        })
-        .catch(function(err) {
+	            console.log(finalSpecs);
+	        
+	        }
+		})
+		.catch(function(err) {
             console.log(err);
         });
+}
 
+
+app.post('/:module/:master', function(req, res, next) {
+	for (var key in req.params){ 
+		req.params[key] = req.params[key].toLowerCase();
 	}
-
-
-app.post('/spec-directory/:module/:master', function(req, res, next) {
-
 	console.log(req.params);
 	console.log(req.params.master);
 	var master = req.params.master;
@@ -254,20 +171,10 @@ app.post('/spec-directory/:module/:master', function(req, res, next) {
 	next();
 });
 
-app.get('/spec-directory', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-
-
-
-// request.get('https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yaml', function (error, response, body) {
-//     if (!error && response.statusCode == 200) {
-//         var csv = body;
-//         // console.log(csv);
-//         // Continue with your processing here.
-//     }
-// });
 
 
 const port = process.env.PORT || '4022';

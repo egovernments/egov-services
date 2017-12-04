@@ -54,3 +54,57 @@ ReportDefinitions:
     source: egswm_sourcesegregation
     isMandatory: true
   query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid and cd.collectiontype = $collectiontypecode and ssg.dumpingground = $dumpinggroundcode and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date group by date, dumpinggroundname;
+  
+- reportName: ExpenditureIncurredReport
+  summary: Report regarding Expenditure incurred on Transportation
+  version: 1.0.0
+  moduleName: swm
+  sourceColumns:
+  - name: date
+    label: reports.swm.date
+    type: string
+    source: egswm_vehiclemaintenancedetails
+  - name: vehicletype
+    label: reports.swm.vehicletype
+    type: string
+    source: mdms
+  - name: registrationnumber
+    label: reports.swm.registrationnumber
+    type: string
+    source: egswm_vehicle
+  - name: fuellingcost
+    label: reports.swm.fuellingcost
+    type: number
+    source: egswm_vehiclefuellingdetails    
+  - name: maintenancecost
+    label: reports.swm.maintenancecost
+    type: number
+    source: egswm_vehiclemaintenancedetails
+  - name: totalcost
+    label: reports.swm.totalcost
+    type: number
+    source: egswm_vehiclemaintenancedetails    
+  searchParams:
+  - name: vehicle
+    label: reports.swm.vehicle
+    type: singlevaluelist
+    source: egswm_vehicle
+    isMandatory: true
+    pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid|$..regNumber|$..regNumber
+  - name: vehicletype
+    label: reports.swm.vehicletype
+    type: singlevaluelist
+    source: mdms
+    isMandatory: true
+    pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid&regNumbers={vehicle}|$..vehicleType.code|$..vehicleType.name    
+  - name: fromDate
+    label: reports.swm.datefrom
+    type: epoch
+    source: egswm_vehiclemaintenancedetails
+    isMandatory: true
+  - name: toDate
+    label: reports.swm.dateto
+    type: epoch
+    source: egswm_vehiclemaintenancedetails
+    isMandatory: true
+  query: select (to_timestamp(vmd.actualmaintenancedate/1000) AT TIME ZONE 'IST')::date as date,vehicle.vehicletype as vehicletype,vehicle.regnumber as registrationnumber,sum(vfd.totalcostincurred) as fuellingcost,sum(vmd.costincurred) as maintenancecost,sum(vfd.totalcostincurred) + sum(vmd.costincurred) as totalcost from egswm_vehicle vehicle, egswm_vehiclefuellingdetails vfd, egswm_vehiclemaintenancedetails vmd where vehicle.regnumber = vfd.vehicle and vehicle.regnumber = vmd.vehicle and vehicle.tenantid = $tenantid and vfd.tenantid = $tenantid and vmd.tenantid = $tenantid and vehicle.regnumber = $vehicle and vehicle.vehicletype = $vehicletype and (to_timestamp(vmd.actualmaintenancedate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date group by date, vehicletype, registrationnumber;

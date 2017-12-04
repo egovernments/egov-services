@@ -235,7 +235,7 @@ var getFieldsFromInnerObject = function(properties, module, jPath, isArray, requ
 	}
 
 
-app.post('/spec-directory/:module/:master', function(req, res, next) {
+app.post('/:module/:master', function(req, res, next) {
 
 	console.log(req.params);
 	console.log(req.params.master);
@@ -254,7 +254,7 @@ app.post('/spec-directory/:module/:master', function(req, res, next) {
 	next();
 });
 
-app.get('/spec-directory', (req, res) => {
+app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 

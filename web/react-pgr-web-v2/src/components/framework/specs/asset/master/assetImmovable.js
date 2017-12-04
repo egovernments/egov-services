@@ -942,6 +942,12 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Assets",
+		"customActionsAndUrl":[
+			{
+				"actionName":"update",
+				"url":"/non-framework/asset/master/assetImmovableCreate/{id}"
+			}
+		],
 		"groups": [
 			{
 				"label": "ac.View.Header.Details",

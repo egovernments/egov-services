@@ -21,6 +21,7 @@ import ContentAdd from 'material-ui/svg-icons/content/add';
 import ContentRemove from 'material-ui/svg-icons/content/remove';
 import UiTable from '../../../framework/components/UiTable';
 import UiBackButton from '../../../framework/components/UiBackButton';
+import UiEditButton from '../../../framework/components/UiEditButton';
 
 var specifications={};
 const styles = {
@@ -393,6 +394,7 @@ printer = () => {
   render() {
     let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
+    let customActionsAndUrl=!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty("customActionsAndUrl")?mockData[`${moduleName}.${actionName}`]["customActionsAndUrl"][0].url:"";
     let self = this;
     var mappingObject;
 
@@ -564,11 +566,29 @@ printer = () => {
 
     return (
       <div className="Report">
-      <UiBackButton />
+      <Row>
+        <Col xs={6} md={6}>
+          <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
+        </Col>
+      </Row>
+
+      <Row>
+        <Col xs={6} md={6}>
+          <div style={{marginLeft: "16px"
+          }}>
+              <UiBackButton/>
+          </div>
+        </Col>
+        <Col xs={6} md={6}>
+        <div style={{"textAlign": "right",marginRight:"16px"}}>
+          <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" icon={<i style={{color:"white"}} className="material-icons">print</i>} handler={printer}/>  &nbsp;&nbsp;
+          <UiEditButton customUrl={customActionsAndUrl}/>/>
+        </div>
+        </Col>
+      </Row>
         <form id="printable">
         {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <div>
-
             {renderBody()}
           </div>
 

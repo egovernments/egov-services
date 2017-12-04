@@ -716,6 +716,10 @@ class Transaction extends Component {
       if(!(formData.Disposal.orderDate) || formData.Disposal.orderDate == null || formData.Disposal.orderDate == ""){
         self.props.toggleSnackbarAndSetText(true, "Please enter Order Date", false, true);
       }
+
+      if(!(formData.Disposal.orderNumber) || formData.Disposal.orderNumber == null || formData.Disposal.orderNumber == ""){
+        self.props.toggleSnackbarAndSetText(true, "Please enter Order Number", false, true);
+      }
     }else{
 
     self.props.setLoadingStatus('loading');

@@ -599,10 +599,16 @@ var dat = {
 	},
 	"asset.search": {
 		"numCols": 12/3,
-		"url": "/asset-services-maha/assets/_search",
+		"url": "asset-services-maha/assets/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Asset",
+		"customActionsAndUrl":[
+			{
+				"actionName":"Add",
+				"url":"/non-framework/asset/master/assetImmovableCreate"
+			}
+		],
 		"groups": [
 			{
 				"label": "ac.search.asset.title",
@@ -776,6 +782,12 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Assets",
+		"customActionsAndUrl":[
+			{
+				"actionName":"Edit",
+				"url":"/asset-services-maha/assets/_search?ids={id}"
+			}
+		],
 		"groups": [
 			{
 				"label": "ac.view.movable.Header.Details",

@@ -133,7 +133,7 @@ var dat = {
 							"label": "ac.create.additional.field.name",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": ""
@@ -145,7 +145,7 @@ var dat = {
   						"pattern": "",
   						"type": "singleValueList",
   						"url": "",
-  						"isRequired": true,
+  						"isRequired": false,
   						"isDisabled": false,
   						"requiredErrMsg": "",
   						"patternErrMsg": "",

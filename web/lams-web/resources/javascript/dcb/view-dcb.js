@@ -2,7 +2,43 @@ class ViewDCB extends React.Component {
     constructor(props) {
       super(props);
       this.state = {
-        agreement: {},
+        agreement: {
+          allottee: {
+              id: "",
+              name: "",
+              permanentAddress: "",
+              mobileNumber: "",
+              aadhaarNumber: "",
+              pan: "",
+              emailId: "",
+              userName: "",
+              password: "",
+              active: "",
+              type: "",
+              gender: "",
+              tenantId: tenantId,
+          },
+          asset: {
+              id: "",
+              assetCategory: {
+                  id: "",
+                  name: "",
+                  code: ""
+              },
+              name: "",
+              code: "",
+              locationDetails: {
+                  locality: "",
+                  zone: "",
+                  revenueWard: "",
+                  block: "",
+                  street: "",
+                  electionWard: "",
+                  doorNo: "",
+                  pinCode: ""
+              }
+          }
+        },
         demandDetails:{}
       }
 

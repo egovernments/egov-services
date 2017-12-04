@@ -32,9 +32,6 @@ public class DocumentDetailsService {
 	private DocumentDetailRepository documentDetailRepository;
 
 	@Autowired
-	private FileStoreRepository fileStoreRepository;
-
-	@Autowired
 	private CommonUtils commonUtils;
 
 	@Autowired

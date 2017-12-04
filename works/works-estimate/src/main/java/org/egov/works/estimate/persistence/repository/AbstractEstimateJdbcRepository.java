@@ -103,8 +103,9 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		}
 		if (abstractEstimateSearchContract.getNameOfWork() != null) {
 			addAnd(params);
-			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) like :nameOfWork");
+			params.append("estimate.id = details.abstractestimate and upper(details.nameofwork) like :nameOfWork and details.tenantId=:tenantId");
 			paramValues.put("nameOfWork", '%' + abstractEstimateSearchContract.getNameOfWork().toUpperCase() + '%');
+            paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
 		}
 		if (abstractEstimateSearchContract.getAdminSanctionFromDate() != null) {
 			addAnd(params);
@@ -138,8 +139,10 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
 		
 		if (abstractEstimateSearchContract.getWorkIdentificationNumbers() != null) {
 			addAnd(params);
-			params.append("estimate.id = details.abstractEstimate and details.projectCode in (:workIdentificationNumbers)");
+			params.append("estimate.id = details.abstractEstimate and details.projectCode in (:workIdentificationNumbers) and details.tenantId=:tenantId");
 			paramValues.put("workIdentificationNumbers", abstractEstimateSearchContract.getWorkIdentificationNumbers());
+            paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
+
 		}
 
         params.append(" and estimate.deleted = false");

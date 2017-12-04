@@ -110,9 +110,9 @@ public class DetailedEstimateJdbcRepository extends JdbcRepository {
 		if (detailedEstimateSearchContract.getWorkIdentificationNumbers() != null) {
 			addAnd(params);
 			params.append(
-					"id in (select id from egw_detailedestimate where projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers)))");
+					"id in (select id from egw_detailedestimate where projectCode in (select id from egw_projectcode where code in (:workIdentificationNumbers)) and tenantid=:tenantid )");
 			paramValues.put("workIdentificationNumbers", detailedEstimateSearchContract.getWorkIdentificationNumbers());
-			paramValues.put("workIdentificationNumbers", detailedEstimateSearchContract.getWorkIdentificationNumbers());
+			paramValues.put("tenantid", detailedEstimateSearchContract.getTenantId());
 		}
 
 		if (detailedEstimateSearchContract.getNameOfWork() != null) {

@@ -9191,7 +9191,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL ISSUE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Material Issue.Material Issues Create"
@@ -9204,7 +9204,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL ISSUE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Material Issue.Material Issues Update"
@@ -9217,7 +9217,7 @@
     "orderNumber": 3,
     "queryParams": null,
     "parentModule": null,
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "MATERIAL ISSUE",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Material Issue.Material Issues Search"

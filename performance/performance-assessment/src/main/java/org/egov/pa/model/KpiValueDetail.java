@@ -21,7 +21,20 @@ public class KpiValueDetail {
 	@JsonProperty("documents")
 	private List<ValueDocument> documentList = null; 
 	
+	@JsonProperty("kpiCode")
+	private String kpiCode = null; 
 	
+	
+	
+	
+
+	public String getKpiCode() {
+		return kpiCode;
+	}
+
+	public void setKpiCode(String kpiCode) {
+		this.kpiCode = kpiCode;
+	}
 
 	public List<ValueDocument> getDocumentList() {
 		return documentList;

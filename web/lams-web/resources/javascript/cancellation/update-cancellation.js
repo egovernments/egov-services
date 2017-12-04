@@ -274,21 +274,6 @@ class UpdateCancellation extends React.Component {
         }
 
 
-        var cityGrade = !localStorage.getItem("city_grade") || localStorage.getItem("city_grade") == "undefined" ? (localStorage.setItem("city_grade", JSON.stringify(commonApiPost("tenant", "v1/tenant", "_search", { code: tenantId }).responseJSON["tenant"][0]["city"]["ulbGrade"] || {})), JSON.parse(localStorage.getItem("city_grade"))) : JSON.parse(localStorage.getItem("city_grade"));
-        var agreementType = "Create Municipality Agreement";
-        if (cityGrade.toLowerCase() === 'corp') {
-            agreementType = "Create Corporation Agreement";
-        }
-
-        getDesignations(null, function (designations) {
-            console.log(designations);
-            _this.setState({
-                ..._this.state,
-                designationList: designations
-            });
-
-        }, agreementType);
-
         var stateId = getUrlVars()["state"];
         var agreement = commonApiPost("lams-services",
             "agreements",
@@ -316,6 +301,15 @@ class UpdateCancellation extends React.Component {
                 }
             }
         }
+
+        getDesignations(null, function (designations) {
+            console.log(designations);
+            _this.setState({
+                ..._this.state,
+                designationList: designations
+            });
+
+        }, process.businessKey);
 
         if (!agreement.cancellation) {
             agreement.cancellation = {};
@@ -537,7 +531,7 @@ class UpdateCancellation extends React.Component {
         let { handleChange, handleChangeTwoLevel, addOrUpdate, handleProcess } = this;
         let { agreement, cancelReasons, buttons } = this.state;
         let { allottee, asset, rentIncrementMethod, workflowDetails, cancellation,
-            renewal, eviction, objection, judgement, remission } = this.state.agreement;
+            renewal, eviction, objection, judgement, remission, remarks, documents } = this.state.agreement;
         let { assetCategory, locationDetails } = this.state.agreement.asset;
 
         const renderOption = function (data) {

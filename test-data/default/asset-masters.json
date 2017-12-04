@@ -1,2289 +1,9 @@
 {
-<<<<<<< Updated upstream
-  "tenantId": "default",
-  "moduleName": "ASSET",
-  "AssetCategory": [
-    {
-      "tenantId": "default",
-      "id": 2,
-      "name": "Infrastructure assets",
-      "code": "002",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 3,
-      "name": "Plant and Machinery",
-      "code": "003",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 4,
-      "name": "Electrical Installations",
-      "code": "004",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 12,
-      "name": "Roads and Bridges",
-      "code": "012",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 2,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 6.66,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Location",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-	{
-          "name": "Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Length",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "MinimumWidth",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "MaximumWidth",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Road Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "WBM, Bitomun, Concrete, Tremix concrete",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-	{
-          "name": "Layer Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "No. Of Layers",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Layer Size",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-	{
-          "name": "Layer description",
-          "type": "image",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-        
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 13,
-      "name": "Drainage",
-      "code": "013",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 2,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 6.66,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Pipe Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Diameter",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Collection Mains",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Trunk Main",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Usage",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 14,
-      "name": "Water Ways",
-      "code": "014",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 2,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Pipe line",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Pipe Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": " Distribution, Raw water raising main, Pure water raising main",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Diameter",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Material Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "MS, CI, DI, HWPE, PVC, BRW/WRB",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "SSR, GSR,MBR",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Length",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 15,
-      "name": "Water Treatment Plant",
-      "code": "015",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 3,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 10,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Capacity",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "reference no",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 16,
-      "name": "Generator Plan",
-      "code": "016",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 4,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 17,
-      "name": "Public Lighting",
-      "code": "017",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 4,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 18,
-      "name": "Commercial Vehicles",
-      "code": "018",
-      "assetCategoryType": "MOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 19,
-      "name": "Other Vehicles",
-      "code": "019",
-      "assetCategoryType": "MOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 20,
-      "name": "Office Equipment’s, computers and peripherals",
-      "code": "020",
-      "assetCategoryType": "MOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 21,
-      "name": "Furniture and Fixtures",
-      "code": "021",
-      "assetCategoryType": "MOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 22,
-      "name": "Intangible Assets",
-      "code": "022",
-      "assetCategoryType": "MOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 23,
-      "name": "Buses",
-      "code": "023",
-      "assetCategoryType": "MOVABLE",
-      "parent": 18,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 24,
-      "name": "Dumpers etc.",
-      "code": "024",
-      "assetCategoryType": "MOVABLE",
-      "parent": 18,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 25,
-      "name": "Tipper",
-      "code": "025",
-      "assetCategoryType": "MOVABLE",
-      "parent": 18,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 26,
-      "name": "Fire Brigade",
-      "code": "026",
-      "assetCategoryType": "MOVABLE",
-      "parent": 18,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 27,
-      "name": "Tractor",
-      "code": "027",
-      "assetCategoryType": "MOVABLE",
-      "parent": 18,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 28,
-      "name": "Car",
-      "code": "028",
-      "assetCategoryType": "MOVABLE",
-      "parent": 19,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 29,
-      "name": "Boat",
-      "code": "029",
-      "assetCategoryType": "MOVABLE",
-      "parent": 19,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 30,
-      "name": "Air Conditioner",
-      "code": "030",
-      "assetCategoryType": "MOVABLE",
-      "parent": 20,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 31,
-      "name": "Inverters",
-      "code": "031",
-      "assetCategoryType": "MOVABLE",
-      "parent": 20,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 32,
-      "name": "UPS",
-      "code": "032",
-      "assetCategoryType": "MOVABLE",
-      "parent": 20,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 33,
-      "name": "Plotters",
-      "code": "033",
-      "assetCategoryType": "MOVABLE",
-      "parent": 20,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 34,
-      "name": "Printers",
-      "code": "034",
-      "assetCategoryType": "MOVABLE",
-      "parent": 20,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 35,
-      "name": "computers and peripherals",
-      "code": "035",
-      "assetCategoryType": "MOVABLE",
-      "parent": 20,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 36,
-      "name": "Furniture",
-      "code": "036",
-      "assetCategoryType": "MOVABLE",
-      "parent": 21,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 37,
-      "name": "Fittings ",
-      "code": "037",
-      "assetCategoryType": "MOVABLE",
-      "parent": 21,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 38,
-      "name": "electrical appliances",
-      "code": "038",
-      "assetCategoryType": "MOVABLE",
-      "parent": 21,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 39,
-      "name": "Fixtures",
-      "code": "039",
-      "assetCategoryType": "MOVABLE",
-      "parent": 21,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 15,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 40,
-      "name": "Computer software Licences",
-      "code": "040",
-      "assetCategoryType": "MOVABLE",
-      "parent": 22,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 41,
-      "name": "NOC",
-      "code": "041",
-      "assetCategoryType": "MOVABLE",
-      "parent": 22,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 20,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 42,
-      "name": "Land",
-      "code": "042",
-      "assetCategoryType": "LAND",
-      "parent": null,
-      "depreciationMethod": null,
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 43,
-      "name": "Open Land",
-      "code": "043",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 44,
-      "name": "Play ground",
-      "code": "044",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 45,
-      "name": "Open Market",
-      "code": "045",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 46,
-      "name": "Dumping Ground",
-      "code": "046",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 47,
-      "name": "Lakes and ponds",
-      "code": "047",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 48,
-      "name": "Open Space",
-      "code": "048",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 49,
-      "name": "Land with Encroachments",
-      "code": "049",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 50,
-      "name": "Open Theatre",
-      "code": "050",
-      "assetCategoryType": "LAND",
-      "parent": 42,
-      "depreciationMethod": null,
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": false,
-      "assetFieldsDefination": [
-        {
-          "name": "CTS No./Gatt No.",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Description",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Purpose",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Possession Date",
-          "type": "Date",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Agreement Reference No",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area of Land",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Holding Type",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Survey Number",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    },
-    {
-      "tenantId": "default",
-      "id": 51,
-      "name": "Sewerage",
-      "code": "051",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": 2,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": true,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": 6.66,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Capacity",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        },
-        {
-          "name": "Area",
-          "type": "Number",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": []
-        }
-      ]
-    }
-  ],
-  "ModeOfAcquisition": [
-    {
-      "id": 1,
-      "tenantId": "default",
-      "code": "ACQUIRED",
-      "name": "Acquired",
-      "isActive": true
-    },
-    {
-      "id": 2,
-      "tenantId": "default",
-      "code": "CONSTRUCTION",
-      "name": "Construction",
-      "isActive": true
-    },
-    {
-      "id": 3,
-      "tenantId": "default",
-      "code": "PURCHASE",
-      "name": "Purchase",
-      "isActive": true
-    },
-    {
-      "id": 4,
-      "tenantId": "default",
-      "code": "TENDER",
-      "name": "Tender",
-      "isActive": true
-    },
-    {
-      "id": 5,
-      "tenantId": "default",
-      "code": "DONATION",
-      "name": "Donation",
-      "isActive": true
-    }
-  ],
-  "LayerType": [
-    {
-      "id": 1,
-      "tenantId": "default",
-      "name": "FAKE LAYER 1",
-      "description": "./temp/images/headerLogo.png",
-      "numberOfLayers": 2,
-      "layerSize": 2,
-      "isActive": true
-    },
-    {
-      "id": 2,
-      "tenantId": "default",
-      "name": "FAKE LAYER 2",
-      "description": "./temp/images/mortarlessPavement.jpg",
-      "numberOfLayers": 4,
-      "layeSize": 2,
-      "isActive": true
-    }
-  ],
-  "Assetconfiguration": [
-    {
-      "id": 1,
-      "keyname": "EnableVoucherGeneration",
-      "description": "Enable or Disable voucher generation for asset revaluation,disposal and depreciation",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "false",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 2,
-      "keyname": "AssetRevaluationVoucherName",
-      "description": "Voucher Name for Asset Revaluation",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "Asset Revaluation",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 3,
-      "keyname": "AssetRevaluationVoucherDescription",
-      "description": "Voucher Description for Asset Revaluation",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "Asset Revaluation Journal Voucher",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 4,
-      "keyname": "AssetDisposalVoucherName",
-      "description": "Voucher Name for Asset Disposal or Sale",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "Asset Disposal or Sale",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 5,
-      "keyname": "AssetDisposalVoucherDescription",
-      "description": "Voucher Description for Asset Disposal or Sale",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "Asset Disposal or Sale Journal Voucher",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 6,
-      "keyname": "AssetDefaultCapitalizedValue",
-      "description": "Asset Default Capitalized Value",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "1",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 7,
-      "keyname": "AssetMinimumValue",
-      "description": "Asset Minimum Value",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "5000",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 8,
-      "keyname": "DepreciationSeparationDate",
-      "description": "Asset Depreciation Separation Date",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "9/30/23/59/59",
-          "effectivefrom": 15099500588
-        }
-      ]
-    },
-    {
-      "id": 9,
-      "keyname": "AssetDepreciationVoucherName",
-      "description": "Voucher Name for Asset Depreciation",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "Asset Depreciation",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 10,
-      "keyname": "AssetDepreciationVoucherDescription",
-      "description": "Voucher Description for Asset Depreciation",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "Asset Depreciation Journal Voucher",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 11,
-      "keyname": "AssetBatchSize",
-      "description": "Asset Batch Size",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "500",
-          "effectivefrom": 1509950058
-        }
-      ]
-    },
-    {
-      "id": 12,
-      "keyname": "DepreciationCFactor",
-      "description": "Depreciation Multiple Factor For Half Financial Year",
-      "tenantid": "default",
-      "values": [
-        {
-          "value": "0.5",
-          "effectivefrom": 1509950058
-        }
-      ]
-    }
-  ]
-=======
-"tenantId": "mh",
+"tenantId": "default",
 "moduleName": "ASSET",
 "AssetCategory": [
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 2,
 "name": "Infrastructure assets",
 "code": "002",
@@ -2302,7 +22,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 3,
 "name": "Plant and Machinery",
 "code": "003",
@@ -2321,7 +41,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 4,
 "name": "Electrical Installations",
 "code": "004",
@@ -2340,7 +60,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 12,
 "name": "Roads and Bridges",
 "code": "012",
@@ -2360,6 +80,18 @@
 {
 "name": "Location",
 "type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area",
+"type": "Number",
 "isActive": true,
 "isMandatory": false,
 "values": null,
@@ -2418,32 +150,20 @@
 "columns": []
 },
 {
-"name": "Layer description",
-"type": "Text",
+"name": "Layer Type",
+"type": "Select",
 "isActive": true,
 "isMandatory": false,
 "values": null,
 "localText": null,
 "regExFormate": null,
-"url": null,
+"url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
 "order": null,
 "columns": []
 },
 {
 "name": "No. Of Layers",
 "type": "Number",
-"isActive": true,
-"isMandatory": false,
-"values": null,
-"localText": null,
-"regExFormate": null,
-"url": null,
-"order": null,
-"columns": []
-},
-{
-"name": "Layer Type",
-"type": "Text",
 "isActive": true,
 "isMandatory": false,
 "values": null,
@@ -2466,8 +186,8 @@
 "columns": []
 },
 {
-"name": "Area",
-"type": "Number",
+"name": "Layer description",
+"type": "image",
 "isActive": true,
 "isMandatory": false,
 "values": null,
@@ -2480,9 +200,9 @@
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 13,
-"name": "Sewerage and Drainage",
+"name": "Drainage",
 "code": "013",
 "assetCategoryType": "IMMOVABLE",
 "parent": 2,
@@ -2497,18 +217,6 @@
 "depreciationRate": 6.66,
 "isDepreciationApplicable": true,
 "assetFieldsDefination": [
-{
-"name": "Capacity",
-"type": "Number",
-"isActive": true,
-"isMandatory": false,
-"values": null,
-"localText": null,
-"regExFormate": null,
-"url": null,
-"order": null,
-"columns": []
-},
 {
 "name": "Pipe Type",
 "type": "Text",
@@ -2535,19 +243,7 @@
 },
 {
 "name": "Collection Mains",
-"type": "Text",
-"isActive": true,
-"isMandatory": false,
-"values": null,
-"localText": null,
-"regExFormate": null,
-"url": null,
-"order": null,
-"columns": []
-},
-{
-"name": "Layer Type",
-"type": "Text",
+"type": "Number",
 "isActive": true,
 "isMandatory": false,
 "values": null,
@@ -2568,11 +264,23 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Usage",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 14,
 "name": "Water Ways",
 "code": "014",
@@ -2586,7 +294,7 @@
 "depreciationExpenseAccount": null,
 "unitOfMeasurement": "NOS",
 "version": "1.0",
-"depreciationRate": 6.66,
+"depreciationRate": null,
 "isDepreciationApplicable": true,
 "assetFieldsDefination": [
 {
@@ -2664,7 +372,7 @@
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 15,
 "name": "Water Treatment Plant",
 "code": "015",
@@ -2708,7 +416,7 @@
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 16,
 "name": "Generator Plan",
 "code": "016",
@@ -2727,7 +435,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 17,
 "name": "Public Lighting",
 "code": "017",
@@ -2746,7 +454,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 18,
 "name": "Commercial Vehicles",
 "code": "018",
@@ -2765,7 +473,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 19,
 "name": "Other Vehicles",
 "code": "019",
@@ -2784,7 +492,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 20,
 "name": "Office Equipment’s, computers and peripherals",
 "code": "020",
@@ -2803,7 +511,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 21,
 "name": "Furniture and Fixtures",
 "code": "021",
@@ -2819,10 +527,35 @@
 "version": "1.0",
 "depreciationRate": null,
 "isDepreciationApplicable": true,
-"assetFieldsDefination": null
+"assetFieldsDefination": [
+{
+"name": "Type",
+"type": "Select",
+"isActive": true,
+"isMandatory": false,
+"values": "wood,plastic,steel",
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 },
 {
-"tenantId": "mh",
+"name": "Color",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+}
+]
+},
+{
+"tenantId": "default",
 "id": 22,
 "name": "Intangible Assets",
 "code": "022",
@@ -2841,7 +574,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 23,
 "name": "Buses",
 "code": "023",
@@ -2860,7 +593,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 24,
 "name": "Dumpers etc.",
 "code": "024",
@@ -2879,7 +612,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 25,
 "name": "Tipper",
 "code": "025",
@@ -2898,7 +631,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 26,
 "name": "Fire Brigade",
 "code": "026",
@@ -2917,7 +650,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 27,
 "name": "Tractor",
 "code": "027",
@@ -2936,7 +669,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 28,
 "name": "Car",
 "code": "028",
@@ -2955,7 +688,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 29,
 "name": "Boat",
 "code": "029",
@@ -2974,7 +707,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 30,
 "name": "Air Conditioner",
 "code": "030",
@@ -2993,7 +726,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 31,
 "name": "Inverters",
 "code": "031",
@@ -3012,7 +745,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 32,
 "name": "UPS",
 "code": "032",
@@ -3031,7 +764,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 33,
 "name": "Plotters",
 "code": "033",
@@ -3050,7 +783,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 34,
 "name": "Printers",
 "code": "034",
@@ -3069,7 +802,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 35,
 "name": "computers and peripherals",
 "code": "035",
@@ -3088,7 +821,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 36,
 "name": "Furniture",
 "code": "036",
@@ -3104,10 +837,35 @@
 "version": "1.0",
 "depreciationRate": 15,
 "isDepreciationApplicable": true,
-"assetFieldsDefination": null
+"assetFieldsDefination": [
+{
+"name": "Type",
+"type": "Select",
+"isActive": true,
+"isMandatory": false,
+"values": "wood,plastic,steel",
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 },
 {
-"tenantId": "mh",
+"name": "Color",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+}
+]
+},
+{
+"tenantId": "default",
 "id": 37,
 "name": "Fittings ",
 "code": "037",
@@ -3126,7 +884,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 38,
 "name": "electrical appliances",
 "code": "038",
@@ -3145,7 +903,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 39,
 "name": "Fixtures",
 "code": "039",
@@ -3161,10 +919,35 @@
 "version": "1.0",
 "depreciationRate": 15,
 "isDepreciationApplicable": true,
-"assetFieldsDefination": null
+"assetFieldsDefination": [
+{
+"name": "Type",
+"type": "Select",
+"isActive": true,
+"isMandatory": false,
+"values": "wood,plastic,steel",
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 },
 {
-"tenantId": "mh",
+"name": "Color",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+}
+]
+},
+{
+"tenantId": "default",
 "id": 40,
 "name": "Computer software Licences",
 "code": "040",
@@ -3183,7 +966,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 41,
 "name": "NOC",
 "code": "041",
@@ -3202,7 +985,7 @@
 "assetFieldsDefination": null
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 42,
 "name": "Land",
 "code": "042",
@@ -3266,11 +1049,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 43,
 "name": "Open Land",
 "code": "043",
@@ -3324,7 +1155,31 @@
 "columns": []
 },
 {
-"name": "Width",
+"name": "Possession Date",
+"type": "Date",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
 "type": "Number",
 "isActive": true,
 "isMandatory": false,
@@ -3336,8 +1191,20 @@
 "columns": []
 },
 {
-"name": "Possession Date",
-"type": "Date",
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
 "isActive": true,
 "isMandatory": false,
 "values": null,
@@ -3350,7 +1217,7 @@
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 44,
 "name": "Play ground",
 "code": "044",
@@ -3414,11 +1281,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 45,
 "name": "Open Market",
 "code": "045",
@@ -3482,11 +1397,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 46,
 "name": "Dumping Ground",
 "code": "046",
@@ -3550,11 +1513,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 47,
 "name": "Lakes and ponds",
 "code": "047",
@@ -3618,11 +1629,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 48,
 "name": "Open Space",
 "code": "048",
@@ -3686,11 +1745,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 49,
 "name": "Land with Encroachments",
 "code": "049",
@@ -3754,11 +1861,59 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 },
 {
-"tenantId": "mh",
+"tenantId": "default",
 "id": 50,
 "name": "Open Theatre",
 "code": "050",
@@ -3822,6 +1977,98 @@
 "url": null,
 "order": null,
 "columns": []
+},
+{
+"name": "Agreement Reference No",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area of Land",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Holding Type",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Survey Number",
+"type": "Text",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+}
+]
+},
+{
+"tenantId": "default",
+"id": 51,
+"name": "Sewerage",
+"code": "051",
+"assetCategoryType": "IMMOVABLE",
+"parent": 2,
+"depreciationMethod": "STRAIGHT_LINE_METHOD",
+"isAssetAllow": true,
+"assetAccount": null,
+"accumulatedDepreciationAccount": null,
+"revaluationReserveAccount": null,
+"depreciationExpenseAccount": null,
+"unitOfMeasurement": "NOS",
+"version": "1.0",
+"depreciationRate": 6.66,
+"isDepreciationApplicable": true,
+"assetFieldsDefination": [
+{
+"name": "Capacity",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
+},
+{
+"name": "Area",
+"type": "Number",
+"isActive": true,
+"isMandatory": false,
+"values": null,
+"localText": null,
+"regExFormate": null,
+"url": null,
+"order": null,
+"columns": []
 }
 ]
 }
@@ -3829,37 +2076,57 @@
 "ModeOfAcquisition": [
 {
 "id": 1,
-"tenantId": "mh",
+"tenantId": "default",
 "code": "ACQUIRED",
 "name": "Acquired",
 "isActive": true
 },
 {
 "id": 2,
-"tenantId": "mh",
+"tenantId": "default",
 "code": "CONSTRUCTION",
 "name": "Construction",
 "isActive": true
 },
 {
 "id": 3,
-"tenantId": "mh",
+"tenantId": "default",
 "code": "PURCHASE",
 "name": "Purchase",
 "isActive": true
 },
 {
 "id": 4,
-"tenantId": "mh",
+"tenantId": "default",
 "code": "TENDER",
 "name": "Tender",
 "isActive": true
 },
 {
 "id": 5,
-"tenantId": "mh",
+"tenantId": "default",
 "code": "DONATION",
 "name": "Donation",
+"isActive": true
+}
+],
+"LayerType": [
+{
+"id": 1,
+"tenantId": "default",
+"name": "FAKE LAYER 1",
+"description": "./temp/images/headerLogo.png",
+"numberOfLayers": 2,
+"layerSize": 2,
+"isActive": true
+},
+{
+"id": 2,
+"tenantId": "default",
+"name": "FAKE LAYER 2",
+"description": "./temp/images/mortarlessPavement.jpg",
+"numberOfLayers": 4,
+"layeSize": 2,
 "isActive": true
 }
 ],
@@ -3868,7 +2135,7 @@
 "id": 1,
 "keyname": "EnableVoucherGeneration",
 "description": "Enable or Disable voucher generation for asset revaluation,disposal and depreciation",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "false",
@@ -3880,7 +2147,7 @@
 "id": 2,
 "keyname": "AssetRevaluationVoucherName",
 "description": "Voucher Name for Asset Revaluation",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "Asset Revaluation",
@@ -3892,7 +2159,7 @@
 "id": 3,
 "keyname": "AssetRevaluationVoucherDescription",
 "description": "Voucher Description for Asset Revaluation",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "Asset Revaluation Journal Voucher",
@@ -3904,7 +2171,7 @@
 "id": 4,
 "keyname": "AssetDisposalVoucherName",
 "description": "Voucher Name for Asset Disposal or Sale",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "Asset Disposal or Sale",
@@ -3916,7 +2183,7 @@
 "id": 5,
 "keyname": "AssetDisposalVoucherDescription",
 "description": "Voucher Description for Asset Disposal or Sale",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "Asset Disposal or Sale Journal Voucher",
@@ -3928,7 +2195,7 @@
 "id": 6,
 "keyname": "AssetDefaultCapitalizedValue",
 "description": "Asset Default Capitalized Value",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "1",
@@ -3940,7 +2207,7 @@
 "id": 7,
 "keyname": "AssetMinimumValue",
 "description": "Asset Minimum Value",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "5000",
@@ -3952,7 +2219,7 @@
 "id": 8,
 "keyname": "DepreciationSeparationDate",
 "description": "Asset Depreciation Separation Date",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "9/30/23/59/59",
@@ -3964,7 +2231,7 @@
 "id": 9,
 "keyname": "AssetDepreciationVoucherName",
 "description": "Voucher Name for Asset Depreciation",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "Asset Depreciation",
@@ -3976,7 +2243,7 @@
 "id": 10,
 "keyname": "AssetDepreciationVoucherDescription",
 "description": "Voucher Description for Asset Depreciation",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "Asset Depreciation Journal Voucher",
@@ -3988,7 +2255,7 @@
 "id": 11,
 "keyname": "AssetBatchSize",
 "description": "Asset Batch Size",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "500",
@@ -4000,7 +2267,7 @@
 "id": 12,
 "keyname": "DepreciationCFactor",
 "description": "Depreciation Multiple Factor For Half Financial Year",
-"tenantid": "mh",
+"tenantid": "default",
 "values": [
 {
 "value": "0.5",
@@ -4009,5 +2276,4 @@
 ]
 }
 ]
->>>>>>> Stashed changes
 }

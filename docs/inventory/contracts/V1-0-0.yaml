@@ -2031,6 +2031,10 @@ definitions:
           description: Tenant id of the Indent
           maxLength: 128
           minLength: 4
+        action:
+          type: string
+          description: Action to update Indent Details
+          maxLength: 50
         issueStore:
           format: singleValueList
           $ref: "#/definitions/Store"

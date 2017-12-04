@@ -1,13 +1,13 @@
 package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
-import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import io.swagger.models.auth.In;
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.MdmsRepository;
@@ -25,7 +25,6 @@ import org.egov.inv.model.IndentRequest;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
 import org.egov.inv.model.RequestInfo;
-import org.egov.inv.model.Store;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
@@ -42,6 +41,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import net.minidev.json.JSONArray;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Service
 @Transactional(readOnly = true)
 public class IndentService extends DomainService {
@@ -53,13 +54,16 @@ public class IndentService extends DomainService {
 
 	@Autowired
 	private IndentJdbcRepository indentRepository;
+
 	@Value("${inv.indents.save.topic}")
 	private String saveTopic;
+
 	@Value("${inv.indents.save.key}")
 	private String saveKey;
 
 	@Value("${inv.indents.update.topic}")
 	private String updateTopic;
+
 	@Value("${inv.indents.update.key}")
 	private String updateKey;
 
@@ -70,6 +74,18 @@ public class IndentService extends DomainService {
 	private StoreJdbcRepository storeJdbcRepository;
 	@Autowired
 	private MdmsRepository mdmsRepository;
+
+	@Value("${inv.indents.addquantity.topic}")
+	private String addQuantityTopic;
+
+	@Value("${inv.indents.subtractquantity.topic}")
+	private String subtractQuantityTopic;
+
+	@Value("${inv.indents.addquantity.key}")
+	private String addQuantitykey;
+
+	@Value("${inv.indents.subtractquantity.key}")
+	private String subtractQuantityKey;
 
 	private static final Logger LOG = LoggerFactory.getLogger(IndentService.class);
 
@@ -94,7 +110,7 @@ public class IndentService extends DomainService {
 
 				List<String> detailSequenceNos = indentRepository.getSequence(IndentDetail.class.getSimpleName(),
 						b.getIndentDetails().size());
-
+				setUpdatedQuantities(b);
 				for (IndentDetail d : b.getIndentDetails()) {
 					//save quantity in base uom
 					BigDecimal quantityInBaseUom = InventoryUtilities.getQuantityInBaseUom(d.getIndentQuantity(),d.getUom().getConversionFactor());
@@ -136,6 +152,9 @@ public class IndentService extends DomainService {
 			validate(indentRequest.getIndents(), Constants.ACTION_UPDATE);
 			for (Indent b : indentRequest.getIndents()) {
 				b.setIndentType(IndentTypeEnum.INDENTNOTE);
+				if (!isEmpty(b.getAction())){
+                    updateIndentQuantity(b);
+                }
 				int j = 0;
 				if (!indentNumber.isEmpty()) {
 					indentNumber = b.getIndentNumber();
@@ -198,7 +217,34 @@ public class IndentService extends DomainService {
 
 	}
 
-	
+
+	private void updateIndentQuantity(Indent indent) {
+		setUpdatedQuantities(indent);
+		if (!isEmpty(indent.getAction()) && "Add".equalsIgnoreCase(indent.getAction())) {
+			kafkaQue.send(addQuantityTopic, addQuantitykey, indent);
+		}
+		if (!isEmpty(indent.getAction()) && "Subtract".equalsIgnoreCase(indent.getAction())) {
+			kafkaQue.send(subtractQuantityTopic, subtractQuantityKey, indent);
+		}
+	}
+
+	private Indent setUpdatedQuantities(Indent indent){
+		for (IndentDetail indentDetail : indent.getIndentDetails()){
+			if (isEmpty(indentDetail.getIndentIssuedQuantity())){
+				indentDetail.setIndentIssuedQuantity(BigDecimal.valueOf(0L));
+			}
+			if (isEmpty(indentDetail.getInterstoreRequestQuantity())){
+				indentDetail.setInterstoreRequestQuantity(BigDecimal.valueOf(0L));
+			}
+			if (isEmpty(indentDetail.getPoOrderedQuantity())){
+				indentDetail.setPoOrderedQuantity(BigDecimal.valueOf(0L));
+			}
+			if (isEmpty(indentDetail.getTotalProcessedQuantity())){
+				indentDetail.setTotalProcessedQuantity(BigDecimal.valueOf(0L));
+			}
+		}
+		return indent;
+	}
 
 	private void validate(List<Indent> indents, String method) {
 		InvalidDataException errors = new InvalidDataException();

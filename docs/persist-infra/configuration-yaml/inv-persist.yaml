@@ -1085,4 +1085,41 @@ serviceMaps:
             - jsonPath: $.indents.*.indentDetails.*.id
             - jsonPath: $.indents.*.indentDetails.*.tenantId
 
+    - version: 1
+      name: Indent Details Quantity Update
+      description: update indent details quantity
+      fromTopic: inv-indents-addquantity-topic
+      queryMaps:
+        - query: >-
+            update indentdetail set  indentIssuedQuantity = indentIssuedQuantity+?, poOrderedQuantity = poOrderedQuantity+?,
+            totalProcessedQuantity = totalProcessedQuantity+?, interstoreRequestQuantity = interstoreRequestQuantity+?
+            where id = ? and tenantid = ?
+          basePath: $.indentDetails.*
+          jsonMaps:
+            - jsonPath: $.indentDetails.*.indentIssuedQuantity
+            - jsonPath: $.indentDetails.*.poOrderedQuantity
+            - jsonPath: $.indentDetails.*.totalProcessedQuantity
+            - jsonPath: $.indentDetails.*.interstoreRequestQuantity
+            - jsonPath: $.indentDetails.*.id
+            - jsonPath: $.indentDetails.*.tenantId
+
+    - version: 1
+      name: Indent Details Quantity Update
+      description: update indent details quantity
+      fromTopic: inv-indents-subtractquantity-topic
+      queryMaps:
+        - query: >-
+            update indentdetail set  indentIssuedQuantity = indentIssuedQuantity-?, poOrderedQuantity = poOrderedQuantity-?,
+            totalProcessedQuantity = totalProcessedQuantity-?, interstoreRequestQuantity = interstoreRequestQuantity-?
+            where id = ? and tenantid = ?
+          basePath: $.indentDetails.*
+          jsonMaps:
+            - jsonPath: $.indentDetails.*.indentIssuedQuantity
+            - jsonPath: $.indentDetails.*.poOrderedQuantity
+            - jsonPath: $.indentDetails.*.totalProcessedQuantity
+            - jsonPath: $.indentDetails.*.interstoreRequestQuantity
+            - jsonPath: $.indentDetails.*.id
+            - jsonPath: $.indentDetails.*.tenantId
+
+
 

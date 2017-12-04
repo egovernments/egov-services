@@ -1,27 +1,23 @@
 package org.egov.common;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.AuditDetails;
-import org.egov.inv.persistence.entity.IndentEntity;
+import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.*;
 
 @Repository
 public abstract class JdbcRepository {
@@ -38,7 +34,7 @@ public abstract class JdbcRepository {
     @Autowired
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 
-	public static synchronized void init(Class T) {
+    public static synchronized void init(Class T) {
         String TABLE_NAME = "";
 
         List<String> insertFields = new ArrayList<>();
@@ -101,17 +97,17 @@ public abstract class JdbcRepository {
             fieldNames.append(s);
             paramNames.append(":").append(s);
             persisterQ.append("?");
-           
+
             i++;
         }
 
-       // System.out.println(fields);
+        // System.out.println(fields);
         //System.out.println(uniqueFields);
-        persister=iQuery.toString();
-       
-        persister=persister.replace(":fields", fieldNames.toString()).replace(":params", persisterQ)
-        .replace(":tableName", tableName).toString();
-        System.out.println("persister   "+persister);
+        persister = iQuery.toString();
+
+        persister = persister.replace(":fields", fieldNames.toString()).replace(":params", persisterQ)
+                .replace(":tableName", tableName).toString();
+        System.out.println("persister   " + persister);
         iQuery = iQuery.replace(":fields", fieldNames.toString()).replace(":params", paramNames.toString())
                 .replace(":tableName", tableName).toString();
         System.out.println(tableName + "----" + iQuery);
@@ -124,9 +120,9 @@ public abstract class JdbcRepository {
             if (java.lang.reflect.Modifier.isStatic(f.getModifiers())) {
                 continue;
             }
-            
+
             if (f.getType().getSimpleName().equals(AuditDetails.class.getSimpleName())) {
-            	for (Field ff : AuditDetails.class.getDeclaredFields()) {
+                for (Field ff : AuditDetails.class.getDeclaredFields()) {
 
                     if (java.lang.reflect.Modifier.isStatic(ff.getModifiers())) {
                         continue;
@@ -141,7 +137,7 @@ public abstract class JdbcRepository {
             fields.add(f.getName());
         }
 
-         
+
         return fields;
     }
 
@@ -349,38 +345,74 @@ public abstract class JdbcRepository {
         jdbcTemplate.execute(delQuery);
     }
 
+
+    @Transactional
+    public void updateQuantity(String tableName, String id, String tenantId, HashMap<String, BigDecimal> columns, String operation) {
+        String updateQuery = null;
+
+        if (operation.equalsIgnoreCase("ADD")) {
+            updateQuery = "update " + tableName + " set " + addColumn(columns, "+") + " where id = '" + id + "' and tenantid = " + tenantId ;
+        }
+
+        if (operation.equalsIgnoreCase("SUBTRACT")) {
+            updateQuery = "update " + tableName + " set " + addColumn(columns, "-") + " where id = '" + "' and tenantid = " + tenantId ;
+        }
+
+        try {
+            jdbcTemplate.execute(updateQuery);
+        } catch (DataIntegrityViolationException ex) {
+            throw new CustomException("error", ex.getMessage());
+        } catch (Exception e) {
+            throw new CustomException("error", e.getMessage());
+        }
+    }
+
+    private String addColumn(HashMap<String, BigDecimal> columns, String sign) {
+        Iterator iterator = columns.entrySet().iterator();
+        StringBuilder addedColumns = new StringBuilder();
+        while (iterator.hasNext()) {
+            Map.Entry pair = (Map.Entry) iterator.next();
+            addedColumns.append(" " + pair.getKey() + " = " + pair.getKey() + sign + pair.getValue() + ",");
+        }
+
+        String totalQuery = addedColumns.toString();
+        return totalQuery.substring(0, totalQuery.length() - 1);
+    }
+
     public String getSequence(String seqName) {
         String seqQuery = "select nextval('" + seqName + "')";
         return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1);
     }
-    
+
     public String getSequence(Object ob) {
-    	 
+
         String seqQuery = "select nextval('seq_" + ob.getClass().getSimpleName() + "')";
         return String.valueOf(jdbcTemplate.queryForObject(seqQuery, Long.class) + 1);
     }
+
     /**
-     * Pass the object you want to persist. 
-     * @param ob 
+     * Pass the object you want to persist.
+     *
+     * @param ob
      * @param count
      * @return
      */
-    public List<String> getSequence(Object ob,int count) {
-   	 
-        String seqQuery = "select nextval('seq_" + ob.getClass().getSimpleName() + "')  FROM GENERATE_SERIES(1,"+count+")";
-         List<String> ids = jdbcTemplate.queryForList(seqQuery, String.class) ;
-         return ids;
+    public List<String> getSequence(Object ob, int count) {
+
+        String seqQuery = "select nextval('seq_" + ob.getClass().getSimpleName() + "')  FROM GENERATE_SERIES(1," + count + ")";
+        List<String> ids = jdbcTemplate.queryForList(seqQuery, String.class);
+        return ids;
     }
-    
-    public List<String> getSequence(String className,int count) {
-      	 
-        String seqQuery = "select nextval('seq_" + className + "')  FROM GENERATE_SERIES(1,"+count+")";
-         List<String> ids = jdbcTemplate.queryForList(seqQuery, String.class) ;
-         return ids;
+
+    public List<String> getSequence(String className, int count) {
+
+        String seqQuery = "select nextval('seq_" + className + "')  FROM GENERATE_SERIES(1," + count + ")";
+        List<String> ids = jdbcTemplate.queryForList(seqQuery, String.class);
+        return ids;
     }
 
 
-    @Transactional(propagation=Propagation.REQUIRES_NEW)
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
     public void createSequence(String seqName) {
         String seqQuery = "create sequence " + seqName + "";
         jdbcTemplate.execute(seqQuery);
@@ -524,25 +556,25 @@ public abstract class JdbcRepository {
         return count >= 1 ? false : true;
 
     }
+
     /**
-     * 
      * @param ids
      * @param tenantId
      * @param tableName
      * @param parentPkFieldName
      * @param parentPkValue
      */
-    public void markDeleted(List<String> ids,String tenantId,String tableName,String parentPkFieldName,String parentPkValue)
-    {
-    	Map<String, Object> paramValues = new HashMap<>();
-    	String query="update "+tableName+" set deleted=true where id not in (:ids) and tenantId=:tenantId and "
-    	+parentPkFieldName+"=:parentPkValue";
-    	paramValues.put("ids", ids);
-    	paramValues.put("tenantId", tenantId);
-    	paramValues.put("parentPkValue", parentPkValue);
-    	
+    public void markDeleted(List<String> ids, String tenantId, String tableName, String parentPkFieldName, String parentPkValue) {
+        Map<String, Object> paramValues = new HashMap<>();
+        String query = "update " + tableName + " set deleted=true where id not in (:ids) and tenantId=:tenantId and "
+                + parentPkFieldName + "=:parentPkValue";
+        paramValues.put("ids", ids);
+        paramValues.put("tenantId", tenantId);
+        paramValues.put("parentPkValue", parentPkValue);
+
         namedParameterJdbcTemplate.update(query.toString(), paramValues);
     }
+
     public void delete(Object entity, String reason) {
 
         String backupTable = "egf_deletedtxn";
@@ -603,26 +635,26 @@ public abstract class JdbcRepository {
         // paramValues.put("fieldValue", getValue(getField(ob,fieldName ), ob));
 
     }
-    
-	 
-	public Object findById(Object entity,String entityName) {
-		List<String> list = allIdentitiferFields.get(entityName);
 
-		Map<String, Object> paramValues = new HashMap<>();
 
-		for (String s : list) {
-			paramValues.put(s, getValue(getField(entity, s), entity));
-		}
+    public Object findById(Object entity, String entityName) {
+        List<String> list = allIdentitiferFields.get(entityName);
 
-		List<Object> indents = namedParameterJdbcTemplate.query(
-				getByIdQuery.get(entityName), paramValues,
-				new BeanPropertyRowMapper(entity.getClass()));
-		if (indents.isEmpty()) {
-			return null;
-		} else {
-			return indents.get(0);
-		}
+        Map<String, Object> paramValues = new HashMap<>();
 
-	}
+        for (String s : list) {
+            paramValues.put(s, getValue(getField(entity, s), entity));
+        }
+
+        List<Object> indents = namedParameterJdbcTemplate.query(
+                getByIdQuery.get(entityName), paramValues,
+                new BeanPropertyRowMapper(entity.getClass()));
+        if (indents.isEmpty()) {
+            return null;
+        } else {
+            return indents.get(0);
+        }
+
+    }
 
 }

@@ -88,12 +88,7 @@ public class VehicleMaintenanceDetailsService {
     public Pagination<VehicleMaintenanceDetails> search(
             final VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch) {
 
-        final Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList = vehicleMaintenanceDetailsRepository
-                .search(vehicleMaintenanceDetailsSearch);
-
-        populateVehicleData(vehicleMaintenanceDetailsList.getPagedData());
-
-        return vehicleMaintenanceDetailsList;
+        return vehicleMaintenanceDetailsRepository.search(vehicleMaintenanceDetailsSearch);
     }
 
     public long calaculateNextSceduledMaintenanceDate(final String tenantId, final String vehicleRegNumber) {
@@ -124,26 +119,6 @@ public class VehicleMaintenanceDetailsService {
 
         if (codesList.size() != codesList.stream().distinct().count())
             throw new CustomException("Code", "Duplicate codes in given Vehicle Maintenance Details:");
-    }
-
-    private List<VehicleMaintenanceDetails> populateVehicleData(
-            final List<VehicleMaintenanceDetails> vehicleMaintenanceDetailsList) {
-
-        for (final VehicleMaintenanceDetails vehicleMaintenanceDetail : vehicleMaintenanceDetailsList)
-            if (vehicleMaintenanceDetail.getVehicle() != null
-                    && vehicleMaintenanceDetail.getVehicle().getRegNumber() != null
-                    && !vehicleMaintenanceDetail.getVehicle().getRegNumber().isEmpty()) {
-
-                final VehicleSearch vehicleSearch = new VehicleSearch();
-                vehicleSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-                vehicleSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
-                final Pagination<Vehicle> vehicleList = vehicleRepository.search(vehicleSearch);
-
-                if (vehicleList != null || vehicleList.getPagedData() != null || !vehicleList.getPagedData().isEmpty())
-                    vehicleMaintenanceDetail.setVehicle(vehicleList.getPagedData().get(0));
-            }
-
-        return vehicleMaintenanceDetailsList;
     }
 
     private void validate(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {

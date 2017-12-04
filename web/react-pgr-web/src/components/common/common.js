@@ -2241,7 +2241,7 @@ var localization_EN_Data = {
 "vendorcontracts.create.isActive": "Is Active",
 "vendorcontracts.create.isNotActive": "Is Not Active",
 "vendorcontracts.create.group.title.VendorContractDetails": "Vendor Contract Details",
-
+"swm.vehiclemaintenancedetails.search.title": "Search",
 
 "reports.swm.dumpingground": "Dumping Ground",
 "reports.swm.collectiontype": "Collection Type",

@@ -7,7 +7,7 @@ var dat = {
     "groups": [
       {
         "name": "search",
-        "label": "swm.search.title",
+        "label": "swm.vehiclemaintenancedetails.search.title",
         "fields": [
           {
             "name": "maintenanceType",
@@ -61,8 +61,8 @@ var dat = {
         }
       ],
       "values": [
-        "regNumber",
-        "name",
+        "vehicle.regNumber",
+        "vehicle.vehicleType.name",
         "vehicleScheduledMaintenanceDate",
         "costIncurred"
       ],
@@ -151,21 +151,18 @@ var dat = {
             "patternErrorMsg": "",
             "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
             "autoCompleteDependancy": {
-              "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}",
+              "autoCompleteUrl": "/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}",
               "autoFillFields": {
-                "vehicleMaintenanceDetails[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name",
-                "vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate": "vehicles[0].insuranceDetails.insuranceValidityDate",
+                "vehicleMaintenanceDetails[0].vehicle.vehicleType.code": "vehicleMaintenances[0].vehicle.vehicleType.name",
+                "vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate": 
+		"vehicleMaintenances[0].vehicle.insuranceDetails.insuranceValidityDate",
+ 		"vehicleMaintenanceDetails[0].downtimeDefined": "vehicleMaintenances[0].downtimeforMaintenance"
               }
             },
             "depedants": [{
                 "jsonPath": "vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate",
                 "type": "date",
                 "pattern": "/swm-services/vehiclemaintenancedetails/_getnextscheduleddate?vehicleRegNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name"
-              },
-              {
-                "jsonPath": "vehicleMaintenanceDetails[0].downtime",
-                "type": "text",
-                "pattern": "/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name"
               }
             ]
           },
@@ -234,13 +231,13 @@ var dat = {
           },
           {
             "name": "Downtimedefined",
-            "jsonPath": "vehicleMaintenanceDetails[0].downtime",
+            "jsonPath": "vehicleMaintenanceDetails[0].downtimeDefined",
             "label": "swm.create.DowntimeDefined",
             "pattern": "",
             "type": "text",
             "hide": true,
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "patternErrorMsg": "",
             "url": ""
@@ -318,48 +315,20 @@ var dat = {
             "name": "",
             "jsonPath": "vehicleMaintenanceDetails[0].isScheduled",
             "label": "swm.create.isScheduled",
-            "type": "checkbox",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "patternErrorMsg": "",
-            "defaultValue": false,
-            "showHideFields": [{
-              "ifValue": true,
-              "hide": [],
-              "show": [
-                {
-                  "name": "vehicleScheduledMaintenanceDate",
-                  "isGroup": false,
-                  "isField": true
-                },
-                {
-                  "name": "insuranceValidityDate",
-                  "isGroup": false,
-                  "isField": true
-                },
-                {
-                  "name": "Downtimedefined",
-                  "isGroup": false,
-                  "isField": true
-                }
-              ]
-            }] 
+            "defaultValue": false 
           },
           {
             "name": "maintenanceType",
             "jsonPath": "vehicleMaintenanceDetails[0].maintenanceType",
             "label": "swm.create.maintenanceType",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "defaultValue": [{
-                key: "MAINTENANCE",
-                value: "Maintenance"
-              },{
-                key: "REPAIR",
-                value: "Repair"
-              }],
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": ""
@@ -375,32 +344,13 @@ var dat = {
             "jsonPath": "vehicleMaintenanceDetails[0].vehicle.regNumber",
             "label": "vehiclefuellingdetails.create.regNumber",
             "pattern": "",
-            "type": "autoCompelete",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 12,
             "minLength": 6,
-            "patternErrorMsg": "",
-            "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
-            "autoCompleteDependancy": {
-              "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}",
-              "autoFillFields": {
-                "vehicleMaintenanceDetails[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name",
-                "vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate": "vehicles[0].insuranceDetails.insuranceValidityDate",
-              }
-            },
-            "depedants": [{
-                "jsonPath": "vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate",
-                "type": "date",
-                "pattern": "/swm-services/vehiclemaintenancedetails/_getnextscheduleddate?vehicleRegNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name"
-              },
-              {
-                "jsonPath": "vehicleMaintenanceDetails[0].downtime",
-                "type": "text",
-                "pattern": "/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name"
-              }
-            ]
+            "patternErrorMsg": ""
           },
           {
             "name": "name",
@@ -422,7 +372,7 @@ var dat = {
             "label": "swm.create.vehicleScheduledMaintenanceDate",
             "pattern": "",
             "hide": true,
-            "type": "date",
+            "type": "datePicker",
             "isRequired": false,
             "isDisabled": true,
             "defaultValue": "",
@@ -458,25 +408,12 @@ var dat = {
             "jsonPath": "vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate",
             "label": "swm.create.insuranceDetails.insuranceValidityDate",
             "pattern": "",
-            "type": "date",
+            "type": "datePicker",
             "isRequired": false,
             "isDisabled": true,
             "hide": true,
             "defaultValue": "",
             "patternErrorMsg": ""
-          },
-          {
-            "name": "Downtimedefined",
-            "jsonPath": "vehicleMaintenanceDetails[0].downtime",
-            "label": "swm.create.DowntimeDefined",
-            "pattern": "",
-            "type": "text",
-            "hide": true,
-            "isRequired": false,
-            "isDisabled": false,
-            "defaultValue": "",
-            "patternErrorMsg": "",
-            "url": ""
           },
           {
             "name": "vehicleReadingDuringMaintenance",
@@ -505,18 +442,9 @@ var dat = {
             "jsonPath": "vehicleMaintenanceDetails[0].vehicleDownTimeActualUom",
             "label": "swm.create.vehicleDownTimeActualUom",
             "pattern": "",
-            "type": "singleValueList",
+            "type": "text",
             "isRequired": true,
             "isDisabled": false,
-            "defaultValue": [
-              {
-                key: "Hrs",
-                value: "Hrs"
-              },
-              {
-                key: "Days",
-                value: "Days"
-            }],
             "patternErrorMsg": ""
           },
           {
@@ -542,6 +470,7 @@ var dat = {
     "numCols": 4,
     "useTimestamp": true,
     "objectName": "vehicleMaintenanceDetails",
+    "idJsonPath": "vehicleMaintenanceDetails[0].code",
     "groups": [
       {
         "name": "Selection",
@@ -617,10 +546,12 @@ var dat = {
             "patternErrorMsg": "",
             "url": "swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber",
             "autoCompleteDependancy": {
-              "autoCompleteUrl": "/swm-services/vehicles/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}",
+             "autoCompleteUrl": "/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}",
               "autoFillFields": {
-                "vehicleMaintenanceDetails[0].vehicle.vehicleType.code": "vehicles[0].vehicleType.name",
-                "vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate": "vehicles[0].insuranceDetails.insuranceValidityDate",
+                "vehicleMaintenanceDetails[0].vehicle.vehicleType.code": "vehicleMaintenances[0].vehicle.vehicleType.name",
+                "vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate": 
+		"vehicleMaintenances[0].vehicle.insuranceDetails.insuranceValidityDate",
+		"vehicleMaintenanceDetails[0].downtimeDefined": "vehicleMaintenances[0].downtimeforMaintenance"
               }
             },
             "depedants": [{
@@ -700,13 +631,13 @@ var dat = {
           },
           {
             "name": "Downtimedefined",
-            "jsonPath": "vehicleMaintenanceDetails[0].downtime",
+            "jsonPath": "vehicleMaintenanceDetails[0].downtimeDefined",
             "label": "swm.create.DowntimeDefined",
             "pattern": "",
             "type": "text",
             "hide": true,
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "patternErrorMsg": "",
             "url": ""

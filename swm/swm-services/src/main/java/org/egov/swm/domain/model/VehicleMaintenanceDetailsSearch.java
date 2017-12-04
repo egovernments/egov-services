@@ -11,7 +11,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class VehicleMaintenanceDetailsSearch extends VehicleMaintenanceDetails {
     private String codes;
-    private String vehicleCode;
+    private String regNumber;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

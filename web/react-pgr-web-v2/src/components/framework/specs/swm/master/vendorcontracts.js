@@ -441,7 +441,7 @@ var dat = {
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 500,
-            "minLength": 15,
+            "minLength": 0,
             "patternErrorMsg": ""
           }
         ]

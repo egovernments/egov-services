@@ -1,5 +1,6 @@
 package org.egov.swm.persistence.entity;
 
+import org.egov.swm.domain.enums.MaintenanceType;
 import org.egov.swm.domain.model.AuditDetails;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleMaintenanceDetails;
@@ -56,6 +57,7 @@ public class VehicleMaintenanceDetailsEntity {
                 .vehicleDowntimeActual(vehicledowntimeactual).vehicleDownTimeActualUom(vehicledowntimeactualuom)
                 .vehicleReadingDuringMaintenance(vehiclereadingduringmaintenance).remarks(remarks)
                 .costIncurred(costincurred)
+                .maintenanceType(MaintenanceType.valueOf(maintenancetype))
                 .auditDetails(AuditDetails.builder().createdBy(createdBy).createdTime(createdTime)
                         .lastModifiedBy(lastModifiedBy).lastModifiedTime(lastModifiedTime).build())
                 .build();

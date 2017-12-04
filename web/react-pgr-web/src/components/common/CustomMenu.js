@@ -344,6 +344,7 @@ const menuConvention={
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch":"/search/perfManagement/actualKpiUpdate/view",
 
 //Inventoy Service
+
 "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",
 // "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/search/inventory/supplier/view",
 "Inventory.Inventory Masters.Supplier Master.Supplier Search":"/search/inventory/supplier/view",
@@ -374,9 +375,9 @@ const menuConvention={
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Update" : "/search/inventory/openingbalance/update",
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Search" : "/search/inventory/openingbalance/view",
 
-"Inventory.Inventory Transactions.Material Issue.Material Issue Create" : "/create/inventory/materialissues",
-"Inventory.Inventory Transactions.Material Issue.Material Issue Update" : "/search/inventory/materialissues/update",
-"Inventory.Inventory Transactions.Material Issue.Material Issue Search" : "/search/inventory/materialissues/view",
+"Inventory.Inventory Transactions.Material Issue.Material Issues Create" : "/non-framework/inventory/transaction/materialissue/SearchIndentMaterialIssue",
+"Inventory.Inventory Transactions.Material Issue.Material Issues Update" : "/search/inventory/materialissues/update",
+"Inventory.Inventory Transactions.Material Issue.Material Issues Search" : "/search/inventory/materialissues/view",
 
 //Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",

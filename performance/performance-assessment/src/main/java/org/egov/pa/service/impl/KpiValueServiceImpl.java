@@ -50,6 +50,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 		for (ValueResponse vr : valueResponseList) {
 			for (KpiValueDetail detail : vr.getKpiValue().getValueList()) {
 				detail.setValueid(vr.getKpiValue().getId());
+				detail.setKpiCode(vr.getKpiValue().getKpiCode());
 			}
 		}
 	}
@@ -88,7 +89,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 			for (int j = 0; j < kpiValueList.get(i).getValueList().size(); j++) {
 				kpiValueList.get(i).getValueList().get(j).setValueid(kpiValueList.get(i).getId());
 			}
-			if(kpiValueSearchReq.getKpiCodes().contains(kpiValueList.get(i).getKpiCode())) { 
+			if(null != kpiValueSearchReq.getKpiCodes() && kpiValueSearchReq.getKpiCodes().contains(kpiValueList.get(i).getKpiCode())) { 
 				kpiCodeList.add(kpiValueList.get(i).getKpiCode());
 			}
 		}

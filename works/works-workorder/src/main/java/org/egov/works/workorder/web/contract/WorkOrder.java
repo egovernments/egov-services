@@ -1,22 +1,24 @@
 package org.egov.works.workorder.web.contract;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import io.swagger.annotations.ApiModel;
-import io.swagger.annotations.ApiModelProperty;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 
 /**
  * An Object that holds the basic data for a Work Order
  */
 @ApiModel(description = "An Object that holds the basic data for a Work Order")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-30T11:45:24.744Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T07:18:54.555Z")
 
 public class WorkOrder {
     @JsonProperty("id")
@@ -52,6 +54,9 @@ public class WorkOrder {
     @JsonProperty("stateId")
     private String stateId = null;
 
+    @JsonProperty("deleted")
+    private Boolean deleted = false;
+
     public WorkOrder id(String id) {
         this.id = id;
         return this;
@@ -59,11 +64,9 @@ public class WorkOrder {
 
     /**
      * Unique Identifier of the Work Order
-     *
      * @return id
      **/
     @ApiModelProperty(value = "Unique Identifier of the Work Order")
-
 
     public String getId() {
         return id;
@@ -80,7 +83,6 @@ public class WorkOrder {
 
     /**
      * Tenant id of the Work Order
-     *
      * @return tenantId
      **/
     @ApiModelProperty(required = true, value = "Tenant id of the Work Order")
@@ -102,7 +104,6 @@ public class WorkOrder {
 
     /**
      * LOA reference
-     *
      * @return letterOfAcceptance
      **/
     @ApiModelProperty(required = true, value = "LOA reference")
@@ -133,7 +134,6 @@ public class WorkOrder {
 
     /**
      * Array of Work Order Details
-     *
      * @return workOrderDetails
      **/
     @ApiModelProperty(value = "Array of Work Order Details")
@@ -154,13 +154,12 @@ public class WorkOrder {
     }
 
     /**
-     * Epoch time of Work Order Date
-     *
+     * Epoch time of Work Order Date. If the Work order is spillover then the Work Order Date is user entered. Otherwise it is
+     * default to current date. This field is allowed to edit during rejected status or drafts for Spillover Work Order.
      * @return workOrderDate
      **/
-    @ApiModelProperty(required = true, value = "Epoch time of Work Order Date")
+    @ApiModelProperty(required = true, value = "Epoch time of Work Order Date. If the Work order is spillover then the Work Order Date is user entered. Otherwise it is default to current date. This field is allowed to edit during rejected status or drafts for Spillover Work Order.")
     @NotNull
-
 
     public Long getWorkOrderDate() {
         return workOrderDate;
@@ -176,11 +175,11 @@ public class WorkOrder {
     }
 
     /**
-     * Work Order Number. Auto generated.
-     *
+     * Work Order Number. Auto generated. If the Work order is spillover then the Work Order number is user entered. Otherwise it
+     * is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Work Order.
      * @return workOrderNumber
      **/
-    @ApiModelProperty(value = "Work Order Number. Auto generated.")
+    @ApiModelProperty(value = "Work Order Number. Auto generated. If the Work order is spillover then the Work Order number is user entered. Otherwise it is auto generated. This field is allowed to edit during rejected status or drafts for Spillover Work Order.")
 
     @Pattern(regexp = "[a-zA-Z0-9-/]+")
     @Size(max = 50)
@@ -207,7 +206,6 @@ public class WorkOrder {
 
     /**
      * Array of document details
-     *
      * @return documentDetails
      **/
     @ApiModelProperty(value = "Array of document details")
@@ -229,7 +227,6 @@ public class WorkOrder {
 
     /**
      * Get workFlowDetails
-     *
      * @return workFlowDetails
      **/
     @ApiModelProperty(value = "")
@@ -251,7 +248,6 @@ public class WorkOrder {
 
     /**
      * Get auditDetails
-     *
      * @return auditDetails
      **/
     @ApiModelProperty(value = "")
@@ -273,7 +269,6 @@ public class WorkOrder {
 
     /**
      * Get status
-     *
      * @return status
      **/
     @ApiModelProperty(value = "")
@@ -295,11 +290,9 @@ public class WorkOrder {
 
     /**
      * State id of the workflow
-     *
      * @return stateId
      **/
     @ApiModelProperty(value = "State id of the workflow")
-
 
     public String getStateId() {
         return stateId;
@@ -309,9 +302,27 @@ public class WorkOrder {
         this.stateId = stateId;
     }
 
+    public WorkOrder deleted(Boolean deleted) {
+        this.deleted = deleted;
+        return this;
+    }
+
+    /**
+     * Boolean value to identify whether the object is deleted or not from UI.
+     * @return deleted
+     **/
+    @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+    public Boolean getDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(Boolean deleted) {
+        this.deleted = deleted;
+    }
 
     @Override
-    public boolean equals(Object o) {
+    public boolean equals(java.lang.Object o) {
         if (this == o) {
             return true;
         }
@@ -329,12 +340,14 @@ public class WorkOrder {
                 Objects.equals(this.workFlowDetails, workOrder.workFlowDetails) &&
                 Objects.equals(this.auditDetails, workOrder.auditDetails) &&
                 Objects.equals(this.status, workOrder.status) &&
-                Objects.equals(this.stateId, workOrder.stateId);
+                Objects.equals(this.stateId, workOrder.stateId) &&
+                Objects.equals(this.deleted, workOrder.deleted);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails, workFlowDetails, auditDetails, status, stateId);
+        return Objects.hash(id, tenantId, letterOfAcceptance, workOrderDetails, workOrderDate, workOrderNumber, documentDetails,
+                workFlowDetails, auditDetails, status, stateId, deleted);
     }
 
     @Override
@@ -353,19 +366,18 @@ public class WorkOrder {
         sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
         sb.append("    status: ").append(toIndentedString(status)).append("\n");
         sb.append("    stateId: ").append(toIndentedString(stateId)).append("\n");
+        sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
         sb.append("}");
         return sb.toString();
     }
 
     /**
-     * Convert the given object to string with each line indented by 4 spaces
-     * (except the first line).
+     * Convert the given object to string with each line indented by 4 spaces (except the first line).
      */
-    private String toIndentedString(Object o) {
+    private String toIndentedString(java.lang.Object o) {
         if (o == null) {
             return "null";
         }
         return o.toString().replace("\n", "\n    ");
     }
 }
-

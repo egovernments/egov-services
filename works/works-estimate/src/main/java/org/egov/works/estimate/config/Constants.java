@@ -315,4 +315,7 @@ public class Constants {
     public static final String MESSAGE_INVALID_WORKORDER_FLAG = "When workorder creates checked detailed estimate created flag is required";
 
     
+    public static final String KEY_INVALID_GROSSBILLEDAMOUNT = "UNIQUE_GROSSBILLEDAMOUNT";
+    public static final String MESSAGE_INVALID_GROSSBILLEDAMOUNT = "Gross billed amount should be greater then 0";
+    
 }

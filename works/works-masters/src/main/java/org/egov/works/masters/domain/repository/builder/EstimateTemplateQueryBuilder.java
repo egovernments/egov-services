@@ -11,8 +11,8 @@ import java.util.Map;
 @Service
 public class EstimateTemplateQueryBuilder {
     public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_estimatetemplate et";
-    public static final String GET_ESTIMATETEMPLATE_ACTIVTIES_BY_ET="select * from egw_estimatetemplateactivities where tenantid = :tenantId and estimatetemplate=:estimateTemplate;";
-    public static final String GET_NONSORRATE_BY_ID="select * from egw_nonsor where tenantid = :tenantId and id=:nonSorId;";
+    public static final String GET_ESTIMATETEMPLATE_ACTIVTIES_BY_ET="select * from egw_estimatetemplateactivities where tenantid = :tenantId and deleted=false and estimatetemplate=:estimateTemplate;";
+    public static final String GET_NONSORRATE_BY_ID="select * from egw_nonsor where tenantid = :tenantId and deleted=false and id=:nonSorId;";
 
     public String getSearchQuery(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria, Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
@@ -35,7 +35,7 @@ public class EstimateTemplateQueryBuilder {
 
     private void appendParams(EstimateTemplateSearchCriteria estimateTemplateSearchCriteria, Map params, StringBuilder selectQuery) {
 
-        selectQuery.append(" where et.id is not null");
+        selectQuery.append(" where et.id is not null and deleted=false");
 
         if (estimateTemplateSearchCriteria.getTenantId() != null) {
             selectQuery.append(" and et.tenantid = :tenantId");

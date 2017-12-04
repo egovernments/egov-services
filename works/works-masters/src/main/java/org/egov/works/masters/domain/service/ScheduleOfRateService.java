@@ -62,7 +62,7 @@ public class ScheduleOfRateService {
                 }
             }
         }
-        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateCreateValidatedTopic(), scheduleOfRateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateSaveOrUpdateValidatedTopic(), scheduleOfRateRequest);
         response.setScheduleOfRates(scheduleOfRateRequest.getScheduleOfRates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));
         return new ResponseEntity<>(response, HttpStatus.OK);
@@ -85,7 +85,7 @@ public class ScheduleOfRateService {
             }
         }
 
-        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateUpdateValidatedTopic(), scheduleOfRateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterSorrateSaveOrUpdateValidatedTopic(), scheduleOfRateRequest);
 
         response.setScheduleOfRates(scheduleOfRateRequest.getScheduleOfRates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(scheduleOfRateRequest.getRequestInfo(), true));

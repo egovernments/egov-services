@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds SOR Rate Details for the given Schedule Of Rate. No Overlapping of rates expected for the same period.
  */
 @ApiModel(description = "An Object that holds SOR Rate Details for the given Schedule Of Rate. No Overlapping of rates expected for the same period.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T05:49:05.088Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
 public class SORRate   {
   @JsonProperty("id")
@@ -34,6 +34,9 @@ public class SORRate   {
 
   @JsonProperty("rate")
   private BigDecimal rate = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -85,10 +88,10 @@ public class SORRate   {
   }
 
    /**
-   * unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'
+   * unique reference from 'ScheduleOfRate'. Primary key is ref. here.
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(required = true, value = "unique reference from 'ScheduleOfRate'. We will store primary key of 'ScheduleOfRate'")
+  @ApiModelProperty(value = "unique reference from 'ScheduleOfRate'. Primary key is ref. here.")
 
 
   public String getScheduleOfRate() {
@@ -162,6 +165,26 @@ public class SORRate   {
     this.rate = rate;
   }
 
+  public SORRate deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public SORRate auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -199,12 +222,13 @@ public class SORRate   {
         Objects.equals(this.fromDate, soRRate.fromDate) &&
         Objects.equals(this.toDate, soRRate.toDate) &&
         Objects.equals(this.rate, soRRate.rate) &&
+        Objects.equals(this.deleted, soRRate.deleted) &&
         Objects.equals(this.auditDetails, soRRate.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, scheduleOfRate, fromDate, toDate, rate, auditDetails);
+    return Objects.hash(id, tenantId, scheduleOfRate, fromDate, toDate, rate, deleted, auditDetails);
   }
 
   @Override
@@ -218,6 +242,7 @@ public class SORRate   {
     sb.append("    fromDate: ").append(toIndentedString(fromDate)).append("\n");
     sb.append("    toDate: ").append(toIndentedString(toDate)).append("\n");
     sb.append("    rate: ").append(toIndentedString(rate)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

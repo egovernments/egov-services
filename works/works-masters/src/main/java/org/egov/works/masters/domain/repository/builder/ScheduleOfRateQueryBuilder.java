@@ -13,8 +13,8 @@ public class ScheduleOfRateQueryBuilder {
     public static final String BASE_SEARCH_QUERY = "SELECT * FROM egw_scheduleofrate sor";
     public static final String SORRATE_SEARCH_EXTENTION = ", egw_sorrate sorrate";
     public static final String MARKETRATE_SEARCH_EXTENTION = ", egw_marketrate marketrate";
-    public static final String GETSORRATE_BY_SCHEDULEOFRATE="select * from egw_sorrate where tenantid = :tenantId and scheduleofrate=:scheduleOfRate;";
-    public static final String GETMARKETRATE_BY_SCHEDULEOFRATE="select * from egw_marketrate where tenantid = :tenantId and scheduleofrate=:scheduleOfRate;";
+    public static final String GETSORRATE_BY_SCHEDULEOFRATE="select * from egw_sorrate where tenantid = :tenantId and deleted=false and scheduleofrate=:scheduleOfRate;";
+    public static final String GETMARKETRATE_BY_SCHEDULEOFRATE="select * from egw_marketrate where tenantid = :tenantId and deleted=false and scheduleofrate=:scheduleOfRate;";
 
     public String getSearchQuery(ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria, Map params) {
         StringBuilder selectQuery = new StringBuilder(BASE_SEARCH_QUERY);
@@ -48,7 +48,7 @@ public class ScheduleOfRateQueryBuilder {
             isMarketRate = Boolean.TRUE;
         }
 
-        selectQuery.append(" where sor.id is not null");
+        selectQuery.append(" where sor.id is not null and deleted=false");
 
         if(isSorRate) {
             selectQuery.append(" and sorrate.scheduleofrate=sor.code and :validSORRateDate between sorrate.fromdate and sorrate.todate");

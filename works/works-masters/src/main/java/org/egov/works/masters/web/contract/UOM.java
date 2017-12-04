@@ -12,7 +12,7 @@ import java.util.Objects;
 /**
  * UOM
  */
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-02T07:23:18.632Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
 public class UOM   {
   @JsonProperty("id")

@@ -14,7 +14,7 @@ import java.util.Objects;
  * An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.
  */
 @ApiModel(description = "An Object that holds Activities for a given Estimate template. Either SOR or NON SOR is mandatory.")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-09T13:20:32.652Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-04T10:03:03.894Z")
 
 public class EstimateTemplateActivities   {
   @JsonProperty("id")
@@ -37,6 +37,9 @@ public class EstimateTemplateActivities   {
 
   @JsonProperty("unitRate")
   private BigDecimal unitRate = null;
+
+  @JsonProperty("deleted")
+  private Boolean deleted = false;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -91,7 +94,7 @@ public class EstimateTemplateActivities   {
    * The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.
    * @return estimateTemplate
   **/
-  @ApiModelProperty(required = true, value = "The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.")
+  @ApiModelProperty(value = "The estimate template of the Template activity. Unique reference from 'EstimateTemplate'. Primary key is ref. here.")
 
 
   public String getEstimateTemplate() {
@@ -108,10 +111,10 @@ public class EstimateTemplateActivities   {
   }
 
    /**
-   * The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'.Primary key is ref. here.
+   * The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'. Primary key is ref. here.
    * @return scheduleOfRate
   **/
-  @ApiModelProperty(value = "The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'.Primary key is ref. here.")
+  @ApiModelProperty(value = "The Schedue of Rate of the Template activity. Unique reference from 'ScheduleOfRate'. Primary key is ref. here.")
 
 
   public String getScheduleOfRate() {
@@ -128,10 +131,10 @@ public class EstimateTemplateActivities   {
   }
 
    /**
-   * UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.
+   * UOM for the Estimate Template Activity. Unique reference from 'UOM'. Code is ref. here.
    * @return uom
   **/
-  @ApiModelProperty(required = true, value = "UOM for the Estimate Template Activity. Unique reference from 'UOM'. Primary key is ref. here.")
+  @ApiModelProperty(required = true, value = "UOM for the Estimate Template Activity. Unique reference from 'UOM'. Code is ref. here.")
   @NotNull
 
 
@@ -185,6 +188,26 @@ public class EstimateTemplateActivities   {
     this.unitRate = unitRate;
   }
 
+  public EstimateTemplateActivities deleted(Boolean deleted) {
+    this.deleted = deleted;
+    return this;
+  }
+
+   /**
+   * Boolean value to identify whether the object is deleted or not from UI.
+   * @return deleted
+  **/
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+
+
+  public Boolean getDeleted() {
+    return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+    this.deleted = deleted;
+  }
+
   public EstimateTemplateActivities auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -223,12 +246,13 @@ public class EstimateTemplateActivities   {
         Objects.equals(this.uom, estimateTemplateActivities.uom) &&
         Objects.equals(this.nonSOR, estimateTemplateActivities.nonSOR) &&
         Objects.equals(this.unitRate, estimateTemplateActivities.unitRate) &&
+        Objects.equals(this.deleted, estimateTemplateActivities.deleted) &&
         Objects.equals(this.auditDetails, estimateTemplateActivities.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, estimateTemplate, scheduleOfRate, uom, nonSOR, unitRate, auditDetails);
+    return Objects.hash(id, tenantId, estimateTemplate, scheduleOfRate, uom, nonSOR, unitRate, deleted, auditDetails);
   }
 
   @Override
@@ -243,6 +267,7 @@ public class EstimateTemplateActivities   {
     sb.append("    uom: ").append(toIndentedString(uom)).append("\n");
     sb.append("    nonSOR: ").append(toIndentedString(nonSOR)).append("\n");
     sb.append("    unitRate: ").append(toIndentedString(unitRate)).append("\n");
+    sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

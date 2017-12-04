@@ -56,7 +56,7 @@ public class EstimateTemplateService {
                 estimateTemplateActivities.setEstimateTemplate(estimateTemplate.getId());
             }
         }
-        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateCreateValidatedTopic(), estimateTemplateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateSaveOrUpdateValidatedTopic(), estimateTemplateRequest);
 
         response.setEstimateTemplates(estimateTemplateRequest.getEstimateTemplates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(estimateTemplateRequest.getRequestInfo(), true));
@@ -75,7 +75,7 @@ public class EstimateTemplateService {
             }
         }
 
-        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateUpdateValidatedTopic(), estimateTemplateRequest);
+        kafkaTemplate.send(propertiesManager.getWorksMasterEstimateTemplateSaveOrUpdateValidatedTopic(), estimateTemplateRequest);
 
         response.setEstimateTemplates(estimateTemplateRequest.getEstimateTemplates());
         response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(estimateTemplateRequest.getRequestInfo(), true));

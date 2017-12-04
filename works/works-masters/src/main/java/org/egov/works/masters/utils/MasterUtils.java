@@ -26,16 +26,10 @@ public class MasterUtils {
 
     public AuditDetails getAuditDetails(final RequestInfo requestInfo, final Boolean isUpdate) {
         AuditDetails auditDetails = new AuditDetails();
-        if (isUpdate) {
-            auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-            auditDetails.setLastModifiedTime(new Date().getTime());
-        } else {
-            auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
-            auditDetails.setCreatedTime(new Date().getTime());
-            auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
-            auditDetails.setLastModifiedTime(new Date().getTime());
-        }
-
+        auditDetails.setCreatedBy(requestInfo.getUserInfo().getUserName());
+        auditDetails.setCreatedTime(new Date().getTime());
+        auditDetails.setLastModifiedBy(requestInfo.getUserInfo().getUserName());
+        auditDetails.setLastModifiedTime(new Date().getTime());
         return auditDetails;
     }
 }

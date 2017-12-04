@@ -25,17 +25,11 @@ public class PropertiesManager {
     @Value("${egov.services.works.masters.pagesize.max}")
     private String pageSizeMax;
 
-    @Value("${egov.services.works.masters.sorrate.create.validated}")
-    private String worksMasterSorrateCreateValidatedTopic;
+    @Value("${egov.services.works.masters.sorrate.saveorupdate.validated}")
+    private String worksMasterSorrateSaveOrUpdateValidatedTopic;
 
-    @Value("${egov.services.works.masters.sorrate.update.validated}")
-    private String worksMasterSorrateUpdateValidatedTopic;
-
-    @Value("${egov.services.works.masters.estimatetemplate.create.validated}")
-    private String worksMasterEstimateTemplateCreateValidatedTopic;
-
-    @Value("${egov.services.works.masters.estimatetemplate.update.validated}")
-    private String worksMasterEstimateTemplateUpdateValidatedTopic;
+    @Value("${egov.services.works.masters.estimatetemplate.saveorupdate.validated}")
+    private String worksMasterEstimateTemplateSaveOrUpdateValidatedTopic;
 
     @Value("${egov.services.egov_mdms.hostname}")
     private String mdmsServiceHostname;

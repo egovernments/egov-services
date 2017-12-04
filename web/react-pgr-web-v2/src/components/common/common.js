@@ -2236,7 +2236,18 @@ var localization_EN_Data = {
 "vendorcontracts.create.isActive": "Is Active",
 "vendorcontracts.create.isNotActive": "Is Not Active",
 "vendorcontracts.create.group.title.VendorContractDetails": "Vendor Contract Details",
+"swm.vehiclemaintenancedetails.search.title": "Search",
 
+"swm.sourcesegregation.search.title": "Search",
+"swm.create.sourceSegregationDate": "Source Segregation Date",
+"swm.create.dumpingGround": "Dumping Ground",
+"swm.search.result.dumpingGround": "Dumping Ground",
+"swm.search.result.sourceSegregationDate": "Source Segregation Date",
+"swm.create.collectionType": "Collection Type",
+"swm.create.collectionDetails.wetWasteCollected": "Quantity of wet waste collected (tones)",
+"swm.create.collectionDetails.dryWasteCollected": "Quantity of dry waste collected (tones)",
+"swm.create.group.title.SourceSegregationDetails": "Source Segregation Details",
+"swm.create.group.title.CollectionTypeDetails": "Collection Type Details",
 
 "pgr.dashboard.gis.registered.title":"Registered",
 "pgr.dashboard.gis.redressed.title":"Redressed",

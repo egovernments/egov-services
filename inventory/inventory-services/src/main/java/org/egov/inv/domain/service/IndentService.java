@@ -167,6 +167,7 @@ public class IndentService extends DomainService {
 	}
 
 	public IndentResponse search(IndentSearch is,RequestInfo info) {
+	
 		 ObjectMapper mapper = new ObjectMapper();
 		Map<String, Uom> uomMap = getUoms(is.getTenantId(), mapper,info );
 		IndentResponse response = new IndentResponse();
@@ -235,7 +236,7 @@ public class IndentService extends DomainService {
 					 * "expectedDeliveryDate",indent.getExpectedDeliveryDate().
 					 * toString()); }
 					 */
-					if (indent.getIndentDate().compareTo(indent.getExpectedDeliveryDate()) > 0) {
+					if (indent.getExpectedDeliveryDate()!=null && indent.getIndentDate().compareTo(indent.getExpectedDeliveryDate()) > 0) {
 						LOG.info("expectedDeliveryDate=" + toDateStr(indent.getExpectedDeliveryDate()));
 						LOG.info("indentDate=" + toDateStr(indent.getIndentDate()));
 						errors.addDataError(ErrorCode.DATE1_GE_DATE2.getCode(), "expectedDeliveryDate", "indentDate",

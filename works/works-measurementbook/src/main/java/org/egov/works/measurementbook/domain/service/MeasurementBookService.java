@@ -1,21 +1,26 @@
 package org.egov.works.measurementbook.domain.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.measurementbook.config.PropertiesManager;
+import org.egov.works.measurementbook.domain.repository.EstimateRepository;
 import org.egov.works.measurementbook.domain.repository.MeasurementBookRepository;
+import org.egov.works.measurementbook.domain.repository.WorkOrderRepository;
 import org.egov.works.measurementbook.utils.MeasurementBookUtils;
 import org.egov.works.measurementbook.web.contract.AuditDetails;
 import org.egov.works.measurementbook.web.contract.DetailedEstimate;
 import org.egov.works.measurementbook.web.contract.DetailedEstimateRequest;
+import org.egov.works.measurementbook.web.contract.DetailedEstimateResponse;
 import org.egov.works.measurementbook.web.contract.DocumentDetail;
 import org.egov.works.measurementbook.web.contract.EstimateActivity;
 import org.egov.works.measurementbook.web.contract.EstimateMeasurementSheet;
 import org.egov.works.measurementbook.web.contract.LOAActivity;
 import org.egov.works.measurementbook.web.contract.LOAMeasurementSheet;
+import org.egov.works.measurementbook.web.contract.LOAStatus;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceEstimate;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceRequest;
@@ -46,8 +51,14 @@ public class MeasurementBookService {
 	@Autowired
 	private MeasurementBookUtils measurementBookUtils;
 
-    @Autowired
-    private MeasurementBookRepository measurementBookRepository;
+	@Autowired
+	private MeasurementBookRepository measurementBookRepository;
+
+	@Autowired
+	private EstimateRepository estimateRepository;
+
+	@Autowired
+	private WorkOrderRepository workOrderRepository;
 
 	public MeasurementBookResponse create(MeasurementBookRequest measurementBookRequest) {
 		for (MeasurementBook measurementBook : measurementBookRequest.getMeasurementBooks()) {
@@ -71,7 +82,7 @@ public class MeasurementBookService {
 			}
 			measurementBook.setAuditDetails(
 					measurementBookUtils.setAuditDetails(measurementBookRequest.getRequestInfo(), false));
-			
+
 			if (measurementBook.getEstimateActivities() != null && !measurementBook.getEstimateActivities().isEmpty())
 				createRevisionEstimate(measurementBook, measurementBookRequest.getRequestInfo());
 		}
@@ -84,48 +95,55 @@ public class MeasurementBookService {
 	private void createRevisionEstimate(MeasurementBook measurementBook, RequestInfo requestInfo) {
 		DetailedEstimateRequest detailedEstimateRequest = new DetailedEstimateRequest();
 		LetterOfAcceptanceRequest letterOfAcceptanceRequest = new LetterOfAcceptanceRequest();
-		AuditDetails auditDetails = measurementBookUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
+		AuditDetails auditDetails = measurementBookUtils.setAuditDetails(requestInfo, false);
 		List<DetailedEstimate> detailedEstimates = new ArrayList<>();
 		List<LetterOfAcceptance> letterOfAcceptances = new ArrayList<>();
 		DetailedEstimate detailedEstimate = new DetailedEstimate();
 		LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
-		detailedEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
 		detailedEstimate.setTenantId(measurementBook.getTenantId());
 		detailedEstimate.setParent(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getId());
 		detailedEstimate.setEstimateActivities(measurementBook.getEstimateActivities());
+		detailedEstimate.setEstimateDate(new Date().getTime());
+		detailedEstimate.setDepartment(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getDepartment());
+		detailedEstimate.setEstimateValue(measurementBook.getLetterOfAcceptanceEstimate().getDetailedEstimate().getEstimateValue());
 		for (final EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-			estimateActivity.setId(UUID.randomUUID().toString().replace("-", ""));
 			estimateActivity.setTenantId(measurementBook.getTenantId());
 			estimateActivity.setAuditDetails(auditDetails);
 			if (estimateActivity.getEstimateMeasurementSheets() != null) {
 				for (final EstimateMeasurementSheet estimateMeasurementSheet : estimateActivity
 						.getEstimateMeasurementSheets()) {
-					estimateMeasurementSheet.setId(UUID.randomUUID().toString().replace("-", ""));
 					estimateMeasurementSheet.setTenantId(measurementBook.getTenantId());
 					estimateMeasurementSheet.setAuditDetails(auditDetails);
 				}
 			}
 		}
 		detailedEstimates.add(detailedEstimate);
+		detailedEstimateRequest.setDetailedEstimates(detailedEstimates);
 		detailedEstimateRequest.setRequestInfo(requestInfo);
-		kafkaTemplate.send(propertiesManager.getWorksRECreateUpdateTopic(), detailedEstimateRequest);
-		
-		letterOfAcceptance.setId(UUID.randomUUID().toString().replace("-", ""));
+
+		DetailedEstimateResponse detailedEstimateResponse = estimateRepository
+				.createDetailedEstimate(detailedEstimateRequest);
+
 		letterOfAcceptance.setTenantId(measurementBook.getTenantId());
 		letterOfAcceptance.setParent(measurementBook.getLetterOfAcceptanceEstimate().getLetterOfAcceptance());
+		letterOfAcceptance.setLoaDate(new Date().getTime());
+		letterOfAcceptance.setLoaAmount(detailedEstimateResponse.getDetailedEstimates().get(0).getEstimateValue());
+		letterOfAcceptance.setStatus(LOAStatus.APPROVED);
 		List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<>();
 		LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = new LetterOfAcceptanceEstimate();
-		letterOfAcceptanceEstimate.setId(UUID.randomUUID().toString().replace("-", ""));
+		letterOfAcceptanceEstimate.setTenantId(measurementBook.getTenantId());
 		letterOfAcceptanceEstimate.setAuditDetails(auditDetails);
-		letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimate);
+		letterOfAcceptanceEstimate.setDetailedEstimate(detailedEstimateResponse.getDetailedEstimates().get(0));
 		letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
-		populateLOAActivities(letterOfAcceptanceEstimate, detailedEstimate, auditDetails);
+		populateLOAActivities(letterOfAcceptanceEstimate, detailedEstimateResponse.getDetailedEstimates().get(0),
+				auditDetails);
 		letterOfAcceptanceEstimates.add(letterOfAcceptanceEstimate);
 		letterOfAcceptance.setLetterOfAcceptanceEstimates(letterOfAcceptanceEstimates);
 		letterOfAcceptances.add(letterOfAcceptance);
 		letterOfAcceptanceRequest.setLetterOfAcceptances(letterOfAcceptances);
 		letterOfAcceptanceRequest.setRequestInfo(requestInfo);
-		kafkaTemplate.send(propertiesManager.getWorksRevisionLOACreateUpdateTopic(), detailedEstimateRequest);
+
+		workOrderRepository.createLOA(letterOfAcceptanceRequest);
 	}
 
 	private void populateLOAActivities(LetterOfAcceptanceEstimate letterOfAcceptanceEstimate,
@@ -133,7 +151,6 @@ public class MeasurementBookService {
 		List<LOAActivity> loaActivities = new ArrayList<>();
 		for (EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
 			LOAActivity loaActivity = new LOAActivity();
-			loaActivity.setId(UUID.randomUUID().toString().replace("-", ""));
 			loaActivity.setTenantId(activity.getTenantId());
 			loaActivity.setAuditDetails(auditDetails);
 			loaActivity.setEstimateActivity(activity);
@@ -141,7 +158,6 @@ public class MeasurementBookService {
 			List<LOAMeasurementSheet> loaMeasurementSheets = new ArrayList<>();
 			for (EstimateMeasurementSheet sheet : activity.getEstimateMeasurementSheets()) {
 				LOAMeasurementSheet loaMeasurementSheet = new LOAMeasurementSheet();
-				loaMeasurementSheet.setId(UUID.randomUUID().toString().replace("-", ""));
 				loaMeasurementSheet.setTenantId(sheet.getTenantId());
 				loaMeasurementSheet.setAuditDetails(auditDetails);
 				loaMeasurementSheet.setDepthOrHeight(sheet.getDepthOrHeight());
@@ -151,7 +167,7 @@ public class MeasurementBookService {
 				loaMeasurementSheet.setNumber(sheet.getNumber());
 				loaMeasurementSheet.setQuantity(sheet.getQuantity());
 				loaMeasurementSheet.setWidth(sheet.getWidth());
-				
+
 				loaMeasurementSheets.add(loaMeasurementSheet);
 			}
 			loaActivity.setLoaMeasurements(loaMeasurementSheets);
@@ -167,8 +183,9 @@ public class MeasurementBookService {
 
 	public MeasurementBookResponse search(MeasurementBookSearchContract measurementBookSearchContract,
 			RequestInfo requestInfo) {
-        MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
-        measurementBookResponse.setMeasurementBooks(measurementBookRepository.searchMeasurementBooks(measurementBookSearchContract,requestInfo));
-        return measurementBookResponse;
+		MeasurementBookResponse measurementBookResponse = new MeasurementBookResponse();
+		measurementBookResponse.setMeasurementBooks(
+				measurementBookRepository.searchMeasurementBooks(measurementBookSearchContract, requestInfo));
+		return measurementBookResponse;
 	}
 }

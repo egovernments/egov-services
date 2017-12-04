@@ -226,7 +226,7 @@ public class LetterOfAcceptance {
      * @return contractPeriod
      **/
     @ApiModelProperty(required = true, value = "Contract Period (In days) for the Letter Of Acceptance")
-    @NotNull
+//    @NotNull
 
     @Valid
 
@@ -271,7 +271,7 @@ public class LetterOfAcceptance {
      * @return stampPaperAmount
      **/
     @ApiModelProperty(required = true, value = "Stamp Paper amount for Agreement")
-    @NotNull
+//    @NotNull
 
     @Valid
 
@@ -370,7 +370,7 @@ public class LetterOfAcceptance {
      **/
     @ApiModelProperty(value = "Array of document details")
 
-    @Valid
+//    @Valid
 
     public List<DocumentDetail> getDocumentDetails() {
         return documentDetails;
@@ -393,7 +393,7 @@ public class LetterOfAcceptance {
     @ApiModelProperty(required = true, value = "")
     @NotNull
 
-    @Valid
+//    @Valid
 
     public LOAStatus getStatus() {
         return status;
@@ -658,7 +658,7 @@ public class LetterOfAcceptance {
     @ApiModelProperty(required = true, value = "Array of Letter Of Acceptance Estimate Details")
     @NotNull
 
-    @Valid
+//    @Valid
     @Size(min = 1)
     public List<LetterOfAcceptanceEstimate> getLetterOfAcceptanceEstimates() {
         return letterOfAcceptanceEstimates;
@@ -688,7 +688,7 @@ public class LetterOfAcceptance {
      **/
     @ApiModelProperty(value = "Array of Security Deposit collection details")
 
-    @Valid
+//    @Valid
 
     public List<SecurityDeposit> getSecurityDeposits() {
         return securityDeposits;
@@ -710,7 +710,7 @@ public class LetterOfAcceptance {
      **/
     @ApiModelProperty(value = "")
 
-    @Valid
+//    @Valid
 
     public WorkFlowDetails getWorkFlowDetails() {
         return workFlowDetails;

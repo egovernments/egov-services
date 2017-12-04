@@ -11,4 +11,8 @@ public class Constants {
     public static final String FORWARD = "Forward";
     public static final String CANCEL = "Cancel";
 
+    //Error messages
+    public static final String KEY_COMMON_ERROR_CODE = "SOMETHING_WENT_WRONG";
+    public static final String MESSAGE_RE_COMMON_ERROR_CODE = "Something went wrong while persisting Revision Detailed Estimate";
+    public static final String MESSAGE_LOA_COMMON_ERROR_CODE = "Something went wrong while persisting Revision LOA";
 }

@@ -60,8 +60,8 @@ public class LetterOfAcceptanceService {
 	@Autowired
 	private PropertiesManager propertiesManager;
 
-	public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
-		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.FALSE);
+	public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, final Boolean isRevision) {
+		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.FALSE, isRevision);
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
 			letterOfAcceptance.setId(commonUtils.getUUID());
@@ -97,6 +97,7 @@ public class LetterOfAcceptanceService {
 						letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo());
 			}
 
+			if ((isRevision != null && !isRevision))
 			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
 				securityDeposit.setId(commonUtils.getUUID());
@@ -120,7 +121,10 @@ public class LetterOfAcceptanceService {
 
 		}
 
-		kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
+		if (isRevision == null || (isRevision != null && !isRevision))
+			kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
+		else
+			kafkaTemplate.send(propertiesManager.getWorksRevisionLOACreateUpdateTopic(), letterOfAcceptanceRequest);
 
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
 		letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
@@ -178,8 +182,8 @@ public class LetterOfAcceptanceService {
 		loaActivity.setLoaMeasurements(loaSheetList);
 	}
 
-	public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
-		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.TRUE);
+	public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, final Boolean isRevision) {
+		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.TRUE, isRevision);
 		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
 			if (letterOfAcceptance.getId() == null || letterOfAcceptance.getId().isEmpty())

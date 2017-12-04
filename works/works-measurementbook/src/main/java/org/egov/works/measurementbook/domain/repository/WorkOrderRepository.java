@@ -1,16 +1,29 @@
 package org.egov.works.measurementbook.domain.repository;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.egov.tracer.model.CustomException;
+import org.egov.tracer.model.ErrorRes;
+import org.egov.works.measurementbook.config.Constants;
 import org.egov.works.measurementbook.web.contract.LOAStatus;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptance;
+import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceRequest;
 import org.egov.works.measurementbook.web.contract.LetterOfAcceptanceResponse;
 import org.egov.works.measurementbook.web.contract.RequestInfo;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class WorkOrderRepository {
@@ -18,12 +31,19 @@ public class WorkOrderRepository {
     private RestTemplate restTemplate;
 
     private String contractorSearchUrl;
+    
+    private String loaCreateUrl;
+    
+    @Autowired
+    private ObjectMapper objectMapper;
 
 
     public WorkOrderRepository(final RestTemplate restTemplate,@Value("${egov.services.workorder.hostname}") final String workOrderHostname,
-                               @Value("${egov.services.workorder.contractorsearchpath}") final String contractorSearchUrl) {
+                               @Value("${egov.services.workorder.contractorsearchpath}") final String contractorSearchUrl,
+                               @Value("${egov.services.egov_works_loa.createpath}") final String loaCreateUrl) {
         this.restTemplate = restTemplate;
         this.contractorSearchUrl = workOrderHostname + contractorSearchUrl;
+        this.loaCreateUrl = workOrderHostname + loaCreateUrl;
     }
 
     public List<LetterOfAcceptance> searchLetterOfAcceptance(List<String> codes,List<String> names, String tenantId,
@@ -35,4 +55,32 @@ public class WorkOrderRepository {
 
     }
 
+    public LetterOfAcceptanceResponse createLOA(LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
+    	ErrorHandler errorHandler = new ErrorHandler();
+    	Map<String, String> errors = new HashMap<>();
+    	restTemplate.setErrorHandler(errorHandler);
+    	HttpHeaders headers = new HttpHeaders();
+        headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
+        HttpEntity<?> request = new HttpEntity<Object>(letterOfAcceptanceRequest, headers);
+    	ResponseEntity<String> response =
+                restTemplate.exchange(loaCreateUrl, HttpMethod.POST, request, String.class);
+        String responseBody = response.getBody();
+        try {
+            if (errorHandler.hasError(response.getStatusCode())) {
+            	ErrorRes errorRes = objectMapper.readValue(responseBody, ErrorRes.class);
+            	if (errorRes != null && errorRes.getErrors() != null) {
+        			for (org.egov.tracer.model.Error error : errorRes.getErrors())
+        				errors.put(error.getCode(), error.getMessage());
+            	} else
+            		errors.put(Constants.KEY_COMMON_ERROR_CODE, Constants.MESSAGE_LOA_COMMON_ERROR_CODE);
+            	throw new CustomException(errors);
+            } else {
+            	LetterOfAcceptanceResponse letterOfAcceptanceResponse = objectMapper.readValue(responseBody, LetterOfAcceptanceResponse.class);
+                return letterOfAcceptanceResponse;
+            }
+        } catch (IOException e) {
+        	errors.put(Constants.KEY_COMMON_ERROR_CODE, Constants.MESSAGE_LOA_COMMON_ERROR_CODE);
+        	throw new CustomException(errors);
+        }
+    }
 }

@@ -410,8 +410,8 @@ serviceMaps:
              
        - jsonPath: $.detailedEstimates.*.projectCode.code
          
-       - jsonPath: $.detailedEstimates.*.parent.id
-              
+       - jsonPath: $.detailedEstimates.*.parent
+                  
        - jsonPath: $.detailedEstimates.*.copiedFrom
        
        - jsonPath: $.detailedEstimates.*.approvedDate
@@ -746,7 +746,7 @@ serviceMaps:
    fromTopic: works-revision-detailed-estimate-create-update
    isTransaction: true
    queryMaps:
-    - query: INSERT INTO egw_detailedestimate(id, tenantid, estimatenumber, estimatedate, status, estimatevalue, parent, createdby, createdtime, lastModifiedBy, lastModifiedTime, deleted) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT  (id,tenantid) DO UPDATE parent=EXCLUDED.parent;
+    - query: INSERT INTO egw_detailedestimate(id, tenantid, estimatenumber, estimatedate, status, estimatevalue, parent, createdby, createdtime, lastModifiedBy, lastModifiedTime, deleted) VALUES  (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) on CONFLICT  (id,tenantid) DO UPDATE SET parent=EXCLUDED.parent;
       basePath: $.detailedEstimates.*
       jsonMaps:
          
@@ -762,8 +762,8 @@ serviceMaps:
 
        - jsonPath: $.detailedEstimates.*.estimateValue
          
-       - jsonPath: $.detailedEstimates.*.parent.id
-              
+       - jsonPath: $.detailedEstimates.*.parent
+                  
        - jsonPath: $.detailedEstimates.*.auditDetails.createdBy
  
        - jsonPath: $.detailedEstimates.*.auditDetails.createdTime

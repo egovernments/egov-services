@@ -28,9 +28,10 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
 	private LetterOfAcceptanceService letterOfAcceptanceService;
 
 	public ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesCreatePost(
-			@ApiParam(value = "Details of new Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
+			@ApiParam(value = "Details of new Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+			@RequestParam(required = false) Boolean isRevision) {
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService
-				.create(letterOfAcceptanceRequest);
+				.create(letterOfAcceptanceRequest, isRevision);
 		return new ResponseEntity(letterOfAcceptanceResponse, HttpStatus.OK);
 	}
 
@@ -60,9 +61,10 @@ public class LetterofacceptancesApiController implements LetterofacceptancesApi 
 	}
 
 	public ResponseEntity<LetterOfAcceptanceResponse> letterofacceptancesUpdatePost(
-			@ApiParam(value = "Details of Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
+			@ApiParam(value = "Details of Letter Of Acceptance(s) + RequestInfo meta data.", required = true) @Valid @RequestBody LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+			@RequestParam(required = false) Boolean isRevision) {
 		LetterOfAcceptanceResponse letterOfAcceptanceResponse = letterOfAcceptanceService
-				.update(letterOfAcceptanceRequest);
+				.update(letterOfAcceptanceRequest, isRevision);
 		return new ResponseEntity(letterOfAcceptanceResponse, HttpStatus.OK);
 	}
 

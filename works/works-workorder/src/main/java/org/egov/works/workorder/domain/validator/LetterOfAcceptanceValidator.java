@@ -46,7 +46,7 @@ public class LetterOfAcceptanceValidator {
             throw new CustomException(messages);
     }
 
-    public void validateLetterOfAcceptance(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, Boolean isUpdate) {
+    public void validateLetterOfAcceptance(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, Boolean isUpdate, Boolean isRevision) {
         DetailedEstimate detailedEstimate = null;
         OfflineStatus offlineStatus = null;
         HashMap<String, String> messages = new HashMap<>();
@@ -74,17 +74,19 @@ public class LetterOfAcceptanceValidator {
                 if (messages != null && !messages.isEmpty())
                     throw new CustomException(messages);
 
-                List<OfflineStatus> offlineStatuses = offlineStatusService
-                        .getOfflineStatus(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
-                                letterOfAcceptance.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
-                        .getOfflineStatuses();
-                if (!offlineStatuses.isEmpty())
-                    offlineStatus = offlineStatuses.get(0);
+                if (isRevision == null || (isRevision != null && !isRevision)) {
+                	List<OfflineStatus> offlineStatuses = offlineStatusService
+                            .getOfflineStatus(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+                                    letterOfAcceptance.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
+                            .getOfflineStatuses();
+                    if (!offlineStatuses.isEmpty())
+                        offlineStatus = offlineStatuses.get(0);
 
-                validateOfflineStatus(offlineStatus, messages);
+                    validateOfflineStatus(offlineStatus, messages);
 
-                if (messages != null && !messages.isEmpty())
-                    throw new CustomException(messages);
+                    if (messages != null && !messages.isEmpty())
+                        throw new CustomException(messages);
+                }
             }
 
             validateLOA(offlineStatus, messages, letterOfAcceptance);

@@ -394,22 +394,24 @@ public class EstimateValidator {
 			messages.put(Constants.KEY_LOCALITY_CODE_REQUIRED, Constants.MESSAGE_LOCALITY_CODE_REQUIRED);
 	}
 
-	public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest) {
+	public void validateDetailedEstimates(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
 		final RequestInfo requestInfo = detailedEstimateRequest.getRequestInfo();
 		Map<String, String> messages = new HashMap<>();
 		for (DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
-			AbstractEstimate abstactEstimate = searchAbstractEstimate(detailedEstimate);
-			if (abstactEstimate == null)
-				messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
-						Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
-			validateMasterData(detailedEstimate, requestInfo, messages);
-			validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
-			validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
+			if (isRevision == null || (isRevision != null && !isRevision)) {
+				AbstractEstimate abstactEstimate = searchAbstractEstimate(detailedEstimate);
+				if (abstactEstimate == null)
+					messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
+							Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
+				validateMasterData(detailedEstimate, requestInfo, messages);
+				validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
+				validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
+				validateLocationDetails(detailedEstimate, requestInfo, messages);
+				validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
+				validateOverheads(detailedEstimate, requestInfo, messages);
+				validateDocuments(detailedEstimate, requestInfo, messages);
+			}
 			validateActivities(detailedEstimate, messages, requestInfo);
-			validateLocationDetails(detailedEstimate, requestInfo, messages);
-			validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
-			validateOverheads(detailedEstimate, requestInfo, messages);
-			validateDocuments(detailedEstimate, requestInfo, messages);
 			if (StringUtils.isNotBlank(detailedEstimate.getId()))
 				validateIsModified(detailedEstimate, requestInfo, messages);
 

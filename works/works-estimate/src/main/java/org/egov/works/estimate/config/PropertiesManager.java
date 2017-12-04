@@ -73,5 +73,8 @@ public class PropertiesManager {
 	
     @Value("${projectcode.prefix}")
     private String workIdentificationNumberPrefix;
+    
+    @Value("${egov.services.works.revision.detailed.estimate.create.update.topic}")
+    private String worksRECreateUpdateTopic;
 
 }

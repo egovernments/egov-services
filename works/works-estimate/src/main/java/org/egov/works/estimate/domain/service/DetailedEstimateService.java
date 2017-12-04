@@ -70,17 +70,18 @@ public class DetailedEstimateService {
 		return detailedEstimateRepository.search(detailedEstimateSearchContract);
 	}
 
-	public DetailedEstimateResponse create(DetailedEstimateRequest detailedEstimateRequest) {
-		validator.validateDetailedEstimates(detailedEstimateRequest);
+	public DetailedEstimateResponse create(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
+		validator.validateDetailedEstimates(detailedEstimateRequest, isRevision);
 		AuditDetails auditDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
 		for (final DetailedEstimate detailedEstimate : detailedEstimateRequest.getDetailedEstimates()) {
 			detailedEstimate.setId(commonUtils.getUUID());
 			detailedEstimate.setAuditDetails(auditDetails);
 			detailedEstimate.setTotalIncludingRE(detailedEstimate.getEstimateValue());
 			AbstractEstimate abstactEstimate = null;
-			if (detailedEstimate.getAbstractEstimateDetail() != null) {
+			if (detailedEstimate.getAbstractEstimateDetail() != null || (isRevision != null && isRevision)) {
 				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
-				if (abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated()) {
+				if ((abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated())
+						 || (isRevision != null && isRevision)) {
 					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(
 							detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
 					detailedEstimate.setEstimateNumber(estimateUtils.getCityCode(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) + "/" + propertiesManager.getDetailedEstimateNumberPrefix() + '/'
@@ -88,37 +89,47 @@ public class DetailedEstimateService {
 				}
 			}
 
-			for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-				assetsForEstimate.setId(commonUtils.getUUID());
-				assetsForEstimate.setAuditDetails(auditDetails);
-			}
-
-			if (detailedEstimate.getMultiYearEstimates() != null) {
-				for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
-					multiYearEstimate.setId(commonUtils.getUUID());
-					// Set from financials
-					multiYearEstimate.setFinancialYear(new FinancialYear());
-					multiYearEstimate.setPercentage(100d);
-					multiYearEstimate.setAuditDetails(auditDetails);
+			if (isRevision == null || (isRevision != null && !isRevision)) {
+				for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
+					assetsForEstimate.setId(commonUtils.getUUID());
+					assetsForEstimate.setAuditDetails(auditDetails);
 				}
-			}
 
-			for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
-				estimateOverhead.setId(commonUtils.getUUID());
-				estimateOverhead.setAuditDetails(auditDetails);
-			}
+				if (detailedEstimate.getMultiYearEstimates() != null) {
+					for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
+						multiYearEstimate.setId(commonUtils.getUUID());
+						// Set from financials
+						multiYearEstimate.setFinancialYear(new FinancialYear());
+						multiYearEstimate.setPercentage(100d);
+						multiYearEstimate.setAuditDetails(auditDetails);
+					}
+				}
 
-			for (final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate
-					.getDetailedEstimateDeductions()) {
-				detailedEstimateDeduction.setId(commonUtils.getUUID());
-				detailedEstimateDeduction.setAuditDetails(auditDetails);
-			}
+				for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
+					estimateOverhead.setId(commonUtils.getUUID());
+					estimateOverhead.setAuditDetails(auditDetails);
+				}
 
-			if (detailedEstimate.getEstimateTechnicalSanctions() != null) {
-				for (final EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate
-						.getEstimateTechnicalSanctions()) {
-					estimateTechnicalSanction.setId(commonUtils.getUUID());
-					estimateTechnicalSanction.setAuditDetails(auditDetails);
+				for (final DetailedEstimateDeduction detailedEstimateDeduction : detailedEstimate
+						.getDetailedEstimateDeductions()) {
+					detailedEstimateDeduction.setId(commonUtils.getUUID());
+					detailedEstimateDeduction.setAuditDetails(auditDetails);
+				}
+
+				if (detailedEstimate.getEstimateTechnicalSanctions() != null) {
+					for (final EstimateTechnicalSanction estimateTechnicalSanction : detailedEstimate
+							.getEstimateTechnicalSanctions()) {
+						estimateTechnicalSanction.setId(commonUtils.getUUID());
+						estimateTechnicalSanction.setAuditDetails(auditDetails);
+					}
+				}
+				
+				if (detailedEstimate.getDocumentDetails() != null) {
+					for (DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
+						documentDetail.setObjectId(detailedEstimate.getEstimateNumber());
+						documentDetail.setObjectType(CommonConstants.DETAILEDESTIMATE);
+						documentDetail.setAuditDetails(auditDetails);
+					}
 				}
 			}
 
@@ -134,28 +145,27 @@ public class DetailedEstimateService {
 				}
 			}
 
-			if (detailedEstimate.getDocumentDetails() != null) {
-				for (DocumentDetail documentDetail : detailedEstimate.getDocumentDetails()) {
-					documentDetail.setObjectId(detailedEstimate.getEstimateNumber());
-					documentDetail.setObjectType(CommonConstants.DETAILEDESTIMATE);
-					documentDetail.setAuditDetails(auditDetails);
-				}
-			}
-			populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
-			Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
-					detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
-			detailedEstimate.setStateId(workFlowResponse.get("id"));
-			detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
+			if (isRevision == null || (isRevision != null && !isRevision)) {
+				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
+				Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
+						detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());
+				detailedEstimate.setStateId(workFlowResponse.get("id"));
+				detailedEstimate.setStatus(DetailedEstimateStatus.valueOf(workFlowResponse.get("status")));
+			} else
+				detailedEstimate.setStatus(DetailedEstimateStatus.TECHNICAL_SANCTIONED);
 		}
-		kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
+		if (isRevision == null || (isRevision != null && !isRevision))
+			kafkaTemplate.send(propertiesManager.getWorksDetailedEstimateCreateAndUpdateTopic(), detailedEstimateRequest);
+		else
+			kafkaTemplate.send(propertiesManager.getWorksRECreateUpdateTopic(), detailedEstimateRequest);
 		final DetailedEstimateResponse response = new DetailedEstimateResponse();
 		response.setDetailedEstimates(detailedEstimateRequest.getDetailedEstimates());
 		response.setResponseInfo(estimateUtils.getResponseInfo(detailedEstimateRequest.getRequestInfo()));
 		return response;
 	}
 
-	public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest) {
-		validator.validateDetailedEstimates(detailedEstimateRequest);
+	public DetailedEstimateResponse update(DetailedEstimateRequest detailedEstimateRequest, Boolean isRevision) {
+		validator.validateDetailedEstimates(detailedEstimateRequest, isRevision);
 		AuditDetails updateDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), true);
 		AuditDetails createDetails = estimateUtils.setAuditDetails(detailedEstimateRequest.getRequestInfo(), false);
 		AbstractEstimate abstactEstimate = null;

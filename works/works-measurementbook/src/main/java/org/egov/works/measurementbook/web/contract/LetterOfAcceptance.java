@@ -659,7 +659,7 @@ public class LetterOfAcceptance {
 	@ApiModelProperty(required = true, value = "Array of Letter Of Acceptance Estimate Details")
 	@NotNull
 
-	@Valid
+//	@Valid
 	@Size(min = 1)
 	public List<LetterOfAcceptanceEstimate> getLetterOfAcceptanceEstimates() {
 		return letterOfAcceptanceEstimates;

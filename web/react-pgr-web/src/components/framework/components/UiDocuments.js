@@ -86,7 +86,7 @@ class UiDocuments extends Component {
   }
   uploadDocs = () => {
     return _.times(this.state.allowedMax, idx=>{
-      if(_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`)){
+      if(_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`) && _.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`).name){
         //file exists from client side
         let fileName=_.get(this.props.formData,`${this.props.item.jsonPath}[${idx}]`).name;
         return(

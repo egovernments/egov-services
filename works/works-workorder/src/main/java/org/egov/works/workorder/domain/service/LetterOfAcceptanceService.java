@@ -85,16 +85,13 @@ public class LetterOfAcceptanceService {
 				letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
 				letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
 
-				if (!detailedEstimate.getSpillOverFlag()) {
+				if (!detailedEstimate.getWorkOrderCreated()) {
 					String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
 							letterOfAcceptanceRequest.getRequestInfo());
 					// TODO: check idgen to accept values to generate
 					letterOfAcceptance.setLoaNumber(workOrderUtils.getCityCode(letterOfAcceptance.getTenantId(), letterOfAcceptanceRequest.getRequestInfo()) + "/" + propertiesManager.getLoaNumberPrefix() + "/"
 							+ detailedEstimate.getDepartment().getCode() + loaNumber);
 				}
-				estimateService.getDetailedEstimate(
-						letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
-						letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo());
 			}
 
 			if ((isRevision != null && !isRevision))
@@ -138,7 +135,7 @@ public class LetterOfAcceptanceService {
 			EstimateActivity estimateActivity, final RequestInfo requestInfo, final Boolean isUpdate) {
 		LOAActivity activity = new LOAActivity();
 		activity.setEstimateActivity(estimateActivity);
-		activity.setApprovedRate(letterOfAcceptance.getLoaAmount());
+		activity.setApprovedRate(estimateActivity.getEstimateRate());
 		activity.setApprovedQuantity(new BigDecimal(estimateActivity.getQuantity()));
 		activity.setApprovedAmount(
 				BigDecimal.valueOf(estimateActivity.getEstimateRate().doubleValue() * estimateActivity.getQuantity()));
@@ -209,9 +206,6 @@ public class LetterOfAcceptanceService {
 				letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
 				letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
 
-				estimateService.getDetailedEstimate(
-						letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
-						letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo());
 			}
 
 			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {

@@ -22,7 +22,8 @@ const REGEXP_FIND_IDX = /\[(.*?)\]+/g;
 
 class Report extends Component {
   state={
-    pathname:""
+    pathname:"",
+    mdmsData: {}
   }
   constructor(props) {
     super(props);
@@ -334,10 +335,110 @@ class Report extends Component {
       }
 
     }
-
+    var res = self.handleMasterData(specifications, this.props.moduleName);
+    
     this.setState({
       pathname:this.props.history.location.pathname
     })
+  }
+
+  handleMasterData(specifications) {
+    let self = this;
+    let moduleDetails = [];
+    let {setDropDownData} = this.props;
+    let hashLocation = window.location.hash;
+    let obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    let name, filter;
+    // let {moduleName, actionName, setMockData} = this.props;
+    let data = { moduleName: "" , masterDetails: [] };
+    let k = 0;
+    var masterDetail = {};
+    for(let i=0; i<obj.groups.length; i++) {
+      for(let j=0; j<obj.groups[i].fields.length; j++) {
+        if(obj.groups[i].fields[j].mdms) {
+          masterDetail.name = obj.groups[i].fields[j].mdms.masterName;
+          masterDetail.filter = (obj.groups[i].fields[j].mdms.filter != "") ? obj.groups[i].fields[j].mdms.filter: null;
+          data.masterDetails[k]= _.cloneDeep(masterDetail);
+          data.moduleName = obj.groups[i].fields[j].mdms.moduleName;
+          k++;
+        }
+      }
+    }
+    moduleDetails.push(data);
+    var _body = {
+      MdmsCriteria: {
+        tenantId: localStorage.getItem("tenantId"),
+        moduleDetails: moduleDetails
+      }
+    }
+    
+    Api.commonApiPost('/egov-mdms-service/v1/_search','', _body,{},true,true).then((res)=>{
+      this.setState({
+        mdmsData: res.MdmsRes
+      })
+
+      //set dropdowndata
+      for(let i=0; i<obj.groups.length; i++) {
+        for(let j=0; j<obj.groups[i].fields.length; j++) {
+          if(obj.groups[i].fields[j].mdms) {
+            let dropDownData = [];
+            if(Object.keys(res.MdmsRes).includes(obj.groups[i].fields[j].mdms.moduleName)) {
+              for(var prop in res.MdmsRes) {
+                if(obj.groups[i].fields[j].mdms.dependant) continue;
+                if (res.MdmsRes.hasOwnProperty(prop)) {
+                  if(prop == obj.groups[i].fields[j].mdms.moduleName)
+                    for(var master in res.MdmsRes[prop]) {
+                      if(res.MdmsRes[prop].hasOwnProperty(master)) {
+                        var moduleObj = res.MdmsRes[prop];
+                        if(master == obj.groups[i].fields[j].mdms.masterName) {
+                          moduleObj[master].forEach(function(item) {
+                            let masterObj = {key: "", value: ""};
+                            masterObj.key = item[obj.groups[i].fields[j].mdms.key];
+                            masterObj.value = item[obj.groups[i].fields[j].mdms.value];
+                            dropDownData.push(masterObj);
+                          });
+                        }
+                      }
+                    }
+                }
+              }
+            }
+            setDropDownData(obj.groups[i].fields[j].jsonPath, dropDownData)
+          }
+        }
+      }
+    }).catch((err)=> {
+      console.log(err)
+    })
+  }
+
+  checkifHasDependedantMdmsField(path, value) {
+    let obj = {..._mockData}
+    let _mockData = {...this.props.mockData};
+    let {moduleName, actionName, setMockData, setDropDownData} = this.props;
+    for(let i=0; i<_mockData[moduleName + "." + actionName].groups.length; i++) {
+      for(let j=0; j<_mockData[moduleName + "." + actionName].groups[i].fields.length; j++) {
+        if(_mockData[moduleName + "." + actionName].groups[i].fields[j].mdms) {
+          if(_mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.dependant) {
+            let exp = _mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.dependant.jsonExp;
+            let valuePath = exp.split("=='")[1]
+            valuePath = valuePath.split("')]")[0];
+            if(path == valuePath) {
+              exp = exp.replace(path, value)
+              var dropdownValues = jp.query(this.state.mdmsData, exp)
+              let dropdowndata = [];
+              dropdownValues.forEach(function(item) {
+                let masterObj = {key: "", value: ""};
+                masterObj.key = item[_mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.key];
+                masterObj.value = item[_mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.value];
+                dropdowndata.push(masterObj);
+              });
+              setDropDownData(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, dropdowndata)
+            }
+          }
+        }
+      }
+    }
   }
 
   initData() {
@@ -1338,6 +1439,8 @@ class Report extends Component {
       this.checkifHasValueBasedOn(property, e.target.value);
       this.checkIfHasShowHideFields(property, e.target.value);
       this.checkIfHasEnDisFields(property, e.target.value);
+      this.checkifHasDependedantMdmsField(property, e.target.value);
+      
       try{
           handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 			}

@@ -106,7 +106,15 @@ public class VehicleScheduleService {
                 else
                     vehicleSchedule.setVehicle(vehicleList.getPagedData().get(0));
 
+            } else {
+                throw new CustomException("Vehicle",
+                        "The field Vehicle is Mandatory . It cannot be not be null or empty.Please provide correct value ");
             }
+
+            if (vehicleSchedule.getRoute() != null && (vehicleSchedule.getRoute().getCode() == null
+                    || vehicleSchedule.getRoute().getCode().isEmpty()))
+                throw new CustomException("Route",
+                        "Given Route is invalid: " + vehicleSchedule.getRoute().getCode());
 
             // Validate Route
 
@@ -124,6 +132,10 @@ public class VehicleScheduleService {
                 else
                     vehicleSchedule.setRoute(routes.getPagedData().get(0));
 
+            } else {
+
+                throw new CustomException("Route",
+                        "The field Route is Mandatory . It cannot be not be null or empty.Please provide correct value ");
             }
 
             if (vehicleSchedule.getScheduledFrom() != null && vehicleSchedule.getScheduledTo() != null)

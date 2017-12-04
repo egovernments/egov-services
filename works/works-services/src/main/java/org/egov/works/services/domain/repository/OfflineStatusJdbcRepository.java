@@ -91,6 +91,7 @@ public class OfflineStatusJdbcRepository extends JdbcRepository {
 			paramValues.put("objecttype", offlineStatusSearchContract.getObjectType().toLowerCase());
 		}
 
+        params.append(" and deleted = false");
 		if (params.length() > 0) {
 
 			searchQuery = searchQuery.replace(":condition", " where " + params.toString());

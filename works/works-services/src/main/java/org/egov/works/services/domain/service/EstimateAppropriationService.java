@@ -1,13 +1,11 @@
 package org.egov.works.services.domain.service;
 
-import java.util.List;
-
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.domain.repository.EstimateAppropriationRepository;
 import org.egov.works.services.domain.repository.IdGenerationRepository;
-import org.egov.works.services.domain.validator.EstimateAppropriationValidator;
+import org.egov.works.services.domain.validator.RequestValidator;
 import org.egov.works.services.utils.ServiceUtils;
 import org.egov.works.services.web.contract.EstimateAppropriation;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
@@ -15,6 +13,8 @@ import org.egov.works.services.web.contract.EstimateAppropriationResponse;
 import org.egov.works.services.web.contract.EstimateAppropriationSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 public class EstimateAppropriationService {
@@ -32,13 +32,13 @@ public class EstimateAppropriationService {
 	private EstimateAppropriationRepository estimateAppropriationRepository;
 
 	@Autowired
-	private EstimateAppropriationValidator estimateAppropriationValidator;
-
-	@Autowired
 	private CommonUtils commonUtils;
 
 	@Autowired
 	private ServiceUtils serviceUtils;
+
+    @Autowired
+    private RequestValidator requestValidator;
 
 	public EstimateAppropriationResponse create(final EstimateAppropriationRequest estimateAppropriationRequest) {
 		String budgetRefNumber;
@@ -77,7 +77,7 @@ public class EstimateAppropriationService {
 	}
 
 	public List<EstimateAppropriation> search(EstimateAppropriationSearchContract estimateAppropriationSearchContract) {
-		estimateAppropriationValidator.validateSearchContract(estimateAppropriationSearchContract);
+        requestValidator.validateAppropriationSearchContract(estimateAppropriationSearchContract);
 		return estimateAppropriationRepository.search(estimateAppropriationSearchContract);
 	}
 }

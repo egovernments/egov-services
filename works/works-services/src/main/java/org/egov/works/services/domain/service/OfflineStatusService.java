@@ -1,15 +1,11 @@
 package org.egov.works.services.domain.service;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.works.commons.utils.CommonUtils;
 import org.egov.works.services.config.PropertiesManager;
 import org.egov.works.services.domain.repository.OfflineStatusRepository;
-import org.egov.works.services.domain.validator.OfflineStatusValidator;
+import org.egov.works.services.domain.validator.RequestValidator;
 import org.egov.works.services.utils.ServiceUtils;
 import org.egov.works.services.web.contract.OfflineStatus;
 import org.egov.works.services.web.contract.OfflineStatusRequest;
@@ -20,14 +16,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+
 @Service
 public class OfflineStatusService {
 
 	@Autowired
 	private ServiceUtils serviceUtils;
-
-	@Autowired
-	private OfflineStatusValidator offlineStatusValidator;
 
 	@Autowired
 	private OfflineStatusRepository offlineStatusRepository;
@@ -41,13 +38,16 @@ public class OfflineStatusService {
     @Autowired
     private CommonUtils commonUtils;
 
+    @Autowired
+    private RequestValidator requestValidator;
+
 	@SuppressWarnings("unchecked")
 	public Collection<String> getStatusNameDetails(final String[] statusNames) {
 		return CollectionUtils.select(Arrays.asList(statusNames), statusName -> (String) statusName != null);
 	}
 
 	public OfflineStatusResponse create(OfflineStatusRequest offlineStatusRequest) {
-		offlineStatusValidator.validate(offlineStatusRequest);
+        requestValidator.validateOfflineStatus(offlineStatusRequest);
 
 		OfflineStatusResponse response = new OfflineStatusResponse();
 		for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {
@@ -64,7 +64,7 @@ public class OfflineStatusService {
 	}
 	
 	public ResponseEntity<?> update(OfflineStatusRequest offlineStatusRequest) {
-		offlineStatusValidator.validate(offlineStatusRequest);
+        requestValidator.validateOfflineStatus(offlineStatusRequest);
 
 		OfflineStatusResponse response = new OfflineStatusResponse();
 		for (OfflineStatus offlineStatus : offlineStatusRequest.getOfflineStatuses()) {

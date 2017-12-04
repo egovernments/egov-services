@@ -45,6 +45,8 @@ public class DocumentDetailQueryBuilder {
         if(documentDetailSearchCriteria.getObjectIds() != null && !documentDetailSearchCriteria.getObjectIds().isEmpty()) {
             queryString.append(" and objectid IN " + getIdQuery(documentDetailSearchCriteria.getObjectIds()));
         }
+
+        queryString.append(" and deleted=false ");
     }
 
     private void addPagingClause(final StringBuilder selectQuery,final DocumentDetailSearchCriteria documentDetailSearchCriteria,

@@ -55,6 +55,7 @@ import org.egov.eis.repository.EmployeeRepository;
 import org.egov.eis.web.contract.EmployeeRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -129,7 +130,7 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
                     "Passport Number Already Exists In System. Please Enter Correct Passport Number.");
         }
 
-        if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo", employee.getGpfNo(),
+        if ((!StringUtils.isEmpty(employee.getGpfNo())) && duplicateExists("egeis_employee", "gpfNo", employee.getGpfNo(),
                 employee.getId(), employee.getTenantId())) {
             errors.rejectValue("employee.gpfNo", "invalid",
                     "GPF Number Already Exists In System. Please Enter Correct GPF Number.");

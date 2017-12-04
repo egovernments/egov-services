@@ -53,6 +53,7 @@ import org.egov.eis.web.errorhandler.ErrorHandler;
 import org.egov.eis.web.errorhandler.InvalidDataException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
@@ -123,7 +124,7 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
 			 errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
 		}
 
-		if ((employee.getGpfNo() != null) && duplicateExists("egeis_employee", "gpfNo",
+		if ((!StringUtils.isEmpty(employee.getGpfNo())) && duplicateExists("egeis_employee", "gpfNo",
 				employee.getGpfNo(), employee.getTenantId())) {
 
 			invalidDataException.setFieldName("employee.gpfNo");

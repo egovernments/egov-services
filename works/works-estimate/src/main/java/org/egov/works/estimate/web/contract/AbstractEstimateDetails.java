@@ -146,7 +146,7 @@ public class AbstractEstimateDetails   {
   @NotNull
 
   @Valid
-  @Size(min=1,max=20)
+
   public BigDecimal getEstimateAmount() {
     return estimateAmount;
   }
@@ -166,7 +166,7 @@ public class AbstractEstimateDetails   {
   **/
   @ApiModelProperty(value = "Gross Billed amount of the Abstract Estimate Details. This attribute is required only if billsCreated flag is true for Abstract Estimate.")
 
-  @Size(max=20)
+
   public Double getGrossAmountBilled() {
     return grossAmountBilled;
   }

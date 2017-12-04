@@ -2510,6 +2510,21 @@ definitions:
           maxLength: 512
           description: |
             temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.   
+        indentQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            temporary field used to show indent pending quantity to be used for purchase order. If multiple indent numbers used, then show total quantity by combining indent pending quantities.   
+        tenderQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            temporary field used to show tender quantity. If rate type is tender, then show tender quantity.  
+        tenderAvailableQuantity:
+          type: number
+          format: BigDecimal
+          description: |
+            temporary field used to show tender available quantity. If rate type is tender, then show tender quantity which are already used in purchase orders.  
         purchaseIndentDetails:
           type:  array
           items:

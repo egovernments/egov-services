@@ -150,7 +150,7 @@ for(let i = 0; i < config.data.length; i++){
 }
 
 
-app.post('/:module/:master', function(req, res, next) {
+app.post('/spec-directory/:module/:master', function(req, res, next) {
 	for (var key in req.params){ 
 		req.params[key] = req.params[key].toLowerCase();
 	}
@@ -171,7 +171,7 @@ app.post('/:module/:master', function(req, res, next) {
 	next();
 });
 
-app.get('/', (req, res) => {
+app.get('/spec-directory', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 

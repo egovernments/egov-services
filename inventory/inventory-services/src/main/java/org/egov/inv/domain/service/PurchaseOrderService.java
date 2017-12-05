@@ -88,6 +88,12 @@ public class PurchaseOrderService extends DomainService {
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
                 purchaseOrder.setId(sequenceNos.get(i));
+                
+                if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
+                	purchaseOrder.setPurchaseType(purchaseOrders.get(0).getPurchaseType());
+                }else
+                	purchaseOrder.setPurchaseType(PurchaseTypeEnum.INDENT);
+                
                 //TODO: move to id-gen with format <ULB short code>/<Store Code>/<fin. Year>/<serial No.>
                 purchaseOrder.setPurchaseOrderNumber(sequenceNos.get(i));
                 i++;

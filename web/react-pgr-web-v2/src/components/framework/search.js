@@ -113,14 +113,14 @@ class Search extends Component {
   }
 
   componentDidMount() {
-      this.props.resetDropdownData();
+      // this.props.resetDropdownData();
       this.initData();
       this.hasReturnUrl();
 
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
-      this.props.resetDropdownData();
+      // this.props.resetDropdownData();
       this.initData();
 
     }
@@ -521,14 +521,14 @@ class Search extends Component {
     let {formData}=this.props;
      if(id){
       localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
-      localStorage.setItem("formData",JSON.stringify(formData));      
+      localStorage.setItem("formData",JSON.stringify(formData));
       this.props.setRoute(buttonUrl+id);
-      
+
      }else{
          let {selectedRecordId} =this.state;
       if(selectedRecordId){
-        localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]); 
-        localStorage.setItem("formData",JSON.stringify(formData));        
+        localStorage.setItem("returnUrl",window.location.hash.split("#/")[1]);
+        localStorage.setItem("formData",JSON.stringify(formData));
        this.props.setRoute(buttonUrl+selectedRecordId);
       }
      }

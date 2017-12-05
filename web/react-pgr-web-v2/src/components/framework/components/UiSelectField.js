@@ -5,7 +5,9 @@ import MenuItem from 'material-ui/MenuItem';
 import Api from '../../../api/api';
 import jp from "jsonpath";
 import _ from 'lodash';
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router';
+
+let tracker=[];
 
 class UiSelectField extends Component {
 
@@ -14,8 +16,9 @@ class UiSelectField extends Component {
   }
 
   initData(props) {
-          let {item, setDropDownData,setDropDownOriginalData, useTimestamp} = props;
-      if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1) {
+          let {item, setDropDownData,setDropDownOriginalData, useTimestamp,dropDownOringalData} = props;
+      if(item.hasOwnProperty("url") && item.url && item.url.search("\\|")>-1 && item.url.search("{")==-1 && !_.some(tracker,{jsonPath:item.jsonPath})) {
+         tracker.push({jsonPath:item.jsonPath});
          let splitArray=item.url.split("?");
          let context="";
          let id={};
@@ -117,18 +120,18 @@ class UiSelectField extends Component {
    }
 
 	 componentWillReceiveProps(nextProps) {
-    let {dropDownData, value} = this.props;
+      let {dropDownData,dropDownOringalData,value} = this.props;
 
-    //load dependant field values on update/view screen
-    if(dropDownData==undefined && value && nextProps.dropDownData){
-      let {item, handler}=this.props;
-      if(handler)
-        handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg);
-    }
+      //load dependant field values on update/view screen
+      if(dropDownData==undefined && value && nextProps.dropDownData){
+        let {item, handler}=this.props;
+        if(handler)
+          handler({target: {value: value}}, item.jsonPath, item.isRequired ? true : false, '', item.requiredErrMsg, item.patternErrMsg, item.expression, item.expressionMsg);
+      }
 
- 		if(this.props.location.pathname != nextProps.history.location.pathname || dropDownData === undefined) {
- 			this.initData(nextProps);
- 		}
+   		if(this.props.location.pathname != nextProps.history.location.pathname || dropDownData === undefined) {
+   			this.initData(nextProps);
+   		}
  	}
 
    renderSelect =(item) => {
@@ -189,6 +192,7 @@ const mapStateToProps = (state, props) => {
 
   return {
      dropDownData: state.framework.dropDownData[item.jsonPath],
+     dropDownOringalData:state.framework.dropDownOringalData,
      value:value
   }
 };

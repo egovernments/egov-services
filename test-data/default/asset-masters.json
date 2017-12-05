@@ -97,9 +97,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area",
@@ -111,9 +109,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Length",
@@ -125,9 +121,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "MinimumWidth",
@@ -139,9 +133,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "MaximumWidth",
@@ -153,9 +145,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Road Type",
@@ -167,9 +157,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Layer Type",
@@ -181,9 +169,7 @@
           "regExFormate": null,
           "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "No. Of Layers",
@@ -195,9 +181,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Layer Size",
@@ -209,9 +193,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Layer description",
@@ -223,9 +205,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -257,9 +237,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Diameter",
@@ -271,9 +249,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Collection Mains",
@@ -285,9 +261,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Trunk Main",
@@ -299,9 +273,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Usage",
@@ -313,9 +285,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -347,9 +317,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Pipe Type",
@@ -361,9 +329,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Diameter",
@@ -375,9 +341,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Material Type",
@@ -389,9 +353,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Type",
@@ -403,9 +365,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Length",
@@ -417,9 +377,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -451,9 +409,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "reference no",
@@ -465,9 +421,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -550,7 +504,7 @@
     {
       "tenantId": "default",
       "id": 20,
-      "name": "Office Equipment\u2019s, computers and peripherals",
+      "name": "Office Equipment’s, computers and peripherals",
       "code": "020",
       "assetCategoryType": "MOVABLE",
       "parent": null,
@@ -594,9 +548,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Color",
@@ -608,9 +560,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -908,9 +858,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Color",
@@ -922,9 +870,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -994,9 +940,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Color",
@@ -1008,9 +952,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1080,9 +1022,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1094,9 +1034,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1108,9 +1046,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1122,9 +1058,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1136,9 +1070,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1150,9 +1082,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1164,9 +1094,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1178,9 +1106,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1212,9 +1138,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1226,9 +1150,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1240,9 +1162,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1254,9 +1174,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1268,9 +1186,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1282,9 +1198,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1296,9 +1210,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1310,9 +1222,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1344,9 +1254,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1358,9 +1266,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1372,9 +1278,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1386,9 +1290,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1400,9 +1302,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1414,9 +1314,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1428,9 +1326,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1442,9 +1338,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1476,9 +1370,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1490,9 +1382,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1504,9 +1394,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1518,9 +1406,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1532,9 +1418,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1546,9 +1430,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1560,9 +1442,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1574,9 +1454,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1608,9 +1486,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1622,9 +1498,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1636,9 +1510,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1650,9 +1522,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1664,9 +1534,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1678,9 +1546,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1692,9 +1558,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1706,9 +1570,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1740,9 +1602,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1754,9 +1614,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1768,9 +1626,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1782,9 +1638,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1796,9 +1650,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1810,9 +1662,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1824,9 +1674,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1838,9 +1686,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -1872,9 +1718,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1886,9 +1730,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1900,9 +1742,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1914,9 +1754,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1928,9 +1766,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1942,9 +1778,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1956,9 +1790,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1970,9 +1802,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -2004,9 +1834,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -2018,9 +1846,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -2032,9 +1858,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -2046,9 +1870,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -2060,9 +1882,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -2074,9 +1894,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -2088,9 +1906,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -2102,9 +1918,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -2136,9 +1950,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -2150,9 +1962,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -2164,9 +1974,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -2178,9 +1986,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -2192,9 +1998,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -2206,9 +2010,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -2220,9 +2022,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -2234,9 +2034,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
@@ -2268,9 +2066,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area",
@@ -2282,51 +2078,10 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
-    },
-    {
-      "tenantId": "default",
-      "id": 1,
-      "name": "Buildings",
-      "code": "001",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 60,
-      "name": "Building",
-      "code": "060",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    "{\"tenantId\":\"default\",\"id\":100,\"name\":\"Land\",\"code\":\"100\",\"assetCategoryType\":\"IMMOVABLE\",\"parent\":null,\"depreciationMethod\":\"STRAIGHT_LINE_METHOD\",\"isAssetAllow\":false,\"assetAccount\":null,\"accumulatedDepreciationAccount\":null,\"revaluationReserveAccount\":null,\"depreciationExpenseAccount\":null,\"unitOfMeasurement\":\"NOS\",\"version\":\"1.0\",\"depreciationRate\":null,\"isDepreciationApplicable\":true,\"assetFieldsDefination\":null}"
+    }
   ],
   "ModeOfAcquisition": [
     {

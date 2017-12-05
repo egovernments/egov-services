@@ -11,10 +11,12 @@ import org.egov.pa.model.Department;
 import org.egov.pa.model.Document;
 import org.egov.pa.model.DocumentTypeContract;
 import org.egov.pa.model.KPI;
+import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIMasterRowMapper;
 import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
@@ -137,13 +139,26 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 	
 	@Override
-	public List<KPI> getKpiByCode(List<String> kpiCodeList) {
+	public List<KPI> getKpiByCode(List<String> kpiCodeList, List<String> finYearList) {
 		String query = queryBuilder.getKpiByCode();
 		final HashMap<String, Object> parametersMap = new HashMap<>();
 		parametersMap.put("kpiCodeList", kpiCodeList);
+		parametersMap.put("finYearList", finYearList);
+		KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
 		List<KPI> kpiList = namedParameterJdbcTemplate.query(query,
-                parametersMap, new PerformanceAssessmentRowMapper().new KPIMasterRowMapper());
+                parametersMap, mapper );
+		mapTargetToKpi(mapper.kpiTargetMap, kpiList); 
 		return kpiList;
+	}
+	
+	private void mapTargetToKpi(Map<String, List<KpiTarget>> map, List<KPI> kpiList){
+		for(KPI kpi : kpiList) { 
+			List<KpiTarget> targetList = map.get(kpi.getCode());
+			if(null != targetList && targetList.size() > 0) { 
+				kpi.setKpiTargets(targetList);
+			}
+			
+		}
 	}
 	
 	private List<Document> getDocumentListForKpi(String kpiCode) {

@@ -181,11 +181,13 @@ public class PerformanceAssessmentQueryBuilder {
     	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
     }
     
+    private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "  
+			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
+			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
+			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.code IN (:kpiCodeList) AND target.finyear IN (:finYearList) " ;
+    
     public String getKpiByCode() { 
-    	return "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "  
-    			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
-    			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate "  
-    			+ " from egpa_kpi_master master WHERE master.code IN (:kpiCodeList)" ;  
+    	return GETKPIBYCODEFINYEAR; 
     }
     
     

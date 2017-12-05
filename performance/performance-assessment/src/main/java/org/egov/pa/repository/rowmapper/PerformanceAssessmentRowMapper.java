@@ -53,6 +53,7 @@ import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.TargetType;
 import org.egov.pa.model.ValueDocument;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.springframework.jdbc.core.RowMapper;
@@ -65,6 +66,7 @@ import lombok.extern.slf4j.Slf4j;
 public class PerformanceAssessmentRowMapper {
 
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
+		public Map<String, List<KpiTarget>> kpiTargetMap = new HashMap<>();
 
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
@@ -78,8 +80,20 @@ public class PerformanceAssessmentRowMapper {
 			kpi.setPeriodicity(rs.getString("periodicity"));
 			kpi.setTargetType(rs.getString("targetType"));
 			kpi.setAuditDetails(addAuditDetails(rs));
-			/*if(StringUtils.isNotBlank(rs.getString("targetId"))) { 
-				KpiTarget target = new KpiTarget();
+			if(!kpiTargetMap.containsKey(rs.getString("code"))) { 
+				List<KpiTarget> targetList = new ArrayList<>(); 
+				targetList.add(constructKpiTargetObject(rs));
+				kpiTargetMap.put(rs.getString("code"), targetList); 
+			} else { 
+				List<KpiTarget> targetList = kpiTargetMap.get(rs.getString("code")); 
+				targetList.add(constructKpiTargetObject(rs));
+			}
+			return kpi;
+		}
+		
+		private KpiTarget constructKpiTargetObject(ResultSet rs) { 
+			KpiTarget target = new KpiTarget();
+			try { 
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("kpiCode"));
 				target.setTargetValue(rs.getString("targetValue"));
@@ -89,15 +103,16 @@ public class PerformanceAssessmentRowMapper {
 					else if (rs.getString("targetValue").equals("2"))
 						target.setTargetDescription("No");
 					else if (rs.getString("targetValue").equals("3"))
-						target.setTargetDescription("In Progress");
+						target.setTargetDescription("WIP");
 				} else {
 					target.setTargetDescription(rs.getString("targetValue"));
 				}
 				target.setTenantId(rs.getString("tenantId"));
 				target.setFinYear(rs.getString("targetFinYear"));
-				kpi.setKpiTarget(target);
-			}*/
-			return kpi;
+			} catch (Exception e) { 
+				log.error("Encountered an exception while creating the Target Object : " + e);
+			}
+			return target; 
 		}
 	}
 	
@@ -167,7 +182,9 @@ public class PerformanceAssessmentRowMapper {
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("targetKpiCode"));
 				target.setTargetValue(rs.getString("targetvalue"));
-				kpi.setKpiTarget(target);
+				List<KpiTarget> targetList = new ArrayList<>();
+				targetList.add(target);
+				kpi.setKpiTargets(targetList);
 			} 
 			catch (Exception e) { 
 				log.error("Encountered an exception while creating KPI Object " + e);

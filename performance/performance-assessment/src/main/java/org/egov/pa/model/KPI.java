@@ -51,21 +51,22 @@ public class KPI   {
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null; 
   
-  public KpiTarget getKpiTarget() {
-	return kpiTarget;
+
+  @JsonProperty("kpiTargets") 
+  private List<KpiTarget> kpiTargets = null; 
+  
+  
+  
+  
+
+
+public List<KpiTarget> getKpiTargets() {
+	return kpiTargets;
 }
 
-public void setKpiTarget(KpiTarget kpiTarget) {
-	this.kpiTarget = kpiTarget;
+public void setKpiTargets(List<KpiTarget> kpiTargets) {
+	this.kpiTargets = kpiTargets;
 }
-
-@JsonProperty("kpiTarget")
-  private KpiTarget kpiTarget = null; 
-  
-  
-  
-  
-
 
 public String getPeriodicity() {
 	return periodicity;

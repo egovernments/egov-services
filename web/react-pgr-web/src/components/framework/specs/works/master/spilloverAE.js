@@ -341,7 +341,20 @@ var dat = {
 												"isField": true
 										}
 									]
-								}]
+								},
+								{
+									"ifValue": false,
+									"hide": [
+										{
+											"name": "pmcName",
+											"jpath":"abstractEstimates[0].pmcName",
+											"isGroup": false,
+											"isField": true
+										}
+									],
+									"show": []
+								}
+							]
             },
 						{
               "name": "pmcType",
@@ -367,7 +380,8 @@ var dat = {
 												"isField": true
 										}
 									]
-								}]
+								}
+							]
             },
 						{
               "name": "pmcName",
@@ -376,7 +390,7 @@ var dat = {
               "label": "works.create.groups.fields.pmcName",
               "pattern": "",
               "type": "singleValueList",
-              "url": "/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name",
+              "url": "/works-masters/v1/contractors/_search?&pmc=true&statuses=ACTIVE|$.contractors[*].code|$.contractors[*].name",
               "isRequired": true,
               "isDisabled": false,
               "requiredErrMsg": "",

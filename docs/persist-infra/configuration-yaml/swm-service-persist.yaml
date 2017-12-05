@@ -1276,7 +1276,7 @@ serviceMaps:
    description: create sourcesegregation in egswm_sourcesegregation
    fromTopic: swm-sourcesegregation-save-topic
    queryMaps: 
-    - query: INSERT INTO egswm_sourcesegregation(code, tenantid, dumpingGround, sourceSegregationDate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?);
+    - query: INSERT INTO egswm_sourcesegregation(code, tenantid, dumpingGround, ulb, sourceSegregationDate, createdby, lastmodifiedby, createdtime, lastmodifiedtime) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
       basePath: $.sourceSegregations.*
       jsonMaps:
        
@@ -1285,6 +1285,8 @@ serviceMaps:
        - jsonPath: $.sourceSegregations.*.tenantId
          
        - jsonPath: $.sourceSegregations.*.dumpingGround.code
+
+       - jsonPath: $.sourceSegregations.*.ulb.code
 
        - jsonPath: $.sourceSegregations.*.sourceSegregationDate
          dbType: LONG
@@ -1323,10 +1325,12 @@ serviceMaps:
    description: update sourcesegregation in egswm_sourcesegregation
    fromTopic: swm-sourcesegregation-update-topic
    queryMaps: 
-    - query: update egswm_sourcesegregation set dumpingGround=?, sourceSegregationDate=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
+    - query: update egswm_sourcesegregation set ulb=?, dumpingGround=?, sourceSegregationDate=?, lastmodifiedby=?, lastmodifiedtime=? where code=? and tenantId=?;
       basePath: $.sourceSegregations.*
       jsonMaps:
        
+       - jsonPath: $.sourceSegregations.*.ulb.code
+
        - jsonPath: $.sourceSegregations.*.dumpingGround.code
 
        - jsonPath: $.sourceSegregations.*.sourceSegregationDate

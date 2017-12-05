@@ -161,7 +161,7 @@ var dat = {
             "name": "supplier",
             "jsonPath": "priceLists[0].supplier.code",
             "label": "inventory.supplier",
-            "url":"inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name",
+            "url":"inventory-services/suppliers/_search?&active=true|$.suppliers[*].code|$.suppliers[*].name",
             "type": "singleValueList",
             "isRequired": true,
             "isDisabled": false,

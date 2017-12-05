@@ -127,7 +127,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 		}
 		List<KPI> kpiList = new ArrayList<>();
 		if (kpiCodeList.size() > 0) {
-			kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList, kpiValueSearchReq.getFinYear());
+			kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList, kpiValueSearchReq.getFinYear(), kpiValueSearchReq.getDepartmentId());
 		}
 		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);
 	}
@@ -135,24 +135,13 @@ public class KpiValueServiceImpl implements KpiValueService {
 	private List<ValueResponse> sortKpiAndValues(KPIValueSearchRequest kpiValueSearchReq, List<KpiValue> kpiValueList,
 			List<KPI> kpiList) {
 		List<ValueResponse> list = new ArrayList<>();
-		List<ValueResponse> deptList = new ArrayList<>();
 		for (int i = 0; i < kpiValueList.size(); i++) {
 			for (int j = 0; j < kpiList.size(); j++) {
 				if (kpiValueList.get(i).getKpiCode().equals(kpiList.get(j).getCode())) {
-					if (null != kpiValueSearchReq.getDepartmentId()
-							&& kpiList.get(j).getDepartmentId() == kpiValueSearchReq.getDepartmentId()) {
-						deptList.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
-								kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
-					} else {
-						list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
-								kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
-					}
+					list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j), kpiValueList.get(i),
+							kpiValueSearchReq.getGraphType()));
 				}
 			}
-		}
-		if (null != kpiValueSearchReq.getDepartmentId()) { 
-			log.info("After sorting KPI and Value List : " + deptList.toString());
-			return deptList; 
 		}
 		log.info("After sorting KPI and Value List : " + list.toString());
 		return list;

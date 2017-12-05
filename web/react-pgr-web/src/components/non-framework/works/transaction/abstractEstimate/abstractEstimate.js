@@ -275,17 +275,6 @@ class AbstractEstimate extends Component {
       if(obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
       setFormData(formData);
 
-      Promise.all([
-        Api.commonApiPost('/egov-mdms-service/v1/_get', {moduleName:'Works',masterName:'AppConfiguration',filter:"[?(@.code=='Spillover_Workflow_Mandatory')]"}, {}, false, specifications[`works.create`].useTimestamp)
-      ]).then(responses => {
-        try{
-          self.setState({spilloverConfiguration:responses[0].MdmsRes.Works.AppConfiguration[0].value.toLowerCase()});
-        }catch(e){
-          console.log('error');
-          setLoadingStatus('hide');
-        }
-      })
-
       handleChange (new Date().valueOf(), `${obj.objectName}[0].dateOfProposal`, true);
       handleChange (false, `${obj.objectName}[0].spillOverFlag`, false);
       handleChange (false, `${obj.objectName}[0].pmcRequired`, false);
@@ -1419,13 +1408,8 @@ class AbstractEstimate extends Component {
           />
           <div style={{"textAlign": "center"}}>
             <br/>
-            {this.state.spilloverConfiguration === 'yes' &&
-              <UiButton item={{"label": "Save", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google" handler={this.save}/>
-            }
-            {this.state.spilloverConfiguration === 'yes' && actionName == "create" &&
-              <UiButton item={{"label": "Forward", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>
-            }
-            {this.state.spilloverConfiguration === 'no' && actionName == "create" && <UiButton item={{"label": "Submit", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
+            <UiButton item={{"label": "Save", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google" handler={this.save}/>
+            {actionName == "create" && <UiButton item={{"label": "Forward", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
             {this.renderActions()}
             {/*actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>*/}
             &nbsp;&nbsp;<RaisedButton label="Reset" primary={false} onClick={() => {

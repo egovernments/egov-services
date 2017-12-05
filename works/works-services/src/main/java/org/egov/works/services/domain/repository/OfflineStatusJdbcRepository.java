@@ -13,98 +13,83 @@ import org.springframework.stereotype.Service;
 @Service
 public class OfflineStatusJdbcRepository extends JdbcRepository {
 
-	public static final String TABLE_NAME = "egw_offlinestatus";
+    public static final String TABLE_NAME = "egw_offlinestatus";
 
-	public List<OfflineStatus> search(OfflineStatusSearchContract offlineStatusSearchContract) {
-		String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
+    public List<OfflineStatus> search(OfflineStatusSearchContract offlineStatusSearchContract) {
+        String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
-		Map<String, Object> paramValues = new HashMap<>();
-		StringBuffer params = new StringBuffer();
+        Map<String, Object> paramValues = new HashMap<>();
+        StringBuilder params = new StringBuilder();
 
-		if (offlineStatusSearchContract.getSortBy() != null && !offlineStatusSearchContract.getSortBy().isEmpty()) {
-			validateSortByOrder(offlineStatusSearchContract.getSortBy());
-			validateEntityFieldName(offlineStatusSearchContract.getSortBy(), OfflineStatus.class);
-		}
+        if (offlineStatusSearchContract.getSortBy() != null && !offlineStatusSearchContract.getSortBy().isEmpty()) {
+            validateSortByOrder(offlineStatusSearchContract.getSortBy());
+            validateEntityFieldName(offlineStatusSearchContract.getSortBy(), OfflineStatus.class);
+        }
 
-		String orderBy = "order by objectnumber";
-		if (offlineStatusSearchContract.getSortBy() != null && !offlineStatusSearchContract.getSortBy().isEmpty()) {
-			orderBy = "order by " + offlineStatusSearchContract.getSortBy();
-		}
+        String orderBy = "order by objectnumber";
+        if (offlineStatusSearchContract.getSortBy() != null && !offlineStatusSearchContract.getSortBy().isEmpty()) {
+            orderBy = "order by " + offlineStatusSearchContract.getSortBy();
+        }
 
-		searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
+        searchQuery = searchQuery.replace(":tablename", TABLE_NAME);
 
-		searchQuery = searchQuery.replace(":selectfields", " * ");
+        searchQuery = searchQuery.replace(":selectfields", " * ");
 
-		if (offlineStatusSearchContract.getTenantId() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("tenantId =:tenantId");
-			paramValues.put("tenantId", offlineStatusSearchContract.getTenantId());
-		}
-		if (offlineStatusSearchContract.getDetailedEstimateNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("objectnumber in (:detailedEstimateNumbers)");
-			paramValues.put("detailedEstimateNumbers", offlineStatusSearchContract.getDetailedEstimateNumbers());
-		}
-		
-		if (offlineStatusSearchContract.getIds() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("id in(:ids) ");
-			paramValues.put("ids", offlineStatusSearchContract.getIds());
-		}
+        if (offlineStatusSearchContract.getTenantId() != null) {
+            addAnd(params);
+            params.append("tenantId =:tenantId");
+            paramValues.put("tenantId", offlineStatusSearchContract.getTenantId());
+        }
+        if (offlineStatusSearchContract.getDetailedEstimateNumbers() != null) {
+            addAnd(params);
+            params.append("objectnumber in (:detailedEstimateNumbers)");
+            paramValues.put("detailedEstimateNumbers", offlineStatusSearchContract.getDetailedEstimateNumbers());
+        }
 
-		
-		if (offlineStatusSearchContract.getWorkOrderNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("objectnumber in (:workOrderNumbers)");
-			paramValues.put("workOrderNumbers", offlineStatusSearchContract.getWorkOrderNumbers());
-		}
-		
-		if (offlineStatusSearchContract.getLoaNumbers() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("objectnumber in (:loaNumbers)");
-			paramValues.put("loaNumbers", offlineStatusSearchContract.getLoaNumbers());
-		}
+        if (offlineStatusSearchContract.getIds() != null) {
+            addAnd(params);
+            params.append("id in(:ids) ");
+            paramValues.put("ids", offlineStatusSearchContract.getIds());
+        }
 
-		if (offlineStatusSearchContract.getStatuses() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("status in (:statuses)");
-			paramValues.put("statuses", offlineStatusSearchContract.getStatuses());
-		}
+        if (offlineStatusSearchContract.getWorkOrderNumbers() != null) {
+            addAnd(params);
+            params.append("objectnumber in (:workOrderNumbers)");
+            paramValues.put("workOrderNumbers", offlineStatusSearchContract.getWorkOrderNumbers());
+        }
 
-		if (offlineStatusSearchContract.getObjectType() != null) {
-			if (params.length() > 0) {
-				params.append(" and ");
-			}
-			params.append("lower(objectType) = :objecttype");
-			paramValues.put("objecttype", offlineStatusSearchContract.getObjectType().toLowerCase());
-		}
+        if (offlineStatusSearchContract.getLoaNumbers() != null) {
+            addAnd(params);
+            params.append("objectnumber in (:loaNumbers)");
+            paramValues.put("loaNumbers", offlineStatusSearchContract.getLoaNumbers());
+        }
+
+        if (offlineStatusSearchContract.getStatuses() != null) {
+            addAnd(params);
+            params.append("status in (:statuses)");
+            paramValues.put("statuses", offlineStatusSearchContract.getStatuses());
+        }
+
+        if (offlineStatusSearchContract.getObjectType() != null) {
+            addAnd(params);
+            params.append("lower(objectType) = :objecttype");
+            paramValues.put("objecttype", offlineStatusSearchContract.getObjectType().toLowerCase());
+        }
 
         params.append(" and deleted = false");
-		if (params.length() > 0) {
+        if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+            searchQuery = searchQuery.replace(":condition", " where " + params.toString());
 
-		} else
+        } else
 
-			searchQuery = searchQuery.replace(":condition", "");
+            searchQuery = searchQuery.replace(":condition", "");
 
-		searchQuery = searchQuery.replace(":orderby", orderBy);
+        searchQuery = searchQuery.replace(":orderby", orderBy);
 
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(OfflineStatus.class);
+        BeanPropertyRowMapper row = new BeanPropertyRowMapper(OfflineStatus.class);
 
-		return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
-	}
+        return namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+    }
 
 }

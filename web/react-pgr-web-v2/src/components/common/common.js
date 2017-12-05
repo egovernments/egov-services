@@ -2062,6 +2062,7 @@ var localization_EN_Data = {
 "swm.vehicles.search.title": "Search",
 "swm.vehicles.create.title": "Vehicle Master",
 "swm.vehicles.create.vehicleType": "Vehicle Type",
+"swm.vehicles.create.driver": "Driver",
 "swm.vehicles.create.fuelType": "Type of Fuel",
 "swm.vehicles.create.regNumber": "Registration Number",
 "swm.vehicles.create.engineSrNumber": "Engine Serial Number",
@@ -2077,6 +2078,7 @@ var localization_EN_Data = {
 "swm.vehicles.create.isUnderWarranty": "Is vehicle under warranty ?",
 "swm.vehicles.search.result.vehicleType": "Vehicle Type",
 "swm.vehicles.search.result.regNumber": "Registration Number",
+"swm.vehicles.search.result.driver": "Driver",
 "swm.vehicles.search.result.vehicleCapacity": "Vehicle Capacity (Tons)",
 "swm.vehicles.search.result.engineSrNumber": "Engine Serial Number",
 "swm.vehicles.search.result.chassisSrNumber": "Chassis Sr Number",
@@ -2256,6 +2258,7 @@ var localization_EN_Data = {
 "swm.create.sanitationstaffschedules.targetto": "Target To",
 "swm.create.sanitationstaffschedules.route": "Route",
 "swm.create.sanitationstaffschedules.dumpingground": "Dumping Ground",
+"swm.create.ulb": "ULB Name",
 
 "pgr.dashboard.gis.registered.title":"Registered",
 "pgr.dashboard.gis.redressed.title":"Redressed",
@@ -2762,7 +2765,7 @@ var localization_EN_Data = {
 "perfManagement.create.KPIs.groups.type":"Type",
 "perfManagement.create.KPIs.groups.kpiTarget":"Target",
 "perfManagement.create.KPIs.groups.kpiInfo":"KPI Info",
-"perfManagement.create.KPIs.groups.Uploads":"Uploads",
+"perfManagement.create.KPIs.groups.Uploads":"UPLOADS",
 
 
 "perfManagement.create.KPIs.groups.kpiMaster":"Key Performance Indicator Master",
@@ -2816,7 +2819,7 @@ var localization_EN_Data = {
 "perfManagement.update.KPIs.groups.updatekpiTargetRadioBlock":"Target Value",
 "perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes":"Yes",
 "perfManagement.update.KPIs.groups.updatekpiTargetBlock.no":"No",
-"perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress":"In Progress",
+"perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress":"WIP",
 "perfManagement.update.KPIs.groups.updateKpiInstruc":"Instruction to Achieve Target",
 "perfManagement.update.KPIs.groups.updatekpiDocuments":"Document Required",
 "perfManagement.update.KPIs.groups.updatekpidoc":"Document Name",

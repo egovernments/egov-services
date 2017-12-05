@@ -36,6 +36,10 @@ public class SourceSegregation {
     private DumpingGround dumpingGround = null;
 
     @NotNull
+    @JsonProperty("ulb")
+    private Tenant ulb = null;
+
+    @NotNull
     @JsonProperty("sourceSegregationDate")
     private Long sourceSegregationDate = null;
 

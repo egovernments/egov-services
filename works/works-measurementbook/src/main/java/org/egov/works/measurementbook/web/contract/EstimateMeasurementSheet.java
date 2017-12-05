@@ -56,6 +56,9 @@ public class EstimateMeasurementSheet   {
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
+  
+  @JsonProperty("deleted")
+  private Boolean deleted = null;
 
   public EstimateMeasurementSheet id(String id) {
     this.id = id;
@@ -327,7 +330,15 @@ public class EstimateMeasurementSheet   {
   }
 
 
-  @Override
+  public Boolean getDeleted() {
+	return deleted;
+}
+
+public void setDeleted(Boolean deleted) {
+	this.deleted = deleted;
+}
+
+@Override
   public boolean equals(Object o) {
     if (this == o) {
       return true;

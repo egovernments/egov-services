@@ -14,7 +14,9 @@ import org.egov.swm.domain.model.DumpingGround;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.SourceSegregation;
 import org.egov.swm.domain.model.SourceSegregationSearch;
+import org.egov.swm.domain.model.Tenant;
 import org.egov.swm.domain.service.DumpingGroundService;
+import org.egov.swm.domain.service.TenantService;
 import org.egov.swm.persistence.entity.SourceSegregationEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -30,6 +32,9 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
     @Autowired
     private DumpingGroundService dumpingGroundService;
+
+    @Autowired
+    private TenantService tenantService;
 
     public Boolean uniqueCheck(final String tenantId, final String fieldName, final String fieldValue,
             final String uniqueFieldName,
@@ -84,6 +89,12 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
             paramValues.put("dumpingGround", searchRequest.getDumpingGroundCode());
         }
 
+        if (searchRequest.getUlbCode() != null) {
+            addAnd(params);
+            params.append("ulb =:ulb");
+            paramValues.put("ulb", searchRequest.getUlbCode());
+        }
+
         Pagination<SourceSegregation> page = new Pagination<>();
         if (searchRequest.getOffset() != null)
             page.setOffset(searchRequest.getOffset());
@@ -128,9 +139,12 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
 
         }
         if (sourceSegregationList != null && !sourceSegregationList.isEmpty()) {
+
             populateDumpingGrounds(sourceSegregationList);
 
             populateCollectionDetails(sourceSegregationList, sourceSegregationCodes.toString());
+
+            populateULBs(sourceSegregationList);
         }
         page.setTotalResults(sourceSegregationList.size());
 
@@ -199,6 +213,31 @@ public class SourceSegregationJdbcRepository extends JdbcRepository {
                     && !sourceSegregation.getDumpingGround().getCode().isEmpty()) {
 
                 sourceSegregation.setDumpingGround(dumpingGroundMap.get(sourceSegregation.getDumpingGround().getCode()));
+            }
+
+        }
+    }
+
+    private void populateULBs(List<SourceSegregation> sourceSegregationList) {
+
+        Map<String, Tenant> TenantMap = new HashMap<>();
+        String tenantId = null;
+
+        if (sourceSegregationList != null && !sourceSegregationList.isEmpty())
+            tenantId = sourceSegregationList.get(0).getTenantId();
+
+        List<Tenant> tenants = tenantService.getAll(tenantId, new RequestInfo());
+
+        for (Tenant t : tenants) {
+            TenantMap.put(t.getCode(), t);
+        }
+
+        for (SourceSegregation sourceSegregation : sourceSegregationList) {
+
+            if (sourceSegregation.getUlb() != null && sourceSegregation.getUlb().getCode() != null
+                    && !sourceSegregation.getUlb().getCode().isEmpty()) {
+
+                sourceSegregation.setUlb(TenantMap.get(sourceSegregation.getUlb().getCode()));
             }
 
         }

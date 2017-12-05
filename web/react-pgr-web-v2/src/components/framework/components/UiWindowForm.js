@@ -18,6 +18,9 @@ import {
 
 var specifications = {};
 var reqRequired = [];
+
+const REGEXP_FIND_IDX = /\[(.*?)\]+/g;
+
 class UiWindowForm extends Component {
   constructor(props) {
     super(props);
@@ -475,6 +478,8 @@ class UiWindowForm extends Component {
     }
   };
  
+
+
   checkValidations =(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg)=> {
   let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
@@ -507,6 +512,138 @@ class UiWindowForm extends Component {
     errorText
   }
 }
+affectDependants = (obj, e, property)=>{
+  let {handleChange, setDropDownData,setDropDownOriginalData,dropDownOringalData} = this.props;
+  let {getVal, getValFromDropdownData, returnPathValueFunction} = this;
+
+
+  const findLastIdxOnJsonPath = (jsonPath) => {
+    var str = jsonPath.split(REGEXP_FIND_IDX);
+    for (let i = str.length - 1; i > -1; i--) {
+      if (str[i].match(/\d+/)) {
+        return str[i];
+      }
+    }
+    return undefined;
+  }
+
+  const replaceLastIdxOnJsonPath = (jsonPath, replaceIdx) => {
+    var str = jsonPath.split(REGEXP_FIND_IDX);
+    var isReplaced = false;
+    for (let i = str.length - 1; i > -1; i--) {
+      if (str[i].match(/\d+/)) {
+        if (!isReplaced) {
+          isReplaced = true;
+          str[i] = `[${replaceIdx}]`;
+        } else
+          str[i] = `[${str[i]}]`;
+      }
+    }
+    return str.join("");
+  }
+  let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+  let dependantIdx;
+  if (depedants.length === 0 && property) {
+    let currentProperty = property;
+    dependantIdx = findLastIdxOnJsonPath(property);
+    if (dependantIdx !== undefined)
+      currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+    depedants = jp.query(obj, `$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
+
+    //Changes to handle table sum
+    var jpathname = property.substr(0, property.lastIndexOf("[") + 1) + '0' + property.substr(property.lastIndexOf("[") + 2);
+
+    var dependency = jp.query(obj, `$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
+    if (dependency.length > 0) {
+      let _formData = { ...this.props.formData
+      };
+      if (_formData) {
+        let field = property.substr(0, property.lastIndexOf("["));
+        let last = property.substr(property.lastIndexOf("]") + 2);
+        let curIndex = property.substr(property.lastIndexOf("[") + 1, 1);
+
+        let arrval = _.get(_formData, field);
+        if (arrval) {
+          let len = _.get(_formData, field).length;
+
+          let amtsum = 0;
+          let svalue = "";
+          for (var i = 0; i < len; i++) {
+            let ifield = field + '[' + i + ']' + '.' + last;
+            if (i == curIndex) {
+              svalue = e.target.value;
+            } else {
+              svalue = _.get(_formData, ifield);
+            }
+
+            amtsum += parseInt(svalue);
+          }
+          if (amtsum > 0) {
+            handleChange({
+              target: {
+                value: amtsum
+              }
+            }, dependency[0], false, '', '');
+
+          }
+        }
+      }
+    }
+     }
+
+    _.forEach(depedants, function(value, key) {
+          if (value.type == "dropDown") {
+              let splitArray = value.pattern.split("?");
+              let context = "";
+              let id = {};
+              for (var j = 0; j < splitArray[0].split("/").length; j++) {
+                context+=splitArray[0].split("/")[j]+"/";
+              }
+
+              let queryStringObject=splitArray[1].split("|")[0].split("&");
+              for (var i = 0; i < queryStringObject.length; i++) {
+                if (i) {
+                   if (queryStringObject[i].split("=")[1].search("{")>-1) {
+                    if (queryStringObject[i].split("=")[1].split("{")[1].split("}")[0]==property) {
+                        //console.log("replacing!!!", queryStringObject[i].split("=")[1], queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value))
+                        id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value) || "";
+                    } else {
+                      id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/,getVal(queryStringObject[i].split("=")[1].split("{")[1].split("}")[0])) || "";
+                    }
+                   } else {
+                    id[queryStringObject[i].split("=")[0]]=queryStringObject[i].split("=")[1];
+                  }
+                }
+              }
+
+              Api.commonApiPost(context, id, {}, false, false, false, "", "", value.isStateLevel).then(function(response) {
+                if(response) {
+                  let keys=jp.query(response,splitArray[1].split("|")[1]);
+                  let values=jp.query(response,splitArray[1].split("|")[2]);
+                  let dropDownData=[];
+                  for (var k = 0; k < keys.length; k++) {
+                      let obj={};
+                      obj["key"]=keys[k];
+                      obj["value"]=values[k];
+                      dropDownData.push(obj);
+                  }
+
+                  dropDownData.sort(function(s1, s2) {
+                    return (s1.value < s2.value) ? -1 : (s1.value > s2.value) ? 1 : 0;
+                  });
+                  dropDownData.unshift({key: null, value: "-- Please Select --"});
+                  setDropDownData(value.jsonPath, dropDownData);
+                  setDropDownOriginalData(value.jsonPath, response);
+
+                }
+              },function(err) {
+                  console.log(err);
+              });
+          }
+        
+    });
+}
+
 
   handleChange = (
     e,
@@ -516,13 +653,23 @@ class UiWindowForm extends Component {
     requiredErrMsg,
     patternErrMsg
   ) => {
+    let {handleChange,mockData,setDropDownData, formData} = this.props;
     var currentState = this.state;
+    let hashLocation = window.location.hash;
+    var substring = "updateagency";
+    let obj;
+    if(hashLocation.indexOf(substring) !== -1){
+       obj = specifications[`${hashLocation.split("/")[2]}.create`];
+    }else{
+       obj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
+    }
+
     var newObj = _.set(currentState.valuesObj, property, e.target.value);
     // this.setState({
     //   valuesObj: newObj
     // });
-//$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
-//$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
+    //$("#title>div>div:nth-child(2)").text(this.state.valuesObj.title);
+    //$("#gender>div>div:nth-child(2)").text(this.state.valuesObj.gender);
     // dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
     var validationDat = this.checkValidations(currentState.fieldErrors, property, e.target.value, isRequired, currentState.valuesObj, currentState.reqRequired, pattern, patternErrMsg)
     
@@ -535,7 +682,15 @@ class UiWindowForm extends Component {
             }
        })
 
+       try{
+           handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+       }
+       catch(e){
+         console.log('error in autocomplete . It is version issue');
+         console.log(e);
+       }
 
+       this.affectDependants(obj, e, property);
   };
 
   getValueFn = path => {
@@ -567,11 +722,34 @@ class UiWindowForm extends Component {
 }
 const mapStateToProps = state => ({
   fieldErrors: state.frameworkForm.fieldErrors,
-  formData: state.frameworkForm.form
+  formData: state.frameworkForm.form,
+  mockData: state.framework.mockData,
+  moduleName:state.framework.moduleName,
+  actionName:state.framework.actionName,
+  dropDownData: state.framework.dropDownData,
+  dropDownOringalData:state.framework.dropDownOringalData
 });
 const mapDispatchToProps = dispatch => ({
   setLoadingStatus: loadingStatus => {
     dispatch({ type: "SET_LOADING_STATUS", loadingStatus });
+  },
+  setMockData: (mockData) => {
+    dispatch({type: "SET_MOCK_DATA", mockData});
+  },
+  setModuleName: (moduleName) => {
+    dispatch({type:"SET_MODULE_NAME", moduleName})
+  },
+  setActionName: (actionName) => {
+    dispatch({type:"SET_ACTION_NAME", actionName})
+  },
+  setDropDownData:(fieldName, dropDownData) => {
+    dispatch({type: "SET_DROPDWON_DATA", fieldName, dropDownData})
+  },
+  setDropDownOriginalData:(fieldName, dropDownData) => {
+    dispatch({type: "SET_ORIGINAL_DROPDWON_DATA", fieldName, dropDownData})
+  },
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   }
 });
 

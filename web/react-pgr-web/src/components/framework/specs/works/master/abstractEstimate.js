@@ -602,7 +602,7 @@ var dat = {
 								"maxLength":1024
 			        }, {
 			          "name": "estimateAmount",
-			          "pattern": "^\\d{0,6}(\\.\\d{0,2})?$",
+			          "pattern": "^\\d{0,20}(\\.\\d{0,2})?$",
 								"patternErrMsg": "works.create.pattern.fields.label.estimateAmount",
 			          "type": "text",
 			          "jsonPath": "abstractEstimates[0].abstractEstimateDetails[0].estimateAmount",

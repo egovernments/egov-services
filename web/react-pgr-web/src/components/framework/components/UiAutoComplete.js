@@ -34,11 +34,10 @@ class UiAutoComplete extends Component {
 
    }
 
-  // componentWillReceiveProps(nextProps, nextState) {
-  //  		if(!_.isEqual(nextProps, this.props)) {
-  //  			this.initData(nextProps);
-  //  		}
-  //  	}
+  componentWillReceiveProps(nextProps, nextState) {
+ 	// 	console.log(this.props.getVal(nextProps.item.jsonPath), nextProps.item.jsonPath);
+		this.setState({searchText:this.props.getVal(nextProps.item.jsonPath)});
+ 	}
 
 	componentDidMount() {
 		this.initData();

@@ -2063,6 +2063,12 @@ definitions:
           description: name of the DumpingGround. should be unique in ULB
           maxLength: 128
           minLength: 1
+        ulbs:
+          description: ULB's
+          type: array
+          items: 
+            $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1.0.1.yml#/definitions/Tenant'
+          minItems: 1
         siteDetails:
           $ref: '#/definitions/SiteDetails'
         isProcessingSite:
@@ -2072,6 +2078,7 @@ definitions:
       required:
       - tenantId
       - name
+      - ulbs
       - siteDetails
       
     ProcessingSite:
@@ -3276,6 +3283,9 @@ definitions:
         dumpingGround:
           $ref: '#/definitions/DumpingGround'
           description: With the name of dumping ground, display the location data Ward / Zone/ street etc on GUI
+        ulb:
+          $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/tenant/contracts/v1.0.1.yml#/definitions/Tenant'
+          description: Code of ULB
         sourceSegregationDate:
           type: integer
           format: int64
@@ -3289,6 +3299,7 @@ definitions:
       required:
       - tenantId
       - dumpingGround
+      - ulb
       - sourceSegregationDate
       - collectionDetails
       
@@ -3462,14 +3473,3 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
-
-
-
-
-
-
-
-
-
-
-

@@ -48,7 +48,7 @@ class UiDocuments extends Component {
         })
       }
     }else{
-      let fileCount = (_.get(this.props.formData,item.jsonPath) && _.get(this.props.formData,item.jsonPath).length) || 1;
+      let fileCount = (_.get(props.formData,item.jsonPath) && _.get(props.formData,item.jsonPath).length) || 1;
       this.setState({
         docs: [],
         allowedMax:item.maxFile,

@@ -77,6 +77,7 @@ public class AbstractEstimateService {
     public AbstractEstimateResponse create(AbstractEstimateRequest abstractEstimateRequest) {
         validator.validateEstimates(abstractEstimateRequest, true);
         Boolean isSpilloverWFReq = false;
+        ProjectCode projectCode = new ProjectCode();
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
             estimate.setId(commonUtils.getUUID());
             estimate.setAuditDetails(estimateUtils.setAuditDetails(abstractEstimateRequest.getRequestInfo(), false));
@@ -116,8 +117,14 @@ public class AbstractEstimateService {
             if (estimate.getSpillOverFlag())
                 isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
                         abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
-            if (!isSpilloverWFReq && estimate.getSpillOverFlag())
+            if (!isSpilloverWFReq && estimate.getSpillOverFlag()) {
                 estimate.setStatus(AbstractEstimateStatus.ADMIN_SANCTIONED);
+                for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
+                    projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+                            abstractEstimateRequest.getRequestInfo(), estimate));
+                    abstractEstimateDetails.setProjectCode(projectCode);
+                }
+            }
             else {
                 populateWorkFlowDetails(estimate, abstractEstimateRequest.getRequestInfo());
                 Map<String, String> workFlowResponse = workflowService.enrichWorkflow(estimate.getWorkFlowDetails(),
@@ -176,13 +183,13 @@ public class AbstractEstimateService {
                 }
             }
 
-            if (estimate.getSpillOverFlag() && estimate.getStatus().toString()
-                    .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
+            if ((estimate.getStatus().toString()
+                    .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) || (estimate.getStatus().toString()
+                            .equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString()) && estimate.getSpillOverFlag())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate));
                     abstractEstimateDetails.setProjectCode(projectCode);
-
                 }
             }
         }

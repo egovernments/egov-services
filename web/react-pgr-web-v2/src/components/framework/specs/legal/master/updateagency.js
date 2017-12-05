@@ -2073,7 +2073,7 @@ var dat = {
         "fields": [
           {
             "name": "additionalAdvocateWindow",
-            "jsonPath": "agencies[0]",
+            "jsonPath": "agencies[0].advocates",
             "arrayPath": "advocates",
             "label": "legal.advocates.create.additionalAdvocateWindow",
             "pattern": "",

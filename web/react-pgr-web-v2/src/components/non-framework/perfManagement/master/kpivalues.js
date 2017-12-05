@@ -50,10 +50,10 @@ class kpivalues  extends Component{
 
             uploadPane:[],
             anchorEl:[],
+            response:[],
 
-            allowedMax:1,
-
-
+            allowedMax:1,            
+            search:false,
             errorInput:'No record found'
      };
 
@@ -74,6 +74,8 @@ class kpivalues  extends Component{
      this.handleChange = this.handleChange.bind(this);
      this.nextSection = this.nextSection.bind(this);
      this.prevSection = this.prevSection.bind(this);
+     this.clearSearch = this.clearSearch.bind(this);
+     
 
    }
 
@@ -172,14 +174,14 @@ class kpivalues  extends Component{
         var response = res.kpiValues;
 
          let header = self.header();
-         var row   = self.prepareBodyobject(response);
+        //var row   = self.prepareBodyobject(response);
 
          let showResult = false;
          if (res.kpiValues.length) {
           showResult = true;
          }
 
-         self.setState({data: row,header:header,showResult: showResult,KPIResult:response});
+         self.setState({data: res.kpiValues,header:header,showResult: showResult,KPIResult:response});
 
        }, function(err){
          self.props.setLoadingStatus('hide');
@@ -189,7 +191,7 @@ class kpivalues  extends Component{
 
 header()
 {
-  let header = ['April','May','June','July','Augest','Sep','Oct','Nov','Dec','Jan','Feb','March'];
+  let header = ['April','May','June','July','August','September','October','November','December','January','February','March'];
 
   return header.map((headerItem,k) =>  {
     //console.log(headerItem,k);
@@ -236,8 +238,8 @@ renderFileObject = (item, i) => {
 
         <label class="btn btn-primary" for={"file_"+item.valueid+item.period} style={{"color":"orange"}}>
             <input id={"file_"+item.valueid+item.period} type="file" style={{"display":"none"}}  onChange={e => this.handleFile(e,item.valueid,item.period)}/>
-            <span className="glyphicon glyphicon-upload" aria-hidden="true"></span>
-            <strong>Upload More</strong>
+            <span className="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;
+            <strong>UPLOAD MORE</strong>
         </label>
       )
     }
@@ -254,10 +256,16 @@ prepareUploadPanel(itemValue)
           marginLeft: 78,
           marginTop: 5,
           padding: 10,
-          backgroundColor:'white'
+          backgroundColor:'white',
+          width:170,
+          zIndex:1
         }}
       >
-        <strong>Holy guacamole!</strong> Check this info.
+        <ul>
+          <li>attachment 1</li>
+          <li>attachment 2</li>
+          <li>attachment 3</li>
+        </ul>
         <br/>
         {this.renderFileObject(itemValue)}
       </div>
@@ -272,9 +280,9 @@ prepareKPIdesc(kpi)
 
 prepareBodyobject(response)
 {
-  
   return response.map(item => {
-    this.state.uploadPane[item.kpiValue.id] = [];
+      
+    //this.state.uploadPane[item.kpiValue.id] = [];
     return (
           <tr>
             <td>
@@ -282,13 +290,13 @@ prepareBodyobject(response)
                 <label>{translate("perfManagement.create.KPIs.groups.type")}</label>:&nbsp;
                 <span>{item.kpi.targetType}</span><br/>
                 <label>{translate("perfManagement.create.KPIs.groups.kpiTarget")}</label>:&nbsp;
-                <span>{item.kpi.kpiTarget.targetDescription}</span><br/>
+                <span>{item.kpi.kpiTargets[0].targetDescription}</span><br/>
 
                 <OverlayTrigger
                    trigger="click"
                    overlay={this.prepareKPIdesc(item.kpi)} placement="bottom" rootClose>
                     <span style={{"color":"orange"}}>
-                        <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;
                         <u>{translate("perfManagement.create.KPIs.groups.kpiInfo")}</u>
                     </span>
                 </OverlayTrigger>
@@ -307,7 +315,7 @@ prepareBodyobject(response)
                         <TextField 
                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
                            inputStyle={{"color": "#5F5C57","textAlign":"left"}}
-                           style={{"display": 'inline-block'}}
+                           style={{"display": 'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
                            value={itemValue.value}
                             />
@@ -319,7 +327,7 @@ prepareBodyobject(response)
                         <TextField 
                            floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
                            inputStyle={{"color": "#5F5C57","textAlign":"left"}}
-                           style={{"display": 'inline-block'}}
+                           style={{"display": 'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
                            value={itemValue.value} />
 
@@ -329,7 +337,7 @@ prepareBodyobject(response)
 
                         <SelectField value={itemValue.value}
                            dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
-                           style={{"display":  'inline-block'}}
+                           style={{"display":  'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
                            fullWidth={true}
                            hintText="Please Select"
@@ -367,7 +375,7 @@ prepareBodyobject(response)
             <td>
             </td>   
           </tr>
-          );          
+          );        
         });
 }
 
@@ -498,14 +506,14 @@ prepareBodyobject(response)
 
    clearSearch()
    {
-     this.setState({selectedDeptId: '',selectedFinYear:'', selectedKpiCode:'',showResult: false});
+     this.setState({selectedDeptId: '',selectedFinYear:'', selectedKpiCode:'',showResult: false, search:false});
    }
 
     searchKPIValues(event,key,value,type)
     {
       switch (type) {
         case 'DEPT':
-         this.setState({selectedDeptId:value});
+         this.setState({selectedDeptId:value,'search':true});
         break;
         case 'FINYEAR':
          this.setState({selectedFinYear:event.target.innerHTML});
@@ -566,17 +574,10 @@ prepareBodyobject(response)
      //console.log(list);
      return (
        <div className="SearchResult">
-       <Row>
-           <Col xs={6} md={6}>
-             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
-           </Col>
-           <Col xs={6} md={6}>
-             <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
-           </Col>
-         </Row>
+       
 
          <Card className="uiCard">
-           <CardHeader title={<strong> Key Performance Indicator Search </strong>}/>
+           <CardHeader title={<strong>Search Key Performance Indicator </strong>}/>
            <CardText>
               <Row className="show-grid">
                  <Col xs={4} md={4}>
@@ -590,7 +591,7 @@ prepareBodyobject(response)
                    fullWidth={true}
                    hintText="Please Select"
                    labelStyle={{"color": "#5F5C57"}}
-                   floatingLabelText={<span>Department</span>}
+                   floatingLabelText={<span>Department <span style={{"color": "#FF0000"}}><i>*</i></span></span>}
                    onChange={(event, key, value) => this.searchKPIValues(event, key, value,'DEPT')}>
 
                      {this.state.Department && this.state.Department.map((dd, index) => (
@@ -645,10 +646,19 @@ prepareBodyobject(response)
              </CardText>
            </Card>
 
+           <Row>
+           <Col xs={6} md={6}>
+             <h3 style={{paddingLeft: 15, "marginBottom": "0"}}>{!_.isEmpty(mockData) && moduleName && actionName && mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].title ? translate(mockData[`${moduleName}.${actionName}`].title) : ""}</h3>
+           </Col>
+           <Col xs={6} md={6}>
+             <div style={{"textAlign": "right", "color": "#FF0000", "marginTop": "15px", "marginRight": "15px", "paddingTop": "8px"}}><i>( * ) {translate("framework.required.note")}</i></div>
+           </Col>
+         </Row>
+
            <Row className="show-grid">
 
                 <Col xs={6} xsOffset={5}>
-                 <UiButton item={{"label": "Search","uiType":"button", "primary": true}} ui="google" handler={(e) => this.handleSearch(e)} />&nbsp;&nbsp;
+                 <UiButton item={{"label": "Search","uiType":"button", "primary": true,"isDisabled": !this.state.search}} ui="google" handler={(e) => this.handleSearch(e)} />&nbsp;&nbsp;
                  <RaisedButton icon={<i style={{color:"black"}} className="material-icons">backspace</i>} label="Reset" primary={false} onClick={this.clearSearch}/>
                  &nbsp;&nbsp;
                </Col>
@@ -657,7 +667,7 @@ prepareBodyobject(response)
 
           {this.state.showResult  &&
           <Card className="uiCard">
-              <CardHeader title={<strong> KPI Values Monthly View </strong>} />
+              <CardHeader titleStyle={{marginLeft: 638}} title={<strong> {translate("ui.table.title")} </strong>} />
 
               <CardText>                  
                 <div className="cntdatatable">
@@ -666,15 +676,16 @@ prepareBodyobject(response)
                        <Table id="searchTable" className="table table-striped table-bordered table dataTable no-footer" cellspacing="0" width="100%" style={tableStyle} responsive>
                            
                         <thead>
-                          <th>                          
+                          <th>
+                            KPI                          
                           </th>
 
                           <th>
-                            <span className="glyphicon glyphicon-menu-left" aria-hidden="true" style={{"cursor":"pointer"}} title="Prev" onClick={(e) => this.prevSection(e)}></span>
+                            {this.state.prev && <span className="glyphicon glyphicon-menu-left" aria-hidden="true" style={{"cursor":"pointer"}} title="Prev" onClick={(e) => this.prevSection(e)}></span>}
                           </th>
                           {header}
                           <th>
-                            <span className="glyphicon glyphicon-menu-right" aria-hidden="true" style={{"cursor":"pointer"}} title="Next" onClick={(e) => this.nextSection(e)}></span>
+                            {this.state.next && <span className="glyphicon glyphicon-menu-right" aria-hidden="true" style={{"cursor":"pointer"}} title="Next" onClick={(e) => this.nextSection(e)}></span>}
                           </th>
                         </thead>
                         <tbody>

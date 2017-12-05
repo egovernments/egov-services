@@ -42,6 +42,9 @@ public class MDMSService {
 	@Value("${egov.data.root.folder}")
 	private String dataRootFolder;
 	
+	@Value("${git.repo.path}")
+	private String gitRepoPath;
+	
 	@Autowired
 	private MDMSCreateRepository mDMSCreateRepository;
 	
@@ -67,7 +70,7 @@ public class MDMSService {
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
     	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
     	
-		logger.info("Step 1: Getting branch head......");
+		logger.info("Step 1: Getting the branch head......");
 		startTime = new Date().getTime();
 		String branchHeadSHA = getBranchHead();
 		endTime = new Date().getTime();
@@ -99,7 +102,7 @@ public class MDMSService {
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
 		startTime = new Date().getTime();
-		updateCache(MDMSConstants.READ_FILE_PATH_APPEND + filePath);
+		updateCache(gitRepoPath + filePath);
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 
@@ -120,7 +123,7 @@ public class MDMSService {
 	public Object getFileContents(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest) throws Exception{
 		logger.info("Getting file contents from git repo.....");
 		String filePath = getFilePath(filePathMap, mDMSCreateRequest);
-		filePath = MDMSConstants.READ_FILE_PATH_APPEND + filePath;
+		filePath = gitRepoPath + filePath;
 		Object fileContents = mDMSCreateRepository.getFileContents(filePath);
 		return fileContents;
 	}
@@ -194,7 +197,7 @@ public class MDMSService {
 						}else{
 							iterator.remove();
 							logger.debug("adding master to file: "+mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
-							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
+							iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index));
 						}
 		            }
 				}
@@ -228,7 +231,8 @@ public class MDMSService {
 	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest){
 		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() +"-"+ mDMSCreateRequest.getMasterMetaData().getModuleName());
 		if(null == fileName){
-			throw new CustomException("400", "No data available for this module");
+			throw new CustomException("400", "No data available for this module. NOTE: Please check if the json file exists for this module."
+					+ "If it does, please check your spelling of moduleName param, It is case-sensitive.");
 		}
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(dataRootFolder);

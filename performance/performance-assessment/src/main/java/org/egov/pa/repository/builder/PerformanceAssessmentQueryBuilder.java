@@ -186,28 +186,34 @@ public class PerformanceAssessmentQueryBuilder {
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
 			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ;
     
-    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, List<Object> preparedStatementValues) { 
+    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId,
+    		List<Object> preparedStatementValues) { 
     	StringBuilder baseQuery = new StringBuilder(GETKPIBYCODEFINYEAR);
-    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, preparedStatementValues);
+    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, departmentId, preparedStatementValues);
     	 return baseQuery.toString();
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void getKpiByCodeWhereClause(final StringBuilder selectQuery, final List<String> kpiCodeList, 
-            final List<String> finYearList, List<Object> preparedStatementValues) {
-        if (null != kpiCodeList && null != finYearList)
+            final List<String> finYearList, Long departmentId, List<Object> preparedStatementValues) {
+        if (!(null == kpiCodeList && null == finYearList && null == departmentId))
         	selectQuery.append(" AND ");
-
         
         boolean isAppendAndClause = false;
 
-        if (kpiCodeList.size() > 0) {
+        if (null != departmentId && departmentId > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department = ? ");
+            preparedStatementValues.add(departmentId);
+        }
+        
+        if (null != kpiCodeList && kpiCodeList.size() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
             
         }
 
-        if (finYearList.size() > 0) { 
+        if (null != finYearList && finYearList.size() > 0) { 
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" target.finyear IN " + getStringQuery(finYearList));
         }
@@ -219,9 +225,9 @@ public class PerformanceAssessmentQueryBuilder {
 			final KPIValueSearchRequest kpiValueSearchReq) {
 		List<String> finYearList = kpiValueSearchReq.getFinYear();
 		List<String> tenantIdList = kpiValueSearchReq.getTenantId();
-		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear())
-			return;
-		selectQuery.append(" AND ");
+		if (!(null == finYearList && null == tenantIdList))
+			selectQuery.append(" AND ");
+		
 		boolean isAppendAndClause = false;
 		
 		if (null != tenantIdList && tenantIdList.size() > 0 && 

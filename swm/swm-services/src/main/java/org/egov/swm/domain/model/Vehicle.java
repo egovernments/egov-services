@@ -60,9 +60,7 @@ public class Vehicle {
     @JsonProperty("manufacturingDetails")
     private ManufacturingDetails manufacturingDetails = null;
 
-    @NotNull
     @JsonProperty("insuranceDetails")
-    @Valid
     private InsuranceDetails insuranceDetails = null;
 
     @JsonProperty("kilometers")

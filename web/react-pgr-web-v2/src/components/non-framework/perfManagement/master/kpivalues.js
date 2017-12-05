@@ -50,6 +50,7 @@ class kpivalues  extends Component{
 
             uploadPane:[],
             anchorEl:[],
+            response:[],
 
             allowedMax:1,            
             search:false,
@@ -173,14 +174,14 @@ class kpivalues  extends Component{
         var response = res.kpiValues;
 
          let header = self.header();
-         var row   = self.prepareBodyobject(response);
+        //var row   = self.prepareBodyobject(response);
 
          let showResult = false;
          if (res.kpiValues.length) {
           showResult = true;
          }
 
-         self.setState({data: row,header:header,showResult: showResult,KPIResult:response});
+         self.setState({data: res.kpiValues,header:header,showResult: showResult,KPIResult:response});
 
        }, function(err){
          self.props.setLoadingStatus('hide');
@@ -279,9 +280,9 @@ prepareKPIdesc(kpi)
 
 prepareBodyobject(response)
 {
-  
   return response.map(item => {
-    this.state.uploadPane[item.kpiValue.id] = [];
+      
+    //this.state.uploadPane[item.kpiValue.id] = [];
     return (
           <tr>
             <td>
@@ -289,7 +290,7 @@ prepareBodyobject(response)
                 <label>{translate("perfManagement.create.KPIs.groups.type")}</label>:&nbsp;
                 <span>{item.kpi.targetType}</span><br/>
                 <label>{translate("perfManagement.create.KPIs.groups.kpiTarget")}</label>:&nbsp;
-                <span>{item.kpi.kpiTarget.targetDescription}</span><br/>
+                <span>{item.kpi.kpiTargets[0].targetDescription}</span><br/>
 
                 <OverlayTrigger
                    trigger="click"
@@ -374,7 +375,7 @@ prepareBodyobject(response)
             <td>
             </td>   
           </tr>
-          );          
+          );        
         });
 }
 

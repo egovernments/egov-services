@@ -247,16 +247,49 @@
     {
       "code": "Fake Dumping Ground Code 1",
       "name": "Fake Dumping Ground 1",
+      "ulbs": 
+	[
+		{
+		"code":"default",
+		"name":"Default Corportation"
+		},
+		{
+		"code":"mh.roha",
+		"name":"Roha Municipal Council"
+		}
+	],
       "tenantId": "default"
     },
     {
      "code": "Fake Dumping Ground Code 2",
      "name": "Fake Dumping Ground 2",
+     "ulbs": 
+	[
+		{
+		"code":"default",
+		"name":"Default Corportation"
+		},
+		{
+		"code":"mh.roha",
+		"name":"Roha Municipal Council"
+		}
+	],
      "tenantId": "default"
     },
     {
       "code": "Fake Dumping Ground Code 3",
       "name": "Fake Dumping Ground 3",
+      "ulbs": 
+	[
+		{
+		"code":"default",
+		"name":"Default Corportation"
+		},
+		{
+		"code":"mh.roha",
+		"name":"Roha Municipal Council"
+		}
+	],
       "tenantId": "default"
     }
   ],

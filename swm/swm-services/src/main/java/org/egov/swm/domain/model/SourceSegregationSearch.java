@@ -12,6 +12,7 @@ import lombok.Setter;
 public class SourceSegregationSearch extends SourceSegregation {
     private String codes;
     private String dumpingGroundCode;
+    private String ulbCode;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

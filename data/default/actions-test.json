@@ -908,7 +908,7 @@
     "orderNumber": 2,
     "queryParams": null,
     "parentModule": "513",
-    "enabled": false,
+    "enabled": true,
     "serviceCode": "CASE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Case.Legacy Case Create"

@@ -184,10 +184,33 @@ public class PerformanceAssessmentQueryBuilder {
     private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "  
 			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
-			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.code IN (:kpiCodeList) AND target.finyear IN (:finYearList) " ;
+			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ;
     
-    public String getKpiByCode() { 
-    	return GETKPIBYCODEFINYEAR; 
+    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, List<Object> preparedStatementValues) { 
+    	StringBuilder baseQuery = new StringBuilder(GETKPIBYCODEFINYEAR);
+    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, preparedStatementValues);
+    	 return baseQuery.toString();
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void getKpiByCodeWhereClause(final StringBuilder selectQuery, final List<String> kpiCodeList, 
+            final List<String> finYearList, List<Object> preparedStatementValues) {
+        if (null != kpiCodeList && null != finYearList)
+        	selectQuery.append(" AND ");
+
+        
+        boolean isAppendAndClause = false;
+
+        if (kpiCodeList.size() > 0) {
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
+            
+        }
+
+        if (finYearList.size() > 0) { 
+            isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" target.finyear IN " + getStringQuery(finYearList));
+        }
     }
     
     

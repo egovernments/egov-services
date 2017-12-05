@@ -140,13 +140,11 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	
 	@Override
 	public List<KPI> getKpiByCode(List<String> kpiCodeList, List<String> finYearList) {
-		String query = queryBuilder.getKpiByCode();
-		final HashMap<String, Object> parametersMap = new HashMap<>();
-		parametersMap.put("kpiCodeList", kpiCodeList);
-		parametersMap.put("finYearList", finYearList);
+		final List<Object> preparedStatementValues = new ArrayList<>();
+		String query = queryBuilder.getKpiByCode(kpiCodeList, finYearList, preparedStatementValues);
+		log.info("QUERY to fetch KPI Details : "  + query);
 		KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
-		List<KPI> kpiList = namedParameterJdbcTemplate.query(query,
-                parametersMap, mapper );
+		List<KPI> kpiList = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
 		mapTargetToKpi(mapper.kpiTargetMap, kpiList); 
 		return kpiList;
 	}

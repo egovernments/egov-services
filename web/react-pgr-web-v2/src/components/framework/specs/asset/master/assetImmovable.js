@@ -944,7 +944,7 @@ var dat = {
 		"objectName": "Assets",
 		"customActionsAndUrl":[
 			{
-				"actionName":"Edit",
+				"actionName":"update",
 				"url":"/non-framework/asset/master/assetImmovableCreate/{id}"
 			}
 		],

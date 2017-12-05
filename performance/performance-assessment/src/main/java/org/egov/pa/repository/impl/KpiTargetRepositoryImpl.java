@@ -54,9 +54,11 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 
 	@Override
 	public List<KpiTarget> searchKpiTargets(KPITargetGetRequest getReq) {
-    	String query = queryBuilder.getTargetSearchQuery();  
+    	String query = queryBuilder.getTargetSearchQuery(getReq);  
     	final HashMap<String, Object> parametersMap = new HashMap<>();
-		parametersMap.put("kpiCode", getReq.getKpiCode());
+    	if(null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0) {
+    		parametersMap.put("kpiCode", getReq.getKpiCode());
+    	}
 		List<KpiTarget> list = namedParameterJdbcTemplate.query(query,
                 parametersMap, new BeanPropertyRowMapper<>(KpiTarget.class));
 		return list;

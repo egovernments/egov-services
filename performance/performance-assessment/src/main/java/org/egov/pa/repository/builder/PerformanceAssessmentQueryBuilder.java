@@ -44,6 +44,7 @@ import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.pa.web.contract.KPIGetRequest;
+import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -158,9 +159,13 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
-    public String getTargetSearchQuery() { 
-    	return "SELECT id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, finyear as finYear, (select distinct name from egpa_kpi_master where code = target.kpicode) as kpiName " 
-    			+ " FROM egpa_kpi_master_target target WHERE target.kpicode IN (:kpiCode) "; 
+    public String getTargetSearchQuery(KPITargetGetRequest getReq) { 
+    	StringBuilder sb = new StringBuilder("SELECT id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, finyear as finYear, (select distinct name from egpa_kpi_master where code = target.kpicode) as kpiName " 
+    			+ " FROM egpa_kpi_master_target target"); 
+    	if(null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0){ 
+    		sb.append(" WHERE kpicode IN (:kpiCode) " ) ;
+    	}
+    	return sb.toString(); 
     }
     
     public String getDocumentForKpiValue() { 

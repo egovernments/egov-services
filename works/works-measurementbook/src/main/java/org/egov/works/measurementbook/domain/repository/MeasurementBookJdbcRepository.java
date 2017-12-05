@@ -152,7 +152,7 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         for (MeasurementBookHelper measurementBookHelper : loaList) {
             MeasurementBook measurementBook = measurementBookHelper.toDomain();
 
-            MBContractorBillSearchContract mbContractorBillSearchCriteria = MBContractorBillSearchContract.builder()
+             mbContractorBillSearchCriteria = MBContractorBillSearchContract.builder()
                     .tenantId(measurementBook.getTenantId())
                     .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
 

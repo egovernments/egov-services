@@ -50,9 +50,9 @@ public class MeasurementBook   {
 
   @JsonProperty("letterOfAcceptanceEstimate")
   private LetterOfAcceptanceEstimate letterOfAcceptanceEstimate = null;
-
-  @JsonProperty("mbContractorBills")
-  private List<MBContractorBills> mbContractorBills = null;
+  
+  @JsonProperty("revisionLOA")
+  private String revisionLOA = null;
 
   @JsonProperty("status")
   private MeasurementBookStatus status = null;
@@ -90,6 +90,9 @@ public class MeasurementBook   {
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
+  
+  @JsonProperty("deleted")
+  private Boolean deleted = null;
 
   public MeasurementBook id(String id) {
     this.id = id;
@@ -298,33 +301,12 @@ public class MeasurementBook   {
     this.letterOfAcceptanceEstimate = letterOfAcceptanceEstimate;
   }
 
-  public MeasurementBook mbContractorBills(List<MBContractorBills> mbContractorBills) {
-    this.mbContractorBills = mbContractorBills;
-    return this;
+  public String getRevisionLOA() {
+	return revisionLOA;
   }
 
-  public MeasurementBook addMbContractorBillsItem(MBContractorBills mbContractorBillsItem) {
-    if (this.mbContractorBills == null) {
-      this.mbContractorBills = new ArrayList<MBContractorBills>();
-    }
-    this.mbContractorBills.add(mbContractorBillsItem);
-    return this;
-  }
-
-   /**
-   * Array of MB and Contractor bill mapping
-   * @return mbContractorBills
-  **/
-  @ApiModelProperty(value = "Array of MB and Contractor bill mapping")
-
-  @Valid
- @Size(min=1)
-  public List<MBContractorBills> getMbContractorBills() {
-    return mbContractorBills;
-  }
-
-  public void setMbContractorBills(List<MBContractorBills> mbContractorBills) {
-    this.mbContractorBills = mbContractorBills;
+  public void setRevisionLOA(String revisionLOA) {
+	this.revisionLOA = revisionLOA;
   }
 
   public MeasurementBook status(MeasurementBookStatus status) {
@@ -380,13 +362,13 @@ public class MeasurementBook   {
 
   public List<EstimateActivity> getEstimateActivities() {
 	return estimateActivities;
-}
+  }
 
-public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
+  public void setEstimateActivities(List<EstimateActivity> estimateActivities) {
 	this.estimateActivities = estimateActivities;
-}
+  }
 
-public MeasurementBook isLegacyMB(Boolean isLegacyMB) {
+  public MeasurementBook isLegacyMB(Boolean isLegacyMB) {
     this.isLegacyMB = isLegacyMB;
     return this;
   }
@@ -580,6 +562,14 @@ public MeasurementBook isLegacyMB(Boolean isLegacyMB) {
   }
 
 
+  public Boolean getDeleted() {
+	return deleted;
+  }
+
+  public void setDeleted(Boolean deleted) {
+	this.deleted = deleted;
+  }
+
   @Override
   public boolean equals(Object o) {
     if (this == o) {
@@ -599,7 +589,6 @@ public MeasurementBook isLegacyMB(Boolean isLegacyMB) {
         Objects.equals(this.fromPageNo, measurementBook.fromPageNo) &&
         Objects.equals(this.toPageNo, measurementBook.toPageNo) &&
         Objects.equals(this.letterOfAcceptanceEstimate, measurementBook.letterOfAcceptanceEstimate) &&
-        Objects.equals(this.mbContractorBills, measurementBook.mbContractorBills) &&
         Objects.equals(this.status, measurementBook.status) &&
         Objects.equals(this.measurementBookDetails, measurementBook.measurementBookDetails) &&
         Objects.equals(this.isLegacyMB, measurementBook.isLegacyMB) &&
@@ -615,7 +604,7 @@ public MeasurementBook isLegacyMB(Boolean isLegacyMB) {
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, mbContractorBills, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, auditDetails);
+    return Objects.hash(id, tenantId, mbRefNo, contractorComments, mbDate, mbIssuedDate, mbAbstract, fromPageNo, toPageNo, letterOfAcceptanceEstimate, status, measurementBookDetails, isLegacyMB, mbAmount, approvedDate, documentDetails, workFlowDetails, stateId, cancellationReason, cancellationRemarks, auditDetails);
   }
 
   @Override
@@ -633,7 +622,6 @@ public MeasurementBook isLegacyMB(Boolean isLegacyMB) {
     sb.append("    fromPageNo: ").append(toIndentedString(fromPageNo)).append("\n");
     sb.append("    toPageNo: ").append(toIndentedString(toPageNo)).append("\n");
     sb.append("    letterOfAcceptanceEstimate: ").append(toIndentedString(letterOfAcceptanceEstimate)).append("\n");
-    sb.append("    mbContractorBills: ").append(toIndentedString(mbContractorBills)).append("\n");
     sb.append("    status: ").append(toIndentedString(status)).append("\n");
     sb.append("    measurementBookDetails: ").append(toIndentedString(measurementBookDetails)).append("\n");
     sb.append("    isLegacyMB: ").append(toIndentedString(isLegacyMB)).append("\n");

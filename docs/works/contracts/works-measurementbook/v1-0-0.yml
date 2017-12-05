@@ -503,6 +503,9 @@ definitions:
       letterOfAcceptanceEstimate:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
         description: Reference of Letter of Acceptance Estimate
+      revisionLOA:
+        type: string
+        description: Reference of Revision LOA
       status:
         $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-common/v1-0-0.yml#/definitions/MeasurementBookStatus'
         description: Status of the Measurement Book
@@ -548,6 +551,10 @@ definitions:
         maxLength: 512
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - letterOfAcceptanceEstimate
@@ -615,6 +622,10 @@ definitions:
         description: Reduced Rate of the Measurement sheet
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
     required:
       - tenantId
       - rate
@@ -673,6 +684,10 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAMeasurementSheet"
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+        type: boolean
+        description: Boolean value to identify whether the object is deleted or not from UI.
+        default: false
       required:
         - tenantId
         - quantity

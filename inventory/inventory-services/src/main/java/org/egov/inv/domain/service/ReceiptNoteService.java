@@ -216,14 +216,40 @@ public class ReceiptNoteService extends DomainService {
     private void validateMaterialReceipt(MaterialReceipt materialReceipt, String tenantId) {
 
         if (null != materialReceipt.getReceivingStore() && !isEmpty(materialReceipt.getReceivingStore().getCode())) {
-            validateStore(materialReceipt.getReceivingStore().getCode(),tenantId);
+            validateStore(materialReceipt.getReceivingStore().getCode(), tenantId);
         }
 
-        validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
+        if (null != materialReceipt.getSupplierBillDate() && materialReceipt.getSupplierBillDate() > getCurrentDate()) {
+            throw new CustomException("inv.0026", "Supplier bill date must be less than or equal to current date");
+        }
+
+        if (null != materialReceipt.getChallanDate() && materialReceipt.getChallanDate() > getCurrentDate()) {
+            throw new CustomException("inv.0026", "Challan date must be less than or equal to current date");
+        }
+
+        validateMaterialReceiptDetail(materialReceipt, tenantId);
 
     }
 
-    private void validateStore(String storeCode,String tenantId) {
+    private Long getCurrentDate() {
+        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
+    }
+
+    private void validateMaterialReceiptDetail(MaterialReceipt materialReceipt, String tenantId) {
+        validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
+        for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+            if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
+                validatePurchaseOrder(materialReceiptDetail, tenantId);
+                validateMaterial(materialReceiptDetail, tenantId);
+                validateQuantity(materialReceiptDetail);
+                if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
+                    validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
+                }
+            }
+        }
+    }
+
+    private void validateStore(String storeCode, String tenantId) {
         StoreGetRequest storeGetRequest = StoreGetRequest.builder()
                 .code(Collections.singletonList(storeCode))
                 .tenantId(tenantId)
@@ -232,18 +258,6 @@ public class ReceiptNoteService extends DomainService {
         StoreResponse storeResponse = storeService.search(storeGetRequest);
         if (storeResponse.getStores().size() == 0) {
             throw new CustomException("inv.0025", "Store not found");
-        }
-    }
-
-    private void validateMaterialReceiptDetail(List<MaterialReceiptDetail> receiptDetails, String tenantId) {
-        validateDuplicateMaterialDetails(receiptDetails);
-        for (MaterialReceiptDetail materialReceiptDetail : receiptDetails) {
-            validatePurchaseOrder(materialReceiptDetail, tenantId);
-            validateMaterial(materialReceiptDetail, tenantId);
-            validateQuantity(materialReceiptDetail);
-            if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
-                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
-            }
         }
     }
 

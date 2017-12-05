@@ -1,6 +1,16 @@
 {
   "tenantId": "default",
   "moduleName": "ASSET",
+  "mdms-config": [
+    {
+      "masterName": "AssetCategory",
+      "moduleDefinition": "a/b/c",
+      "uniqueKeys": [
+        "$.id",
+        "$.tenantId"
+      ]
+    }
+  ],
   "AssetCategory": [
     {
       "tenantId": "default",
@@ -89,7 +99,7 @@
           "order": null,
           "columns": []
         },
-	{
+        {
           "name": "Area",
           "type": "Number",
           "isActive": true,
@@ -149,7 +159,7 @@
           "order": null,
           "columns": []
         },
-	{
+        {
           "name": "Layer Type",
           "type": "Select",
           "isActive": true,
@@ -185,7 +195,7 @@
           "order": null,
           "columns": []
         },
-	{
+        {
           "name": "Layer description",
           "type": "image",
           "isActive": true,
@@ -197,7 +207,6 @@
           "order": null,
           "columns": []
         }
-        
       ]
     },
     {

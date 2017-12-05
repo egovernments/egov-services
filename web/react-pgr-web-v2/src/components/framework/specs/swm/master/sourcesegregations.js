@@ -24,12 +24,14 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": false,
             "patternErrorMsg": "swm.create.field.message.dumpingGroundCode",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name",
-	    "depedants": [{
-                "jsonPath": "ulbCode",
-                "type": "dropDown",
-                "pattern": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround&filter=[/?(@.code=={dumpingGroundCode.code})]|$..ulbs.*.code|$..ulbs.*.name"
-              }]
+	    "url":"",
+	    "mdms": {
+              "moduleName": "swm",
+              "masterName": "DumpingGround",
+              "filter": "",
+              "key": "code",
+              "value": "name"
+            }
           },
 	{
             "name": "ulbCode",

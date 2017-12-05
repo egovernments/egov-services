@@ -94,9 +94,26 @@ public class PurchaseOrderService extends DomainService {
                 int j = 0;
                 purchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_CREATE));
                 List<String> detailSequenceNos = purchaseOrderRepository.getSequence(PurchaseOrderDetail.class.getSimpleName(), purchaseOrder.getPurchaseOrderDetails().size());
-                for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
-                    purchaseOrderDetail.setId(detailSequenceNos.get(j));
-                    purchaseOrderDetail.setTenantId(purchaseOrder.getTenantId());
+
+				for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrder.getPurchaseOrderDetails()) {
+					purchaseOrderDetail.setId(detailSequenceNos.get(j));
+					purchaseOrderDetail.setTenantId(purchaseOrder.getTenantId());
+
+					if (purchaseOrderDetail.getPurchaseIndentDetails() != null
+							&& purchaseOrderDetail.getPurchaseIndentDetails().size() > 0) {
+						int k = 0;
+						List<String> poIndentDetailSequenceNos = purchaseOrderRepository.getSequence(
+								PurchaseIndentDetail.class.getSimpleName(),
+								purchaseOrderDetail.getPurchaseIndentDetails().size());
+
+						for (PurchaseIndentDetail purchaseIndentDetail : purchaseOrderDetail
+								.getPurchaseIndentDetails()) {
+							purchaseIndentDetail.setId(poIndentDetailSequenceNos.get(k));
+							purchaseIndentDetail.setTenantId(purchaseOrder.getTenantId());
+							k++;
+						}
+
+					}
                     j++;
                 }
             }

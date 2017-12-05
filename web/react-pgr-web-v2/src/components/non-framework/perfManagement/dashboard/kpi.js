@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {Card, CardText, CardMedia, CardHeader, CardTitle} from 'material-ui/Card';
-import {Grid, Row, Col} from 'react-bootstrap';
-import RaisedButton from 'material-ui/RaisedButton';
+// import {Card, CardText, CardMedia, CardHeader, CardTitle} from 'material-ui/Card';
+// import {Grid, Row, Col} from 'react-bootstrap';
+// import RaisedButton from 'material-ui/RaisedButton';
 import {
     fetchDepartmentAPI,
     fetchDepartmentKPIsAPI,
@@ -59,10 +59,16 @@ export default class Dashboard extends Component {
     toast = (msg) => {
 
     }
+
     busyUI = (status) => {
         this.setState({
             apiLoading:status
         })
+    }
+
+    processOnClickOnCard = (e) => {
+        console.log(`processOnClickOnCard`)
+        console.log(e)
     }
 
     /**
@@ -83,7 +89,7 @@ export default class Dashboard extends Component {
         let departments = parseDepartmentResponse(this.state.departments)
         if (departments.length > 0) {
             return (
-                departments.map((item, index) => <DashboardCard name={item.name} logo={require('../../../../images/headerLogo.png')} />)
+                departments.map((item, index) => <DashboardCard key={index} onClick={this.processOnClickOnCard} name={item.name} logo={require('../../../../images/headerLogo.png')} />)
             )
         }
         return (

@@ -2762,7 +2762,7 @@ var localization_EN_Data = {
 "perfManagement.create.KPIs.groups.type":"Type",
 "perfManagement.create.KPIs.groups.kpiTarget":"Target",
 "perfManagement.create.KPIs.groups.kpiInfo":"KPI Info",
-"perfManagement.create.KPIs.groups.Uploads":"Uploads",
+"perfManagement.create.KPIs.groups.Uploads":"UPLOADS",
 
 
 "perfManagement.create.KPIs.groups.kpiMaster":"Key Performance Indicator Master",
@@ -2816,7 +2816,7 @@ var localization_EN_Data = {
 "perfManagement.update.KPIs.groups.updatekpiTargetRadioBlock":"Target Value",
 "perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes":"Yes",
 "perfManagement.update.KPIs.groups.updatekpiTargetBlock.no":"No",
-"perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress":"In Progress",
+"perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress":"WIP",
 "perfManagement.update.KPIs.groups.updateKpiInstruc":"Instruction to Achieve Target",
 "perfManagement.update.KPIs.groups.updatekpiDocuments":"Document Required",
 "perfManagement.update.KPIs.groups.updatekpidoc":"Document Name",

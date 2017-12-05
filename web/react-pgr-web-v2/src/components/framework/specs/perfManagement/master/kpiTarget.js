@@ -230,7 +230,7 @@ var dat = {
         }],
         "result": {
             "header": [ { label: "perfManagement.search.KPIs.groups.searchkpiCode" }, { label: "perfManagement.search.KPIs.groups.searchkpiTarget" }],
-            "values": ["kpiCode", "targetDescription"],
+            "values": ["kpiCode", "targetValue"],
             "resultPath": "kpiTargets",
             "rowClickUrlUpdate": "/update/perfManagement/kpiTarget/{kpiCode}",
             "rowClickUrlView": "/view/perfManagement/kpiTarget/{kpiCode}"
@@ -238,7 +238,7 @@ var dat = {
     },
     "perfManagement.view": {
         "numCols": 12 / 2,
-        "url": "/perfmanagement/v1/kpitarget/_search={kpiCode}",
+        "url": "/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}",
         "useTimestamp": true,
         "objectName": "KPIs",
         "groups": [{
@@ -246,7 +246,7 @@ var dat = {
                 "name": "viewKPI",
                 "fields": [{
                         "name": "viewkpiDepartment",
-                        "jsonPath": "KPIs[0].department.name",
+                        "jsonPath": "kpiTargets[0].kpi.department",
                         // "url": "egov-mdms-service/v1/_get?tenantId=default&tenantIdCustom={KPIs[0].tenantId}&moduleName=common-masters&masterName=Department|$..id|$..name",
                         "label": "perfManagement.view.KPIs.groups.viewkpiDepartment",
                         "pattern": "",
@@ -256,7 +256,7 @@ var dat = {
                     },
                     {
                         "name": "viewkpiDate",
-                        "jsonPath": "KPIs[0].financialYear",
+                        "jsonPath": "kpiTargets[0].kpi.financialYear",
                         "label": "perfManagement.view.KPIs.groups.viewkpiDate",
                         "isRequired": true,
                         "pattern": "",
@@ -271,7 +271,7 @@ var dat = {
                 "name": "viewKpiNameBlock",
                 "fields": [{
                         "name": "viewkpiName",
-                        "jsonPath": "KPIs[0].name",
+                        "jsonPath": "kpiTargets[0].kpi.name",
                         "label": "perfManagement.view.KPIs.groups.viewkpiName",
                         "isRequired": true,
                         "pattern": "",
@@ -281,7 +281,7 @@ var dat = {
                     },
                     {
                         "name": "viewkpiCode",
-                        "jsonPath": "KPIs[0].code",
+                        "jsonPath": "kpiTargets[0].kpi.code",
                         "label": "perfManagement.view.KPIs.groups.viewkpiCode",
                         "isRequired": true,
                         "pattern": "",
@@ -301,7 +301,7 @@ var dat = {
                 "fields": [{
                     "name": "viewkpiTarget",
                     //"hide": false,
-                    "jsonPath": "KPIs[0].targetDescription",
+                    "jsonPath": "kpiTargets[0].targetValue",
                     "label": "",
                     "pattern": "",
                     "type": "text",
@@ -317,7 +317,7 @@ var dat = {
                 "multiple": false,
                 "fields": [{
                     "name": "viewkpiTargetRadio",
-                    "jsonPath": "KPIs[0].targetDescription",
+                    "jsonPath": "kpiTargets[0].targetValue",
                     "label": "",
                     "pattern": "",
                     //"type": "radio",
@@ -347,7 +347,7 @@ var dat = {
                         "isRequired": true,
                         "pattern": "",
                         "type": "text",
-                        "isDisabled": false,
+                        "isDisabled": true,
                         "requiredErrMsg": ""
                     },
                     {
@@ -357,7 +357,7 @@ var dat = {
                         "isRequired": true,
                         "pattern": "",
                         "type": "text",
-                        "isDisabled": false,
+                        "isDisabled": true,
                         "requiredErrMsg": ""
                     }, {
                         "name": "updatekpitype",
@@ -366,7 +366,7 @@ var dat = {
                         "pattern": "",
                         "type": "radio",
                         "isRequired": false,
-                        "isDisabled": false,
+                        "isDisabled": true,
                         "requiredErrMsg": "",
                         "patternErrMsg": "",
                         "defaultValue": true,
@@ -492,13 +492,13 @@ var dat = {
                     "patternErrMsg": "",
                     "values": [{
                         "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes",
-                        "value": 1
+                        "value": "1"
                     }, {
                         "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock.no",
-                        "value": 2
+                        "value": "2"
                     }, {
                         "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress",
-                        "value": 3
+                        "value": "3"
                     }]
                 }]
             },

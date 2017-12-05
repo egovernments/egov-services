@@ -350,6 +350,8 @@ const menuConvention={
 
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch":"/non-framework/perfManagement/master/kpivalues",
 
+"Performance Assessment.KPI Targets.PerfAssmtKpiTargetSearch":"/search/perfManagement/kpiTarget/view",
+
 //Inventoy Service
 
 "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",

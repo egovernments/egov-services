@@ -2249,6 +2249,14 @@ var localization_EN_Data = {
 "swm.create.group.title.SourceSegregationDetails": "Source Segregation Details",
 "swm.create.group.title.CollectionTypeDetails": "Collection Type Details",
 
+"swm.sanitationstaffschedules.search.title": "Search",
+"swm.create.sanitationstaffschedules.shift": "Shift",
+"swm.create.sanitationstaffschedules.targetNo": "Sanitation Staff TaretNo",
+"swm.create.sanitationstaffschedules.targetfrom": "Target From",
+"swm.create.sanitationstaffschedules.targetto": "Target To",
+"swm.create.sanitationstaffschedules.route": "Route",
+"swm.create.sanitationstaffschedules.dumpingground": "Dumping Ground",
+
 "pgr.dashboard.gis.registered.title":"Registered",
 "pgr.dashboard.gis.redressed.title":"Redressed",
 "pgr.grievanceno":"Grievance No.",

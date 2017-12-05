@@ -1,0 +1,23 @@
+UIInfo:
+- referencePath: "/sourcesegregations"
+  searchUrl: "/sourcesegregations/_search?code={code}"
+  groups:
+    SourceSegregationDetails:
+      fields:
+      - sourceSegregations[0].dumpingGround.code
+      - sourceSegregations[0].sourceSegregationDate
+    CollectionTypeDetails:
+      fields:
+      - sourceSegregations[0].collectionDetails[0].collectionType.code
+      - sourceSegregations[0].collectionDetails[0].wetWasteCollected
+      - sourceSegregations[0].collectionDetails[0].dryWasteCollected
+  searchResult:
+    rowClickUrlUpdate: "/update/swm/sourcesegregations/{code}"
+    rowClickUrlView: "/view/swm/sourcesegregations/{code}"
+    columns:
+    - dumpingGround
+    - sourceSegregationDate
+    values:
+    - dumpingGround.code
+    - sourceSegregationDate
+    resultObjectName: sourceSegregations

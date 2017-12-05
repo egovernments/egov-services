@@ -186,21 +186,27 @@ public class PerformanceAssessmentQueryBuilder {
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
 			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ;
     
-    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, List<Object> preparedStatementValues) { 
+    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId,
+    		List<Object> preparedStatementValues) { 
     	StringBuilder baseQuery = new StringBuilder(GETKPIBYCODEFINYEAR);
-    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, preparedStatementValues);
+    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, departmentId, preparedStatementValues);
     	 return baseQuery.toString();
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void getKpiByCodeWhereClause(final StringBuilder selectQuery, final List<String> kpiCodeList, 
-            final List<String> finYearList, List<Object> preparedStatementValues) {
-        if (null != kpiCodeList && null != finYearList)
+            final List<String> finYearList, Long departmentId, List<Object> preparedStatementValues) {
+        if (!(null == kpiCodeList && null == finYearList && null == departmentId))
         	selectQuery.append(" AND ");
-
         
         boolean isAppendAndClause = false;
 
+        if (departmentId > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department = ? ");
+            preparedStatementValues.add(departmentId);
+        }
+        
         if (kpiCodeList.size() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));

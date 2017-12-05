@@ -1518,7 +1518,7 @@ var dat = {
 					{
 						"name": "budgetHeadCodes",
 						"jsonPath": "budgetHeadCodes",
-						"label": "works.create.groups.fields.budgetHeadCodes",
+						"label": "works.create.groups.fields.objectCode",
 						"pattern": "",
 						"type": "multiValueList",
 						"url": "/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name",
@@ -1580,6 +1580,19 @@ var dat = {
             "isDisabled": false,
             "patternErrorMsg": ""
           },
+					{
+						"name": "employees",
+						"jsonPath": "employees",
+						"label": "works.create.groups.fields.employee",
+						"pattern": "",
+						"type": "singleValueList",
+						"url": "/hr-employee/employees/_search?&|$..assignments[*].position|$..name",
+						"hide":true,
+						"isRequired": false,
+						"isDisabled": false,
+						"requiredErrMsg": "",
+						"patternErrMsg": ""
+					}
 				]
 			}
 		],
@@ -1608,15 +1621,33 @@ var dat = {
         }
       ],
       "values": [
-        "department.code",
+				{
+					 path:"department.code",
+					 valExp:`getValFromDropdownData('departmentCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
 				"abstractEstimateNumber",
 				"adminSanctionNumber",
-				"fund.code",
-				"function.code",
-				"budgetGroup.name",
-				"auditDetails.createBy",
-				"workFlowDetails.assignee",
-				"status",
+				{
+					 path:"fund.code",
+					 valExp:`getValFromDropdownData('fundCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				{
+					 path:"function.code",
+					 valExp:`getValFromDropdownData('functionCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				{
+					 path:"budgetGroup.name",
+					 valExp:`getValFromDropdownData('budgetHeadCodes', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				"auditDetails.createdBy",
+				{
+					 path:"workFlowDetails.assignee",
+					 valExp:`getValFromDropdownData('employees', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
+				{
+					 path:"status",
+					 valExp:`getValFromDropdownData('statuses', _.get(values[i], specsValuesList[j].path), 'value')`
+				},
 				"estimateAmount"
       ],
       "resultPath": "abstractEstimates",

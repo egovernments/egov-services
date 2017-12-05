@@ -222,7 +222,12 @@ class Search extends Component {
 
   getValFromDropdownData = (fieldJsonPath, key, path) => {
     let dropdownData = this.props.dropDownData[fieldJsonPath] || [];
-    let _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
+    let _val;
+    if(!key){
+      _val = undefined;
+    }else{
+        _val = _.get(dropdownData.find((data)=>data.key == key) || [], path);
+    }
     return typeof _val != "undefined" ? _val : "";
   }
 

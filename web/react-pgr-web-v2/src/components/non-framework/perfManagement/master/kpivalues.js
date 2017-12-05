@@ -174,7 +174,12 @@ class kpivalues  extends Component{
          let header = self.header();
          var row   = self.prepareBodyobject(response);
 
-         self.setState({data: row,header:header,showResult: true,KPIResult:response});
+         let showResult = false;
+         if (res.kpiValues.length) {
+          showResult = true;
+         }
+
+         self.setState({data: row,header:header,showResult: showResult,KPIResult:response});
 
        }, function(err){
          self.props.setLoadingStatus('hide');
@@ -406,9 +411,12 @@ prepareBodyobject(response)
        let {actionName, moduleName } = this.props;
        let fileList = this.state.documents;
        let counter = Object.keys(fileList).length;
-
+       let url = "perfmanagement/v1/kpivalue/_create";
        let fileStorId = [];
+       let self = this;
+
        let breakOut = 0;
+       this.props.setLoadingStatus('loading');
        if (counter) {
 
          for(let key in fileList) {
@@ -431,9 +439,25 @@ prepareBodyobject(response)
               //_.set(formData, key, res.files[0].fileStoreId);
               if(counter == 0 && breakOut == 0)
               {
-                this.state.KPIResult.map(kpi => {
 
-                });
+                this.state.KPIResult.map(kpi => {
+              if (fileStorId[kpi.kpiValue.id]) {
+                    kpi.kpiValue.valueList.map(kpiValue => {
+                      console.log(fileStorId);
+                      console.log(fileStorId[kpi.kpiValue.id]);
+                      if (fileStorId[kpi.kpiValue.id][kpiValue.period]) {
+                        console.log(fileStorId[kpi.kpiValue.id][kpiValue.period]); 
+                        kpiValue.documents = fileStorId[kpi.kpiValue.id][kpiValue.period];                   
+                      }
+                    });
+                  }
+                  
+
+              });
+                self.props.setLoadingStatus('hide');
+                let body = {'kpiValues' : this.state.KPIResult};
+                self.makeAjaxCall(body,url);
+                
               }
                 console.log('go for form submission');
                 //self.makeAjaxCall(formData, _url);
@@ -442,78 +466,16 @@ prepareBodyobject(response)
 
         }
         counter--;
-        if (counter == 0) {
-
-          //console.log(fileStorId);
-
-            this.state.KPIResult.map(kpi => {
-              if (fileStorId[kpi.kpiValue.id]) {
-                kpi.kpiValue.valueList.map(kpiValue => {
-                  console.log(fileStorId);
-                  console.log(fileStorId[kpi.kpiValue.id]);
-                  if (fileStorId[kpi.kpiValue.id][kpiValue.period]) {
-                    console.log(fileStorId[kpi.kpiValue.id][kpiValue.period]); 
-                    kpiValue.documents = fileStorId[kpi.kpiValue.id][kpiValue.period];                   
-                  }
-                });
-              }
-              
-
-          });
-             console.log(this.state.KPIResult); 
-            console.log('go for form submission');
-          }
        }
 
        }
        else
        {
-        var fileStoreIds = {
-              57:{
-                6:"543444ef-9b4d-4cce-b45e-c71b59d37eff"
-              },
-              
-              66:{
-                4:"d1170afd-2a2b-44e0-822c-b7d16faf7cd1",
-                6:"54a209f9-ad03-49d2-9926-ce39127f67fc",
-                7:"15dd143c-5f51-462f-b590-59ea1f04913c"
-              }
-              
-            };
-            this.props.setLoadingStatus('hide');
-            //console.log(fileStoreIds);
-        this.state.KPIResult.map(kpi => {              //console.log(kpi.kpiValue);
-              
-              if (fileStoreIds[kpi.kpiValue.id]) {
-                //console.log(fileStoreIds[kpi.kpiValue.id].length);
-                  kpi.kpiValue.valueList.map(kpiValue => {
-                    console.log(fileStoreIds[kpi.kpiValue.id]);
-                    console.log(kpiValue.period);
-                    if (fileStoreIds[kpi.kpiValue.id][kpiValue.period]) {
-                      console.log(fileStoreIds[kpi.kpiValue.id]);
-                      console.log(kpiValue.period);
-                      kpiValue.documents = fileStoreIds[kpi.kpiValue.id][kpiValue.period];
-                    }
-                    
-                  });
-            }              
-
-          });
-
-        console.log(this.state.KPIResult);
-
+          self.props.setLoadingStatus('hide');
+          let body = {'kpiValues' : this.state.KPIResult};
+          self.makeAjaxCall(body,url);
        }
-      
-
-
-       this.props.setLoadingStatus('loading');
-       let url = "perfmanagement/v1/kpivalue/_create";
-       let query = [];
-       let body = {'kpiValues' : this.state.KPIResult};
-       let self = this;
-      
-
-      
+       
    }
 
    makeAjaxCall= (data,url) =>  {
@@ -614,7 +576,7 @@ prepareBodyobject(response)
          </Row>
 
          <Card className="uiCard">
-           <CardHeader title={<strong> KPI Value Search </strong>}/>
+           <CardHeader title={<strong> Key Performance Indicator Search </strong>}/>
            <CardText>
               <Row className="show-grid">
                  <Col xs={4} md={4}>
@@ -648,7 +610,7 @@ prepareBodyobject(response)
                    fullWidth={true}
                    hintText="Please Select"
                    labelStyle={{"color": "#5F5C57"}}
-                   floatingLabelText={<span>Finantial Year</span>}
+                   floatingLabelText={<span>Financial Year</span>}
                    onChange={(event, key, value) => this.searchKPIValues(event, key, value,'FINYEAR')}>
                        {this.state.FinantialYear && this.state.FinantialYear.map((dd, index) => (
                            <MenuItem value={dd.finYearRange && dd.finYearRange.toString()} key={index} primaryText={dd.finYearRange} />
@@ -685,9 +647,10 @@ prepareBodyobject(response)
 
            <Row className="show-grid">
 
-                <Col xs={6} xsOffset={6}>
+                <Col xs={6} xsOffset={5}>
                  <UiButton item={{"label": "Search","uiType":"button", "primary": true}} ui="google" handler={(e) => this.handleSearch(e)} />&nbsp;&nbsp;
-                 <UiButton item={{"label": "Reset", "uiType":"button", "primary": false}} ui="google" handler={this.clearSearch}/>&nbsp;&nbsp;
+                 <RaisedButton icon={<i style={{color:"black"}} className="material-icons">backspace</i>} label="Reset" primary={false} onClick={this.clearSearch}/>
+                 &nbsp;&nbsp;
                </Col>
             </Row>
 
@@ -696,11 +659,7 @@ prepareBodyobject(response)
           <Card className="uiCard">
               <CardHeader title={<strong> KPI Values Monthly View </strong>} />
 
-              <CardText>
-
-                    <label><span style={{"fontWeight":600, "fontSize": "13px"}}>{'Navigate next for selecting coming mounths'}</span></label>
-
-                  
+              <CardText>                  
                 <div className="cntdatatable">
                   <div className="cntdatatable1">
 

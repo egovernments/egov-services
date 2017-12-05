@@ -390,7 +390,7 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/works/transaction/viewSpilloverAE/:id'} component={viewSpilloverAE}/>
       <Route exact path= {base + '/non-framework/works/transaction/detailedEstimate'} component={detailedEstimate}/>
 
-      <Route exact path= {base + '/list/perfManagement/actualKpiCreate'} component={kpivalues}/>
+      <Route exact path= {base + '/non-framework/perfManagement/master/kpivalues'} component={kpivalues}/>
 
 
       <Route component={NoMatch}/>

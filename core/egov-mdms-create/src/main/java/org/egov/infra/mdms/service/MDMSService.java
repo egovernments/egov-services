@@ -67,7 +67,7 @@ public class MDMSService {
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
     	String filePath = getFilePath(filePathMap, mDMSCreateRequest);
     	
-		logger.info("Step 1: Getting branch head......");
+		logger.info("Step 1: Getting the branch head......");
 		startTime = new Date().getTime();
 		String branchHeadSHA = getBranchHead();
 		endTime = new Date().getTime();

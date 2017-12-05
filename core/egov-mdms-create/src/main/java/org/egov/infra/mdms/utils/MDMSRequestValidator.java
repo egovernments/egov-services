@@ -48,12 +48,12 @@ public class MDMSRequestValidator {
 			throw new CustomException("400", "There are duplicate mdms-configs for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());
 		}else if(uniqueKeys.isEmpty()){
 			logger.info("Skipping Validation....");
-			for(int i = 0; i < masterDataArray.length() ; i++){
+			/*for(int i = 0; i < masterDataArray.length() ; i++){
 				Object arrayElement = masterDataArray.get(i);
 				List<Object> filterResult = mDMSUtils.filter(masterData, arrayElement);			
 				if(!filterResult.isEmpty())
 					result.add(masterDataArray.get(i));
-			}
+			}*/
 			return result;
 		}else {
 			logger.info("uniqueKeys: "+uniqueKeys);

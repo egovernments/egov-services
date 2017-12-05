@@ -149,6 +149,15 @@ public class MDMSService {
 		}
 		String moduleContentJson = mapper.writeValueAsString(moduleContent);
 		if(isCreate){
+		     if(null == masterData){
+		    	 List<Object> newMaster = new ArrayList<>();
+		    	 newMaster.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
+		    	 moduleDataMap.put(mDMSCreateRequest.getMasterMetaData().getMasterName(), newMaster);
+				 moduleContentJson = mapper.writeValueAsString(moduleDataMap);
+				 logger.info("moduleContentJson: "+moduleContentJson);
+				 
+				 return moduleContentJson;
+		    }
 			masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
 	    	result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 		}else{

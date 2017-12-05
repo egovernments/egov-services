@@ -11,6 +11,8 @@ import org.egov.works.services.web.contract.EstimateAppropriation;
 import org.egov.works.services.web.contract.EstimateAppropriationRequest;
 import org.egov.works.services.web.contract.EstimateAppropriationResponse;
 import org.egov.works.services.web.contract.EstimateAppropriationSearchContract;
+import org.egov.works.services.web.contract.RequestInfo;
+import org.egov.works.services.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,65 +21,71 @@ import java.util.List;
 @Service
 public class EstimateAppropriationService {
 
-	@Autowired
-	private PropertiesManager propertiesManager;
+    @Autowired
+    private PropertiesManager propertiesManager;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private IdGenerationRepository idGenerationRepository;
+    @Autowired
+    private IdGenerationRepository idGenerationRepository;
 
-	@Autowired
-	private EstimateAppropriationRepository estimateAppropriationRepository;
+    @Autowired
+    private EstimateAppropriationRepository estimateAppropriationRepository;
 
-	@Autowired
-	private CommonUtils commonUtils;
+    @Autowired
+    private CommonUtils commonUtils;
 
-	@Autowired
-	private ServiceUtils serviceUtils;
+    @Autowired
+    private ServiceUtils serviceUtils;
 
     @Autowired
     private RequestValidator requestValidator;
+    
+    @Autowired
+    private ResponseInfoFactory responseInfoFactory;
 
-	public EstimateAppropriationResponse create(final EstimateAppropriationRequest estimateAppropriationRequest) {
-		String budgetRefNumber;
-		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
-			estimateAppropriationRepository.validateEstimateAppropriation(estimateAppropriation);
-			estimateAppropriation.setAuditDetails(serviceUtils
-					.setAuditDetails(estimateAppropriationRequest.getRequestInfo(), false));
-			estimateAppropriation.setId(commonUtils.getUUID());
-			budgetRefNumber = idGenerationRepository.generateAppropriationNumber(estimateAppropriation.getTenantId(),
-					estimateAppropriationRequest.getRequestInfo());
-			estimateAppropriation
-					.setBudgetRefNumber(propertiesManager.getAppropriationNumberPrefix() + budgetRefNumber);
-		}
-		kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
-		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-		estimateAppropriationResponse
-				.setEstimateAppropriations(estimateAppropriationRequest.getEstimateAppropriations());
-		return estimateAppropriationResponse;
+    public EstimateAppropriationResponse create(final EstimateAppropriationRequest estimateAppropriationRequest) {
+        String budgetRefNumber;
+        for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
+            estimateAppropriationRepository.validateEstimateAppropriation(estimateAppropriation);
+            estimateAppropriation.setAuditDetails(serviceUtils
+                    .setAuditDetails(estimateAppropriationRequest.getRequestInfo(), false));
+            estimateAppropriation.setId(commonUtils.getUUID());
+            budgetRefNumber = idGenerationRepository.generateAppropriationNumber(estimateAppropriation.getTenantId(),
+                    estimateAppropriationRequest.getRequestInfo());
+            estimateAppropriation
+                    .setBudgetRefNumber(propertiesManager.getAppropriationNumberPrefix() + budgetRefNumber);
+        }
+        kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
+        EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
+        estimateAppropriationResponse
+                .setEstimateAppropriations(estimateAppropriationRequest.getEstimateAppropriations());
+        return estimateAppropriationResponse;
 
-	}
+    }
 
-	public EstimateAppropriationResponse update(final EstimateAppropriationRequest estimateAppropriationRequest) {
+    public EstimateAppropriationResponse update(final EstimateAppropriationRequest estimateAppropriationRequest) {
 
-		for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
-			estimateAppropriationRepository.validateEstimateAppropriation(estimateAppropriation);
-			estimateAppropriation.setAuditDetails(serviceUtils
-					.setAuditDetails(estimateAppropriationRequest.getRequestInfo(), true));
+        for (EstimateAppropriation estimateAppropriation : estimateAppropriationRequest.getEstimateAppropriations()) {
+            estimateAppropriationRepository.validateEstimateAppropriation(estimateAppropriation);
+            estimateAppropriation.setAuditDetails(serviceUtils
+                    .setAuditDetails(estimateAppropriationRequest.getRequestInfo(), true));
 
-		}
-		kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
-		EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
-		estimateAppropriationResponse
-				.setEstimateAppropriations(estimateAppropriationRequest.getEstimateAppropriations());
-		return estimateAppropriationResponse;
+        }
+        kafkaTemplate.send(propertiesManager.getEstimateAppropriationsCreateTopic(), estimateAppropriationRequest);
+        EstimateAppropriationResponse estimateAppropriationResponse = new EstimateAppropriationResponse();
+        estimateAppropriationResponse
+                .setEstimateAppropriations(estimateAppropriationRequest.getEstimateAppropriations());
+        return estimateAppropriationResponse;
 
-	}
+    }
 
-	public List<EstimateAppropriation> search(EstimateAppropriationSearchContract estimateAppropriationSearchContract) {
+    public EstimateAppropriationResponse search(EstimateAppropriationSearchContract estimateAppropriationSearchContract,final RequestInfo requestInfo) {
         requestValidator.validateAppropriationSearchContract(estimateAppropriationSearchContract);
-		return estimateAppropriationRepository.search(estimateAppropriationSearchContract);
-	}
+        EstimateAppropriationResponse appropriationResponse = new EstimateAppropriationResponse();
+        appropriationResponse.setEstimateAppropriations(estimateAppropriationRepository.search(estimateAppropriationSearchContract));
+        appropriationResponse.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, Boolean.TRUE));
+        return appropriationResponse;
+    }
 }

@@ -54,21 +54,34 @@ function getType(type) {
     }
 }
 
-var getFieldsFromInnerObject = function(properties, module, master, jPath, isArray, required) {
-    var fields = [];
-    var header = [];
+var getFieldsFromInnerObject = function(fields, header, properties, module, master, jPath, isArray, required) {
+    // console.log("Iner object called with - " + jPath);
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
-        if(properties[key].properties) {
-            if(jPath.search("." + key) < 2)
-                getFieldsFromInnerObject(properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
+        if(properties[key].properties) 	{
+        	//its an inner object - should be another MDMS object - make UI paint a singleValueList with appropriate URL
+            fields.push({
+                "name": key,
+                "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
+                "label": module + ".create." + key,
+                "type": "singleValueList",
+                "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
+                "defaultValue": properties[key].default || "",
+                "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
+                	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
+                "isStateLevel":true							
+            });
+            header.push({
+            	"label": jPath + "." + module + "." + master + "." + key
+            })
         } else if(properties[key].items && properties[key].items.properties) {
+            if(jPath == "WasteSubType") console.log(jPath + " is an array");
             if(jPath.search("." + key) < 2)
-                getFieldsFromInnerObject(properties[key].items.properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []));
+                getFieldsFromInnerObject(fields, header, properties[key].items.properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []));
         } else {
             fields.push({
                 "name": key,
-                "jsonPath": (isArray ? (jPath + "[0]") : jPath) + "." + key,
+                "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
                 "label": module + ".create." + key,
                 "pattern": properties[key].pattern || "",
                 "type": properties[key].enum ? "singleValueList" : properties[key].format && ["number", "integer", "double", "long", "float"].indexOf(properties[key].type) == -1 ? getType(properties[key].format) : getType(properties[key].type),
@@ -93,17 +106,26 @@ var getFieldsFromInnerObject = function(properties, module, master, jPath, isArr
     };
 }
 
+var configData = config.data;
 var mainObj = {};
 var completed_requests = 0;
 var finalSpecs = {};
+var urls = [];
+var modules = [];
 
-for(let i = 0; i < config.data.length; i++){
+for(module in configData){
+	urls.push(configData[module].url);
+	modules.push(module);
+}
 
-	SwaggerParser.dereference(config.data[i])
+
+// for(module in modules){
+	for(var i = 0; i < urls.length; i++){
+		SwaggerParser.dereference(urls[i])
         .then(function(yamlJSON) {
-        	// console.log(yamlJSON)
+        	// console.log(yamlJSON.definitions.WasteSubType.properties)
         	let basePath = [];
-        	basePath = yamlJSON.basePath.split("-")[0].split("");
+        	basePath = yamlJSON.basePath.split("-")[0].split("");		// /asset-services type pattern should be in basepath
         	let index = basePath.indexOf("/");
         	if(index > -1){
         		basePath.splice(index, 1);
@@ -113,40 +135,50 @@ for(let i = 0; i < config.data.length; i++){
         	
         	completed_requests++;
 
-        	if (completed_requests == config.data.length) {
+        	if (completed_requests == urls.length) {
 	            // All downloads done, process responses array
 	            // console.log(mainObj);
 
-	            for(key in mainObj){
-	            	finalSpecs[key.toLowerCase()] = {};
-	            	for(property in mainObj[key.toLowerCase()]){
+	            for(moduleName in mainObj){
+	            	// console.log("Main Object module- " + moduleName);
+	            	finalSpecs[moduleName.toLowerCase()] = {};
+	            	for(master in mainObj[moduleName.toLowerCase()]){
 	            		// console.log(property);
-	            		if(!finalSpecs[key].masters) finalSpecs[key].masters = {};
+	            		// console.log("Master in Object module- " + master);
+	            		if(!finalSpecs[moduleName].masters) finalSpecs[moduleName].masters = {};
 
-	            		if(!finalSpecs[key.toLowerCase()].masters[property.toLowerCase()]) finalSpecs[key.toLowerCase()].masters[property.toLowerCase()] = {};
-	            		if(!finalSpecs[key.toLowerCase()].masters[property.toLowerCase()]) finalSpecs[key.toLowerCase()].masters[property.toLowerCase()] = {};
+	            		if(!finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()]) finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()] = {};
+	            		if(!finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()]) finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()] = {};
 	            		
 
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].name = "";
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].label = "";
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].type = "multiFieldAddToTable";
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].jsonPath = "";
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].header = (getFieldsFromInnerObject(mainObj[key][property].properties, key, property, 'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).header;
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].values = (getFieldsFromInnerObject(mainObj[key][property].properties, key, property, 'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).fields;
+	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].name = "";
+	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].label = "";
+	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].type = "multiFieldAddToTable";
+	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].jsonPath = "";
+	            		
+	            		var header = [];
+	            		var fields = [];
+	            		var spec = getFieldsFromInnerObject(fields, header, mainObj[moduleName][master].properties, moduleName, master, master, true, mainObj[moduleName][master].required || []);
+
+	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].header = spec.header;
+	            		finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()].values = spec.fields;
 	            		// console.log("Break-------------------------------------------");
 	            		// console.log(finalSpecs.swm.masters.CollectionPoint);
 	            	}
 	            	
 	            }
 
-	            console.log(finalSpecs);
+	            console.log(finalSpecs.swm.masters.wastesubtype.header);
+	            // console.log(finalSpecs.swm);
 	        
 	        }
 		})
 		.catch(function(err) {
             console.log(err);
         });
-}
+	}
+	
+// }
 
 
 app.post('/spec-directory/:module/:master', function(req, res, next) {

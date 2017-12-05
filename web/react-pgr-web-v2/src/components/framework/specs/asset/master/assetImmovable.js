@@ -4,7 +4,7 @@ var dat = {
 		"url": "asset-services-maha/assets/_create",
 		"tenantIdRequired": true,
 		"useTimestamp":true,
-		"idJsonPath": "",
+		"idJsonPath": "Asset.assetCategory.id",
 		"objectName": "Asset",
 		"groups": [
 			{
@@ -1561,6 +1561,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Asset",
+		"idJsonPath": "Asset.assetCategory.id",
 		"groups": [
 			{
 				"label": "ac.Modify.Header.Details",

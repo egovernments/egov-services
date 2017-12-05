@@ -574,26 +574,34 @@ class assetMovableCreate extends Component {
 
   makeAjaxCall = (formData, url) => {
     let self = this;
-    delete formData.ResponseInfo;
+    //delete formData.ResponseInfo;
     //return console.log(formData);
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
       self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "wc.create.message.success" : "wc.update.message.success"), true);
+      console.log(response);
       setTimeout(function() {
+        if(self.props.actionName == "update") {
+          console.log("update");
+          var hash = "/non-framework/asset/master/assetMovableView/" + response.Assets[0].id;
+        }
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
               var hash = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              console.log("check");
           } else {
+            console.log("check1");
             if(self.props.actionName == "update") {
-              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/");
+              console.log("update");
+              var hash = "/non-framework/asset/master/assetMovableView/" + response.Assets[0].id;
             } else {
-              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, "/view/") + "/" + encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
+              console.log(formData);
+              var hash = "/non-framework/asset/master/assetMovableView/" + response.Assets[0].id;
             }
           }
 
-
-          self.props.setRoute(hash + (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].queryString || ''));
+          self.props.setRoute(hash);
         }
       }, 1500);
     }, function(err) {
@@ -1348,9 +1356,8 @@ delete formData.Asset.assetAttributesCheck;
     let {create, handleChange, getVal, addNewCard, removeCard, autoComHandler} = this;
     let customActionsAndUrl=!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty("customActionsAndUrl")?mockData[`${moduleName}.${actionName}`]["customActionsAndUrl"][0].url:"";
     let self = this;
-    if(formData && formData.Asset && formData.Asset.fundSource){
-      console.log(formData.Asset.fundSource.name);
-    }
+      console.log(formData);
+
 
   //  {formData && formData.hasOwnProperty("Asset") && formData.Asset.hasOwnProperty("assetAttributes") && formData.Asset.assetAttributes.map((item,index)=>{
 
@@ -1505,12 +1512,7 @@ delete formData.Asset.assetAttributesCheck;
                   			</Card>
                     </div>
                 }
-          <div style={{"textAlign": "center"}}>
-            <br/>
-            {actionName == "create" && <UiButton item={{"label": "Create", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
-            {actionName == "update" && <UiButton item={{"label": "Update", "uiType":"submit", "isDisabled": isFormValid ? false : true}} ui="google"/>}
-            <br/>
-          </div>
+          
         </form>
       </div>
     );

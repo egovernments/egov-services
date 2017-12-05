@@ -3,7 +3,7 @@ var dat = {
 		"numCols": 12/3,
 		"url": "asset-services-maha/assets/_create",
 		"tenantIdRequired": true,
-		"idJsonPath": "",
+		"idJsonPath": "Asset.assetCategory.id",
 		"objectName": "Asset",
 		"customActionsAndUrl":[
 			{
@@ -606,7 +606,7 @@ var dat = {
 		"customActionsAndUrl":[
 			{
 				"actionName":"Add",
-				"url":"/non-framework/asset/master/assetImmovableCreate"
+				"url":"/non-framework/asset/master/assetMovableCreate"
 			}
 		],
 		"groups": [
@@ -1382,6 +1382,7 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "Asset",
+		"idJsonPath": "Asset.assetCategory.id",
 		"groups": [
 			{
 				"label": "ac.update.movable.Header.Details",

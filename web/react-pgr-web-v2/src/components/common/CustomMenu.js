@@ -351,46 +351,48 @@ const menuConvention={
 "Performance Assessment.Performance Assessment Actuals.PerfAssmtKpiValueSearch":"/non-framework/perfManagement/master/kpivalues",
 
 //Inventoy Service
-// "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",
-"Inventory.Inventory Masters.Supplier Master.Supplier Create":"/search/inventory/supplier/view",
+
+"Inventory.Inventory Masters.Supplier Master.Supplier Create":"/create/inventory/supplier",
+// "Inventory.Inventory Masters.Supplier Master.Supplier Create":"/search/inventory/supplier/view",
 "Inventory.Inventory Masters.Supplier Master.Supplier Search":"/search/inventory/supplier/view",
 "Inventory.Inventory Masters.Supplier Master.Supplier Update":"/search/inventory/supplier/update",
 
-// "Inventory.Inventory Masters.Material Master.Material Create":"/create/inventory/material",
-"Inventory.Inventory Masters.Material Master.Material Create":"/search/inventory/material/view",
+"Inventory.Inventory Masters.Material Master.Material Create":"/create/inventory/material",
+// "Inventory.Inventory Masters.Material Master.Material Create":"/search/inventory/material/view",
 "Inventory.Inventory Masters.Material Master.Material Search":"/search/inventory/material/view",
 "Inventory.Inventory Masters.Material Master.Material Update":"/search/inventory/material/update",
 
-// "Inventory.Inventory Masters.Store Master.Store Create":"/create/inventory/stores",
-"Inventory.Inventory Masters.Store Master.Store Create":"/search/inventory/stores/view",
+"Inventory.Inventory Masters.Store Master.Store Create":"/create/inventory/stores",
+// "Inventory.Inventory Masters.Store Master.Store Create":"/search/inventory/stores/view",
 "Inventory.Inventory Masters.Store Master.Store Search":"/search/inventory/stores/view",
 "Inventory.Inventory Masters.Store Master.Store Update":"/search/inventory/stores/update",
 
-// "Inventory.Inventory Masters.Price List Master.PriceList Create":"/create/inventory/pricelists",
-"Inventory.Inventory Masters.Price List Master.PriceList Create":"/search/inventory/pricelists/view",
+"Inventory.Inventory Masters.Price List Master.PriceList Create":"/create/inventory/pricelists",
+// "Inventory.Inventory Masters.Price List Master.PriceList Create":"/search/inventory/pricelists/view",
 "Inventory.Inventory Masters.Price List Master.PriceList Search":"/search/inventory/pricelists/view",
 "Inventory.Inventory Masters.Price List Master.PriceList Update":"/search/inventory/pricelists/update",
 
-// "Inventory.Inventory Transactions.Indent.Indent Create":"/create/inventory/indent",
-"Inventory.Inventory Transactions.Indent.Indent Create":"/search/inventory/indent/view",
+"Inventory.Inventory Transactions.Indent.Indent Create":"/create/inventory/indent",
+// "Inventory.Inventory Transactions.Indent.Indent Create":"/search/inventory/indent/view",
 "Inventory.Inventory Transactions.Indent.Indent Search":"/search/inventory/indent/view",
 "Inventory.Inventory Transactions.Indent.Indent Update":"/search/inventory/indent/update",
 
-// "Inventory.Inventory Transactions.Opening Balance.Opening Balance Create" : "/create/inventory/openingbalance",
-"Inventory.Inventory Transactions.Opening Balance.Opening Balance Create" : "/search/inventory/openingbalance/update",
+"Inventory.Inventory Transactions.Opening Balance.Opening Balance Create" : "/create/inventory/openingbalance",
+// "Inventory.Inventory Transactions.Opening Balance.Opening Balance Create" : "/search/inventory/openingbalance/update",
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Update" : "/search/inventory/openingbalance/update",
 "Inventory.Inventory Transactions.Opening Balance.Opening Balance Search" : "/search/inventory/openingbalance/view",
 
-"Inventory.Inventory Transactions.Material Issue.Material Issue Create" : "/create/inventory/materialissues",
-"Inventory.Inventory Transactions.Material Issue.Material Issue Update" : "/search/inventory/materialissues/update",
-"Inventory.Inventory Transactions.Material Issue.Material Issue Search" : "/search/inventory/materialissues/view",
+"Inventory.Inventory Transactions.Material Issue.Material Issues Create" : "/non-framework/inventory/transaction/materialissue/SearchIndentMaterialIssue",
+"Inventory.Inventory Transactions.Material Issue.Material Issues Update" : "/search/inventory/materialissues/update",
+"Inventory.Inventory Transactions.Material Issue.Material Issues Search" : "/search/inventory/materialissues/view",
 
 //Inventory Reports
 "Inventory.Inventory Report.Opening Balance Report":"/report/inventory/openingBalanceReport",
 "Inventory.Inventory Report.Supplier Report":"/report/inventory/supplierreport",
 "Inventory.Inventory Report.Rates Comparison With History Data":"/report/inventory/ratesComparisonWithHistory",
 "Inventory.Inventory Report.Comparison Between Different Rates":"/report/inventory/comparisonBetweenDifferentRates",
-
+"Inventory.Inventory Report.Material wise Purchase Order History":"/report/inventory/MaterialwisePurchaseOrderHistoryReport",
+"Inventory.Inventory Report.Supplier wise Purchase Order History":"/report/inventory/SupplierwisesPurchaseOrderHistoryReport",
 //Works
 "Works Management.Abstract Estimate.Estimate Create":"/non-framework/works/transaction/create/abstractEstimate",
 "Works Management.Abstract Estimate.Estimate Search":"/search/works/abstractEstimate/view",

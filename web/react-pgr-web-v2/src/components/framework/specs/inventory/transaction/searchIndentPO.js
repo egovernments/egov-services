@@ -26,7 +26,7 @@ var dat = {
                 "name": "supplierName",
                 "jsonPath": "purchaseOrders[0].supplier.code",
                 "label": "inventory.supplier.name",
-                "type": "autoCompelete",
+                "type": "singleValueList",
                 "url":"inventory-services/suppliers/_search?|$..code|$..name",
                 "isKeyValuePair":true,
                 "isRequired": true,

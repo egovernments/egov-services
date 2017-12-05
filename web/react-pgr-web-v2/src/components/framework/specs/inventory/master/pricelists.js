@@ -313,16 +313,7 @@ var dat = {
                   "label":"inventory.Rate"
                 },
                 {
-                  "label": "inventory.from.date"
-                },
-                {
-                  "label": "inventory.TO.date"
-                },
-                {
                   "label": "inventory.quantity"
-                },
-                {
-                  "label":"inventory.active"
                 }
               ],
               "values": [
@@ -376,26 +367,6 @@ var dat = {
                   "patternErrorMsg": "inventory.create.field.message.code"
                 },
                 {
-                  "name": "fromDate",
-                  "jsonPath": "priceLists[0].priceListDetails[0].fromDate",
-                  "pattern": "",
-                  "type": "datePicker",
-                  "isRequired": false,
-                  "isDisabled": true,
-                  "defaultValue": "",
-                  "patternErrorMsg": ""
-                },
-                {
-                  "name": "toDate",
-                  "jsonPath": "priceLists[0].priceListDetails[0].toDate",
-                  "pattern": "",
-                  "type": "datePicker",
-                  "isRequired": false,
-                  "isDisabled": true,
-                  "defaultValue": "",
-                  "patternErrorMsg": ""
-                },
-                {
                   "name": "quantity",
                   "jsonPath": "priceLists[0].priceListDetails[0].quantity",
                   "pattern": "",
@@ -403,17 +374,6 @@ var dat = {
                   "isRequired": false,
                   "isDisabled": false,
                   "defaultValue": "",
-                  "patternErrorMsg": ""
-                },
-                {
-                  "name": "active",
-                  "jsonPath": "priceLists[0].priceListDetails[0].active",
-                  "label": "",
-                  "pattern": "",
-                  "type": "checkbox",
-                  "isRequired": true,
-                  "isDisabled": false,
-                  "defaultValue": true,
                   "patternErrorMsg": ""
                 }
               ]
@@ -699,7 +659,7 @@ var dat = {
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
             "isRequired": false,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "maxLength": 50,
             "minLength": 5,

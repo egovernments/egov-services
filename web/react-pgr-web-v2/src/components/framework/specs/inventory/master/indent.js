@@ -110,7 +110,7 @@ var dat = {
         "indentDate",
 				"issueStore.name",
         "indentPurpose",
-        "status"
+        "indentStatus"
       ],
 
       "resultIdKey":"indentNumber",
@@ -265,7 +265,7 @@ var dat = {
             "jsonPath": "indents[0].desig.code",
             "label": "inventory.store.name",
             "type": "singleValueList",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "isHidden":true,
             "defaultValue": "",
@@ -418,7 +418,7 @@ var dat = {
       "groups": [
         {
           "name": "indent",
-          "label": "inventory.create.group.title.indent",
+          "label": "inventory.view.group.title.indent",
           "fields": [
             {
               "name": "name",
@@ -562,6 +562,7 @@ var dat = {
                   "type":"tableList",
                   "jsonPath":"indents[0].indentDetails",
                   "tableList":{
+										actionsNotRequired:true,
                      "header":[
                         {
                            "label":"Material Name"
@@ -585,20 +586,33 @@ var dat = {
                      ],
                      "values":[
 
-               {
+                 {
           			"name":"material",
                  "pattern":"",
-                 "type":"singleValueList",
+                 "type":"autoCompelete",
                  "jsonPath":"indents[0].indentDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory",
                  "depedants":[
                       {
                          "jsonPath":"indents[0].indentDetails[0].material.description",
                          "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others')"
+                         "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[0]')"
+                      },
+											
+											{
+                         "jsonPath":"indents[0].indentDetails[0].material.baseUom.uomCategory",
+                         "type":"textField",
+                         "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')"
+                      },
+
+											{
+                         "jsonPath":"indents[0].indentDetails[0].uom.code",
+                         "type":"dropDown",
+                         "pattern":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom&filter=+%5B%3F%28%40.uomCategory%3D%3D%27{indents[0].indentDetails[0].material.baseUom.uomCategory}%27%29%5D|$..code|$..description"
                       }
+
                     ]
                },
                {
@@ -669,7 +683,7 @@ var dat = {
     "groups": [
       {
         "name": "indent",
-        "label": "inventory.create.group.title.indent",
+        "label": "inventory.update.group.title.indent",
         "fields": [
           {
             "name": "name",
@@ -738,7 +752,7 @@ var dat = {
             "pattern": "",
             "type": "text",
             "isRequired": false,
-            "defaultValue":"Indent",
+            "defaultValue":"",
             "patternErrorMsg": ""
           },
           {
@@ -845,19 +859,31 @@ var dat = {
                      ],
                      "values":[
 
-               {
+                 {
           			"name":"material",
                  "pattern":"",
-                 "type":"singleValueList",
+                 "type":"autoCompelete",
                  "jsonPath":"indents[0].indentDetails[0].material.code",
                  "isRequired":true,
                  "isDisabled":false,
-                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description",
+                 "url":"/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory",
                  "depedants":[
                       {
                          "jsonPath":"indents[0].indentDetails[0].material.description",
                          "type":"textField",
-                         "valExp":"getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others')"
+                         "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[0]')"
+                      },
+											
+											{
+                         "jsonPath":"indents[0].indentDetails[0].material.baseUom.uomCategory",
+                         "type":"textField",
+                         "valExp":"getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')"
+                      },
+
+											{
+                         "jsonPath":"indents[0].indentDetails[0].uom.code",
+                         "type":"dropDown",
+                         "pattern":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom&filter=+%5B%3F%28%40.uomCategory%3D%3D%27{indents[0].indentDetails[0].material.baseUom.uomCategory}%27%29%5D|$..code|$..description"
                       }
                     ]
                },

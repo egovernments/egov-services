@@ -4,7 +4,7 @@ import SearchForCreate from '../../common/SearchForCreate';
 
 import template from '../../../../framework/specs/inventory/transaction/searchIndentMaterialIssue'
 
-class SearchIndentIssue extends Component {
+class SearchIndentMaterialIssue extends Component {
 
   constructor(){
     super();
@@ -81,4 +81,4 @@ const mapDispatchToProps = dispatch => ({
   }
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchIndent);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchIndentMaterialIssue);

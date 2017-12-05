@@ -201,20 +201,6 @@ var dat =
             "label": "inventory.create.group.title.MaterialIssues1",
             "fields": [
                {
-                  "name": "name",
-                  "jsonPath": "materialIssues[0].fromStore.name",
-                  "label": "inventory.create.fromStore.name",
-                  "pattern": "^[a-zA-Z ]+$",
-                  "type": "singleValueList",
-                  "isRequired": false,
-                  "isDisabled": false,
-                  "defaultValue": "",
-                  "maxLength": 50,
-                  "minLength": 5,
-                  "patternErrorMsg": "inventory.create.field.message.name",
-                  "url": "inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name"
-               },
-               {
                   "name": "issueDate",
                   "jsonPath": "materialIssues[0].issueDate",
                   "label": "inventory.create.issueDate",
@@ -226,11 +212,11 @@ var dat =
                   "patternErrorMsg": ""
                },
                {
-                  "name": "indentstorename",
-                  "jsonPath": "materialIssues[0].indent.indentStore.name",
-                  "label": "inventory.indenting.store",
+                  "name": "issuestorename",
+                  "jsonPath": "materialIssues[0].indent.issueStore.name",
+                  "label": "inventory.search.issueStore",
                   "pattern": "^[a-zA-Z ]+$",
-                  "type": "singleValueList",
+                  "type": "text",
                   "isRequired": false,
                   "isDisabled": true,
                   "defaultValue": "",
@@ -241,10 +227,10 @@ var dat =
                },
                {
                   "name": "departmentname",
-                  "jsonPath": "materialIssues[0].indent.department.name",
+                  "jsonPath": "materialIssues[0].indent.issueStore.department.name",
                   "label": "inventory.create.department.name",
                   "pattern": "",
-                  "type": "autoCompelete",
+                  "type": "text",
                   "isRequired": false,
                   "isDisabled": true,
                   "defaultValue": "",
@@ -257,7 +243,7 @@ var dat =
                   "name": "indentNumber",
                   "jsonPath": "materialIssues[0].indent.indentNumber",
                   "label": "inventory.indent.number",
-                  "pattern": "",
+                  "pattern": "text",
                   "type": "autoCompelete",
                   "isRequired": false,
                   "isDisabled": true,
@@ -582,6 +568,7 @@ var dat =
     }
 ],
   "url": "/inventory-services/materialissues/_create",
+  "onloadFetchUrl":"/inventory-services/materialissues/_preparemifromindents",
       "tenantIdRequired": true
 },
    "inventory.view": {

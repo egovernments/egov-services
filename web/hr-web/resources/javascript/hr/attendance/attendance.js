@@ -223,6 +223,9 @@ class Attendance extends React.Component {
             }
 
             for (var k = 0; k < empLeaveList.length; k++) {
+
+              console.log("leave employee", empLeaveList[k].employee);
+
               if (empLeaveList[k].fromDate===empLeaveList[k].toDate) {
                 if (currentDate.getFullYear()==empLeaveList[k].fromDate.split("/")[2] && currentDate.getMonth()==empLeaveList[k].fromDate.split("/")[1]-1) {
                   employees[empLeaveList[k].employee]["attendance"][`${parseInt(queryParam["month"])}-${empLeaveList[k].fromDate.split("/")[0]}`]="L";                  
@@ -237,6 +240,7 @@ class Attendance extends React.Component {
                   }
                 }
               }
+              
             }
   
         

@@ -89,128 +89,11 @@ var dat = {
                                   "value": 'OBJECTIVE'
                               }],
                         "defaultValue": "TEXT",
-                        "showHideFields": [{
-                            "ifValue": "OBJECTIVE",
-
-                            "hide": [{
-                                "name": "kpiTargetBlock",
-                                "isGroup": true,
-                                "isField": false
-                            },
-                            {
-                                "name": "kpiTargetTextBlock",
-                                "isGroup": true,
-                                "isField": false
-                            }
-                          ],
-                            "show": [{
-                                "name": "kpiTargetRadioBlock",
-                                "isGroup": true,
-                                "isField": false
-                            }]
-                        },
-                        {
-                            "ifValue": "VALUE",
-                            "hide": [{
-                                "name": "kpiTargetRadioBlock",
-                                "isGroup": true,
-                                "isField": false
-                            },
-                            {
-                                "name": "kpiTargetTextBlock",
-                                "isGroup": true,
-                                "isField": false
-                            }
-                          ],
-                            "show": [{
-                                "name": "kpiTargetBlock",
-                                "isGroup": true,
-                                "isField": false
-                            }]
-                        },
-                        {
-                            "ifValue": "TEXT",
-                            "hide": [{
-                                "name": "kpiTargetRadioBlock",
-                                "isGroup": true,
-                                "isField": false
-                            },
-                            {
-                                "name": "kpiTargetBlock",
-                                "isGroup": true,
-                                "isField": false
-                            }
-                          ],
-                            "show": [{
-                                "name": "kpiTargetTextBlock",
-                                "isGroup": true,
-                                "isField": false
-                            }]
-                        }
-                      ]
+                        
                     }
                 ]
             },
-            {
-                "label": "Text",
-                "name": "kpiTargetTextBlock",
-                "hide": false,
-                "multiple": false,
-                "fields": [{
-                    "name": "kpiTargetText",
-                    "jsonPath": "KPIs[0].targetDescription",
-                    "label": "",
-                    "pattern": "",
-                    "type": "text",
-                    "isDisabled": false,
-                    "requiredErrMsg": ""
-                }]
-            },
-            {
-                "label": "value",
-                "name": "kpiTargetBlock",
-                "hide": true,
-                "multiple": false,
-                "fields": [{
-                    "name": "kpiTarget",
-                    //"hide":false,
-                    "jsonPath": "KPIs[0].targetValue",
-                    "label": "",
-                    "pattern": "[0-9]",
-                    "type": "text",
-                    "isDisabled": false,
-                    "patternErrMsg": "Please enter a valid number",
-                    "requiredErrMsg": ""
-                }]
-            },
-            {
-                "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock",
-                "name": "kpiTargetRadioBlock",
-                "hide": true,
-                "multiple": false,
-                "fields": [{
-                    "name": "kpiTargetRadio",
-                    //"hide":true,
-                    "jsonPath": "KPIs[0].targetValue",
-                    "label": "",
-                    "pattern": "",
-                    "type": "radio",
-                    "isRequired": false,
-                    "isDisabled": false,
-                    "requiredErrMsg": "",
-                    "patternErrMsg": "",
-                    "values": [{
-                        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes",
-                        "value": 1
-                    }, {
-                        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no",
-                        "value": 2
-                    }, {
-                        "label": "perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress",
-                        "value": 3
-                    }]
-                }]
-            },
+            
             {
                 "label": "perfManagement.create.KPIs.groups.kpiInstruct",
                 "name": "kpiInstruct",
@@ -402,7 +285,7 @@ var dat = {
             },
 
 
-            {
+            /*{
                 "label": "perfManagement.view.KPIs.groups.viewkpiTargetBlock",
                 "name": "viewkpiTargetBlock",
                 "hide": false,
@@ -436,7 +319,7 @@ var dat = {
                     "requiredErrMsg": "",
                     "patternErrMsg": "",
                 }]
-            },
+            },*/
 
             {
                 "label": "perfManagement.view.KPIs.groups.viewKpiInstruc",
@@ -571,127 +454,9 @@ var dat = {
                         }, {
                             "label": "perfManagement.update.KPIs.groups.updatekpitype.objective",
                             "value": "OBJECTIVE"
-                        }],
-                        "showHideFields": [{
-                                						"ifValue": "OBJECTIVE",
-
-                                						"hide": [{
-                                							"name": "updatekpiTargetBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						},
-                                						{
-                                							"name": "updatekpiTargetTextBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						}
-                                					  ],
-                                						"show": [{
-                                							"name": "updatekpiTargetRadioBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						}]
-                                					},
-                                					{
-                                						"ifValue": "VALUE",
-                                						"hide": [{
-                                							"name": "updatekpiTargetRadioBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						},
-                                						{
-                                							"name": "updatekpiTargetTextBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						}
-                                					  ],
-                                						"show": [{
-                                							"name": "updatekpiTargetBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						}]
-                                					},
-                                					{
-                                						"ifValue": "TEXT",
-                                						"hide": [{
-                                							"name": "updatekpiTargetRadioBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						},
-                                						{
-                                							"name": "updatekpiTargetBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						}
-                                					  ],
-                                						"show": [{
-                                							"name": "updatekpiTargetTextBlock",
-                                							"isGroup": true,
-                                							"isField": false
-                                						}]
-                                					}
-                                				  ]
+                        }]
                     }
                 ]
-            },
-            {
-                "label": "perfManagement.update.KPIs.groups.updatekpiTargetTextBlock",
-                "name": "updatekpiTargetTextBlock",
-                "hide": false,
-                "multiple": false,
-                "fields": [{
-                    "name": "updatekpiTarget",
-                    "jsonPath": "KPIs[0].targetDescription",
-                    "label": "",
-                    "pattern": "",
-                    "type": "text",
-                    "isDisabled": false,
-                    "requiredErrMsg": ""
-                }]
-            },
-
-            {
-                "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock",
-                "name": "updatekpiTargetBlock",
-                "hide": false,
-                "multiple": false,
-                "fields": [{
-                    "name": "updatekpiTargetText",
-                    "jsonPath": "KPIs[0].targetValue",
-                    "label": "",
-                    "pattern": "",
-                    "type": "text",
-                    "isDisabled": false,
-                    "requiredErrMsg": ""
-                }]
-            },
-            {
-                "label": "perfManagement.update.KPIs.groups.updatekpiTargetRadioBlock",
-                "name": "updatekpiTargetRadioBlock",
-                "hide":true,
-                //"hide": "`${getVal('KPIs[0].targetType')}`",
-                "multiple": false,
-                "fields": [{
-                    "name": "updatekpiTargetRadio",
-                    "jsonPath": "KPIs[0].targetValue",
-                    "label": "",
-                    "pattern": "",
-                    "type": "radio",
-                    "isRequired": false,
-                    "isDisabled": false,
-                    "requiredErrMsg": "",
-                    "patternErrMsg": "",
-                    "values": [{
-                        "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes",
-                        "value": 1
-                    }, {
-                        "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock.no",
-                        "value": 2
-                    }, {
-                        "label": "perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress",
-                        "value": 3
-                    }]
-                }]
             },
             {
                 "name": "updateKpiInstruc",

@@ -4,10 +4,12 @@ import {connect} from 'react-redux';
 import TextField from 'material-ui/TextField';
 import SelectField from 'material-ui/SelectField'
 import RaisedButton from 'material-ui/RaisedButton';
-import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton'
-import MenuItem from 'material-ui/MenuItem'
+import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
+import Menu from 'material-ui/Menu';
+import MenuItem from 'material-ui/MenuItem';
 
-import {Collapse,Grid, Row, Col, Table, DropdownButton,Button} from 'react-bootstrap';
+
+import {Collapse,Grid, Row, Col, Table, DropdownButton,Button,OverlayTrigger,Popover,Glyphicon} from 'react-bootstrap';
 
 import {Card, CardHeader, CardText} from 'material-ui/Card';
 
@@ -16,6 +18,8 @@ import _ from "lodash";
 import {translate} from '../../../common/common';
 import Api from '../../../../api/api';
 import UiButton from '../../../framework/components/UiButton';
+import {fileUpload} from '../../../framework/utility/utility';
+
 
 
 class kpivalues  extends Component{
@@ -29,8 +33,8 @@ class kpivalues  extends Component{
             KPIs:[],
             Department:[],
             FinantialYear:[],
-            KPIs:[],
             collapse:[],
+
             selectedDeptId:'',
             selectedFinYear:'',
             selectedKpiCode:'',
@@ -42,13 +46,32 @@ class kpivalues  extends Component{
             next:true,
             prev:false,
             KPIResult:[],
+            documents:[],
+
+            uploadPane:[],
+            anchorEl:[],
+
+            allowedMax:1,
+
+
             errorInput:'No record found'
      };
 
-     this.handleChange = this.handleChange.bind(this);
+     //this.handleChange = this.handleChange.bind(this);
+     //this.handleSubmit = this.handleSubmit.bind(this);
+     //this.searchKPIValues = this.searchKPIValues.bind(this);
+     //this.clearSearch = this.clearSearch.bind(this);
+     //this.nextSection = this.nextSection.bind(this);
+     this.header = this.header.bind(this);
+
      this.handleSubmit = this.handleSubmit.bind(this);
-     this.searchKPIValues = this.searchKPIValues.bind(this);
-     this.clearSearch = this.clearSearch.bind(this);
+     this.handleFile   = this.handleFile.bind(this);
+     
+
+     this.prepareBodyobject = this.prepareBodyobject.bind(this);
+     
+     this.renderFileObject = this.renderFileObject.bind(this);
+     this.handleChange = this.handleChange.bind(this);
      this.nextSection = this.nextSection.bind(this);
      this.prevSection = this.prevSection.bind(this);
 
@@ -91,180 +114,32 @@ class kpivalues  extends Component{
 
 
 
-   prepareTableHeader()
+
+   nextSection()
    {
-     return [{'id':1,1:'',2:'April',3:'May',4:'June',5:'July',6:'Augest',7:'Sep',8:'Oct',9:'Nov',10:'Dec',11:'Jan',12:'Feb',13:'March',}];
-   }
-
-   prepareTableBody(response,self)
- 	  {
- 	    var data = {};
-
- 	    var kpi = new Array();
-      var accordian = new Array();
-
-
-
- 	    for (var i = 0; i < response.length; i++) {
- 	      //var row = {};
- 	      var key = i+1;
- 	      data[key] = {id :i + 2};
- 	      data[key][1] = {kpiName : response[i].kpi.name , kpiid: response[i].kpi.id, targetType:response[i].kpi.targetType, instructions: response[i].kpi.instructions, documentsReq:response[i].kpi.documentsReq, kpiTarget:response[i].kpi.kpiTarget,cellheader:true};
-        kpi[response[i].kpi.id] = [];
-        accordian[response[i].kpi.id] = false;
-
-
-
- 	      for (var j = 0; j < response[i].kpiValue.valueList.length; j++) {
- 	        var index = j+2;
-
- 	        data[key][index] = {
- 	        						targetType:response[i].kpi.targetType,
- 	        						val:response[i].kpiValue.valueList[j].value,
- 	        						kpiid: response[i].kpi.id ,
- 	        						kpivalueid : response[i].kpiValue.valueList[j].period,
-                      valueid : response[i].kpiValue.valueList[j].valueid
- 	        					}
-
- 	        kpi[response[i].kpi.id][response[i].kpiValue.valueList[j].period] = response[i].kpiValue.valueList[j].value;
-
- 	      }
-
-
- 	    }
-
- 	    self.setState({KPIs:kpi});
-      self.setState({collapse:accordian});
-       //self.state.KPIs = kpi;
- 	    var result = [];
-
-     Object.keys(data).forEach(function(item) {
-       result.push(data[item]);
-     })
-
-     return result;
-   }
-
-   getFieldRow(item)
-   {
-     if (item.cellheader) {
-       return <div >
-       {item.kpiName}&nbsp; &nbsp;
-       <span className="glyphicon glyphicon-menu-down" aria-hidden="true" onClick={(e) => this.toggle(item.kpiid, e)} ></span>
-       </div>;
+     this.setState({prev:true})
+     if (this.state.viewFirst) {
+       this.setState({viewFirst:false,viewSecond:true})
      }
-     if (item.targetType) {
-      //this.setState({KPIs:kpi});
-       if (item.targetType == 'TEXT') {
-
-         /*return <TextField className="custom-form-control-for-textfield"
-         floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-         inputStyle={{"color": "#5F5C57","textAlign":"left"}}
-         style={{"display": 'inline-block'}}
-         errorStyle={{"float":"left"}}
-         value={this.state.KPIs[item.kpiid][item.kpivalueid]}
-         onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} />*/
-
-           return <input type="text" value={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid,item.valueid, e)} />;
-           //return <TextField id='kpival_{item.id}' name='kpival_{item.id}'  value={item.val} onChange={this.handleChange} />;
-       }
-       if (item.targetType == 'VALUE') {
-
-         /*return <TextField className="custom-form-control-for-textfield"
-         floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
-         inputStyle={{"color": "#5F5C57","textAlign":"left"}}
-         style={{"display": 'inline-block'}}
-         errorStyle={{"float":"left"}}
-         value={this.state.KPIs[item.kpiid][item.kpivalueid]}
-         onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid, e)} />*/
-         return <input type="text" pattern="[0-9]*" value={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid ,item.valueid, e)} />;
-         //return <TextField id='kpival_{item.id}' name='kpival_{item.id}' value={item.val} onChange={this.handleChange}/>;
-       }
-       if (item.targetType == 'OBJECTIVE') {
-
-           return <RadioButtonGroup name={item.kpiid+'-'+item.kpivalueid} defaultSelected={this.state.KPIs[item.kpiid][item.kpivalueid]}  valueSelected={this.state.KPIs[item.kpiid][item.kpivalueid]} onChange={(e) => this.handleChange(item.kpiid, item.kpivalueid ,item.valueid, e)} >
-                    <RadioButton  value="1" label="YES" disabled={false} />
-                    <RadioButton  value="2" label="NO" disabled={false} />
-                    <RadioButton  value="3" label="INPROGRESS" disabled={false}/>
-                 </RadioButtonGroup>;
-       }
-       if (item.field == 'BUTTON') {
-         return <RaisedButton id="savekpival{item.id}" name="savekpival{item.id}" type="button" label="SAVE" />
-       }
-
-       return item.value;
+     if (this.state.viewSecond) {
+       this.setState({viewSecond:false,viewThird:true,next:false})
      }
-     return <div >{item}</div>;
-     //return item;
    }
-
-
-
-   toggle(kpiId,event) {
-    //console.log(kpiId);
-     let accordianClone = this.state.collapse.slice();
-     //console.log(accordianClone);
-     accordianClone[kpiId] = !accordianClone[kpiId];
-     this.setState({ collapse: accordianClone });
-   }
-
-   handleChange(kpiId,kpiValueId, valueid, event) {
-    let KPIsClone = this.state.KPIs.slice();
-
-    //console.log(event.target.validity.valid);
-
-    KPIsClone[kpiId][kpiValueId] = (event.target.validity.valid)?event.target.value:KPIsClone[kpiId][kpiValueId];
-
-    /*this.state.KPIResult[kpiId]['kpiValue']['valueList'].map(p =>{
-      if (p['period'] == kpiValueId) {
-        p['value'] = KPIsClone[kpiId][kpiValueId];
-      }
-    });*/
-
-
-    let resultsClone = this.state.KPIResult.slice();
-    for (var i = 0; i < resultsClone.length; i++) {
-      if(valueid == resultsClone[i].kpiValue.id)
-      {
-          resultsClone[i].kpiValue.valueList.map(p =>{
-            if (p['period'] == kpiValueId) {
-              p['value'] = KPIsClone[kpiId][kpiValueId];
-            }
-        });
-      }
-    }
-
-    //console.log(this.state.KPIResult);
-
-    this.setState({KPIs : KPIsClone, KPIResult:resultsClone});
-
-
-     //console.log(this.state.KPIs);
-   }
-
-   handleSubmit(event)
+   prevSection()
    {
-       this.props.setLoadingStatus('loading');
-       let url = "perfmanagement/v1/kpivalue/_create";
-       let query = [];
-       let body = {'kpiValues' : this.state.KPIResult};
-       console.log(this.state.KPIResult);
-       console.log(JSON.stringify(body));
-       let self = this;
-      Api.commonApiPost(url, query, body , false, true).then(function(res){
-          self.props.setLoadingStatus('hide');
-          if (res) {
-            self.props.toggleSnackbarAndSetText(true, translate("perfManagement.update.KPIs.groups.updatekpivalue"), true);
-          }
-
-        }, function(err){
-            self.props.setLoadingStatus('hide');
-            self.props.toggleSnackbarAndSetText(true, err.message);
-        });
-
-
+     this.setState({next:true})
+     if (this.state.viewThird) {
+       this.setState({viewThird:false,viewSecond:true})
+     }
+     if (this.state.viewSecond) {
+       this.setState({viewSecond:false,viewFirst:true,prev:false})
+     }
 
    }
+   
+   
+
+   
 
    handleSearch( event )
    {
@@ -281,24 +156,381 @@ class kpivalues  extends Component{
      }
 
      let self = this;
+
+     /*var res = JSON.parse('{"responseInfo":{"apiId":"org.egov.pt","ver":"1.0","ts":1512034880099,"resMsgId":"uief87324","msgId":"654654","status":"200"},"kpiValues":[{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"2","name":"MYKPITWO 2","code":"MKT","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"OBJECTIVE","instructions":"SECOND INS Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1511867571861},"kpiTarget":{"id":"10","kpiCode":"MKT","targetValue":"3","targetDescription":"In Progress","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"66","kpi":null,"kpiCode":"MKT","tenantId":"default","valueList":[{"id":null,"valueid":"66","period":"4","value":"1"},{"id":null,"valueid":"66","period":"5","value":"3"},{"id":null,"valueid":"66","period":"6","value":""},{"id":null,"valueid":"66","period":"7","value":"3"},{"id":null,"valueid":"66","period":"8","value":""},{"id":null,"valueid":"66","period":"9","value":""},{"id":null,"valueid":"66","period":"10","value":""},{"id":null,"valueid":"66","period":"11","value":""},{"id":null,"valueid":"66","period":"12","value":""},{"id":null,"valueid":"66","period":"1","value":""},{"id":null,"valueid":"66","period":"2","value":""},{"id":null,"valueid":"66","period":"3","value":"2"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}},{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"1","name":"MYKPIONE 1","code":"MKO","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"VALUE","instructions":"ONE Ins Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1512030906958},"kpiTarget":{"id":"9","kpiCode":"MKO","targetValue":"1000","targetDescription":"1000","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"57","kpi":null,"kpiCode":"MKO","tenantId":"default","valueList":[{"id":null,"valueid":"57","period":"4","value":"311"},{"id":null,"valueid":"57","period":"5","value":"200"},{"id":null,"valueid":"57","period":"6","value":"100"},{"id":null,"valueid":"57","period":"7","value":"120"},{"id":null,"valueid":"57","period":"8","value":"130"},{"id":null,"valueid":"57","period":"9","value":"140"},{"id":null,"valueid":"57","period":"10","value":"110"},{"id":null,"valueid":"57","period":"11","value":"120"},{"id":null,"valueid":"57","period":"12","value":"105"},{"id":null,"valueid":"57","period":"1","value":""},{"id":null,"valueid":"57","period":"2","value":""},{"id":null,"valueid":"57","period":"3","value":"10"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}},{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"3","name":"MYKPITHREE 3","code":"MKTH","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"TEXT","instructions":"THIRD INS Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1511867571861},"kpiTarget":{"id":"11","kpiCode":"MKTH","targetValue":"CONFIRMED","targetDescription":"CONFIRMED","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"75","kpi":null,"kpiCode":"MKTH","tenantId":"default","valueList":[{"id":null,"valueid":"75","period":"4","value":"100"},{"id":null,"valueid":"75","period":"5","value":"200"},{"id":null,"valueid":"75","period":"6","value":""},{"id":null,"valueid":"75","period":"7","value":""},{"id":null,"valueid":"75","period":"8","value":""},{"id":null,"valueid":"75","period":"9","value":""},{"id":null,"valueid":"75","period":"10","value":""},{"id":null,"valueid":"75","period":"11","value":""},{"id":null,"valueid":"75","period":"12","value":""},{"id":null,"valueid":"75","period":"1","value":""},{"id":null,"valueid":"75","period":"2","value":""},{"id":null,"valueid":"75","period":"3","value":"CONFIRMED"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}}]}');
+     var response = res.kpiValues;
+
+     let header = self.header();
+     //var row   = response;//self.prepareBodyobject(response);
+
+     self.setState({data: response,header:header,showResult: true,KPIResult:response});*/
+
      var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
      this.props.setLoadingStatus('loading');
      Api.commonApiPost(url, {}, {}, false, true).then(function(res){
         self.props.setLoadingStatus('hide');
         var response = res.kpiValues;
 
-         var header = self.prepareTableHeader();
+         let header = self.header();
+         var row   = self.prepareBodyobject(response);
 
-         var data   = self.prepareTableBody(response,self);
-
-         self.setState({data: data,header:header,showResult: true,KPIResult:response});
+         self.setState({data: row,header:header,showResult: true,KPIResult:response});
 
        }, function(err){
          self.props.setLoadingStatus('hide');
        });
 
+   }
+
+header()
+{
+  let header = ['April','May','June','July','Augest','Sep','Oct','Nov','Dec','Jan','Feb','March'];
+
+  return header.map((headerItem,k) =>  {
+    //console.log(headerItem,k);
+    var className = '';
+         // first section
+         var className = this.panelVisiblity(k);
+    return (        
+          <th className={className}>                      
+            <div suppressContentEditableWarning="true"   >{headerItem}</div>
+          </th> 
+          );
+  });
+
+}
+
+panelVisiblity(k)
+{
+  var className = '';
+  if(k >= 0 && k <= 3 && !this.state.viewFirst)
+   {
+     className = 'hidden';
+   }
+   if(k >= 4 && k <= 7 && !this.state.viewSecond)
+   {
+     className = 'hidden';
+   }
+   if(k >= 8 && k <= 11 && !this.state.viewThird)
+   {
+     className = 'hidden';
+   }
+  return className;
+}
 
 
+
+renderFileObject = (item, i) => {
+      let self = this;
+      if(self.props.readonly) {
+      return (
+        <a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + self.props.getVal(item.period + "[" + i + "].fileStoreId")} target="_blank">{translate("wc.craete.file.Download")}</a>
+      );
+    } else {
+      return (
+
+        <label class="btn btn-primary" for={"file_"+item.valueid+item.period} style={{"color":"orange"}}>
+            <input id={"file_"+item.valueid+item.period} type="file" style={{"display":"none"}}  onChange={e => this.handleFile(e,item.valueid,item.period)}/>
+            <span className="glyphicon glyphicon-upload" aria-hidden="true"></span>
+            <strong>Upload More</strong>
+        </label>
+      )
+    }
+  }
+
+prepareUploadPanel(itemValue)
+{
+
+  return <div style={{
+          ...this.props.style,
+          position: 'absolute',
+          boxShadow: '0 5px 10px rgba(0, 0, 0, 0.2)',
+          border: '1px solid #CCC',
+          marginLeft: 78,
+          marginTop: 5,
+          padding: 10,
+          backgroundColor:'white'
+        }}
+      >
+        <strong>Holy guacamole!</strong> Check this info.
+        <br/>
+        {this.renderFileObject(itemValue)}
+      </div>
+}
+
+prepareKPIdesc(kpi)
+{
+  return <Popover id="popover-positioned-bottom">
+            <span>{kpi.instructions}</span>
+         </Popover>
+}
+
+prepareBodyobject(response)
+{
+  
+  return response.map(item => {
+    this.state.uploadPane[item.kpiValue.id] = [];
+    return (
+          <tr>
+            <td>
+                <h6><strong>{item.kpi.name}</strong></h6>
+                <label>{translate("perfManagement.create.KPIs.groups.type")}</label>:&nbsp;
+                <span>{item.kpi.targetType}</span><br/>
+                <label>{translate("perfManagement.create.KPIs.groups.kpiTarget")}</label>:&nbsp;
+                <span>{item.kpi.kpiTarget.targetDescription}</span><br/>
+
+                <OverlayTrigger
+                   trigger="click"
+                   overlay={this.prepareKPIdesc(item.kpi)} placement="bottom" rootClose>
+                    <span style={{"color":"orange"}}>
+                        <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        <u>{translate("perfManagement.create.KPIs.groups.kpiInfo")}</u>
+                    </span>
+                </OverlayTrigger>
+
+            </td>
+            <td>
+            </td> 
+            {
+              item.kpiValue.valueList.map((itemValue,k) => {
+               var className = this.panelVisiblity(k);
+
+                return (
+                    <td className={className}>
+                      {item.kpi.targetType == 'TEXT' &&
+
+                        <TextField 
+                           floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                           inputStyle={{"color": "#5F5C57","textAlign":"left"}}
+                           style={{"display": 'inline-block'}}
+                           errorStyle={{"float":"left"}}
+                           value={itemValue.value}
+                            />
+
+                      }
+
+                      {item.kpi.targetType == 'VALUE' &&
+
+                        <TextField 
+                           floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
+                           inputStyle={{"color": "#5F5C57","textAlign":"left"}}
+                           style={{"display": 'inline-block'}}
+                           errorStyle={{"float":"left"}}
+                           value={itemValue.value} />
+
+                      }
+
+                      {item.kpi.targetType == 'OBJECTIVE' &&
+
+                        <SelectField value={itemValue.value}
+                           dropDownMenuProps={{animated: false, targetOrigin: {horizontal: 'left', vertical: 'bottom'}}}
+                           style={{"display":  'inline-block'}}
+                           errorStyle={{"float":"left"}}
+                           fullWidth={true}
+                           hintText="Please Select"
+                           >
+                              <MenuItem value="1"  primaryText="YES" />
+                              <MenuItem value="2"  primaryText="NO" />
+                              <MenuItem value="3"  primaryText="WIP" />                             
+                        </SelectField>
+
+                      }
+
+
+                      <div>
+                          <OverlayTrigger
+                             trigger="click"
+                             overlay={this.prepareUploadPanel(itemValue)} placement="bottom"  rootClose >
+                              <span style={{"color":"orange"}}>
+                              <span className="glyphicon glyphicon-upload" aria-hidden="true"></span> &nbsp;&nbsp;
+                              <span id={itemValue.valueid+''+itemValue.period} >
+                                <strong>{translate('perfManagement.create.KPIs.groups.Uploads')}</strong>
+                              </span>
+                              </span>
+                          </OverlayTrigger>
+                          <br/>
+                          
+
+                        </div>
+
+
+                    </td>
+                  );
+
+              })
+            }
+            <td>
+            </td>   
+          </tr>
+          );          
+        });
+}
+
+
+  handleChange(kpiId,kpiValueId,event) {
+      let KPIsClone = this.state.KPIs.slice();
+      console.log(kpiValueId,'kpi value id');
+      KPIsClone[kpiId][kpiValueId] = parseInt(event.target.value);
+
+      this.state.KPIResult[kpiId]['kpiValue']['valueList'].map(p =>{
+        if (p['period'] == kpiValueId) {
+          p['value'] = KPIsClone[kpiId][kpiValueId];
+        }
+      });
+     
+
+      this.setState({KPIs : KPIsClone});
+
+
+       //console.log(this.state.KPIs);
+     }
+  
+
+  handleFile(event,valueid,period)
+  {
+    let files = this.state.documents.slice();
+
+    if(!files[valueid])
+    {
+      files[valueid] = [];
+    }
+
+    files[valueid][period] = event.target.files[0];
+    this.setState({documents:files});
+
+  }
+
+
+  handleSubmit(event)
+   {
+       let {actionName, moduleName } = this.props;
+       let fileList = this.state.documents;
+       let counter = Object.keys(fileList).length;
+
+       let fileStorId = [];
+       let breakOut = 0;
+       if (counter) {
+
+         for(let key in fileList) {
+        let kpiFiles = fileList[key];
+
+        fileStorId[key] = [];
+
+        for(let index in kpiFiles) {
+
+           fileUpload(kpiFiles[index], moduleName, function(err, res) {
+            if(breakOut == 1) return;
+            if(err) {
+              breakOut = 1;
+              self.props.setLoadingStatus('hide');
+              self.props.toggleSnackbarAndSetText(true, err, false, true);
+            } else {
+              counter--;
+              fileStorId[key][index] = res.files[0].fileStoreId;
+              //console.log(res.files[0].fileStoreId);
+              //_.set(formData, key, res.files[0].fileStoreId);
+              if(counter == 0 && breakOut == 0)
+              {
+                this.state.KPIResult.map(kpi => {
+
+                });
+              }
+                console.log('go for form submission');
+                //self.makeAjaxCall(formData, _url);
+            }
+        })
+
+        }
+        counter--;
+        if (counter == 0) {
+
+          //console.log(fileStorId);
+
+            this.state.KPIResult.map(kpi => {
+              if (fileStorId[kpi.kpiValue.id]) {
+                kpi.kpiValue.valueList.map(kpiValue => {
+                  console.log(fileStorId);
+                  console.log(fileStorId[kpi.kpiValue.id]);
+                  if (fileStorId[kpi.kpiValue.id][kpiValue.period]) {
+                    console.log(fileStorId[kpi.kpiValue.id][kpiValue.period]); 
+                    kpiValue.documents = fileStorId[kpi.kpiValue.id][kpiValue.period];                   
+                  }
+                });
+              }
+              
+
+          });
+             console.log(this.state.KPIResult); 
+            console.log('go for form submission');
+          }
+       }
+
+       }
+       else
+       {
+        var fileStoreIds = {
+              57:{
+                6:"543444ef-9b4d-4cce-b45e-c71b59d37eff"
+              },
+              
+              66:{
+                4:"d1170afd-2a2b-44e0-822c-b7d16faf7cd1",
+                6:"54a209f9-ad03-49d2-9926-ce39127f67fc",
+                7:"15dd143c-5f51-462f-b590-59ea1f04913c"
+              }
+              
+            };
+            this.props.setLoadingStatus('hide');
+            //console.log(fileStoreIds);
+        this.state.KPIResult.map(kpi => {              //console.log(kpi.kpiValue);
+              
+              if (fileStoreIds[kpi.kpiValue.id]) {
+                //console.log(fileStoreIds[kpi.kpiValue.id].length);
+                  kpi.kpiValue.valueList.map(kpiValue => {
+                    console.log(fileStoreIds[kpi.kpiValue.id]);
+                    console.log(kpiValue.period);
+                    if (fileStoreIds[kpi.kpiValue.id][kpiValue.period]) {
+                      console.log(fileStoreIds[kpi.kpiValue.id]);
+                      console.log(kpiValue.period);
+                      kpiValue.documents = fileStoreIds[kpi.kpiValue.id][kpiValue.period];
+                    }
+                    
+                  });
+            }              
+
+          });
+
+        console.log(this.state.KPIResult);
+
+       }
+      
+
+
+       this.props.setLoadingStatus('loading');
+       let url = "perfmanagement/v1/kpivalue/_create";
+       let query = [];
+       let body = {'kpiValues' : this.state.KPIResult};
+       let self = this;
+      
+
+      
+   }
+
+   makeAjaxCall= (data,url) =>  {
+      let self = this;
+
+      let query = [];
+
+      Api.commonApiPost(url, query, data , false, true).then(function(res){
+          self.props.setLoadingStatus('hide');
+          if (res) {
+            self.props.toggleSnackbarAndSetText(true, translate("perfManagement.update.KPIs.groups.updatekpivalue"), true);
+          }
+
+        }, function(err){
+            self.props.setLoadingStatus('hide');
+            self.props.toggleSnackbarAndSetText(true, err.message);
+        });
 
    }
 
@@ -352,28 +584,7 @@ class kpivalues  extends Component{
 
     }
 
-   nextSection()
-   {
-     this.setState({prev:true})
-     if (this.state.viewFirst) {
-       this.setState({viewFirst:false,viewSecond:true})
-     }
-     if (this.state.viewSecond) {
-       this.setState({viewSecond:false,viewThird:true,next:false})
-     }
-
-   }
-   prevSection()
-   {
-     this.setState({next:true})
-     if (this.state.viewThird) {
-       this.setState({viewThird:false,viewSecond:true})
-     }
-     if (this.state.viewSecond) {
-       this.setState({viewSecond:false,viewFirst:true,prev:false})
-     }
-
-   }
+   
 
 
 
@@ -385,124 +596,9 @@ class kpivalues  extends Component{
                 align:"center"
            };
 
-           let list = this.state.header.map(p =>{
-             //console.log('here');
-             //console.log(p);
-                return (
-                  <thead>
-                     <tr className="grey2" key={p.id}>
-                         <th style={{"width":"10px"}}>
-                         {this.state.prev && <span className="glyphicon glyphicon-menu-left" aria-hidden="true" onClick={(e) => this.prevSection(e)} ></span>}
-                         </th>
-                          {Object.keys(p).filter(k => k !== 'id').map(k => {
 
-                             var className = '';
-                             // first section
-                             if(k>=2 && k <= 5 && !this.state.viewFirst)
-                             {
-                               className = 'hidden';
-                             }
-                             if(k>=6 && k <= 9 && !this.state.viewSecond)
-                             {
-                               className = 'hidden';
-                             }
-                             if(k>=10 && k <= 13 && !this.state.viewThird)
-                             {
-                               className = 'hidden';
-                             }
-
-                                return (
-                                  <th className={className} key={p.id+''+k}>
-                                  <div suppressContentEditableWarning="true"   value={k} >{this.getFieldRow(p[k])}</div>
-                               </th>);
-                          })}
-                          <th style={{"width":"10px"}}>
-                          {this.state.next &&  <span className="glyphicon glyphicon-menu-right" aria-hidden="true" onClick={(e) => this.nextSection(e)} ></span>}
-                          </th>
-                     </tr>
-                     </thead>
-                );
-           });
-
-          list.push(this.state.data.map(p =>{
-             //console.log('here');
-                return (
-                   <tbody>
-                     <tr className="grey2" key={p.id}>
-                         <td></td>
-                          {Object.keys(p).filter(k => k !== 'id').map(k => {
-                                var className = '';
-                                // first section
-                                if(k>=2 && k <= 5 && !this.state.viewFirst)
-                                {
-                                  className = 'hidden';
-                                }
-                                if(k>=6 && k <= 9 && !this.state.viewSecond)
-                                {
-                                  className = 'hidden';
-                                }
-                                if(k>=10 && k <= 13 && !this.state.viewThird)
-                                {
-                                  className = 'hidden';
-                                }
-                                return (
-                                  <td className={className} key={p.id+''+k}>
-                                  <div suppressContentEditableWarning="true"  value={k} >{this.getFieldRow(p[k])}</div>
-                               </td>);
-                          })}
-                          <td></td>
-                     </tr>
-                     <tr>
-                     		<td colSpan="13">
-                     		<Collapse in={this.state.collapse[p[1].kpiid]} >
- 					          <Card className="kpi">
- 						          <CardText>
-                           <Row>
-                           <Col xs={6} md={6}>
-                              <label>KPI Target Type</label>
-                              <RadioButtonGroup name={'target_type_'+p[1].kpiid} defaultSelected={p[1].targetType.toString()} >
-                                 <RadioButton  value={"TEXT"} label="TEXT" disabled={true} />
-                                	<RadioButton  value={"VALUE"} label="VALUE" disabled={true} />
-                                	<RadioButton  value={"OBJECTIVE"} label="OBJECTIVE" disabled={true}/>
-                              </RadioButtonGroup>
-                            </Col>
-                            <Col xs={6} md={6}>
-
-                            <TextField className="custom-form-control-for-textfield"
-                            floatingLabelStyle={{"color": "#A9A9A9", "fontSize": "20px", "white-space": "nowrap"}}
-                            inputStyle={{"color": "#5F5C57","textAlign":"left"}}
-                            floatingLabelText={<span> Target Value </span>}
-                            floatingLabelFixed={true}
-                            style={{"display": 'inline-block'}}
-                            errorStyle={{"float":"left"}}
-                            fullWidth={true}
-                            disabled={true}
-                            value={p[1].kpiTarget.targetValue} />
-                           </Col>
-                           <Col xs={6} md={6}>
-
-                              <TextField className="custom-form-control-for-textfield"
-                              floatingLabelStyle={{"color": "#A9A9A9", "fontSize": "20px", "white-space": "nowrap"}}
-                              inputStyle={{"color": "#5F5C57","textAlign":"left"}}
-                              floatingLabelText={<span> Instructions </span>}
-                              floatingLabelFixed={true}
-                              style={{"display": 'inline-block'}}
-                              errorStyle={{"float":"left"}}
-                              fullWidth={true}
-                              disabled={true}
-                              value={p[1].instructions} />
-
-                            </Col>
-
-                            </Row>
- 						           </CardText>
- 					          </Card>
- 					        </Collapse>
- 					        </td>
-                     </tr>
-                   </tbody>
-                );
-           }));
+           let body = this.prepareBodyobject(this.state.data);
+           let header = this.header();
 
 
      //console.log(list);
@@ -543,7 +639,6 @@ class kpivalues  extends Component{
 
                    <Col xs={4} md={4}>
                    <SelectField  value={this.state.selectedFinYear}
-                   className="custom-form-control-for-select"
                    className="custom-form-control-for-select"
                    floatingLabelStyle={{"color": "#696969", "fontSize": "20px", "white-space": "nowrap"}}
                    floatingLabelFixed={true}
@@ -596,15 +691,39 @@ class kpivalues  extends Component{
                </Col>
             </Row>
 
-         {this.state.showResult  &&
- 	        <Card className="uiCard">
- 	            <CardHeader title={<strong> Report </strong>} />
 
- 	            <CardText>
+          {this.state.showResult  &&
+          <Card className="uiCard">
+              <CardHeader title={<strong> KPI Values Monthly View </strong>} />
 
-                     <Table id="searchTable" className="table table-striped table-bordered table dataTable no-footer" cellspacing="0" width="100%" style={tableStyle} responsive>
-                         {list}
-                    </Table>
+              <CardText>
+
+                    <label><span style={{"fontWeight":600, "fontSize": "13px"}}>{'Navigate next for selecting coming mounths'}</span></label>
+
+                  
+                <div className="cntdatatable">
+                  <div className="cntdatatable1">
+
+                       <Table id="searchTable" className="table table-striped table-bordered table dataTable no-footer" cellspacing="0" width="100%" style={tableStyle} responsive>
+                           
+                        <thead>
+                          <th>                          
+                          </th>
+
+                          <th>
+                            <span className="glyphicon glyphicon-menu-left" aria-hidden="true" style={{"cursor":"pointer"}} title="Prev" onClick={(e) => this.prevSection(e)}></span>
+                          </th>
+                          {header}
+                          <th>
+                            <span className="glyphicon glyphicon-menu-right" aria-hidden="true" style={{"cursor":"pointer"}} title="Next" onClick={(e) => this.nextSection(e)}></span>
+                          </th>
+                        </thead>
+                        <tbody>
+                          {body}
+                        </tbody>
+                      </Table>
+                  </div>
+                </div>
 
                     <br/>
                     <Row>
@@ -612,8 +731,9 @@ class kpivalues  extends Component{
                          <UiButton item={{"label": "Save","uiType":"button", "primary": true}} ui="google" handler={(e) => this.handleSubmit(e)} />&nbsp;&nbsp;
                        </Col>
                      </Row>
- 	        </CardText>
- 	        </Card>}
+          </CardText>
+          </Card>}
+         
 
        </div>
      );

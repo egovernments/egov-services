@@ -40,14 +40,6 @@
 
 package org.egov.eis.web.validator;
 
-import static org.springframework.util.ObjectUtils.isEmpty;
-
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import org.egov.eis.model.*;
 import org.egov.eis.model.enums.EntityType;
 import org.egov.eis.repository.AssignmentRepository;
@@ -58,6 +50,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static org.springframework.util.ObjectUtils.isEmpty;
 
 @Component
 public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValidator implements Validator {
@@ -124,7 +124,7 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
                     "Employee Code Can't Be Changed. Please Enter Same Employee Code.");
         }
 
-        if ((employee.getPassportNo() != null) && duplicateExists("egeis_employee", "passportNo",
+        if ((!StringUtils.isEmpty(employee.getPassportNo())) && duplicateExists("egeis_employee", "passportNo",
                 employee.getPassportNo(), employee.getId(), employee.getTenantId())) {
             errors.rejectValue("employee.passportNo", "invalid",
                     "Passport Number Already Exists In System. Please Enter Correct Passport Number.");
@@ -135,6 +135,11 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
             errors.rejectValue("employee.gpfNo", "invalid",
                     "GPF Number Already Exists In System. Please Enter Correct GPF Number.");
         }
+
+        if (employee.getPassportNo().equals(""))
+            employee.setPassportNo(null);
+        if (employee.getGpfNo().equals(""))
+            employee.setGpfNo(null);
     }
 
     private void validateAssignments(List<Assignment> assignments, Long employeeId, String tenantId, Errors errors) {

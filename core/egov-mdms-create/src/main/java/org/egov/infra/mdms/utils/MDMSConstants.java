@@ -15,7 +15,6 @@ public class MDMSConstants {
 	public static final String EGOV_CREATE_TREE_PATH = "git/trees";
 	public static final String EGOV_CREATE_COMMIT_PATH = "git/commits";
 	public static final String FINAL_FILE_PATH_APPEND = "https://github.com/egovernments/egov-services/blob/master/";
-	public static final String READ_FILE_PATH_APPEND = "https://raw.githubusercontent.com/egovernments/egov-services/master/";
 	
 	
 	public static final String GIT_BLOB_MODE = "100644";

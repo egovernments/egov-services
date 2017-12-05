@@ -11,6 +11,7 @@ import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.ULBKpiValueList;
+import org.egov.pa.model.ValueDocument;
 import org.egov.pa.repository.KpiMasterRepository;
 import org.egov.pa.repository.KpiValueRepository;
 import org.egov.pa.service.KpiValueService;
@@ -41,8 +42,39 @@ public class KpiValueServiceImpl implements KpiValueService {
 	@Override
 	public KPIValueRequest createKpiValue(KPIValueRequest kpiValueRequest) {
 		kpiValueDetailListUpdate(kpiValueRequest);
+		updateValueIdForRequest(kpiValueRequest);
 		kpiValueRepository.persistKpiValueDetail(kpiValueRequest);
 		return kpiValueRequest;
+	}
+	
+	private void updateValueIdForRequest(KPIValueRequest kpiValueRequest) { 
+		int count = 0; 
+		List<ValueResponse> valueResponseList = kpiValueRequest.getKpiValues();
+		for(ValueResponse vr : valueResponseList) { 
+			KpiValue value = vr.getKpiValue();
+			if(null != value && null != value.getValueList()) {
+				count = count + value.getValueList().size(); 
+			}
+		}
+		List<String> idList = kpiValueRepository.getNewKpiIds(count);
+		int i=0; 
+		for(ValueResponse vr : valueResponseList) { 
+			KpiValue value = vr.getKpiValue();
+			if(null != value && null != value.getValueList()) {
+				for(KpiValueDetail valueDetail : value.getValueList()) {
+					valueDetail.setId(idList.get(i));
+					if(null != valueDetail.getDocumentList() && valueDetail.getDocumentList().size() > 0) { 
+						for(ValueDocument doc : valueDetail.getDocumentList()) { 
+							doc.setValueId(idList.get(i));
+							doc.setKpiCode(valueDetail.getKpiCode());
+						}
+					}
+					i++; 
+				}
+			}
+		}
+		
+		
 	}
 
 	private void kpiValueDetailListUpdate(KPIValueRequest kpiValueRequest) {

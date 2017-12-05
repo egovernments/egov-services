@@ -28,7 +28,7 @@ public interface KpiValueRepository {
     
     public String searchPossibilityCheck(String tenantCount, String kpiCount, String finYearCount);
     
-    public List<Long> getNewKpiIds(int numberOfIds); 
+    public List<String> getNewKpiIds(int numberOfIds); 
     
     public int numberOfDocsRequired(String kpiCode); 
 }

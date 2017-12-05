@@ -230,9 +230,11 @@ serviceMaps:
                
        - jsonPath: $.kpiValues.*.kpiValue.id
 
-    - query: INSERT INTO egpa_kpi_value_detail (id, valueid, period, value, createdby, createddate) values (nextval('seq_egpa_kpi_value_detail'), ?, ?, ?, ?, ?)   
+    - query: INSERT INTO egpa_kpi_value_detail (id, valueid, period, value, createdby, createddate) values (?, ?, ?, ?, ?, ?)   
       basePath: $.kpiValues.*.kpiValue.valueList.*
       jsonMaps:
+      
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.id
        
        - jsonPath: $.kpiValues.*.kpiValue.valueList.*.valueid
          
@@ -245,3 +247,17 @@ serviceMaps:
          
        - jsonPath: $.kpiValues.*.auditDetails.createdTime
          type: LONG
+         
+    - query: INSERT INTO egpa_kpi_value_documents (id, kpicode, valueid, filestoreid, createdby) values (nextval('seq_egpa_kpi_value_documents'), ?, ?, ?, ?)   
+      basePath: $.kpiValues.*.kpiValue.valueList.*.documents.*
+      jsonMaps:
+       
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.documents.*.kpiCode
+       
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.documents.*.valueId
+       
+       - jsonPath: $.kpiValues.*.kpiValue.valueList.*.documents.*.fileStoreId
+         
+       - jsonPath: $.RequestInfo.userInfo.id
+         type: LONG  
+         

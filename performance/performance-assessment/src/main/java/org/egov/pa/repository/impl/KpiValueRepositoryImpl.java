@@ -137,8 +137,13 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 			KpiValue value = entry.getValue();
 			
 			if(mapper.valueDetailMap.containsKey(id)) { 
-				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id); 
+				List<KpiValueDetail> valueDetailList = mapper.valueDetailMap.get(id);
+				for(KpiValueDetail detail : valueDetailList) {
+					if(null != detail) 
+						detail.setDocumentList(mapper.detailDocumentMap.get(detail.getId()));  
+				}
 				value.setValueList(valueDetailList);
+				
 			} else { 
 				List<KpiValueDetail> defaultValueDetailList = mapper.valueDetailMap.get(value.getKpiCode()+"_"+value.getTenantId()+"_"+value.getFinYear());
 				value.setValueList(defaultValueDetailList);
@@ -209,13 +214,13 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 	}
 
 	@Override
-	public List<Long> getNewKpiIds(int numberOfIds) {
-		String query = PerformanceAssessmentQueryBuilder.getNextKpiValueId();
+	public List<String> getNewKpiIds(int numberOfIds) {
+		String query = PerformanceAssessmentQueryBuilder.getNextKpiValueDetailId();
 		Map<String, Object> paramValues = new HashMap<>();
 		paramValues.put("size", numberOfIds);
-		List<Long> idList;
+		List<String> idList = new ArrayList<>();
 		try {
-			idList = namedParameterJdbcTemplate.queryForList(query, paramValues, Long.class);
+			idList = namedParameterJdbcTemplate.queryForList(query, paramValues, String.class);
 		} catch (Exception e) {
 			throw new RuntimeException("Next id is not generated.");
 		}

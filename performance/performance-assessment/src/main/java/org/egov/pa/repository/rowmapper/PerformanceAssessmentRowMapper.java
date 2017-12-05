@@ -53,6 +53,7 @@ import org.egov.pa.model.KpiTarget;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
 import org.egov.pa.model.KpiValueList;
+import org.egov.pa.model.ValueDocument;
 import org.egov.pa.utils.PerformanceAssessmentConstants;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -191,6 +192,9 @@ public class PerformanceAssessmentRowMapper {
 	public class KPIValueRowMapper implements RowMapper<KpiValue> {
 		public Map<String, KpiValue> valueMap = new HashMap<>();
 		public Map<String, List<KpiValueDetail>> valueDetailMap = new HashMap<>();
+		public Map<String, List<ValueDocument>> detailDocumentMap = new HashMap<>();
+		public List<String> detailList = new ArrayList<>();
+		
 		@Override
 		public KpiValue mapRow(final ResultSet rs, final int rowNum) throws SQLException {
 			
@@ -204,13 +208,34 @@ public class PerformanceAssessmentRowMapper {
 				valueMap.put(rs.getString("id"), value); 
 			}
 			
+			if(!detailDocumentMap.containsKey(rs.getString("valueDetailId"))) {
+				List<ValueDocument> docList = new ArrayList<>(); 
+				if(StringUtils.isNotBlank(rs.getString("fileStoreId"))) { 
+					ValueDocument doc = new ValueDocument();
+					doc.setFileStoreId(rs.getString("fileStoreId"));
+					docList.add(doc);
+				}
+				detailDocumentMap.put(rs.getString("valueDetailId"), docList); 
+ 			} else { 
+ 				List<ValueDocument> docList = detailDocumentMap.get(rs.getString("valueDetailId"));
+ 				if(StringUtils.isNotBlank(rs.getString("fileStoreId"))) { 
+ 					ValueDocument doc = new ValueDocument();
+ 	 				doc.setFileStoreId(rs.getString("fileStoreId"));
+ 	 				docList.add(doc);
+ 				}
+ 			}
+			
 			if(StringUtils.isNotBlank(rs.getString("valueId")) && !valueDetailMap.containsKey(rs.getString("valueId"))) { 
 				List<KpiValueDetail> valueDetailList = new ArrayList<>();
 				valueDetailList.add(addValueDetails(rs)); 
 				valueDetailMap.put(rs.getString("valueId"), valueDetailList); 
+				detailList.add(rs.getString("valueDetailId"));
 			} else if(StringUtils.isNotBlank(rs.getString("valueId")) && valueDetailMap.containsKey(rs.getString("valueId"))) {
 				List<KpiValueDetail> valueDetailList = valueDetailMap.get(rs.getString("valueId"));
-				valueDetailList.add(addValueDetails(rs));
+				if(!detailList.contains(rs.getString("valueDetailId"))) { 
+					valueDetailList.add(addValueDetails(rs));
+					detailList.add(rs.getString("valueDetailId")); 
+				}
 			} else if(StringUtils.isBlank(rs.getString("valueId"))) { 
 				List<KpiValueDetail> valueDetailList = new ArrayList<>();
 				KpiValueDetail detail =null ; 
@@ -245,11 +270,14 @@ public class PerformanceAssessmentRowMapper {
 			detail.setPeriod(rs.getString("period"));
 			detail.setValue(rs.getString("value"));
 			detail.setValueid(rs.getString("valueId"));
+			detail.setId(rs.getString("valueDetailId"));
 		}  catch (Exception e) {
 			log.error("Encountered an exception while adding Value Details" + e);
 		}
 		return detail;
 	}
+	
+	
 
 }
 	

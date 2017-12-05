@@ -243,14 +243,14 @@ public class ReceiptNoteService extends DomainService {
         validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
         for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
             if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
-                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceiptDate(), tenantId);
+                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
             }
-                validateMaterial(materialReceiptDetail, tenantId);
-                validateQuantity(materialReceiptDetail);
-                if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
-                    validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
-                }
+            validateMaterial(materialReceiptDetail, tenantId);
+            validateQuantity(materialReceiptDetail);
+            if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
+                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
             }
+        }
     }
 
     private void validateStore(String storeCode, String tenantId) {
@@ -325,7 +325,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, Long receiptDate, String tenantId) {
+    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, Long receiptDate, String supplier, String tenantId) {
 
         if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
@@ -347,7 +347,11 @@ public class ReceiptNoteService extends DomainService {
                         for (PurchaseOrder purchaseOrder : purchaseOrders.getPurchaseOrders()) {
                             if (null != purchaseOrder.getPurchaseOrderDate()
                                     && purchaseOrder.getPurchaseOrderDate() >= receiptDate) {
-                                throw new CustomException("inv.00270", "Receipt Date must be greater than purchase order date");
+                                throw new CustomException("inv.00027", "Receipt Date must be greater than purchase order date");
+                            }
+                            if (!isEmpty(supplier) && !isEmpty(purchaseOrder.getSupplier().getCode())
+                                    && !supplier.equalsIgnoreCase(purchaseOrder.getSupplier().getCode())) {
+                                throw new CustomException("inv.0029", "Supplier doesn't match the purchase order supplier");
                             }
                         }
                     } else

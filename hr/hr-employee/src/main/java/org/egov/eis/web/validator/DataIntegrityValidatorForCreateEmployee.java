@@ -132,9 +132,9 @@ public class DataIntegrityValidatorForCreateEmployee extends EmployeeCommonValid
             invalidDataException.setFieldValue("invalid");
             errorHandler.getErrorInvalidData(invalidDataException, employeeRequest.getRequestInfo());
         }
-        if (employee.getPassportNo().equals(""))
+        if (employee.getPassportNo() != null && employee.getPassportNo().equals(""))
             employee.setPassportNo(null);
-        if (employee.getGpfNo().equals(""))
+        if (employee.getGpfNo() != null && employee.getGpfNo().equals(""))
             employee.setGpfNo(null);
     }
 

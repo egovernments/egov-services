@@ -136,9 +136,9 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
                     "GPF Number Already Exists In System. Please Enter Correct GPF Number.");
         }
 
-        if (employee.getPassportNo().equals(""))
+        if (employee.getPassportNo() != null && employee.getPassportNo().equals(""))
             employee.setPassportNo(null);
-        if (employee.getGpfNo().equals(""))
+        if (employee.getGpfNo() != null && employee.getGpfNo().equals(""))
             employee.setGpfNo(null);
     }
 
@@ -186,6 +186,7 @@ public class DataIntegrityValidatorForUpdateEmployee extends EmployeeCommonValid
         }
         if (!idsMap.isEmpty())
             validateEntityId(idsMap, EntityType.TEST, employeeId, tenantId, errors);
+
     }
 
     private void validateEducationalQualification(List<EducationalQualification> educations, Long employeeId,

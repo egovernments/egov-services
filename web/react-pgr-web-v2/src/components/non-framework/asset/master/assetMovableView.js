@@ -392,7 +392,7 @@ printer = () => {
 }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors,date,match} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
     let customActionsAndUrl=!_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty("customActionsAndUrl")?mockData[`${moduleName}.${actionName}`]["customActionsAndUrl"][0].url:"";
     let self = this;
@@ -581,8 +581,8 @@ printer = () => {
         </Col>
         <Col xs={6} md={6}>
         <div style={{"textAlign": "right",marginRight:"16px"}}>
-          <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" icon={<i style={{color:"white"}} className="material-icons">print</i>} handler={printer}/>  &nbsp;&nbsp;
-          <UiEditButton customUrl={customActionsAndUrl}/>/>
+        <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" icon={<i style={{color:"white"}} className="material-icons">print</i>} handler={printer}/>  &nbsp;&nbsp;
+        <UiEditButton customUrl={"/non-framework/asset/master/assetMovableCreate/"+(!_.isEmpty(match)?match.params.id:"")}/>
         </div>
         </Col>
       </Row>

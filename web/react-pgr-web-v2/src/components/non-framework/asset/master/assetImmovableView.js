@@ -390,8 +390,9 @@ printer = () => {
 }
 
   render() {
-    let {mockData, moduleName, actionName, formData, fieldErrors,date} = this.props;
+    let {mockData, moduleName, actionName, formData, fieldErrors,date,match} = this.props;
     let {handleChange, getVal, addNewCard, removeCard, printer,feeMatrices} = this;
+    // console.log(match);
     let self = this;
     var mappingObject;
 
@@ -573,7 +574,7 @@ printer = () => {
           <Col xs={6} md={6}>
           <div style={{"textAlign": "right",marginRight:"16px"}}>
             <UiButton item={{"label": "Print", "uiType":"view"}} ui="google" icon={<i style={{color:"white"}} className="material-icons">print</i>} handler={printer}/>  &nbsp;&nbsp;
-            <UiEditButton/>
+            <UiEditButton customUrl={"/non-framework/asset/master/assetImmovableCreate/"+(!_.isEmpty(match)?match.params.id:"")}/>
           </div>
           </Col>
         </Row>

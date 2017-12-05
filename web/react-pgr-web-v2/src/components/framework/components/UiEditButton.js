@@ -14,11 +14,16 @@ class UiEditButton extends Component {
 
 	 edit=(e)=>
 	 {
-				 let {setRoute,match}=this.props;
+				 let {setRoute,match,customUrl}=this.props;
          let {params,url}=match;
          // console.log(path);
          // console.log(`/create/${params.moduleName}`+ (params.master && "/"+params.master));
-         setRoute(url.replace("view","update"));
+         if (customUrl) {
+           setRoute(customUrl);
+         } else {
+           setRoute(url.replace("view","update"));
+         }
+
 	 }
 
    render () {

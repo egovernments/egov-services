@@ -18,7 +18,10 @@ class UiAddButton extends Component {
 				 let {setRoute,match}=this.props;
          let {params}=match;
          // console.log(`/create/${params.moduleName}`+ (params.master && "/"+params.master));
+         // debugger;
          if (customUrl) {
+          // debugger;
+           localStorage.setItem("returnUrl","search/"+params.moduleName+"/"+params.master+"/view")
            setRoute(customUrl);
          } else {
            setRoute(`/create/${params.moduleName}`+ (params.master && "/"+params.master));

@@ -201,19 +201,19 @@ public class PerformanceAssessmentQueryBuilder {
         
         boolean isAppendAndClause = false;
 
-        if (departmentId > 0) { 
+        if (null != departmentId && departmentId > 0) { 
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(departmentId);
         }
         
-        if (kpiCodeList.size() > 0) {
+        if (null != kpiCodeList && kpiCodeList.size() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
             
         }
 
-        if (finYearList.size() > 0) { 
+        if (null != finYearList && finYearList.size() > 0) { 
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" target.finyear IN " + getStringQuery(finYearList));
         }
@@ -225,9 +225,9 @@ public class PerformanceAssessmentQueryBuilder {
 			final KPIValueSearchRequest kpiValueSearchReq) {
 		List<String> finYearList = kpiValueSearchReq.getFinYear();
 		List<String> tenantIdList = kpiValueSearchReq.getTenantId();
-		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear())
-			return;
-		selectQuery.append(" AND ");
+		if (!(null == finYearList && null == tenantIdList))
+			selectQuery.append(" AND ");
+		
 		boolean isAppendAndClause = false;
 		
 		if (null != tenantIdList && tenantIdList.size() > 0 && 

@@ -66,20 +66,26 @@ import lombok.extern.slf4j.Slf4j;
 public class PerformanceAssessmentRowMapper {
 
 	public class KPIMasterRowMapper implements RowMapper<KPI> {
+		public Map<String, KPI> kpiMap = new HashMap<>(); 
 		public Map<String, List<KpiTarget>> kpiTargetMap = new HashMap<>();
 
 		@Override
 		public KPI mapRow(final ResultSet rs, final int rowNum) throws SQLException {
-			KPI kpi = new KPI(); 
-			kpi.setId(rs.getString("id"));
-			kpi.setName(rs.getString("name"));
-			kpi.setCode(rs.getString("code"));
-			kpi.setDepartmentId(rs.getLong("departmentId"));
-			kpi.setFinancialYear(rs.getString("financialYear"));
-			kpi.setInstructions(rs.getString("instructions"));
-			kpi.setPeriodicity(rs.getString("periodicity"));
-			kpi.setTargetType(rs.getString("targetType"));
-			kpi.setAuditDetails(addAuditDetails(rs));
+			 
+			if(!kpiMap.containsKey(rs.getString("code"))) { 
+				KPI kpi = new KPI();
+				kpi.setId(rs.getString("id"));
+				kpi.setName(rs.getString("name"));
+				kpi.setCode(rs.getString("code"));
+				kpi.setDepartmentId(rs.getLong("departmentId"));
+				kpi.setFinancialYear(rs.getString("financialYear"));
+				kpi.setInstructions(rs.getString("instructions"));
+				kpi.setPeriodicity(rs.getString("periodicity"));
+				kpi.setTargetType(rs.getString("targetType"));
+				kpi.setAuditDetails(addAuditDetails(rs));
+				kpiMap.put(rs.getString("code"), kpi); 
+			}
+			
 			if(!kpiTargetMap.containsKey(rs.getString("code"))) { 
 				List<KpiTarget> targetList = new ArrayList<>(); 
 				targetList.add(constructKpiTargetObject(rs));
@@ -88,7 +94,7 @@ public class PerformanceAssessmentRowMapper {
 				List<KpiTarget> targetList = kpiTargetMap.get(rs.getString("code")); 
 				targetList.add(constructKpiTargetObject(rs));
 			}
-			return kpi;
+			return null;
 		}
 		
 		private KpiTarget constructKpiTargetObject(ResultSet rs) { 

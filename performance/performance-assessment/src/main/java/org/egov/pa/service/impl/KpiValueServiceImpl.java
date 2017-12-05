@@ -138,8 +138,8 @@ public class KpiValueServiceImpl implements KpiValueService {
 		for (int i = 0; i < kpiValueList.size(); i++) {
 			for (int j = 0; j < kpiList.size(); j++) {
 				if (kpiValueList.get(i).getKpiCode().equals(kpiList.get(j).getCode())) {
-						list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j),
-								kpiValueList.get(i), kpiValueSearchReq.getGraphType()));
+					list.add(new ValueResponse(kpiValueList.get(i).getTenantId(), kpiList.get(j), kpiValueList.get(i),
+							kpiValueSearchReq.getGraphType()));
 				}
 			}
 		}

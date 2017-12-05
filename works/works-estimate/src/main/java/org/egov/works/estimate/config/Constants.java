@@ -317,5 +317,12 @@ public class Constants {
     
     public static final String KEY_INVALID_GROSSBILLEDAMOUNT = "UNIQUE_GROSSBILLEDAMOUNT";
     public static final String MESSAGE_INVALID_GROSSBILLEDAMOUNT = "Gross billed amount should be greater then 0";
+ 
+    public static final String KEY_PMCTYPE_INVALID = "INVALID_PMCTYPE";
+    public static final String MESSAGE_PMCTYPE_INVALID = "Please provide valid data for PMC Type";
+
+    public static final String KEY_PMCNAME_INVALID = "INVALID_PMCNAME";
+    public static final String MESSAGE_PMCNAME_INVALID = "Please provide valid data for PMC Name";
+
     
 }

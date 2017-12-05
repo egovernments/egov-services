@@ -139,12 +139,14 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
 
         if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() == 1) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and upper(loaestimate.detailedestimate) like :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and upper(loaestimate.detailedestimate) like :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
             paramValues.put("detailedestimatenumber", '%' + workOrderSearchContract.getDetailedEstimateNumbers().get(0).toUpperCase() + '%');
+            paramValues.put("tenantid",workOrderSearchContract.getTenantId());
         } else if (workOrderSearchContract.getDetailedEstimateNumbers() != null && workOrderSearchContract.getDetailedEstimateNumbers().size() > 1) {
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid ");
             paramValues.put("detailedestimatenumber", workOrderSearchContract.getDetailedEstimateNumbers());
+            paramValues.put("tenantid",workOrderSearchContract.getTenantId());
         }
 
         List<String> estimateNumbers = new ArrayList<>();
@@ -154,8 +156,9 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
                 estimateNumbers.add(detailedEstimate.getEstimateNumber());
 
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid");
             paramValues.put("detailedestimatenumber", workOrderSearchContract.getDetailedEstimateNumbers());
+            paramValues.put("tenantid",workOrderSearchContract.getTenantId());
         }
 
         List<String> winEstimateNumbers = new ArrayList<>();
@@ -165,8 +168,9 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
                 winEstimateNumbers.add(detailedEstimate.getEstimateNumber());
 
             addAnd(params);
-            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber");
+            params.append("loaestimate.letterofacceptance = wo.letterofacceptance and loaestimate.detailedestimate in :detailedestimatenumber and loaestimate.tenantid=:tenantid");
             paramValues.put("detailedestimatenumber", winEstimateNumbers);
+            paramValues.put("tenantid",workOrderSearchContract.getTenantId());
         }
 
         if (params.length() > 0) {

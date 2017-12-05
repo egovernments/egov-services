@@ -9962,6 +9962,19 @@
     "serviceCode": "HRPT",
     "code": "null",
     "path": "Employee Management.HR Report.Employee leave summary report"
+  },
+  {
+    "id": 870,
+    "name": "Get Actions from MDMS",
+    "url": "/access/v1/actions/mdms/_get",
+    "displayName": "Get Actions from mdms",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "221",
+    "enabled": true,
+    "serviceCode": "AccessControl",
+    "code": "null",
+    "path": "Access Control.Get Actions from MDMS"
   }
   
 ]

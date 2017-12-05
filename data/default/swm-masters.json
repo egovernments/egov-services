@@ -1,6 +1,6 @@
 {
   "tenantId": "default",
-  "moduleName": "SWM",
+  "moduleName": "swm",
   "CollectionPoint": [
     {
       "id": 1,

@@ -192,7 +192,7 @@ import viewSpilloverAE from './components/non-framework/works/transaction/spillo
 import detailedEstimate from './components/non-framework/works/transaction/detailedEstimate';
 
 import kpivalues from './components/non-framework/perfManagement/master/kpivalues';
-
+import KPIDashboard from './components/non-framework/perfManagement/dashboard/kpi';
 
 import MdmsComponent from './components/framework/mdms/list';
 const base = "";
@@ -394,7 +394,9 @@ const Main = () => {
       <Route exact path= {base + '/non-framework/works/transaction/viewSpilloverAE/:id'} component={viewSpilloverAE}/>
       <Route exact path= {base + '/non-framework/works/transaction/detailedEstimate'} component={detailedEstimate}/>
 
+      {/* KPI */}
       <Route exact path= {base + '/non-framework/perfManagement/master/kpivalues'} component={kpivalues}/>
+      <Route exact path= {base + '/non-framework/perfManagement/dashboard/kpi'} component={KPIDashboard}/>
 
       <Route exact path={base + '/mdms/:module/:master'} component={MdmsComponent}/>
       <Route component={NoMatch}/>

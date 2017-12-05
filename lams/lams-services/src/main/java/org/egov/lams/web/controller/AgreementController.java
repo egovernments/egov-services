@@ -38,6 +38,8 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("agreements")
 public class AgreementController {
 	public static final Logger LOGGER = LoggerFactory.getLogger(AgreementController.class);
+	
+	public static final String VIEW_DCB = "DCB";
 
 	@Autowired
 	private AgreementService agreementService;
@@ -83,7 +85,7 @@ public class AgreementController {
 		AgreementRequest agreementRequest = new AgreementRequest();
 		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
 		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
-			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria, requestInfo);
+			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,null, requestInfo);
 		}
 		if (agreements != null && !agreements.isEmpty()) {
 			agreementRequest.setRequestInfo(requestInfo);
@@ -485,6 +487,39 @@ public class AgreementController {
 		LOGGER.info(agreementResponse.toString());
 		return new ResponseEntity<>(agreementResponse, HttpStatus.CREATED);
 	}
+	
+	@PostMapping("dcb/_view")
+	@ResponseBody
+	public ResponseEntity<?> viewDcb(@ModelAttribute @Valid AgreementCriteria agreementCriteria,
+			@RequestBody RequestInfoWrapper requestInfoWrapper, BindingResult bindingResult) {
+
+		if (bindingResult.hasErrors()) {
+			ErrorResponse errorResponse = populateErrors(bindingResult);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+		List<Agreement> agreements = null;
+		AgreementRequest agreementRequest = new AgreementRequest();
+		RequestInfo requestInfo = requestInfoWrapper.getRequestInfo();
+		if (agreementCriteria.getAgreementNumber() != null && agreementCriteria.getTenantId() != null) {
+			agreements = agreementService.getAgreementsByAgreementNumber(agreementCriteria,VIEW_DCB, requestInfo);
+		}
+		if (agreements != null && !agreements.isEmpty()) {
+			Agreement agreement = agreements.get(0); 
+			agreementRequest.setRequestInfo(requestInfo);
+			agreementRequest.setAgreement(agreement);
+			agreement.setLegacyDemands(agreementService.getDemands(agreementRequest));
+
+				return getSuccessResponse(agreements, requestInfo);
+		} else {
+			Error error = new Error();
+			error.setCode(1);
+			error.setDescription("No Agreements Found!");
+			ErrorResponse errorResponse = new ErrorResponse();
+			errorResponse.setError(error);
+			return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
+		}
+	}
+	
 
 	private ErrorResponse populateErrors(BindingResult errors) {
 		ErrorResponse errRes = new ErrorResponse();

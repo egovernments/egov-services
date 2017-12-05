@@ -59,19 +59,14 @@ class ViewDCB extends React.Component {
       }
       var _this = this;
       var agreement = commonApiPost("lams-services",
-        "agreements",
-        "_search", {
+        "agreements/dcb",
+        "_view", {
           agreementNumber: getUrlVars()["agreementNumber"],
           tenantId
         }).responseJSON["Agreements"][0] || {};
       console.log(agreement);
-      var demandDetails = commonApiPost("demand-services",
-        "demand",
-        "_search", {
-          demandId:agreement["demands"][0] ,
-          tenantId
-        }).responseJSON["Demand"][0]["demandDetails"] || {};
-        console.log(demandDetails);
+      var demandDetails = agreement.legacyDemands[0].demandDetails;
+      console.log(demandDetails);
       this.setState({
         ...this.state,
         agreement: agreement,

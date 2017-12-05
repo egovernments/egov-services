@@ -386,8 +386,8 @@ public class AgreementService {
 		}
 	}
 	
-	public List<Agreement> getAgreementsByAgreementNumber(AgreementCriteria agreementCriteria, RequestInfo requestInfo){
-		return agreementRepository.findByAgreementNumber(agreementCriteria, requestInfo);
+	public List<Agreement> getAgreementsByAgreementNumber(AgreementCriteria agreementCriteria,String action, RequestInfo requestInfo){
+		return agreementRepository.findByAgreementNumber(agreementCriteria,action, requestInfo);
 	}
 
 	private static Date setToTime(Date toDate) {
@@ -410,6 +410,18 @@ public class AgreementService {
 
 	public List<Demand> prepareDemands(AgreementRequest agreementRequest) {
 		return demandService.prepareDemands(agreementRequest);
+	}
+	
+	public List<Demand> getDemands(AgreementRequest agreementRequest) {
+
+		List<Demand> agreementDemands = null;
+		RequestInfo requestInfo = agreementRequest.getRequestInfo();
+		Agreement agreement = agreementRequest.getAgreement();
+		DemandSearchCriteria demandSearchCriteria = new DemandSearchCriteria();
+
+		demandSearchCriteria.setDemandId(Long.valueOf(agreement.getDemands().get(0)));
+		agreementDemands = demandRepository.getDemandBySearch(demandSearchCriteria, requestInfo).getDemands();
+		return agreementDemands;
 	}
 
 	private List<String> updateDemand(List<String> demands, List<Demand> legacydemands, RequestInfo requestInfo) {

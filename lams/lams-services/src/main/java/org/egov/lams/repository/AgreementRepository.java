@@ -44,7 +44,11 @@ public class AgreementRepository {
     
 	public static final String AGREEMENT_SEARCH_QUERY = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand ON agreement.id = demand.agreementid LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id where agreement.agreement_No=:agreementNumber and agreement.tenant_id=:tenantId order by agreement.id desc";
 
-    @Autowired
+	public static final String AGREEMENT_SEARCH_QUERY_FOR_DCB = "SELECT *,agreement.id as lamsagreementid FROM eglams_agreement agreement LEFT OUTER JOIN eglams_demand demand ON agreement.id = demand.agreementid LEFT OUTER JOIN eglams_rentincrementtype rent ON agreement.rent_increment_method = rent.id where agreement.agreement_No=:agreementNumber and agreement.tenant_id=:tenantId and status in ('ACTIVE') order by agreement.id desc";
+
+	public static final String VIEW_DCB = "DCB";
+
+	@Autowired
     private AssetHelper assetHelper;
 
     @Autowired
@@ -215,8 +219,13 @@ public class AgreementRepository {
         return agreements;
     }
 
-	public List<Agreement> findByAgreementNumber(AgreementCriteria agreementCriteria, RequestInfo requestInfo) {
-		String query = AGREEMENT_SEARCH_QUERY;
+	public List<Agreement> findByAgreementNumber(AgreementCriteria agreementCriteria,String action, RequestInfo requestInfo) {
+		
+		String query = null;
+		if (action != null && VIEW_DCB.equals(action)) {
+			query = AGREEMENT_SEARCH_QUERY_FOR_DCB;  //to get only active agreements
+		} else
+			query = AGREEMENT_SEARCH_QUERY;
 		List<Agreement> agreements = null;
 		Map<String, Object> params = new HashMap<>();
 		params.put("agreementNumber", agreementCriteria.getAgreementNumber());

@@ -244,7 +244,7 @@ var commom_fields_rules = {
     },
     placeOfBirth: {
         required: false,
-        alphanumericWSpc: true
+        alphaWSpcNDot: true
     },
     documents: {
         required: false
@@ -314,7 +314,7 @@ var commom_fields_rules = {
     },
     "user.fatherOrHusbandName": {
         required: false,
-        alphanumericWSpc: true
+        alphaWSpcNDot: true
     },
     "user.bloodGroup": {
         required: false

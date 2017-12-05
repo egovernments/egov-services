@@ -66,7 +66,7 @@ class Nominee extends React.Component {
     } = this.state;
 
 
-    var patt = new RegExp("[a-zA-Z0-9\s]+");
+    var patt = new RegExp("[a-zA-Z\s]+");
     if (!patt.test(nomineeSet.name)) {
       return this.setState({
         showMsg: "name"

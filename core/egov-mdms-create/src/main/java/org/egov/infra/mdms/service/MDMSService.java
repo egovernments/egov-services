@@ -150,11 +150,11 @@ public class MDMSService {
 		String moduleContentJson = mapper.writeValueAsString(moduleContent);
 		if(isCreate){
 		     if(null == masterData){
+		    	 logger.info("Master doesn't exist, Posting this master data to the module's file.....");
 		    	 List<Object> newMaster = new ArrayList<>();
 		    	 newMaster.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
 		    	 moduleDataMap.put(mDMSCreateRequest.getMasterMetaData().getMasterName(), newMaster);
 				 moduleContentJson = mapper.writeValueAsString(moduleDataMap);
-				 logger.info("moduleContentJson: "+moduleContentJson);
 				 
 				 return moduleContentJson;
 		    }

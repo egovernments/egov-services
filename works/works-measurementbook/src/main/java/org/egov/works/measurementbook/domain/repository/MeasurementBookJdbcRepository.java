@@ -13,9 +13,6 @@ import java.util.*;
 public class MeasurementBookJdbcRepository extends JdbcRepository {
 
     @Autowired
-    private MBContractorBillRepository mbContractorBillRepository;
-
-    @Autowired
     private MeasurementBookDetailRepository measurementBookDetailRepository;
 
     @Autowired
@@ -152,15 +149,10 @@ public class MeasurementBookJdbcRepository extends JdbcRepository {
         for (MeasurementBookHelper measurementBookHelper : loaList) {
             MeasurementBook measurementBook = measurementBookHelper.toDomain();
 
-             mbContractorBillSearchCriteria = MBContractorBillSearchContract.builder()
-                    .tenantId(measurementBook.getTenantId())
-                    .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
-
             MeasurementBookDetailSearchContract measurementBookDetailSearchCriteria = MeasurementBookDetailSearchContract.builder()
                     .tenantId(measurementBook.getTenantId())
                     .measurementBookIds(Arrays.asList(measurementBook.getId())).build();
 
-            measurementBook.setMbContractorBills(mbContractorBillRepository.searchMBContractorBill(mbContractorBillSearchCriteria));
             measurementBook.setMeasurementBookDetails(measurementBookDetailRepository.searchMeasurementBookDetail(measurementBookDetailSearchCriteria));
 
             measurementBooks.add(measurementBook);

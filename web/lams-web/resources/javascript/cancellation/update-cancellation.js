@@ -311,6 +311,18 @@ class UpdateCancellation extends React.Component {
 
         }, process.businessKey);
 
+        if (process.status && process.status != "Rejected") {
+
+            $("#orderNumber").prop("disabled", true)
+            $("#orderDate").prop("disabled", true)
+            $("#terminationDate").prop("disabled", true)
+            $("#reasonForCancellation").prop("disabled", true)
+            $("#documents").prop("disabled", true)
+            $("#remarks").prop("disabled", true)
+        }
+
+        console.log("Process", process);
+
         if (!agreement.cancellation) {
             agreement.cancellation = {};
         }
@@ -327,18 +339,6 @@ class UpdateCancellation extends React.Component {
             //status : process.status,
             buttons: _btns ? _btns : []
         });
-
-
-        if (process.status && process.status != "Rejected") {
-
-            $("#orderNumber").prop("disabled", true)
-            $("#orderDate").prop("disabled", true)
-            $("#terminationDate").prop("disabled", true)
-            $("#reasonForCancellation").prop("disabled", true)
-            $("#documents").prop("disabled", true)
-            $("#remarks").prop("disabled", true)
-        }
-
 
     }
 
@@ -427,7 +427,7 @@ class UpdateCancellation extends React.Component {
 
         e.preventDefault();
 
-        if ($('#update-promotion').valid()) { }
+        if ($('#update-cancellation').valid()) { }
         var ID = e.target.id;
         var _this = this;
         var agreement = Object.assign({}, _this.state.agreement);
@@ -435,7 +435,14 @@ class UpdateCancellation extends React.Component {
         agreement.action = "cancellation";
         agreement.workflowDetails.action = ID;
 
-        console.log("Documents", agreement);
+        if(ID === "Reject"){
+
+            if(agreement.workflowDetails.comments || agreement.workflowDetails.comments==="")
+                return showError("Please enter the Comments, If you are rejecting");
+
+        }
+
+        console.log("Agreement", agreement);
 
         if (agreement.documents && agreement.documents.constructor == FileList) {
             let counter = agreement.documents.length,
@@ -947,7 +954,7 @@ class UpdateCancellation extends React.Component {
                                     </div>
                                     <div className="col-sm-6">
                                         <textarea rows="4" cols="50" id="remarks" name="remarks" value={remarks}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "remarks") }} ></textarea>
+                                            onChange={(e) => { handleChange(e, "remarks") }} ></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -1016,17 +1023,28 @@ class UpdateCancellation extends React.Component {
                                 </div>
                             </div>
                         </div>
+                        <div className="col-sm-6">
+                            <div className="row">
+                                <div className="col-sm-6 label-text">
+                                    <label htmlFor="comments">Comments </label>
+                                </div>
+                                <div className="col-sm-6">
+                                    <textarea rows="4" cols="50" id="comments" name="comments" value={workflowDetails.comments}
+                                        onChange={(e) => { handleChangeTwoLevel(e, "workflowDetails", "comments") }} ></textarea>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             );
 
         }
-
+        
 
         return (
             <div>
                 <h3>Cancellation Of Agreement </h3>
-                <form onSubmit={(e) => { addOrUpdate(e) }} >
+                <form className="update-cancellation" id="update-cancellation" >
                     <fieldset>
                         {renderAssetDetails()}
                         {renderAllottee()}

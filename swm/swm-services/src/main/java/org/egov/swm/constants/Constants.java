@@ -12,7 +12,9 @@ public class Constants {
     public static final String ACTION_EDIT = "edit";
     public static final String ACTION_SEARCH = "search";
     public static final String MODULE_CODE = "SWM";
+    public static final String TENANT_MODULE_CODE = "tenant";
     public static final String VEHICLETYPE_MASTER_NAME = "VehicleType";
+    public static final String TENANTS_MASTER_NAME = "tenants";
     public static final String FUELTYPE_MASTER_NAME = "FuelType";
     public static final String COLLECTIONTYPE_MASTER_NAME = "CollectionType";
     public static final String DUMPINGGROUND_MASTER_NAME = "DumpingGround";
@@ -21,3 +23,4 @@ public class Constants {
     public static final String SHIFT_MASTER_NAME = "Shift";
 
 }
+

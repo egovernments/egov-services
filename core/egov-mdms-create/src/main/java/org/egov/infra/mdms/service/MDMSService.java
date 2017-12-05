@@ -194,7 +194,7 @@ public class MDMSService {
 						}else{
 							iterator.remove();
 							logger.debug("adding master to file: "+mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
-							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
+							iterator.add(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index));
 						}
 		            }
 				}
@@ -228,7 +228,8 @@ public class MDMSService {
 	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest){
 		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() +"-"+ mDMSCreateRequest.getMasterMetaData().getModuleName());
 		if(null == fileName){
-			throw new CustomException("400", "No data available for this module");
+			throw new CustomException("400", "No data available for this module. NOTE: Please check if the json file exists for this module."
+					+ "If it does, please check your spelling of moduleName param, It is case-sensitive.");
 		}
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(dataRootFolder);

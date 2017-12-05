@@ -1,6 +1,10 @@
 package org.egov.swm.domain.model;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Length;
 
@@ -31,6 +35,11 @@ public class DumpingGround {
     @Length(min = 1, max = 128)
     @NotNull
     private String name;
+
+    @JsonProperty("ulbs")
+    @Size(min = 1)
+    @NotNull
+    private List<Tenant> ulbs = new ArrayList<>();
 
     @NotNull
     @JsonProperty("siteDetails")

@@ -2256,6 +2256,7 @@ var localization_EN_Data = {
 "swm.create.sanitationstaffschedules.targetto": "Target To",
 "swm.create.sanitationstaffschedules.route": "Route",
 "swm.create.sanitationstaffschedules.dumpingground": "Dumping Ground",
+"swm.create.ulb": "ULB Name",
 
 "pgr.dashboard.gis.registered.title":"Registered",
 "pgr.dashboard.gis.redressed.title":"Redressed",

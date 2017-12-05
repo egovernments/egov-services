@@ -11,26 +11,26 @@ import lombok.ToString;
 @ToString
 public class PropertiesManager {
 
-	@Value("${app.timezone}")
-	private String appTimeZone;
+    @Value("${app.timezone}")
+    private String appTimeZone;
 
-	@Value("${egov.services.works.estimate.pageSize.default}")
-	private String pageSize;
+    @Value("${egov.services.works.estimate.pageSize.default}")
+    private String pageSize;
 
-	@Value("${egov.services.works.estimate.pageNumber.default}")
-	private String pageNumber;
+    @Value("${egov.services.works.estimate.pageNumber.default}")
+    private String pageNumber;
 
-	@Value("${egov.services.works.estimate.pagesize.max}")
-	private String pageSizeMax;
-	
-	@Value("${egov.services.works.abstract.estimate.createandupdate.topic}")
-	private String worksAbstractEstimateCreateAndUpdateTopic;
-	
-	@Value("${egov.services.works.projectcode.create.topic}")
-	private String worksProjectCodeCreateTopic;
-	
-	@Value("${egov.services.works.projectcode.update.topic}")
-	private String worksProjectCodeUpdateTopic;
+    @Value("${egov.services.works.estimate.pagesize.max}")
+    private String pageSizeMax;
+
+    @Value("${egov.services.works.abstract.estimate.createandupdate.topic}")
+    private String worksAbstractEstimateCreateAndUpdateTopic;
+
+    @Value("${egov.services.works.projectcode.create.topic}")
+    private String worksProjectCodeCreateTopic;
+
+    @Value("${egov.services.works.projectcode.update.topic}")
+    private String worksProjectCodeUpdateTopic;
 
     @Value("${egov.services.works.detailed.estimate.createandupdate.topic}")
     private String worksDetailedEstimateCreateAndUpdateTopic;
@@ -46,7 +46,7 @@ public class PropertiesManager {
 
     @Value("${works.detailedestimatenumber.format}")
     private String worksDetailedEstimateNumberFormat;
-    
+
     @Value("${works.projectcode}")
     private String worksWorkIdentificationNumber;
 
@@ -61,19 +61,19 @@ public class PropertiesManager {
 
     @Value("${detailedEstimateNumber.prefix}")
     private String detailedEstimateNumberPrefix;
-    
+
     @Value("${egov.works.services.hostname}")
     private String worksSeviceHostName;
-    
+
     @Value("${egov.works.services.estimateappropriation.create}")
     private String estimateAppropriationURL;
-    
-	@Value("${egov.services.works.accountdetailkey.create.topic}")
-	private String createAccountDetailKeyTopic;
-	
+
+    @Value("${egov.services.works.accountdetailkey.create.topic}")
+    private String createAccountDetailKeyTopic;
+
     @Value("${projectcode.prefix}")
     private String workIdentificationNumberPrefix;
-    
+
     @Value("${egov.services.works.revision.detailedestimate.topic}")
     private String worksRECreateUpdateTopic;
 

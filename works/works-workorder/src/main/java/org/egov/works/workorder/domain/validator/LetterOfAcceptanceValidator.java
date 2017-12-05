@@ -45,6 +45,7 @@ public class LetterOfAcceptanceValidator {
         for (LetterOfAcceptance acceptance : letterOfAcceptances) {
             if (!acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
                 messages.put(Constants.KEY_INVALID_LOA_EXISTS, Constants.MESSAGE_INVALID_LOA_EXISTS);
+                break;
             }
         }
 
@@ -60,6 +61,7 @@ public class LetterOfAcceptanceValidator {
 
             if (!isUpdate && letterOfAcceptance.getLoaNumber() != null && !letterOfAcceptance.getLoaNumber().isEmpty()) {
                 validateUniqueLOANumber(letterOfAcceptanceRequest, messages, letterOfAcceptance, letterOfAcceptanceRepository);
+                validateLOACreated(letterOfAcceptanceRequest, messages, letterOfAcceptance, letterOfAcceptanceRepository);
             }
             if (isUpdate) {
                 checkLOAExists(letterOfAcceptanceRequest, messages, letterOfAcceptance);
@@ -98,6 +100,29 @@ public class LetterOfAcceptanceValidator {
 
     }
 
+    private static void validateLOACreated(LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+            HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance,
+            LetterOfAcceptanceRepository letterOfAcceptanceRepository) {
+
+        LetterOfAcceptanceSearchContract letterOfAcceptanceSearchContract = new LetterOfAcceptanceSearchContract();
+
+        letterOfAcceptanceSearchContract.setTenantId(letterOfAcceptance.getTenantId());
+        letterOfAcceptanceSearchContract.setDetailedEstimateNumbers(Arrays
+                .asList(letterOfAcceptance.getLetterOfAcceptanceEstimates().get(0).getDetailedEstimate().getEstimateNumber()));
+
+        List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract,
+                letterOfAcceptanceRequest.getRequestInfo());
+
+        for (LetterOfAcceptance acceptance : letterOfAcceptances) {
+            if (!acceptance.getStatus().toString().equalsIgnoreCase(LOAStatus.CANCELLED.toString())) {
+                messages.put(Constants.KEY_INVALID_LOA_DE_EXISTS, Constants.MESSAGE_INVALID_LOA_DE_EXISTS);
+            }
+        }
+
+        if (messages != null && !messages.isEmpty())
+            throw new CustomException(messages);
+    }
+
     private OfflineStatus validateOfflineStatus(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
             HashMap<String, String> messages, LetterOfAcceptance letterOfAcceptance,
             LetterOfAcceptanceEstimate letterOfAcceptanceEstimate) {
@@ -129,7 +154,7 @@ public class LetterOfAcceptanceValidator {
         if (letterOfAcceptance.getId() != null && letterOfAcceptance.getId().isEmpty())
             letterOfAcceptanceSearchContract.setIds(Arrays.asList(letterOfAcceptance.getId()));
         letterOfAcceptanceSearchContract.setLoaNumbers(Arrays.asList(letterOfAcceptance.getLoaNumber()));
-        
+
         List<LetterOfAcceptance> letterOfAcceptances = letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchContract,
                 letterOfAcceptanceRequest.getRequestInfo());
 

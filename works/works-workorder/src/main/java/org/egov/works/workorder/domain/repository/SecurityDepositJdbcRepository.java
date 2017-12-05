@@ -1,20 +1,19 @@
 package org.egov.works.workorder.domain.repository;
 
-import org.egov.works.common.persistence.repository.JdbcRepository;
-import org.egov.works.workorder.persistence.helper.SecurityDepositHelper;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.egov.works.workorder.web.contract.SecurityDeposit;
-import org.egov.works.workorder.web.contract.SecurityDepositSearchContract;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.works.common.persistence.repository.JdbcRepository;
+import org.egov.works.workorder.persistence.helper.SecurityDepositHelper;
+import org.egov.works.workorder.web.contract.SecurityDeposit;
+import org.egov.works.workorder.web.contract.SecurityDepositSearchContract;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
+
 @Repository
-public class SecurityDepositJdbcRepository extends JdbcRepository{
+public class SecurityDepositJdbcRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egw_securitydeposit securitydeposite";
 
@@ -33,10 +32,10 @@ public class SecurityDepositJdbcRepository extends JdbcRepository{
             validateEntityFieldName(securityDepositeSearchCriteria.getSortBy(), SecurityDeposit.class);
         }
 
-        String orderBy = "order by id";
+        String orderBy = "order by securitydeposite.id";
         if (securityDepositeSearchCriteria.getSortBy() != null
                 && !securityDepositeSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by " + securityDepositeSearchCriteria.getSortBy();
+            orderBy = "order by securitydeposite." + securityDepositeSearchCriteria.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -54,14 +53,14 @@ public class SecurityDepositJdbcRepository extends JdbcRepository{
             paramValues.put("ids", securityDepositeSearchCriteria.getIds());
         }
 
-
-        if (securityDepositeSearchCriteria.getLetterOfAcceptanceIds() != null && !securityDepositeSearchCriteria.getLetterOfAcceptanceIds().isEmpty()) {
+        if (securityDepositeSearchCriteria.getLetterOfAcceptanceIds() != null
+                && !securityDepositeSearchCriteria.getLetterOfAcceptanceIds().isEmpty()) {
             addAnd(params);
             params.append("securitydeposite.letterofacceptance in(:letterofacceptance)");
             paramValues.put("letterofacceptance", securityDepositeSearchCriteria.getLetterOfAcceptanceIds());
         }
 
-        params.append(" and deleted = false");
+        params.append(" and securitydeposite.deleted = false");
 
         if (params.length() > 0) {
 
@@ -75,7 +74,8 @@ public class SecurityDepositJdbcRepository extends JdbcRepository{
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(SecurityDepositHelper.class);
 
-        List<SecurityDepositHelper> securityDepositeHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        List<SecurityDepositHelper> securityDepositeHelpers = namedParameterJdbcTemplate.query(searchQuery.toString(),
+                paramValues, row);
         List<SecurityDeposit> securityDeposits = new ArrayList<>();
         for (SecurityDepositHelper securityDepositeHelper : securityDepositeHelpers) {
             SecurityDeposit securityDeposit = securityDepositeHelper.toDomain();

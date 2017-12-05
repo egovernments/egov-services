@@ -100,21 +100,21 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
 
         if (workOrderSearchContract.getLoaNumbers() != null && workOrderSearchContract.getLoaNumbers().size() == 1) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber)");
+            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber)");
             paramValues.put("loaNumber", "%" + workOrderSearchContract.getLoaNumbers().get(0).toLowerCase() + "%");
         } else if (workOrderSearchContract.getLoaNumbers() != null) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers))");
+            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers))");
             paramValues.put("loaNumbers", workOrderSearchContract.getLoaNumbers());
         }
 
         if (workOrderSearchContract.getContractorCodes() != null && !workOrderSearchContract.getContractorCodes().isEmpty() && workOrderSearchContract.getContractorCodes().size() == 1) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
+            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
             paramValues.put("contractorcode", "%" + workOrderSearchContract.getContractorCodes().get(0).toLowerCase() + "%");
         } else if (workOrderSearchContract.getContractorCodes() != null) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
+            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
             paramValues.put("contractorcodes", workOrderSearchContract.getContractorCodes());
         }
 
@@ -127,11 +127,11 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             if (!contractorCodes.isEmpty()) {
                 if (!contractorCodes.isEmpty() && contractorCodes.size() == 1) {
                     addAnd(params);
-                    params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
+                    params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.contractor) like (:contractorcode))");
                     paramValues.put("contractorcode", "%" + contractorCodes.get(0).toLowerCase() + "%");
                 } else if (contractorCodes != null) {
                     addAnd(params);
-                    params.append("wo.letterofacceptance in (select id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
+                    params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.contractor in (:contractorcodes))");
                     paramValues.put("contractorcodes", contractorCodes);
                 }
             }
@@ -173,6 +173,8 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
             paramValues.put("tenantid",workOrderSearchContract.getTenantId());
         }
 
+        params.append(" and wo.deleted = false");
+        
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

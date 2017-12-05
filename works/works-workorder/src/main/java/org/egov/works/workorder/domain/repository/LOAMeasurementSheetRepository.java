@@ -1,24 +1,24 @@
 package org.egov.works.workorder.domain.repository;
 
-import org.egov.works.common.persistence.repository.JdbcRepository;
-import org.egov.works.workorder.persistence.helper.LOAMeasurementSheetHelper;
-import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
-import org.egov.works.workorder.web.contract.LOAMeasurementSheetSearchContract;
-import org.egov.works.workorder.web.contract.LetterOfAcceptance;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
-import org.springframework.stereotype.Repository;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.works.common.persistence.repository.JdbcRepository;
+import org.egov.works.workorder.persistence.helper.LOAMeasurementSheetHelper;
+import org.egov.works.workorder.web.contract.LOAMeasurementSheet;
+import org.egov.works.workorder.web.contract.LOAMeasurementSheetSearchContract;
+import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.stereotype.Repository;
+
 @Repository
-public class LOAMeasurementSheetRepository  extends JdbcRepository {
+public class LOAMeasurementSheetRepository extends JdbcRepository {
 
     public static final String TABLE_NAME = "egw_loameasurementsheet loams";
 
-    public List<LOAMeasurementSheet> searchLoaMeasurementSheet(final LOAMeasurementSheetSearchContract loaMeasurementSheetSearchCriteria) {
+    public List<LOAMeasurementSheet> searchLoaMeasurementSheet(
+            final LOAMeasurementSheetSearchContract loaMeasurementSheetSearchCriteria) {
 
         String searchQuery = "select :selectfields from :tablename :condition  :orderby   ";
 
@@ -33,10 +33,10 @@ public class LOAMeasurementSheetRepository  extends JdbcRepository {
             validateEntityFieldName(loaMeasurementSheetSearchCriteria.getSortBy(), LOAMeasurementSheet.class);
         }
 
-        String orderBy = "order by id";
+        String orderBy = "order by loams.id";
         if (loaMeasurementSheetSearchCriteria.getSortBy() != null
                 && !loaMeasurementSheetSearchCriteria.getSortBy().isEmpty()) {
-            orderBy = "order by " + loaMeasurementSheetSearchCriteria.getSortBy();
+            orderBy = "order by loams." + loaMeasurementSheetSearchCriteria.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -54,14 +54,14 @@ public class LOAMeasurementSheetRepository  extends JdbcRepository {
             paramValues.put("ids", loaMeasurementSheetSearchCriteria.getIds());
         }
 
-
-        if (loaMeasurementSheetSearchCriteria.getLoaActivity() != null && !loaMeasurementSheetSearchCriteria.getLoaActivity().isEmpty()) {
+        if (loaMeasurementSheetSearchCriteria.getLoaActivity() != null
+                && !loaMeasurementSheetSearchCriteria.getLoaActivity().isEmpty()) {
             addAnd(params);
             params.append("loams.loaactivity in(:loaactivity)");
             paramValues.put("loaactivity", loaMeasurementSheetSearchCriteria.getLoaActivity());
         }
 
-        params.append(" and deleted = false");
+        params.append(" and loams.deleted = false");
 
         if (params.length() > 0) {
 
@@ -75,7 +75,8 @@ public class LOAMeasurementSheetRepository  extends JdbcRepository {
 
         BeanPropertyRowMapper row = new BeanPropertyRowMapper(LOAMeasurementSheetHelper.class);
 
-        List<LOAMeasurementSheetHelper> assetsForLoaList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues, row);
+        List<LOAMeasurementSheetHelper> assetsForLoaList = namedParameterJdbcTemplate.query(searchQuery.toString(), paramValues,
+                row);
         List<LOAMeasurementSheet> loaMeasurementSheets = new ArrayList<>();
         for (LOAMeasurementSheetHelper lOAMeasurementSheetHelper : assetsForLoaList) {
             LOAMeasurementSheet loaMeasurementSheet = lOAMeasurementSheetHelper.toDomain();

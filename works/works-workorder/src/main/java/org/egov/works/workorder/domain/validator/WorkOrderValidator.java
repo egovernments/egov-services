@@ -29,42 +29,46 @@ public class WorkOrderValidator {
     private WorkOrderRepository workOrderRepository;
 
     public void validateWorkOrder(final WorkOrderRequest workOrderRequest, Boolean isUpdate) {
-        LetterOfAcceptance letterOfAcceptance;
         HashMap<String, String> messages = new HashMap<>();
-        OfflineStatus offlineStatus = null;
         for (WorkOrder workOrder : workOrderRequest.getWorkOrders()) {
-
             if (workOrder.getLetterOfAcceptance() != null && workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
                 checkWorkOrderNumberExist(workOrderRequest, messages, workOrder, isUpdate);
             }
             if (isUpdate) {
                 validateWorkOrderExist(workOrderRequest, messages, workOrder);
             }
-
-
-            letterOfAcceptance = new LetterOfAcceptance();
+            if (!isUpdate)
+                validateWorkOrderCreated(workOrderRequest, messages, workOrder);
             LetterOfAcceptanceResponse letterOfAcceptanceResponse = getLetterOfAcceptanceResponse(workOrderRequest, workOrder);
-
             validateLOA(messages, letterOfAcceptanceResponse);
-
-            List<OfflineStatus> offlineStatuses = offlineStatusService
-                    .getOfflineStatusForWorkOrder(workOrder.getLetterOfAcceptance().getLoaNumber(),
-                            workOrder.getTenantId(), workOrderRequest.getRequestInfo())
-                    .getOfflineStatuses();
-            if (!offlineStatuses.isEmpty())
-                offlineStatus = offlineStatuses.get(0);
-
-            validateOfflineStatus(offlineStatus, messages);
-            validateWorkOrder(letterOfAcceptance, messages, workOrder, letterOfAcceptanceResponse);
+            if(workOrder.getLetterOfAcceptance() != null && !workOrder.getLetterOfAcceptance().getSpillOverFlag())
+                validateOfflineStatus(workOrderRequest, messages, workOrder);
+            validateWorkOrder(messages, workOrder, letterOfAcceptanceResponse);
 
             if (!messages.isEmpty())
                 throw new CustomException(messages);
 
-
         }
     }
 
-    private void checkWorkOrderNumberExist(WorkOrderRequest workOrderRequest, HashMap<String, String> messages, WorkOrder workOrder, Boolean isUpdate) {
+    private void validateOfflineStatus(final WorkOrderRequest workOrderRequest, HashMap<String, String> messages,
+            WorkOrder workOrder) {
+        OfflineStatus offlineStatus = null;
+        List<OfflineStatus> offlineStatuses = offlineStatusService
+                .getOfflineStatusForWorkOrder(workOrder.getLetterOfAcceptance().getLoaNumber(),
+                        workOrder.getTenantId(), workOrderRequest.getRequestInfo())
+                .getOfflineStatuses();
+        if (!offlineStatuses.isEmpty())
+            offlineStatus = offlineStatuses.get(0);
+
+        if (offlineStatus == null) {
+            messages.put(Constants.KEY_LOA_OFFLINE_STATUS,
+                    Constants.MESSAGE_LOA_OFFLINE_STATUS);
+        }
+    }
+
+    private void checkWorkOrderNumberExist(WorkOrderRequest workOrderRequest, HashMap<String, String> messages,
+            WorkOrder workOrder, Boolean isUpdate) {
         WorkOrderSearchContract workOrderSearchContract = new WorkOrderSearchContract();
         workOrderSearchContract.setWorkOrderNumbers(Arrays.asList(workOrder.getWorkOrderNumber()));
         workOrderSearchContract.setTenantId(workOrder.getTenantId());
@@ -72,15 +76,21 @@ public class WorkOrderValidator {
             workOrderSearchContract.setIds(Arrays.asList(workOrder.getId()));
         List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
 
-        if (!isUpdate && !workOrders.isEmpty()) {
-            messages.put(Constants.KEY_INVALID_WORKORDER_EXISTS, Constants.MESSAGE_INVALID_WORKORDER_EXISTS);
-        }
+        if (!isUpdate)
+            for (WorkOrder workOrder2 : workOrders) {
+                if (!workOrder2.getStatus().toString().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+                    messages.put(Constants.KEY_INVALID_WORKORDER_EXISTS, Constants.MESSAGE_INVALID_WORKORDER_EXISTS);
+                    break;
+                }
+
+            }
 
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
     }
 
-    private void validateWorkOrderExist(WorkOrderRequest workOrderRequest, HashMap<String, String> messages, WorkOrder workOrder) {
+    private void validateWorkOrderExist(WorkOrderRequest workOrderRequest, HashMap<String, String> messages,
+            WorkOrder workOrder) {
         WorkOrderSearchContract workOrderSearchContract = new WorkOrderSearchContract();
         workOrderSearchContract.setWorkOrderNumbers(Arrays.asList(workOrder.getWorkOrderNumber()));
         workOrderSearchContract.setTenantId(workOrder.getTenantId());
@@ -88,8 +98,33 @@ public class WorkOrderValidator {
 
         List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
 
-        if (workOrders.isEmpty()) {
-            messages.put(Constants.KEY_INVALID_WORKORDER, Constants.MESSAGE_INVALID_WORKORDER);
+        for (WorkOrder workOrder2 : workOrders) {
+            if (!workOrder2.getStatus().toString().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+                messages.put(Constants.KEY_INVALID_WORKORDER, Constants.MESSAGE_INVALID_WORKORDER);
+                break;
+            }
+
+        }
+
+        if (messages != null && !messages.isEmpty())
+            throw new CustomException(messages);
+    }
+
+    private void validateWorkOrderCreated(WorkOrderRequest workOrderRequest, HashMap<String, String> messages,
+            WorkOrder workOrder) {
+        WorkOrderSearchContract workOrderSearchContract = new WorkOrderSearchContract();
+        workOrderSearchContract.setLoaNumbers(Arrays.asList(workOrder.getLetterOfAcceptance().getLoaNumber()));
+        workOrderSearchContract.setTenantId(workOrder.getTenantId());
+        workOrderSearchContract.setIds(Arrays.asList(workOrder.getId()));
+
+        List<WorkOrder> workOrders = workOrderRepository.search(workOrderSearchContract, workOrderRequest.getRequestInfo());
+
+        for (WorkOrder workOrder2 : workOrders) {
+            if (!workOrder2.getStatus().toString().equalsIgnoreCase(WorkOrderStatus.CANCELLED.toString())) {
+                messages.put(Constants.KEY_INVALID_LOA_WORKORDER, Constants.MESSAGE_INVALID_LOA_WORKORDER);
+                break;
+            }
+
         }
 
         if (messages != null && !messages.isEmpty())
@@ -112,8 +147,11 @@ public class WorkOrderValidator {
         }
     }
 
-    private void validateWorkOrder(LetterOfAcceptance letterOfAcceptance, HashMap<String, String> messages, WorkOrder workOrder, LetterOfAcceptanceResponse letterOfAcceptanceResponse) {
-        if (letterOfAcceptanceResponse.getLetterOfAcceptances() != null && !letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty())
+    private void validateWorkOrder(HashMap<String, String> messages, WorkOrder workOrder,
+            LetterOfAcceptanceResponse letterOfAcceptanceResponse) {
+        LetterOfAcceptance letterOfAcceptance = new LetterOfAcceptance();
+        if (letterOfAcceptanceResponse.getLetterOfAcceptances() != null
+                && !letterOfAcceptanceResponse.getLetterOfAcceptances().isEmpty())
             letterOfAcceptance = letterOfAcceptanceResponse.getLetterOfAcceptances().get(0);
 
         if (messages != null && !messages.isEmpty())
@@ -124,17 +162,12 @@ public class WorkOrderValidator {
 
         if (workOrder.getLetterOfAcceptance().getSpillOverFlag()) {
             if (workOrder.getWorkOrderNumber() == null || workOrder.getWorkOrderNumber().isEmpty())
-                messages.put(Constants.KEY_WORKORDER_WORKORDERNUMBER_REQUIRED, Constants.MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED);
+                messages.put(Constants.KEY_WORKORDER_WORKORDERNUMBER_REQUIRED,
+                        Constants.MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED);
         }
 
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
     }
 
-    private void validateOfflineStatus(OfflineStatus offlineStatus, HashMap<String, String> messages) {
-        if (offlineStatus == null) {
-            messages.put(Constants.KEY_LOA_OFFLINE_STATUS,
-                    Constants.MESSAGE_LOA_OFFLINE_STATUS);
-        }
-    }
 }

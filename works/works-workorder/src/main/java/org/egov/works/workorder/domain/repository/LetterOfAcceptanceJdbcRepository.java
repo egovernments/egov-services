@@ -101,7 +101,7 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
 
         if (letterOfAcceptanceSearchCriteria.getStatuses() != null) {
             addAnd(params);
-            params.append("status in(:status)");
+            params.append("loa.status in(:status)");
             paramValues.put("status", letterOfAcceptanceSearchCriteria.getStatuses());
         }
 
@@ -143,6 +143,8 @@ public class LetterOfAcceptanceJdbcRepository extends JdbcRepository {
             paramValues.put("detailedestimatenumber", letterOfAcceptanceSearchCriteria.getDetailedEstimateNumbers());
         }
 
+        params.append(" and loa.deleted = false");
+        
         if (params.length() > 0) {
 
             searchQuery = searchQuery.replace(":condition", " where " + params.toString());

@@ -98,6 +98,7 @@ public class WorkOrderUtils {
         return responseInfo;
     }
 
+    @SuppressWarnings("rawtypes")
     public String getCityCode(final String tenantId, final RequestInfo requestInfo) {
         String cityCode = "";
         JSONArray responseJSONArray = getMDMSData(CommonConstants.TENANT_OBJECTNAME,
@@ -105,6 +106,7 @@ public class WorkOrderUtils {
                 tenantId, tenantId, requestInfo,
                 CommonConstants.TENANT_MODULENAME);
         if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            @SuppressWarnings("unchecked")
             Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
             cityCode = ((Map) jsonMap.get("city")).get("code").toString();
         }

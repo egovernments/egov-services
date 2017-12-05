@@ -36,209 +36,212 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 public class LetterOfAcceptanceService {
 
-	@Autowired
-	private WorkOrderUtils workOrderUtils;
+    @Autowired
+    private WorkOrderUtils workOrderUtils;
 
-	@Autowired
-	private EstimateService estimateService;
+    @Autowired
+    private EstimateService estimateService;
 
-	@Autowired
-	private IdGenerationRepository idGenerationRepository;
+    @Autowired
+    private IdGenerationRepository idGenerationRepository;
 
-	@Autowired
-	private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
+    @Autowired
+    private LetterOfAcceptanceRepository letterOfAcceptanceRepository;
 
-	@Autowired
-	LetterOfAcceptanceValidator letterOfAcceptanceValidator;
+    @Autowired
+    LetterOfAcceptanceValidator letterOfAcceptanceValidator;
 
-	@Autowired
-	private CommonUtils commonUtils;
+    @Autowired
+    private CommonUtils commonUtils;
 
-	@Autowired
-	private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
+    @Autowired
+    private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-	@Autowired
-	private PropertiesManager propertiesManager;
+    @Autowired
+    private PropertiesManager propertiesManager;
 
-	public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, final Boolean isRevision) {
-		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.FALSE, isRevision);
-		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
+    public LetterOfAcceptanceResponse create(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+            final Boolean isRevision) {
+        letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest, Boolean.FALSE, isRevision);
+        for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
-			letterOfAcceptance.setId(commonUtils.getUUID());
+            letterOfAcceptance.setId(commonUtils.getUUID());
 
-			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
-					.getLetterOfAcceptanceEstimates()) {
-				letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
-				letterOfAcceptanceEstimate.setAuditDetails(
-						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
-				DetailedEstimate detailedEstimate = estimateService
-						.getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
-								letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
-						.getDetailedEstimates().get(0);
+            for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
+                    .getLetterOfAcceptanceEstimates()) {
+                letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
+                letterOfAcceptanceEstimate.setAuditDetails(
+                        workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+                DetailedEstimate detailedEstimate = estimateService
+                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+                                letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
+                        .getDetailedEstimates().get(0);
 
-				List<LOAActivity> loaActivities = new ArrayList<>();
+                List<LOAActivity> loaActivities = new ArrayList<>();
 
-				for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-					prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
-							letterOfAcceptanceRequest.getRequestInfo(), false);
-				}
-				letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
-				letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
+                for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
+                    prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
+                            letterOfAcceptanceRequest.getRequestInfo(), false);
+                }
+                letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
+                letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
 
-				if (!detailedEstimate.getWorkOrderCreated()) {
-					String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
-							letterOfAcceptanceRequest.getRequestInfo());
-					// TODO: check idgen to accept values to generate
-					letterOfAcceptance.setLoaNumber(workOrderUtils.getCityCode(letterOfAcceptance.getTenantId(), letterOfAcceptanceRequest.getRequestInfo()) + "/" + propertiesManager.getLoaNumberPrefix() + "/"
-							+ detailedEstimate.getDepartment().getCode() + loaNumber);
-				}
-			}
+                if (!detailedEstimate.getWorkOrderCreated()) {
+                    String loaNumber = idGenerationRepository.generateLOANumber(letterOfAcceptance.getTenantId(),
+                            letterOfAcceptanceRequest.getRequestInfo());
+                    // TODO: check idgen to accept values to generate
+                    letterOfAcceptance.setLoaNumber(workOrderUtils.getCityCode(letterOfAcceptance.getTenantId(),
+                            letterOfAcceptanceRequest.getRequestInfo()) + "/" + propertiesManager.getLoaNumberPrefix() + "/"
+                            + detailedEstimate.getDepartment().getCode() + loaNumber);
+                }
+            }
 
-			if ((isRevision != null && !isRevision))
-			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
+            if ((isRevision != null && !isRevision))
+                for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
-				securityDeposit.setId(commonUtils.getUUID());
-				securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
-				securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
-				securityDeposit.setAuditDetails(
-						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
-			}
+                    securityDeposit.setId(commonUtils.getUUID());
+                    securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
+                    securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
+                    securityDeposit.setAuditDetails(
+                            workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+                }
 
-			if (letterOfAcceptance.getDocumentDetails() != null)
-				for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
-					documentDetail.setId(commonUtils.getUUID());
-					documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
-					documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
-					documentDetail.setAuditDetails(
-							workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
-				}
+            if (letterOfAcceptance.getDocumentDetails() != null)
+                for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
+                    documentDetail.setId(commonUtils.getUUID());
+                    documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
+                    documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+                    documentDetail.setAuditDetails(
+                            workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+                }
 
-			letterOfAcceptance
-					.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
+            letterOfAcceptance
+                    .setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), false));
 
-		}
+        }
 
-		if (isRevision == null || (isRevision != null && !isRevision))
-			kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
-		else
-			kafkaTemplate.send(propertiesManager.getWorksRevisionLOACreateUpdateTopic(), letterOfAcceptanceRequest);
+        if (isRevision == null || (isRevision != null && !isRevision))
+            kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
+        else
+            kafkaTemplate.send(propertiesManager.getWorksRevisionLOACreateUpdateTopic(), letterOfAcceptanceRequest);
 
-		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
-		letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
-		letterOfAcceptanceResponse
-				.setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
-		return letterOfAcceptanceResponse;
-	}
+        LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
+        letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
+        letterOfAcceptanceResponse
+                .setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
+        return letterOfAcceptanceResponse;
+    }
 
-	private void prepairLOAActivity(LetterOfAcceptance letterOfAcceptance,
-			LetterOfAcceptanceEstimate letterOfAcceptanceEstimate, List<LOAActivity> loaActivities,
-			EstimateActivity estimateActivity, final RequestInfo requestInfo, final Boolean isUpdate) {
-		LOAActivity activity = new LOAActivity();
-		activity.setEstimateActivity(estimateActivity);
-		activity.setApprovedRate(estimateActivity.getEstimateRate());
-		activity.setApprovedQuantity(new BigDecimal(estimateActivity.getQuantity()));
-		activity.setApprovedAmount(
-				BigDecimal.valueOf(estimateActivity.getEstimateRate().doubleValue() * estimateActivity.getQuantity()));
-		if (activity.getId() == null || activity.getId().isEmpty())
-			activity.setId(commonUtils.getUUID());
-		activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
-		activity.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate.getId());
-		activity.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
-		createLOAMSheet(activity, estimateActivity, requestInfo, isUpdate);
-		loaActivities.add(activity);
-	}
+    private void prepairLOAActivity(LetterOfAcceptance letterOfAcceptance,
+            LetterOfAcceptanceEstimate letterOfAcceptanceEstimate, List<LOAActivity> loaActivities,
+            EstimateActivity estimateActivity, final RequestInfo requestInfo, final Boolean isUpdate) {
+        LOAActivity activity = new LOAActivity();
+        activity.setEstimateActivity(estimateActivity);
+        activity.setApprovedRate(estimateActivity.getEstimateRate());
+        activity.setApprovedQuantity(new BigDecimal(estimateActivity.getQuantity()));
+        activity.setApprovedAmount(
+                BigDecimal.valueOf(estimateActivity.getEstimateRate().doubleValue() * estimateActivity.getQuantity()));
+        if (activity.getId() == null || activity.getId().isEmpty())
+            activity.setId(commonUtils.getUUID());
+        activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
+        activity.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate.getId());
+        activity.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
+        createLOAMSheet(activity, estimateActivity, requestInfo, isUpdate);
+        loaActivities.add(activity);
+    }
 
-	public LetterOfAcceptanceResponse search(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria,
-			final RequestInfo requestInfo) {
-		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
-		letterOfAcceptanceResponse.setLetterOfAcceptances(
-				letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchCriteria, requestInfo));
-		return letterOfAcceptanceResponse;
-	}
+    public LetterOfAcceptanceResponse search(final LetterOfAcceptanceSearchContract letterOfAcceptanceSearchCriteria,
+            final RequestInfo requestInfo) {
+        LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
+        letterOfAcceptanceResponse.setLetterOfAcceptances(
+                letterOfAcceptanceRepository.searchLOAs(letterOfAcceptanceSearchCriteria, requestInfo));
+        return letterOfAcceptanceResponse;
+    }
 
-	private void createLOAMSheet(final LOAActivity loaActivity, final EstimateActivity estimateActivity,
-			final RequestInfo requestInfo, final Boolean isUpdate) {
-		final List<LOAMeasurementSheet> loaSheetList = new ArrayList<LOAMeasurementSheet>();
-		LOAMeasurementSheet loaSheet = null;
-		for (final EstimateMeasurementSheet estimatesheet : estimateActivity.getEstimateMeasurementSheets()) {
-			loaSheet = new LOAMeasurementSheet();
-			if (loaSheet.getId() == null || loaSheet.getId().isEmpty())
-				loaSheet.setId(commonUtils.getUUID());
-			loaSheet.setNumber(estimatesheet.getNumber());
-			loaSheet.setLength(estimatesheet.getLength());
-			loaSheet.setWidth(estimatesheet.getWidth());
-			loaSheet.setDepthOrHeight(estimatesheet.getDepthOrHeight());
-			loaSheet.setLoaActivity(loaActivity.getId());
-			loaSheet.setQuantity(estimatesheet.getQuantity());
-			loaSheet.setEstimateMeasurementSheet(estimatesheet.getId());
-			loaSheet.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
-			loaSheet.setTenantId(loaActivity.getTenantId());
-			loaSheetList.add(loaSheet);
+    private void createLOAMSheet(final LOAActivity loaActivity, final EstimateActivity estimateActivity,
+            final RequestInfo requestInfo, final Boolean isUpdate) {
+        final List<LOAMeasurementSheet> loaSheetList = new ArrayList<LOAMeasurementSheet>();
+        LOAMeasurementSheet loaSheet = null;
+        for (final EstimateMeasurementSheet estimatesheet : estimateActivity.getEstimateMeasurementSheets()) {
+            loaSheet = new LOAMeasurementSheet();
+            if (loaSheet.getId() == null || loaSheet.getId().isEmpty())
+                loaSheet.setId(commonUtils.getUUID());
+            loaSheet.setNumber(estimatesheet.getNumber());
+            loaSheet.setLength(estimatesheet.getLength());
+            loaSheet.setWidth(estimatesheet.getWidth());
+            loaSheet.setDepthOrHeight(estimatesheet.getDepthOrHeight());
+            loaSheet.setLoaActivity(loaActivity.getId());
+            loaSheet.setQuantity(estimatesheet.getQuantity());
+            loaSheet.setEstimateMeasurementSheet(estimatesheet.getId());
+            loaSheet.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
+            loaSheet.setTenantId(loaActivity.getTenantId());
+            loaSheetList.add(loaSheet);
 
-		}
-		loaActivity.setLoaMeasurements(loaSheetList);
-	}
+        }
+        loaActivity.setLoaMeasurements(loaSheetList);
+    }
 
-	public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest, final Boolean isRevision) {
-		letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest,Boolean.TRUE, isRevision);
-		for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
+    public LetterOfAcceptanceResponse update(final LetterOfAcceptanceRequest letterOfAcceptanceRequest,
+            final Boolean isRevision) {
+        letterOfAcceptanceValidator.validateLetterOfAcceptance(letterOfAcceptanceRequest, Boolean.TRUE, isRevision);
+        for (LetterOfAcceptance letterOfAcceptance : letterOfAcceptanceRequest.getLetterOfAcceptances()) {
 
-			if (letterOfAcceptance.getId() == null || letterOfAcceptance.getId().isEmpty())
-				letterOfAcceptance.setId(commonUtils.getUUID());
+            if (letterOfAcceptance.getId() == null || letterOfAcceptance.getId().isEmpty())
+                letterOfAcceptance.setId(commonUtils.getUUID());
 
-			for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
-					.getLetterOfAcceptanceEstimates()) {
-				if (letterOfAcceptanceEstimate.getId() == null || letterOfAcceptanceEstimate.getId().isEmpty())
-					letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
-				letterOfAcceptanceEstimate.setAuditDetails(
-						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
-				DetailedEstimate detailedEstimate = estimateService
-						.getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
-								letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
-						.getDetailedEstimates().get(0);
+            for (LetterOfAcceptanceEstimate letterOfAcceptanceEstimate : letterOfAcceptance
+                    .getLetterOfAcceptanceEstimates()) {
+                if (letterOfAcceptanceEstimate.getId() == null || letterOfAcceptanceEstimate.getId().isEmpty())
+                    letterOfAcceptanceEstimate.setId(commonUtils.getUUID());
+                letterOfAcceptanceEstimate.setAuditDetails(
+                        workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
+                DetailedEstimate detailedEstimate = estimateService
+                        .getDetailedEstimate(letterOfAcceptanceEstimate.getDetailedEstimate().getEstimateNumber(),
+                                letterOfAcceptanceEstimate.getTenantId(), letterOfAcceptanceRequest.getRequestInfo())
+                        .getDetailedEstimates().get(0);
 
-				List<LOAActivity> loaActivities = new ArrayList<>();
+                List<LOAActivity> loaActivities = new ArrayList<>();
 
-				for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
-					prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
-							letterOfAcceptanceRequest.getRequestInfo(), true);
-				}
-				letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
-				letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
+                for (EstimateActivity estimateActivity : detailedEstimate.getEstimateActivities()) {
+                    prepairLOAActivity(letterOfAcceptance, letterOfAcceptanceEstimate, loaActivities, estimateActivity,
+                            letterOfAcceptanceRequest.getRequestInfo(), true);
+                }
+                letterOfAcceptanceEstimate.setLetterOfAcceptance(letterOfAcceptance.getId());
+                letterOfAcceptanceEstimate.setLoaActivities(loaActivities);
 
-			}
+            }
 
-			for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
+            for (SecurityDeposit securityDeposit : letterOfAcceptance.getSecurityDeposits()) {
 
-				if (securityDeposit.getId() == null || securityDeposit.getId().isEmpty())
-					securityDeposit.setId(commonUtils.getUUID());
-				securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
-				securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
-				securityDeposit.setAuditDetails(
-						workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
-			}
+                if (securityDeposit.getId() == null || securityDeposit.getId().isEmpty())
+                    securityDeposit.setId(commonUtils.getUUID());
+                securityDeposit.setTenantId(letterOfAcceptance.getTenantId());
+                securityDeposit.setLetterOfAcceptance(letterOfAcceptance.getId());
+                securityDeposit.setAuditDetails(
+                        workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
+            }
 
-			if (letterOfAcceptance.getDocumentDetails() != null && !letterOfAcceptance.getDocumentDetails().isEmpty())
-				for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
-					if (documentDetail.getId() == null || documentDetail.getId().isEmpty())
-						documentDetail.setId(commonUtils.getUUID());
-					documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
-					documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
-					documentDetail.setAuditDetails(
-							workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
-				}
+            if (letterOfAcceptance.getDocumentDetails() != null && !letterOfAcceptance.getDocumentDetails().isEmpty())
+                for (final DocumentDetail documentDetail : letterOfAcceptance.getDocumentDetails()) {
+                    if (documentDetail.getId() == null || documentDetail.getId().isEmpty())
+                        documentDetail.setId(commonUtils.getUUID());
+                    documentDetail.setObjectId(letterOfAcceptance.getLoaNumber());
+                    documentDetail.setObjectType(CommonConstants.LETTEROFACCEPTANCE);
+                    documentDetail.setAuditDetails(
+                            workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
+                }
 
-			letterOfAcceptance
-					.setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
+            letterOfAcceptance
+                    .setAuditDetails(workOrderUtils.setAuditDetails(letterOfAcceptanceRequest.getRequestInfo(), true));
 
-		}
+        }
 
-		kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
-		LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
-		letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
-		letterOfAcceptanceResponse
-				.setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
-		return letterOfAcceptanceResponse;
-	}
+        kafkaTemplate.send(propertiesManager.getWorksLOACreateTopic(), letterOfAcceptanceRequest);
+        LetterOfAcceptanceResponse letterOfAcceptanceResponse = new LetterOfAcceptanceResponse();
+        letterOfAcceptanceResponse.setLetterOfAcceptances(letterOfAcceptanceRequest.getLetterOfAcceptances());
+        letterOfAcceptanceResponse
+                .setResponseInfo(workOrderUtils.getResponseInfo(letterOfAcceptanceRequest.getRequestInfo()));
+        return letterOfAcceptanceResponse;
+    }
 
 }

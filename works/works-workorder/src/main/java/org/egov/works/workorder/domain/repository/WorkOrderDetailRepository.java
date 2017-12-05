@@ -36,7 +36,7 @@ public class WorkOrderDetailRepository extends JdbcRepository {
         String orderBy = "order by wod.workorder";
         if (workOrderDetailSearchContract.getSortBy() != null
                 && !workOrderDetailSearchContract.getSortBy().isEmpty()) {
-            orderBy = "order by " + workOrderDetailSearchContract.getSortBy();
+            orderBy = "order by wod." + workOrderDetailSearchContract.getSortBy();
         }
 
         searchQuery = searchQuery.replace(":tablename", tableName);
@@ -61,7 +61,7 @@ public class WorkOrderDetailRepository extends JdbcRepository {
             paramValues.put("workOrders", workOrderDetailSearchContract.getWorkOrders());
         }
 
-        params.append(" and deleted = false");
+        params.append(" and wod.deleted = false");
 
         if (params.length() > 0) {
 

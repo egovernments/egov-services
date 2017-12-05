@@ -61,5 +61,12 @@ public class Constants {
 
     public static final String KEY_WORKORDER_WORKORDERNUMBER_REQUIRED= "INVALID_WORKORDER_WORKORDER";
     public static final String MESSAGE_WORKORDER_WORKORDERNUMBER_REQUIRED= "Work order number is required when LOA is spillover";
+    
+    public static final String KEY_INVALID_LOA_DE_EXISTS = "INVALID_LOA_DE_EXISTS";
+    public static final String MESSAGE_INVALID_LOA_DE_EXISTS = "LOA with detailed estimate number already exist in the system";
+    
+    public static final String KEY_INVALID_LOA_WORKORDER = "INVALID_LOA_WORKORDER";
+    public static final String MESSAGE_INVALID_LOA_WORKORDER = "Workorder already created for given LOA";
+
 
 }

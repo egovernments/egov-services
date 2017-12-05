@@ -280,7 +280,7 @@ var dat = {
             "pattern": "^[a-zA-Z0-9]+$",
             "type": "singleValueList",
             "isRequired": true,
-            "isDisabled": false,
+            "isDisabled": true,
             "defaultValue": "",
             "maxLength": 50,
             "minLength": 5,

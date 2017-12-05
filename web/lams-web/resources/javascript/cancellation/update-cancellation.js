@@ -98,7 +98,7 @@ class UpdateCancellation extends React.Component {
                 source: "",
                 legacyDemands: "",
                 cancellation: {
-                    orderNumber: "",
+                    orderNo: "",
                     orderDate: "",
                     terminationDate: "",
                     reasonForCancellation: "",
@@ -115,7 +115,7 @@ class UpdateCancellation extends React.Component {
                 isAdvancePaid: "",
                 adjustmentStartDate: ""
             },
-            cancelReasons: ["Reason 1", "Reason 2", "Reason 3", "Reason 4"],
+            cancelReasons: ["Termination", "Cancellation"],
             positionList: [],
             departmentList: [],
             designationList: [],
@@ -311,9 +311,11 @@ class UpdateCancellation extends React.Component {
 
         }, process.businessKey);
 
+        console.log("Process", process);
+
         if (process.status && process.status != "Rejected") {
 
-            $("#orderNumber").prop("disabled", true)
+            $("#orderNo").prop("disabled", true)
             $("#orderDate").prop("disabled", true)
             $("#terminationDate").prop("disabled", true)
             $("#reasonForCancellation").prop("disabled", true)
@@ -321,8 +323,7 @@ class UpdateCancellation extends React.Component {
             $("#remarks").prop("disabled", true)
         }
 
-        console.log("Process", process);
-
+        
         if (!agreement.cancellation) {
             agreement.cancellation = {};
         }
@@ -483,7 +484,7 @@ class UpdateCancellation extends React.Component {
 
                                 },
                                 error: function (err) {
-                                    if (err.responseJSON.Error && err.responseJSON.Error.message)
+                                    if (err && err.responseJSON && err.responseJSON.Error && err.responseJSON.Error.message)
                                         showError(err.responseJSON.Error.message);
                                     else
                                         showError("Something went wrong. Please contact Administrator");
@@ -877,11 +878,11 @@ class UpdateCancellation extends React.Component {
                             <div className="col-sm-6">
                                 <div className="row">
                                     <div className="col-sm-6 label-text">
-                                        <label htmlFor="orderNumber"> Order Number<span>*</span> </label>
+                                        <label htmlFor="orderNo"> Order Number<span>*</span> </label>
                                     </div>
                                     <div className="col-sm-6">
-                                        <input type="text" name="orderNumber" id="orderNumber" value={cancellation.orderNumber}
-                                            onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNumber") }} required />
+                                        <input type="text" name="orderNo" id="orderNo" value={cancellation.orderNo}
+                                            onChange={(e) => { handleChangeTwoLevel(e, "cancellation", "orderNo") }} required />
                                     </div>
                                 </div>
                             </div>

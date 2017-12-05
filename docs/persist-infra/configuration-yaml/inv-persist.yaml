@@ -460,12 +460,15 @@ serviceMaps:
       fromTopic: inv-pricelist-update-topic
       isTransaction: true
       queryMaps:
-        - query: update pricelist SET active=?, agreementNumber=?, agreementDate=?, agreementStartDate=?, agreementEndDate=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
+        - query: update pricelist SET active=?, agreementNumber=?, rateType=?, rateContractNumber=?, rateContractDate=?, agreementDate=?, agreementStartDate=?, agreementEndDate=?, lastmodifiedby=?,  lastmodifiedtime=? WHERE id=? AND tenantid=?;
           basePath: $.priceLists.*
           jsonMaps:
             - jsonPath: $.priceLists.*.active
               dbType: BOOLEAN
             - jsonPath: $.priceLists.*.agreementNumber
+            - jsonPath: $.priceLists.*.rateType
+            - jsonPath: $.priceLists.*.rateContractNumber
+            - jsonPath: $.priceLists.*.rateContractDate
             - jsonPath: $.priceLists.*.agreementDate
               dbType: LONG
             - jsonPath: $.priceLists.*.agreementStartDate

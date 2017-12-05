@@ -69,7 +69,8 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
                 "defaultValue": properties[key].default || "",
                 "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
                 	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
-                "isStateLevel":true							
+                "isStateLevel":true, 
+                "apiKey": jPath + "." + key							
             });
             header.push({
             	"label": jPath + "." + module + "." + master + "." + key
@@ -124,14 +125,20 @@ for(module in configData){
 		SwaggerParser.dereference(urls[i])
         .then(function(yamlJSON) {
         	// console.log(yamlJSON.definitions.WasteSubType.properties)
-        	let basePath = [];
-        	basePath = yamlJSON.basePath.split("-")[0].split("");		// /asset-services type pattern should be in basepath
-        	let index = basePath.indexOf("/");
-        	if(index > -1){
-        		basePath.splice(index, 1);
+        	let module = yamlJSON["x-module"];
+        	if(module){
+        		mainObj[module] = yamlJSON.definitions;	
         	}
+        	else{
+	        	let basePath = [];
+	        	basePath = yamlJSON.basePath.split("-")[0].split("");		// /asset-services type pattern should be in basepath
+	        	let index = basePath.indexOf("/");
+	        	if(index > -1){
+        			basePath.splice(index, 1);
+        		}			
 
-        	mainObj[basePath.join("")] = yamlJSON.definitions;
+        		mainObj[basePath.join("")] = yamlJSON.definitions;
+        	}
         	
         	completed_requests++;
 
@@ -141,6 +148,7 @@ for(module in configData){
 
 	            for(moduleName in mainObj){
 	            	// console.log("Main Object module- " + moduleName);
+	            	console.log("module name is - " + moduleName);
 	            	finalSpecs[moduleName.toLowerCase()] = {};
 	            	for(master in mainObj[moduleName.toLowerCase()]){
 	            		// console.log(property);
@@ -168,7 +176,7 @@ for(module in configData){
 	            	
 	            }
 
-	            console.log(finalSpecs.swm.masters.wastesubtype.header);
+	            console.log(finalSpecs.swm.masters.wastesubtype);
 	            // console.log(finalSpecs.swm);
 	        
 	        }

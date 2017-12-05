@@ -82,7 +82,7 @@ class UiMultiFieldTable extends Component {
     var valuesArray=[];
 		let {isintialLoad }=this.state;
     var numberOfRowsArray= _.get(props.formData,props.item.jsonPath);
-    // console.log(props.item.jsonPath);
+    // console.log(numberOfRowsArray, props.item.jsonPath);
     // console.log(this.state.values, numberOfRowsArray, props.item.tableList.values);
     var listValues = _.cloneDeep(props.item.tableList.values);
     // console.log(listValues);
@@ -111,14 +111,17 @@ class UiMultiFieldTable extends Component {
             this.setState({
              isintialLoad:true
             })
+    }else if(numberOfRowsArray == undefined){
+      let values = [props.item.tableList.values];
+      this.setState({
+        values,
+        isintialLoad:true,
+        list: Object.assign([], props.item.tableList.values)
+      });
+      this.addMandatoryOnLoad(props.item.tableList.values, 1);
     }
     // this.addMandatoryOnLoad(props.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
   }
-
-  // shouldComponentUpdate(nextProps, nextState){
-  //   console.log(!(_.isEqual(this.props.formData, nextProps.formData) && _.isEqual(this.state, nextState)));
-  //   return !(_.isEqual(this.props.formData, nextProps.formData) && _.isEqual(this.state, nextState));
-  // }
 
   addMandatoryOnLoad = (values,length) => {
     // console.log(values, '<--->', length, this.props.item.jsonPath);

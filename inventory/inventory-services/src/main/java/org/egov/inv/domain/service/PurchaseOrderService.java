@@ -55,10 +55,10 @@ public class PurchaseOrderService extends DomainService {
     @Value("${inv.purchaseorders.save.key}")
     private String saveKey;
 
-    @Value("${inv.purchaseorders.save.topic}")
+    @Value("${inv.purchaseorders.update.topic}")
     private String updateTopic;
 
-    @Value("${inv.purchaseorders.save.key}")
+    @Value("${inv.purchaseorders.update.key}")
     private String updateKey;
 
     @Value("${inv.purchaseorders.nonindent.save.topic}")
@@ -67,10 +67,10 @@ public class PurchaseOrderService extends DomainService {
     @Value("${inv.purchaseorders.nonindent.save.key}")
     private String saveNonIndentKey;
 
-    @Value("${inv.purchaseorders.nonindent.save.topic}")
+    @Value("${inv.purchaseorders.nonindent.update.topic}")
     private String updateNonIndentTopic;
 
-    @Value("${inv.purchaseorders.nonindent.save.key}")
+    @Value("${inv.purchaseorders.nonindent.update.key}")
     private String updateNonIndentKey;
     
     @Value("${usetotal.indent.quantity}")
@@ -203,6 +203,13 @@ public class PurchaseOrderService extends DomainService {
             switch (method) {
 
                 case Constants.ACTION_CREATE: {
+                    if (pos == null) {
+                        throw new InvalidDataException("purchaseOrders", ErrorCode.NOT_NULL.getCode(), null);
+                    }
+                }
+                break;
+                
+                case Constants.ACTION_UPDATE: {
                     if (pos == null) {
                         throw new InvalidDataException("purchaseOrders", ErrorCode.NOT_NULL.getCode(), null);
                     }

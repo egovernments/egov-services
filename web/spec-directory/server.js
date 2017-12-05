@@ -54,17 +54,17 @@ function getType(type) {
     }
 }
 
-var getFieldsFromInnerObject = function(properties, module, jPath, isArray, required) {
+var getFieldsFromInnerObject = function(properties, module, master, jPath, isArray, required) {
     var fields = [];
     var header = [];
     for (let key in properties) {
         if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
         if(properties[key].properties) {
             if(jPath.search("." + key) < 2)
-                getFieldsFromInnerObject(properties[key].properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
+                getFieldsFromInnerObject(properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, false, (properties[key].properties.required || []));
         } else if(properties[key].items && properties[key].items.properties) {
             if(jPath.search("." + key) < 2)
-                getFieldsFromInnerObject(properties[key].items.properties, module, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []));
+                getFieldsFromInnerObject(properties[key].items.properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []));
         } else {
             fields.push({
                 "name": key,
@@ -79,14 +79,13 @@ var getFieldsFromInnerObject = function(properties, module, jPath, isArray, requ
                 "minLength": properties[key].minLength,
                 "patternErrorMsg": properties[key].pattern ? (module + ".create.field.message." + key) : ""
             });
+            header.push({
+            	"label": jPath + "." + module + "." + master + "." + key
+            })
             
 
         }
-
-        for(var i = 0; i < fields.length; i++){
-        	header[i] = {};
-        	header[i].label = fields[i].jsonPath;
-        }
+        
     }
     return {
         fields,
@@ -132,8 +131,8 @@ for(let i = 0; i < config.data.length; i++){
 	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].label = "";
 	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].type = "multiFieldAddToTable";
 	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].jsonPath = "";
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].header = (getFieldsFromInnerObject(mainObj[key][property].properties, key,'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).header;
-	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].values = (getFieldsFromInnerObject(mainObj[key][property].properties, key,'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).fields;
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].header = (getFieldsFromInnerObject(mainObj[key][property].properties, key, property, 'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).header;
+	            		finalSpecs[key.toLowerCase()].masters[property.toLowerCase()].values = (getFieldsFromInnerObject(mainObj[key][property].properties, key, property, 'MdmsMetadata.masterData', true, mainObj[key][property].required || [])).fields;
 	            		// console.log("Break-------------------------------------------");
 	            		// console.log(finalSpecs.swm.masters.CollectionPoint);
 	            	}

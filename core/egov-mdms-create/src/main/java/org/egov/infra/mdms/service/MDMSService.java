@@ -188,9 +188,10 @@ public class MDMSService {
 							iterator.add(mapper.writeValueAsString(mDMSCreateRequest.getMasterMetaData().getMasterData().get(index)));
 						}
 		            }
-		 		   result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 				}
 			}
+			
+	 	    result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 		}
 		
       	return result;

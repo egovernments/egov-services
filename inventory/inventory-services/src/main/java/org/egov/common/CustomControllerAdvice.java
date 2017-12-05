@@ -3,6 +3,7 @@ package org.egov.common;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.egov.common.contract.response.ErrorResponse;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.Error;
@@ -63,6 +64,28 @@ public class CustomControllerAdvice {
 		errRes.setErrors(errors);
 		return errRes;
 	}
+	
+	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+	@ExceptionHandler(Exception.class)
+	public ErrorRes handleServerError(Exception ex) {
+		ex.printStackTrace();
+		ErrorRes errRes = new ErrorRes();
+		ex.printStackTrace();
+		ResponseInfo responseInfo = new ResponseInfo();
+		responseInfo.setStatus(StatusEnum.FAILED);
+		errRes.setResponseInfo(responseInfo);
+		Error error = new  Error();
+		error.setCode(ErrorCode.INTERNAL_SERVER_ERROR.getCode());
+		error.setMessage(ErrorCode.INTERNAL_SERVER_ERROR.getDescription());
+		error.setDescription(ex.getMessage());
+		List<Error> errors = new ArrayList<>();
+		errors.add(error);
+		errRes.setErrors(errors);
+		return errRes;
+
+	  
+	 
+	}
 
 /*	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
 	@ExceptionHandler(Throwable.class)
@@ -80,23 +103,7 @@ public class CustomControllerAdvice {
 		return errRes;
 	}
 
-	@ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-	@ExceptionHandler(Exception.class)
-	public ErrorResponse handleServerError(Exception ex) {
-		ex.printStackTrace();
-		ErrorResponse errRes = new ErrorResponse();
-
-		ResponseInfo responseInfo = new ResponseInfo();
-		responseInfo.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.toString());
-		errRes.setResponseInfo(responseInfo);
-		Error error = new Error();
-
-		error.setCode(500);
-		error.setMessage("Internal Server Error");
-		error.setDescription(ex.getMessage());
-		errRes.setError(error);
-		return errRes;
-	}
+	
 
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	@ExceptionHandler(UnauthorizedAccessException.class)

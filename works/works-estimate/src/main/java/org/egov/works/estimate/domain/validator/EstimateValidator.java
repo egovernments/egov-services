@@ -100,9 +100,10 @@ public class EstimateValidator {
             if (estimate.getSpillOverFlag())
                 validateSpillOverData(estimate, messages);
             validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages, isNew);
-            if (estimate.getAbstractEstimateNumber() != null)
+            if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
                 validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
-            validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
+            if (StringUtils.isNotBlank(estimate.getAdminSanctionNumber()))
+               validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             validateEstimateAssetDetails(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             if (estimate.getId() != null)
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);

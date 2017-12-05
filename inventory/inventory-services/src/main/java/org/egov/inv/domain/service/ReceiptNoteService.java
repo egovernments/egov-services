@@ -53,6 +53,8 @@ public class ReceiptNoteService extends DomainService {
     @Autowired
     private MaterialService materialService;
 
+    @Autowired
+    private StoreService storeService;
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -84,6 +86,8 @@ public class ReceiptNoteService extends DomainService {
 
     public MaterialReceiptResponse update(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
+        validate(materialReceipts, tenantId, Constants.ACTION_UPDATE);
+
         List<String> materialReceiptDetailIds = new ArrayList<>();
         List<String> materialReceiptDetailAddlnInfoIds = new ArrayList<>();
         materialReceipts.forEach(materialReceipt ->
@@ -181,7 +185,7 @@ public class ReceiptNoteService extends DomainService {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
-                            validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
+                            validateMaterialReceipt(materialReceipt, tenantId);
                         }
                     }
                 }
@@ -193,7 +197,7 @@ public class ReceiptNoteService extends DomainService {
                         throw new InvalidDataException("materialreceipt", ErrorCode.NOT_NULL.getCode(), null);
                     } else {
                         for (MaterialReceipt materialReceipt : materialReceipts) {
-                            validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
+                            validateMaterialReceipt(materialReceipt, tenantId);
                         }
                     }
                 }
@@ -207,6 +211,28 @@ public class ReceiptNoteService extends DomainService {
 
         }
 
+    }
+
+    private void validateMaterialReceipt(MaterialReceipt materialReceipt, String tenantId) {
+
+        if (null != materialReceipt.getReceivingStore() && !isEmpty(materialReceipt.getReceivingStore().getCode())) {
+            validateStore(materialReceipt.getReceivingStore().getCode(),tenantId);
+        }
+
+        validateMaterialReceiptDetail(materialReceipt.getReceiptDetails(), tenantId);
+
+    }
+
+    private void validateStore(String storeCode,String tenantId) {
+        StoreGetRequest storeGetRequest = StoreGetRequest.builder()
+                .code(Collections.singletonList(storeCode))
+                .tenantId(tenantId)
+                .build();
+
+        StoreResponse storeResponse = storeService.search(storeGetRequest);
+        if (storeResponse.getStores().size() == 0) {
+            throw new CustomException("inv.0025", "Store not found");
+        }
     }
 
     private void validateMaterialReceiptDetail(List<MaterialReceiptDetail> receiptDetails, String tenantId) {

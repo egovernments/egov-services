@@ -224,7 +224,11 @@ public class ReceiptNoteService extends DomainService {
         }
 
         if (null != materialReceipt.getChallanDate() && materialReceipt.getChallanDate() > getCurrentDate()) {
-            throw new CustomException("inv.0026", "Challan date must be less than or equal to current date");
+            throw new CustomException("inv.0028", "Challan date must be less than or equal to current date");
+        }
+
+        if (null != materialReceipt.getReceiptDate() && materialReceipt.getReceiptDate() > getCurrentDate()) {
+            throw new CustomException("inv.0029", "Receipt date must be less than or equal to current date");
         }
 
         validateMaterialReceiptDetail(materialReceipt, tenantId);
@@ -239,14 +243,14 @@ public class ReceiptNoteService extends DomainService {
         validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
         for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
             if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
-                validatePurchaseOrder(materialReceiptDetail, tenantId);
+                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceiptDate(), tenantId);
+            }
                 validateMaterial(materialReceiptDetail, tenantId);
                 validateQuantity(materialReceiptDetail);
                 if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
                     validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
                 }
             }
-        }
     }
 
     private void validateStore(String storeCode, String tenantId) {
@@ -321,7 +325,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String tenantId) {
+    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, Long receiptDate, String tenantId) {
 
         if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
@@ -340,7 +344,12 @@ public class ReceiptNoteService extends DomainService {
                     PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
 
                     if (purchaseOrders.getPurchaseOrders().size() > 0) {
-                        return;
+                        for (PurchaseOrder purchaseOrder : purchaseOrders.getPurchaseOrders()) {
+                            if (null != purchaseOrder.getPurchaseOrderDate()
+                                    && purchaseOrder.getPurchaseOrderDate() >= receiptDate) {
+                                throw new CustomException("inv.00270", "Receipt Date must be greater than purchase order date");
+                            }
+                        }
                     } else
                         throw new CustomException("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
                                 " is not present");

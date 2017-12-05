@@ -2924,6 +2924,7 @@ var localization_EN_Data = {
 "inventory.totalValue":"Total Value",
 "inventory.assetCode":"Asset Code",
 "inventory.projectCode":"Project Code",
+"inventory.indent.certificate.title":"Indent Certificate",
 
 
 // Material Issue Lables

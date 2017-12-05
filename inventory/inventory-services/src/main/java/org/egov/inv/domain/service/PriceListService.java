@@ -85,6 +85,7 @@ public class PriceListService extends DomainService {
 					}
 					if(priceListDetail.getUom().getCode()!=null)
 					{
+						if(priceListDetail.getQuantity()!=null)
 						priceListDetail.setQuantity((priceListDetail.getUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
 					}
                 });
@@ -155,6 +156,7 @@ public class PriceListService extends DomainService {
 									}
 									if(priceListDetail.getUom().getCode()!=null)
 									{
+										if(priceListDetail.getQuantity()!=null)
 										priceListDetail.setQuantity((priceListDetail.getUom().getConversionFactor()).doubleValue()*priceListDetail.getQuantity());
 									}
 									if(priceListDetail.getFromDate()==null)

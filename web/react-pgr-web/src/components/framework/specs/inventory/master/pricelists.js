@@ -629,7 +629,7 @@ var dat = {
             "label": "",
             "pattern": "",
             "type": "checkbox",
-            "isRequired": true,
+            "isRequired": false,
             "isDisabled": false,
             "defaultValue": true,
             "patternErrorMsg": ""
@@ -890,7 +890,7 @@ var dat = {
                   "label":"",
                   "pattern":"",
                   "type":"checkbox",
-                  "isRequired":true,
+                  "isRequired":false,
                   "isDisabled":false,
                   "defaultValue":true,
                   "patternErrorMsg":""

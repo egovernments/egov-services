@@ -773,6 +773,7 @@ class grievanceCreate extends Component {
                       <RaisedButton label={translate('pgr.lbl.uploadphoto')} containerElement="label" style={{ marginTop: '20px', marginBottom:'20px'}}>
                           <input type="file" accept="image/*" style={{display:'none'}} onChange={(e)=>handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)}/>
                       </RaisedButton>
+                      <p className="errorMsg">Allowed File Formats : jpg, jpeg, png</p>
                     </Col>
                     {this.renderImagePreview(files)}
                   </Row>

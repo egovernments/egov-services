@@ -7,6 +7,7 @@ import java.util.UUID;
 
 import org.egov.swm.constants.Constants;
 import org.egov.swm.domain.model.AuditDetails;
+import org.egov.swm.domain.model.InsuranceDetails;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.Vehicle;
 import org.egov.swm.domain.model.VehicleSearch;
@@ -62,6 +63,10 @@ public class VehicleService {
         for (final Vehicle v : vehicleRequest.getVehicles()) {
 
             setAuditDetails(v, userId);
+
+            if (v.getInsuranceDetails() == null) {
+                v.setInsuranceDetails(new InsuranceDetails());
+            }
 
             prepareInsuranceDocument(v);
         }

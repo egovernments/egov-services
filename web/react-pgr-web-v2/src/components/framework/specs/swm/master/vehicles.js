@@ -10,7 +10,7 @@ var dat = {
         "label": "swm.vehicles.create.group.title.VehicleDetails1",
         "fields": [
           {
-            "name": "code",
+            "name": "vehicleTypeCode",
             "jsonPath": "vehicleTypeCode",
             "label": "swm.vehicles.create.vehicleType",
             "type": "singleValueList",
@@ -18,7 +18,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "regNumber",
@@ -29,6 +29,17 @@ var dat = {
             "maxLength": 12,
             "minLength": 6,
             "patternErrorMsg": ""
+          },
+	{
+            "name": "driverCode",
+            "jsonPath": "driverCode",
+            "label": "swm.vehicles.create.driver",
+            "type": "singleValueList",
+            "isDisabled": false,
+            "maxLength": 128,
+            "minLength": 1,
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "engineSrNumber",
@@ -75,7 +86,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..name|$..name"
           }
         ]
       },
@@ -118,6 +129,9 @@ var dat = {
         {
           "label": "swm.vehicles.search.result.regNumber"
         },
+	{
+          "label": "swm.vehicles.search.result.driver"
+        },
         {
           "label": "swm.vehicles.search.result.vehicleCapacity"
         },
@@ -137,6 +151,7 @@ var dat = {
       "values": [
         "vehicleType.code",
         "regNumber",
+	"driver.name",
         "manufacturingDetails.vehicleCapacity",
         "manufacturingDetails.engineSrNumber",
         "manufacturingDetails.chassisSrNumber",
@@ -169,7 +184,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "regNumber",
@@ -181,6 +196,18 @@ var dat = {
             "maxLength": 12,
             "minLength": 6,
             "patternErrorMsg": ""
+          },
+	 {
+            "name": "driver",
+            "jsonPath": "vehicles[0].driver.code",
+            "label": "swm.vehicles.create.driver",
+            "type": "singleValueList",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 128,
+            "minLength": 1,
+            "patternErrorMsg": "",
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name"
           },
           {
             "name": "vehicleCapacity",
@@ -243,7 +270,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name"
           }
         ]
       },
@@ -448,6 +475,17 @@ var dat = {
             "name": "regNumber",
             "jsonPath": "vehicles[0].regNumber",
             "label": "swm.vehicles.create.regNumber",
+            "type": "text",
+            "isRequired": true,
+            "isDisabled": false,
+            "maxLength": 12,
+            "minLength": 6,
+            "patternErrorMsg": ""
+          },
+	{
+            "name": "driver",
+            "jsonPath": "vehicles[0].driver.name",
+            "label": "swm.vehicles.create.driver",
             "type": "text",
             "isRequired": true,
             "isDisabled": false,
@@ -713,7 +751,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..code"
           },
           {
             "name": "regNumber",
@@ -787,7 +825,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..code"
           }
         ]
       },
@@ -875,7 +913,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..vendorNo|$..name"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..vendorNo|$..name"
           }
         ]
       },

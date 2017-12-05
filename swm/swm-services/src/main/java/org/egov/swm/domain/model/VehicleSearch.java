@@ -15,6 +15,7 @@ public class VehicleSearch extends Vehicle {
     private String vendorName;
     private String purchaseYear;
     private String fuelTypeCode;
+    private String driverCode;
     private String sortBy;
     private Integer pageSize;
     private Integer offset;

@@ -24,7 +24,12 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": false,
             "patternErrorMsg": "swm.create.field.message.dumpingGroundCode",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=DumpingGround|$..code|$..name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name",
+	    "depedants": [{
+                "jsonPath": "ulbCode",
+                "type": "dropDown",
+                "pattern": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround&filter=[/?(@.code=={dumpingGroundCode.code})]|$..ulbs.*.code|$..ulbs.*.name"
+              }]
           },
 	{
             "name": "ulbCode",
@@ -32,8 +37,7 @@ var dat = {
             "label": "swm.create.ulb",
             "type": "singleValueList",
             "isDisabled": false,
-            "patternErrorMsg": "swm.create.field.message.ulbCode",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
+            "patternErrorMsg": "swm.create.field.message.ulbCode"
           }
         ]
       }
@@ -83,7 +87,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=DumpingGround|$..code|$..name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name"
           },
           {
             "name": "sourceSegregationDate",
@@ -108,7 +112,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
           }
         ]
       },
@@ -130,7 +134,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=CollectionType|$..code|$..name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name"
           },
           {
             "name": "wetWasteCollected",
@@ -277,7 +281,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=DumpingGround|$..code|$..name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name"
           },
           {
             "name": "sourceSegregationDate",
@@ -302,7 +306,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
           }
         ]
       },
@@ -324,7 +328,7 @@ var dat = {
             "maxLength": 128,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=CollectionType|$..code|$..name"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name"
           },
           {
             "name": "wetWasteCollected",

@@ -25,7 +25,7 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": false,
             "patternErrorMsg": "swm.create.field.message.name",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Shift|$..code|$..code"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code"
           }
         ]
       }
@@ -141,7 +141,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Shift|$..code|$..code"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code"
           }
         ]
       }
@@ -332,7 +332,7 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-            "url": "/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Shift|$..code|$..code"
+            "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code"
           }
         ]
       }

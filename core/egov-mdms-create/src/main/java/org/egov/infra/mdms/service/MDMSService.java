@@ -219,7 +219,7 @@ public class MDMSService {
 	public String getFilePath(Map<String, String> filePathMap, MDMSCreateRequest mDMSCreateRequest){
 		String fileName = filePathMap.get(mDMSCreateRequest.getMasterMetaData().getTenantId() +"-"+ mDMSCreateRequest.getMasterMetaData().getModuleName());
 		if(null == fileName){
-			throw new CustomException("400", "No data available for this master");
+			throw new CustomException("400", "No data available for this module");
 		}
 		StringBuilder filePath = new StringBuilder();
 		filePath.append(dataRootFolder);

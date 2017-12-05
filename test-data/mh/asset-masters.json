@@ -1,19 +1,9 @@
 {
-  "tenantId": "default",
+  "tenantId": "mh",
   "moduleName": "ASSET",
-  "mdms-config": [
-    {
-      "masterName": "AssetCategory",
-      "moduleDefinition": "a/b/c",
-      "uniqueKeys": [
-        "$.id",
-        "$.tenantId"
-      ]
-    }
-  ],
   "AssetCategory": [
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 2,
       "name": "Infrastructure assets",
       "code": "002",
@@ -32,7 +22,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 3,
       "name": "Plant and Machinery",
       "code": "003",
@@ -51,7 +41,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 4,
       "name": "Electrical Installations",
       "code": "004",
@@ -70,7 +60,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 12,
       "name": "Roads and Bridges",
       "code": "012",
@@ -97,9 +87,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area",
@@ -111,9 +99,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Length",
@@ -125,9 +111,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "MinimumWidth",
@@ -139,9 +123,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "MaximumWidth",
@@ -153,9 +135,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Road Type",
@@ -167,9 +147,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Layer Type",
@@ -179,11 +157,9 @@
           "values": null,
           "localText": null,
           "regExFormate": null,
-          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=default",
+          "url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=LayerType&tenantId=mh",
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "No. Of Layers",
@@ -195,9 +171,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Layer Size",
@@ -209,9 +183,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Layer description",
@@ -223,14 +195,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 13,
       "name": "Drainage",
       "code": "013",
@@ -257,9 +227,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Diameter",
@@ -271,9 +239,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Collection Mains",
@@ -285,9 +251,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Trunk Main",
@@ -299,9 +263,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Usage",
@@ -313,14 +275,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 14,
       "name": "Water Ways",
       "code": "014",
@@ -334,7 +294,7 @@
       "depreciationExpenseAccount": null,
       "unitOfMeasurement": "NOS",
       "version": "1.0",
-      "depreciationRate": null,
+      "depreciationRate": 6.66,
       "isDepreciationApplicable": true,
       "assetFieldsDefination": [
         {
@@ -347,9 +307,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Pipe Type",
@@ -361,9 +319,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Diameter",
@@ -375,9 +331,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Material Type",
@@ -389,9 +343,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Type",
@@ -403,9 +355,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Length",
@@ -417,14 +367,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 15,
       "name": "Water Treatment Plant",
       "code": "015",
@@ -451,9 +399,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "reference no",
@@ -465,14 +411,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 16,
       "name": "Generator Plan",
       "code": "016",
@@ -491,7 +435,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 17,
       "name": "Public Lighting",
       "code": "017",
@@ -510,7 +454,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 18,
       "name": "Commercial Vehicles",
       "code": "018",
@@ -529,7 +473,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 19,
       "name": "Other Vehicles",
       "code": "019",
@@ -548,9 +492,9 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 20,
-      "name": "Office Equipment\u2019s, computers and peripherals",
+      "name": "Office Equipment’s, computers and peripherals",
       "code": "020",
       "assetCategoryType": "MOVABLE",
       "parent": null,
@@ -567,7 +511,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 21,
       "name": "Furniture and Fixtures",
       "code": "021",
@@ -583,39 +527,10 @@
       "version": "1.0",
       "depreciationRate": null,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": [
-            
-          ]
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": [
-            
-          ]
-        }
-      ]
+      "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 22,
       "name": "Intangible Assets",
       "code": "022",
@@ -634,7 +549,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 23,
       "name": "Buses",
       "code": "023",
@@ -653,7 +568,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 24,
       "name": "Dumpers etc.",
       "code": "024",
@@ -672,7 +587,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 25,
       "name": "Tipper",
       "code": "025",
@@ -691,7 +606,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 26,
       "name": "Fire Brigade",
       "code": "026",
@@ -710,7 +625,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 27,
       "name": "Tractor",
       "code": "027",
@@ -729,7 +644,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 28,
       "name": "Car",
       "code": "028",
@@ -748,7 +663,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 29,
       "name": "Boat",
       "code": "029",
@@ -767,7 +682,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 30,
       "name": "Air Conditioner",
       "code": "030",
@@ -786,7 +701,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 31,
       "name": "Inverters",
       "code": "031",
@@ -805,7 +720,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 32,
       "name": "UPS",
       "code": "032",
@@ -824,7 +739,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 33,
       "name": "Plotters",
       "code": "033",
@@ -843,7 +758,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 34,
       "name": "Printers",
       "code": "034",
@@ -862,7 +777,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 35,
       "name": "computers and peripherals",
       "code": "035",
@@ -881,7 +796,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 36,
       "name": "Furniture",
       "code": "036",
@@ -897,39 +812,10 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": [
-            
-          ]
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": [
-            
-          ]
-        }
-      ]
+      "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 37,
       "name": "Fittings ",
       "code": "037",
@@ -948,7 +834,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 38,
       "name": "electrical appliances",
       "code": "038",
@@ -967,7 +853,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 39,
       "name": "Fixtures",
       "code": "039",
@@ -983,39 +869,10 @@
       "version": "1.0",
       "depreciationRate": 15,
       "isDepreciationApplicable": true,
-      "assetFieldsDefination": [
-        {
-          "name": "Type",
-          "type": "Select",
-          "isActive": true,
-          "isMandatory": false,
-          "values": "wood,plastic,steel",
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": [
-            
-          ]
-        },
-        {
-          "name": "Color",
-          "type": "Text",
-          "isActive": true,
-          "isMandatory": false,
-          "values": null,
-          "localText": null,
-          "regExFormate": null,
-          "url": null,
-          "order": null,
-          "columns": [
-            
-          ]
-        }
-      ]
+      "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 40,
       "name": "Computer software Licences",
       "code": "040",
@@ -1034,7 +891,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 41,
       "name": "NOC",
       "code": "041",
@@ -1053,7 +910,7 @@
       "assetFieldsDefination": null
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 42,
       "name": "Land",
       "code": "042",
@@ -1080,9 +937,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1094,9 +949,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1108,9 +961,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1122,9 +973,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1136,9 +985,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1150,9 +997,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1164,9 +1009,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1178,14 +1021,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 43,
       "name": "Open Land",
       "code": "043",
@@ -1212,9 +1053,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1226,9 +1065,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1240,9 +1077,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1254,9 +1089,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1268,9 +1101,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1282,9 +1113,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1296,9 +1125,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1310,14 +1137,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 44,
       "name": "Play ground",
       "code": "044",
@@ -1344,9 +1169,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1358,9 +1181,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1372,9 +1193,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1386,9 +1205,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1400,9 +1217,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1414,9 +1229,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1428,9 +1241,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1442,14 +1253,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 45,
       "name": "Open Market",
       "code": "045",
@@ -1476,9 +1285,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1490,9 +1297,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1504,9 +1309,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1518,9 +1321,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1532,9 +1333,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1546,9 +1345,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1560,9 +1357,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1574,14 +1369,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 46,
       "name": "Dumping Ground",
       "code": "046",
@@ -1608,9 +1401,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1622,9 +1413,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1636,9 +1425,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1650,9 +1437,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1664,9 +1449,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1678,9 +1461,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1692,9 +1473,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1706,14 +1485,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 47,
       "name": "Lakes and ponds",
       "code": "047",
@@ -1740,9 +1517,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1754,9 +1529,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1768,9 +1541,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1782,9 +1553,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1796,9 +1565,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1810,9 +1577,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1824,9 +1589,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1838,14 +1601,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 48,
       "name": "Open Space",
       "code": "048",
@@ -1872,9 +1633,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -1886,9 +1645,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -1900,9 +1657,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -1914,9 +1669,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -1928,9 +1681,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -1942,9 +1693,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -1956,9 +1705,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -1970,14 +1717,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 49,
       "name": "Land with Encroachments",
       "code": "049",
@@ -2004,9 +1749,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -2018,9 +1761,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -2032,9 +1773,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -2046,9 +1785,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -2060,9 +1797,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -2074,9 +1809,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -2088,9 +1821,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -2102,14 +1833,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 50,
       "name": "Open Theatre",
       "code": "050",
@@ -2136,9 +1865,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Description",
@@ -2150,9 +1877,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Purpose",
@@ -2164,9 +1889,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Possession Date",
@@ -2178,9 +1901,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Agreement Reference No",
@@ -2192,9 +1913,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area of Land",
@@ -2206,9 +1925,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Holding Type",
@@ -2220,9 +1937,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Survey Number",
@@ -2234,14 +1949,12 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
     },
     {
-      "tenantId": "default",
+      "tenantId": "mh",
       "id": 51,
       "name": "Sewerage",
       "code": "051",
@@ -2268,9 +1981,7 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         },
         {
           "name": "Area",
@@ -2282,84 +1993,43 @@
           "regExFormate": null,
           "url": null,
           "order": null,
-          "columns": [
-            
-          ]
+          "columns": []
         }
       ]
-    },
-    {
-      "tenantId": "default",
-      "id": 1,
-      "name": "Buildings",
-      "code": "001",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    {
-      "tenantId": "default",
-      "id": 60,
-      "name": "Building",
-      "code": "060",
-      "assetCategoryType": "IMMOVABLE",
-      "parent": null,
-      "depreciationMethod": "STRAIGHT_LINE_METHOD",
-      "isAssetAllow": false,
-      "assetAccount": null,
-      "accumulatedDepreciationAccount": null,
-      "revaluationReserveAccount": null,
-      "depreciationExpenseAccount": null,
-      "unitOfMeasurement": "NOS",
-      "version": "1.0",
-      "depreciationRate": null,
-      "isDepreciationApplicable": true,
-      "assetFieldsDefination": null
-    },
-    "{\"tenantId\":\"default\",\"id\":100,\"name\":\"Land\",\"code\":\"100\",\"assetCategoryType\":\"IMMOVABLE\",\"parent\":null,\"depreciationMethod\":\"STRAIGHT_LINE_METHOD\",\"isAssetAllow\":false,\"assetAccount\":null,\"accumulatedDepreciationAccount\":null,\"revaluationReserveAccount\":null,\"depreciationExpenseAccount\":null,\"unitOfMeasurement\":\"NOS\",\"version\":\"1.0\",\"depreciationRate\":null,\"isDepreciationApplicable\":true,\"assetFieldsDefination\":null}"
+    }
   ],
   "ModeOfAcquisition": [
     {
       "id": 1,
-      "tenantId": "default",
+      "tenantId": "mh",
       "code": "ACQUIRED",
       "name": "Acquired",
       "isActive": true
     },
     {
       "id": 2,
-      "tenantId": "default",
+      "tenantId": "mh",
       "code": "CONSTRUCTION",
       "name": "Construction",
       "isActive": true
     },
     {
       "id": 3,
-      "tenantId": "default",
+      "tenantId": "mh",
       "code": "PURCHASE",
       "name": "Purchase",
       "isActive": true
     },
     {
       "id": 4,
-      "tenantId": "default",
+      "tenantId": "mh",
       "code": "TENDER",
       "name": "Tender",
       "isActive": true
     },
     {
       "id": 5,
-      "tenantId": "default",
+      "tenantId": "mh",
       "code": "DONATION",
       "name": "Donation",
       "isActive": true
@@ -2368,7 +2038,7 @@
   "LayerType": [
     {
       "id": 1,
-      "tenantId": "default",
+      "tenantId": "mh",
       "name": "FAKE LAYER 1",
       "description": "./temp/images/headerLogo.png",
       "numberOfLayers": 2,
@@ -2377,7 +2047,7 @@
     },
     {
       "id": 2,
-      "tenantId": "default",
+      "tenantId": "mh",
       "name": "FAKE LAYER 2",
       "description": "./temp/images/mortarlessPavement.jpg",
       "numberOfLayers": 4,
@@ -2390,7 +2060,7 @@
       "id": 1,
       "keyname": "EnableVoucherGeneration",
       "description": "Enable or Disable voucher generation for asset revaluation,disposal and depreciation",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "false",
@@ -2402,7 +2072,7 @@
       "id": 2,
       "keyname": "AssetRevaluationVoucherName",
       "description": "Voucher Name for Asset Revaluation",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "Asset Revaluation",
@@ -2414,7 +2084,7 @@
       "id": 3,
       "keyname": "AssetRevaluationVoucherDescription",
       "description": "Voucher Description for Asset Revaluation",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "Asset Revaluation Journal Voucher",
@@ -2426,7 +2096,7 @@
       "id": 4,
       "keyname": "AssetDisposalVoucherName",
       "description": "Voucher Name for Asset Disposal or Sale",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "Asset Disposal or Sale",
@@ -2438,7 +2108,7 @@
       "id": 5,
       "keyname": "AssetDisposalVoucherDescription",
       "description": "Voucher Description for Asset Disposal or Sale",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "Asset Disposal or Sale Journal Voucher",
@@ -2450,7 +2120,7 @@
       "id": 6,
       "keyname": "AssetDefaultCapitalizedValue",
       "description": "Asset Default Capitalized Value",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "1",
@@ -2462,7 +2132,7 @@
       "id": 7,
       "keyname": "AssetMinimumValue",
       "description": "Asset Minimum Value",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "5000",
@@ -2474,7 +2144,7 @@
       "id": 8,
       "keyname": "DepreciationSeparationDate",
       "description": "Asset Depreciation Separation Date",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "9/30/23/59/59",
@@ -2486,7 +2156,7 @@
       "id": 9,
       "keyname": "AssetDepreciationVoucherName",
       "description": "Voucher Name for Asset Depreciation",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "Asset Depreciation",
@@ -2498,7 +2168,7 @@
       "id": 10,
       "keyname": "AssetDepreciationVoucherDescription",
       "description": "Voucher Description for Asset Depreciation",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "Asset Depreciation Journal Voucher",
@@ -2510,7 +2180,7 @@
       "id": 11,
       "keyname": "AssetBatchSize",
       "description": "Asset Batch Size",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "500",
@@ -2522,7 +2192,7 @@
       "id": 12,
       "keyname": "DepreciationCFactor",
       "description": "Depreciation Multiple Factor For Half Financial Year",
-      "tenantid": "default",
+      "tenantid": "mh",
       "values": [
         {
           "value": "0.5",

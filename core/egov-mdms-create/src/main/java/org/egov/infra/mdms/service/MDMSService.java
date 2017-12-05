@@ -39,6 +39,9 @@ public class MDMSService {
 	@Value("${egov.github.pass}")
 	private String password;
 	
+	@Value("${egov.data.root.folder}")
+	private String dataRootFolder;
+	
 	@Autowired
 	private MDMSCreateRepository mDMSCreateRepository;
 	
@@ -218,7 +221,7 @@ public class MDMSService {
 			throw new CustomException("400", "No data available for this master");
 		}
 		StringBuilder filePath = new StringBuilder();
-		filePath.append(MDMSConstants.DATA_ROOT_FOLDER);
+		filePath.append(dataRootFolder);
 		String[] tenantArray = mDMSCreateRequest.getMasterMetaData().getTenantId().split("[.]");
 		StringBuilder folderPath = new StringBuilder();
 		for(int i = 0; i < tenantArray.length; i++){

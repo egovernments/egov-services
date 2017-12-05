@@ -19,7 +19,7 @@ public class MDMSConstants {
 	
 	
 	public static final String GIT_BLOB_MODE = "100644";
-	public static final String DATA_ROOT_FOLDER = "test-data";
+	//public static final String DATA_ROOT_FOLDER = "test-data";
 	public static final String CONFIG_ARRAY_KEY= "mdms-config";
 
 

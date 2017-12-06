@@ -21,6 +21,9 @@ public class City {
 
     @JsonProperty("name")
     private String name = null;
+    
+    @JsonProperty("code")
+    private String code = null;
 
     @JsonProperty("localName")
     private String localName = null;
@@ -33,6 +36,9 @@ public class City {
 
     @JsonProperty("regionName")
     private String regionName = null;
+    
+    @JsonProperty("ulbGrade")
+    private String ulbGrade = null;
 
     @JsonProperty("longitude")
     private BigDecimal longitude = null;
@@ -41,8 +47,8 @@ public class City {
     private BigDecimal latitude = null;
 
     @Length(max = 100)
-    @JsonProperty("shapeFilePath")
-    private String shapeFilePath = null;
+    @JsonProperty("shapeFileLocation")
+    private String shapeFileLocation = null;
 
     @Length(max = 100)
     @JsonProperty("captcha")

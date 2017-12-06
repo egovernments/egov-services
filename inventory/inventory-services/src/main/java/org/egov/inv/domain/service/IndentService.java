@@ -30,6 +30,7 @@ import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.Tenant;
 import org.egov.inv.model.Uom;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
+import org.egov.inv.persistence.entity.IndentEntity;
 import org.egov.inv.persistence.repository.IndentDetailJdbcRepository;
 import org.egov.inv.persistence.repository.IndentJdbcRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
@@ -286,6 +287,26 @@ public class IndentService extends DomainService {
 
 			Long ll = new Date().getTime();
 			switch (method) {
+			case Constants.ACTION_UPDATE: {
+				if (indents == null) {
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indents", "null");
+				}
+
+				for (Indent indent : indents) {
+					IndentEntity entity = indentRepository.findById(new IndentEntity().toEntity(indent));
+					if (entity.getIndentStatus().equalsIgnoreCase(IndentStatusEnum.CREATED.name())) {
+						continue;
+					} else {
+						errors.addDataError(ErrorCode.UPDATE_NOT_ALLOWED.getCode(), "indent", entity.getIndentStatus(),
+								indent.getIndentNumber());
+					}
+
+				}
+				if(errors.getValidationErrors().size()>0)
+					break;
+
+			}
+
 			case Constants.ACTION_CREATE: {
 				if (indents == null) {
 					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "indents", "null");
@@ -374,6 +395,7 @@ public class IndentService extends DomainService {
 		Map<String, Uom> uomMap = getUoms(tenantId, mapper, requestInfo);
 
 		for (Indent indent : indentRequest.getIndents()) {
+
 			// fetch related items
 
 			/*

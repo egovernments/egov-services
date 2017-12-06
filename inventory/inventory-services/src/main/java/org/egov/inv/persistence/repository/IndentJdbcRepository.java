@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.egov.common.Pagination;
 import org.egov.inv.model.Indent;
+import org.egov.inv.model.Indent.IndentStatusEnum;
 import org.egov.inv.model.IndentSearch;
 import org.egov.inv.persistence.entity.IndentDetailEntity;
 import org.egov.inv.persistence.entity.IndentEntity;
@@ -184,6 +185,24 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 				params.append(" and ");
 			params.append("stateId =:stateId");
 			paramValues.put("stateId", indentSearch.getStateId());
+		}
+		
+		//TODO : Handle the status for these
+		if(indentSearch.getSearchPurpose()!=null  && indentSearch.getSearchPurpose().equalsIgnoreCase("PurchaseOrder"))
+		{
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentStatus =:indentStatus");
+			paramValues.put("indentStatus", IndentStatusEnum.APPROVED.name());
+		}
+		
+		if(indentSearch.getSearchPurpose()!=null  && indentSearch.getSearchPurpose().equalsIgnoreCase("IssueMaterial"))
+		{
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("indentStatus !=:indentStatus");
+			paramValues.put("indentStatus", IndentStatusEnum.APPROVED.name());
+			
 		}
 
 		 

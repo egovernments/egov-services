@@ -60,8 +60,11 @@ public enum ErrorCode {
 			  "Financial Year does not exist for the date {0} ",
 			  "Financial Year does not exist for the date {0}."),
 	CITY_CODE_NOT_AVAILABLE("city.code.not.available",
-			  "City code is not available for tenant {0} ",
-			  "City code is not available for tenant  {0}.")  
+			  "City code is not available for tenant {0} ", 
+			  "City code is not available for tenant  {0}.") ,
+	UPDATE_NOT_ALLOWED("update.not.allowed",
+			"Updation of {0} is not allowed for status {1}",
+			"The {0} of {2} is at status {1}. Updation of this is not allowed")
 	; 
 
 	

@@ -101,7 +101,7 @@ export const parseFinancialYearResponse = (res) => {
             id: item.id,
             startingDate: item.startingDate,
             endingDate: item.endingDate,
-            code: item.finYearRange,
+            finYearRange: item.finYearRange,
             name: item.finYearRange
         }
     })

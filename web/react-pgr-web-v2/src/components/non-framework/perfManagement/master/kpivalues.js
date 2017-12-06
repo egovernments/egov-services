@@ -20,6 +20,7 @@ import Api from '../../../../api/api';
 import UiButton from '../../../framework/components/UiButton';
 import {fileUpload} from '../../../framework/utility/utility';
 
+import {parseFinancialYearResponse} from '../apis/apis';
 
 
 class kpivalues  extends Component{
@@ -104,8 +105,10 @@ class kpivalues  extends Component{
        Api.commonApiPost(url, query, {}, false, false).then(function(res){
            if (res) {
 
+            let fnYear = parseFinancialYearResponse(res);
+            console.log(fnYear);
              //res.MdmsRes.`common-masters
-             self.setState({FinantialYear:res.financialYears});
+             self.setState({FinantialYear:fnYear});
              //self.state.Department = res.MdmsRes['common-masters'].Department;
            }
 
@@ -114,6 +117,7 @@ class kpivalues  extends Component{
          });
 
    }
+
 
 
 

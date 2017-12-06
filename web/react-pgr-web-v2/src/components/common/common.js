@@ -454,6 +454,12 @@ var localization_EN_Data = {
 "reports.lcms.remarksRegardingReferenceToCourt" : "Remarks regarding verification with the reference to court records, Adjustment of Advances",
 "reports.lcms.remarks" : "Remarks",
 
+"MdmsMetadata.masterData.lcms.Court.name": "Court Name",
+"MdmsMetadata.masterData.lcms.Court.code": "Court Code",
+"MdmsMetadata.masterData.lcms.Court.address": "Court Address",
+"MdmsMetadata.masterData.lcms.Court.active": "Court Active",
+
+
       //Water Connection
       "reports.wcms.fromdate":"From Date",
       "reports.wcms.todate":"To Date",

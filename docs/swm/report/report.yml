@@ -92,7 +92,7 @@ ReportDefinitions:
     isMandatory: true
     wrapper: true
     pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid|$..regNumber|$..regNumber
-  - name: vehicletype
+  - name: typeofvehicle
     label: reports.swm.vehicletype
     type: url
     source: egswm_vehicle
@@ -109,4 +109,4 @@ ReportDefinitions:
     type: epoch
     source: egswm_vehiclemaintenancedetails
     isMandatory: true
-  query: select (to_timestamp(vmd.actualmaintenancedate/1000) AT TIME ZONE 'IST')::date as date,vehicle.vehicletype as vehicletype,vehicle.regnumber as registrationnumber,sum(vfd.totalcostincurred) as fuellingcost,sum(vmd.costincurred) as maintenancecost,sum(vfd.totalcostincurred) + sum(vmd.costincurred) as totalcost from egswm_vehicle vehicle, egswm_vehiclefuellingdetails vfd, egswm_vehiclemaintenancedetails vmd where vehicle.regnumber = vfd.vehicle and vehicle.regnumber = vmd.vehicle and vehicle.tenantid = $tenantid and vfd.tenantid = $tenantid and vmd.tenantid = $tenantid and vehicle.regnumber = $vehicle and vehicle.vehicletype = $vehicletype and (to_timestamp(vmd.actualmaintenancedate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date group by date, vehicletype, registrationnumber;
+  query: select (to_timestamp(vmd.actualmaintenancedate/1000) AT TIME ZONE 'IST')::date as date,vehicle.vehicletype as vehicletype,vehicle.regnumber as registrationnumber,sum(vfd.totalcostincurred) as fuellingcost,sum(vmd.costincurred) as maintenancecost,sum(vfd.totalcostincurred) + sum(vmd.costincurred) as totalcost from egswm_vehicle vehicle, egswm_vehiclefuellingdetails vfd, egswm_vehiclemaintenancedetails vmd where vehicle.regnumber = vfd.vehicle and vehicle.regnumber = vmd.vehicle and vehicle.tenantid = $tenantid and vfd.tenantid = $tenantid and vmd.tenantid = $tenantid and vehicle.regnumber = $vehicle and vehicle.vehicletype = $typeofvehicle and (to_timestamp(vmd.actualmaintenancedate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date group by date, vehicletype, registrationnumber;

@@ -100,11 +100,11 @@ public class WorkOrderJdbcRepository extends JdbcRepository {
 
         if (workOrderSearchContract.getLoaNumbers() != null && workOrderSearchContract.getLoaNumbers().size() == 1) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber)");
+            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where lower(loa.loanumber) like :loaNumber and loa.tenantId=:tenantId)");
             paramValues.put("loaNumber", "%" + workOrderSearchContract.getLoaNumbers().get(0).toLowerCase() + "%");
         } else if (workOrderSearchContract.getLoaNumbers() != null) {
             addAnd(params);
-            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers))");
+            params.append("wo.letterofacceptance in (select loa.id from egw_letterofacceptance loa where loa.loanumber in (:loaNumbers) and loa.tenantId=:tenantId)");
             paramValues.put("loaNumbers", workOrderSearchContract.getLoaNumbers());
         }
 

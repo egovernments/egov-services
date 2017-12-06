@@ -22,39 +22,7 @@ import org.egov.works.estimate.persistence.repository.EstimateTechnicalSanctionR
 import org.egov.works.estimate.persistence.repository.FileStoreRepository;
 import org.egov.works.estimate.persistence.repository.WorksMastersRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AbstractEstimateAssetDetail;
-import org.egov.works.estimate.web.contract.AbstractEstimateDetails;
-import org.egov.works.estimate.web.contract.AbstractEstimateRequest;
-import org.egov.works.estimate.web.contract.AbstractEstimateSearchContract;
-import org.egov.works.estimate.web.contract.AbstractEstimateStatus;
-import org.egov.works.estimate.web.contract.Asset;
-import org.egov.works.estimate.web.contract.AssetsForEstimate;
-import org.egov.works.estimate.web.contract.Boundary;
-import org.egov.works.estimate.web.contract.BudgetGroup;
-import org.egov.works.estimate.web.contract.Department;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
-import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.contract.DocumentDetail;
-import org.egov.works.estimate.web.contract.EstimateActivity;
-import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
-import org.egov.works.estimate.web.contract.EstimateOverhead;
-import org.egov.works.estimate.web.contract.EstimateTechnicalSanction;
-import org.egov.works.estimate.web.contract.ExpenditureType;
-import org.egov.works.estimate.web.contract.Function;
-import org.egov.works.estimate.web.contract.Fund;
-import org.egov.works.estimate.web.contract.ModeOfAllotment;
-import org.egov.works.estimate.web.contract.NatureOfWork;
-import org.egov.works.estimate.web.contract.Overhead;
-import org.egov.works.estimate.web.contract.ReferenceType;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.ScheduleOfRate;
-import org.egov.works.estimate.web.contract.Scheme;
-import org.egov.works.estimate.web.contract.SubScheme;
-import org.egov.works.estimate.web.contract.TechnicalSanctionSearchContract;
-import org.egov.works.estimate.web.contract.TypeOfWork;
-import org.egov.works.estimate.web.contract.UOM;
+import org.egov.works.estimate.web.contract.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -433,6 +401,7 @@ public class EstimateValidator {
                 if (abstactEstimate == null)
                     messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
                             Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
+                validateDetailedEstimateExists(detailedEstimate, abstactEstimate,requestInfo, messages);
                 validateMasterData(detailedEstimate, requestInfo, messages);
                 validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
                 validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
@@ -448,6 +417,20 @@ public class EstimateValidator {
         }
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
+    }
+
+    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,RequestInfo requestInfo, Map<String, String> messages) {
+        if(abstractEstimate != null) {
+            DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
+                    .tenantId(detailedEstimate.getTenantId())
+                    .abstractEstimateNumbers(Arrays.asList(abstractEstimate.getAbstractEstimateNumber()))
+                    .ids(Arrays.asList(detailedEstimate.getId())).build();
+            List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+            for(DetailedEstimateHelper detailedEstimateHelper : lists) {
+                if(!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+                    messages.put(Constants.KEY_DE_EXISTS_FOR_AE, Constants.MESSAGE_DE_EXISTS_FOR_AE);
+            }
+        }
     }
 
     private void validateIsModified(DetailedEstimate detailedEstimate, RequestInfo requestInfo,
@@ -517,11 +500,13 @@ public class EstimateValidator {
                     .search(abstractEstimateSearchContract);
             if (!abstractEstimates.isEmpty()) {
                 abstractEstimate = abstractEstimates.get(0);
-                for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
-                    if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
-                            .getCode().equalsIgnoreCase(workIdentificationNumber))
-                        abstractEstimate.setAbstractEstimateDetails(Arrays.asList(abstractEstimateDetails));
-                    return abstractEstimate;
+                if(!abstractEstimate.getStatus().equals(AbstractEstimateStatus.CANCELLED)) {
+                    for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
+                        if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
+                                .getCode().equalsIgnoreCase(workIdentificationNumber))
+                            abstractEstimate.setAbstractEstimateDetails(Arrays.asList(abstractEstimateDetails));
+                        return abstractEstimate;
+                    }
                 }
             }
         }

@@ -1,7 +1,7 @@
 var dat = {
 	"asset.create": {
 		"numCols": 12/3,
-		"url": "",
+		"url": "/egov-mdms-create/v1/_create",
 		"tenantIdRequired": true,
 		"useTimestamp":true,
 		"idJsonPath": "",
@@ -53,7 +53,7 @@ var dat = {
   						"label": "ac.create.asset.sub.categroy",
 							"pattern": "",
 							"type": "singleValueList",
-							"isRequired": true,
+							"isRequired": false,
 							"isDisabled": false,
 							"requiredErrMsg": "",
 							"patternErrMsg": "",
@@ -235,10 +235,16 @@ var dat = {
 	},
 	"asset.search": {
 		"numCols": 12/3,
-		"url": "/asset-services/assetCategories/_search",
+		"url": "/egov-mdms-service/v1/_search",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "AssetCategory",
+		"customActionsAndUrl":[
+			{
+				"actionName":"Add",
+				"url":"/non-framework/asset/master/assetCategoryCreate"
+			}
+		],
 		"groups": [
 			{
 				"label": "ac.search.assetCategory.title",

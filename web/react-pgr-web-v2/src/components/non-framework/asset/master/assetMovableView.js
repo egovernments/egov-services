@@ -589,7 +589,7 @@ printer = () => {
         <form id="printable">
         {!_.isEmpty(mockData) && mockData["asset.view"] && <ShowFields groups={mockData["asset.view"].groups} noCols={mockData["asset.view"].numCols} ui="google" handler={""} getVal={getVal} fieldErrors={fieldErrors} useTimestamp={mockData["asset.view"].useTimestamp || false} addNewCard={""} removeCard={""} screen="view"/>}
           <div>
-            {renderBody()}
+
           </div>
 
             <Card className="uiCard">

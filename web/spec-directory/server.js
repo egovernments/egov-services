@@ -28,7 +28,7 @@ function getType(type) {
         case 'string':
             return 'text';
         case 'boolean':
-            return 'radio';
+            return 'checkbox';
         case 'date':
             return 'datePicker';
         case 'email':

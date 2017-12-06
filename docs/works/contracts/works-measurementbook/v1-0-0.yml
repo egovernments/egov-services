@@ -763,6 +763,7 @@ definitions:
         type: string
         description: Bill sequence number of the Bill
         pattern: '[a-zA-Z0-9-\\]+'
+        maxLength: 50
       approvedDate:
         type: integer
         format: int64
@@ -785,7 +786,12 @@ definitions:
         type: array
         description: Array of Asset details for the Bill
         items:
-          $ref: '#/definitions/AssetForBill'
+          ref: '#/definitions/AssetForBill'
+      mbForContractorBill:
+        type: array
+        description: Array of Measurement Book for the Bill
+        items:
+          $ref: '#/definitions/MeasurementBookForContractorBill'    
       letterOfAcceptanceEstimate:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LetterOfAcceptanceEstimate"
         description: LOA and Estimate reference for the Bill
@@ -796,6 +802,10 @@ definitions:
         description: State id of the workflow
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false  
     required:
       - tenantId
       - letterOfAcceptanceEstimate
@@ -828,14 +838,49 @@ definitions:
         type: number
         format: BigDecimal
         description: Asset wise Amount for the Bill
+        minLength: 1
+        maxLength: 20
       contractorBill:
         $ref: '#/definitions/ContractorBill'
         description: Bill reference in the Asset
       auditDetails:
         $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false  
     required:
       - tenantId
       - asset
+      - amount
+      - contractorBill
+      
+  MeasurementBookForContractorBill:
+    type: object
+    description: Measurement Book information for the Contractor Bill
+    properties:
+      id:
+        type: string
+        description: Unique Identifier of the MB for Contractor Bill
+      tenantId:
+        type: string
+        description: Tenant id of the MB for Contractor Bill
+        maxLength: 128
+        minLength: 2
+      measurementBook:
+        $ref: '#/definitions/MeasurementBook'
+        description: Measurement Book Reference in the MB for Contractor Bill
+      contractorBill:
+        $ref: '#/definitions/ContractorBill'
+        description: Bill reference in the MB for Contractor Bill
+      auditDetails:
+        $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
+      deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false  
+    required:
+      - tenantId
       - contractorBill
       
 tags:

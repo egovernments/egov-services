@@ -144,6 +144,19 @@ public class AbstractEstimateJdbcRepository extends JdbcRepository {
             paramValues.put("tenantId", abstractEstimateSearchContract.getTenantId());
 
 		}
+		
+        if (abstractEstimateSearchContract.getCouncilSanctionNumbers() != null
+                && !abstractEstimateSearchContract.getCouncilSanctionNumbers().isEmpty()
+                && abstractEstimateSearchContract.getCouncilSanctionNumbers().size() == 1) {
+            addAnd(params);
+            params.append("lower(estimate.councilResolutionNumber) like :councilSanctionNumbers");
+            paramValues.put("councilSanctionNumbers",
+                    '%' + abstractEstimateSearchContract.getCouncilSanctionNumbers().get(0).toLowerCase() + '%');
+        } else if (abstractEstimateSearchContract.getCouncilSanctionNumbers() != null) {
+            addAnd(params);
+            params.append("estimate.councilResolutionNumber in (:councilSanctionNumbers)");
+            paramValues.put("councilSanctionNumbers", abstractEstimateSearchContract.getCouncilSanctionNumbers());
+        }
 
         params.append(" and estimate.deleted = false");
 		if (params.length() > 0) {

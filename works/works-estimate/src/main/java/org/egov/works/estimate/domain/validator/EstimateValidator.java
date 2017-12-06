@@ -75,8 +75,9 @@ public class EstimateValidator {
             if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
                 validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (StringUtils.isNotBlank(estimate.getAdminSanctionNumber()))
-               validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
+                validateAdminSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             validateEstimateAssetDetails(estimate, abstractEstimateRequest.getRequestInfo(), messages);
+            validateCouncilSanctionDetails(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (estimate.getId() != null)
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             if (!messages.isEmpty())
@@ -85,20 +86,22 @@ public class EstimateValidator {
     }
 
     private void validateWardAndLocalityMandatory(Map<String, String> messages, final AbstractEstimate estimate) {
-        if(estimate.getWard() == null || (estimate.getWard() != null && StringUtils.isBlank(estimate.getWard().getCode()))) {
+        if (estimate.getWard() == null || (estimate.getWard() != null && StringUtils.isBlank(estimate.getWard().getCode()))) {
             messages.put(Constants.KEY_WARDCODE_INVALID, Constants.MESSAGE_WARDCODE_INVALID);
         }
-        if(estimate.getLocality() == null || (estimate.getLocality() != null && StringUtils.isBlank(estimate.getLocality().getCode()))) {
+        if (estimate.getLocality() == null
+                || (estimate.getLocality() != null && StringUtils.isBlank(estimate.getLocality().getCode()))) {
             messages.put(Constants.KEY_LOCALITYCODE_INVALID, Constants.MESSAGE_LOCALITYCODE_INVALID);
         }
     }
 
     private void validatePMCData(Map<String, String> messages, final AbstractEstimate estimate) {
-        if(estimate.getPmcRequired() && estimate.getPmcType() == null) {
+        if (estimate.getPmcRequired() && estimate.getPmcType() == null) {
             messages.put(Constants.KEY_PMCTYPE_INVALID, Constants.MESSAGE_PMCTYPE_INVALID);
         }
-        
-        if(estimate.getPmcRequired() && estimate.getPmcType() != null && estimate.getPmcType().equalsIgnoreCase("Panel") && estimate.getPmcName() == null) {
+
+        if (estimate.getPmcRequired() && estimate.getPmcType() != null && estimate.getPmcType().equalsIgnoreCase("Panel")
+                && estimate.getPmcName() == null) {
             messages.put(Constants.KEY_PMCNAME_INVALID, Constants.MESSAGE_PMCNAME_INVALID);
         }
     }
@@ -129,6 +132,27 @@ public class EstimateValidator {
                     && !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId())))
                 messages.put(Constants.KEY_UNIQUE_ADMINSANCTIONNUMBER, Constants.MESSAGE_UNIQUE_ADMINSANCTIONNUMBER);
         }
+    }
+
+    private void validateCouncilSanctionDetails(RequestInfo requestInfo, Boolean isNew, Map<String, String> messages,
+            final AbstractEstimate estimate) {
+        if (estimate.getCouncilResolutionDate() != null && estimate.getCouncilResolutionDate() > new Date().getTime())
+            messages.put(Constants.KEY_FUTUREDATE_COUNCILRESOLUTIONDATE,
+                    Constants.MESSAGE_FUTUREDATE_COUNCILRESOLUTIONDATE);
+        if (estimate.getCouncilResolutionDate() != null && estimate.getCouncilResolutionDate() < estimate.getDateOfProposal())
+            messages.put(Constants.KEY_COUNCILRESOLUTION_PROPOSAL_DATE, Constants.MESSAGE_COUNCILRESOLUTION_PROPOSAL_DATE);
+        if (estimate.getCouncilResolutionNumber() != null) {
+            AbstractEstimateSearchContract searchContract = new AbstractEstimateSearchContract();
+            searchContract.setCouncilSanctionNumbers(Arrays.asList(estimate.getCouncilResolutionNumber()));
+
+            List<AbstractEstimate> oldEstimates = abstractEstimateService.search(searchContract, requestInfo)
+                    .getAbstractEstimates();
+            if ((isNew && !oldEstimates.isEmpty())
+                    || (!isNew && !oldEstimates.isEmpty()
+                            && !estimate.getId().equalsIgnoreCase(oldEstimates.get(0).getId())))
+                messages.put(Constants.KEY_UNIQUE_COUNCILRESOLUTIONNUMBER, Constants.MESSAGE_UNIQUE_COUNCILRESOLUTIONNUMBER);
+        }
+
     }
 
     private void validateAbstractEstimateNumber(RequestInfo requestInfo, Boolean isNew, Map<String, String> messages,
@@ -166,14 +190,14 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED,
                         Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED);
             }
-            
+
             if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null && aed.getGrossAmountBilled() <= 0) {
                 messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED,
                         Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED);
             }
-            
 
-            if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
+            if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null
+                    && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
                 messages.put(Constants.KEY_INVALID_GROSSBILLEDAMOUNT, Constants.MESSAGE_INVALID_GROSSBILLEDAMOUNT);
 
         }
@@ -401,7 +425,7 @@ public class EstimateValidator {
                 if (abstactEstimate == null)
                     messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
                             Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
-                validateDetailedEstimateExists(detailedEstimate, abstactEstimate,requestInfo, messages);
+                validateDetailedEstimateExists(detailedEstimate, abstactEstimate, requestInfo, messages);
                 validateMasterData(detailedEstimate, requestInfo, messages);
                 validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
                 validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
@@ -419,15 +443,16 @@ public class EstimateValidator {
             throw new CustomException(messages);
     }
 
-    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,RequestInfo requestInfo, Map<String, String> messages) {
-        if(abstractEstimate != null && StringUtils.isBlank(detailedEstimate.getId())) {
+    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
+            RequestInfo requestInfo, Map<String, String> messages) {
+        if (abstractEstimate != null) {
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
                     .abstractEstimateNumbers(Arrays.asList(abstractEstimate.getAbstractEstimateNumber())).build();
 
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
-            for(DetailedEstimateHelper detailedEstimateHelper : lists) {
-                if(!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+            for (DetailedEstimateHelper detailedEstimateHelper : lists) {
+                if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
                     messages.put(Constants.KEY_DE_EXISTS_FOR_AE, Constants.MESSAGE_DE_EXISTS_FOR_AE);
             }
         }
@@ -500,7 +525,7 @@ public class EstimateValidator {
                     .search(abstractEstimateSearchContract);
             if (!abstractEstimates.isEmpty()) {
                 abstractEstimate = abstractEstimates.get(0);
-                if(!abstractEstimate.getStatus().equals(AbstractEstimateStatus.CANCELLED)) {
+                if (!abstractEstimate.getStatus().equals(AbstractEstimateStatus.CANCELLED)) {
                     for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
                         if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
                                 .getCode().equalsIgnoreCase(workIdentificationNumber))

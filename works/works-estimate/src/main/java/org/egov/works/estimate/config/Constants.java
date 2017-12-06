@@ -333,6 +333,12 @@ public class Constants {
     public static final String KEY_LOCALITYCODE_INVALID = "INVALID_LOCALITY";
     public static final String MESSAGE_LOCALITYCODE_INVALID = "Please provide valid data for Locality";
     
+    public static final String KEY_FUTUREDATE_COUNCILRESOLUTIONDATE = "INVALID_COUNCILRESOLUTIONDATE";
+    public static final String MESSAGE_FUTUREDATE_COUNCILRESOLUTIONDATE = "Council Resolution Date cannot be future date";
+    
+    public static final String KEY_COUNCILRESOLUTION_PROPOSAL_DATE = "INVALID_ADMINSANCTION_PROPOSAL_DATE";
+    public static final String MESSAGE_COUNCILRESOLUTION_PROPOSAL_DATE = "Council Resolution date should be on or after the Date of Proposal";
+
 
     
 }

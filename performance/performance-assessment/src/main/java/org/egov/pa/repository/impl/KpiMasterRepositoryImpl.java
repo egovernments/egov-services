@@ -148,19 +148,22 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 	
 	@Override
-	public List<KPI> getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId) {
+	public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, List<String> finYearList,
+			Long departmentId) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
 		String query = queryBuilder.getKpiByCode(kpiCodeList, finYearList, departmentId, preparedStatementValues);
-		log.info("QUERY to fetch KPI Details : "  + query);
+		log.info("QUERY to fetch KPI Details : " + query);
 		KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
 		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
 		List<KPI> kpiList = new ArrayList<>();
-		Map<String, KPI> kpiMap = mapper.kpiMap; 
+		Map<String, KPI> kpiMap = mapper.kpiMap;
 		Iterator<Entry<String, KPI>> itr = kpiMap.entrySet().iterator();
-		while(itr.hasNext()) { 
-			kpiList.add(itr.next().getValue()); 
+		while (itr.hasNext()) {
+			kpiList.add(itr.next().getValue());
 		}
-		mapTargetToKpi(mapper.kpiTargetMap, kpiList); 
+		if (getTargets) {
+			mapTargetToKpi(mapper.kpiTargetMap, kpiList);
+		}
 		return kpiList;
 	}
 	

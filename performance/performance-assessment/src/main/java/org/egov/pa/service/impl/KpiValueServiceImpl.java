@@ -127,7 +127,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 		}
 		List<KPI> kpiList = new ArrayList<>();
 		if (kpiCodeList.size() > 0) {
-			kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList, kpiValueSearchReq.getFinYear(), kpiValueSearchReq.getDepartmentId());
+			kpiList = kpiMasterRepository.getKpiByCode(Boolean.TRUE,kpiCodeList, kpiValueSearchReq.getFinYear(), kpiValueSearchReq.getDepartmentId());
 		}
 		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);
 	}

@@ -160,14 +160,6 @@ public class PerformanceAssessmentQueryBuilder {
 		return selectQuery.toString();
     }
     
-    public String getTargetSearchQuery(KPITargetGetRequest getReq) { 
-    	StringBuilder sb = new StringBuilder("SELECT id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, finyear as finYear, (select distinct name from egpa_kpi_master where code = target.kpicode) as kpiName " 
-    			+ " FROM egpa_kpi_master_target target"); 
-    	if(null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0){ 
-    		sb.append(" WHERE kpicode IN (:kpiCode) " ) ;
-    	}
-    	return sb.toString(); 
-    }
     
     public String getDocumentForKpiValue() { 
     	return " SELECT documentcode as code, kpicode as kpiCode, filestoreid as fileStoreId, id, valueid as valueId " 
@@ -218,6 +210,40 @@ public class PerformanceAssessmentQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" target.finyear IN " + getStringQuery(finYearList));
         }
+    }
+    
+    public String getTargetSearchQuery(KPITargetGetRequest getReq, final List preparedStatementValues) { 
+    	
+    	final StringBuilder selectQuery = new StringBuilder("SELECT target.id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, target.finyear as finYear, master.name " 
+    			+ " FROM egpa_kpi_master_target target, egpa_kpi_master master "  
+    			+ " WHERE master.code = target.kpicode"); 
+    	getTargetSearchWhereClause(selectQuery, preparedStatementValues, getReq);
+		LOGGER.info("Query : " + selectQuery);
+		return selectQuery.toString();
+    }
+    
+    @SuppressWarnings({ "unchecked", "rawtypes" })
+    private void getTargetSearchWhereClause(final StringBuilder selectQuery, List<Object> preparedStatementValues, KPITargetGetRequest getReq) {
+        if (!(null == getReq.getKpiCode() && null == getReq.getFinYear() && null == getReq.getDepartmentId()))
+        	selectQuery.append(" AND ");
+        
+        boolean isAppendAndClause = false;
+
+        if (null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.code IN " + getStringQuery(getReq.getKpiCode()));
+        }
+        
+        if (null != getReq.getFinYear() && getReq.getFinYear().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" target.finyear IN " + getStringQuery(getReq.getFinYear()));
+        }
+        
+        if (null != getReq.getDepartmentId() && getReq.getDepartmentId().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.department IN " + getIdQuery(getReq.getDepartmentId()));
+        }
+        
     }
     
     
@@ -335,6 +361,16 @@ public class PerformanceAssessmentQueryBuilder {
             query.append("'" + idList.get(0).toString() + "'");
             for (int i = 1; i < idList.size(); i++)
                 query.append(",'" + idList.get(i) + "'");
+        }
+        return query.append(")").toString();
+    }
+    
+    private static String getIdQuery(final List<Long> idList) {
+        final StringBuilder query = new StringBuilder("(");
+        if (idList.size() >= 1) {
+            query.append(idList.get(0).toString());
+            for (int i = 1; i < idList.size(); i++)
+                query.append(", " + idList.get(i));
         }
         return query.append(")").toString();
     }

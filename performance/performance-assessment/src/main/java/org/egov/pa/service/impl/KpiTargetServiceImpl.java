@@ -116,11 +116,13 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq) {
 		List<KpiTarget> targetList = kpiTargetRepository.searchKpiTargets(getReq);
 		List<String> kpiCodeList = new ArrayList<>();
-		for(KpiTarget target : targetList) { 
+		for (KpiTarget target : targetList) {
 			kpiCodeList.add(target.getKpiCode());
 		}
-		List<KPI> kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList, getReq.getFinYear(), 0l);
-		sortKpisToTarget(targetList, kpiList);
+		if (null != kpiCodeList && kpiCodeList.size() > 0) {
+			List<KPI> kpiList = kpiMasterRepository.getKpiByCode(Boolean.FALSE, kpiCodeList, getReq.getFinYear(), 0l);
+			sortKpisToTarget(targetList, kpiList);
+		}
 		return targetList;
 	}
 	

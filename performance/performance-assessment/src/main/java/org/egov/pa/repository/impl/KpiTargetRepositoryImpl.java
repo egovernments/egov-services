@@ -1,6 +1,6 @@
 package org.egov.pa.repository.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.egov.pa.model.KpiTarget;
@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +34,6 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
-    @Autowired
     private PerformanceAssessmentQueryBuilder queryBuilder;
 	
 	@Override
@@ -54,13 +50,9 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 
 	@Override
 	public List<KpiTarget> searchKpiTargets(KPITargetGetRequest getReq) {
-    	String query = queryBuilder.getTargetSearchQuery(getReq);  
-    	final HashMap<String, Object> parametersMap = new HashMap<>();
-    	if(null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0) {
-    		parametersMap.put("kpiCode", getReq.getKpiCode());
-    	}
-		List<KpiTarget> list = namedParameterJdbcTemplate.query(query,
-                parametersMap, new BeanPropertyRowMapper<>(KpiTarget.class));
+		final List<Object> preparedStatementValues = new ArrayList<>();
+    	String query = queryBuilder.getTargetSearchQuery(getReq, preparedStatementValues);
+    	List<KpiTarget> list = jdbcTemplate.query(query, preparedStatementValues.toArray(), new BeanPropertyRowMapper<>(KpiTarget.class));
 		return list;
 	}
 	

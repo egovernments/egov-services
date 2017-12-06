@@ -80,11 +80,13 @@ public class KpiTargetController implements KpiTarget{
 	@Override
 	public ResponseEntity<?> search(@RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
+			 @RequestParam(value="departmentId", required = false) List<Long> departmentId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
-		log.info("KPI Get Target Request as recieved in Controller : " + kpiCodes + finYearList);
+		log.info("KPI Get Target Request as recieved in Controller : " + kpiCodes + finYearList + departmentId);
 		KPITargetGetRequest getReq = new KPITargetGetRequest(); 
 		getReq.setFinYear(finYearList);
 		getReq.setKpiCode(kpiCodes);
+		getReq.setDepartmentId(departmentId);
 		List<org.egov.pa.model.KpiTarget> targetList = kpiTargetService.searchKpiTarget(getReq); 
 		return getSearchSuccessResponse(targetList, requestInfo.getRequestInfo());
 	}

@@ -30,6 +30,6 @@ public interface KpiMasterRepository {
     
     public List<DocumentTypeContract> getDocumentForKpi(String kpiCode);
     
-    public List<KPI> getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId); 
+    public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, List<String> finYearList, Long departmentId); 
     
 }

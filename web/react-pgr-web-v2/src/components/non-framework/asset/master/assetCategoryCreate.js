@@ -304,12 +304,11 @@ class assetCategoryCreate extends Component {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
+      let mockObj = specifications[`asset.create`];
 
       var id = self.props.match.params.id && decodeURIComponent(self.props.match.params.id);
       if(id){
         //console.log('id', id);
-        let mockObj = specifications[`asset.create`];
-
         if(mockObj.onloadFetchUrl){
           let params = JSON.parse(id);
           self.props.setLoadingStatus('loading');
@@ -342,6 +341,13 @@ class assetCategoryCreate extends Component {
 
 
       }
+
+      Promise.all([
+        Api.commonApiPost('/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory', {}, {}, false, mockObj.useTimestamp)
+      ]).then((responses)=>{
+        let searchAPI = responses[0];
+        this.setState({createId:searchAPI.MdmsRes.ASSET.AssetCategory.length+101})
+      })
 
     }
     var res = self.handleMasterData(specifications, this.props.moduleName);
@@ -680,10 +686,14 @@ MdmsCriteria: {
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
 
-    if(formData.AssetCategory){
-      formData.AssetCategory[0].id = 1;
-      formData.AssetCategory[0].code = 1;
+    if(formData.MasterMetaData){
+      formData.MasterMetaData.masterData[0].id = this.state.createId;
+      formData.MasterMetaData.masterData[0].code = this.state.createId;
+      //need to work on the logic
+      formData.MasterMetaData.masterData[0].isAssetAllow = true;
+      formData.MasterMetaData.masterData[0].tenantId = localStorage.getItem('tenantId');
     }
+
     console.log(formData);
 
     if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired) {
@@ -696,6 +706,24 @@ MdmsCriteria: {
         }
       } else
         formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["tenantId"] = localStorage.getItem("tenantId") || "default";
+    }
+
+    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].moduleName) {
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["moduleName"] = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].moduleName;
+        }
+      } else
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["moduleName"] = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].moduleName;
+    }
+
+    if(self.props.moduleName && self.props.actionName && self.props.metaData && self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].masterName) {
+      if(formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for(var i=0; i< formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]["masterName"] = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].masterName;
+        }
+      } else
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]["masterName"] = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].masterName;
     }
 
     if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {

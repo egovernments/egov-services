@@ -5,8 +5,9 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp":true,
 		"idJsonPath": "",
+		"moduleName": "ASSET",
+   	"masterName": "AssetCategory",
 		"objectName": "MasterMetaData",
-
 		"groups": [
 			{
 				"label": "ac.create.title",
@@ -45,7 +46,7 @@ var dat = {
 							"depedants": [{
 								"jsonPath": "MasterMetaData.masterData[0].parent",
 								"type": "dropDown",
-								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%3D%3D'{AssetCategory[0].assetCategoryType}')%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
+								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%3D%3D'{MasterMetaData.masterData[0].assetCategoryType}')%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
 							}]
   					},
 						{
@@ -236,7 +237,7 @@ var dat = {
 	},
 	"asset.search": {
 		"numCols": 12/3,
-		"url": "/egov-mdms-service/v1/_search",
+		"url": "/egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory",
 		"tenantIdRequired": true,
 		"useTimestamp": true,
 		"objectName": "AssetCategory",
@@ -270,6 +271,14 @@ var dat = {
 						"pattern": "",
 						"type": "singleValueList",
 						"url": "",
+						"defaultValue": [{
+							"key": "IMMOVABLE",
+							"value": "IMMOVABLE"
+							},
+							{
+							"key": "MOVABLE",
+							"value": "MOVABLE"
+			      }],
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
@@ -279,10 +288,10 @@ var dat = {
 			}
 		],
 		"result": {
-			"header": [{label: "code"},{label: "ac.create.asset.category.name"}, {label: "ac.create.asset.asset.category.type"}, {label: "Parent Category"}, {label: "ac.create.unit.of.measurement"}],
-			"values": ["code","name", "assetCategoryType", "parent", "unitOfMeasurement"],
-			"resultPath": "AssetCategory",
-			// "rowClickUrlUpdate": "/update/wc/categoryType/{id}",
+			"header": [{label: "code"},{label: "ac.create.asset.category.name"}, {label: "ac.create.asset.asset.category.type"}, {label: "ac.create.unit.of.measurement"}],
+			"values": ["code","name", "assetCategoryType", "unitOfMeasurement"],
+			"resultPath": "MdmsRes.ASSET.AssetCategory",
+			"rowClickUrlUpdate": "/non-framework/asset/master/assetCategoryCreate/{id}",
 			// "rowClickUrlView": "/view/wc/categoryType/{id}"
 			}
 	}

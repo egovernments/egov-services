@@ -300,6 +300,7 @@ const menuConvention={
 //SWM Reports
 
 "Solid Waste Management.SWM Reports.Dumping Ground Detail Report": "/report/swm/DumpingGroundDetailReport",
+"Solid Waste Management.SWM Reports.Expenditure Incurred On Transportation Report": "/report/swm/ExpenditureIncurredReport",
 
 
 //legal case

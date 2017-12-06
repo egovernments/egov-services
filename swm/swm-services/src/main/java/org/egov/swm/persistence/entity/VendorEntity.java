@@ -44,7 +44,7 @@ public class VendorEntity {
         vendor.setTenantId(tenantId);
         vendor.setName(name);
         vendor.setRegistrationNo(registrationNo);
-        vendor.setSupplier(Supplier.builder().contactNo(supplier).build());
+        vendor.setSupplier(Supplier.builder().supplierNo(supplier).build());
         vendor.setDetails(details);
         vendor.setAuditDetails(new AuditDetails());
         vendor.getAuditDetails().setCreatedBy(createdBy);

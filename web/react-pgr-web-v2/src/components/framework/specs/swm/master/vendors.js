@@ -7,7 +7,7 @@ var dat = {
      "groups":[
         {
             "name":"search",
-            "label":"swm.search.title",
+            "label":"swm.search.vendor.title",
             "fields":[
               {
                  "name":"vendorNos",

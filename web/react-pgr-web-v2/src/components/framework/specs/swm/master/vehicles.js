@@ -7,7 +7,7 @@ var dat = {
     "groups": [
       {
         "name": "VehicleDetails1",
-        "label": "swm.vehicles.create.group.title.VehicleDetails1",
+        "label": "swm.vehicles.search.title",
         "fields": [
           {
             "name": "vehicleTypeCode",

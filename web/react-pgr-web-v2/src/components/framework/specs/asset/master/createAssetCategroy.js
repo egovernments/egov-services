@@ -5,7 +5,8 @@ var dat = {
 		"tenantIdRequired": true,
 		"useTimestamp":true,
 		"idJsonPath": "",
-		"objectName": "AssetCategory",
+		"objectName": "MasterMetaData",
+
 		"groups": [
 			{
 				"label": "ac.create.title",
@@ -13,7 +14,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "SubCategoryName",
-							"jsonPath": "AssetCategory[0].name",
+							"jsonPath": "MasterMetaData.masterData[0].name",
 							"label": "ac.create.asset.category.name",
 							"pattern": "^.[a-zA-Z. ]{2,99}$",
 							"type": "text",
@@ -24,7 +25,7 @@ var dat = {
 						},
             {
   						"name": "AssetCategoryType",
-  						"jsonPath": "AssetCategory[0].assetCategoryType",
+  						"jsonPath": "MasterMetaData.masterData[0].assetCategoryType",
   						"label": "ac.create.asset.asset.category.type",
   						"pattern": "",
   						"type": "singleValueList",
@@ -42,14 +43,14 @@ var dat = {
 								"value": "MOVABLE"
 							}],
 							"depedants": [{
-								"jsonPath": "AssetCategory[0].parent",
+								"jsonPath": "MasterMetaData.masterData[0].parent",
 								"type": "dropDown",
 								"pattern": "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory&filter=%5B%3F(%20%40.isAssetAllow%20%3D%3D%20false%20%26%26%20%40.assetCategoryType%3D%3D'{AssetCategory[0].assetCategoryType}')%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name"
 							}]
   					},
 						{
 							"name": "AssetCategory",
-							"jsonPath": "AssetCategory[0].parent",
+							"jsonPath": "MasterMetaData.masterData[0].parent",
   						"label": "ac.create.asset.sub.categroy",
 							"pattern": "",
 							"type": "singleValueList",
@@ -61,7 +62,7 @@ var dat = {
 						},
             {
   						"name": "DepericiationMethod",
-  						"jsonPath": "AssetCategory[0].depreciationMethod",
+  						"jsonPath": "MasterMetaData.masterData[0].depreciationMethod",
   						"label": "ac.create.depericiation.method",
   						"pattern": "",
   						"type": "text",
@@ -74,7 +75,7 @@ var dat = {
   					},
             {
   						"name": "UnitOfMeasurement",
-  						"jsonPath": "AssetCategory[0].unitOfMeasurement",
+  						"jsonPath": "MasterMetaData.masterData[0].unitOfMeasurement",
   						"label": "ac.create.unit.of.measurement",
   						"pattern": "",
   						"type": "singleValueList",
@@ -87,7 +88,7 @@ var dat = {
   					},
 						{
 							"name": "IsDepreciationApplicable",
-							"jsonPath": "AssetCategory[0].isDepreciationApplicable",
+							"jsonPath": "MasterMetaData.masterData[0].isDepreciationApplicable",
 							"label": "ac.create.depreciation.applicable",
 							"url": "",
 							"pattern": "",
@@ -107,7 +108,7 @@ var dat = {
 						},
             {
   						"name": "DepericiationRate",
-  						"jsonPath": "AssetCategory[0].depreciationRate",
+  						"jsonPath": "MasterMetaData.masterData[0].depreciationRate",
   						"label": "ac.create.depericiation.rate",
   						"pattern": "^[1-9]\\d{0,3}(\\.\\d{0,3})*(,\\d+)?$",
   						"type": "number",
@@ -129,7 +130,7 @@ var dat = {
 				"fields": [
 						{
 							"name": "additionalName",
-							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].name",
+							"jsonPath": "MasterMetaData.masterData[0].assetFieldsDefination[0].name",
 							"label": "ac.create.additional.field.name",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -140,7 +141,7 @@ var dat = {
 						},
             {
   						"name": "additionalDataType",
-  						"jsonPath": "AssetCategory[0].assetFieldsDefination[0].type",
+  						"jsonPath": "MasterMetaData.masterData[0].assetFieldsDefination[0].type",
   						"label": "ac.create.additional.field.data.type",
   						"pattern": "",
   						"type": "singleValueList",
@@ -185,7 +186,7 @@ var dat = {
   					},
             {
   						"name": "Active",
-  						"jsonPath": "AssetCategory[0].assetFieldsDefination[0].isActive",
+  						"jsonPath": "MasterMetaData.masterData[0].assetFieldsDefination[0].isActive",
   						"label": "wc.create.active",
   						"pattern": "",
   						"type": "checkbox",
@@ -197,7 +198,7 @@ var dat = {
   					},
             {
   						"name": "Mandatory",
-  						"jsonPath": "AssetCategory[0].assetFieldsDefination[0].isMandatory",
+  						"jsonPath": "MasterMetaData.masterData[0].assetFieldsDefination[0].isMandatory",
   						"label": "wc.create.mandatory",
   						"pattern": "",
   						"type": "checkbox",
@@ -209,7 +210,7 @@ var dat = {
   					},
             {
 							"name": "additionalOrder",
-							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].order",
+							"jsonPath": "MasterMetaData.masterData[0].assetFieldsDefination[0].order",
 							"label": "ac.create.additional.field.order",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -220,7 +221,7 @@ var dat = {
 						},
             {
 							"name": "additionalValue",
-							"jsonPath": "AssetCategory[0].assetFieldsDefination[0].values",
+							"jsonPath": "MasterMetaData.masterData[0].assetFieldsDefination[0].values",
 							"label": "ac.create.additional.field.value",
 							"pattern": "^[\s.]*([^\s.][\s.]*){0,100}$",
 							"type": "text",
@@ -272,15 +273,7 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": "",
-						"defaultValue": [{
-						"key": "IMMOVABLE",
-						"value": "IMMOVABLE"
-					},
-					{
-							"key": "MOVABLE",
-							"value": "MOVABLE"
-						}]
+						"patternErrMsg": ""
 					}
 				]
 			}

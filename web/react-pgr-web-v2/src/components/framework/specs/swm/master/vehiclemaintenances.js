@@ -198,7 +198,7 @@ var dat = {
           },
           {
              "name":"name",
-             "jsonPath":"vehicleMaintenances[0].vehicle.vehicleType.code",
+             "jsonPath":"vehicleMaintenances[0].vehicle.vehicleType.name",
              "label":"swm.vehicles.create.vehicleType",
              "pattern":"",
              "type":"text",

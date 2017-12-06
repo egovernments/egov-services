@@ -2835,6 +2835,7 @@ var localization_EN_Data = {
  "inventory.store.search.title":"Search Store",
  "inventory.store.code" : "Store Code",
  "inventory.store.name" : "Store Name",
+ "inventory.currentRate":"Current Rate",
  "inventory.currentYear": "Current Year(From 01/Jan to 01/Mar)",
  "inventory.previousYear": "Previous Year(From 01/Jan to 31/Dec)",
 

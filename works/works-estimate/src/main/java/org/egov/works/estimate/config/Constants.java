@@ -323,6 +323,13 @@ public class Constants {
 
     public static final String KEY_PMCNAME_INVALID = "INVALID_PMCNAME";
     public static final String MESSAGE_PMCNAME_INVALID = "Please provide valid data for PMC Name";
+    
+    public static final String KEY_WARDCODE_INVALID = "INVALID_WARDCODE";
+    public static final String MESSAGE_WARDCODE_INVALID = "Please provide valid data for Ward";
+    
+    public static final String KEY_LOCALITYCODE_INVALID = "INVALID_LOCALITY";
+    public static final String MESSAGE_LOCALITYCODE_INVALID = "Please provide valid data for Locality";
+    
 
     
 }

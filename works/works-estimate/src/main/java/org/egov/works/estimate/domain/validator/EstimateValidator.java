@@ -98,6 +98,7 @@ public class EstimateValidator {
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
             validateEstimateDetails(estimate, messages);
             validatePMCData(messages, estimate);
+            validateWardAndLocalityMandatory(messages, estimate);
             if (estimate.getSpillOverFlag())
                 validateSpillOverData(estimate, messages);
             validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages, isNew);
@@ -112,6 +113,15 @@ public class EstimateValidator {
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             if (!messages.isEmpty())
                 throw new CustomException(messages);
+        }
+    }
+
+    private void validateWardAndLocalityMandatory(Map<String, String> messages, final AbstractEstimate estimate) {
+        if(estimate.getWard() == null || (estimate.getWard() != null && StringUtils.isBlank(estimate.getWard().getCode()))) {
+            messages.put(Constants.KEY_WARDCODE_INVALID, Constants.MESSAGE_WARDCODE_INVALID);
+        }
+        if(estimate.getLocality() == null || (estimate.getLocality() != null && StringUtils.isBlank(estimate.getLocality().getCode()))) {
+            messages.put(Constants.KEY_LOCALITYCODE_INVALID, Constants.MESSAGE_LOCALITYCODE_INVALID);
         }
     }
 

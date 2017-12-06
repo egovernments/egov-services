@@ -146,6 +146,7 @@ public class LetterOfAcceptanceService {
         activity.setTenantId(letterOfAcceptanceEstimate.getTenantId());
         activity.setLetterOfAcceptanceEstimate(letterOfAcceptanceEstimate.getId());
         activity.setAuditDetails(workOrderUtils.setAuditDetails(requestInfo, isUpdate));
+        activity.setParent(estimateActivity.getParent());
         createLOAMSheet(activity, estimateActivity, requestInfo, isUpdate);
         loaActivities.add(activity);
     }

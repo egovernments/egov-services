@@ -215,6 +215,7 @@ var dat = {
                     "type": "singleValueList",
                     "url": "egov-mdms-service/v1/_get?tenantId="+localStorage.tenantId.split(".")[0]+"&moduleName=common-masters&masterName=Department|$..id|$..name",
                     "isDisabled": false,
+                    "isRequired" : true,
                     "requiredErrMsg": ""
                 },
                 {

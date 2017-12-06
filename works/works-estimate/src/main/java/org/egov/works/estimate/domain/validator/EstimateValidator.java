@@ -164,8 +164,12 @@ public class EstimateValidator {
         searchContract.setTenantId(estimate.getTenantId());
         List<AbstractEstimate> oldEstimates = abstractEstimateService.search(searchContract, requestInfo)
                 .getAbstractEstimates();
+
         if (isNew && !oldEstimates.isEmpty())
-            messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER, Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
+            for(AbstractEstimate abstractEstimate : oldEstimates) {
+                if(!abstractEstimate.getStatus().toString().equals(AbstractEstimateStatus.CANCELLED.toString()))
+                 messages.put(Constants.KEY_UNIQUE_ABSTRACTESTIMATENUMBER, Constants.MESSAGE_UNIQUE_ABSTRACTESTIMATENUMBER);
+            }
     }
 
     private void validateSpillOverData(AbstractEstimate estimate, Map<String, String> messages) {

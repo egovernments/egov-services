@@ -1,7 +1,28 @@
 import React, { Component } from 'react';
-import {BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
-import {Card, CardText, CardMedia, CardHeader, CardTitle} from 'material-ui/Card';
-
+import {
+    BarChart, 
+    Bar, 
+    XAxis, 
+    YAxis, 
+    CartesianGrid, 
+    Tooltip, 
+    Legend
+} from 'recharts';
+import {
+    Card, 
+    CardText, 
+    CardMedia, 
+    CardHeader, 
+    CardTitle
+} from 'material-ui/Card';
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+  } from 'material-ui/Table';
 var jp = require('jsonpath')
 
 export default class BarChartCard extends Component {
@@ -117,6 +138,7 @@ export default class BarChartCard extends Component {
             <div>
             {
                 this.renderChart()
+                // this.renderTable()
             }
             </div>
         )
@@ -146,7 +168,7 @@ export default class BarChartCard extends Component {
             <br /><br />
             <Card className="uiCard">
                 <CardHeader
-                    title={<strong> Chart presented for</strong>}
+                    title={<strong> KPI chart data </strong>}
                 />
                 <BarChart padding={'20%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
                     <XAxis dataKey={this.state.dataKey}/>
@@ -157,6 +179,52 @@ export default class BarChartCard extends Component {
                     <Bar yAxisId="left" dataKey="target" fill="#8884d8" />
                     <Bar yAxisId="right" dataKey="value" fill="#82ca9d" />
                 </BarChart>
+            </Card>
+        </div>
+        )
+    }
+
+    /**
+     * render
+     * presents same data in tabular format
+     */
+    renderTable = () => {
+        if (this.state.data.length < 1) {
+            return (
+                <div style={{"textAlign": "center"}}>
+                    <br /><br />
+                    <Card className="uiCard">
+                        <CardHeader
+                            title={<strong> insufficient data to draw the chart </strong>}
+                        />
+                    </Card>
+                </div>
+            )
+        }
+
+        let headers = Object.keys(this.state.data[0]);
+        return (
+            <div>
+            <br /><br />
+            <Card className="uiCard">
+                <CardHeader
+                    title={<strong> KPI data </strong>}
+                />
+                <Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+                    <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+                        <TableRow>
+                            {
+                                headers.map((item, index) => <TableHeaderColumn>{item.toUpperCase()}</TableHeaderColumn>)
+                            }
+                        </TableRow>
+                    </TableHeader>
+
+                    <TableBody displayRowCheckbox={false}>
+                        {
+                            this.state.data.map((item, index) => <TableRow> {headers.map((el, index) => <TableRowColumn>{item[el]} </TableRowColumn>)} </TableRow>)
+                        }
+                    </TableBody>
+                </Table>
             </Card>
         </div>
         )

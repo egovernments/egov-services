@@ -63,8 +63,8 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
     addres += data.summon.courtName.address.city ? data.summon.courtName.address.city : '';
     addres += data.summon.courtName.address.addressLine2 ? data.summon.courtName.address.addressLine2 + ', ' : '';
 
-    console.log(data.witness);
-    console.log(data);
+   // console.log(data.witness);
+    //console.log(data);
 
     var d = new Date(data.vakalatnamaGenerationDate);
     var monthNames = ["January", "February", "March", "April", "May", "June",
@@ -77,10 +77,11 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
       var year = d.getFullYear();
 
      var vit = data.witness;
+
      var witnessObj = {ul: []};
       for(var i = 0; i<vit.length; i++){
-       // witnessObj.ul.push(vit[i]);
-       witnessObj.ul = vit[i].split(',');
+       witnessObj.ul.push(vit[i]);
+      // witnessObj.ul = vit[i].split(',');
       }
     
 

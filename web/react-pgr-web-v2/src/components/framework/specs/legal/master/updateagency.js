@@ -1014,7 +1014,7 @@ var dat = {
             "tableConfig": {
               "header": [
                 {
-                  "label": "legal.create.advocateName",
+                  "label": "legal.create.additionalAdvocateName",
                   "style": {
                     "width": "700px"
                   }
@@ -2083,7 +2083,7 @@ var dat = {
               actionsNotRequired: true,
               "header": [
                 {
-                  "label": "legal.create.additionalOwnerName",
+                  "label": "legal.create.additionalAdvocateName",
                   "style": {
                     "width": "700px"
                   }

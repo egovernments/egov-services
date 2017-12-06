@@ -2316,6 +2316,12 @@ var localization_EN_Data = {
 "reports.swm.date" : "Date",
 "reports.swm.wetwaste" : "Wet Waste",
 "reports.swm.drywaste" : "Dry Waste",
+"reports.swm.vehicle" : "Vehicle",
+"reports.swm.vehicletype" : "Vehicle Type",
+"reports.swm.registrationnumber" : "Vehicle Registration Number",
+"reports.swm.fuellingcost" : "Cost Incurred on Fuelling",
+"reports.swm.maintenancecost" : "Cost Incurred on Maintenance/Repair",
+"reports.swm.totalcost" : "Total Cost Incurred",
 
 "pgr.dashboard.gis.registered.title":"Registered",
 "pgr.dashboard.gis.redressed.title":"Redressed",

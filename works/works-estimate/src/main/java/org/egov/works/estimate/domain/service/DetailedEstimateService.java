@@ -80,6 +80,7 @@ public class DetailedEstimateService {
 			AbstractEstimate abstactEstimate = null;
 			if (detailedEstimate.getAbstractEstimateDetail() != null || (isRevision != null && isRevision)) {
 				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
+                detailedEstimate.setAbstractEstimateDetail(abstactEstimate.getAbstractEstimateDetails().get(0));
 				if ((abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated())
 						 || (isRevision != null && isRevision)) {
 					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(

@@ -420,11 +420,11 @@ public class EstimateValidator {
     }
 
     private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,RequestInfo requestInfo, Map<String, String> messages) {
-        if(abstractEstimate != null) {
+        if(abstractEstimate != null && StringUtils.isBlank(detailedEstimate.getId())) {
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
-                    .abstractEstimateNumbers(Arrays.asList(abstractEstimate.getAbstractEstimateNumber()))
-                    .ids(Arrays.asList(detailedEstimate.getId())).build();
+                    .abstractEstimateNumbers(Arrays.asList(abstractEstimate.getAbstractEstimateNumber())).build();
+
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
             for(DetailedEstimateHelper detailedEstimateHelper : lists) {
                 if(!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))

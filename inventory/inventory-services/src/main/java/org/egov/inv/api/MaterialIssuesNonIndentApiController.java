@@ -1,47 +1,48 @@
 package org.egov.inv.api;
 
-import org.egov.inv.domain.service.MaterialIssuesService;
-import org.egov.inv.model.MaterialIssue;
-import org.egov.inv.model.MaterialIssueRequest;
-import org.egov.inv.model.MaterialIssueResponse;
-import org.egov.inv.model.MaterialIssueSearchContract;
-import org.egov.inv.model.MaterialResponse;
-import org.egov.inv.model.RequestInfo;
+import java.math.BigDecimal;
 
 import io.swagger.annotations.*;
 
+import org.egov.common.contract.request.RequestInfo;
+import org.egov.inv.domain.service.NonIndentMaterialIssueService;
+import org.egov.inv.model.MaterialIssueRequest;
+import org.egov.inv.model.MaterialIssueResponse;
+import org.egov.inv.model.MaterialIssueSearchContract;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import javax.validation.constraints.*;
 import javax.validation.Valid;
 
-@javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-06T06:54:07.407Z")
 
 @Controller
-public class MaterailIssuesApiController implements MaterailIssuesApi {
+public class MaterialIssuesNonIndentApiController implements MaterialIssuesNonIndentApi {
 
 	@Autowired
-	private MaterialIssuesService materialIssueService;
+	private NonIndentMaterialIssueService nonIndentMaterialIssueService;
 
-	@Override
-	public ResponseEntity<MaterialIssueResponse> materialIssuesCreatePost(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.create(indentIssueRequest);
+	public ResponseEntity<MaterialIssueResponse> materialissuesNonIndentCreatePost(
+			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
+			@ApiParam(value = "Create  new") @Valid @RequestBody MaterialIssueRequest nonIndentIssueRequest) {
+		MaterialIssueResponse materialIssueResponse = nonIndentMaterialIssueService.create(nonIndentIssueRequest);
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
-	public ResponseEntity<MaterialIssueResponse> materialissuesSearchPost(
+	public ResponseEntity<MaterialIssueResponse> materialissuesNonIndentSearchPost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody org.egov.common.contract.request.RequestInfo requestInfo,
+			@ApiParam(value = "Parameter to carry Request metadata in the request body") @Valid @RequestBody RequestInfo requestInfo,
 			@Size(max = 50) @ApiParam(value = "comma seperated list of Ids") @RequestParam(value = "ids", required = false) List<String> ids,
 			@ApiParam(value = "issuing store of the MaterialIssue ") @RequestParam(value = "fromStore", required = false) String fromStore,
 			@ApiParam(value = "receiving store of the MaterialIssue ") @RequestParam(value = "toStore", required = false) String toStore,
@@ -56,22 +57,16 @@ public class MaterailIssuesApiController implements MaterailIssuesApi {
 		MaterialIssueSearchContract searchContract = new MaterialIssueSearchContract(tenantId, ids, fromStore, toStore,
 				issueNoteNumber, issueDate, materialIssueStatus, description, totalIssueValue, pageNumber, sortBy,
 				pageSize);
-		MaterialIssueResponse materialIssueResponse = materialIssueService.search(searchContract);
+		MaterialIssueResponse materialIssueResponse = nonIndentMaterialIssueService.search(searchContract);
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
 	}
 
-	@Override
-	public ResponseEntity<MaterialIssueResponse> materialIssuesUpdatePost(
+	public ResponseEntity<MaterialIssueResponse> materialissuesNonIndentUpdatePost(
 			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.update(indentIssueRequest,tenantId);
-		return new ResponseEntity(materialIssueResponse,HttpStatus.OK);
-	}
-	
-	public ResponseEntity<MaterialIssueResponse> materiallIssuesPreparemiFromIndents(
-			@NotNull @ApiParam(value = "Unique id for a tenant.", required = true) @Valid @RequestParam(value = "tenantId", required = true) String tenantId,
-			@ApiParam(value = "Create  new")  @RequestBody MaterialIssueRequest indentIssueRequest) {
-		MaterialIssueResponse materialIssueResponse = materialIssueService.prepareMIFromIndents(indentIssueRequest, tenantId);
+			@ApiParam(value = "common Request info") @Valid @RequestBody MaterialIssueRequest nonIndentIssueRequest) {
+		MaterialIssueResponse materialIssueResponse = nonIndentMaterialIssueService.update(nonIndentIssueRequest, tenantId);
 		return new ResponseEntity(materialIssueResponse, HttpStatus.OK);
+
 	}
+
 }

@@ -543,7 +543,7 @@ serviceMaps:
               dbType: LONG
 
         - query: >-
-            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, materialid, quantityissued,description)
+            INSERT INTO materialissuedetail(id, materialissuenumber, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, indentdetailid, materialcode, quantityissued,description)
               VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?);
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
@@ -558,7 +558,7 @@ serviceMaps:
               dbType: DOUBLE
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
-            - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.code
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
 
@@ -610,10 +610,10 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.tenantId
         - query: >-
                  INSERT INTO materialissuedetail(id, tenantId, orderNumber, value, uom, scrapvalue, voucherheader, materialissuenumber, indentdetailid,
-                   materialid, quantityissued, description) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                   materialcode, quantityissued, description) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
                  orderNumber = EXCLUDED.orderNumber, value  = EXCLUDED.value, uom = EXCLUDED.uom,
                  scrapvalue = EXCLUDED.scrapvalue, voucherheader = EXCLUDED.voucherheader, materialissuenumber = EXCLUDED.materialissuenumber,
-                 indentdetailid = EXCLUDED.indentdetailid, materialid = EXCLUDED.materialid, quantityissued =
+                 indentdetailid = EXCLUDED.indentdetailid, materialcode = EXCLUDED.materialcode, quantityissued =
                  EXCLUDED.quantityissued, description = EXCLUDED.description;
           basePath: $.materialIssues.*.materialIssueDetails.*
           jsonMaps:
@@ -628,7 +628,7 @@ serviceMaps:
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.voucherHeader
             - jsonPath: $.materialIssues[?({id} in @.materialIssueDetails[*].id)].issueNumber
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.indentDetail.id
-            - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.id
+            - jsonPath: $.materialIssues.*.materialIssueDetails.*.material.code
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.quantityIssued
             - jsonPath: $.materialIssues.*.materialIssueDetails.*.description
 
@@ -859,14 +859,13 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
-
     - version: 1.0
       name: Update Purchase Order with indent
       description: Update Purchase Order with indent
       fromTopic: inv-purchaseorders-update-topic
       queryMaps:
         - query: >-
-               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , lastModifiedBy= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
+               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
           basePath: $.purchaseOrders.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.store.code
@@ -886,18 +885,19 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.fileStoreId
             - jsonPath: $.purchaseOrders.*.designation
             - jsonPath: $.purchaseOrders.*.stateId
+            - jsonPath: $.purchaseOrders.*.auditDetails.createdBy
             - jsonPath: $.purchaseOrders.*.auditDetails.lastModifiedBy
+            - jsonPath: $.purchaseOrders.*.auditDetails.createdTime
+              dbType: LONG
             - jsonPath: $.purchaseOrders.*.auditDetails.lastModifiedTime
               dbType: LONG
             - jsonPath: $.purchaseOrders.*.purchaseOrderNumber
             - jsonPath: $.purchaseOrders.*.tenantId
+
         - query: >-
-               INSERT INTO PurchaseOrderDetail(id, tenantId,material, purchaseOrder, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description  )VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? ) ON CONFLICT(id, tenantId) DO UPDATE SET
-               material=EXCLUDED.material, purchaseOrder=EXCLUDED.purchaseOrder, orderNumber=EXCLUDED.orderNumber, uom=EXCLUDED.uom, pricelist=EXCLUDED.pricelist, orderQuantity=EXCLUDED.orderQuantity, receivedQuantity=EXCLUDED.receivedQuantity, unitPrice=EXCLUDED.unitPrice, description=EXCLUDED.description;
+               update purchaseOrderDetail set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.id
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.tenantId
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.material.code
             - jsonPath: $.purchaseOrders[?({id} in @.purchaseOrderDetails[*].id)].purchaseOrderNumber
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.orderNumber
@@ -907,16 +907,18 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.receivedQuantity
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.unitPrice
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.description
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.id
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.tenantId
+
         - query: >-
-               INSERT INTO PurchaseIndentDetail(id, purchaseOrderDetail, tenantId, indentDetail, quantity )VALUES ( ?, ?, ?, ?, ?) ON CONFLICT(id, tenantId) DO UPDATE SET
-               PurchaseOrderDetail=EXCLUDED.PurchaseOrderDetail, indentDetail=EXCLUDED.indentDetail, quantity=EXCLUDED.quantity;
+               update PurchaseIndentDetail set purchaseOrderDetail = ?, indentDetail = ?, quantity = ?  where id = ? and tenantid = ?;
           basePath:  $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*
           jsonMaps:
-            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails[?({id} in @.purchaseIndentDetails[*].id)].id
-            - jsonPath: $.purchaseOrders.*.tenantId
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.indentDetail.id
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.quantity
+            - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.purchaseIndentDetails.*.id
+            - jsonPath: $.materialReceipt.*.tenantId
     - version: 1.0
       name: Purchase Order for non indent
       description: Create Purchase order for non indent
@@ -974,7 +976,7 @@ serviceMaps:
       fromTopic: inv-purchaseorders-nonindent-update-topic
       queryMaps:
         - query: >-
-               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , lastModifiedBy= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
+               update purchaseorder set store= ? , purchaseOrderDate= ? , purchaseType= ? , rateType= ? , supplier= ? , advanceAmount= ? , advancePercentage= ? , expectedDeliveryDate= ? , deliveryTerms= ? , paymentTerms= ? , remarks= ? , status= ? , fileStoreId= ? , designation= ? , stateId= ? , createdBy= ? , lastModifiedBy= ? , createdTime= ? , lastModifiedTime= ? where purchaseOrderNumber = ? and tenantid = ?;
           basePath: $.purchaseOrders.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.store.code
@@ -994,7 +996,10 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.fileStoreId
             - jsonPath: $.purchaseOrders.*.designation
             - jsonPath: $.purchaseOrders.*.stateId
+            - jsonPath: $.purchaseOrders.*.auditDetails.createdBy
             - jsonPath: $.purchaseOrders.*.auditDetails.lastModifiedBy
+            - jsonPath: $.purchaseOrders.*.auditDetails.createdTime
+              dbType: LONG
             - jsonPath: $.purchaseOrders.*.auditDetails.lastModifiedTime
               dbType: LONG
             - jsonPath: $.purchaseOrders.*.purchaseOrderNumber
@@ -1140,5 +1145,6 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.acceptedQty
             - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+
 
 

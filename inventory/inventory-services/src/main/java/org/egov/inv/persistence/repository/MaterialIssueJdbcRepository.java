@@ -7,7 +7,9 @@ import java.util.Map;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
+import org.egov.inv.model.Indent;
 import org.egov.inv.model.MaterialIssue;
+import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueSearchContract;
 import org.egov.inv.persistence.entity.MaterialIssueDetailEntity;
@@ -19,11 +21,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class MaterialIssueJdbcRepository extends JdbcRepository {
-	
-	  @Autowired
-	    public JdbcTemplate jdbcTemplate;
+	@Autowired
+	public JdbcTemplate jdbcTemplate;
 
-	public Pagination<MaterialIssue> search(final MaterialIssueSearchContract searchContract) {
+	public Pagination<MaterialIssue> search(final MaterialIssueSearchContract searchContract, String issueType) {
 		String searchQuery = "select * from materialissue :condition :orderby";
 		StringBuffer params = new StringBuffer();
 		Map<String, Object> paramValues = new HashMap<>();
@@ -96,7 +97,7 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 		if (searchContract.getPageNumber() != null)
 			page.setOffset(searchContract.getPageNumber());
 		if (params.length() > 0)
-			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and " + params.toString());
+			searchQuery = searchQuery.replace(":condition", " where deleted is not true and " + params.toString());
 		else
 			searchQuery = searchQuery.replace(":condition", "");
 
@@ -115,7 +116,7 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 
 		for (MaterialIssueEntity materialIssueEntity : materialIssueEntities) {
 
-			materialIssueList.add(materialIssueEntity.toDomain());
+			materialIssueList.add(materialIssueEntity.toDomain(issueType));
 		}
 
 		page.setTotalResults(materialIssueList.size());
@@ -124,24 +125,10 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 
 		return page;
 	}
-	
-	public List<MaterialIssueDetail> getMaterialIssueDetailsByIssueNumber(String tenantId, List<String> materialIssueNumbers) {
-		BeanPropertyRowMapper row = new BeanPropertyRowMapper(MaterialIssueDetailEntity.class);
-		List<MaterialIssueDetail> materialIssueDetails = new ArrayList<>();
-		Map<String,Object> paramValues = new HashMap<>();
-		paramValues.put("tenantId", tenantId);
-		paramValues.put("materialissuenumber", materialIssueNumbers);	
-		List<MaterialIssueDetailEntity> materialIssueDetailEntities = namedParameterJdbcTemplate.
-				query(getDetailQuery(), paramValues, row);
-		for(MaterialIssueDetailEntity materialIssueDetailEntity : materialIssueDetailEntities ){
-			materialIssueDetails.add(materialIssueDetailEntity.toDomain());
-		}
-		return materialIssueDetails;
-}
-
-	private String getDetailQuery() {
-       return "select * from materialissuedetail where tenantId = :tenantId and materialissuenumber in (:materialissuenumber)";		
-	}
 
 	
+
+
+
+
 }

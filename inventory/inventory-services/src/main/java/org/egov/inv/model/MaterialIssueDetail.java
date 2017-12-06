@@ -12,7 +12,7 @@ import javax.validation.Valid;
 import javax.validation.constraints.*;
 
 /**
- * This object holds the materail issue detail information for both indent and non indent. 
+ * This object holds the material issue detail information for both indent and non indent. 
  */
 @ApiModel(description = "This object holds the materail issue detail information for both indent and non indent. ")
 @javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-13T08:36:20.118Z")
@@ -108,8 +108,6 @@ public class MaterialIssueDetail   {
    * @return material
   **/
   @ApiModelProperty(required = true, value = "Applicable for Non Indent Issue. ")
-  @NotNull
-
   @Valid
 
   public Material getMaterial() {
@@ -195,8 +193,6 @@ public class MaterialIssueDetail   {
    * @return uom
   **/
   @ApiModelProperty(required = true, value = "unit of measure of selected material.")
-  @NotNull
-
   @Valid
 
   public Uom getUom() {

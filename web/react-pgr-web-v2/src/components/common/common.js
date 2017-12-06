@@ -1,4 +1,15 @@
 var localization_EN_Data = {
+  //works Schedule Of rate
+  "works.create.group.title.createRateMaster":"Create Rate Master",
+  "works.create.scheduleCategory":"Schedule Categroy",
+  "works.create.code":"SOR  Code",
+  "works.create.description":"SOR Description",
+  "works.create.uom":"Unit Of Measure",
+  "works.create.group.title.rateDetails":"Rate Details",
+  "Rate":"Rate",
+  "FromDate":"From Date",
+  "ToDate":"To Date",
+  "works.create.group.title.marketRateDetails":"Market Rate Details",
   //works Detailed Estimate
   "works.create.group.title.workInfo":"Work Info",
   "works.create.estimateNumber": "Abstract Estimate No.",

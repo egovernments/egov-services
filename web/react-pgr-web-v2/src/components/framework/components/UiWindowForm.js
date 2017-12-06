@@ -682,13 +682,13 @@ affectDependants = (obj, e, property)=>{
             }
        })
 
-       try{
-           handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-       }
-       catch(e){
-         console.log('error in autocomplete . It is version issue');
-         console.log(e);
-       }
+      //  try{
+      //      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+      //  }
+      //  catch(e){
+      //    console.log('error in autocomplete . It is version issue');
+      //    console.log(e);
+      //  }
 
        this.affectDependants(obj, e, property);
   };

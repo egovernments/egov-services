@@ -13,12 +13,13 @@ var dat ={
               "name":"name",
               "jsonPath":"name",
               "label":"swm.refillingpumpstations.create.name",
-              "type":"text",
+              "type":"autoCompelete",
               "isRequired":false,
               "isDisabled":false,
               "maxLength":128,
               "minLength":1,
-              "patternErrorMsg":""
+              "patternErrorMsg":"",
+	      "url": "swm-services/refillingpumpstations/_search?|$..name|$..name"
             },
             {  
               "name":"code",

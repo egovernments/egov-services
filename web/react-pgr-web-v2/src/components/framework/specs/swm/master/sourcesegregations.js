@@ -24,22 +24,7 @@ var dat = {
             "type": "singleValueList",
             "isDisabled": false,
             "patternErrorMsg": "swm.create.field.message.dumpingGroundCode",
-	    "url":"",
-	    "mdms": {
-              "moduleName": "swm",
-              "masterName": "DumpingGround",
-              "filter": "",
-              "key": "code",
-              "value": "name"
-            }
-          },
-	{
-            "name": "ulbCode",
-            "jsonPath": "ulbCode",
-            "label": "swm.create.ulb",
-            "type": "singleValueList",
-            "isDisabled": false,
-            "patternErrorMsg": "swm.create.field.message.ulbCode"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name"
           }
         ]
       }
@@ -89,7 +74,14 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name"
+	    "url": "",
+ 	    "mdms": {
+              "moduleName": "swm",
+              "masterName": "DumpingGround",
+              "filter": "",
+              "key": "code",
+              "value": "name"
+            }
           },
           {
             "name": "sourceSegregationDate",
@@ -114,7 +106,17 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
+	    "url": "",
+            "mdms": {
+              "moduleName": "swm",
+              "masterName": "DumpingGround",
+              "filter": "",
+              "key": "$..ulbs.*.code",
+              "value": "$..ulbs.*.code",
+              "dependant": {
+                "jsonExp": "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]"
+              }
+            }
           }
         ]
       },
@@ -283,7 +285,14 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name"
+	    "url": "",
+ 	    "mdms": {
+              "moduleName": "swm",
+              "masterName": "DumpingGround",
+              "filter": "",
+              "key": "code",
+              "value": "name"
+            }
           },
           {
             "name": "sourceSegregationDate",
@@ -308,7 +317,17 @@ var dat = {
             "maxLength": 256,
             "minLength": 1,
             "patternErrorMsg": "",
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..ulbs.*.code|$..ulbs.*.name"
+	    "url": "",
+            "mdms": {
+              "moduleName": "swm",
+              "masterName": "DumpingGround",
+              "filter": "",
+              "key": "$..ulbs.*.code",
+              "value": "$..ulbs.*.code",
+              "dependant": {
+                "jsonExp": "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]"
+              }
+            }
           }
         ]
       },

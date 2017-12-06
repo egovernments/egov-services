@@ -1,6 +1,5 @@
 package org.egov.swm.domain.model;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
 import org.hibernate.validator.constraints.Length;
@@ -99,7 +98,6 @@ public class Tenant {
     @JsonProperty("emailId")
     private String emailId = null;
 
-    @Valid
     @JsonProperty("city")
     private City city = null;
 

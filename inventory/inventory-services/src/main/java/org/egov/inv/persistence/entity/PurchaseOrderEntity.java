@@ -72,7 +72,7 @@ public class PurchaseOrderEntity {
 		purchaseOrder.setRemarks(remarks);
 		purchaseOrder.setStateId(stateId);
 		if (status != null)
-			purchaseOrder.setStatus(StatusEnum.valueOf(status));
+			purchaseOrder.setStatus(StatusEnum.fromValue(status));
 		purchaseOrder.setSupplier(new Supplier().code(supplier));
 
 		purchaseOrder.setStateId(this.stateId);

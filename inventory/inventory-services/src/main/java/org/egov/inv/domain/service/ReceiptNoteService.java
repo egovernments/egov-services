@@ -18,8 +18,6 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.*;
 
-import static org.egov.inv.model.PurchaseOrder.StatusEnum.FULFILLED_AND_PAID;
-import static org.egov.inv.model.PurchaseOrder.StatusEnum.FULFILLED_AND_UNPAID;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
@@ -262,7 +260,7 @@ public class ReceiptNoteService extends DomainService {
         validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
         for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
             if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
-                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getMrnStatus().toString(), materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
+                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceivingStore().getCode(), materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
             }
             validateMaterial(materialReceiptDetail, tenantId);
             validateQuantity(materialReceiptDetail);
@@ -340,7 +338,7 @@ public class ReceiptNoteService extends DomainService {
             {
                 if (null != addnlinfo.getExpiryDate()
                         && currentDate > addnlinfo.getExpiryDate()) {
-                    throw new CustomException("inv.0023", "Expiry date must br greater than today's date");
+                    throw new CustomException("inv.0023", "Expiry date must be greater than today's date");
                 }
             }
         }
@@ -357,7 +355,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String status, Long receiptDate, String supplier, String tenantId) {
+    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate, String supplier, String tenantId) {
 
         if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
@@ -371,14 +369,16 @@ public class ReceiptNoteService extends DomainService {
 
                     PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
                     purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
+                    purchaseOrderSearch.setSupplier(supplier);
+                    purchaseOrderSearch.setStore(store);
+                    purchaseOrderSearch.setPurchaseOrderDate(receiptDate);
                     purchaseOrderSearch.setTenantId(purchaseOrderDetail.getTenantId());
 
                     PurchaseOrderResponse purchaseOrders = purchaseOrderService.search(purchaseOrderSearch);
-
                     if (purchaseOrders.getPurchaseOrders().size() > 0) {
                         for (PurchaseOrder purchaseOrder : purchaseOrders.getPurchaseOrders()) {
                             if (null != purchaseOrder.getPurchaseOrderDate()
-                                    && purchaseOrder.getPurchaseOrderDate() >= receiptDate) {
+                                    && purchaseOrder.getPurchaseOrderDate() > receiptDate) {
                                 throw new CustomException("inv.00027", "Receipt Date must be greater than purchase order date");
                             }
 

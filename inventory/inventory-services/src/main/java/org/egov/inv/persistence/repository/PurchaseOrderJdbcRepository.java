@@ -98,8 +98,8 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 		if (purchaseOrderSearch.getStore() != null) {
 			if (params.length() > 0)
 				params.append(" and ");
-			params.append("store =:issueStore ");
-			paramValues.put("issueStore", purchaseOrderSearch.getStore());
+			params.append("store =:store ");
+			paramValues.put("store", purchaseOrderSearch.getStore());
 		}
 
 		if (purchaseOrderSearch.getPurchaseOrderDate() != null) {

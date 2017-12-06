@@ -302,7 +302,7 @@ class UpdateCancellation extends React.Component {
             }
         }
 
-        getDesignations(null, function (designations) {
+        getDesignations(process.status, function (designations) {
             console.log(designations);
             _this.setState({
                 ..._this.state,

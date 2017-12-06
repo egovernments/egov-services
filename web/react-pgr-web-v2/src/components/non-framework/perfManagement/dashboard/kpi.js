@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Snackbar from 'material-ui/Snackbar';
 import {Card, CardText} from 'material-ui/Card';
 import {Grid, Row, Col} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -29,10 +30,14 @@ export default class Dashboard extends Component {
             showDepartmentView: true,
             showKPIQueryView: false,
             showChartView: false,
+            showToast: false,
+
             disableViewButton: false,
             kpiIndices: [0],
             ulbIndices: [0],
-            fyIndices: [0]
+            fyIndices: [0],
+
+            toastMsg: ''
         }
 
         this.kpiLabel   = "KPIs";
@@ -59,6 +64,9 @@ export default class Dashboard extends Component {
                 {
                     this.renderChart()
                 }
+                {
+                    this.renderToast()
+                }
             </div>
         )
     }
@@ -82,6 +90,11 @@ export default class Dashboard extends Component {
      */
     toast = (msg) => {
         console.log(msg)
+
+        this.setState({
+            showToast: true,
+            toastMsg: msg
+        })
     }
 
     busyUI = (status) => {
@@ -199,6 +212,7 @@ export default class Dashboard extends Component {
         this.busyUI(true)
         fetchCompareSearchAPI(finYears, kpis, ulbs, (err, res) => {
             this.busyUI(false)
+            console.log(res)
             if (err || !res) {
                 this.toast('Unable to get report data')
             } else {
@@ -324,6 +338,26 @@ export default class Dashboard extends Component {
         }
         return(
             <BarChartCard data={this.chartRes} />
+        )
+    }
+
+    /**
+     * render
+     * display Snackbar to inform user
+     */
+    renderToast = () => {
+        if (!this.state.showToast) {
+            return (
+                <div></div>
+            )
+        }
+        return (
+            <Snackbar open={this.state.showToast} message={this.state.toastMsg} autoHideDuration={3000} onRequestClose={()=>{
+                this.setState({
+                    showToast: false
+                })
+            }}
+          />
         )
     }
 }

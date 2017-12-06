@@ -127,11 +127,20 @@ export default class BarChartCard extends Component {
      * presents chart
      */
     renderChart = () => {
+
         if (this.state.data.length < 1) {
             return (
-                <div></div>
+                <div style={{"textAlign": "center"}}>
+                    <br /><br />
+                    <Card className="uiCard">
+                        <CardHeader
+                            title={<strong> insufficient data to draw the chart </strong>}
+                        />
+                    </Card>
+                </div>
             )
         }
+
         return (
             <div style={{"textAlign": "center"}}>
             <br /><br />

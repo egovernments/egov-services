@@ -393,8 +393,8 @@ class Report extends Component {
                         if(master == obj.groups[i].fields[j].mdms.masterName) {
                           moduleObj[master].forEach(function(item) {
                             let masterObj = {key: "", value: ""};
-                            masterObj.key = item[obj.groups[i].fields[j].mdms.key];
-                            masterObj.value = item[obj.groups[i].fields[j].mdms.value];
+                            masterObj.key = jp.query(item, obj.groups[i].fields[j].mdms.key);
+                            masterObj.value = jp.query(item, obj.groups[i].fields[j].mdms.value);
                             dropDownData.push(masterObj);
                           });
                         }

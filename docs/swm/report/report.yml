@@ -34,7 +34,7 @@ ReportDefinitions:
     isMandatory: true
     stateData: true
     wrapper: true
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.SWM.DumpingGround.*.code|$.MdmsRes.SWM.DumpingGround.*.name
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.swm.DumpingGround.*.code|$.MdmsRes.swm.DumpingGround.*.name
   - name: collectiontypecode
     label: reports.swm.collectiontype
     type: singlevaluelist
@@ -42,7 +42,7 @@ ReportDefinitions:
     isMandatory: true  
     stateData: true
     wrapper: true
-    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.SWM.CollectionType.*.code|$.MdmsRes.SWM.CollectionType.*.name    
+    pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.swm.CollectionType.*.code|$.MdmsRes.swm.CollectionType.*.name    
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch

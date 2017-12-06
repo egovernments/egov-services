@@ -183,13 +183,6 @@ class Report extends Component {
     for(var i=0; i<specs[moduleName + "." + actionName].groups.length; i++) {
       if(specs[moduleName + "." + actionName].groups[i].multiple) {
         var arr = _.get(_form, specs[moduleName + "." + actionName].groups[i].jsonPath);
-        console.log('--------');
-        console.log(arr,i);
-        console.log(specs[moduleName + "." + actionName].groups[i].jsonPath);
-        console.log(_form);
-        console.log(_.get);
-        console.log(specs[moduleName + "." + actionName].groups,i);
-        console.log('--------');
         ind = i;
         var _stringifiedGroup = JSON.stringify(specs[moduleName + "." + actionName].groups[i]);
         var regex = new RegExp(specs[moduleName + "." + actionName].groups[i].jsonPath.replace(/\[/g, "\\[").replace(/\]/g, "\\]") + "\\[\\d{1}\\]", 'g');
@@ -261,7 +254,6 @@ class Report extends Component {
         [pname]:pval
           };
         }
-
       if(window.location.href.indexOf("?") > -1) {
        var qs =  window.location.href.split("?")[1];
        if(qs && qs.indexOf("=") > -1) {
@@ -285,7 +277,6 @@ class Report extends Component {
               self.props.setFormData(res);
           }
             let obj1 = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-
           self.depedantValue(obj1.groups);
       }, function(err){
           self.props.setLoadingStatus('hide');
@@ -295,16 +286,14 @@ class Report extends Component {
       var formData = {};
       if(obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
-
       var id = self.props.match.params.id && decodeURIComponent(self.props.match.params.id);
       if(id){
         //console.log('id', id);
         let mockObj = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
-
         if(mockObj.onloadFetchUrl){
           let params = JSON.parse(id);
           self.props.setLoadingStatus('loading');
-          console.log('query', query);
+          // console.log('query', query);
 
           let requestBody = {};
 
@@ -325,6 +314,7 @@ class Report extends Component {
               }
                 let obj1 = specifications[`${hashLocation.split("/")[2]}.${hashLocation.split("/")[1]}`];
 
+          
               self.depedantValue(obj1.groups);
           }, function(err){
               self.props.setLoadingStatus('hide');
@@ -392,10 +382,16 @@ class Report extends Component {
                         var moduleObj = res.MdmsRes[prop];
                         if(master == obj.groups[i].fields[j].mdms.masterName) {
                           moduleObj[master].forEach(function(item) {
-                            let masterObj = {key: "", value: ""};
-                            masterObj.key = jp.query(item, obj.groups[i].fields[j].mdms.key);
-                            masterObj.value = jp.query(item, obj.groups[i].fields[j].mdms.value);
-                            dropDownData.push(masterObj);
+                            let key = [];
+                            let value = [];
+                            key = jp.query(item, obj.groups[i].fields[j].mdms.key);
+                            value = jp.query(item, obj.groups[i].fields[j].mdms.value);
+                            for(let r=0; r<key.length; r++) {
+                              let masterObj = {};
+                              masterObj.key = key[r];
+                              masterObj.value = value[r];
+                              dropDownData.push(masterObj);
+                            }
                           });
                         }
                       }
@@ -428,10 +424,16 @@ class Report extends Component {
               var dropdownValues = jp.query(this.state.mdmsData, exp)
               let dropdowndata = [];
               dropdownValues.forEach(function(item) {
-                let masterObj = {key: "", value: ""};
-                masterObj.key = item[_mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.key];
-                masterObj.value = item[_mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.value];
-                dropdowndata.push(masterObj);
+                let key = [];
+                let value = [];
+                key = jp.query(item, _mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.key);
+                value = jp.query(item, _mockData[moduleName + "." + actionName].groups[i].fields[j].mdms.value);
+                for(let r=0; r<key.length; r++) {
+                  let masterObj = {};
+                  masterObj.key = key[r];
+                  masterObj.value = value[r];
+                  dropdowndata.push(masterObj);
+                }
               });
               setDropDownData(_mockData[moduleName + "." + actionName].groups[i].fields[j].jsonPath, dropdowndata)
             }
@@ -660,7 +662,6 @@ class Report extends Component {
 
     if(/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
       _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
-     console.log(_url);
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g,"");
       _url = _url.replace(match, _.get(formData, jPath));

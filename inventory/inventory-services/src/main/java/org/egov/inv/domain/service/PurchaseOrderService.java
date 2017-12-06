@@ -154,6 +154,9 @@ public class PurchaseOrderService extends DomainService {
             List<PurchaseOrder> purchaseOrder = purchaseOrderRequest.getPurchaseOrders();
             validate(purchaseOrder, Constants.ACTION_UPDATE);
 
+            for(PurchaseOrder eachPurchaseOrder : purchaseOrder)
+            	eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+            
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
             // PUSH DATA TO KAFKA.
 
@@ -165,7 +168,7 @@ public class PurchaseOrderService extends DomainService {
                     kafkaQue.send(updateNonIndentTopic, updateNonIndentKey, purchaseOrderRequest);
             }else
             	  kafkaQue.send(updateTopic, updateKey, purchaseOrderRequest); //TODO REMOVE THIS IF PUCHASE TYPE PRESENT.
-
+            
             PurchaseOrderResponse response = new PurchaseOrderResponse();
             response.setPurchaseOrders(purchaseOrderRequest.getPurchaseOrders());
             response.setResponseInfo(getResponseInfo(purchaseOrderRequest.getRequestInfo()));

@@ -86,12 +86,25 @@ export const parseULBResponse = (res) => {
 }
 
 export const parseFinancialYearResponse = (res) => {
-    return jp.query(res, '$.financialYears[*]').map((finYear, index) => {
-        return {
-            code: finYear.finYearRange,
-            name: finYear.finYearRange
+    // return jp.query(res, '$.financialYears[*]').map((finYear, index) => {
+    //     return {
+    //         code: finYear.finYearRange,
+    //         name: finYear.finYearRange
+    //     }
+    // });
+    return jp.query(res, '$.financialYears[*]').filter((el) => {
+        if (new Date(el.startingDate) <= Date.now()) {
+            return el
         }
-    });
+    }).map((item, index) => {
+        return {
+            id: item.id,
+            startingDate: item.startingDate,
+            endingDate: item.endingDate,
+            code: item.finYearRange,
+            name: item.finYearRange
+        }
+    })
 }
 
 export const parseDepartmentKPIsAsPerKPIType = (res, type) => {

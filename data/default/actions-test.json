@@ -9975,6 +9975,32 @@
     "serviceCode": "AccessControl",
     "code": "null",
     "path": "Access Control.Get Actions from MDMS"
+  },
+  {
+    "id": 1407,
+    "name": "Dumping Ground Detail Report",
+    "url": "/swm-services/report/dumpinggrounddetailsreport",
+    "displayName": "Dumping Ground Detail Report",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": true,
+    "serviceCode": "SWMRPT",
+    "code": null,
+    "path": "Solid Waste Management.SWM Reports.Dumping Ground Detail Report"
+  },
+  {
+    "id": 1416,
+    "name": "Expenditure Incurred On Transportation Report",
+    "url": "/swm-services/report/expenditureincurredreport",
+    "displayName": "Expenditure Incurred On Transportation Report",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": true,
+    "serviceCode": "SWMRPT",
+    "code": null,
+    "path": "Solid Waste Management.SWM Reports.Expenditure Incurred On Transportation Report"
   }
   
 ]

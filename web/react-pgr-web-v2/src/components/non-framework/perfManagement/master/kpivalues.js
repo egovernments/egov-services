@@ -53,7 +53,7 @@ class kpivalues  extends Component{
             response:[],
 
             allowedMax:1,            
-            search:true,
+            search:false,
             headerList : [{4:'April'},{5:'May'},{6:'June'},{7:'July'},{8:'August'},{9:'September'},{10:'October'},{11:'November'},{12:'December'},{1:'January'},{2:'February'},{3:'March'}],
             errorInput:'No record found'
      };
@@ -168,8 +168,8 @@ class kpivalues  extends Component{
 
      self.setState({data: response,header:header,showResult: true,KPIResult:response});*/
 
-     let url = 'http://localhost:3000/perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=PFP&tenantId=default&pageSize=200';
-     //var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
+     //let url = 'http://localhost:3000/perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=PFP&tenantId=default&pageSize=200';
+     var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
      this.props.setLoadingStatus('loading');
      Api.commonApiPost(url, {}, {}, false, true).then(function(res){
         self.props.setLoadingStatus('hide');

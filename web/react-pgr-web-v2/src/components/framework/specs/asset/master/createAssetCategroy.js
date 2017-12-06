@@ -272,7 +272,15 @@ var dat = {
 						"isRequired": true,
 						"isDisabled": false,
 						"requiredErrMsg": "",
-						"patternErrMsg": ""
+						"patternErrMsg": "",
+						"defaultValue": [{
+						"key": "IMMOVABLE",
+						"value": "IMMOVABLE"
+					},
+					{
+							"key": "MOVABLE",
+							"value": "MOVABLE"
+						}]
 					}
 				]
 			}

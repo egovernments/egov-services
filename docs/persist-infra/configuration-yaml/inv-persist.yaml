@@ -1124,5 +1124,26 @@ serviceMaps:
             - jsonPath: $.indentDetails.*.id
             - jsonPath: $.indentDetails.*.tenantId
 
+    - version: 1
+      name: Update Purchase Order From Cancel Material Receipt
+      description: update purchase order from cancel material receipt
+      fromTopic: inv-purchaseorders-cancelreceipt-topic
+      queryMaps:
+        - query: >-
+            update purchaseorder
+            set status = (case when status = 'Fulfilled and Paid' then 'Fulfilled and Unpaid' ELSE status end )
+            where purchaseordernumber =
+            (select purchaseorder from purchaseorderdetail where id = ? and tenantid = ? );
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+        - query: >-
+                 update purchaseorderdetail set receivedquantity = receivedquantity-? where id = ? and tenantid = ? ;
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
 
 

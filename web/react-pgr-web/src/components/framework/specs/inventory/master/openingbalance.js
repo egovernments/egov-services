@@ -45,13 +45,17 @@ var dat = {
         },
         {
           "label": "inventory.mrnNumber"
+        },
+        {
+          "label": "inventory.status"
         }
         
       ],
       "values": [
         "financialYear",
         "receivingStore.code",
-        "mrnNumber"
+        "mrnNumber",
+        "mrnStatus"
       ],
       "resultPath": "materialReceipt",
       "rowClickUrlUpdate": "/update/inventory/openingbalance/{id}",

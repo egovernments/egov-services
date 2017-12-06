@@ -2821,6 +2821,7 @@ var localization_EN_Data = {
  "referenceEvidence.create.caseNo":"Case No",
 
 //Inventory Store Master
+"inventory.status":"Status",
  "inventory.store.title":"Store Master",
  "inventory.supplier.title":"Supplier Master",
  "inventory.pricelist.title":"PriceList Master",
@@ -2835,6 +2836,7 @@ var localization_EN_Data = {
  "inventory.store.search.title":"Search Store",
  "inventory.store.code" : "Store Code",
  "inventory.store.name" : "Store Name",
+ "inventory.currentRate":"Current Rate",
  "inventory.currentYear": "Current Year(From 01/Jan to 01/Mar)",
  "inventory.previousYear": "Previous Year(From 01/Jan to 31/Dec)",
 

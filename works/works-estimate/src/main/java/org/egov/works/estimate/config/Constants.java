@@ -289,6 +289,9 @@ public class Constants {
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";
     
+    public static final String KEY_DE_EXISTS_FOR_AE = "DE_EXISTS_FOR_AE";
+    public static final String MESSAGE_DE_EXISTS_FOR_AE = "Detailed estimate exists for the given abstract estimate";
+
     public static final String KEY_ESTIMATE_NOT_EXISTS = "ESTIMATE_NOT_EXISTS";
     public static final String MESSAGE_ESTIMATE_NOT_EXISTS = "Estimate does not exist with the given id";
     
@@ -323,6 +326,19 @@ public class Constants {
 
     public static final String KEY_PMCNAME_INVALID = "INVALID_PMCNAME";
     public static final String MESSAGE_PMCNAME_INVALID = "Please provide valid data for PMC Name";
+    
+    public static final String KEY_WARDCODE_INVALID = "INVALID_WARDCODE";
+    public static final String MESSAGE_WARDCODE_INVALID = "Please provide valid data for Ward";
+    
+    public static final String KEY_LOCALITYCODE_INVALID = "INVALID_LOCALITY";
+    public static final String MESSAGE_LOCALITYCODE_INVALID = "Please provide valid data for Locality";
+    
+    public static final String KEY_FUTUREDATE_COUNCILRESOLUTIONDATE = "INVALID_COUNCILRESOLUTIONDATE";
+    public static final String MESSAGE_FUTUREDATE_COUNCILRESOLUTIONDATE = "Council Resolution Date cannot be future date";
+    
+    public static final String KEY_COUNCILRESOLUTION_PROPOSAL_DATE = "INVALID_ADMINSANCTION_PROPOSAL_DATE";
+    public static final String MESSAGE_COUNCILRESOLUTION_PROPOSAL_DATE = "Council Resolution date should be on or after the Date of Proposal";
+
 
     
 }

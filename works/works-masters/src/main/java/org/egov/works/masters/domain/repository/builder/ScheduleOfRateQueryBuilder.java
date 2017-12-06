@@ -69,12 +69,18 @@ public class ScheduleOfRateQueryBuilder {
             params.put("sorIds", scheduleOfRateSearchCriteria.getIds());
         }
 
-        if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty()) {
+        if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty() && scheduleOfRateSearchCriteria.getSorCodes().size() == 1) {
+            selectQuery.append("lower(sor.code) like :sorCodes ");
+            params.put("sorCodes", '%' + scheduleOfRateSearchCriteria.getSorCodes().get(0).toLowerCase() + '%' );
+        } else if (scheduleOfRateSearchCriteria.getSorCodes() != null) {
             selectQuery.append(" and sor.code in (:sorCodes)");
             params.put("sorCodes", scheduleOfRateSearchCriteria.getSorCodes());
         }
 
-        if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty()) {
+        if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty() && scheduleOfRateSearchCriteria.getScheduleCategoryCodes().size() == 1) {
+            selectQuery.append("lower(sor.schedulecategory) like :scheduleCategoryCodes ");
+            params.put("scheduleCategoryCodes", '%' + scheduleOfRateSearchCriteria.getScheduleCategoryCodes().get(0).toLowerCase() + '%' );
+        } else if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null) {
             selectQuery.append(" and sor.schedulecategory in (:scheduleCategoryCodes)");
             params.put("scheduleCategoryCodes", scheduleOfRateSearchCriteria.getScheduleCategoryCodes());
         }

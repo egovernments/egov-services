@@ -198,7 +198,7 @@ public class IndentJdbcRepository extends org.egov.common.JdbcRepository {
 
 		if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString() +"  "+ conditions);
+			searchQuery = searchQuery.replace(":condition", " where indent.isdeleted is not true and " + params.toString() +" "+ conditions);
 
 		} else
 

@@ -6,6 +6,16 @@ public class KPITargetGetRequest {
 	
 	private List<String> kpiCode; 
 	private List<String> finYear;
+	private List<Long> departmentId; 
+	
+	
+	
+	public List<Long> getDepartmentId() {
+		return departmentId;
+	}
+	public void setDepartmentId(List<Long> departmentId) {
+		this.departmentId = departmentId;
+	}
 	public List<String> getKpiCode() {
 		return kpiCode;
 	}

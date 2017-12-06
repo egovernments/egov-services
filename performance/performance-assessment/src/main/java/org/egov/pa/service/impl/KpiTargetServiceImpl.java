@@ -54,9 +54,23 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 
 	@Override
 	public KPITargetRequest updateNewTarget(KPITargetRequest kpiTargetRequest) {
-		setCreatedAndUpdatedDate(kpiTargetRequest);
-		log.info("KPI Target Message after updating Updated Date " + kpiTargetRequest);
-		kpiTargetRepository.modifyNewTarget(kpiTargetRequest);
+		List<KpiTarget> targetList = kpiTargetRequest.getKpiTargets();
+		List<KpiTarget> createTargetList = new ArrayList<>();
+		for(KpiTarget target : targetList) { 
+			if(StringUtils.isBlank(target.getId())) { 
+				createTargetList.add(target); 
+			}
+		}
+		KPITargetRequest createRequest = new KPITargetRequest();
+		createRequest.setKpiTargets(createTargetList);
+		createRequest.setRequestInfo(kpiTargetRequest.getRequestInfo());
+		createNewTarget(createRequest); 
+		
+		if(targetList.size() != createTargetList.size()) { 
+			setCreatedAndUpdatedDate(kpiTargetRequest);
+			log.info("KPI Target Message after updating Updated Date " + kpiTargetRequest);
+			kpiTargetRepository.modifyNewTarget(kpiTargetRequest);
+		}
 		return kpiTargetRequest;
 	}
 	
@@ -115,22 +129,6 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 	@Override
 	public List<KpiTarget> searchKpiTarget(KPITargetGetRequest getReq) {
 		List<KpiTarget> targetList = kpiTargetRepository.searchKpiTargets(getReq);
-		List<String> kpiCodeList = new ArrayList<>();
-		for(KpiTarget target : targetList) { 
-			kpiCodeList.add(target.getKpiCode());
-		}
-		List<KPI> kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList, getReq.getFinYear(), 0l);
-		sortKpisToTarget(targetList, kpiList);
 		return targetList;
-	}
-	
-	private void sortKpisToTarget(List<KpiTarget> targetList, List<KPI> kpiList) { 
-		for(KpiTarget target : targetList) { 
-			for(KPI kpi : kpiList) { 
-				if(target.getKpiCode().equals(kpi.getCode())) { 
-					target.setKpi(kpi);
-				}
-			}
-		}
 	}
 }

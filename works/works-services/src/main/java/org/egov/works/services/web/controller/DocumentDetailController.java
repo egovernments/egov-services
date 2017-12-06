@@ -9,7 +9,6 @@ import org.egov.works.services.web.contract.DocumentDetail;
 import org.egov.works.services.web.contract.DocumentDetailRequest;
 import org.egov.works.services.web.contract.DocumentDetailResponse;
 import org.egov.works.services.web.contract.DocumentDetailSearchCriteria;
-import org.egov.works.services.web.contract.DocumentDetailSearchRequest;
 import org.egov.works.services.web.contract.RequestInfo;
 import org.egov.works.services.web.contract.factory.ResponseInfoFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -53,11 +52,11 @@ public class DocumentDetailController {
 	@PostMapping
 	@RequestMapping("/_search")
 	@ResponseStatus(HttpStatus.OK)
-	public ResponseEntity<?> searchDocuments(@Valid @ModelAttribute DocumentDetailSearchRequest documentDetailSearchRequest,
+	public ResponseEntity<?> searchDocuments(@Valid @ModelAttribute DocumentDetailSearchCriteria documentDetailSearchCriteria,
 			@RequestBody RequestInfo requestInfo) {
 
         DocumentDetailResponse documentDetailResponse = documentDetailsService
-				.searchDocuments(new DocumentDetailSearchCriteria().toDomain(documentDetailSearchRequest),requestInfo);
+				.searchDocuments(documentDetailSearchCriteria,requestInfo);
 		return new ResponseEntity<>(documentDetailResponse, HttpStatus.OK);
 	}
 }

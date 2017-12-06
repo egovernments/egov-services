@@ -146,7 +146,7 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 
 		String reason = rs.getString("reason");
 		String orderNo = rs.getString("order_no");
-		Date orderDate = rs.getDate("order_date");
+		Date orderDate = rs.getTimestamp("order_date");
 
 		if (Action.RENEWAL.equals(action)) {
 			Renewal renewal = new Renewal();
@@ -172,34 +172,34 @@ public class AgreementRowMapper implements ResultSetExtractor<List<Agreement>> {
 			cancellation.setOrderNumber(orderNo);
 			cancellation.setOrderDate(orderDate);
 			cancellation.setReasonForCancellation(ReasonForCancellation.fromValue(rs.getString("reason")));
-			cancellation.setTerminationDate(rs.getDate("terminationdate"));
+			cancellation.setTerminationDate(rs.getTimestamp("terminationdate"));
 
 			agreement.setCancellation(cancellation);
 			return agreement;
 		} else if (Action.OBJECTION.equals(action)) {
 			Objection objection = new Objection();
-			objection.setCourtCaseDate(rs.getDate("courtcase_date"));
+			objection.setCourtCaseDate(rs.getTimestamp("courtcase_date"));
 			objection.setCourtCaseNo(rs.getString("courtcase_no"));
 			objection.setCourtFixedRent(rs.getDouble("courtfixed_rent"));
-			objection.setEffectiveDate(rs.getDate("effective_date"));
+			objection.setEffectiveDate(rs.getTimestamp("effective_date"));
 
 			agreement.setObjection(objection);
 			return agreement;
 
 		} else if (Action.JUDGEMENT.equals(action)) {
 			Judgement judgement = new Judgement();
-			judgement.setJudgementDate(rs.getDate("judgement_date"));
+			judgement.setJudgementDate(rs.getTimestamp("judgement_date"));
 			judgement.setJudgementNo(rs.getString("judgement_no"));
 			judgement.setJudgementRent(rs.getDouble("judgement_rent"));
-			judgement.setEffectiveDate(rs.getDate("effective_date"));
+			judgement.setEffectiveDate(rs.getTimestamp("effective_date"));
 
 			agreement.setJudgement(judgement);
 			return agreement;
 		} else if (Action.REMISSION.equals(action)) {
 
 			Remission remission = new Remission();
-			remission.setRemissionFromDate(rs.getDate("remission_from_date"));
-			remission.setRemissionToDate(rs.getDate("remission_to_date"));
+			remission.setRemissionFromDate(rs.getTimestamp("remission_from_date"));
+			remission.setRemissionToDate(rs.getTimestamp("remission_to_date"));
 			remission.setRemissionReason(reason);
 			remission.setRemissionOrder(rs.getString("remission_order_no"));
 			remission.setRemissionRent(rs.getDouble("remission_fee"));

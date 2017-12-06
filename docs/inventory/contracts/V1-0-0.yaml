@@ -690,8 +690,8 @@ paths:
 
     /materialissues/_search:
       post:
-        summary: Get the list of material issues
-        description: This API holds the common information required by both Indent Issue and Non Indent Issue. This API will be invoked internally during search of Indent Issue and Non Indent Issue.
+        summary: Get the list of material issues for indent case.
+        description: This API holds the common information required by  Indent Issue . This API will be invoked internally during search of Indent Issue.
         tags:
           - Material Issue
         parameters:
@@ -762,8 +762,8 @@ paths:
 
     /materialissues/_create:
       post:
-        summary: Create  new  materialissues
-        description: This API holds the common information of both Indent Issue and Non Indent Issue. Whenver and Indent Issue or Non Indent Isseu is created in the system, this API will be invoked internally and the common information will be hold by this API.
+        summary: Create  new  materialissues for indent case.
+        description: This API holds the common information of both Indent Issue . Whenver  Indent Issue  is created in the system, this API will be invoked internally and the common information will be hold by this API.
         tags:
           - Material Issue
         parameters:
@@ -785,8 +785,8 @@ paths:
 
     /materialissues/_update:
       post:
-        summary: Update any of the material issues.
-        description: This API is inoked to update the material issue information.
+        summary: Update any of the material issues for indent case.
+        description: This API is inoked to update the material issue information for indent case.
         tags:
           - Material Issue
         parameters:
@@ -805,6 +805,124 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+              
+    /materialissues-ni/_search:
+      post:
+        summary: Get the list of material issues without
+        description: This API holds the common information required by Non Indent Issue. This API will be invoked internally during search of  Non Indent Issue.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/requestInfo'
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: ids
+            type: array
+            items:
+             type: string
+            in: query
+            maxItems: 50
+            description: comma seperated list of Ids
+          - name: fromStore
+            type: string
+            in: query
+            description: |
+             issuing store of the MaterialIssue
+          - name: toStore
+            type: string
+            in: query
+            description: |
+             receiving store of the MaterialIssue
+          - name: issueNoteNumber
+            type: string
+            in: query
+            description: |
+              issueNoteNumber  Auto generated number, read only
+          - name: issueDate
+            type: integer
+            format: int64
+            x-displayformat: 'dd/MM/yyyy'
+            in: query
+            description: |
+              issue date of the MaterialIssue
+          - name: materialIssueStatus
+            type: string
+            in: query
+            description: |
+              material issue status of the MaterialIssue
+            enum:
+              - CREATED
+              - APPROVED
+              - REJECTED
+              - CANCELED
+          - name: description
+            type: string
+            in: query
+            description: |
+              description of the MaterialIssue
+          - name: totalIssueValue
+            type: number
+            format: BigDecimal
+            in: query
+            description: |
+              total issue value of the MaterialIssue
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        responses:
+          200:
+            description: MaterialIssue retrieved Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialissues-ni/_create:
+      post:
+        summary: Create  new  materialissues for non indent case
+        description: This API holds the common information of Non Indent Issue. Whenver Non Indent Issue is created in the system, this API will be invoked internally and the common information will be hold by this API.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: Create  new
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue created Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
+    /materialissues-ni/_update:
+      post:
+        summary: Update any of the material issues for non indent case.
+        description: This API is inoked to update the material issue information for non indent case.
+        tags:
+          - Material Issue
+        parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
+          - name: materialIssueRequest
+            in: body
+            description: common Request info
+            schema:
+              $ref: '#/definitions/MaterialIssueRequest'
+        responses:
+          200:
+            description: MaterialIssue updated Successfully
+            schema:
+              $ref: '#/definitions/MaterialIssueResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'              
 
     /materials/_search:
       post:

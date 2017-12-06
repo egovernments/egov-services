@@ -18,6 +18,8 @@ import org.springframework.util.StringUtils;
 import java.math.BigDecimal;
 import java.util.*;
 
+import static org.egov.inv.model.PurchaseOrder.StatusEnum.FULFILLED_AND_PAID;
+import static org.egov.inv.model.PurchaseOrder.StatusEnum.FULFILLED_AND_UNPAID;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
@@ -38,6 +40,13 @@ public class ReceiptNoteService extends DomainService {
     @Value("${inv.materialreceiptnote.update.topic}")
     private String updateTopicKey;
 
+    @Value("${inv.purchaseorders.cancelreceipt.key}")
+    private String cancelReceiptPOTopicKey;
+
+    @Value("${inv.purchaseorders.cancelreceipt.topic}")
+    private String cancelReceiptPOTopic;
+
+
     @Autowired
     private MaterialReceiptService materialReceiptService;
 
@@ -55,6 +64,9 @@ public class ReceiptNoteService extends DomainService {
 
     @Autowired
     private StoreService storeService;
+
+    @Autowired
+    private SupplierService supplierService;
 
     public MaterialReceiptResponse create(MaterialReceiptRequest materialReceiptRequest, String tenantId) {
         List<MaterialReceipt> materialReceipts = materialReceiptRequest.getMaterialReceipt();
@@ -123,6 +135,9 @@ public class ReceiptNoteService extends DomainService {
                 receiptNoteRepository.markDeleted(materialReceiptDetailIds, tenantId, "materialreceiptdetail", "mrnNumber", materialReceipt.getMrnNumber());
 
             });
+            if (MaterialReceipt.MrnStatusEnum.CANCELED.toString().equalsIgnoreCase(materialReceipt.getMrnStatus().toString())) {
+                logAwareKafkaTemplate.send(cancelReceiptPOTopic, cancelReceiptPOTopicKey, materialReceiptRequest);
+            }
         });
 
         logAwareKafkaTemplate.send(updateTopic, updateTopicKey, materialReceiptRequest);
@@ -231,6 +246,10 @@ public class ReceiptNoteService extends DomainService {
             throw new CustomException("inv.0029", "Receipt date must be less than or equal to current date");
         }
 
+        if (null != materialReceipt.getSupplier() && !isEmpty(materialReceipt.getSupplier().getCode())) {
+            validateSupplier(materialReceipt, tenantId);
+        }
+
         validateMaterialReceiptDetail(materialReceipt, tenantId);
 
     }
@@ -243,7 +262,7 @@ public class ReceiptNoteService extends DomainService {
         validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
         for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
             if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
-                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
+                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getMrnStatus().toString(), materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
             }
             validateMaterial(materialReceiptDetail, tenantId);
             validateQuantity(materialReceiptDetail);
@@ -262,6 +281,19 @@ public class ReceiptNoteService extends DomainService {
         StoreResponse storeResponse = storeService.search(storeGetRequest);
         if (storeResponse.getStores().size() == 0) {
             throw new CustomException("inv.0025", "Store not found");
+        }
+    }
+
+    private void validateSupplier(MaterialReceipt materialReceipt, String tenantId) {
+        SupplierGetRequest supplierGetRequest = SupplierGetRequest.builder()
+                .code(Collections.singletonList(materialReceipt.getSupplier().getCode()))
+                .tenantId(tenantId)
+                .active(true)
+                .build();
+        SupplierResponse suppliers = supplierService.search(supplierGetRequest);
+        if (suppliers.getSuppliers().size() == 0) {
+            throw new CustomException("inv.0030", "Supplier not found or inactive");
+
         }
     }
 
@@ -325,7 +357,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, Long receiptDate, String supplier, String tenantId) {
+    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String status, Long receiptDate, String supplier, String tenantId) {
 
         if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
@@ -349,10 +381,12 @@ public class ReceiptNoteService extends DomainService {
                                     && purchaseOrder.getPurchaseOrderDate() >= receiptDate) {
                                 throw new CustomException("inv.00027", "Receipt Date must be greater than purchase order date");
                             }
+
                             if (!isEmpty(supplier) && !isEmpty(purchaseOrder.getSupplier().getCode())
                                     && !supplier.equalsIgnoreCase(purchaseOrder.getSupplier().getCode())) {
                                 throw new CustomException("inv.0029", "Supplier doesn't match the purchase order supplier");
                             }
+
                         }
                     } else
                         throw new CustomException("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +

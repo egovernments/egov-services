@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.egov.MDMSApplicationRunnerImpl;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.infra.mdms.repository.MDMSCreateRepository;
 import org.egov.infra.mdms.utils.MDMSConstants;
 import org.egov.infra.mdms.utils.MDMSUtils;
@@ -102,7 +103,9 @@ public class MDMSService {
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
 		startTime = new Date().getTime();
-		updateCache(gitRepoPath + filePath);
+		updateCache(gitRepoPath + filePath, 
+				mDMSCreateRequest.getMasterMetaData().getTenantId(), 
+				mDMSCreateRequest.getRequestInfo());
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 
@@ -128,9 +131,9 @@ public class MDMSService {
 		return fileContents;
 	}
 	
-	public void updateCache(String filePath){
+	public void updateCache(String filePath, String tenantId, RequestInfo requestInfo){
 		logger.info("Updating cache......");
-		mDMSCreateRepository.updateCache(filePath);
+		mDMSCreateRepository.updateCache(filePath, tenantId, requestInfo);
 	}
 	
 	public String getContentForPush(Object fileContents, 

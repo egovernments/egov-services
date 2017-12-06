@@ -227,7 +227,7 @@ public class SupplierJdbcRepository extends JdbcRepository {
 		if (supplierGetRequest.getOffset() != null)
 			page.setOffset(supplierGetRequest.getOffset());
 		if (params.length() > 0)
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and  " + params.toString());
 		else
 			searchQuery = searchQuery.replace(":condition", "");
 

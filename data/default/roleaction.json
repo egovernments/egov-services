@@ -12002,6 +12002,48 @@
       "actionid": 1215,
       "actioncode": "",
       "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1407,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1416,
+      "actioncode": "",
+      "tenantid": "default"
+    }
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1409,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1410,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1413,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+{
+      "rolecode": "SUPERUSER",
+      "actionid": 1405,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+{
+      "rolecode": "SUPERUSER",
+      "actionid": 1404,
+      "actioncode": "",
+      "tenantid": "default"
     }
   ]
 }

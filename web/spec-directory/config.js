@@ -32,6 +32,16 @@ const data =
 				"dataurl" : "/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=AssetCategory|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name",			
 			}
 		]
+	},
+	
+	"lcms" :
+	{
+		"url": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/lcms/contracts/lcms-services/v1-0-0.yml",
+		"masters":
+		[
+			{		
+			}
+		]
 	}
 
 }

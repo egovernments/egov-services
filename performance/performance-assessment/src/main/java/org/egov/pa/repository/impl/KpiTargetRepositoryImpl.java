@@ -1,18 +1,20 @@
 package org.egov.pa.repository.impl;
 
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.repository.KpiTargetRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPITargetRowMapper;
 import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPITargetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
 
@@ -35,9 +37,6 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
     private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
-    
-    @Autowired
     private PerformanceAssessmentQueryBuilder queryBuilder;
 	
 	@Override
@@ -54,13 +53,17 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 
 	@Override
 	public List<KpiTarget> searchKpiTargets(KPITargetGetRequest getReq) {
-    	String query = queryBuilder.getTargetSearchQuery(getReq);  
-    	final HashMap<String, Object> parametersMap = new HashMap<>();
-    	if(null != getReq.getKpiCode() && getReq.getKpiCode().size() > 0) {
-    		parametersMap.put("kpiCode", getReq.getKpiCode());
+		final List<Object> preparedStatementValues = new ArrayList<>();
+    	String query = queryBuilder.getTargetSearchQuery(getReq, preparedStatementValues);
+    	KPITargetRowMapper mapper = new PerformanceAssessmentRowMapper().new KPITargetRowMapper(); 
+    	List<KpiTarget> list = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+    	Map<String, KPI> kpiMap = mapper.kpiMap; 
+    	if(null != list && list.size() > 0) {
+    		for(KpiTarget target : list) { 
+    			KPI kpi = kpiMap.get(target.getKpiCode());
+    			target.setKpi(kpi); 
+    		}
     	}
-		List<KpiTarget> list = namedParameterJdbcTemplate.query(query,
-                parametersMap, new BeanPropertyRowMapper<>(KpiTarget.class));
 		return list;
 	}
 	

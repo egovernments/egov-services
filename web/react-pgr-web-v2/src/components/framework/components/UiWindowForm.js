@@ -272,7 +272,7 @@ class UiWindowForm extends Component {
                             }
                return (
                    <tr style={item.style}>
-                      <td>{i}</td>
+                      <td>{item.hidePrimaryRecord ? i : ++i}</td>
                       {item.tableConfig.rows.map((value, idx) => {
                         return <td>{_.get(v, value.displayField)}</td>;
                         //this.renderFields(_.get(v,value.displayField),value.type)}</td>);
@@ -682,13 +682,13 @@ affectDependants = (obj, e, property)=>{
             }
        })
 
-       try{
-           handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
-       }
-       catch(e){
-         console.log('error in autocomplete . It is version issue');
-         console.log(e);
-       }
+      //  try{
+      //      handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
+      //  }
+      //  catch(e){
+      //    console.log('error in autocomplete . It is version issue');
+      //    console.log(e);
+      //  }
 
        this.affectDependants(obj, e, property);
   };

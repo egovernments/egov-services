@@ -1,16 +1,17 @@
 package org.egov.inv.domain.service;
 
 import static org.springframework.util.StringUtils.isEmpty;
+
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
 import org.egov.common.Pagination;
-import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
@@ -59,7 +60,7 @@ public class OpeningBalanceService extends DomainService {
 			validate(openBalReq.getMaterialReceipt(), Constants.ACTION_CREATE,tenantId);
 			openBalReq.getMaterialReceipt().stream().forEach(materialReceipt -> {
 				materialReceipt.setId(jdbcRepository.getSequence("seq_materialreceipt"));
-				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.CREATED);
+				materialReceipt.setMrnStatus(MaterialReceipt.MrnStatusEnum.APPROVED);
 				if (isEmpty(materialReceipt.getTenantId())) {
 					materialReceipt.setTenantId(tenantId);
 				}
@@ -174,7 +175,6 @@ public class OpeningBalanceService extends DomainService {
 					break;
 	
 				}
-			Long currentMilllis = System.currentTimeMillis();
 
 			for (MaterialReceipt rcpt : receipt) 
 				{
@@ -228,13 +228,13 @@ public class OpeningBalanceService extends DomainService {
 									
 									
 									if (null != addInfo.getReceivedDate()
-											&& Long.valueOf(addInfo.getReceivedDate()) >= currentMilllis) {
+											&& Long.valueOf(addInfo.getReceivedDate()) > getCurrentDate()) {
 										throw new CustomException("ReceiptDate",
 												"ReceiptDate  Must Be Less Than Or Equal To Today's Date In Row "
 														+ detailIndex);
 									}
 									if (null != addInfo.getExpiryDate()
-											&& Long.valueOf(addInfo.getExpiryDate()) <= currentMilllis) {
+											&& Long.valueOf(addInfo.getExpiryDate()) < getCurrentDate()) {
 										throw new CustomException("ExpiryDate",
 												"ExpiryDate  Must Be Greater Than Or Equal To Today's Date In Row "
 														+ detailIndex);
@@ -289,4 +289,8 @@ public class OpeningBalanceService extends DomainService {
 			}
 		});
 	}
+	
+	 private Long getCurrentDate() {
+	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
+	    }
 }

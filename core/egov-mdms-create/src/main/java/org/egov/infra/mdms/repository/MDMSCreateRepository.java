@@ -8,10 +8,12 @@ import java.util.Map;
 import java.util.WeakHashMap;
 
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.egov.common.contract.request.RequestInfo;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,7 +31,13 @@ public class MDMSCreateRepository {
 	
 	@Autowired
 	private RestTemplate restTemplate;
+	
+	@Value("${reload.path.host}")
+	private String reloadPathHost;
 		
+	@Value("${reload.path.endpoint}")
+	private String reloadPathEndpoint;
+	
 	public Object get(String uri, String userName, String password){
 		Object result = null;
 		HttpHeaders headers = new HttpHeaders();
@@ -90,11 +98,17 @@ public class MDMSCreateRepository {
 		return result;
 	}
 	
-	public void updateCache(String filePath){
+	public void updateCache(String filePath, String tenantId, RequestInfo requestInfo){
+		StringBuilder uri = new StringBuilder();
+		uri.append(reloadPathHost)
+		   .append(reloadPathEndpoint)
+		   .append("?filePath="+filePath)
+		   .append("&tenantId="+tenantId);
+		logger.info("URI: "+uri.toString());
 		try{
-			//make rest call to update cache.
+			 restTemplate.postForObject(uri.toString(), requestInfo, String.class);
 		}catch(Exception e){
-			
+			logger.error("Exception while updating cache for: "+filePath+" = ",e);
 		}
 	}
 

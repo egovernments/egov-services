@@ -260,7 +260,8 @@ public class ReceiptNoteService extends DomainService {
         validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
         for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
             if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
-                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceivingStore().getCode(), materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
+                validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceivingStore().getCode(),
+                        materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
             }
             validateMaterial(materialReceiptDetail, tenantId);
             validateQuantity(materialReceiptDetail);
@@ -367,6 +368,16 @@ public class ReceiptNoteService extends DomainService {
             if (purchaseOrderDetails.getPagedData().size() > 0) {
                 for (PurchaseOrderDetail purchaseOrderDetail : purchaseOrderDetails.getPagedData()) {
 
+                    if (null != materialReceiptDetail.getReceivedQty() &&
+                            materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
+                        throw new CustomException("inv.0031", "Received quantity should be less than order quantity");
+                    }
+
+                    if (null != materialReceiptDetail.getReceivedQty() &&
+                            materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getReceivedQuantity().longValue()) {
+                        throw new CustomException("inv.0032", "Received quantity should be not be greater than receieved quatity");
+                    }
+
                     PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
                     purchaseOrderSearch.setPurchaseOrderNumber(purchaseOrderDetail.getPurchaseOrderNumber());
                     purchaseOrderSearch.setSupplier(supplier);
@@ -386,7 +397,6 @@ public class ReceiptNoteService extends DomainService {
                                     && !supplier.equalsIgnoreCase(purchaseOrder.getSupplier().getCode())) {
                                 throw new CustomException("inv.0029", "Supplier doesn't match the purchase order supplier");
                             }
-
                         }
                     } else
                         throw new CustomException("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +

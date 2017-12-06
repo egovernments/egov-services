@@ -32,7 +32,7 @@ var dat = {
     "result": {
       "header": [
 	{
-          "label": "swm.search.result.ulb"
+          "label": "swm.create.ulb"
         },
         {
           "label": "swm.search.result.dumpingGround"
@@ -186,7 +186,7 @@ var dat = {
         "fields": [
           {
             "name": "code",
-            "jsonPath": "sourceSegregations[0].dumpingGround.code",
+            "jsonPath": "sourceSegregations[0].dumpingGround.name",
             "label": "swm.create.dumpingGround",
             "pattern": "",
             "type": "text",
@@ -231,7 +231,7 @@ var dat = {
         "fields": [
           {
             "name": "code",
-            "jsonPath": "sourceSegregations[0].collectionDetails[0].collectionType.code",
+            "jsonPath": "sourceSegregations[0].collectionDetails[0].collectionType.name",
             "label": "swm.create.collectionType",
             "pattern": "",
             "type": "text",

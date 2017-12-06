@@ -144,52 +144,85 @@ class kpivalues  extends Component{
 
    
 
-   handleSearch( event )
-   {
-     let args = [];
-     if (this.state.selectedDeptId) {
-       args.push('departmentId='+this.state.selectedDeptId);
-     }
-     if (this.state.selectedFinYear) {
-       args.push('finYear='+this.state.selectedFinYear);
-       args['finYear'] = this.state.selectedFinYear;
-     }
-     if (this.state.selectedKpiCode) {
-       args.push('kpiCodes='+this.state.selectedKpiCode);
-     }
-
-     let self = this;
-
-     /*var res = JSON.parse('{"responseInfo":{"apiId":"org.egov.pt","ver":"1.0","ts":1512034880099,"resMsgId":"uief87324","msgId":"654654","status":"200"},"kpiValues":[{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"2","name":"MYKPITWO 2","code":"MKT","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"OBJECTIVE","instructions":"SECOND INS Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1511867571861},"kpiTarget":{"id":"10","kpiCode":"MKT","targetValue":"3","targetDescription":"In Progress","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"66","kpi":null,"kpiCode":"MKT","tenantId":"default","valueList":[{"id":null,"valueid":"66","period":"4","value":"1"},{"id":null,"valueid":"66","period":"5","value":"3"},{"id":null,"valueid":"66","period":"6","value":""},{"id":null,"valueid":"66","period":"7","value":"3"},{"id":null,"valueid":"66","period":"8","value":""},{"id":null,"valueid":"66","period":"9","value":""},{"id":null,"valueid":"66","period":"10","value":""},{"id":null,"valueid":"66","period":"11","value":""},{"id":null,"valueid":"66","period":"12","value":""},{"id":null,"valueid":"66","period":"1","value":""},{"id":null,"valueid":"66","period":"2","value":""},{"id":null,"valueid":"66","period":"3","value":"2"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}},{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"1","name":"MYKPIONE 1","code":"MKO","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"VALUE","instructions":"ONE Ins Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1512030906958},"kpiTarget":{"id":"9","kpiCode":"MKO","targetValue":"1000","targetDescription":"1000","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"57","kpi":null,"kpiCode":"MKO","tenantId":"default","valueList":[{"id":null,"valueid":"57","period":"4","value":"311"},{"id":null,"valueid":"57","period":"5","value":"200"},{"id":null,"valueid":"57","period":"6","value":"100"},{"id":null,"valueid":"57","period":"7","value":"120"},{"id":null,"valueid":"57","period":"8","value":"130"},{"id":null,"valueid":"57","period":"9","value":"140"},{"id":null,"valueid":"57","period":"10","value":"110"},{"id":null,"valueid":"57","period":"11","value":"120"},{"id":null,"valueid":"57","period":"12","value":"105"},{"id":null,"valueid":"57","period":"1","value":""},{"id":null,"valueid":"57","period":"2","value":""},{"id":null,"valueid":"57","period":"3","value":"10"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}},{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"3","name":"MYKPITHREE 3","code":"MKTH","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"TEXT","instructions":"THIRD INS Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1511867571861},"kpiTarget":{"id":"11","kpiCode":"MKTH","targetValue":"CONFIRMED","targetDescription":"CONFIRMED","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"75","kpi":null,"kpiCode":"MKTH","tenantId":"default","valueList":[{"id":null,"valueid":"75","period":"4","value":"100"},{"id":null,"valueid":"75","period":"5","value":"200"},{"id":null,"valueid":"75","period":"6","value":""},{"id":null,"valueid":"75","period":"7","value":""},{"id":null,"valueid":"75","period":"8","value":""},{"id":null,"valueid":"75","period":"9","value":""},{"id":null,"valueid":"75","period":"10","value":""},{"id":null,"valueid":"75","period":"11","value":""},{"id":null,"valueid":"75","period":"12","value":""},{"id":null,"valueid":"75","period":"1","value":""},{"id":null,"valueid":"75","period":"2","value":""},{"id":null,"valueid":"75","period":"3","value":"CONFIRMED"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}}]}');
-     var response = res.kpiValues;
-
-     let header = self.header();
-     //var row   = response;//self.prepareBodyobject(response);
-
-     self.setState({data: response,header:header,showResult: true,KPIResult:response});*/
-
-     //let url = 'http://localhost:3000/perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=PFP&tenantId=default&pageSize=200';
-     var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
-     this.props.setLoadingStatus('loading');
-     Api.commonApiPost(url, {}, {}, false, true).then(function(res){
-        self.props.setLoadingStatus('hide');
-        var response = res.kpiValues;
-
-         let header = self.header();
-        //var row   = self.prepareBodyobject(response);
-
-         let showResult = false;
-         if (res.kpiValues.length) {
-          showResult = true;
-         }
-
-         self.setState({data: res.kpiValues,header:header,showResult: showResult,KPIResult:response});
-
-       }, function(err){
-         self.props.setLoadingStatus('hide');
-       });
-
+ handleSearch( event )
+ {
+   let args = [];
+   if (this.state.selectedDeptId) {
+     args.push('departmentId='+this.state.selectedDeptId);
    }
+   if (this.state.selectedFinYear) {
+     args.push('finYear='+this.state.selectedFinYear);
+     args['finYear'] = this.state.selectedFinYear;
+   }
+   if (this.state.selectedKpiCode) {
+     args.push('kpiCodes='+this.state.selectedKpiCode);
+   }
+
+   let self = this;
+
+   /*var res = JSON.parse('{"responseInfo":{"apiId":"org.egov.pt","ver":"1.0","ts":1512034880099,"resMsgId":"uief87324","msgId":"654654","status":"200"},"kpiValues":[{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"2","name":"MYKPITWO 2","code":"MKT","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"OBJECTIVE","instructions":"SECOND INS Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1511867571861},"kpiTarget":{"id":"10","kpiCode":"MKT","targetValue":"3","targetDescription":"In Progress","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"66","kpi":null,"kpiCode":"MKT","tenantId":"default","valueList":[{"id":null,"valueid":"66","period":"4","value":"1"},{"id":null,"valueid":"66","period":"5","value":"3"},{"id":null,"valueid":"66","period":"6","value":""},{"id":null,"valueid":"66","period":"7","value":"3"},{"id":null,"valueid":"66","period":"8","value":""},{"id":null,"valueid":"66","period":"9","value":""},{"id":null,"valueid":"66","period":"10","value":""},{"id":null,"valueid":"66","period":"11","value":""},{"id":null,"valueid":"66","period":"12","value":""},{"id":null,"valueid":"66","period":"1","value":""},{"id":null,"valueid":"66","period":"2","value":""},{"id":null,"valueid":"66","period":"3","value":"2"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}},{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"1","name":"MYKPIONE 1","code":"MKO","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"VALUE","instructions":"ONE Ins Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1512030906958},"kpiTarget":{"id":"9","kpiCode":"MKO","targetValue":"1000","targetDescription":"1000","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"57","kpi":null,"kpiCode":"MKO","tenantId":"default","valueList":[{"id":null,"valueid":"57","period":"4","value":"311"},{"id":null,"valueid":"57","period":"5","value":"200"},{"id":null,"valueid":"57","period":"6","value":"100"},{"id":null,"valueid":"57","period":"7","value":"120"},{"id":null,"valueid":"57","period":"8","value":"130"},{"id":null,"valueid":"57","period":"9","value":"140"},{"id":null,"valueid":"57","period":"10","value":"110"},{"id":null,"valueid":"57","period":"11","value":"120"},{"id":null,"valueid":"57","period":"12","value":"105"},{"id":null,"valueid":"57","period":"1","value":""},{"id":null,"valueid":"57","period":"2","value":""},{"id":null,"valueid":"57","period":"3","value":"10"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}},{"tenantId":"default","kpi":{"departmentId":2,"department":null,"id":"3","name":"MYKPITHREE 3","code":"MKTH","remoteSystemId":null,"periodicity":"MONTHLY","targetType":"TEXT","instructions":"THIRD INS Updated","financialYear":"2017-18","documentsReq":null,"auditDetails":{"createdBy":73,"lastModifiedBy":73,"createdTime":1511867483098,"lastModifiedTime":1511867571861},"kpiTarget":{"id":"11","kpiCode":"MKTH","targetValue":"CONFIRMED","targetDescription":"CONFIRMED","tenantId":null,"createdBy":null,"lastModifiedBy":null,"createdDate":null,"lastModifiedDate":null}},"kpiValue":{"id":"75","kpi":null,"kpiCode":"MKTH","tenantId":"default","valueList":[{"id":null,"valueid":"75","period":"4","value":"100"},{"id":null,"valueid":"75","period":"5","value":"200"},{"id":null,"valueid":"75","period":"6","value":""},{"id":null,"valueid":"75","period":"7","value":""},{"id":null,"valueid":"75","period":"8","value":""},{"id":null,"valueid":"75","period":"9","value":""},{"id":null,"valueid":"75","period":"10","value":""},{"id":null,"valueid":"75","period":"11","value":""},{"id":null,"valueid":"75","period":"12","value":""},{"id":null,"valueid":"75","period":"1","value":""},{"id":null,"valueid":"75","period":"2","value":""},{"id":null,"valueid":"75","period":"3","value":"CONFIRMED"}],"documents":null,"auditDetails":{"createdBy":73,"lastModifiedBy":0,"createdTime":1511867905957,"lastModifiedTime":0}}}]}');
+   var response = res.kpiValues;
+
+   let header = self.header();
+   //var row   = response;//self.prepareBodyobject(response);
+
+   self.setState({data: response,header:header,showResult: true,KPIResult:response});*/
+
+   //let url = 'http://localhost:3000/perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=PFP&tenantId=default&pageSize=200';
+   var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
+   this.props.setLoadingStatus('loading');
+   Api.commonApiPost(url, {}, {}, false, true).then(function(res){
+      self.props.setLoadingStatus('hide');
+      var response = res.kpiValues;
+
+       let header = self.header();
+      //var row   = self.prepareBodyobject(response);
+
+       let showResult = false;
+       if (res.kpiValues.length) {
+        showResult = true;
+       }
+
+      /* response.map(item => {
+      item.kpiValue.valueList.map(periodItem =>{
+        if(periodItem.documents) {
+            periodItem.documents.map(files => {
+              console.log(files);
+              self.getFileDetails(files['fileStoreId'],self);
+            }); 
+          }
+          
+        });      
+      });*/
+
+       self.setState({data: res.kpiValues,header:header,showResult: showResult,KPIResult:response});
+
+     }, function(err){
+       self.props.setLoadingStatus('hide');
+     });
+
+ }
+
+getFileDetails(filestoreID,self)
+{
+    let {setLoadingStatus} = self.props;
+    let url = "/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + filestoreID;
+   
+   var oReq = new XMLHttpRequest();
+    oReq.open("GET", url, true);
+    oReq.responseType = "arraybuffer";
+    // console.log(fileURL);
+    oReq.onload = function(oEvent) {
+      var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
+      var url = URL.createObjectURL(blob);
+      self.setState({
+        iframe_src : url,
+        contentType: oReq.getResponseHeader('content-type')
+      }, setLoadingStatus('hide'));
+      //self.handleOpen();
+    };
+    oReq.send();
+}
 
 header()
 {
@@ -265,8 +298,9 @@ prepareUploadPanel(itemValue)
       >
         <ul>
           {
-            itemValue.documents.map(fileStoreId => {
-              return (<span><a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId} target="_blank">{translate("wc.craete.file.Download")}</a><br/></span>)
+
+             (itemValue.documents) && itemValue.documents.map(fileStoreId => {
+              return (<span><a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId['fileStoreId']} target="_blank">{/*fileStoreId['fileStoreId']*/ translate("wc.craete.file.Download")}</a><br/></span>)
             })
           }
         </ul>
@@ -313,7 +347,7 @@ prepareBodyobject(response)
 
                 <OverlayTrigger
                    trigger="click"
-                   overlay={this.prepareKPIdesc(item.kpi)} placement="bottom" rootClose>
+                   overlay={this.prepareKPIdesc(item.kpi)} placement="right" rootClose>
                     <span style={{"color":"orange"}}>
                         <span className="glyphicon glyphicon-info-sign" aria-hidden="true"></span>&nbsp;
                         <u>{translate("perfManagement.create.KPIs.groups.kpiInfo")}</u>
@@ -337,7 +371,7 @@ prepareBodyobject(response)
                            style={{"display": 'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
                            value={itemValue.value}
-                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e)} }
+                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e,'TXT')} }
                             />
 
                       }
@@ -350,7 +384,7 @@ prepareBodyobject(response)
                            style={{"display": 'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
                            value={itemValue.value}
-                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e)} }
+                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e,"TXT")} }
                             />
 
                       }
@@ -363,7 +397,7 @@ prepareBodyobject(response)
                            errorStyle={{"float":"left"}}
                            fullWidth={true}
                            hintText="Please Select"
-                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e)} }
+                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e,'DD')} }
                            >
                               <MenuItem value="1"  primaryText="YES" />
                               <MenuItem value="2"  primaryText="NO" />
@@ -406,7 +440,7 @@ prepareBodyobject(response)
   
 
 
-   handleChange(kpiValueID,period,event) {
+   handleChange(kpiValueID,period,event,type) {
 
       let KPIsClone = this.state.KPIResult.slice();
       
@@ -419,14 +453,30 @@ prepareBodyobject(response)
         KPIsClone[kpiId] = [];
         KPIsClone[kpiId][kpiValueId] = event.target.value;
       }
-      
       console.log(this.state.KPIResult);
       console.log(this.state.KPIResult);*/
+     
+      if (type == 'DD') {
+        if(event.target.innerHTML == 'NO')
+        {
+          event.target.value = "2";
+        }
+        if(event.target.innerHTML == 'YES')
+        {
+          event.target.value = "1";
+        }
+        if(event.target.innerHTML == 'WIP')
+        {
+          event.target.value = "3";
+        }
+      }
+      
+      console.log(event.target);
       for (var i = KPIsClone.length - 1; i >= 0; i--) {
         console.log(KPIsClone);
         console.log(i);
          KPIsClone[i]['kpiValue']['valueList'].map(p =>{
-           if (p['period'] == period && p['valueid']) {
+           if (p['valueid'] == kpiValueID && p['period'] == period) {
              p['value'] = event.target.value;
            }
         });

@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
-import {Card, CardText, CardMedia, CardHeader, CardTitle} from 'material-ui/Card';
+import {Card, CardText} from 'material-ui/Card';
 import {Grid, Row, Col} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
-import UIButton from '../../../framework/components/UiButton';
-import UIBackButton from '../../../framework/components/UiBackButton';
-
 import {
     fetchDepartmentAPI,
     fetchDepartmentKPIsAPI,
@@ -19,6 +16,9 @@ import {
 import LoadingIndicator from '../../../common/LoadingIndicator';
 import DashboardCard from './dashboardcard';
 import KPISelectField from './kpiselectfield';
+import BarChartCard from './barchartcard';
+
+var jp = require('jsonpath');
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -27,7 +27,12 @@ export default class Dashboard extends Component {
             apiLoading: false,
             departments: [],
             showDepartmentView: true,
-            showKPIQueryView: false
+            showKPIQueryView: false,
+            showChartView: false,
+            disableViewButton: false,
+            kpiIndices: [0],
+            ulbIndices: [0],
+            fyIndices: [0]
         }
 
         this.kpiLabel   = "KPIs";
@@ -36,6 +41,7 @@ export default class Dashboard extends Component {
         this.ulbRes     = null;
         this.fyRes      = null;
         this.kpiRes     = null;
+        this.chartRes   = null;
     }
 
     render() {
@@ -49,6 +55,9 @@ export default class Dashboard extends Component {
                 }
                 {
                     this.renderKPIQueryView()
+                }
+                {
+                    this.renderChart()
                 }
             </div>
         )
@@ -118,17 +127,93 @@ export default class Dashboard extends Component {
         })
     }
 
-    processSelectOnKPISelectField = (index, value, label) => {
-        console.log(`processSelectOnKPISelectField ${index} ${value} ${label}`)
+    /**
+     * SelectField manipulations.
+     */
+    processSelectOnKPISelectField = (index, values, label) => {
+        if (label === this.kpiLabel) {
+            if (values.length > 1) {
+                if (this.state.ulbIndices.length > 1 || this.state.fyIndices.length > 1) {
+                    this.toast('You have already selected multiple ULBs or Financial Years values')
+                } else {
+                    this.setState({
+                        kpiIndices: values
+                    })
+                }
+            } else {
+                this.setState({
+                    kpiIndices: values
+                })
+            }
+        }
+        if (label === this.ulbLabel) {
+            if (values.length > 1) {
+                if (this.state.kpiIndices.length > 1 || this.state.fyIndices.length > 1) {
+                    this.toast('You have already selected multiple KPIs or Financial Years values')
+                } else {
+                    this.setState({
+                        ulbIndices: values
+                    })
+                }
+            } else {
+                this.setState({
+                    ulbIndices: values
+                })
+            }
+        }
+        if (label === this.fyLabel) {
+            if (values.length > 1) {
+                if (this.state.kpiIndices.length > 1 || this.state.ulbIndices.length > 1) {
+                    this.toast('You have already selected multiple KPIs or ULBs values')
+                } else {
+                    this.setState({
+                        fyIndices: values
+                    })
+                }
+            } else {
+                this.setState({
+                    fyIndices: values
+                })
+            }
+        }
+
+        if (values.length === 0) {
+            this.setState({
+                disableViewButton: true
+            })
+        } else {
+            this.setState({
+                disableViewButton: false
+            })
+        }
     }
 
     processOnClickViewButton = () => {
+        let finYears    = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',')
+        let ulbs        = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',')
+        let kpis        = this.state.kpiIndices.map((item, index)=> jp.query(this.kpiRes, `$.KPIs[${item}].code`)).join(',')
+        console.log(finYears)
+        console.log(ulbs)
+        console.log(kpis)
 
+        this.busyUI(true)
+        fetchCompareSearchAPI(finYears, kpis, ulbs, (err, res) => {
+            this.busyUI(false)
+            if (err || !res) {
+                this.toast('Unable to get report data')
+            } else {
+                this.chartRes   = res;
+                this.setState({
+                    showChartView: true
+                });
+            }
+        })
     }
 
     processOnClickBackButton = () => {
         this.setState({
             showKPIQueryView: false,
+            showChartView: false,
             showDepartmentView: true
         })
     }
@@ -157,7 +242,7 @@ export default class Dashboard extends Component {
         let departments = parseDepartmentResponse(this.state.departments)
         if (departments.length > 0) {
             return (
-                departments.map((item, index) => <DashboardCard index={index} onClick={this.processOnClickOnCard} name={item.name} logo={require('../../../../images/headerLogo.png')} />)
+                departments.map((item, index) => <DashboardCard key={index} index={index} onClick={this.processOnClickOnCard} name={item.name} logo={require('../../../../images/headerLogo.png')} />)
             )
         }
     }
@@ -195,19 +280,22 @@ export default class Dashboard extends Component {
                         <CardText>
                             <Row>
                                 <Col xs={12} sm={4} md={4} >
-                                    <KPISelectField label={this.kpiLabel} mandatory= {true} multiple={true} disabled={false} value={0} displayKey={"name"}
-                                        items={parseDepartmentKPIsAsPerKPIType(this.state.departments, 'VALUE')}
+                                    <KPISelectField label={this.kpiLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
+                                        value={this.state.kpiIndices}
+                                        items={parseDepartmentKPIsAsPerKPIType(this.kpiRes, 'VALUE')}
                                         onItemsSelected={this.processSelectOnKPISelectField}
                                     />
                                 </Col>
                                 <Col xs={12} sm={4} md={4} >
-                                    <KPISelectField label={this.ulbLabel} mandatory= {true} multiple={true} disabled={false} value={0} displayKey={"name"}
+                                    <KPISelectField label={this.ulbLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
+                                        value={this.state.ulbIndices}
                                         items={parseULBResponse(this.ulbRes)}
                                         onItemsSelected={this.processSelectOnKPISelectField}
                                     />
                                 </Col>
                                 <Col xs={12} sm={4} md={4} >
-                                    <KPISelectField label={this.fyLabel} mandatory= {true} multiple={true} disabled={false} value={0} displayKey={"name"}
+                                    <KPISelectField label={this.fyLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
+                                        value={this.state.fyIndices}
                                         items={parseFinancialYearResponse(this.fyRes)}
                                         onItemsSelected={this.processSelectOnKPISelectField}
                                     />
@@ -219,10 +307,23 @@ export default class Dashboard extends Component {
 
                 <div style={{"textAlign": "center"}}>
                     <br/>
-                    <RaisedButton label="VIEW" style={style} primary={true} type="button" onClick={this.processOnClickViewButton} />
+                    <RaisedButton label="View" style={style} primary={true} type="button" onClick={this.processOnClickViewButton} disabled={this.state.disableViewButton} />
                 </div>
 
             </div>
+        )
+    }
+
+    /**
+     * render
+     * display charts for the selected values
+     */
+    renderChart = () => {
+        if (!this.state.showChartView) {
+            return (<div></div>)
+        }
+        return(
+            <BarChartCard data={this.chartRes} />
         )
     }
 }

@@ -24,9 +24,9 @@ const style = {
     },
     cardtext: {
         position: 'absolute',
-        'font-size': '20px',
+        'fontSize': '20px',
         height: '60px',
-        'text-align': 'center',
+        'textAlign': 'center',
         bottom: '15px',
         width: '100%'
     }
@@ -45,7 +45,7 @@ export default class DashboardCard extends Component {
     }
 
     render() {
-        style.cardheader['background-color'] = this.getRandomColor(this.props.name)
+        style.cardheader['backgroundColor'] = this.getRandomColor(this.props.name)
 
         return (
             <div>

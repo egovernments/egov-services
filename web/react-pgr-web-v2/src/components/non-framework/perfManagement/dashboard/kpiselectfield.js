@@ -3,8 +3,8 @@ import MenuItem from 'material-ui/MenuItem';
 import SelectField from 'material-ui/SelectField';
 
 export default class KPISelectField extends Component {
-    handleChange = (event, index, value) => {
-        this.props.onItemsSelected(index, value, this.props.label)
+    handleChange = (event, index, values) => {
+        this.props.onItemsSelected(index, values, this.props.label)
     }
 
     render() {

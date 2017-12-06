@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
 import TextField from 'material-ui/TextField';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
+import IconButton from 'material-ui/IconButton';
 import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import UiTextField from './UiTextField'
@@ -41,61 +42,169 @@ class UiMultiFieldAddToTable extends Component {
       valueList: [],
       formData: {},
       disableAdd: true,
-      index: 0
+      index: -1,
+      fieldErrors: {},
+      isBtnDisabled: false,
+      requiredFields: [],
+      isInlineEdit: false,
+      indexes: [],
+      isAddAgain: true
     }
   }
-  // componentWillReceiveProps(nextProps) {
-  // let arrayValue = this.props.getVal(this.props.item.jsonPath);
-  // console.log(arrayValue)
 
-  // let { valueList } = this.state;
-  // if (_.isArray(arrayValue) && JSON.stringify(arrayValue) != JSON.stringify(valueList)) {
-  //   this.setState({
-  //     valueList: arrayValue
-  //   })
-  // }
-  // }
+  componentDidMount() {
+    let { item, valueList } = this.props;
+    let requiredFields = [];
+    for (let i = 0; i < item.values.length; i++) {
+      if (item.values[i].isRequired)
+        requiredFields.push(item.values[i].jsonPath);
+    }
+
+    this.setState({
+      requiredFields,
+      isInlineEdit: item.values.length < 5
+    });
+
+    if (valueList && valueList.length) {
+      this.setState({
+        valueList: _.cloneDeep(valueList)
+      })
+    }
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!_.isEqual(nextProps, this.props)) {
+      this.updateValueList(nextProps);
+    }
+  }
+
+  updateValueList = (nProps) => {
+    if (nProps.valueList && nProps.valueList.length && !_.isEqual(nProps.valueList, this.state.valueList)) {
+      this.setState({
+        valueList: _.cloneDeep(nProps.valueList)
+      })
+    }
+  }
 
   handler = (e, property, isRequired, pattern, requiredErrMsg = "Required", patternErrMsg = "Pattern Missmatch", expression, expErr, isDate) => {
     let { formData } = this.state;
+    let fieldErrors = _.cloneDeep(this.state.fieldErrors);
+    let isFormValid = true;
     _.set(formData, property, e.target.value);
+
+    //Check if required
+    if (isRequired && (e.target.value == "")) {
+      fieldErrors[property] = requiredErrMsg;
+    } else {
+      delete fieldErrors[property];
+    }
+
+    //Check for pattern match
+    if (pattern && _.get(formData, property) && !new RegExp(pattern).test(_.get(formData, property))) {
+      fieldErrors[property] = patternErrMsg ? translate(patternErrMsg) : translate('ui.framework.patternMessage');
+      isFormValid = false;
+    }
+
+    //Check if any other field is required
+    for (let i = 0; i < this.state.requiredFields.length; i++) {
+      if (typeof _.get(formData, this.state.requiredFields[i]) == "undefined" || _.get(formData, this.state.requiredFields[i]) == "") {
+        isFormValid = false;
+        break;
+      }
+    }
+
     this.setState({
-      formData
-    }, function () { });
+      formData,
+      fieldErrors,
+      isBtnDisabled: !isFormValid || Object.keys(fieldErrors).length > 0
+    });
   }
 
-  addToParent = () => {
-
+  addToParent = (doNotOpen, ind) => {
     let formData = _.cloneDeep(this.props.formData);
-    let formData2 = _.cloneDeep(this.state.formData);
+    let localFormData = _.cloneDeep(this.state.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
-    let stateFormDataTable = _.get(formData2, this.props.item.jsonPath);
-
-    if (!myTableInParent) {
-      this.props.handler({ target: { value: stateFormDataTable } }, this.props.item.jsonPath);
+    let stateFormDataTable = _.get(localFormData, this.props.item.jsonPath);
+    let indexes;
+    if (this.state.index == -1) {
+      if (!myTableInParent) {
+        this.props.handler({ target: { value: stateFormDataTable } }, this.props.item.jsonPath);
+      } else {
+        myTableInParent.push(stateFormDataTable[0]);
+        this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
+      }
     } else {
-      myTableInParent.push(stateFormDataTable[0]);
+      myTableInParent[this.state.index] = stateFormDataTable[0];
       this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
     }
+
     let list = _.get(this.props.formData, this.props.item.jsonPath);
+
+    if (typeof ind != 'undefined') {
+      indexes = _.cloneDeep(this.state.indexes);
+      for (let i = 0; i < indexes.length; i++) {
+        if (indexes[i] == ind) {
+          indexes.splice(i, 1);
+          break;
+        }
+      }
+    }
+
     this.setState({
       valueList: list,
-      formData: {}
+      formData: {},
+      open: doNotOpen ? false : (this.state.index > -1 ? false : true),
+      index: -1,
+      isAddAgain: true,
+      indexes: indexes || this.state.indexes
+    }, function () {
+      if (this.props.setDisabled) this.props.setDisabled(true);
+    })
+  }
+
+  editRow = (index) => {
+    let list = _.cloneDeep(this.state.valueList);
+    let formData = {};
+    _.set(formData, this.props.item.jsonPath + "[0]", list[index]);
+    this.setState({
+      formData,
+      index,
+      open: true
     })
   }
 
   deleteRow = (index) => {
     let formData = _.cloneDeep(this.props.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
-    myTableInParent.splice(index, 1);
-    this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
+    if (myTableInParent) {
+      myTableInParent.splice(index, 1);
+      this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
+    }
     let list = _.cloneDeep(this.state.valueList);
     list.splice(index, 1)
     this.setState({
-      valueList: list
+      valueList: list,
+      isAddAgain: true,
+      formData: {}
+    }, function () {
+      if (this.props.setDisabled) this.props.setDisabled(true);
     })
-
   }
+
+  editInline = (index) => {
+    let { indexes } = this.state;
+    let list = _.cloneDeep(this.state.valueList);
+    indexes.push(index);
+    let formData = {};
+    _.set(formData, this.props.item.jsonPath + "[0]", list[index]);
+    this.setState({
+      formData,
+      index,
+      indexes,
+      isAddAgain: false
+    })
+  }
+
   renderFields = (item, screen) => {
     if (screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1) {
       if (item.type == "datePicker") {
@@ -103,45 +212,50 @@ class UiMultiFieldAddToTable extends Component {
       }
       item.type = "label";
     }
+
+    item.label = translate(item.label);
     switch (item.type) {
       case 'text':
-        return <UiTextField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiTextField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'textarea':
-        return <UiTextArea ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiTextArea ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'singleValueListMultiple':
-        return <UiSelectFieldMultiple ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiSelectFieldMultiple ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'singleValueList':
-        return <UiSelectField ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        item.fromProps = true;
+        item.animated = true;
+        item.isSet = !item.isSet;
+        return <UiSelectField isSet={item.isSet} ui={this.props.ui} useTimestamp={this.props.useTimestamp} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'multiValueList':
-        return <UiMultiSelectField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiMultiSelectField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'autoCompelete':
-        return <UiAutoComplete ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.autoComHandler || ""} />
+        return <UiAutoComplete ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} autoComHandler={this.autoComHandler || ""} />
       case 'number':
-        return <UiNumberField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiNumberField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'mobileNumber':
-        return <UiMobileNumber ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiMobileNumber ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'checkbox':
-        return <UiCheckBox ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiCheckBox ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'email':
-        return <UiEmailField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiEmailField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'datePicker':
-        return <UiDatePicker ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiDatePicker ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'singleFileUpload':
-        return <UiSingleFileUpload ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiSingleFileUpload ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'multiFileUpload':
-        return <UiMultiFileUpload ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiMultiFileUpload ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'pan':
-        return <UiPanCard ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiPanCard ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'aadhar':
-        return <UiAadharCard ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiAadharCard ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'pinCode':
-        return <UiPinCode ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiPinCode ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'label':
         return <UiLabel getVal={this.getVal} item={item} />
       case 'radio':
-        return <UiRadioButton ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.handler} />
+        return <UiRadioButton ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />
       case 'textSearch':
-        return <UiTextSearch ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} autoComHandler={this.autoComHandler} />
+        return <UiTextSearch ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.props.handler} autoComHandler={this.autoComHandler} />
     }
   }
 
@@ -150,23 +264,20 @@ class UiMultiFieldAddToTable extends Component {
       case 'google':
         return (
           <div>
-
-            {/* this.renderField(item) */}
             <Dialog
               title={this.props.item.label}
               actions={
                 <div>
                   <FlatButton
-                    label={translate("pt.create.groups.ownerDetails.fields.add")}
+                    label={(this.state.index == -1) ? translate("pt.create.groups.ownerDetails.fields.add") : translate("pgr.lbl.update")}
                     secondary={true}
+                    disabled={this.state.isBtnDisabled}
                     style={{ "marginTop": 39 }}
-                    onClick={this.addToParent}
-                  />
+                    onClick={this.addToParent} />
                   <FlatButton
                     label={translate("pt.create.button.viewdcb.close")}
                     primary={true}
-                    onClick={this.handleClose}
-                  />
+                    onClick={this.handleClose} />
                 </div>
               }
               modal={false}
@@ -183,18 +294,23 @@ class UiMultiFieldAddToTable extends Component {
                   }
                   )
                 }
-
-                
               </Row>
               <br />
 
             </Dialog>
+            <div style={{ "textAlign": "right" }}>
+              <RaisedButton label={"Add"}
+                onClick={this.handleOpen}
+                disabled={!this.state.isAddAgain}
+                primary={true} />
+            </div>
+            <br />
             <Table className="table table-striped table-bordered" responsive>
               <thead>
                 <tr>
                   <th>#</th>
                   {this.props.item.header.map((v) => {
-                    return(
+                    return (
                       <th>{translate(v.label)}</th>
                     )
                   })}
@@ -203,47 +319,106 @@ class UiMultiFieldAddToTable extends Component {
               </thead>
               <tbody>
                 {
-                  this.state.valueList.map((item, index) => {
-                    return (
-                      <tr key={index}>
-                        <td> {index + 1} </td>
-                        {Object.values(item).map((v) => {
-                          return (
-                            <td>{v}</td>
-                          )
-                        })
-                        }
-                        <td>
-                          <div className="material-icons" onClick={()=>{
-                            this.deleteRow(index)
-                          }}>delete</div>
-                        </td>
-                      </tr>
-                    )
-                  })
+                  this.state.valueList && this.state.valueList.length ?
+                    this.state.valueList.map((item, index) => {
+                      if (this.state.indexes.indexOf(index) > -1 || typeof item == "string") {
+                        return (
+                          <tr key={index}>
+                            <td> {index + 1} </td>
+                            {this.props.item.values.map((v) => {
+                              return (
+                                <td>{this.renderFields(v)}</td>
+                              )
+                            })
+                            }
+                            <td>
+                              <FlatButton
+                                label={(this.state.index == -1) ? translate("pt.create.groups.ownerDetails.fields.add") : translate("pgr.lbl.update")}
+                                secondary={true}
+                                disabled={this.state.isBtnDisabled}
+                                onClick={(e) => { this.addToParent(true, index) }} />
+                              <br />
+                              <FlatButton
+                                label={translate("pgr.lbl.delete")}
+                                secondary={true}
+                                onClick={(e) => { this.deleteRow(index) }} />
+                            </td>
+                          </tr>
+                        )
+                      } else {
+                        return (
+                          <tr key={index}>
+                            <td> {index + 1} </td>
+                            {Object.values(item).map((v) => {
+                              return (
+                                <td>{v}</td>
+                              )
+                            })
+                            }
+                            <td>
+                              {this.state.isInlineEdit ?
+                                <IconButton
+                                  onClick={() => {
+                                    this.editInline(index)
+                                  }}
+                                  disabled={!this.state.isAddAgain}>
+                                  <i className="material-icons" style={{ "color": "#000000" }}>border_color</i>
+                                </IconButton>
+                                :
+                                <IconButton
+                                  onClick={() => {
+                                    this.editRow(index)
+                                  }}
+                                  disabled={!this.state.isAddAgain}>
+                                  <i className="material-icons" style={{ "color": "#000000" }}>mode_edit</i>
+                                </IconButton>}
+                              &nbsp;&nbsp;&nbsp;&nbsp;
+                            <IconButton
+                                onClick={() => {
+                                  this.deleteRow(index)
+                                }}
+                                disabled={!this.state.isAddAgain}>
+                                <i className="material-icons text-danger">delete</i>
+                              </IconButton>
+                            </td>
+                          </tr>
+                        )
+                      }
+
+                    }) : <tr>
+                      <td colSpan={this.props.item.header.length + 2} className="text-center">
+                        No data yet! &nbsp;&nbsp; <a
+                          href="javascript:void(0)"
+                          className
+                          onClick={this.handleOpen}>Click here</a> to add.
+                          </td>
+                    </tr>
                 }
               </tbody>
             </Table>
-            <RaisedButton label={"Add"}
-              onClick={(e) => {
-                this.setState({ open: true })
-              }}
-              primary={true}
-              style={{ float: "right"}} 
-            />
           </div>
         );
     }
   }
 
-  enableAdd = () => {
-
-  }
-
   handleOpen = () => {
-    this.setState({
-      open: true
-    });
+    if (this.state.isInlineEdit) {
+      let list = _.cloneDeep(this.state.valueList);
+      list.push(" ");
+      this.setState({
+        isBtnDisabled: true,
+        index: -1,
+        valueList: list,
+        isAddAgain: false
+      }, function () {
+        if (this.props.setDisabled) this.props.setDisabled(false);
+      })
+    } else
+      this.setState({
+        open: true,
+        isBtnDisabled: true,
+        index: -1
+      });
   }
 
   handleClose = () => {
@@ -271,7 +446,6 @@ class UiMultiFieldAddToTable extends Component {
       this.props.handler({ target: { value: this.state.valueList.length ? this.state.valueList : "" } }, this.props.item.jsonPath, this.props.item.isRequired ? true : false, '', this.props.item.requiredErrMsg, this.props.item.patternErrMsg);
     })
   }
-
 
   render() {
     return (<div>

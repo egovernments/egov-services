@@ -375,10 +375,27 @@ class assetCategoryCreate extends Component {
     }
     moduleDetails.push(data);
     var _body = {
-      MdmsCriteria: {
+  /*    MdmsCriteria: {
         tenantId: localStorage.getItem("tenantId"),
         moduleDetails: moduleDetails
       }
+*/
+MdmsCriteria: {
+  tenantId: localStorage.getItem("tenantId"),
+  "moduleDetails": [
+    {
+      "moduleName": "ASSET",
+      "masterDetails": [
+        {
+          "name": "AssetCategory"
+
+        }
+
+      ]
+    }
+]
+  }
+
     }
 
     Api.commonApiPost('/egov-mdms-service/v1/_search','', _body,{},true,true).then((res)=>{

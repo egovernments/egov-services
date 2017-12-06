@@ -100,8 +100,8 @@ public class EstimateValidator {
             messages.put(Constants.KEY_PMCTYPE_INVALID, Constants.MESSAGE_PMCTYPE_INVALID);
         }
 
-        if (estimate.getPmcRequired() && estimate.getPmcType() != null && estimate.getPmcType().equalsIgnoreCase("Panel")
-                && estimate.getPmcName() == null) {
+        if (estimate.getPmcRequired() && StringUtils.isNotBlank(estimate.getPmcType()) && estimate.getPmcType().equalsIgnoreCase("Panel")
+                && StringUtils.isBlank(estimate.getPmcName())) {
             messages.put(Constants.KEY_PMCNAME_INVALID, Constants.MESSAGE_PMCNAME_INVALID);
         }
     }
@@ -565,9 +565,11 @@ public class EstimateValidator {
         if (detailedEstimate.getId() != null)
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
         List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
-        if (lists != null && !lists.isEmpty())
-            messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
-                    Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
+         for(DetailedEstimateHelper detailedEstimateHelper : lists) {
+             if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
+                 messages.put(Constants.KEY_INVALID_ESTIMATNUMBER_SPILLOVER,
+                         Constants.MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER);
+         }
     }
 
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,

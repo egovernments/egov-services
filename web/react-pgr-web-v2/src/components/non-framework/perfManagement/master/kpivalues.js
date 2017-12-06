@@ -50,9 +50,12 @@ class kpivalues  extends Component{
 
             uploadPane:[],
             anchorEl:[],
+            response:[],
+            files : [],
 
             allowedMax:1,            
-            search:false,
+            search:true,
+            headerList : [{4:'April'},{5:'May'},{6:'June'},{7:'July'},{8:'August'},{9:'September'},{10:'October'},{11:'November'},{12:'December'},{1:'January'},{2:'February'},{3:'March'}],
             errorInput:'No record found'
      };
 
@@ -166,6 +169,7 @@ class kpivalues  extends Component{
 
      self.setState({data: response,header:header,showResult: true,KPIResult:response});*/
 
+     //let url = 'http://localhost:3000/perfmanagement/v1/kpivalue/_search?departmentId=2&finYear=2017-18&kpiCodes=PFP&tenantId=default&pageSize=200';
      var url = 'perfmanagement/v1/kpivalue/_search?'+args.join('&')
      this.props.setLoadingStatus('loading');
      Api.commonApiPost(url, {}, {}, false, true).then(function(res){
@@ -173,14 +177,14 @@ class kpivalues  extends Component{
         var response = res.kpiValues;
 
          let header = self.header();
-         var row   = self.prepareBodyobject(response);
+        //var row   = self.prepareBodyobject(response);
 
          let showResult = false;
          if (res.kpiValues.length) {
           showResult = true;
          }
 
-         self.setState({data: row,header:header,showResult: showResult,KPIResult:response});
+         self.setState({data: res.kpiValues,header:header,showResult: showResult,KPIResult:response});
 
        }, function(err){
          self.props.setLoadingStatus('hide');
@@ -190,16 +194,16 @@ class kpivalues  extends Component{
 
 header()
 {
-  let header = ['April','May','June','July','August','September','October','November','December','January','February','March'];
+  let header = [{4:'April'},{5:'May'},{6:'June'},{7:'July'},{8:'August'},{9:'September'},{10:'October'},{11:'November'},{12:'December'},{1:'January'},{2:'February'},{3:'March'}];
 
   return header.map((headerItem,k) =>  {
-    //console.log(headerItem,k);
+    let index = Object.keys(headerItem)
     var className = '';
          // first section
          var className = this.panelVisiblity(k);
     return (        
           <th className={className}>                      
-            <div suppressContentEditableWarning="true"   >{headerItem}</div>
+            <div suppressContentEditableWarning="true"   >{headerItem[index[0]]}</div>
           </th> 
           );
   });
@@ -261,9 +265,11 @@ prepareUploadPanel(itemValue)
         }}
       >
         <ul>
-          <li>attachment 1</li>
-          <li>attachment 2</li>
-          <li>attachment 3</li>
+          {
+            itemValue.documents.map(fileStoreId => {
+              return (<a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId} target="_blank">{translate("wc.craete.file.Download")}</a>)
+            })
+          }
         </ul>
         <br/>
         {this.renderFileObject(itemValue)}
@@ -279,9 +285,24 @@ prepareKPIdesc(kpi)
 
 prepareBodyobject(response)
 {
-  
+    
+    response.map(item => {
+      let result = [];
+      item.kpiValue.valueList.map(periodItem =>{
+          this.state.headerList.map((headerItem,index) => {
+            let key = Object.keys(headerItem);
+              if (periodItem.period == key[0]) {
+                result[index] = periodItem;
+              }
+          });
+        });
+      item.kpiValue.valueList = result;
+      
+      });
+
   return response.map(item => {
-    this.state.uploadPane[item.kpiValue.id] = [];
+      
+    //this.state.uploadPane[item.kpiValue.id] = [];
     return (
           <tr>
             <td>
@@ -289,7 +310,7 @@ prepareBodyobject(response)
                 <label>{translate("perfManagement.create.KPIs.groups.type")}</label>:&nbsp;
                 <span>{item.kpi.targetType}</span><br/>
                 <label>{translate("perfManagement.create.KPIs.groups.kpiTarget")}</label>:&nbsp;
-                <span>{item.kpi.kpiTarget.targetDescription}</span><br/>
+                <span>{item.kpi.kpiTargets[0].targetDescription}</span><br/>
 
                 <OverlayTrigger
                    trigger="click"
@@ -317,6 +338,7 @@ prepareBodyobject(response)
                            style={{"display": 'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
                            value={itemValue.value}
+                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e)} }
                             />
 
                       }
@@ -328,7 +350,9 @@ prepareBodyobject(response)
                            inputStyle={{"color": "#5F5C57","textAlign":"left"}}
                            style={{"display": 'inline-block',width: 153}}
                            errorStyle={{"float":"left"}}
-                           value={itemValue.value} />
+                           value={itemValue.value}
+                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e)} }
+                            />
 
                       }
 
@@ -340,6 +364,7 @@ prepareBodyobject(response)
                            errorStyle={{"float":"left"}}
                            fullWidth={true}
                            hintText="Please Select"
+                           onChange={(e) => { this.handleChange(itemValue.valueid,itemValue.period,e)} }
                            >
                               <MenuItem value="1"  primaryText="YES" />
                               <MenuItem value="2"  primaryText="NO" />
@@ -374,24 +399,44 @@ prepareBodyobject(response)
             <td>
             </td>   
           </tr>
-          );          
+          );        
         });
 }
 
 
-  handleChange(kpiId,kpiValueId,event) {
-      let KPIsClone = this.state.KPIs.slice();
-      console.log(kpiValueId,'kpi value id');
-      KPIsClone[kpiId][kpiValueId] = parseInt(event.target.value);
+  
 
-      this.state.KPIResult[kpiId]['kpiValue']['valueList'].map(p =>{
-        if (p['period'] == kpiValueId) {
-          p['value'] = KPIsClone[kpiId][kpiValueId];
-        }
-      });
+
+   handleChange(kpiValueID,period,event) {
+
+      let KPIsClone = this.state.KPIResult.slice();
+      
+
+      /*if (KPIsClone[kpiId]) {
+        KPIsClone[kpiId][kpiValueId] = event.target.value;
+      }
+      else
+      {
+        KPIsClone[kpiId] = [];
+        KPIsClone[kpiId][kpiValueId] = event.target.value;
+      }
+      
+      console.log(this.state.KPIResult);
+      console.log(this.state.KPIResult);*/
+      for (var i = KPIsClone.length - 1; i >= 0; i--) {
+        console.log(KPIsClone);
+        console.log(i);
+         KPIsClone[i]['kpiValue']['valueList'].map(p =>{
+           if (p['period'] == period && p['valueid']) {
+             p['value'] = event.target.value;
+           }
+        });
+
+      }     
      
+     console.log(KPIsClone);
 
-      this.setState({KPIs : KPIsClone});
+      this.setState({KPIResult : KPIsClone});
 
 
        //console.log(this.state.KPIs);
@@ -429,10 +474,10 @@ prepareBodyobject(response)
          for(let key in fileList) {
         let kpiFiles = fileList[key];
 
-        fileStorId[key] = [];
+       var previous = '';
 
         for(let index in kpiFiles) {
-
+            let reference = '';
            fileUpload(kpiFiles[index], moduleName, function(err, res) {
             if(breakOut == 1) return;
             if(err) {
@@ -440,42 +485,45 @@ prepareBodyobject(response)
               self.props.setLoadingStatus('hide');
               self.props.toggleSnackbarAndSetText(true, err, false, true);
             } else {
-              counter--;
-              fileStorId[key][index] = res.files[0].fileStoreId;
+              
+              let filesClone = self.state.files.slice();
+              if(filesClone[key])
+              {
+                filesClone[key][index] = [];
+                filesClone[key][index].push(res.files[0].fileStoreId);
+               
+              }
+              else {
+                filesClone[key] = [];
+                filesClone[key][index] = [];
+                filesClone[key][index].push(res.files[0].fileStoreId);
+              }
+
+              self.setState({files:filesClone});
+              if(previous != key)
+              {
+                counter--;
+                console.log(counter);
+                if(counter == 0 && breakOut == 0)
+                {
+                  self.prepareFilesList(self,url);
+                }
+              }
+              //
+              previous = key;
               //console.log(res.files[0].fileStoreId);
               //_.set(formData, key, res.files[0].fileStoreId);
-              if(counter == 0 && breakOut == 0)
-              {
-
-                this.state.KPIResult.map(kpi => {
-              if (fileStorId[kpi.kpiValue.id]) {
-                    kpi.kpiValue.valueList.map(kpiValue => {
-                      console.log(fileStorId);
-                      console.log(fileStorId[kpi.kpiValue.id]);
-                      if (fileStorId[kpi.kpiValue.id][kpiValue.period]) {
-                        console.log(fileStorId[kpi.kpiValue.id][kpiValue.period]); 
-                        kpiValue.documents = fileStorId[kpi.kpiValue.id][kpiValue.period];                   
-                      }
-                    });
-                  }
-                  
-
-              });
-                self.props.setLoadingStatus('hide');
-                let body = {'kpiValues' : this.state.KPIResult};
-                self.makeAjaxCall(body,url);
+              
                 
-              }
-                console.log('go for form submission');
                 //self.makeAjaxCall(formData, _url);
             }
-        })
-
+        });
+          
         }
-        counter--;
-       }
+        //counter--;
 
        }
+     }
        else
        {
           self.props.setLoadingStatus('hide');
@@ -483,6 +531,34 @@ prepareBodyobject(response)
           self.makeAjaxCall(body,url);
        }
        
+   }
+
+   prepareFilesList(self,url)
+   {
+    let resultClone = self.state.KPIResult.slice();
+    resultClone.map(kpi => {
+      if (self.state.files[kpi.kpiValue.id]) {
+        kpi.kpiValue.valueList.map(kpiValue => {          
+          /*
+          kpiValue.documents[1] = self.state.files[kpi.kpiValue.id][1];
+          kpiValue.documents[2] = self.state.files[kpi.kpiValue.id][2];
+          kpiValue.documents[3] = self.state.files[kpi.kpiValue.id][3];
+          kpiValue.documents[4] = self.state.files[kpi.kpiValue.id][4];
+          kpiValue.documents[5] = self.state.files[kpi.kpiValue.id][5];
+          kpiValue.documents[6] = self.state.files[kpi.kpiValue.id][6];
+          kpiValue.documents[7] = self.state.files[kpi.kpiValue.id][7];
+          kpiValue.documents[8] = self.state.files[kpi.kpiValue.id][8];
+          kpiValue.documents[9] = self.state.files[kpi.kpiValue.id][9];
+          kpiValue.documents[10] = self.state.files[kpi.kpiValue.id][10];
+          kpiValue.documents[11] = self.state.files[kpi.kpiValue.id][11];
+          kpiValue.documents[12] = self.state.files[kpi.kpiValue.id][12];
+          */
+        });
+      }
+    });
+    self.props.setLoadingStatus('hide');
+    let body = {'kpiValues' : resultClone};
+    self.makeAjaxCall(body,url);
    }
 
    makeAjaxCall= (data,url) =>  {

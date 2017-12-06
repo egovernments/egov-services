@@ -625,7 +625,7 @@ class assetImmovableCreate extends Component {
       setTimeout(function() {
         if(self.props.actionName == "update") {
           console.log("update");
-          var hash = "/non-framework/asset/master/assetMovableView/" + response.Assets[0].id;
+          var hash = "/non-framework/asset/master/assetImmovableView/" + response.Assets[0].id;
         }
         if(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
           if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
@@ -635,10 +635,10 @@ class assetImmovableCreate extends Component {
             console.log("check1");
             if(self.props.actionName == "update") {
               console.log("update");
-              var hash = "/non-framework/asset/master/assetMovableView/" + response.Assets[0].id;
+              var hash = "/non-framework/asset/master/assetImmovableView/" + response.Assets[0].id;
             } else {
               console.log(formData);
-              var hash = "/non-framework/asset/master/assetMovableView/" + response.Assets[0].id;
+              var hash = "/non-framework/asset/master/assetImmovableView/" + response.Assets[0].id;
             }
           }
 

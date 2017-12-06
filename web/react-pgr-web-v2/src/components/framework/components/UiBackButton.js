@@ -17,6 +17,7 @@ class UiBackButton extends Component {
 				 let {setRoute,match}=this.props;
          let {params,path}=match;
          let {customUrl}=this.props;
+         // debugger;
          if(customUrl){
              setRoute(customUrl);
          }

@@ -56,8 +56,9 @@ public class PerformanceAssessmentQueryBuilder {
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "
     		+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
-    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate " 
-    		+ " FROM egpa_kpi_master master WHERE master.id IS NOT NULL " ; 
+    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, "
+    		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear "
+    		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ; 
     
     public static final String SEARCH_VALUE_BASE_QUERY = "SELECT value.id, value.finyear as valueFinYear, value.kpicode as kpiCode, value.tenantid as tenantId, value.createdby as createdBy, value.createddate as createdDate, value.lastmodifiedby as lastModifiedBy, value.lastmodifieddate as lastModifiedDate, "  
     		+ " detail.id as valueDetailId, detail.id as valueDetailId, detail.valueid as valueId, detail.period, detail.value , docs.filestoreid as fileStoreId FROM  "  
@@ -201,19 +202,19 @@ public class PerformanceAssessmentQueryBuilder {
         
         boolean isAppendAndClause = false;
 
-        if (departmentId > 0) { 
+        if (null != departmentId && departmentId > 0) { 
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(departmentId);
         }
         
-        if (kpiCodeList.size() > 0) {
+        if (null != kpiCodeList && kpiCodeList.size() > 0) {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.code IN " + getStringQuery(kpiCodeList));
             
         }
 
-        if (finYearList.size() > 0) { 
+        if (null != finYearList && finYearList.size() > 0) { 
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" target.finyear IN " + getStringQuery(finYearList));
         }
@@ -225,9 +226,9 @@ public class PerformanceAssessmentQueryBuilder {
 			final KPIValueSearchRequest kpiValueSearchReq) {
 		List<String> finYearList = kpiValueSearchReq.getFinYear();
 		List<String> tenantIdList = kpiValueSearchReq.getTenantId();
-		if (null == kpiValueSearchReq.getTenantId() || null == kpiValueSearchReq.getFinYear())
-			return;
-		selectQuery.append(" AND ");
+		if (!(null == finYearList && null == tenantIdList))
+			selectQuery.append(" AND ");
+		
 		boolean isAppendAndClause = false;
 		
 		if (null != tenantIdList && tenantIdList.size() > 0 && 
@@ -284,7 +285,7 @@ public class PerformanceAssessmentQueryBuilder {
     private void addKpiMasterWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final KPIGetRequest kpiGetRequest) {
         if (null == kpiGetRequest.getKpiCode() && null == kpiGetRequest.getKpiName() 
-        		&& null == kpiGetRequest.getDepartmentId())
+        		&& null == kpiGetRequest.getDepartmentId() && null == kpiGetRequest.getFinYear())
             return;
 
         selectQuery.append(" AND ");
@@ -312,6 +313,12 @@ public class PerformanceAssessmentQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(kpiGetRequest.getDepartmentId());
+        }
+        
+        if (StringUtils.isNotBlank(kpiGetRequest.getFinYear())) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.finyear = ? ");
+            preparedStatementValues.add(kpiGetRequest.getFinYear());
         }
     }
     

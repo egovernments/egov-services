@@ -895,7 +895,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
 
         - query: >-
-               update purchaseOrderDetails set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
+               update purchaseOrderDetail set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.material.code
@@ -1006,7 +1006,7 @@ serviceMaps:
             - jsonPath: $.purchaseOrders.*.tenantId
 
         - query: >-
-               update purchaseOrderDetails set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
+               update purchaseOrderDetail set  material= ? , purchaseOrder= ? , orderNumber= ? , uom= ? , priceList= ? , orderQuantity= ? , receivedQuantity= ? , unitPrice= ? , description= ?  where id= ? and tenantId= ?;
           basePath: $.purchaseOrders.*.purchaseOrderDetails.*
           jsonMaps:
             - jsonPath: $.purchaseOrders.*.purchaseOrderDetails.*.material.code

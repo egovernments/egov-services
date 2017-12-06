@@ -745,16 +745,7 @@ var dat = {
             "patternErrorMsg": ""
           },
 
-          {
-            "name": "indentType",
-            "jsonPath": "indents[0].indentType",
-            "label": "inventory.indent.type",
-            "pattern": "",
-            "type": "text",
-            "isRequired": false,
-            "defaultValue":"",
-            "patternErrorMsg": ""
-          },
+          
           {
             "name": "inventoryType",
             "jsonPath": "indents[0].inventoryType",

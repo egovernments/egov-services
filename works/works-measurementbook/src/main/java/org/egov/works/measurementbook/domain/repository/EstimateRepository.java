@@ -34,6 +34,8 @@ public class EstimateRepository {
     
     private String detailedEstimateCreateUrl;
     
+    private String detailedEstimateUpdateUrl;
+    
     @Autowired
     private ObjectMapper objectMapper;
 
@@ -41,10 +43,12 @@ public class EstimateRepository {
 	public EstimateRepository(final RestTemplate restTemplate,
                               @Value("${egov.services.egov_works_estimate.hostname}") final String worksEstimateHostname,
                               @Value("${egov.services.egov_works_estimate.searchbydepartment}") final String detailedEstimateByDepartmentUrl,
-                              @Value("${egov.services.egov_works_estimate.createpath}") final String detailedEstimateCreateUrl) {
+                              @Value("${egov.services.egov_works_estimate.createpath}") final String detailedEstimateCreateUrl,
+                              @Value("${egov.services.egov_works_estimate.updatepath}") final String detailedEstimateUpdateUrl) {
 		this.restTemplate = restTemplate;
         this.detailedEstimateByDepartmentUrl = worksEstimateHostname + detailedEstimateByDepartmentUrl;
         this.detailedEstimateCreateUrl = worksEstimateHostname + detailedEstimateCreateUrl;
+        this.detailedEstimateUpdateUrl = worksEstimateHostname + detailedEstimateUpdateUrl;
 	}
 
     public List<DetailedEstimate> searchDetailedEstimatesByDepartment(final List<String> departmentCodes, final String tenantId,final RequestInfo requestInfo) {
@@ -54,15 +58,18 @@ public class EstimateRepository {
         return restTemplate.postForObject(detailedEstimateByDepartmentUrl, requestInfo, DetailedEstimateResponse.class,tenantId,departments, status).getDetailedEstimates();
     }
 
-    public DetailedEstimateResponse createDetailedEstimate(DetailedEstimateRequest detailedEstimateRequest) {
+    public DetailedEstimateResponse createUpdateDetailedEstimate(DetailedEstimateRequest detailedEstimateRequest, Boolean isUpdate) {
     	ErrorHandler errorHandler = new ErrorHandler();
     	Map<String, String> errors = new HashMap<>();
     	restTemplate.setErrorHandler(errorHandler);
     	HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<?> request = new HttpEntity<Object>(detailedEstimateRequest, headers);
-    	ResponseEntity<String> response =
-                restTemplate.exchange(detailedEstimateCreateUrl, HttpMethod.POST, request, String.class);
+    	ResponseEntity<String> response = null;
+    	if (isUpdate)
+    		response = restTemplate.exchange(detailedEstimateUpdateUrl, HttpMethod.POST, request, String.class);
+    	else
+    		response = restTemplate.exchange(detailedEstimateCreateUrl, HttpMethod.POST, request, String.class);
         String responseBody = response.getBody();
         try {
             if (errorHandler.hasError(response.getStatusCode())) {

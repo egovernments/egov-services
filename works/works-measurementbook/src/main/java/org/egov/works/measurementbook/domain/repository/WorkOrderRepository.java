@@ -34,16 +34,24 @@ public class WorkOrderRepository {
     
     private String loaCreateUrl;
     
+    private String loaUpdateUrl;
+    
+    private String loaSearchUrl;
+    
     @Autowired
     private ObjectMapper objectMapper;
 
 
     public WorkOrderRepository(final RestTemplate restTemplate,@Value("${egov.services.workorder.hostname}") final String workOrderHostname,
                                @Value("${egov.services.workorder.contractorsearchpath}") final String contractorSearchUrl,
-                               @Value("${egov.services.egov_works_loa.createpath}") final String loaCreateUrl) {
+                               @Value("${egov.services.egov_works_loa.createpath}") final String loaCreateUrl,
+                               @Value("${egov.services.egov_works_loa.updatepath}") final String loaUpdateUrl,
+                               @Value("${egov.services.egov_works_loa.searchpath}") final String loaSearchUrl) {
         this.restTemplate = restTemplate;
         this.contractorSearchUrl = workOrderHostname + contractorSearchUrl;
         this.loaCreateUrl = workOrderHostname + loaCreateUrl;
+        this.loaUpdateUrl = workOrderHostname + loaUpdateUrl;
+        this.loaSearchUrl = workOrderHostname + loaSearchUrl;
     }
 
     public List<LetterOfAcceptance> searchLetterOfAcceptance(List<String> codes,List<String> names, String tenantId,
@@ -54,16 +62,27 @@ public class WorkOrderRepository {
         return restTemplate.postForObject(contractorSearchUrl,requestInfo, LetterOfAcceptanceResponse.class,tenantId, contractorCodes,contractorNames,status).getLetterOfAcceptances();
 
     }
+    
+	public LetterOfAcceptanceResponse searchLOAById(List<String> idList, String tenantId,
+			RequestInfo requestInfo) {
+		String status = LOAStatus.APPROVED.toString();
+		String ids = idList != null ? String.join(",", idList) : "";
+		return restTemplate.postForObject(loaSearchUrl, requestInfo, LetterOfAcceptanceResponse.class, tenantId,
+				ids, status);
+	}
 
-    public LetterOfAcceptanceResponse createLOA(LetterOfAcceptanceRequest letterOfAcceptanceRequest) {
+    public LetterOfAcceptanceResponse createUpdateLOA(LetterOfAcceptanceRequest letterOfAcceptanceRequest, Boolean isUpdate) {
     	ErrorHandler errorHandler = new ErrorHandler();
     	Map<String, String> errors = new HashMap<>();
     	restTemplate.setErrorHandler(errorHandler);
     	HttpHeaders headers = new HttpHeaders();
         headers.add("Accept", MediaType.APPLICATION_JSON_VALUE);
         HttpEntity<?> request = new HttpEntity<Object>(letterOfAcceptanceRequest, headers);
-    	ResponseEntity<String> response =
-                restTemplate.exchange(loaCreateUrl, HttpMethod.POST, request, String.class);
+    	ResponseEntity<String> response = null;
+    	if (isUpdate)
+    		response = restTemplate.exchange(loaUpdateUrl, HttpMethod.POST, request, String.class);
+    	else
+    		response = restTemplate.exchange(loaCreateUrl, HttpMethod.POST, request, String.class);
         String responseBody = response.getBody();
         try {
             if (errorHandler.hasError(response.getStatusCode())) {

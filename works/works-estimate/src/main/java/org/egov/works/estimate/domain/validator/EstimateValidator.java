@@ -97,9 +97,12 @@ public class EstimateValidator {
         Map<String, String> messages = new HashMap<>();
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
             validateEstimateDetails(estimate, messages);
+            validatePMCData(messages, estimate);
             if (estimate.getSpillOverFlag())
                 validateSpillOverData(estimate, messages);
             validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages, isNew);
+            if (!messages.isEmpty())
+                throw new CustomException(messages);
             if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
                 validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (StringUtils.isNotBlank(estimate.getAdminSanctionNumber()))
@@ -109,6 +112,16 @@ public class EstimateValidator {
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             if (!messages.isEmpty())
                 throw new CustomException(messages);
+        }
+    }
+
+    private void validatePMCData(Map<String, String> messages, final AbstractEstimate estimate) {
+        if(estimate.getPmcRequired() && estimate.getPmcType() == null) {
+            messages.put(Constants.KEY_PMCTYPE_INVALID, Constants.MESSAGE_PMCTYPE_INVALID);
+        }
+        
+        if(estimate.getPmcRequired() && estimate.getPmcType() != null && estimate.getPmcType().equalsIgnoreCase("Panel") && estimate.getPmcName() == null) {
+            messages.put(Constants.KEY_PMCNAME_INVALID, Constants.MESSAGE_PMCNAME_INVALID);
         }
     }
 
@@ -171,12 +184,18 @@ public class EstimateValidator {
                     Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_REQUIRED);
         for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails()) {
             estimateAmount = estimateAmount.add(aed.getEstimateAmount());
-            if (estimate.getBillsCreated() && aed.getGrossAmountBilled() <= 0) {
+            if (estimate.getBillsCreated() && aed.getGrossAmountBilled() == null) {
                 messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED,
                         Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED);
             }
+            
+            if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null && aed.getGrossAmountBilled() <= 0) {
+                messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED,
+                        Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_GROSSBILLEDAMOUNT_REQUIRED);
+            }
+            
 
-            if (estimate.getBillsCreated() && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
+            if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
                 messages.put(Constants.KEY_INVALID_GROSSBILLEDAMOUNT, Constants.MESSAGE_INVALID_GROSSBILLEDAMOUNT);
 
         }

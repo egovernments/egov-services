@@ -143,7 +143,7 @@ class Search extends Component {
     self.props.setLoadingStatus('loading');
     var formData = {...this.props.formData};
     if (hasDefaultSearch) {
-      formData=JSON.parse(window.localStorage.getItem("formData"));
+      formData=window.localStorage.getItem("formData") && JSON.parse(window.localStorage.getItem("formData"));
       this.props.setFormData(formData)
     }
     for(var key in formData) {

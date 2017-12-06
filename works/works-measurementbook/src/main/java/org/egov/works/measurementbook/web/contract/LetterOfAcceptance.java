@@ -93,7 +93,7 @@ public class LetterOfAcceptance {
 	private Boolean spillOverFlag = false;
 
 	@JsonProperty("letterOfAcceptanceEstimates")
-	private List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<LetterOfAcceptanceEstimate>();
+	private List<LetterOfAcceptanceEstimate> letterOfAcceptanceEstimates = new ArrayList<>();
 
 	@JsonProperty("securityDeposits")
 	private List<SecurityDeposit> securityDeposits = null;
@@ -103,6 +103,9 @@ public class LetterOfAcceptance {
 
 	@JsonProperty("auditDetails")
 	private AuditDetails auditDetails = null;
+	
+	@JsonProperty("deleted")
+	private Boolean deleted = null;
 
 	public LetterOfAcceptance id(String id) {
 		this.id = id;
@@ -741,6 +744,14 @@ public class LetterOfAcceptance {
 
 	public void setAuditDetails(AuditDetails auditDetails) {
 		this.auditDetails = auditDetails;
+	}
+
+	public Boolean getDeleted() {
+		return deleted;
+	}
+
+	public void setDeleted(Boolean deleted) {
+		this.deleted = deleted;
 	}
 
 	@Override

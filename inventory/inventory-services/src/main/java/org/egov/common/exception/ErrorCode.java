@@ -14,6 +14,10 @@ public enum ErrorCode {
 			"org.egov.service.kafka.timeout",
 			"time out while waiting for kafka",
 			"Some required service is down. Please contact Administrator"), 
+	INTERNAL_SERVER_ERROR(
+			"org.egov.service.internal.error",
+			"Internal Server error",
+			"Some required service is down. Please contact Administrator"),
 	NON_UNIQUE_VALUE(
 					"non.unique.value",
 					"the field {0} must be unique in the system",
@@ -51,7 +55,14 @@ public enum ErrorCode {
 			  "The  value  {2} for the field {0} should be Greater than value  {3} for the field {1} ."),
 	MANDATORY_BASED_ON("value2.manadatory.if.value1",
 			  "the field {0} is mandatory if  {1}  is selected. ",
-			  "The field {0} should be provided if the {1} is selected {2}."); 
+			  "The field {0} should be provided if the {1} is selected {2}."),
+	FIN_YEAR_NOT_EXIST("fin.year.not.exist",
+			  "Financial Year does not exist for the date {0} ",
+			  "Financial Year does not exist for the date {0}."),
+	CITY_CODE_NOT_AVAILABLE("city.code.not.available",
+			  "City code is not available for tenant {0} ",
+			  "City code is not available for tenant  {0}.")  
+	; 
 
 	
 	private final String code;

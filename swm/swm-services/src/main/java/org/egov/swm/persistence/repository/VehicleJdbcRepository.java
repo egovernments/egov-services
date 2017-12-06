@@ -140,6 +140,12 @@ public class VehicleJdbcRepository extends JdbcRepository {
             paramValues.put("fuelType", searchRequest.getFuelTypeCode());
         }
 
+        if (searchRequest.getDriverCode() != null) {
+            addAnd(params);
+            params.append("driver =:driver");
+            paramValues.put("driver", searchRequest.getDriverCode());
+        }
+
         if (searchRequest.getPurchaseYear() != null) {
             addAnd(params);
             params.append("yearOfPurchase =:yearOfPurchase");
@@ -193,7 +199,7 @@ public class VehicleJdbcRepository extends JdbcRepository {
             populateVehicleTypes(vehicleList);
 
             populateVendors(vehicleList);
-            
+
             populateDrivers(vehicleList);
         }
         page.setTotalResults(vehicleList.size());

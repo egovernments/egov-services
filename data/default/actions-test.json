@@ -895,7 +895,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": "513",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "CASE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Case.New Case Create"
@@ -934,7 +934,7 @@
     "orderNumber": 0,
     "queryParams": null,
     "parentModule": "516",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "ADVOCATE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Masters.Advocate.Advocate Create"
@@ -960,7 +960,7 @@
     "orderNumber": 11,
     "queryParams": null,
     "parentModule": "514",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "OPINION",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Opinion.Opinion Create"
@@ -986,7 +986,7 @@
     "orderNumber": 21,
     "queryParams": null,
     "parentModule": "515",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "PAYMENTADVOCATE",
     "code": "null",
     "path": "Legal Case Management.Legal Case Transactions.Payment Request.AdvocatePayment Create"
@@ -1012,7 +1012,7 @@
     "orderNumber": 0,
     "queryParams": null,
     "parentModule": "517",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "REGISTER",
     "code": "null",
     "path": "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Create"

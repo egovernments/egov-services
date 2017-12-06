@@ -24,6 +24,7 @@ public class KPIGetRequest {
 	private String pageSize;
 	private String pageNumber;
 	private String sort;
+	private String finYear; 
 	
 	
 	

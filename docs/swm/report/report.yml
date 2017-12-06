@@ -90,6 +90,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: egswm_vehicle
     isMandatory: true
+    wrapper: true
     pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid|$..regNumber|$..regNumber
   - name: vehicletype
     label: reports.swm.vehicletype

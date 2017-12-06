@@ -2821,6 +2821,7 @@ var localization_EN_Data = {
  "referenceEvidence.create.caseNo":"Case No",
 
 //Inventory Store Master
+"inventory.status":"Status",
  "inventory.store.title":"Store Master",
  "inventory.supplier.title":"Supplier Master",
  "inventory.pricelist.title":"PriceList Master",

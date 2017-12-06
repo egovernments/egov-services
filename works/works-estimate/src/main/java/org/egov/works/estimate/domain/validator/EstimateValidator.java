@@ -72,6 +72,10 @@ public class EstimateValidator {
             validateMasterData(estimate, abstractEstimateRequest.getRequestInfo(), messages, isNew);
             if (!messages.isEmpty())
                 throw new CustomException(messages);
+            
+            if (estimate.getSpillOverFlag())
+                validateDuplicateWINCode(messages, estimate);
+            
             if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
                 validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (StringUtils.isNotBlank(estimate.getAdminSanctionNumber()))
@@ -82,6 +86,23 @@ public class EstimateValidator {
                 validateIsModified(estimate, abstractEstimateRequest.getRequestInfo(), messages);
             if (!messages.isEmpty())
                 throw new CustomException(messages);
+        }
+    }
+
+    private void validateDuplicateWINCode(Map<String, String> messages, final AbstractEstimate estimate) {
+        int size = estimate.getAbstractEstimateDetails().size();
+        boolean validProjectCodes = true;
+        for (int i = 0; i<= size-1; i++) {
+            for(int j = 0; j<= size-1; j++) {
+                if(i != j && estimate.getAbstractEstimateDetails().get(i).getProjectCode().getCode().equalsIgnoreCase(estimate.getAbstractEstimateDetails().get(j).getProjectCode().getCode())) {
+                    validProjectCodes = false;
+                }
+            }
+        }
+
+        if(!validProjectCodes) {
+            messages.put(Constants.KEY_DUPLICATE_WINCODES,
+                    Constants.MESSAGE_DUPLICATE_WINCODES);
         }
     }
 
@@ -188,6 +209,7 @@ public class EstimateValidator {
         if (estimate.getAbstractEstimateDetails().isEmpty())
             messages.put(Constants.KEY_ABSTRACTESTIMATE_DETAILS_REQUIRED,
                     Constants.MESSAGE_ABSTRACTESTIMATE_DETAILS_REQUIRED);
+        
         for (final AbstractEstimateDetails aed : estimate.getAbstractEstimateDetails()) {
             estimateAmount = estimateAmount.add(aed.getEstimateAmount());
             if (estimate.getBillsCreated() && aed.getGrossAmountBilled() == null) {
@@ -203,7 +225,7 @@ public class EstimateValidator {
             if (estimate.getBillsCreated() && aed.getGrossAmountBilled() != null
                     && aed.getGrossAmountBilled().compareTo(BigDecimal.ZERO.doubleValue()) == -1)
                 messages.put(Constants.KEY_INVALID_GROSSBILLEDAMOUNT, Constants.MESSAGE_INVALID_GROSSBILLEDAMOUNT);
-
+            
         }
 
         if (estimate.getBillsCreated() && !(estimate.getDetailedEstimateCreated() && estimate.getWorkOrderCreated())) {

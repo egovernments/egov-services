@@ -339,6 +339,9 @@ public class Constants {
     public static final String KEY_COUNCILRESOLUTION_PROPOSAL_DATE = "INVALID_ADMINSANCTION_PROPOSAL_DATE";
     public static final String MESSAGE_COUNCILRESOLUTION_PROPOSAL_DATE = "Council Resolution date should be on or after the Date of Proposal";
 
+    public static final String KEY_DUPLICATE_WINCODES = "KEY_DUPLICATE_WINCODES";
+    public static final String MESSAGE_DUPLICATE_WINCODES = "Please provide Unique work identification numbers in abstract estimate details";
+
 
     
 }

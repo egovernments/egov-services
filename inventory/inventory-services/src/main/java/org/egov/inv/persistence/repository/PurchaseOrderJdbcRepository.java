@@ -157,7 +157,7 @@ public class PurchaseOrderJdbcRepository extends org.egov.common.JdbcRepository 
 
 		if (params.length() > 0) {
 
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and  " + params.toString());
 
 		} else
 

@@ -96,7 +96,7 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 		if (searchContract.getPageNumber() != null)
 			page.setOffset(searchContract.getPageNumber());
 		if (params.length() > 0)
-			searchQuery = searchQuery.replace(":condition", " where " + params.toString());
+			searchQuery = searchQuery.replace(":condition", " where isdeleted is not true and " + params.toString());
 		else
 			searchQuery = searchQuery.replace(":condition", "");
 

@@ -227,8 +227,7 @@ paths:
             maxItems: 50
             description: comma seperated list of Ids
           - name: issueStore
-            type: integer
-            format: int64
+            type: string
             in: query
             description: |
               issue store of the Indent
@@ -271,6 +270,28 @@ paths:
             in: query
             description: |
               totalIndentValue  denormalized value from Indent Material
+          - name: indentType
+            in: query
+            type: string
+            enum:
+              - Indent
+              - TransferIndent
+            description: |
+              There are 2 types of indent namely Indent Note and Transfer Indent
+          - name: searchPurpose
+            in: query
+            type: string
+            enum:
+              - PurchaseOrder
+              - IssueMaterial
+            description: | 
+                  Using this field to search indents for purchase order or material issue creation.
+          - name: inventoryType
+            in: query
+            type: string
+            enum:
+              - Asset
+              - Consumable
           - $ref: "#/parameters/pageSize"
           - $ref: "#/parameters/pageNumber"
           - $ref: "#/parameters/sortProperty"

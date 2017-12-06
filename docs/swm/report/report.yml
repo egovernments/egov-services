@@ -97,6 +97,7 @@ ReportDefinitions:
     type: singlevaluelist
     source: mdms
     isMandatory: true
+    wrapper: true
     pattern: http://swm-services:8080/swm-services/vehicles/_search?tenantId=$tenantid&regNumbers={vehicle}|$..vehicleType.code|$..vehicleType.name    
   - name: fromDate
     label: reports.swm.datefrom

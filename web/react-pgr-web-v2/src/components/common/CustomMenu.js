@@ -309,6 +309,10 @@ const menuConvention={
 "Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Search": "/search/swm/vendorpaymentdetails/view",
 "Solid Waste Management.SWM Transactions.Vendor Payment Details.VendorPaymentDetails Update": "/search/swm/vendorpaymentdetails/update",
 
+//SWM Reports
+"Solid Waste Management.SWM Reports.Dumping Ground Detail Report": "/report/swm/DumpingGroundDetailReport",
+"Solid Waste Management.SWM Reports.Expenditure Incurred On Transportation Report": "/report/swm/ExpenditureIncurredReport",
+
 //legal case
 "Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacycase",
 "Legal Case Management.Legal Case Transactions.Case.New Case Create":"/create/legal/summon",

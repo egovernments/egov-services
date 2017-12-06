@@ -214,9 +214,10 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getTargetSearchQuery(KPITargetGetRequest getReq, final List preparedStatementValues) { 
     	
-    	final StringBuilder selectQuery = new StringBuilder("SELECT target.id, kpicode as kpiCode, targetvalue as targetValue, tenantid as tenantId, target.finyear as finYear, master.name " 
-    			+ " FROM egpa_kpi_master_target target, egpa_kpi_master master "  
-    			+ " WHERE master.code = target.kpicode"); 
+    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, " 
+    			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear " 
+    			+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
+    			+ " WHERE master.id IS NOT NULL"); 
     	getTargetSearchWhereClause(selectQuery, preparedStatementValues, getReq);
 		LOGGER.info("Query : " + selectQuery);
 		return selectQuery.toString();

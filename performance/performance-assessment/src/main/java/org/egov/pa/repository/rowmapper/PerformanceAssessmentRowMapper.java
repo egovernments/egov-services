@@ -142,6 +142,39 @@ public class PerformanceAssessmentRowMapper {
 		}
 	}
 	
+	public class KPITargetRowMapper implements RowMapper<KpiTarget> {
+		public Map<String, KPI> kpiMap = new HashMap<>();
+		
+		@Override
+		public KpiTarget mapRow(final ResultSet rs, final int rowNum) throws SQLException {
+			
+			if(!kpiMap.containsKey(rs.getString("code"))) { 
+				KPI kpi = new KPI(); 
+				kpi.setId(rs.getString("id"));
+				kpi.setName(rs.getString("name"));
+				kpi.setCode(rs.getString("code"));
+				kpi.setDepartmentId(rs.getLong("departmentId"));
+				kpi.setFinancialYear(rs.getString("financialYear"));
+				kpi.setInstructions(rs.getString("instructions"));
+				kpi.setPeriodicity(rs.getString("periodicity"));
+				kpi.setTargetType(rs.getString("targetType"));
+				kpiMap.put(rs.getString("code"), kpi); 
+			}
+			
+			KpiTarget target = new KpiTarget(); 
+			target.setId(rs.getString("targetId"));
+			if(StringUtils.isNotBlank(rs.getString("kpiCode"))) { 
+				target.setKpiCode(rs.getString("kpiCode"));
+			} else { 
+				target.setKpiCode(rs.getString("code"));
+			}
+			target.setFinYear(rs.getString("targetFinYear"));
+			target.setTargetValue(rs.getString("targetValue"));
+			target.setTargetDescription(rs.getString("targetValue")); 
+			return target;
+		}
+	}
+	
 	public class KPIValueReportMapper implements RowMapper<KpiValueList> {
 		public Map<String, Map<String, Map<String, KpiValue>>> reportMap = new HashMap<>();
 		public Map<String, KPI> kpiMap = new HashMap<>();

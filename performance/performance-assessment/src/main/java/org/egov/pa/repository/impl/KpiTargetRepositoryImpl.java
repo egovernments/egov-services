@@ -2,15 +2,18 @@ package org.egov.pa.repository.impl;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.repository.KpiTargetRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
+import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPITargetRowMapper;
 import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPITargetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -52,7 +55,15 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 	public List<KpiTarget> searchKpiTargets(KPITargetGetRequest getReq) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
     	String query = queryBuilder.getTargetSearchQuery(getReq, preparedStatementValues);
-    	List<KpiTarget> list = jdbcTemplate.query(query, preparedStatementValues.toArray(), new BeanPropertyRowMapper<>(KpiTarget.class));
+    	KPITargetRowMapper mapper = new PerformanceAssessmentRowMapper().new KPITargetRowMapper(); 
+    	List<KpiTarget> list = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
+    	Map<String, KPI> kpiMap = mapper.kpiMap; 
+    	if(null != list && list.size() > 0) {
+    		for(KpiTarget target : list) { 
+    			KPI kpi = kpiMap.get(target.getKpiCode());
+    			target.setKpi(kpi); 
+    		}
+    	}
 		return list;
 	}
 	

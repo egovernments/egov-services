@@ -33,7 +33,11 @@ const style = {
 }
 
 export default class DashboardCard extends Component {
-    
+
+    handleOnClick = () => {
+        this.props.onClick(this.props.index)
+    }
+
     getRandomColor(str) {
         for (var i = 0, hash = 0; i < str.length; hash = str.charCodeAt(i++) + ((hash << 5) - hash));
         let color = Math.floor(Math.abs((Math.sin(hash) * 10000) % 1 * 16777216)).toString(16);
@@ -45,7 +49,7 @@ export default class DashboardCard extends Component {
 
         return (
             <div>
-                <Card style={style.card} onClick={this.props.onClick}>
+                <Card style={style.card} onClick={this.handleOnClick}>
                     <CardHeader
                         style={style.cardheader}
                         title=""

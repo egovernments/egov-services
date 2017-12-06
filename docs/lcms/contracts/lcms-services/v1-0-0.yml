@@ -27,6 +27,7 @@ schemes:
   - https
 basePath: '/legalcase'
 x-api-id: 'org.egov.lcms.services'
+x-module: "lcms"
 paths:
   /case/_search:
     post:

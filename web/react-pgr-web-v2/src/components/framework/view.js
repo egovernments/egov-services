@@ -281,7 +281,8 @@ class Report extends Component {
     if(isTime && val && ((val + "").length == 13 || (val + "").length == 12) && new Date(Number(val)).getTime() > 0){
         return this.formatAMPM(new Date(parseInt(val)));
     }
-    return  typeof val != "undefined" && (typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val === true) ? "Yes" : (val === false) ? "No" : (val + "") : "";
+
+    return  typeof val != "undefined" && (typeof val=="object" || typeof val == "string" || typeof val == "number" || typeof val == "boolean") ?  (val === true) ? "Yes" : (val === false) ? "No" : (typeof val=="object" ? val : val + "") : "";
   }
 
   printer = () => {

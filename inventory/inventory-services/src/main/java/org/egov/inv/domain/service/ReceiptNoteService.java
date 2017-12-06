@@ -288,10 +288,11 @@ public class ReceiptNoteService extends DomainService {
         SupplierGetRequest supplierGetRequest = SupplierGetRequest.builder()
                 .code(Collections.singletonList(materialReceipt.getSupplier().getCode()))
                 .tenantId(tenantId)
+                .active(true)
                 .build();
         SupplierResponse suppliers = supplierService.search(supplierGetRequest);
         if (suppliers.getSuppliers().size() == 0) {
-            throw new CustomException("inv.0030", "Supplier not found");
+            throw new CustomException("inv.0030", "Supplier not found or inactive");
 
         }
     }

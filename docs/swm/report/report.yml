@@ -4,7 +4,7 @@ ReportDefinitions:
   version: 1.0.0
   moduleName: swm
   externalService:
-  - entity: $.MdmsRes.SWM.DumpingGround
+  - entity: $.MdmsRes.swm.DumpingGround
     apiURL:  http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid
     keyOrder: code,name,tenantId
     tableName: tbl_swmdumpingground

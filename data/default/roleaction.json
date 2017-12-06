@@ -12015,5 +12015,17 @@
       "actioncode": "",
       "tenantid": "default"
     }
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1409,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1410,
+      "actioncode": "",
+      "tenantid": "default"
+    }
   ]
 }

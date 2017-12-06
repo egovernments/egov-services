@@ -149,7 +149,7 @@ var dat = {
             "minLength": 1,
             "patternErrorMsg": "",
 	    "isStateLevel": true,
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..code"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name"
           },
           {
             "name": "fuelFilled",
@@ -427,7 +427,7 @@ var dat = {
             "minLength": 1,
             "patternErrorMsg": "",
 	    "isStateLevel": true,
-	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..code"
+	    "url": "/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name"
           },
           {
             "name": "fuelFilled",

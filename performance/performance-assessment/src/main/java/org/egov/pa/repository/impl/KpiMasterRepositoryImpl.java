@@ -63,6 +63,8 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
     
     @Value("${kafka.topics.kpitarget.update.name}")
 	private String updateKpiTargetTopic;
+    
+    private static final String MH_TENANT = "mh"; 
 
 	@Override
 	public void persistKpi(KPIRequest kpiRequest) {
@@ -124,7 +126,7 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	@Override
 	public List<KPI> searchKpi(KPIGetRequest kpiGetRequest) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		List<Department> deptList = restCallService.getDepartmentForId("mh");
+		List<Department> deptList = restCallService.getDepartmentForId(MH_TENANT);
 		log.info("Department List obtained for the Tenant ID : " + deptList.toString());
     	String query = queryBuilder.getKpiSearchQuery(kpiGetRequest, preparedStatementValues);
     	KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper(); 

@@ -121,9 +121,9 @@ public class RequestValidator {
             throw new CustomException(messages);
     }
 
-    public void validateSearchDocuments(final DocumentDetailSearchRequest documentDetailSearchRequest) {
+    public void validateSearchDocuments(final DocumentDetailSearchCriteria documentDetailSearchCriteria) {
         Map<String, String> messages = new HashMap<>();
-        if (StringUtils.isBlank(documentDetailSearchRequest.getTenantId())) {
+        if (StringUtils.isBlank(documentDetailSearchCriteria.getTenantId())) {
             messages.put(Constants.KEY_TENANTID_INVALID, Constants.MESSAGE_TENANTID_INVALID);
         }
         if (messages != null && !messages.isEmpty())

@@ -2836,6 +2836,7 @@ var localization_EN_Data = {
 
 //Inventory Store Master
  "inventory.store.title":"Store Master",
+ "inventory.status":"Status",
  "inventory.supplier.title":"Supplier Master",
  "inventory.pricelist.title":"PriceList Master",
  "inventory.material.title":"Material Master",
@@ -2848,6 +2849,7 @@ var localization_EN_Data = {
  "inventory.create.group.title.viewStore":"View Store",
  "inventory.store.search.title":"Search Store",
  "inventory.store.code" : "Store Code",
+ "inventory.currentRate":"Current Rate",
  "inventory.store.name" : "Store Name",
  "inventory.currentYear": "Current Year(From 01/Jan to 01/Mar)",
  "inventory.previousYear": "Previous Year(From 01/Jan to 31/Dec)",

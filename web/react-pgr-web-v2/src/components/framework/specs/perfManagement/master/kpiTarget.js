@@ -3,7 +3,7 @@ var dat = {
         "numCols": 12 / 2,
         "url": "perfmanagement/v1/kpimaster/_create",
         "useTimestamp": true,
-        "objectName": "KPIs",
+        "objectName": "kpiTargets",
         "groups": [{
                 "label": "perfManagement.create.KPIs.groups.kpiMaster",
                 "name": "kpiMaster",
@@ -336,7 +336,7 @@ var dat = {
         "searchUrl": "perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}",
         "url": "/perfmanagement/v1/kpitarget/_update",
         "useTimestamp": true,
-        "objectName": "KPIs",
+        "objectName": "kpiTargets",
         "groups": [
                 {
                 "label": "",

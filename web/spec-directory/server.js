@@ -69,11 +69,11 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
                 "defaultValue": properties[key].default || "",
                 "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
                 	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
-                "isStateLevel":true, 
+                "isStateLevel":true,
                 "apiKey": jPath + "." + key							
             });
             header.push({
-            	"label": jPath + "." + module + "." + master + "." + key
+            	"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
             })
         } else if(properties[key].items && properties[key].items.properties) {
             if(jPath == "WasteSubType") console.log(jPath + " is an array");
@@ -94,7 +94,7 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
                 "patternErrorMsg": properties[key].pattern ? (module + ".create.field.message." + key) : ""
             });
             header.push({
-            	"label": jPath + "." + module + "." + master + "." + key
+            	"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
             })
             
 
@@ -111,6 +111,7 @@ var configData = config.data;
 var mainObj = {};
 var completed_requests = 0;
 var finalSpecs = {};
+var finalSpecsRaw = {};
 var urls = [];
 var modules = [];
 
@@ -118,6 +119,9 @@ for(module in configData){
 	urls.push(configData[module].url);
 	modules.push(module);
 }
+
+console.log(urls);
+
 
 
 // for(module in modules){
@@ -131,7 +135,7 @@ for(module in configData){
         	}
         	else{
 	        	let basePath = [];
-	        	basePath = yamlJSON.basePath.split("-")[0].split("");		// /asset-services type pattern should be in basepath
+	        	basePath = yamlJSON.basePath.split("-")[0].split("");		// "/asset-services" type pattern should be in basepath
 	        	let index = basePath.indexOf("/");
 	        	if(index > -1){
         			basePath.splice(index, 1);
@@ -141,6 +145,7 @@ for(module in configData){
         	}
         	
         	completed_requests++;
+        	// console.log("completed_requests", completed_requests, urls.length);
 
         	if (completed_requests == urls.length) {
 	            // All downloads done, process responses array
@@ -150,10 +155,12 @@ for(module in configData){
 	            	// console.log("Main Object module- " + moduleName);
 	            	console.log("module name is - " + moduleName);
 	            	finalSpecs[moduleName.toLowerCase()] = {};
+	            	finalSpecsRaw[moduleName.toLowerCase()] = {};
 	            	for(master in mainObj[moduleName.toLowerCase()]){
 	            		// console.log(property);
 	            		// console.log("Master in Object module- " + master);
-	            		if(!finalSpecs[moduleName].masters) finalSpecs[moduleName].masters = {};
+	            		finalSpecsRaw[moduleName.toLowerCase()][master.toLowerCase()] = mainObj[moduleName][master];
+	            		if(!finalSpecs[moduleName.toLowerCase()].masters) finalSpecs[moduleName.toLowerCase()].masters = {};
 
 	            		if(!finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()]) finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()] = {};
 	            		if(!finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()]) finalSpecs[moduleName.toLowerCase()].masters[master.toLowerCase()] = {};
@@ -176,8 +183,8 @@ for(module in configData){
 	            	
 	            }
 
-	            console.log(finalSpecs.swm.masters.wastesubtype);
-	            // console.log(finalSpecs.swm);
+	            // console.log(finalSpecs.swm.masters.wastesubtype);
+	            console.log(finalSpecsRaw);
 	        
 	        }
 		})

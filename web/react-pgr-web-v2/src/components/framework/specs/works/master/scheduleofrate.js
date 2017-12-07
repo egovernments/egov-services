@@ -94,6 +94,10 @@ var dat ={
       "numCols":4,
       "useTimestamp":true,
       "objectName":"scheduleOfRates",
+      "injectData": [{
+        "jsonPath": "scheduleOfRates[0].sorRates[0].tenantId",
+        "value": localStorage.getItem("tenantId")
+      }],
       "groups":[
          {
             "name":"createRateMaster",

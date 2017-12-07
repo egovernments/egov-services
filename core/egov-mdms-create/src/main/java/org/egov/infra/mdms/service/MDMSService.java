@@ -102,12 +102,12 @@ public class MDMSService {
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
-		startTime = new Date().getTime();
+		/*startTime = new Date().getTime();
 		updateCache(gitRepoPath + filePath, 
 				mDMSCreateRequest.getMasterMetaData().getTenantId(), 
 				mDMSCreateRequest.getRequestInfo());
 		endTime = new Date().getTime();
-		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
+		logger.info("Time taken for this step: "+(endTime - startTime)+"ms"); */
 
 		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
 		

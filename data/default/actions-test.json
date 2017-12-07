@@ -10038,6 +10038,45 @@
     "serviceCode": "PERF_ASSESSMENT_TRGT",
     "code": "null",
     "path": "Performance Assessment.KPI Targets.PerfAssmtKpiTargetSearch"
+  },
+  {
+    "id": 1420,
+    "name": "Non Indent Issue Create",
+    "url": "/inventory-services/materialissues-ni/_create",
+    "displayName": "Create Non Indent Issue",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "NON INDENT ISSUES",
+    "code": "null",
+    "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Create"
+  },
+  {
+    "id": 1421,
+    "name": "Non Indent Issue Update",
+    "url": "/inventory-services/materialissues-ni/_update",
+    "displayName": "Update Non Indent Issue",
+    "orderNumber": 2,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "NON INDENT ISSUES",
+    "code": "null",
+    "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Update"
+  },
+  {
+    "id": 1422,
+    "name": "Non Indent Issue Search",
+    "url": "/inventory-services/materialissues-ni/_search",
+    "displayName": "Search Non Indent Issue",
+    "orderNumber": 3,
+    "queryParams": null,
+    "parentModule": null,
+    "enabled": false,
+    "serviceCode": "NON INDENT ISSUES",
+    "code": "null",
+    "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Search"
   }
   
 ]

@@ -202,7 +202,7 @@ export default class BarChartCard extends Component {
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
                 <CardHeader
-                    title={<strong> KPI chart data </strong>}
+                    title={<strong> KPI data </strong>}
                 />
                 <BarChart style={{marginLeft: '30%'}} padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
                     <XAxis dataKey={this.state.dataKey}/>
@@ -245,7 +245,7 @@ export default class BarChartCard extends Component {
         return (
             <div>
             <br /><br />
-            <Card className="uiCard">
+            <Card className="uiCard" style={{"textAlign": "center"}}>
                 <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false} 
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />

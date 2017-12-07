@@ -9996,7 +9996,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": "592",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "PERF_ASSESSMENT_TRGT",
     "code": "null",
     "path": "Performance Assessment.KPI Targets.PerfAssmtKpiTargetCreate"
@@ -10008,7 +10008,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": "592",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "PERF_ASSESSMENT_TRGT",
     "code": "null",
     "path": "Performance Assessment.KPI Targets.PerfAssmtKpiTargetUpdate"
@@ -10017,7 +10017,7 @@
     "id": 1413,
     "name": "PerfAssmtKpiTargetSearch",
     "url": "/perfmanagement/v1/kpitarget/_search",
-    "displayName": "Search KPI Targets",
+    "displayName": "KPI Targets",
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": "592",

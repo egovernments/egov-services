@@ -253,6 +253,35 @@ export default class Dashboard extends Component {
         })
     }
 
+    getDepartmentLogo = (department) => {
+        if (department === 'ADMINISTRATION') {
+            return process.env.PUBLIC_URL + './temp/images/pms/Administration.png'
+        }
+        if (department === 'ACCOUNTS') {
+            return process.env.PUBLIC_URL + './temp/images/pms/accounts.png'
+        }
+        if (department === 'ENGINEERING') {
+            return process.env.PUBLIC_URL + './temp/images/pms/Engineering.png'
+        }
+        if (department === 'TOWN PLANNING') {
+            return process.env.PUBLIC_URL + './temp/images/pms/TownPlanning.png'
+        }
+        if (department === 'REVENUE') {
+            return process.env.PUBLIC_URL + './temp/images/pms/Revenue.png'
+        }
+        if (department === 'PUBLIC HEALTH AND SANITATION') {
+            return process.env.PUBLIC_URL + './temp/images/pms/PublicHealthSanitation.png'
+        }
+        if (department === 'URBAN POVERTY ALLEVIATION') {
+            return process.env.PUBLIC_URL + './temp/images/pms/UrbanPovertyAlleviation.png'
+        }
+        if (department === 'EDUCATION') {
+            return process.env.PUBLIC_URL + './temp/images/pms/Education.png'
+        }
+
+        return process.env.PUBLIC_URL + './temp/images/pms/kpi-default.png'
+    }
+
     /**
      * render
      * show/hide UI busy
@@ -277,7 +306,7 @@ export default class Dashboard extends Component {
         let departments = parseDepartmentResponse(this.state.departments)
         if (departments.length > 0) {
             return (
-                departments.map((item, index) => <DashboardCard key={index} index={index} onClick={this.processOnClickOnCard} name={item.name} logo={require('../../../../images/headerLogo.png')} />)
+                departments.map((item, index) => <DashboardCard key={index} index={index} onClick={this.processOnClickOnCard} name={item.name} logo={this.getDepartmentLogo(item.name)} />)
             )
         }
     }

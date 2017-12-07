@@ -46,6 +46,8 @@ export default class DashboardCard extends Component {
 
     render() {
         style.cardheader['backgroundColor'] = this.getRandomColor(this.props.name)
+        console.log(this.props.logo)
+        console.log(process.env.PUBLIC_URL)
 
         return (
             <div>
@@ -55,7 +57,7 @@ export default class DashboardCard extends Component {
                         title=""
                     />
                     <CardMedia style={style.cardmedia}>
-                        <img src={this.props.logo} alt="" />
+                        <img src={process.env.PUBLIC_URL + '/' + this.props.logo} alt="" />
                     </CardMedia>
                     <CardText style={style.cardtext}> {this.props.name} </CardText>
                 </Card>

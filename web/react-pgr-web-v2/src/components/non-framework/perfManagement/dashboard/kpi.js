@@ -20,6 +20,20 @@ import KPISelectField from './kpiselectfield';
 import BarChartCard from './barchartcard';
 
 var jp = require('jsonpath');
+const kpiTypes = [
+    {
+        'name': 'VALUE',
+        'code': 'VALUE'
+    },
+    {
+        'name': 'OBJECTIVE',
+        'code': 'OBJECTIVE'
+    },
+    {
+        'name': 'TEXT',
+        'code': 'TEXT'
+    }
+]
 
 export default class Dashboard extends Component {
     constructor(props) {
@@ -33,20 +47,21 @@ export default class Dashboard extends Component {
             showToast: false,
 
             disableViewButton: false,
+            kpiTypeIndex: 0,
             kpiIndices: [0],
             ulbIndices: [0],
             fyIndices: [0],
 
             toastMsg: ''
         }
-
-        this.kpiLabel   = "KPIs";
-        this.ulbLabel   = "ULB(s)";
-        this.fyLabel    = "Financial Years";
-        this.ulbRes     = null;
-        this.fyRes      = null;
-        this.kpiRes     = null;
-        this.chartRes   = null;
+        this.kpiTypeLabel   = "KPI Type"
+        this.kpiLabel       = "KPIs";
+        this.ulbLabel       = "ULB(s)";
+        this.fyLabel        = "Financial Years";
+        this.ulbRes         = null;
+        this.fyRes          = null;
+        this.kpiRes         = null;
+        this.chartRes       = null;
     }
 
     render() {
@@ -144,6 +159,12 @@ export default class Dashboard extends Component {
      * SelectField manipulations.
      */
     processSelectOnKPISelectField = (index, values, label) => {
+        if (label === this.kpiTypeLabel) {
+            this.setState({
+                kpiTypeIndex: index
+            })
+        }
+
         if (label === this.kpiLabel) {
             if (values.length > 1) {
                 if (this.state.ulbIndices.length > 1 || this.state.fyIndices.length > 1) {
@@ -279,6 +300,7 @@ export default class Dashboard extends Component {
                 marginTop: '20%'
             }
         };
+        let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)
 
         return (
             <div>
@@ -293,21 +315,28 @@ export default class Dashboard extends Component {
                     <Grid fluid>
                         <CardText>
                             <Row>
-                                <Col xs={12} sm={4} md={4} >
-                                    <KPISelectField label={this.kpiLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
-                                        value={this.state.kpiIndices}
-                                        items={parseDepartmentKPIsAsPerKPIType(this.kpiRes, 'VALUE')}
+                                <Col xs={12} sm={3} md={3} >
+                                    <KPISelectField label={this.kpiTypeLabel} mandatory= {true} multiple={false} disabled={false} displayKey={"name"}
+                                        value={this.state.kpiTypeIndex}
+                                        items={kpiTypes}
                                         onItemsSelected={this.processSelectOnKPISelectField}
                                     />
                                 </Col>
-                                <Col xs={12} sm={4} md={4} >
+                                <Col xs={12} sm={3} md={3} >
+                                    <KPISelectField label={this.kpiLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
+                                        value={this.state.kpiIndices}
+                                        items={departmentKPIs}
+                                        onItemsSelected={this.processSelectOnKPISelectField}
+                                    />
+                                </Col>
+                                <Col xs={12} sm={3} md={3} >
                                     <KPISelectField label={this.ulbLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
                                         value={this.state.ulbIndices}
                                         items={parseULBResponse(this.ulbRes)}
                                         onItemsSelected={this.processSelectOnKPISelectField}
                                     />
                                 </Col>
-                                <Col xs={12} sm={4} md={4} >
+                                <Col xs={12} sm={3} md={3} >
                                     <KPISelectField label={this.fyLabel} mandatory= {true} multiple={true} disabled={false} displayKey={"name"}
                                         value={this.state.fyIndices}
                                         items={parseFinancialYearResponse(this.fyRes)}

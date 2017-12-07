@@ -441,34 +441,34 @@
   ],
   "SwmProcess": [
     {
-      "id": "Process 1",
+      "code": "Process 1",
       "tenantId": "default",
-      "processName": "Collection"
+      "name": "Collection"
     },
     {
-      "id": "Process 2",
+      "code": "Process 2",
       "tenantId": "default",
-      "processName": "Segregation"
+      "name": "Segregation"
     },
     {
-      "id": "Process 3",
+      "code": "Process 3",
       "tenantId": "default",
-      "processName": "Transportation"
+      "name": "Transportation"
     },
     {
-      "id": "Process 4",
+      "code": "Process 4",
       "tenantId": "default",
-      "processName": "Disposal"
+      "name": "Disposal"
     },
     {
-      "id": "Process 5",
+      "code": "Process 5",
       "tenantId": "default",
-      "processName": "Waste Treatment"
+      "name": "Waste Treatment"
     },
     {
-      "id": "Process 6",
+      "code": "Process 6",
       "tenantId": "default",
-      "processName": "Other"
+      "name": "Other"
     }
   ],
   "PaymentTerms": [

@@ -170,7 +170,7 @@ import assetMovableCreate from './components/non-framework/asset/master/assetMov
 import assetImmovableView from './components/non-framework/asset/master/assetImmovableView';
 import assetMovableView from './components/non-framework/asset/master/assetMovableView';
 import assetCategoryCreate from './components/non-framework/asset/master/assetCategoryCreate';
-import assetCategorySearch from './components/non-framework/asset/master/assetCategorySearch';
+//import assetCategorySearch from './components/non-framework/asset/master/assetCategorySearch';
 
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';

@@ -690,7 +690,7 @@
       "keyName": "Spillover_Workflow_Mandatory",
       "tenantId": "default",
       "description": "Workflow for Spillover required or not for Estimate screen",
-      "value": "No",
+      "value": "Yes",
       "effectivefrom": "2017-08-22",
       "createdby": null,
       "createddate": null,

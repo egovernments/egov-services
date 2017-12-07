@@ -220,6 +220,15 @@ public class PurchaseOrderService extends DomainService {
                 break;
 
             }
+            
+            Long currentMilllis = System.currentTimeMillis();
+                        
+            for(PurchaseOrder eachPurchaseOrder : pos){
+            	if(eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis){
+            		throw new CustomException("purchaseOrderDate", "PurchaseOrder Date must be less than or equal to Today's date");
+                }
+            }
+            
         } catch (IllegalArgumentException e) {
 
         }

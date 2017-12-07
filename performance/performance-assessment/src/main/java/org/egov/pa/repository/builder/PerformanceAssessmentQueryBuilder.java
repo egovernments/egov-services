@@ -175,7 +175,7 @@ public class PerformanceAssessmentQueryBuilder {
     }
     
     public String targetAvailableForKpi() { 
-    	return "select 1 as available from egpa_kpi_master master where master.code = :kpiCode AND exists (select 1 from egpa_kpi_master_target where kpicode = master.code) " ;
+    	return "select targettype as targetType from egpa_kpi_master master where master.code = :kpiCode AND exists (select 1 from egpa_kpi_master_target where kpicode = master.code) " ;
     }
     
     private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "  

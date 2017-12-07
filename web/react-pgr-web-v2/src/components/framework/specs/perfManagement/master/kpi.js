@@ -191,8 +191,8 @@ var dat = {
             ]
         }],
         "result": {
-            "header": [{ label: "perfManagement.search.KPIs.groups.searchkpiName" }, { label: "perfManagement.search.KPIs.groups.searchkpiCode" }, { label: "perfManagement.search.KPIs.groups.searchkpiTarget" }],
-            "values": ["name", "code", "targetDescription"],
+            "header": [{ label: "perfManagement.search.KPIs.groups.searchkpiName" }, { label: "perfManagement.search.KPIs.groups.searchkpiCode" },{ label : "perfManagement.create.KPIs.groups.kpiDate"}, { label: "perfManagement.create.KPIs.groups.kpitype" }],
+            "values": ["name", "code","financialYear","targetType"],
             "resultPath": "KPIs",
             "rowClickUrlUpdate": "/update/perfManagement/kpi/{code}",
             "rowClickUrlView": "/view/perfManagement/kpi/{code}"

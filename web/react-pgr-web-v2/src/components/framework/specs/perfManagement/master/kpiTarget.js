@@ -230,8 +230,8 @@ var dat = {
             ]
         }],
         "result": {
-            "header": [ { label: "perfManagement.search.KPIs.groups.searchkpiCode" }, { label: "perfManagement.search.KPIs.groups.searchkpiTarget" }],
-            "values": ["kpiCode", "targetValue"],
+            "header": [ { label: "perfManagement.search.KPIs.groups.searchkpiCode" },{ label : "perfManagement.create.KPIs.groups.kpiDate"}, { label: "perfManagement.search.KPIs.groups.searchkpiTarget" }],
+            "values": ["kpiCode","finYear", "targetValue"],
             "resultPath": "kpiTargets",
             "rowClickUrlUpdate": "/update/perfManagement/kpiTarget/{kpiCode}",
             "rowClickUrlView": "/view/perfManagement/kpiTarget/{kpiCode}"
@@ -360,7 +360,19 @@ var dat = {
                         "type": "text",
                         "isDisabled": true,
                         "requiredErrMsg": ""
-                    }, {
+                    },
+                    {
+                        "name": "updatekpiDate",
+                        "jsonPath": "kpiTargets[0].finYear",
+                        "label": "perfManagement.update.KPIs.groups.updatekpiDate",
+                        "isRequired": true,
+                        "pattern": "",
+                        "type": "singleValueList",
+                        "url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    },
+                     {
                         "name": "updatekpitype",
                         "jsonPath": "kpiTargets[0].kpi.targetType",
                         "label": "perfManagement.update.KPIs.groups.updatekpitype",

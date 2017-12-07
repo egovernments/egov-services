@@ -23,14 +23,17 @@ import {
     TableRow,
     TableRowColumn,
   } from 'material-ui/Table';
-var jp = require('jsonpath')
+import RaisedButton from 'material-ui/RaisedButton';
+  
+  var jp = require('jsonpath')
 
 export default class BarChartCard extends Component {
     constructor(props) {
         super(props)
         this.state  = {
             data: [],
-            dataKey: null
+            dataKey: null,
+            showChartView: true,
         }
     }
 
@@ -133,15 +136,38 @@ export default class BarChartCard extends Component {
         return cb(null, null)
     }
 
+    processOnClickKPIDataRepresentation = () => {
+        if (this.state.showChartView) {
+            this.setState({
+                showChartView: false
+            })
+        } else {
+            this.setState({
+                showChartView: true
+            })
+        }
+    }
+
     render () {
         return (
             <div>
             {
-                this.renderChart()
-                // this.renderTable()
+                this.renderKPIData()
             }
             </div>
         )
+    }
+
+    /**
+     * render
+     * toggle between chart & table format
+     */
+    renderKPIData = () => {
+        if (this.state.showChartView) {
+            return this.renderChart()
+        } else {
+            return this.renderTable()
+        }
     }
 
     /**
@@ -163,14 +189,22 @@ export default class BarChartCard extends Component {
             )
         }
 
+        const style = {
+            marginTop: '15px',
+            marginLeft: '94%'
+        };
+
         return (
-            <div style={{"textAlign": "center"}}>
+            <div>
             <br /><br />
-            <Card className="uiCard">
+            <Card className="uiCard" style={{"textAlign": "center"}}>
+                <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false}
+                                onClick={this.processOnClickKPIDataRepresentation}
+                />
                 <CardHeader
                     title={<strong> KPI chart data </strong>}
                 />
-                <BarChart padding={'20%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 20, bottom: 5}}>
+                <BarChart style={{marginLeft: '30%'}} padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
                     <XAxis dataKey={this.state.dataKey}/>
                     <YAxis yAxisId="left" orientation="left" stroke="#8884d8"/>
                     <YAxis yAxisId="right" orientation="right" stroke="#82ca9d"/>
@@ -203,10 +237,18 @@ export default class BarChartCard extends Component {
         }
 
         let headers = Object.keys(this.state.data[0]);
+        const style = {
+            marginTop: '15px',
+            marginLeft: '94%'
+        };
+
         return (
             <div>
             <br /><br />
             <Card className="uiCard">
+                <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false} 
+                                onClick={this.processOnClickKPIDataRepresentation}
+                />
                 <CardHeader
                     title={<strong> KPI data </strong>}
                 />

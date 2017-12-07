@@ -690,12 +690,17 @@ class Report extends Component {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
           } else {
-            _docs.push({
+            _docs.push({index:i,
               ...documents[i],
               fileStoreId: res.files[0].fileStoreId
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
+            let sortedDocs = _.sortBy(_docs, 'index', function(n) {
+            return Math.sin(n);
+          });
+          sortedDocs = sortedDocs.map(({index,  ...sortedDocs}) => sortedDocs);
+              _docs=sortedDocs;
               formdocumentData["documents"] = _docs;
               self.checkForOtherFiles(formData, _url);
             }

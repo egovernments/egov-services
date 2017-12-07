@@ -107,6 +107,14 @@ public class RequestValidator {
 		List<KPI> kpis = kpiRequest.getKpIs();
 		
 		for(KPI kpi : kpis) {
+
+			
+			if(!createOrUpdate) { 
+				
+				
+			}
+			
+			
 			kpi.setPeriodicity(PerformanceAssessmentConstants.PERIODICITY_DEFAULT);
 			if(StringUtils.isBlank(kpi.getName())) { 
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPINAME_MANDATORY_CODE, 
@@ -140,6 +148,7 @@ public class RequestValidator {
 			
 			// Check whether the document details are available and validate them
 			if(createOrUpdate && null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
+				List<Document> finalDocumentList = new ArrayList<>(); 
 				for(Document doc : kpi.getDocuments()) { 
 					if(doc.getActive() && StringUtils.isBlank(doc.getName())) { 
 						errorFields.add(buildErrorField(PerformanceAssessmentConstants.DOCNAME_MANDATORY_CODE, 
@@ -151,7 +160,12 @@ public class RequestValidator {
 			                    PerformanceAssessmentConstants.DOCACTIVE_MANDATORY_ERROR_MESSAGE,
 			                    PerformanceAssessmentConstants.DOCACTIVE_MANDATORY_FIELD_NAME));
 					}
+					if((doc.getActive() && StringUtils.isNotBlank(doc.getName())) || 
+							(!doc.getActive() && StringUtils.isNotBlank(doc.getName()))) {
+						finalDocumentList.add(doc); 
+					}
 				}
+				kpi.setDocuments(finalDocumentList);
 			}
 			
 		}

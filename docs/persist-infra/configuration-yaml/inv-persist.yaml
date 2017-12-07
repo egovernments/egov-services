@@ -800,7 +800,7 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
               type: LONG
 
-- version: 1.0
+    - version: 1.0
       name: Purchase Order with indent
       description: Create Purchase order with indent
       fromTopic: inv-purchaseorders-save-topic

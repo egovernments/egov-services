@@ -2,54 +2,36 @@ var dat ={
    "works.search":{
       "numCols":4,
       "useTimestamp":true,
-      "objectName":"",
-      "url":"/works-masters/v1/scheduleofrates/_search",
+      "objectName":"scheduleofrates",
+      "url":"/works-masters/scheduleofrates/_search",
       "groups":[
          {
             "name":"search",
             "label":"works.search.title",
             "fields":[
                {
-                  "name":"sortBy",
-                  "jsonPath":"sortBy",
-                  "label":"works.create.sortBy",
-                  "type":"text",
-                  "isDisabled":false,
-                  "defaultValue":"id",
-                  "patternErrorMsg":"works.create.field.message.sortBy"
-               },
-               {
                   "name":"sorCodes",
                   "jsonPath":"sorCodes",
                   "label":"works.create.sorCodes",
-                  "type":"autoCompelete",
+                  "type":"text",
                   "isRequired":false,
                   "isDisabled":false,
                   "patternErrorMsg":"works.create.field.message.sorCodes"
                },
                {
-                  "name":"ids",
-                  "jsonPath":"ids",
-                  "label":"works.create.ids",
-                  "type":"",
-                  "isRequired":false,
-                  "isDisabled":false,
-                  "patternErrorMsg":"works.create.field.message.ids"
-               },
-               {
                   "name":"scheduleCategoryCodes",
                   "jsonPath":"scheduleCategoryCodes",
                   "label":"works.create.scheduleCategoryCodes",
-                  "type":"autoCompelete",
+                  "type":"singleValueList",
                   "isRequired":false,
                   "isDisabled":false,
-                  "patternErrorMsg":"works.create.field.message.scheduleCategoryCodes"
+                  "url":"/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code"
                },
                {
                   "name":"validSORRateDate",
                   "jsonPath":"validSORRateDate",
                   "label":"works.create.validSORRateDate",
-                  "type":"number",
+                  "type":"datePicker",
                   "isDisabled":false,
                   "patternErrorMsg":"works.create.field.message.validSORRateDate"
                },
@@ -57,7 +39,7 @@ var dat ={
                   "name":"validMarketRateDate",
                   "jsonPath":"validMarketRateDate",
                   "label":"works.create.validMarketRateDate",
-                  "type":"number",
+                  "type":"datePicker",
                   "isDisabled":false,
                   "patternErrorMsg":"works.create.field.message.validMarketRateDate"
                }
@@ -82,22 +64,20 @@ var dat ={
          "values":[
             "code",
             "description",
-            "scheduleCategory.name",
-            "uom.description"
+            "scheduleCategory.code",
+            "uom.code"
          ],
+         "resultIdKey":"code",
          "resultPath":"scheduleOfRates",
-         "rowClickUrlUpdate":"/update/scheduleOfRates/{ids}",
-         "rowClickUrlView":"/view/scheduleOfRates/{ids}"
+         "rowClickUrlUpdate":"/update/works/scheduleofrates/{code}",
+         "rowClickUrlView":"/view/works/scheduleofrates/{code}"
       }
    },
    "works.create":{
       "numCols":4,
       "useTimestamp":true,
       "objectName":"scheduleOfRates",
-      "injectData": [{
-        "jsonPath": "scheduleOfRates[0].sorRates[0].tenantId",
-        "value": localStorage.getItem("tenantId")
-      }],
+      "idJsonPath":"scheduleOfRates[0].code",
       "groups":[
          {
             "name":"createRateMaster",
@@ -343,7 +323,7 @@ var dat ={
          }
       ],
       "tenantIdRequired":true,
-      "url":"/works-masters/v1/scheduleofrates/_search?ids={ids}"
+      "url":"/works-masters/v1/scheduleofrates/_search?sorCodes={code}"
    },
    "works.update":{
       "numCols":4,

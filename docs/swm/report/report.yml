@@ -39,10 +39,11 @@ ReportDefinitions:
     label: reports.swm.collectiontype
     type: singlevaluelist
     source: mdms
-    isMandatory: true  
+    isMandatory: false  
     stateData: true
     wrapper: true
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=CollectionType&tenantId=$tenantid|$.MdmsRes.swm.CollectionType.*.code|$.MdmsRes.swm.CollectionType.*.name    
+    searchClause: and cd.collectiontype = $collectiontypecode
   - name: fromDate
     label: reports.swm.datefrom
     type: epoch
@@ -53,7 +54,7 @@ ReportDefinitions:
     type: epoch
     source: egswm_sourcesegregation
     isMandatory: true
-  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid and cd.collectiontype = $collectiontypecode and ssg.dumpingground = $dumpinggroundcode and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date group by date, dumpinggroundname;
+  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid and ssg.dumpingground = $dumpinggroundcode and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date group by date, dumpinggroundname;
   
 - reportName: ExpenditureIncurredReport
   summary: Report regarding Expenditure incurred on Transportation

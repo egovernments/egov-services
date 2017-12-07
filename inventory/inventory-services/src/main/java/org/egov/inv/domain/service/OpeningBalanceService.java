@@ -144,7 +144,7 @@ public class OpeningBalanceService extends DomainService {
 	private String appendString(MaterialReceipt headerRequest) {
 		Calendar cal = Calendar.getInstance();
 		int year = cal.get(Calendar.YEAR);
-		String code = "MRN/";
+		String code = "OPB/";
 		int id = Integer.valueOf(jdbcRepository.getSequence(headerRequest));
 		String idgen = String.format("%05d", id);
 		String mrnNumber = code + idgen + "/" + year;
@@ -159,11 +159,11 @@ public class OpeningBalanceService extends DomainService {
 					if (receipt == null) {
 						throw new InvalidDataException("materialReceipt", ErrorCode.NOT_NULL.getCode(), null);
 					} 
-					else {
+					/*else {
 						receipt.stream().forEach(materialReceipt -> {
 							checkDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
 						});
-					}
+					}*/
 				}
 					break;
 	
@@ -280,7 +280,7 @@ public class OpeningBalanceService extends DomainService {
 
 	}
 
-	private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
+	/*private void checkDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
 		HashSet<String> hashSet = new HashSet<>();
 		materialReceiptDetails.stream().forEach(materialReceiptDetail -> {
 			if (false == hashSet.add(materialReceiptDetail.getMaterial().getCode())) {
@@ -288,7 +288,7 @@ public class OpeningBalanceService extends DomainService {
 						materialReceiptDetail.getMaterial().getCode() + " Combination Is Already Entered");
 			}
 		});
-	}
+	}*/
 	
 	 private Long getCurrentDate() {
 	        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;

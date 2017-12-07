@@ -1018,6 +1018,7 @@ ReportDefinitions:
     source: asset
     wrapper: true
     stateData: true
+    showColumn: false
     searchClause : 
   - name: assetcategory
     label: reports.asset.assetCategory

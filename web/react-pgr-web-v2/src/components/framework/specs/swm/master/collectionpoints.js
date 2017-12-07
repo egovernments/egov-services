@@ -65,7 +65,7 @@ var dat ={
                  "isDisabled":false,
                  "maxLength":256,
                  "patternErrorMsg":"swm.create.field.message.name",
-                 "url": "swm-services/collectionpoints/_search?|$..name|$..name"
+                 "url": "swm-services/collectionpoints/_search?|$..collectionPoints.*.name|$..collectionPoints.*.name"
               }
            ]
         }

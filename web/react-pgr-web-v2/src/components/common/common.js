@@ -2184,7 +2184,7 @@ var localization_EN_Data = {
 "swm.collectionpoints.create.assetOrBinId":"Asset / Bin ID",
 "swm.collectionpoints.create.rfidAssigned":"RFID Assigned ?",
 "swm.collectionpoints.create.rfid":"RFID",
-"swm.collectionpoints.create.garbageEstimate":"Garbage Estimate (Tonnes)",
+"swm.collectionpoints.create.garbageEstimate":"Garbage Estimate (Tons)",
 "swm.collectionpoints.create.description":"Description",
 "swm.create.vendorNos":"Vendornos",
 "swm.create.vendorNo":"Vendorno",

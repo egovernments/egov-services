@@ -19,7 +19,7 @@ var dat ={
               "maxLength":128,
               "minLength":1,
               "patternErrorMsg":"",
-	      "url": "swm-services/refillingpumpstations/_search?|$..name|$..name"
+	      "url": "swm-services/refillingpumpstations/_search?|$..refillingPumpStations.*.name|$..refillingPumpStations.*.name"
             },
             {  
               "name":"code",

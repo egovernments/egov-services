@@ -417,11 +417,9 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   handleOpen = () => {
-<<<<<<< Updated upstream
-    if (this.state.isInlineEdit) {
-=======
+
     if(this.state.isInlineEdit) {
->>>>>>> Stashed changes
+
       let list = _.cloneDeep(this.state.valueList);
       list.push(" ");
       this.setState({
@@ -429,13 +427,10 @@ class UiMultiFieldAddToTable extends Component {
         index: -1,
         valueList: list,
         isAddAgain: false
-<<<<<<< Updated upstream
-      }, function () {
-        if (this.props.setDisabled) this.props.setDisabled(false);
-=======
+
       }, function() {
         if(this.props.setDisabled) this.props.setDisabled(false);
->>>>>>> Stashed changes
+
       })
     } else
       this.setState({

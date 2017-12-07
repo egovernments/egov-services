@@ -356,7 +356,8 @@ var dat = {
           "isDisabled": false,
           "requiredErrMsg": "", //Remove required messages
           "patternErrMsg": "",
-          "isHidden":isRoleCitizen
+          "isHidden":isRoleCitizen,
+          defaultValue:"hi"
         },
         {
           "name": "manualReceiptDate",

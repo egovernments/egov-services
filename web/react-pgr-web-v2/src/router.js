@@ -43,60 +43,60 @@ import PGRDashboard from './components/contents/pgr/dashboards/index';
 import PgrAnalytics from './components/contents/pgr/dashboards/PgrAnalytics';
 
 //WC
-import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';
-import ViewEditCategoryType from './components/contents/wc/master/categoryType/viewEditCategoryType';
-import ViewCategoryType from './components/contents/wc/master/categoryType/viewCategoryType';
-
-import WaterSourceTypeCreate from './components/contents/wc/master/waterSourceType/waterSourceTypeCreate';
-import ViewEditWaterSourceType from './components/contents/wc/master/waterSourceType/viewEditWaterSourceType';
-import ViewWaterSourceType from './components/contents/wc/master/waterSourceType/viewWaterSourceType';
-
-import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyTypeCreate';
-import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
-import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
-
-import PipeSizeCreate from './components/contents/wc/master/pipeSize/pipeSizeCreate';
-import ViewEditPipeSize from './components/contents/wc/master/pipeSize/viewEditPipeSize';
-import ViewPipeSize from './components/contents/wc/master/pipeSize/viewPipeSize';
-
-import DocumentTypeCreate from './components/contents/wc/master/documentType/documentTypeCreate';
-import ViewEditDocumentType from './components/contents/wc/master/documentType/viewEditDocumentType';
-import ViewDocumentType from './components/contents/wc/master/documentType/viewDocumentType';
-
-import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/documentTypeApplicationType/documentTypeApplicationTypeCreate';
-import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
-import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
-
-import AddDemandWc from './components/contents/wc/master/addDemand';
+// import CategoryTypeCreate from './components/contents/wc/master/categoryType/categoryTypeCreate';
+// import ViewEditCategoryType from './components/contents/wc/master/categoryType/viewEditCategoryType';
+// import ViewCategoryType from './components/contents/wc/master/categoryType/viewCategoryType';
+//
+// import WaterSourceTypeCreate from './components/contents/wc/master/waterSourceType/waterSourceTypeCreate';
+// import ViewEditWaterSourceType from './components/contents/wc/master/waterSourceType/viewEditWaterSourceType';
+// import ViewWaterSourceType from './components/contents/wc/master/waterSourceType/viewWaterSourceType';
+//
+// import SupplyTypeCreate from './components/contents/wc/master/supplyType/supplyTypeCreate';
+// import ViewEditSupplyType from './components/contents/wc/master/supplyType/viewEditSupplyType';
+// import ViewSupplyType from './components/contents/wc/master/supplyType/viewSupplyType';
+//
+// import PipeSizeCreate from './components/contents/wc/master/pipeSize/pipeSizeCreate';
+// import ViewEditPipeSize from './components/contents/wc/master/pipeSize/viewEditPipeSize';
+// import ViewPipeSize from './components/contents/wc/master/pipeSize/viewPipeSize';
+//
+// import DocumentTypeCreate from './components/contents/wc/master/documentType/documentTypeCreate';
+// import ViewEditDocumentType from './components/contents/wc/master/documentType/viewEditDocumentType';
+// import ViewDocumentType from './components/contents/wc/master/documentType/viewDocumentType';
+//
+// import DocumentTypeApplicationTypeCreate from './components/contents/wc/master/documentTypeApplicationType/documentTypeApplicationTypeCreate';
+// import ViewEditDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewEditDocumentTypeApplicationType';
+// import ViewDocumentTypeApplicationType from './components/contents/wc/master/documentTypeApplicationType/viewDocumentTypeApplicationType';
+//
+// import AddDemandWc from './components/contents/wc/master/addDemand';
 import ViewLegacy from './components/non-framework/wc/viewLegacy';
 import AddDemand from './components/contents/propertyTax/master/addDemand';
 
 //Property tax
-import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
-import Test from './components/contents/propertyTax/master/Test';
-import FloorType from './components/contents/propertyTax/master/FloorType';
-import RoofType from './components/contents/propertyTax/master/RoofType';
-import WallType from './components/contents/propertyTax/master/WallType';
-import WoodType from './components/contents/propertyTax/master/WoodType';
-import UsageType from './components/contents/propertyTax/master/UsageType';
-import PropertyType from './components/contents/propertyTax/master/PropertyType';
-import EditDemands from './components/non-framework/wc/editDemands';
+// import PropertyTaxSearch from './components/contents/propertyTax/master/PropertyTaxSearch';
+// import Test from './components/contents/propertyTax/master/Test';
+// import FloorType from './components/contents/propertyTax/master/FloorType';
+// import RoofType from './components/contents/propertyTax/master/RoofType';
+// import WallType from './components/contents/propertyTax/master/WallType';
+// import WoodType from './components/contents/propertyTax/master/WoodType';
+// import UsageType from './components/contents/propertyTax/master/UsageType';
+// import PropertyType from './components/contents/propertyTax/master/PropertyType';
+// import EditDemands from './components/non-framework/wc/editDemands';
 
 // import Occupancy from './components/contents/propertyTax/master/Occupancy';
-import MutationReason from './components/contents/propertyTax/master/MutationReason';
-import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
-import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
-import DataEntry from './components/contents/propertyTax/master/DataEntry';
-import ViewProperty from './components/contents/propertyTax/master/viewProperty';
-import ViewDCB from './components/non-framework/pt/viewDCB';
-import Workflow from './components/contents/propertyTax/master/workflow';
-import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
-import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
-import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
-import InboxAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_inbox';
+// import  from './components/contents/propertyTax/master/';
+// import BuildingClassification from './components/contents/propertyTax/master/BuildingClassification';
+// import CreateProperty from './components/contents/propertyTax/master/CreateProperty';
+// import DataEntry from './components/contents/propertyTax/master/DataEntry';
+// import ViewProperty from './components/contents/propertyTax/master/viewProperty';
+// import ViewDCB from './components/non-framework/pt/viewDCB';
+// import Workflow from './components/contents/propertyTax/master/workflow';
+// import Acknowledgement from './components/contents/propertyTax/master/Acknowledgement';
+// import DataEntryAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_dataEntry';
+// import DemandAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_demand';
+// import InboxAcknowledgement from './components/contents/propertyTax/master/Acknowledgement_inbox';
 
 
-import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
+// import CreateVacantLand from'./components/contents/propertyTax/master/CreateVacantLand';
 import Create from './components/framework/create';
 // import CreateTwo from './components/framework/createTwo';
 
@@ -251,69 +251,9 @@ const Main = () => {
         <Route exact path={base+'/report/:moduleName/:reportName'} component={Report}/>
         <Route exact path={base+'/pgr/dashboard'} component={PGRDashboard}/>
 
-        <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
-        <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
-        <Route exact path={base+'/wc/categoryType/view'} component={ViewEditCategoryType}/>
-        <Route exact path={base+'/wc/categoryType/edit'} component={ViewEditCategoryType}/>
-        <Route exact path={base+'/wc/viewCategoryType/:id'} component={ViewCategoryType}/>
 
 
-        <Route exact path={base+'/wc/createWaterSourceType'} component={WaterSourceTypeCreate}/>
-        <Route exact name="createWaterSourceType" path={base+'/wc/createWaterSourceType/:id?'} component={WaterSourceTypeCreate}/>
-        <Route exact path={base+'/wc/waterSourceType/view'} component={ViewEditWaterSourceType}/>
-        <Route exact path={base+'/wc/waterSourceType/edit'} component={ViewEditWaterSourceType}/>
-        <Route exact path={base+'/wc/viewWaterSourceType/:id'} component={ViewWaterSourceType}/>
 
-        <Route exact path={base+'/wc/createSupplyType'} component={SupplyTypeCreate}/>
-        <Route exact name="createSupplyType" path={base+'/wc/createSupplyType/:id?'} component={SupplyTypeCreate}/>
-        <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
-        <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
-        <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
-
-        <Route exact path={base+'/wc/createPipeSize'} component={PipeSizeCreate}/>
-        <Route exact name="createPipeSize" path={base+'/wc/createPipeSize/:id?'} component={PipeSizeCreate}/>
-        <Route exact path={base+'/wc/pipeSize/view'} component={ViewEditPipeSize}/>
-        <Route exact path={base+'/wc/pipeSize/edit'} component={ViewEditPipeSize}/>
-        <Route exact path={base+'/wc/viewPipeSize/:id'} component={ViewPipeSize}/>
-
-        <Route exact path={base+'/wc/createDocumentType'} component={DocumentTypeCreate}/>
-        <Route exact name="createDocumentType" path={base+'/wc/createDocumentType/:id?'} component={DocumentTypeCreate}/>
-        <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
-        <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
-        <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
-
-        <Route exact path={base+'/wc/addDemand'} component={AddDemandWc}/>
-
-        <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
-       <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>
-       <Route exact path={base+'/wc/documentTypeApplicationType/view'} component={ViewEditDocumentTypeApplicationType}/>
-       <Route exact path={base+'/wc/documentTypeApplicationType/edit'} component={ViewEditDocumentTypeApplicationType}/>
-       <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>
-
-
-          <Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
-          <Route exact path={base+'/propertyTax/search'} component={PropertyTaxSearch}/>
-          <Route exact path={base+'/propertyTax/test'} component={Test}/>
-          <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
-          <Route exact path={base+'/propertyTax/roof-type'} component={RoofType}/>
-          <Route exact path={base+'/propertyTax/wall-type'} component={WallType}/>
-          <Route exact path={base+'/propertyTax/wood-type'} component={WoodType}/>
-          <Route exact path={base+'/propertyTax/usage-type'} component={UsageType}/>
-          <Route exact path={base+'/propertyTax/property-type'} component={PropertyType}/>
-          <Route exact path={base+'/propertyTax/mutation-reason'} component={MutationReason}/>
-          <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
-          <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
-		  <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
-		  <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
-		  <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
-		  <Route exact path={base+'/propertyTax/view-dcb/:searchParam/:type?'} component={ViewDCB}/>
-          <Route exact path={base+'/propertyTax/workflow/:searchParam/:type?'} component={Workflow}/>
-		  <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
-		  <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
-		  <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
-		  <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>
-		  <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
-        {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
           <Route exact path= {base + '/update/:moduleName/:master?/:id?'} component={Create}/>
           <Route exact path= {base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction}/>
 		  <Route exact path= {base + '/views/:moduleName/:master?/:id'} component={Inbox}/>
@@ -347,7 +287,7 @@ const Main = () => {
 
       <Route exact path= {base + '/empsearch/:actionName'} component={EmployeeSearch}/>
       <Route exact path= {base+'/legacy/view/:id'} component={ViewLegacy}/>
-      <Route exact path= {base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>
+      {/*<Route exact path= {base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>*/}
       <Route exact path= {base+'/searchconnection/wc'} component={SearchLegacyWc}/>
       <Route exact path= {base+'/wc/application/update/:stateId'} component={updateConnection}/>
 	    <Route exact path= {base+'/waterConnection/view/:id'} component={ViewWc}/>
@@ -413,3 +353,68 @@ const Main = () => {
 export default(
   <Main/>
 );
+
+
+// {/*<Route exact path={base+'/propertyTax/CreateVacantLand'} component={CreateVacantLand}/>
+// <Route exact path={base+'/propertyTax/search'} component={PropertyTaxSearch}/>
+// <Route exact path={base+'/propertyTax/test'} component={Test}/>
+// <Route exact path={base+'/propertyTax/floor-type'} component={FloorType}/>
+// <Route exact path={base+'/propertyTax/roof-type'} component={RoofType}/>
+// <Route exact path={base+'/propertyTax/wall-type'} component={WallType}/>
+// <Route exact path={base+'/propertyTax/wood-type'} component={WoodType}/>
+// <Route exact path={base+'/propertyTax/usage-type'} component={UsageType}/>
+// <Route exact path={base+'/propertyTax/property-type'} component={PropertyType}/>
+// <Route exact path={base+'/propertyTax/mutation-reason'} component={}/>
+// <Route exact path={base+'/propertyTax/building-classification'} component={BuildingClassification}/>
+// <Route exact path={base+'/propertyTax/create-property'} component={CreateProperty}/>
+// <Route exact path={base+'/propertyTax/addDemand/:upicNumber'} component={AddDemand}/>
+// <Route exact path={base+'/propertyTax/create-dataEntry'} component={DataEntry}/>
+// <Route exact path={base+'/propertyTax/view-property/:searchParam/:type?'} component={ViewProperty}/>
+// <Route exact path={base+'/propertyTax/view-dcb/:searchParam/:type?'} component={ViewDCB}/>
+// <Route exact path={base+'/propertyTax/workflow/:searchParam/:type?'} component={Workflow}/>
+// <Route exact path={base+'/propertyTax/acknowledgement'} component={Acknowledgement}/>
+// <Route exact path={base+'/propertyTax/dataEntry-acknowledgement'} component={DataEntryAcknowledgement}/>
+// <Route exact path={base+'/propertyTax/demand-acknowledgement'} component={DemandAcknowledgement}/>
+// <Route exact path={base+'/propertyTax/inbox-acknowledgement'} component={InboxAcknowledgement}/>}
+// <Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>
+// {/*<Route exact path= {base + '/create/:moduleName/:master?/:id?'} component={Create}/>*/}
+
+
+// <Route exact path={base+'/wc/createCategoryType'} component={CategoryTypeCreate}/>
+// <Route exact name="createCategoryType" path={base+'/wc/createCategoryType/:id?'} component={CategoryTypeCreate}/>
+// <Route exact path={base+'/wc/categoryType/view'} component={ViewEditCategoryType}/>
+// <Route exact path={base+'/wc/categoryType/edit'} component={ViewEditCategoryType}/>
+// <Route exact path={base+'/wc/viewCategoryType/:id'} component={ViewCategoryType}/>
+//
+//
+// <Route exact path={base+'/wc/createWaterSourceType'} component={WaterSourceTypeCreate}/>
+// <Route exact name="createWaterSourceType" path={base+'/wc/createWaterSourceType/:id?'} component={WaterSourceTypeCreate}/>
+// <Route exact path={base+'/wc/waterSourceType/view'} component={ViewEditWaterSourceType}/>
+// <Route exact path={base+'/wc/waterSourceType/edit'} component={ViewEditWaterSourceType}/>
+// <Route exact path={base+'/wc/viewWaterSourceType/:id'} component={ViewWaterSourceType}/>
+
+// <Route exact path={base+'/wc/createSupplyType'} component={SupplyTypeCreate}/>
+// <Route exact name="createSupplyType" path={base+'/wc/createSupplyType/:id?'} component={SupplyTypeCreate}/>
+// <Route exact path={base+'/wc/supplyType/view'} component={ViewEditSupplyType}/>
+// <Route exact path={base+'/wc/supplyType/edit'} component={ViewEditSupplyType}/>
+// <Route exact path={base+'/wc/viewSupplyType/:id'} component={ViewSupplyType}/>
+//
+// <Route exact path={base+'/wc/createPipeSize'} component={PipeSizeCreate}/>
+// <Route exact name="createPipeSize" path={base+'/wc/createPipeSize/:id?'} component={PipeSizeCreate}/>
+// <Route exact path={base+'/wc/pipeSize/view'} component={ViewEditPipeSize}/>
+// <Route exact path={base+'/wc/pipeSize/edit'} component={ViewEditPipeSize}/>
+// <Route exact path={base+'/wc/viewPipeSize/:id'} component={ViewPipeSize}/>
+//
+// <Route exact path={base+'/wc/createDocumentType'} component={DocumentTypeCreate}/>
+// <Route exact name="createDocumentType" path={base+'/wc/createDocumentType/:id?'} component={DocumentTypeCreate}/>
+// <Route exact path={base+'/wc/documentType/view'} component={ViewEditDocumentType}/>
+// <Route exact path={base+'/wc/documentType/edit'} component={ViewEditDocumentType}/>
+// <Route exact path={base+'/wc/documentType/:id'} component={ViewDocumentType}/>
+//
+// <Route exact path={base+'/wc/addDemand'} component={AddDemandWc}/>
+//
+// <Route exact path={base+'/wc/createDocumentTypeApplicationType'} component={DocumentTypeApplicationTypeCreate}/>
+// <Route exact name="createDocumentTypeApplicationType" path={base+'/wc/createDocumentTypeApplicationType/:id?'} component={DocumentTypeApplicationTypeCreate}/>
+// <Route exact path={base+'/wc/documentTypeApplicationType/view'} component={ViewEditDocumentTypeApplicationType}/>
+// <Route exact path={base+'/wc/documentTypeApplicationType/edit'} component={ViewEditDocumentTypeApplicationType}/>
+// <Route exact path={base+'/wc/documentTypeApplicationType/:id'} component={ViewDocumentTypeApplicationType}/>

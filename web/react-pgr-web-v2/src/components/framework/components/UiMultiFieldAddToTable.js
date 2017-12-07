@@ -100,14 +100,14 @@ class UiMultiFieldAddToTable extends Component {
     }
 
     //Check for pattern match
-    if (pattern && _.get(formData, property) && !new RegExp(pattern).test(_.get(formData, property))) {
+    if(pattern && _.get(formData, property) && !new RegExp(pattern).test(_.get(formData, property))) {
       fieldErrors[property] = patternErrMsg ? translate(patternErrMsg) : translate('ui.framework.patternMessage');
       isFormValid = false;
     }
 
     //Check if any other field is required
-    for (let i = 0; i < this.state.requiredFields.length; i++) {
-      if (typeof _.get(formData, this.state.requiredFields[i]) == "undefined" || _.get(formData, this.state.requiredFields[i]) == "") {
+    for(let i=0; i<this.state.requiredFields.length; i++) {
+      if(typeof _.get(formData, this.state.requiredFields[i]) == "undefined" || _.get(formData, this.state.requiredFields[i]) == "") {
         isFormValid = false;
         break;
       }
@@ -121,15 +121,21 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   addToParent = (doNotOpen, ind) => {
+    let {valueList}=this.props;
     let formData = _.cloneDeep(this.props.formData);
     let localFormData = _.cloneDeep(this.state.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
     let stateFormDataTable = _.get(localFormData, this.props.item.jsonPath);
     let indexes;
-    if (this.state.index == -1) {
+    // console.log(myTableInParent);
+    // console.log(stateFormDataTable);
+    if(this.state.index == -1) {
+
       if (!myTableInParent) {
+        stateFormDataTable[0].id=1;
         this.props.handler({ target: { value: stateFormDataTable } }, this.props.item.jsonPath);
       } else {
+        stateFormDataTable[0].id=myTableInParent.length+1;
         myTableInParent.push(stateFormDataTable[0]);
         this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
       }
@@ -140,10 +146,10 @@ class UiMultiFieldAddToTable extends Component {
 
     let list = _.get(this.props.formData, this.props.item.jsonPath);
 
-    if (typeof ind != 'undefined') {
+    if(typeof ind != 'undefined') {
       indexes = _.cloneDeep(this.state.indexes);
-      for (let i = 0; i < indexes.length; i++) {
-        if (indexes[i] == ind) {
+      for(let i=0;i<indexes.length;i++){
+        if(indexes[i] == ind) {
           indexes.splice(i, 1);
           break;
         }
@@ -157,8 +163,8 @@ class UiMultiFieldAddToTable extends Component {
       index: -1,
       isAddAgain: true,
       indexes: indexes || this.state.indexes
-    }, function () {
-      if (this.props.setDisabled) this.props.setDisabled(true);
+    }, function() {
+      if(this.props.setDisabled) this.props.setDisabled(true);
     })
   }
 
@@ -176,7 +182,7 @@ class UiMultiFieldAddToTable extends Component {
   deleteRow = (index) => {
     let formData = _.cloneDeep(this.props.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
-    if (myTableInParent) {
+    if(myTableInParent) {
       myTableInParent.splice(index, 1);
       this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
     }
@@ -186,13 +192,13 @@ class UiMultiFieldAddToTable extends Component {
       valueList: list,
       isAddAgain: true,
       formData: {}
-    }, function () {
-      if (this.props.setDisabled) this.props.setDisabled(true);
+    }, function() {
+      if(this.props.setDisabled) this.props.setDisabled(true);
     })
   }
 
   editInline = (index) => {
-    let { indexes } = this.state;
+    let {indexes} = this.state;
     let list = _.cloneDeep(this.state.valueList);
     indexes.push(index);
     let formData = {};
@@ -273,11 +279,11 @@ class UiMultiFieldAddToTable extends Component {
                     secondary={true}
                     disabled={this.state.isBtnDisabled}
                     style={{ "marginTop": 39 }}
-                    onClick={this.addToParent} />
+                    onClick={this.addToParent}/>
                   <FlatButton
                     label={translate("pt.create.button.viewdcb.close")}
                     primary={true}
-                    onClick={this.handleClose} />
+                    onClick={this.handleClose}/>
                 </div>
               }
               modal={false}
@@ -295,104 +301,113 @@ class UiMultiFieldAddToTable extends Component {
                   )
                 }
               </Row>
-              <br />
+              <br/>
 
             </Dialog>
-            <div style={{ "textAlign": "right" }}>
+            <div style={{"textAlign": "right"}}>
               <RaisedButton label={"Add"}
                 onClick={this.handleOpen}
                 disabled={!this.state.isAddAgain}
-                primary={true} />
+                primary={true}/>
             </div>
-            <br />
+            <br/>
             <Table className="table table-striped table-bordered" responsive>
               <thead>
                 <tr>
-                  <th>#</th>
+
                   {this.props.item.header.map((v) => {
                     return (
                       <th>{translate(v.label)}</th>
                     )
                   })}
+                  {/*<th>Id</th>*/}
                   <th> Action</th>
                 </tr>
               </thead>
               <tbody>
                 {
                   this.state.valueList && this.state.valueList.length ?
-                    this.state.valueList.map((item, index) => {
-                      if (this.state.indexes.indexOf(index) > -1 || typeof item == "string") {
-                        return (
-                          <tr key={index}>
-                            <td> {index + 1} </td>
-                            {this.props.item.values.map((v) => {
-                              return (
-                                <td>{this.renderFields(v)}</td>
-                              )
+                  this.state.valueList.map((item, index) => {
+                    if(this.state.indexes.indexOf(index) > -1 || typeof item == "string") {
+                      return (
+                        <tr key={index}>
+                          {/*<td> {index + 1} </td>*/}
+                          {this.props.item.values.map((v) => {
+
+                                return (
+                                    <td >{this.renderFields(v)}</td>
+                                )
+
+
                             })
-                            }
-                            <td>
-                              <FlatButton
-                                label={(this.state.index == -1) ? translate("pt.create.groups.ownerDetails.fields.add") : translate("pgr.lbl.update")}
-                                secondary={true}
-                                disabled={this.state.isBtnDisabled}
-                                onClick={(e) => { this.addToParent(true, index) }} />
-                              <br />
-                              <FlatButton
-                                label={translate("pgr.lbl.delete")}
-                                secondary={true}
-                                onClick={(e) => { this.deleteRow(index) }} />
-                            </td>
-                          </tr>
-                        )
-                      } else {
-                        return (
-                          <tr key={index}>
-                            <td> {index + 1} </td>
-                            {Object.values(item).map((v) => {
-                              return (
-                                <td>{v}</td>
-                              )
+                          }
+                          <td>
+                            <FlatButton
+                              label={(this.state.index == -1) ? translate("pt.create.groups.ownerDetails.fields.add") : translate("pgr.lbl.update")}
+                              secondary={true}
+                              disabled={this.state.isBtnDisabled}
+                              onClick={(e) => {this.addToParent(true, index)}}/>
+                            <br/>
+                            <FlatButton
+                              label={translate("pgr.lbl.delete")}
+                              secondary={true}
+                              onClick={(e) => {this.deleteRow(index)}}/>
+                          </td>
+                        </tr>
+                      )
+                    } else {
+                      return (
+
+                        <tr key={index}>
+                        {/*<td> {index + 1} </td>*/}
+                          {Object.values(item).map((v) => {
+
+
+                                return (
+                                    <td>{v}</td>
+                                )
+
+
                             })
-                            }
-                            <td>
-                              {this.state.isInlineEdit ?
-                                <IconButton
-                                  onClick={() => {
-                                    this.editInline(index)
-                                  }}
-                                  disabled={!this.state.isAddAgain}>
-                                  <i className="material-icons" style={{ "color": "#000000" }}>border_color</i>
-                                </IconButton>
-                                :
-                                <IconButton
-                                  onClick={() => {
-                                    this.editRow(index)
-                                  }}
-                                  disabled={!this.state.isAddAgain}>
-                                  <i className="material-icons" style={{ "color": "#000000" }}>mode_edit</i>
-                                </IconButton>}
-                              &nbsp;&nbsp;&nbsp;&nbsp;
+                          }
+                          <td>
+                            {this.state.isInlineEdit ?
                             <IconButton
-                                onClick={() => {
+                                onClick={()=>{
+                                  this.editInline(index)
+                                }}
+                                disabled={!this.state.isAddAgain}>
+                              <i className="material-icons" style={{"color":"#000000"}}>border_color</i>
+                            </IconButton>
+                             :
+                            <IconButton
+                                onClick={()=>{
+                                  this.editRow(index)
+                                }}
+                                disabled={!this.state.isAddAgain}>
+                              <i className="material-icons" style={{"color":"#000000"}}>mode_edit</i>
+                            </IconButton>}
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <IconButton
+                                onClick={()=>{
                                   this.deleteRow(index)
                                 }}
                                 disabled={!this.state.isAddAgain}>
-                                <i className="material-icons text-danger">delete</i>
-                              </IconButton>
-                            </td>
-                          </tr>
-                        )
-                      }
-
-                    }) : <tr>
-                      <td colSpan={this.props.item.header.length + 2} className="text-center">
-                        No data yet! &nbsp;&nbsp; <a
-                          href="javascript:void(0)"
-                          className
-                          onClick={this.handleOpen}>Click here</a> to add.
+                              <i className="material-icons text-danger">delete</i>
+                            </IconButton>
                           </td>
-                    </tr>
+                        </tr>
+                      )
+                    }
+
+                  }) :  <tr>
+                          <td colSpan={this.props.item.header.length + 2} className="text-center">
+                            No data yet! &nbsp;&nbsp; <a
+                                                        href="javascript:void(0)"
+                                                        className
+                                                        onClick={this.handleOpen}>Click here</a> to add.
+                          </td>
+                        </tr>
                 }
               </tbody>
             </Table>
@@ -402,7 +417,11 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   handleOpen = () => {
+<<<<<<< Updated upstream
     if (this.state.isInlineEdit) {
+=======
+    if(this.state.isInlineEdit) {
+>>>>>>> Stashed changes
       let list = _.cloneDeep(this.state.valueList);
       list.push(" ");
       this.setState({
@@ -410,8 +429,13 @@ class UiMultiFieldAddToTable extends Component {
         index: -1,
         valueList: list,
         isAddAgain: false
+<<<<<<< Updated upstream
       }, function () {
         if (this.props.setDisabled) this.props.setDisabled(false);
+=======
+      }, function() {
+        if(this.props.setDisabled) this.props.setDisabled(false);
+>>>>>>> Stashed changes
       })
     } else
       this.setState({
@@ -448,6 +472,7 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   render() {
+    console.log(this.props);
     return (<div>
       {this.renderArrayField(this.props.item)}
     </div>);

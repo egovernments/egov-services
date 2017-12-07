@@ -50,7 +50,8 @@
     "redux-thunk": "^2.2.0"
   },
   "devDependencies": {
-    "react-scripts": "1.0.7"
+    "@jdcrensh/react-scripts": "1.0.17",
+    "react-scripts-plugin-no-minify": "0.3.2"
   },
   "scripts": {
     "postinstall": "cd node_modules/pdfmake && mkdir -p examples/fonts && cp -r ../../src/fonts/reports/* examples/fonts && npm install && gulp buildFonts",

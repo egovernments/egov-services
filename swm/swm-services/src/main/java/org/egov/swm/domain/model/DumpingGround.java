@@ -48,4 +48,10 @@ public class DumpingGround {
     @JsonProperty("isProcessingSite")
     private Boolean isProcessingSite;
 
+    @JsonProperty("distanceFromProcessingSite")
+    private Double distanceFromProcessingSite;
+
+    @JsonProperty("processingSite")
+    private ProcessingSite processingSite;
+
 }

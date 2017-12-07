@@ -2039,7 +2039,6 @@ definitions:
           minLength: 1
         wasteType:
           $ref: "#/definitions/WasteType"
-          format: singleValueList
       required:
       - tenantId
       - code
@@ -2074,6 +2073,11 @@ definitions:
           $ref: '#/definitions/SiteDetails'
         isProcessingSite:
           type: boolean
+        distanceFromProcessingSite:
+          type: number
+          format: double
+        processingSite:
+          $ref: '#/definitions/ProcessingSite'
         auditDetails:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails'
       required:
@@ -2100,21 +2104,11 @@ definitions:
           description: name of the DumpingGround. should be unique in ULB
           maxLength: 128
           minLength: 1
-        distanceFromDumpingGround:
-          type: number
-          format: double
         siteDetails:
           $ref: '#/definitions/SiteDetails'
-        dumpingGrounds:
-          description: Dumping grounds
-          type: array
-          items: 
-            $ref: '#/definitions/DumpingGround'
-          minItems: 1
       required:
       - tenantId
       - name
-      - distanceFromDumpingGround
       - siteDetails
       
     SiteDetails:

@@ -1,7 +1,5 @@
 package org.egov.swm.domain.model;
 
-import java.util.List;
-
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 
@@ -36,16 +34,8 @@ public class ProcessingSite {
     private String name;
 
     @NotNull
-    @JsonProperty("distanceFromDumpingGround")
-    private Double distanceFromDumpingGround;
-
-    @NotNull
     @JsonProperty("siteDetails")
     private SiteDetails siteDetails;
-
-    @NotNull
-    @JsonProperty("dumpingGrounds")
-    private List<DumpingGround> dumpingGrounds;
 
     @JsonProperty("auditDetails")
     @Valid

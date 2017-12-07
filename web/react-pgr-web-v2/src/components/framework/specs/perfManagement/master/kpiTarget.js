@@ -231,7 +231,7 @@ var dat = {
         }],
         "result": {
             "header": [ { label: "perfManagement.search.KPIs.groups.searchkpiCode" },{ label : "perfManagement.create.KPIs.groups.kpiDate"}, { label: "perfManagement.search.KPIs.groups.searchkpiTarget" }],
-            "values": ["kpiCode","finYear", "targetValue"],
+            "values": ["kpiCode","finYear", "targetDescription"],
             "resultPath": "kpiTargets",
             "rowClickUrlUpdate": "/update/perfManagement/kpiTarget/{kpiCode}",
             "rowClickUrlView": "/view/perfManagement/kpiTarget/{kpiCode}"

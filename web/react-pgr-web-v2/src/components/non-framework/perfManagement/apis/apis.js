@@ -54,8 +54,8 @@ export const fetchFinancialYearsAPI = (cb) => {
 }
 
 export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
-    Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18,2018-19&ulbs=default&kpiCodes=PFP`, [], {}, false, true).then(function(res) {
-    // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
+    // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18,2018-19&ulbs=default&kpiCodes=PFP`, [], {}, false, true).then(function(res) {
+    Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
         if (res && res.ulbs) {
             cb (null, res)
         } else {

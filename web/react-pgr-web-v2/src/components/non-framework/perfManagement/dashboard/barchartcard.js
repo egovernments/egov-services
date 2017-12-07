@@ -201,9 +201,9 @@ export default class BarChartCard extends Component {
                 <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false}
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
-                <CardHeader
-                    title={<strong> KPI data </strong>}
-                />
+                <CardHeader style={{paddingBottom: 0}}
+                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> KPI representation </div>}/>
+                
                 <BarChart style={{marginLeft: '30%'}} padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
                     <XAxis dataKey={this.state.dataKey}/>
                     <YAxis yAxisId="left" orientation="left" stroke="#8884d8"/>
@@ -249,9 +249,8 @@ export default class BarChartCard extends Component {
                 <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false} 
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
-                <CardHeader
-                    title={<strong> KPI data </strong>}
-                />
+                <CardHeader style={{paddingBottom: 0}}
+                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> KPI representation </div>}/>
                 <Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
                         <TableRow>

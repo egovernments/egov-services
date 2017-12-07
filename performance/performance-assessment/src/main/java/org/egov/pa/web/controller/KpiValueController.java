@@ -123,6 +123,7 @@ public class KpiValueController implements KpiValue {
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
+			 @RequestParam(value="categoryId", required = false) Long categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
     	KPIValueSearchRequest kpiValueSearchReq = new KPIValueSearchRequest();
@@ -132,6 +133,7 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
     	kpiValueSearchReq.setUlbList(ulbList);
+    	kpiValueSearchReq.setCategoryId(categoryId);
     	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.TRUE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);
@@ -147,6 +149,7 @@ public class KpiValueController implements KpiValue {
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
+			 @RequestParam(value="categoryId", required = false) Long categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo) {
     	
     	log.info("Request Received for Search : " + tenantIdList + "\n" + departmentId + "\n" + finYearList);
@@ -157,6 +160,7 @@ public class KpiValueController implements KpiValue {
     	kpiValueSearchReq.setKpiCodes(kpiCodes);
     	kpiValueSearchReq.setTenantId(tenantIdList);
     	kpiValueSearchReq.setUlbList(ulbList);
+    	kpiValueSearchReq.setCategoryId(categoryId);
     	final List<ErrorResponse> errorResponses = requestValidator.validateRequest(kpiValueSearchReq, Boolean.FALSE);
         if (!errorResponses.isEmpty())
             return new ResponseEntity<>(errorResponses, HttpStatus.BAD_REQUEST);

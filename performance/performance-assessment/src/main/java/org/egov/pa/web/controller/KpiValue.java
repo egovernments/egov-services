@@ -34,6 +34,7 @@ public interface KpiValue {
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCode,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
+			 @RequestParam(value="categoryId", required = false) Long categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo);
 	
 	@PostMapping(value = "/_search")
@@ -43,6 +44,7 @@ public interface KpiValue {
 			 @RequestParam(value="kpiCodes", required = false) List<String> kpiCode,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="ulbs", required = false) List<String> ulbList,
+			 @RequestParam(value="categoryId", required = false) Long categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo);
 
 }

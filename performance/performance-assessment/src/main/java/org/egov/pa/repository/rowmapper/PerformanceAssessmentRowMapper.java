@@ -160,6 +160,8 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setInstructions(rs.getString("instructions"));
 				kpi.setPeriodicity(rs.getString("periodicity"));
 				kpi.setTargetType(rs.getString("targetType"));
+				kpi.setCategoryId(rs.getLong("categoryId"));
+				kpi.setCategory(rs.getString("category"));
 				kpiMap.put(rs.getString("code"), kpi); 
 			}
 			
@@ -219,6 +221,8 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setPeriodicity(rs.getString("periodicity"));
 				kpi.setTargetType(rs.getString("targettype"));
 				kpi.setFinancialYear(rs.getString("finyear"));
+				kpi.setCategoryId(rs.getLong("categoryId"));
+				kpi.setCategory(rs.getString("category"));
 				KpiTarget target = new KpiTarget(); 
 				target.setId(rs.getString("targetId"));
 				target.setKpiCode(rs.getString("targetKpiCode"));

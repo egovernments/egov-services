@@ -73,7 +73,7 @@ public class PerformanceAssessmentQueryBuilder {
     		+ " LEFT JOIN egpa_kpi_value value ON master.code = value.kpicode " 
     		+ " LEFT JOIN egpa_kpi_value_detail detail ON value.id = detail.valueid WHERE master.id IS NOT NULL " ;*/
     
-    public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, "
+    public static final String COMPARE_SEARCH_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department, master.finyear, master.instructions, master.periodicity, master.targettype, master.active, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category,  "
     		+ " target.id as targetId, target.kpicode as targetKpiCode, target.targetvalue, target.tenantid as targetTenantId, target.finyear as targetFinYear, " 
     		+ " value.id as valueId, value.kpicode as valueKpiCode, value.tenantid as valueTenantId,  "
     		+ " SUM(NULLIF(detail.value, '')::int) as consolidatedValue FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
@@ -174,22 +174,22 @@ public class PerformanceAssessmentQueryBuilder {
     	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
     }
     
-    private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "  
+    private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "  
 			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  
 			+ " from egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ;
     
-    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId,
+    public String getKpiByCode(List<String> kpiCodeList, List<String> finYearList, Long departmentId, Long categoryId,
     		List<Object> preparedStatementValues) { 
     	StringBuilder baseQuery = new StringBuilder(GETKPIBYCODEFINYEAR);
-    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, departmentId, preparedStatementValues);
+    	 getKpiByCodeWhereClause(baseQuery, kpiCodeList, finYearList, departmentId, categoryId, preparedStatementValues);
     	 return baseQuery.toString();
     }
     
     @SuppressWarnings({ "unchecked", "rawtypes" })
     private void getKpiByCodeWhereClause(final StringBuilder selectQuery, final List<String> kpiCodeList, 
-            final List<String> finYearList, Long departmentId, List<Object> preparedStatementValues) {
-        if (!(null == kpiCodeList && null == finYearList && null == departmentId))
+            final List<String> finYearList, Long departmentId, Long categoryId, List<Object> preparedStatementValues) {
+        if (!(null == kpiCodeList && null == finYearList && null == departmentId && null == categoryId))
         	selectQuery.append(" AND ");
         
         boolean isAppendAndClause = false;
@@ -198,6 +198,12 @@ public class PerformanceAssessmentQueryBuilder {
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(departmentId);
+        }
+        
+        if (null != categoryId && categoryId > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.category = ? ");
+            preparedStatementValues.add(categoryId);
         }
         
         if (null != kpiCodeList && kpiCodeList.size() > 0) {
@@ -214,7 +220,7 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getTargetSearchQuery(KPITargetGetRequest getReq, final List preparedStatementValues) { 
     	
-    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, master.category as categoryId, " 
+    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, " 
     			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear " 
     			+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
     			+ " WHERE master.id IS NOT NULL"); 

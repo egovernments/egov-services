@@ -98,18 +98,6 @@ public class KpiValueServiceImpl implements KpiValueService {
 	@Override
 	public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
 		List<ULBKpiValueList> list = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
-		/*List<String> kpiCodeList = new ArrayList<>();
-		for (int i = 0; i < kpiValueList.size(); i++) {
-			for (int j = 0; j < kpiValueList.get(i).getValueList().size(); j++) {
-				kpiValueList.get(i).getValueList().get(j).setValueid(kpiValueList.get(i).getId());
-			}
-			kpiCodeList.add(kpiValueList.get(i).getKpiCode());
-		}
-		List<KPI> kpiList = new ArrayList<>();
-		if (kpiCodeList.size() > 0) {
-			kpiList = kpiMasterRepository.getKpiByCode(kpiCodeList);
-		}
-		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);*/
 		return list;
 	}
 
@@ -127,7 +115,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 		}
 		List<KPI> kpiList = new ArrayList<>();
 		if (kpiCodeList.size() > 0 || null != kpiValueSearchReq.getDepartmentId()) {
-			kpiList = kpiMasterRepository.getKpiByCode(Boolean.TRUE,kpiCodeList, kpiValueSearchReq.getFinYear(), kpiValueSearchReq.getDepartmentId());
+			kpiList = kpiMasterRepository.getKpiByCode(Boolean.TRUE,kpiCodeList, kpiValueSearchReq);
 		}
 		return sortKpiAndValues(kpiValueSearchReq, kpiValueList, kpiList);
 	}

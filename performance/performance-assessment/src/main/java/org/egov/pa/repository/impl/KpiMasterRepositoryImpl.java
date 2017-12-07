@@ -20,6 +20,7 @@ import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPIMaster
 import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
+import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -148,10 +149,12 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	}
 	
 	@Override
-	public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, List<String> finYearList,
-			Long departmentId) {
+	public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq) {
 		final List<Object> preparedStatementValues = new ArrayList<>();
-		String query = queryBuilder.getKpiByCode(kpiCodeList, finYearList, departmentId, preparedStatementValues);
+		List<String> finYearList = kpiValueSearchReq.getFinYear(); 
+		Long departmentId = kpiValueSearchReq.getDepartmentId();
+		Long categoryId = kpiValueSearchReq.getCategoryId(); 
+		String query = queryBuilder.getKpiByCode(kpiCodeList, finYearList, departmentId, categoryId, preparedStatementValues);
 		log.info("QUERY to fetch KPI Details : " + query);
 		KPIMasterRowMapper mapper = new PerformanceAssessmentRowMapper().new KPIMasterRowMapper();
 		jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);

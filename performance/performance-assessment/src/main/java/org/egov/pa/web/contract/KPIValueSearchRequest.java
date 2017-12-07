@@ -37,11 +37,22 @@ public class KPIValueSearchRequest   {
   @JsonProperty("graphType")
   private String graphType = null;
   
+  @JsonProperty("categoryId")
+  private Long categoryId = null ; 
+  
   
   
   
 
-  public List<String> getUlbList() {
+  public Long getCategoryId() {
+	return categoryId;
+}
+
+public void setCategoryId(Long categoryId) {
+	this.categoryId = categoryId;
+}
+
+public List<String> getUlbList() {
 	return ulbList;
 }
 

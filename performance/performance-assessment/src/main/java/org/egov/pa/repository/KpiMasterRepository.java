@@ -7,6 +7,7 @@ import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTargetList;
 import org.egov.pa.web.contract.KPIGetRequest;
 import org.egov.pa.web.contract.KPIRequest;
+import org.egov.pa.web.contract.KPIValueSearchRequest;
 
 public interface KpiMasterRepository {
 	
@@ -30,6 +31,6 @@ public interface KpiMasterRepository {
     
     public List<DocumentTypeContract> getDocumentForKpi(String kpiCode);
     
-    public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, List<String> finYearList, Long departmentId); 
+    public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq); 
     
 }

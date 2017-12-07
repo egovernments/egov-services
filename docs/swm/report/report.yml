@@ -31,10 +31,11 @@ ReportDefinitions:
     label: reports.swm.dumpingground
     type: singlevaluelist
     source: mdms
-    isMandatory: true
+    isMandatory: false
     stateData: true
     wrapper: true
     pattern: http://egov-mdms-service:8080/egov-mdms-service/v1/_get?moduleName=swm&masterName=DumpingGround&tenantId=$tenantid|$.MdmsRes.swm.DumpingGround.*.code|$.MdmsRes.swm.DumpingGround.*.name
+    searchClause: and ssg.dumpingground = $dumpinggroundcode
   - name: collectiontypecode
     label: reports.swm.collectiontype
     type: singlevaluelist
@@ -54,7 +55,7 @@ ReportDefinitions:
     type: epoch
     source: egswm_sourcesegregation
     isMandatory: true
-  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid and ssg.dumpingground = $dumpinggroundcode and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date 
+  query: select dg.name as dumpinggroundname, sum(cd.wetwastecollected) as wetwastecollected, sum(cd.drywastecollected) as drywastecollected, (to_timestamp(ssg.sourcesegregationdate/1000) AT TIME ZONE 'IST')::date as date from egswm_collectiondetails cd, egswm_sourcesegregation ssg, (VALUES tbl_swmdumpingground) as dg (code,name,tenantId) where cd.sourcesegregation = ssg.code and cd.tenantid = $tenantid and ssg.tenantid = $tenantid  and ssg.dumpingground = dg.code and dg.tenantid = $tenantid and (to_timestamp(ssg.sourcesegregationdate) AT TIME ZONE 'IST')::date BETWEEN (to_timestamp($fromDate) AT TIME ZONE 'IST')::date AND (to_timestamp($toDate) AT TIME ZONE 'IST')::date 
   groupBy: group by date, dumpinggroundname;
   
 - reportName: ExpenditureIncurredReport

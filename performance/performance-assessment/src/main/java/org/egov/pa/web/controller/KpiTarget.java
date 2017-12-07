@@ -37,6 +37,7 @@ public interface KpiTarget {
     public ResponseEntity<?> search(@RequestParam(value="kpiCodes", required = false) List<String> kpiCodes,
 			 @RequestParam(value="finYear", required = false) List<String> finYearList,
 			 @RequestParam(value="departmentId", required = false) List<Long> departmentId,
+			 @RequestParam(value="categoryId", required = false) List<Long> categoryId,
 			 @RequestBody RequestInfoWrapper requestInfo);
 	
 }

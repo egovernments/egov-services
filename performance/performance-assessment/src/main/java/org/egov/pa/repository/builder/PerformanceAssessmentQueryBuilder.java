@@ -214,7 +214,7 @@ public class PerformanceAssessmentQueryBuilder {
     
     public String getTargetSearchQuery(KPITargetGetRequest getReq, final List preparedStatementValues) { 
     	
-    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, " 
+    	final StringBuilder selectQuery = new StringBuilder("SELECT master.id, master.name, master.code, master.department as departmentId, master.instructions, master.periodicity, master.targettype as targetType, master.finyear as financialYear, master.category as categoryId, " 
     			+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear " 
     			+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode " 
     			+ " WHERE master.id IS NOT NULL"); 
@@ -243,6 +243,11 @@ public class PerformanceAssessmentQueryBuilder {
         if (null != getReq.getDepartmentId() && getReq.getDepartmentId().size() > 0) { 
         	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.department IN " + getIdQuery(getReq.getDepartmentId()));
+        }
+        
+        if (null != getReq.getCategoryId() && getReq.getCategoryId().size() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.category IN " + getIdQuery(getReq.getCategoryId()));
         }
         
     }

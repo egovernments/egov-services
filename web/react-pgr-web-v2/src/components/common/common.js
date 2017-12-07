@@ -3082,6 +3082,7 @@ var localization_EN_Data = {
  "legal.vakalatnama.create.primaryAdvocate":"Primary Advocate",
   "legal.vakalatnama.create.additionalAdvocate":"Additional Advocate",
     "legal.advocates.create.additionalOwnerWindow":"Additional Owner",
+    "legal.create.additionalAdvocateName":"Additional Advocate Name",
   "legal.advocates.create.additionalAdvocateWindow":"Additional Advocate",
   "advocates.create.group.title.orgEmpanelmentDetails":"Agency Details",
   "advocates.create.agencyAddress":"Agency Address",

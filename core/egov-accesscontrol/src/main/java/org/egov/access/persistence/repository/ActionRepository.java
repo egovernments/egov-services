@@ -72,7 +72,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.stereotype.Repository;
-import org.egov.tracer.http.LogAwareRestTemplate;
+import org.springframework.web.client.RestTemplate;
+
 
 import com.jayway.jsonpath.JsonPath;
 
@@ -99,7 +100,7 @@ public class ActionRepository {
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
 	
 	@Autowired
-	private LogAwareRestTemplate restTemplate;
+	private RestTemplate restTemplate;
 
 	public List<Action> createAction(final ActionRequest actionRequest) {
 
@@ -628,16 +629,36 @@ private List<Action> convertToAction(ActionRequest actionRequest,JSONArray actio
 	List<Action> actionList = new ArrayList<Action>();
 	for (int i = 0; i < actionsArray.length(); i++) {
 		Action act = new Action();
+		if(actionsArray.getJSONObject(i).has("displayName")){
 		act.setDisplayName(actionsArray.getJSONObject(i).getString("displayName"));
+		} else {act.setDisplayName("");}
+		if(actionsArray.getJSONObject(i).has("url")){
 		act.setUrl(actionsArray.getJSONObject(i).getString("url"));
+		} else {act.setUrl("");}
+		if(actionsArray.getJSONObject(i).has("enabled")){
 		act.setEnabled(actionsArray.getJSONObject(i).getBoolean("enabled"));
+		} else {act.setEnabled(false);}
+		if(actionsArray.getJSONObject(i).has("id")){
 		act.setId(actionsArray.getJSONObject(i).getLong("id"));
+		} else {act.setId(new Long(0));}
+		if(actionsArray.getJSONObject(i).has("name")){
 		act.setName(actionsArray.getJSONObject(i).getString("name"));
+		} else {act.setName("");}
+		if(actionsArray.getJSONObject(i).has("orderNumber")){
 		act.setOrderNumber(actionsArray.getJSONObject(i).getInt("orderNumber"));
+		} else {act.setOrderNumber(0);}
+		if(actionsArray.getJSONObject(i).has("parentModule")){
 		act.setParentModule(actionsArray.getJSONObject(i).get("parentModule").toString());
+		} else {act.setParentModule("");}
+		if(actionsArray.getJSONObject(i).has("path")){
 		act.setPath(actionsArray.getJSONObject(i).getString("path"));
+		} else {act.setPath("");}
+		if(actionsArray.getJSONObject(i).has("queryParams")){
 		act.setQueryParams(actionsArray.getJSONObject(i).get("queryParams").toString());
+		} else {act.setQueryParams("");}
+		if(actionsArray.getJSONObject(i).has("serviceCode")){
 		act.setServiceCode(actionsArray.getJSONObject(i).getString("serviceCode"));
+		} else {act.setServiceCode("");}
 		act.setTenantId(actionRequest.getTenantId());
 		actionList.add(act);
 	}

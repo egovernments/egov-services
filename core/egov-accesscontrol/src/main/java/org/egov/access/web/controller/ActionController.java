@@ -102,7 +102,8 @@ public class ActionController {
 		return getNewListSuccessResponse(actionRequest.getRequestInfo(), actionList);
 
 	}
-
+    
+	
 	@PostMapping(value = "_validate")
 	public ValidateActionResponse validateAction(@RequestBody ValidateActionRequest validateActionRequest) {
 		ActionValidation actionValidation = actionService.validate(validateActionRequest.toDomain());

@@ -96,6 +96,8 @@ public class AbstractEstimateService {
                 }
             }
 
+            // TODO: do budget appropriation if spillover
+            
             if (!estimate.getSpillOverFlag()) {
                 String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(
                         estimate.getTenantId(), abstractEstimateRequest.getRequestInfo());
@@ -175,8 +177,9 @@ public class AbstractEstimateService {
             Boolean isFinIntReq = isConfigRequired(CommonConstants.FINANCIAL_INTEGRATION_KEY,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
+            // TODO: check if budget check required
             if (isFinIntReq && estimate.getStatus().toString()
-                    .equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
+                    .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
 
@@ -300,6 +303,7 @@ public class AbstractEstimateService {
         estimateAppropriationRequest.setRequestInfo(requestInfo);
 
         final String url = propertiesManager.getWorksSeviceHostName() + propertiesManager.getEstimateAppropriationURL();
+        // TODO: do appropriation if this succeeds
         restTemplate.postForObject(url, estimateAppropriationRequest, EstimateAppropriationResponse.class);
     }
 

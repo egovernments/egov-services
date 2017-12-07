@@ -253,7 +253,7 @@ public class EstimateValidator {
             if (jsonMap.get("value").equals("Yes"))
                 isFinIntReq = true;
         }
-
+        // TODO:
         if (abstractEstimate.getSpillOverFlag()
                 || (!isNew && AbstractEstimateStatus.CHECKED.equals(abstractEstimate.getStatus())
                         && Constants.FORWARD.equalsIgnoreCase(abstractEstimate.getWorkFlowDetails().getAction())))
@@ -262,6 +262,7 @@ public class EstimateValidator {
         validateSubTypeOfWork(abstractEstimate.getSubTypeOfWork(), abstractEstimate.getTenantId(), requestInfo,
                 messages);
         validateDepartment(abstractEstimate.getDepartment(), abstractEstimate.getTenantId(), requestInfo, messages);
+        // TODO: 
         // validateWard(abstractEstimate.getWard(),
         // abstractEstimate.getTenantId(), requestInfo, messages);
         // validateLocality(abstractEstimate.getLocality(),
@@ -475,7 +476,7 @@ public class EstimateValidator {
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
                     .abstractEstimateNumbers(Arrays.asList(abstractEstimate.getAbstractEstimateNumber())).build();
-
+            //TODO search by projectcode 
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
                 if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
@@ -547,11 +548,12 @@ public class EstimateValidator {
                     .workIdentificationNumbers(
                             Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode()))
                     .build();
+            //TODO : status
             List<AbstractEstimate> abstractEstimates = abstractEstimateRepository
                     .search(abstractEstimateSearchContract);
             if (!abstractEstimates.isEmpty()) {
                 abstractEstimate = abstractEstimates.get(0);
-                if (!abstractEstimate.getStatus().equals(AbstractEstimateStatus.CANCELLED)) {
+                if (abstractEstimate.getStatus().equals(AbstractEstimateStatus.ADMIN_SANCTIONED)) {
                     for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
                         if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
                                 .getCode().equalsIgnoreCase(workIdentificationNumber))
@@ -573,6 +575,7 @@ public class EstimateValidator {
             else
                 validateEstimateNumberUnique(detailedEstimate, messages);
 
+            //TODO both normal and spillover
             if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
                         Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
@@ -586,6 +589,7 @@ public class EstimateValidator {
                 .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
         if (detailedEstimate.getId() != null)
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
+        //TODO check other than cancelled
         List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
          for(DetailedEstimateHelper detailedEstimateHelper : lists) {
              if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
@@ -599,6 +603,7 @@ public class EstimateValidator {
         for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
 
             if (estimateOverhead != null) {
+            	//TODO validate unique overhead 
                 validateEstimateOverHead(estimateOverhead.getOverhead(), requestInfo, messages);
 
                 if (estimateOverhead.getOverhead().getCode() == null) {
@@ -626,6 +631,7 @@ public class EstimateValidator {
     public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages,
             final RequestInfo requestInfo) {
 
+    	//TODO spillover rejected and forward
         if (detailedEstimate.getWorkFlowDetails() != null && detailedEstimate.getWorkFlowDetails().getAction()
                 .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_CREATE))
             if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
@@ -633,6 +639,7 @@ public class EstimateValidator {
 
         ScheduleOfRate sor = null;
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
+        	//TODO 
             if ((activity.getScheduleOfRate() != null && activity.getScheduleOfRate().getId() == null)
                     || (activity.getNonSor() != null && activity.getNonSor().getId() == null))
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
@@ -665,6 +672,7 @@ public class EstimateValidator {
             }
 
             if (activity.getEstimateMeasurementSheets() != null)
+            	//TODO quantity sum with activity
                 for (final EstimateMeasurementSheet estimateMeasurementSheet : activity
                         .getEstimateMeasurementSheets()) {
                     if (StringUtils.isBlank(estimateMeasurementSheet.getIdentifier()))
@@ -684,6 +692,7 @@ public class EstimateValidator {
 
     private void validateUOM(final UOM uom, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray;
+        //add required
         if (uom != null && uom.getCode() != null) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.UOM_OBJECT, CommonConstants.CODE, uom.getCode(),
                     tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
@@ -709,6 +718,7 @@ public class EstimateValidator {
         }
     }
 
+    //TODO : AE required flag
     public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
             Map<String, String> messages, AbstractEstimate abstractEstimate) {
 
@@ -879,9 +889,11 @@ public class EstimateValidator {
         List<EstimateTechnicalSanction> technicalSanctions = estimateTechnicalSanctionRepository
                 .search(technicalSanctionSearchContract);
         if (technicalSanctions != null && !technicalSanctions.isEmpty())
+        	//TODO change the mesg
             messages.put(Constants.KEY_INVALID_ADMINSANCTION_DATE, Constants.MESSAGE_INVALID_ADMINSANCTION_DATE);
     }
 
+    //TODO AE required or not
     private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray = null;

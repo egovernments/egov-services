@@ -81,6 +81,7 @@ public class DetailedEstimateService {
 			if (detailedEstimate.getAbstractEstimateDetail() != null || (isRevision != null && isRevision)) {
 				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
                 detailedEstimate.setAbstractEstimateDetail(abstactEstimate.getAbstractEstimateDetails().get(0));
+                //TODO set all data from AE based on flag
 				if ((abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated())
 						 || (isRevision != null && isRevision)) {
 					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(
@@ -99,7 +100,7 @@ public class DetailedEstimateService {
 				if (detailedEstimate.getMultiYearEstimates() != null) {
 					for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
 						multiYearEstimate.setId(commonUtils.getUUID());
-						// Set from financials
+						//TODO Set from financials
 						multiYearEstimate.setFinancialYear(new FinancialYear());
 						multiYearEstimate.setPercentage(100d);
 						multiYearEstimate.setAuditDetails(auditDetails);

@@ -1,4 +1,25 @@
 var localization_EN_Data = {
+  //works Schedule Of rate
+  "works.search.title":"Search Rate Master",
+  "works.create.sorCodes":"SOR Code",
+  "works.create.scheduleCategoryCodes":"Schedule Categroy",
+  "works.create.validSORRateDate":"SOR Rate Date",
+  "works.create.validMarketRateDate":"Market Rate Date",
+  "works.search.result.code":"Code",
+  "works.search.result.description":"Description",
+  "works.search.result.scheduleCategory":"Schedule Category",
+  "works.search.result.uom":"uom",
+  "works.create.group.title.createRateMaster":"Create Rate Master",
+  "works.create.scheduleCategory":"Schedule Categroy",
+  "works.create.sorCodes":"SOR Code",
+  "works.create.description":"SOR Description",
+  "works.create.uom":"Unit Of Measure",
+  "works.create.group.title.rateDetails":"Rate Details",
+  "Rate":"Rate",
+  "FromDate":"From Date",
+  "ToDate":"To Date",
+  "works.create.group.title.marketRateDetails":"Market Rate Details",
+  
   //works Detailed Estimate
   "works.create.group.title.workInfo":"Work Info",
   "works.create.estimateNumber": "Abstract Estimate No.",

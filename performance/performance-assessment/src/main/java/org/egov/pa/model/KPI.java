@@ -29,6 +29,12 @@ public class KPI   {
   
   @JsonProperty("code")
   private String code = null; 
+  
+  @JsonProperty("category")
+  private String category = null; 
+  
+  @JsonProperty("categoryId")
+  private Long categoryId = null;
 
   @JsonProperty("remoteSystemId")
   private String remoteSystemId = null;
@@ -59,6 +65,22 @@ public class KPI   {
   
   
 
+
+public Long getCategoryId() {
+	return categoryId;
+}
+
+public void setCategoryId(Long categoryId) {
+	this.categoryId = categoryId;
+}
+
+public String getCategory() {
+	return category;
+}
+
+public void setCategory(String category) {
+	this.category = category;
+}
 
 public List<KpiTarget> getKpiTargets() {
 	return kpiTargets;

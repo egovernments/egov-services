@@ -6,7 +6,7 @@ serviceMaps:
    description: Create a new KPI Master Record
    fromTopic: egov.pa.newkpi-create
    queryMaps: 
-    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, instructions, periodicity, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
+    - query: INSERT INTO egpa_kpi_master (id, name, code, finyear, targettype, category, instructions, periodicity, createdby, createddate, department) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ? );
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -19,6 +19,8 @@ serviceMaps:
        - jsonPath: $.KPIs.*.financialYear
        
        - jsonPath: $.KPIs.*.targetType
+       
+       - jsonPath: $.KPIs.*.categoryId
        
        - jsonPath: $.KPIs.*.instructions
        
@@ -57,7 +59,7 @@ serviceMaps:
    description: Update an existing KPI Master Record
    fromTopic: egov.pa.newkpi-update
    queryMaps: 
-    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, department = ? , instructions =?, periodicity = ?, active = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
+    - query: UPDATE egpa_kpi_master SET name = ?, finyear = ?, department = ? , category = ?, instructions =?, periodicity = ?, active = ?, lastmodifiedby = ?, lastmodifieddate = ? WHERE code = ? AND id = ? ;
       basePath: $.KPIs.*
       jsonMaps:
 
@@ -66,6 +68,9 @@ serviceMaps:
        - jsonPath: $.KPIs.*.financialYear
        
        - jsonPath: $.KPIs.*.departmentId
+         type: LONG
+         
+       - jsonPath: $.KPIs.*.categoryId
          type: LONG
        
        - jsonPath: $.KPIs.*.instructions

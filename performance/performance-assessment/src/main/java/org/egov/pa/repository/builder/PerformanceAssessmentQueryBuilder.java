@@ -56,7 +56,7 @@ public class PerformanceAssessmentQueryBuilder {
 
     public static final String SEARCH_KPI_BASE_QUERY = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, "
     		+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
-    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, "
+    		+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "
     		+ " target.id as targetId, target.kpicode as kpiCode, target.targetvalue as targetValue, target.tenantid as tenantId, target.finyear as targetFinYear "
     		+ " FROM egpa_kpi_master master LEFT JOIN egpa_kpi_master_target target ON master.code = target.kpicode WHERE master.id IS NOT NULL " ; 
     
@@ -312,7 +312,8 @@ public class PerformanceAssessmentQueryBuilder {
     private void addKpiMasterWhereClause(final StringBuilder selectQuery, final List preparedStatementValues,
             final KPIGetRequest kpiGetRequest) {
         if (null == kpiGetRequest.getKpiCode() && null == kpiGetRequest.getKpiName() 
-        		&& null == kpiGetRequest.getDepartmentId() && null == kpiGetRequest.getFinYear())
+        		&& null == kpiGetRequest.getDepartmentId() && null == kpiGetRequest.getFinYear()
+        		&& null == kpiGetRequest.getCategoryId())
             return;
 
         selectQuery.append(" AND ");
@@ -340,6 +341,12 @@ public class PerformanceAssessmentQueryBuilder {
             isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
             selectQuery.append(" master.department = ? ");
             preparedStatementValues.add(kpiGetRequest.getDepartmentId());
+        }
+        
+        if (null != kpiGetRequest.getCategoryId() && kpiGetRequest.getCategoryId() > 0) { 
+        	isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+            selectQuery.append(" master.category = ? ");
+            preparedStatementValues.add(kpiGetRequest.getCategoryId());
         }
         
         if (StringUtils.isNotBlank(kpiGetRequest.getFinYear())) { 

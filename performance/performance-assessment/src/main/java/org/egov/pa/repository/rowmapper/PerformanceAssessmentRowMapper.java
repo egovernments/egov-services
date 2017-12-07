@@ -83,6 +83,8 @@ public class PerformanceAssessmentRowMapper {
 				kpi.setPeriodicity(rs.getString("periodicity"));
 				kpi.setTargetType(rs.getString("targetType"));
 				kpi.setAuditDetails(addAuditDetails(rs));
+				kpi.setCategoryId(rs.getLong("categoryId"));
+				kpi.setCategory(rs.getString("category"));
 				kpiMap.put(rs.getString("code"), kpi); 
 			}
 			

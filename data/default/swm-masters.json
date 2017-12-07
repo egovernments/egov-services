@@ -110,13 +110,15 @@
       "code": "DG Code 1",
       "tenantId": "default",
       "name": "Trimbak Muncipal Council",
-      "ulbs": {
-        "code": "Code Trimbak MC",
-        "name": "ULB:Trimbak Muncipal Council",
-        "imageId": "Fake image ID 1",
-        "logoId": "Fake logo ID 1",
-        "type": "Fake type 1"
-      },
+      "ulbs": [
+	{
+	  "code": "Code Trimbak MC",
+	  "name": "ULB:Trimbak Muncipal Council",
+	  "imageId": "Fake image ID 1",
+	  "logoId": "Fake logo ID 1",
+	  "type": "Fake type 1"
+	}
+      ],
       "siteDetails": {
         "tenantId": "default",
         "area": 0.025,
@@ -147,13 +149,16 @@
       "code": "DG Code 2",
       "tenantId": "default",
       "name": "Fake dumping ground 2",
-      "ulbs": {
-        "code": "Fake ULB code 2",
-        "name": "Fake ULB 2",
-        "imageId": "Fake image ID 2",
-        "logoId": "Fake logo ID 2",
-        "type": "Fake type 2"
-      },
+      "ulbs":
+      [
+	{
+          "code": "Fake ULB code 2",
+          "name": "Fake ULB 2",
+          "imageId": "Fake image ID 2",
+          "logoId": "Fake logo ID 2",
+          "type": "Fake type 2"
+        }
+      ],
       "siteDetails": {
         "tenantId": "default",
         "area": 2.025,

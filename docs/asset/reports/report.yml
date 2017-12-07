@@ -1012,7 +1012,7 @@ ReportDefinitions:
     source: asset
   - name: financialyearstartdate
     label: reports.asset.financialyearstartdate
-    isMandatory: true
+    isMandatory: false
     type: url
     pattern: /egov-mdms-service/v1/_get?moduleName=ASSET&masterName=AssetCategory&tenantId=$tenantid&filter=%5B%3F(%20%40.assetCategoryType%3D%3D%27{assetcategorytype}%27%20%26%26%20%40.isAssetAllow%3D%3Dfalse)%5D|$.MdmsRes.ASSET.AssetCategory.*.id|$.MdmsRes.ASSET.AssetCategory.*.name
     source: asset

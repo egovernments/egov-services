@@ -23,6 +23,7 @@ import org.egov.pa.web.contract.KPIRequest;
 import org.egov.pa.web.contract.KPIValueSearchRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -250,6 +251,23 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 	public void updateKpiTarget(KpiTargetList kpiTargetList) {
 		log.info("Request before pushing to Kafka Queue : " + kpiTargetList);
     	kafkaTemplate.send(updateKpiTargetTopic, kpiTargetList);
+	}
+	
+	@Override
+	public String targetExistsForKPI(String kpiCode) { 
+		String query = queryBuilder.targetAvailableForKpi(); 
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		parametersMap.put("kpiCode", kpiCode);
+		String targetType = ""; 
+		try { 
+			targetType = namedParameterJdbcTemplate.queryForObject(query,parametersMap, String.class);
+		} catch(EmptyResultDataAccessException erdae) { 
+			log.info("No target has been set for the KPI : " + kpiCode); 
+		} catch(Exception e) { 
+			log.error("Encountered an exception while fetching the target for the KPI : " + kpiCode + " :: Exception : " + e) ; 
+		}
+		
+		return targetType; 
 	}
 
 	@Override

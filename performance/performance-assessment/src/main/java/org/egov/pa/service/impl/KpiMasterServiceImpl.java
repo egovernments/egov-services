@@ -143,6 +143,10 @@ public class KpiMasterServiceImpl implements KpiMasterService {
     	else 
     		return false;
     }
+    
+    public String targetAlreadyAvailable(String kpiCode) { 
+    	return kpiMasterRepository.targetExistsForKPI(kpiCode); 
+    }
 
 	@Override
 	public List<DocumentTypeContract> getDocumentForKpi(String kpiCode) {

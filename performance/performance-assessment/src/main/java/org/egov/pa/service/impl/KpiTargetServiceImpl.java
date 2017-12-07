@@ -46,10 +46,20 @@ public class KpiTargetServiceImpl implements KpiTargetService {
 	@Override
 	public KPITargetRequest createNewTarget(KPITargetRequest kpiTargetRequest) {
 		setCreatedAndUpdatedDate(kpiTargetRequest);
+		textTargetChanges(kpiTargetRequest);
 		log.info("KPI Target Message after updating Created Date " + kpiTargetRequest);
 		kpiTargetRepository.persistNewTarget(kpiTargetRequest);
 		kpiValueRepository.persistKpiValue(decideTenantsForTarget(kpiTargetRequest));
 		return kpiTargetRequest;
+	}
+	
+	private void textTargetChanges(KPITargetRequest targetReq) { 
+		for(KpiTarget target : targetReq.getKpiTargets()) { 
+			if(StringUtils.isBlank(target.getTargetValue()) && StringUtils.isNotBlank(target.getTargetDescription())) { 
+				target.setTargetValue(target.getTargetDescription());
+			}
+		}
+		
 	}
 
 	@Override

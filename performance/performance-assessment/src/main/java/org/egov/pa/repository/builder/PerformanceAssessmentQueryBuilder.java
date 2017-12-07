@@ -174,6 +174,10 @@ public class PerformanceAssessmentQueryBuilder {
     	return "SELECT id, kpicode as kpiCode, documentcode as code, documentname as name, mandatoryflag as active FROM egpa_kpi_master_document WHERE kpicode = :kpiCode " ; 
     }
     
+    public String targetAvailableForKpi() { 
+    	return "select 1 as available from egpa_kpi_master master where master.code = :kpiCode AND exists (select 1 from egpa_kpi_master_target where kpicode = master.code) " ;
+    }
+    
     private static final String GETKPIBYCODEFINYEAR = "SELECT master.id, master.name, master.code, master.department as departmentId, master.finyear as financialYear, master.instructions, master.category as categoryId, (select name from egpa_kpi_category where id = master.category) as category, "  
 			+ " master.periodicity, master.targettype as targetType, master.active, master.createdby as createdBy, master.createddate as createdDate, " 
 			+ " master.lastmodifiedby as lastModifiedBy, master.lastmodifieddate as lastModifiedDate, target.id as targetId, target.targetvalue as targetValue, target.kpicode as kpiCode, target.tenantid as tenantId, target.finyear as targetFinYear "  

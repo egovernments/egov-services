@@ -109,10 +109,7 @@ public class RequestValidator {
 		for(KPI kpi : kpis) {
 
 			
-			if(!createOrUpdate) { 
-				
-				
-			}
+			
 			
 			
 			kpi.setPeriodicity(PerformanceAssessmentConstants.PERIODICITY_DEFAULT);
@@ -126,6 +123,16 @@ public class RequestValidator {
 				errorFields.add(buildErrorField(PerformanceAssessmentConstants.KPICODE_MANDATORY_CODE, 
 	                    PerformanceAssessmentConstants.KPICODE_MANDATORY_ERROR_MESSAGE,
 	                    PerformanceAssessmentConstants.KPICODE_MANDATORY_FIELD_NAME));
+			}
+			
+			if(!createOrUpdate && errorFields.size() <= 0) {
+				String targetType = kpiMasterService.targetAlreadyAvailable(kpi.getCode()); 
+				if(StringUtils.isNotBlank(targetType) && !targetType.equals(kpi.getTargetType())) {  
+					errorFields.add(buildErrorField(PerformanceAssessmentConstants.TARGET_EXISTS_CODE, 
+		                    PerformanceAssessmentConstants.TARGET_EXISTS_ERROR_MESSAGE,
+		                    PerformanceAssessmentConstants.TARGET_EXISTS_FIELD_NAME));
+				}
+				
 			}
 			
 			if(StringUtils.isBlank(kpi.getFinancialYear())) { 
@@ -147,7 +154,7 @@ public class RequestValidator {
 			}
 			
 			// Check whether the document details are available and validate them
-			if(createOrUpdate && null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
+			if(null != kpi.getDocuments() && kpi.getDocuments().size() > 0) { 
 				List<Document> finalDocumentList = new ArrayList<>(); 
 				for(Document doc : kpi.getDocuments()) { 
 					if(doc.getActive() && StringUtils.isBlank(doc.getName())) { 

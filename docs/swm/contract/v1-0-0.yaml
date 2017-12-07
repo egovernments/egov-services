@@ -2114,11 +2114,6 @@ definitions:
     SiteDetails:
       type: object
       properties:
-        tenantId:
-          type: string
-          description: tenant id of the VehicleType
-          maxLength: 128
-          minLength: 1
         location:
           $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/egov-location/contracts/v1-0-0.yml#/definitions/Boundary'
         area:
@@ -2176,7 +2171,6 @@ definitions:
           x-displayformat: 20/11/2017
           description: Enable this field Iff mpcbAuthorisation is checked. Shall be > bankValidityFrom
       required:
-      - tenantId
       - location
       - area
       - capacity
@@ -3468,3 +3462,4 @@ parameters:
       format: int32
       in: query
       description: page number of the Search Results, Default value is 0
+

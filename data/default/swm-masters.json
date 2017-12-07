@@ -120,7 +120,6 @@
 	}
       ],
       "siteDetails": {
-        "tenantId": "default",
         "area": 0.025,
         "capacity": 6.4,
         "address": "Trimbak",
@@ -160,7 +159,6 @@
         }
       ],
       "siteDetails": {
-        "tenantId": "default",
         "area": 2.025,
         "capacity": 16.4,
         "address": "Fake address",
@@ -194,7 +192,6 @@
       "tenantId": "default",
       "name": "Fake Pro. Plant 1",
       "siteDetails": {
-        "tenantId": "default",
         "area": 0.025,
         "capacity": 6.4,
         "address": "Fake Address",

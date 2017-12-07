@@ -112,7 +112,7 @@
       "name": "Trimbak Muncipal Council",
       "ulbs": [
 	{
-	  "code": "Code Trimbak MC",
+	  "code": "default",
 	  "name": "ULB:Trimbak Muncipal Council",
 	  "imageId": "Fake image ID 1",
 	  "logoId": "Fake logo ID 1",
@@ -151,7 +151,7 @@
       "ulbs":
       [
 	{
-          "code": "Fake ULB code 2",
+          "code": "mh.roha",
           "name": "Fake ULB 2",
           "imageId": "Fake image ID 2",
           "logoId": "Fake logo ID 2",

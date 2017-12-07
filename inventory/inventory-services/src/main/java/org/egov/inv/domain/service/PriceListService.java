@@ -1,6 +1,7 @@
 package org.egov.inv.domain.service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -226,9 +227,23 @@ public class PriceListService extends DomainService {
 
 			}
 			
+			
 			Long currentMilllis = System.currentTimeMillis();
 			
 			for(PriceList pl : priceLists){
+				
+				for(PriceListDetails pld:pl.getPriceListDetails()){
+					for(PriceListDetails plds:pl.getPriceListDetails()){
+						if(pld!=plds && pld.getMaterial().getCode().toString().equals(plds.getMaterial().getCode().toString())){
+							throw new CustomException("Material", "Duplicate material(s) " + "" + " found, please remove them and try creating pricelist");
+						}
+					}
+				}
+				
+				if(!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.name().equals(pl.getRateType()))) {
+					throw new CustomException("rateType", "Please enter a valid RateType");
+				}
+				
 				if(Long.valueOf(pl.getAgreementDate()) > currentMilllis){
 					throw new CustomException("agreementDate", "Agreement Date must be less than or equal to Today's date");
 				}
@@ -242,7 +257,23 @@ public class PriceListService extends DomainService {
 				}
 				
 				if(Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())){
+					if(Long.valueOf(pl.getAgreementEndDate()) < 0){
+						throw new CustomException("agreementEndDate", "Enter a valid Agreement End Date");
+					}
 					throw new CustomException("agreementEndDate", "Agreement End Date must be greater than or equal to Agreement start date");
+				}
+				
+				// Negative epoch time is for years below 1970
+				if(Long.valueOf(pl.getAgreementDate()) < 0){
+					throw new CustomException("agreementDate", "Enter a valid Agreement Date");
+				}
+				
+				if(Long.valueOf(pl.getRateContractDate()) < 0){
+					throw new CustomException("rateContractDate", "Enter a valid Rate Contract Date");
+				}
+				
+				if(Long.valueOf(pl.getAgreementStartDate()) < 0){
+					throw new CustomException("agreementStartDate", "Enter a valid Agreement Start Date");
 				}
 				
 				for(PriceListDetails priceListDetail : pl.getPriceListDetails()){
@@ -253,16 +284,6 @@ public class PriceListService extends DomainService {
 					if(pl.getRateType().name().equals(PriceList.RateTypeEnum.ONE_TIME_TENDER.name())){
 						if(priceListDetail.getQuantity()==null){
 							throw new CustomException("quantity", "Material "+ priceListDetail.getMaterial().getCode() + "'s quantity should be provided incase of Tender");
-						}
-					}
-				}
-			}
-			
-			for(PriceList pl:priceLists){
-				for(PriceListDetails pld:pl.getPriceListDetails()){
-					for(PriceListDetails plds:pl.getPriceListDetails()){
-						if(pld!=plds && pld.getMaterial().getCode().toString().equals(plds.getMaterial().getCode().toString())){
-							throw new CustomException("Material", "Duplicate material(s) " + "" + " found, please remove them and try creating pricelist");
 						}
 					}
 				}

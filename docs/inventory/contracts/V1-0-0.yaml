@@ -709,6 +709,131 @@ paths:
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
+    /miscellaneousreceiptnotes/_search:
+      post:
+        summary: Get list of Miscellaneous material receipt notes based on below search parameter(s).
+        description: >
+          Provides the list of material receipt note information based on the
+          search paramaters.
+        parameters:
+          - name: requestInfo
+            in: body
+            description: Request header for the service request details.
+            required: true
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/RequestInfo
+          - $ref: >-
+              https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId
+          - name: mrnNumber
+            in: query
+            description: >-
+              Pass List of unique mrn number(s) then the API will returns list of
+              receipts.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 100
+          - name: receiptType
+            in: query
+            description: Mention the type of the receipt.
+            required: false
+            type: array
+            items:
+              type: string
+            maxItems: 3
+          - name: mrnStatus
+            in: query
+            description: Unique status code of the receipt.
+            required: false
+            type: string
+          - name: receivingStore
+            in: query
+            description: The store code from which the receipt was received.
+            required: false
+            type: string
+          - name: supplierCode
+            in: query
+            description: Unique Supplier code from which the receipt was made.
+            required: false
+            type: string
+          - name: receiptDateFrom
+            in: query
+            description: From which receipt date onwards the data needs to be fetched.
+            required: false
+            type: integer
+            format: int64
+          - name: receiptDateT0
+            in: query
+            description: Till which receipt date the data needs to be fetched.
+            required: false
+            type: integer
+            format: int64
+          - $ref: "#/parameters/pageSize"
+          - $ref: "#/parameters/pageNumber"
+          - $ref: "#/parameters/sortProperty"
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: 'Successful response, returns list of Material Receipt Note(s).'
+            schema:
+              $ref: '#/definitions/MaterialReceiptResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+    /miscellaneousreceiptnotes/_create:
+      post:
+        summary: Create New Miscellaneous Material Receipt Note.
+        description: >-
+          Create a new miscellaneous material receipt note.
+        parameters:
+          - name: materialReceipt
+            in: body
+            description: Details for the new material receipt.
+            required: true
+            schema:
+              $ref: '#/definitions/MaterialReceiptRequest'
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: Material Receipt created
+            schema:
+              $ref: '#/definitions/MaterialReceiptResponse'
+          '400':
+            description: Invalid input.
+            schema:
+              $ref: >-
+                https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes
+
+    /miscellaneousreceiptnotes/_update:
+      post:
+        summary: Update existing Miscellaneous Material Receipts.
+        description: Existing miscellaneous material receipt notes can be updated except the mrn number.
+        parameters:
+          - name: materialReceipt
+            in: body
+            description: Details for the new material receipts.
+            required: true
+            schema:
+              $ref: '#/definitions/MaterialReceiptRequest'
+        tags:
+          - MRN
+        responses:
+          '200':
+            description: Material Receipt(s) Updated Successfully.
+            schema:
+              $ref: '#/definitions/MaterialReceiptResponse'
+          400:
+            description: Invalid Input
+            schema:
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
+
     /materialissues/_search:
       post:
         summary: Get the list of material issues for indent case.
@@ -826,7 +951,7 @@ paths:
             description: Invalid Input
             schema:
               $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
-              
+
     /materialissues-ni/_search:
       post:
         summary: Get the list of material issues without
@@ -943,7 +1068,7 @@ paths:
           400:
             description: Invalid Input
             schema:
-              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'              
+              $ref: 'https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/ErrorRes'
 
     /materials/_search:
       post:
@@ -2562,7 +2687,7 @@ definitions:
           description: Used for indent search result and used in indent purchase order creation
           type:  array
           items:
-            type: string 
+            type: string
       required:
       - store
       - purchaseOrderDate
@@ -2652,22 +2777,22 @@ definitions:
           type: string
           maxLength: 512
           description: |
-            temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.   
+            temporary field used to show indent number. If multiple indent numbers used, then show multiple as string in this field.
         indentQuantity:
           type: number
           format: BigDecimal
           description: |
-            temporary field used to show indent pending quantity to be used for purchase order. If multiple indent numbers used, then show total quantity by combining indent pending quantities.   
+            temporary field used to show indent pending quantity to be used for purchase order. If multiple indent numbers used, then show total quantity by combining indent pending quantities.
         tenderQuantity:
           type: number
           format: BigDecimal
           description: |
-            temporary field used to show tender quantity. If rate type is tender, then show tender quantity.  
+            temporary field used to show tender quantity. If rate type is tender, then show tender quantity.
         tenderAvailableQuantity:
           type: number
           format: BigDecimal
           description: |
-            temporary field used to show tender available quantity. If rate type is tender, then show tender quantity which are already used in purchase orders.  
+            temporary field used to show tender available quantity. If rate type is tender, then show tender quantity which are already used in purchase orders.
         purchaseIndentDetails:
           type:  array
           items:
@@ -2725,6 +2850,9 @@ definitions:
           type: string
           description: Manual Receipt Number, applicable only for Opening Balanace Entry.
           maxLength: 128
+        issueNumber:
+          type: string
+          description: material issue number.
         receiptDate:
           type: integer
           description: The date on which the receipt was made.
@@ -2848,7 +2976,7 @@ definitions:
           type: string
           maxLength: 1000
           description: |
-            payment terms of the Material Receipt            
+            payment terms of the Material Receipt
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
       required:
@@ -3703,7 +3831,7 @@ definitions:
           minLength: 5
           description: |
             name of the Store
-          format: singleValueList  
+          format: singleValueList
         description:
           type: string
           pattern: ^[a-zA-Z0-9 ]+$

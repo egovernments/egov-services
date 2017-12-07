@@ -183,7 +183,10 @@
       },
       "isProcessingSite": false,
       "distanceFromProcessingSite": 20.75,
-      "processingSite": "Fake Pro. Plant 1"
+      "processingSite": 
+	{
+	   "code":"Fake Pro. Plant 1"
+	}
     }
   ],
   "ProcessingSite": [

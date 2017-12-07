@@ -597,8 +597,10 @@ class Report extends Component {
   checkifHasInjectData = (_mockData) => {
     let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = _.cloneDeep(this.props.formData);
-    for(let i=0; i<_mockData[moduleName + "." + actionName].injectData.length; i++) {
-      _.set(this.props.formData, _mockData[moduleName + "." + actionName].injectData[i].jsonPath,  _mockData[moduleName + "." + actionName].injectData[i].value)
+    if(_mockData[moduleName + "." + actionName].injectData){
+      for(let i=0; i<_mockData[moduleName + "." + actionName].injectData.length; i++) {
+        _.set(this.props.formData, _mockData[moduleName + "." + actionName].injectData[i].jsonPath,  _mockData[moduleName + "." + actionName].injectData[i].value)
+      }
     }
   }
 
@@ -699,13 +701,18 @@ class Report extends Component {
             self.props.setLoadingStatus('hide');
             self.props.toggleSnackbarAndSetText(true, err, false, true);
           } else {
-            _docs.push({
+            _docs.push({index:i,
               ...documents[i],
               fileStoreId: res.files[0].fileStoreId
             })
             counter--;
             if(counter == 0 && breakOut == 0) {
-              formdocumentData["documents"] = _docs;
+            let sortedDocs = _.sortBy(_docs, 'index', function(n) {
+            return Math.sin(n);
+          });
+          sortedDocs = sortedDocs.map(({index,  ...sortedDocs}) => sortedDocs);
+              _docs=sortedDocs;
+                formdocumentData["documents"] = _docs;
               self.checkForOtherFiles(formData, _url);
             }
           }

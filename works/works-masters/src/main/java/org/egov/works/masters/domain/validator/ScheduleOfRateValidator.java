@@ -55,7 +55,7 @@ public class ScheduleOfRateValidator {
                     isDataValid = Boolean.TRUE;
                 }
             }
-
+            //TODO min one SOR rate is required. UOM and Schedule Category is mandatory. rates should be greater than zero. do interval overlap validation for market rate also. for bulk data, within the request check for uniqueness. in case of update uniqueness to be done except current record. only one open ended date should be there. validate overlap with open ended date. validate SOR with given id in case of update
             if (scheduleOfRate.getSorRates() != null && (!scheduleOfRate.getSorRates().isEmpty() && scheduleOfRate.getSorRates().size()>1)){
                 Boolean isDateOverlaped = Boolean.FALSE;
                 List<SORRate> sorRates;

@@ -66,7 +66,12 @@ class MdmsComponent extends Component {
 		// court,caseType,side,caseType,caseCategory,bench,stamp and charge
 		let lcms={
 			"Court":"court",
-			"Side":"side"
+			"Side":"side",
+			"CaseType":"caseType",
+			"Bench":"bench",
+			"Register":"stamp",
+			"CaseStatus":"caseStatus",
+			"CaseCategory":"caseCategory"
 		}
 		Api.commonApiPost("/spec-directory/"+module+"/"+master, {}).then(function(res) {
 			master=lcms[res.header[0].label.split(".")[3]]||res.header[0].label.split(".")[3];

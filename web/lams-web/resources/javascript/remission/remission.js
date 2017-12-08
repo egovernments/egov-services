@@ -118,21 +118,22 @@ class RemissionAgreement extends React.Component {
                 adjustmentStartDate: ""
             },
             remissionReasons: ["Natural Calamity", "Infrastructure Development"],
-            positionList: [],
-            departmentList: [],
-            designationList: [],
-            userList: []
-
         }
-        this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
+
         this.handleChange = this.handleChange.bind(this);
+        this.handleChangeTwoLevel = this.handleChangeTwoLevel.bind(this);
         this.update = this.update.bind(this);
         this.setInitialState = this.setInitialState.bind(this);
-        this.getUsersFun = this.getUsersFun.bind(this);
-    }
+          }
 
     setInitialState(initState) {
         this.setState(initState);
+    }
+
+
+    close() {
+
+        open(location, '_self').close();
     }
 
     update(e) {
@@ -195,8 +196,7 @@ class RemissionAgreement extends React.Component {
                     }
                 })
             }
-            // if (breakout == 1)
-            //     return;
+
         } else {
 
             var body = {
@@ -289,34 +289,13 @@ class RemissionAgreement extends React.Component {
     handleChangeTwoLevel(e, pName, name) {
 
         var _this = this;
-
-        switch (name) {
-            case "department":
-                _this.state.agreement.workflowDetails.assignee = "";
-                if (this.state.agreement.workflowDetails.designation) {
-                    var _designation = this.state.agreement.workflowDetails.designation;
-                    if (e.target.value != "" && e.target.value != null)
-                        _this.getUsersFun(e.target.value, _designation);
-                }
-                break;
-            case "designation":
-                _this.state.agreement.workflowDetails.assignee = "";
-                if (this.state.agreement.workflowDetails.department) {
-                    var _department = this.state.agreement.workflowDetails.department;
-                    if (e.target.value != "" && e.target.value != null)
-                        _this.getUsersFun(_department, e.target.value);
-                }
-                break;
-
-        }
-
-
+        if(pName==="remission")
         _this.setState({
             ..._this.state,
             agreement: {
                 ..._this.state.agreement,
-                [pName]: {
-                    ..._this.state.agreement[pName],
+                remission: {
+                    ..._this.state.agreement.remission,
                     [name]: e.target.value
                 }
             }
@@ -365,14 +344,6 @@ class RemissionAgreement extends React.Component {
         }
         $('#remission-title').text("Remission Of Agreement");
         var _this = this;
-
-        try {
-            var departmentList = !localStorage.getItem("assignments_department") || localStorage.getItem("assignments_department") == "undefined" ? (localStorage.setItem("assignments_department", JSON.stringify(getCommonMaster("egov-common-masters", "departments", "Department").responseJSON["Department"] || [])), JSON.parse(localStorage.getItem("assignments_department"))) : JSON.parse(localStorage.getItem("assignments_department"));
-        } catch (e) {
-            console.log(e);
-            var department = [];
-        }
-
         var agreement = commonApiPost("lams-services",
             "agreements",
             "_search", {
@@ -386,12 +357,8 @@ class RemissionAgreement extends React.Component {
         }
         this.setState({
             ...this.state,
-            agreement: agreement,
-            departmentList: departmentList
-        });
-
-
-
+            agreement: agreement
+              });
     }
 
 
@@ -571,23 +538,6 @@ class RemissionAgreement extends React.Component {
                         </div>
                     </div>
                 </div>);
-        }
-
-        const renderOptionForUser = function (list) {
-            if (list) {
-                return list.map((item, ind) => {
-                    var positionId;
-                    item.assignments.forEach(function (item) {
-                        if (item.isPrimary) {
-                            positionId = item.position;
-                        }
-                    });
-
-                    return (<option key={ind} value={positionId}>
-                        {item.name}
-                    </option>)
-                })
-            }
         }
 
         const renderAllottee = function () {
@@ -902,11 +852,9 @@ class RemissionAgreement extends React.Component {
                 <form onSubmit={(e) => { update(e) }} >
                     <fieldset>
                         {renderAssetDetails()}
-                        {renderAllottee()}}
+                        {renderAllottee()}
                         {renderAgreementDetails()}
                         {renederRemissionDetails()}
-
-
                         <br />
                         <div className="text-center">
                             <button id="sub" type="submit" className="btn btn-submit">Update </button>&nbsp;&nbsp;

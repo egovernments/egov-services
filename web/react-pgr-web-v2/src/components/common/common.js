@@ -472,6 +472,16 @@ var localization_EN_Data = {
 "MdmsMetadata.masterData.lcms.Court.address": "Court Address",
 "MdmsMetadata.masterData.lcms.Court.active": "Court Active",
 "MdmsMetadata.masterData.lcms.Court.tenantId": "Court TenantId",
+"MdmsMetadata.masterData.lcms.Court.latitude": "Court Latitude",
+"MdmsMetadata.masterData.lcms.Court.longitude": "Court Longitude",
+"MdmsMetadata.masterData.lcms.Court.addressId": "Court AddressId",
+"MdmsMetadata.masterData.lcms.Court.addressNumber": "Court AddressNumber",
+"MdmsMetadata.masterData.lcms.Court.addressLine1": "Court AddressLine1",
+"MdmsMetadata.masterData.lcms.Court.addressLine2": "Court AddressLine2",
+"MdmsMetadata.masterData.lcms.Court.landmark": "Court LandMark",
+"MdmsMetadata.masterData.lcms.Court.city": "Court City",
+"MdmsMetadata.masterData.lcms.Court.pincode": "Court Pincode",
+"MdmsMetadata.masterData.lcms.Court.detail": "Court Detail",
 
 
 "MdmsMetadata.masterData.lcms.CaseType.name": "CaseType Name",

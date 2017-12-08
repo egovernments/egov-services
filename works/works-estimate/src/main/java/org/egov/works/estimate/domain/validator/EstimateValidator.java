@@ -197,10 +197,12 @@ public class EstimateValidator {
         if (estimate.getAbstractEstimateNumber() == null)
             messages.put(Constants.KEY_NULL_ABSTRACTESTIMATE_NUMBER, Constants.MESSAGE_NULL_ABSTRACTESTIMATE_NUMBER);
         for (AbstractEstimateDetails details : estimate.getAbstractEstimateDetails())
-            if (details.getProjectCode() == null)
+            if (details.getProjectCode() == null || (details.getProjectCode() != null && StringUtils.isBlank(details.getProjectCode().getCode())))
                 messages.put(Constants.KEY_NULL_WIN_NUMBER, Constants.MESSAGE_NULL_WIN_NUMBER);
+        
         if (estimate.getDateOfProposal() != null && estimate.getDateOfProposal() > new Date().getTime())
             messages.put(Constants.KEY_FUTUREDATE_DATEOFPROPOSAL, Constants.MESSAGE_FUTUREDATE_DATEOFPROPOSAL);
+        
 
     }
 
@@ -402,7 +404,7 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_SUBTYPEOFWORK_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_INVALID);
             }
         } else
-            messages.put(Constants.KEY_DEPARTMENT_CODE_REQUIRED, Constants.MESSAGE_DEPARTMENT_CODE_REQUIRED);
+            messages.put(Constants.KEY_SUBTYPEOFWORK_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_INVALID);
     }
 
     public void validateDepartment(Department department, String tenantId, RequestInfo requestInfo,

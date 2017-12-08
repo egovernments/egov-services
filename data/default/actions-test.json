@@ -1031,6 +1031,19 @@
     "path": "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Search"
   },
   {
+    "id": 1006,
+    "name": "Side",
+    "url": "/lcms-services/legalcase/register/_search",
+    "displayName": "Search Stamp/Register",
+    "orderNumber": 0,
+    "queryParams": null,
+    "parentModule": "517",
+    "enabled": true,
+    "serviceCode": "REGISTER",
+    "code": "null",
+    "path": "Legal Case Management.Legal Case Masters.Side.Side"
+  },
+  {
     "id": 1030,
     "name": "Case Register Report",
     "url": "/lcms/report/CaseRegisterReport/_get",

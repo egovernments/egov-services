@@ -257,16 +257,18 @@ public class ReceiptNoteService extends DomainService {
     }
 
     private void validateMaterialReceiptDetail(MaterialReceipt materialReceipt, String tenantId) {
+        int i = 0;
         validateDuplicateMaterialDetails(materialReceipt.getReceiptDetails());
         for (MaterialReceiptDetail materialReceiptDetail : materialReceipt.getReceiptDetails()) {
+            i++;
             if (materialReceipt.getReceiptType().toString().equalsIgnoreCase(MaterialReceipt.ReceiptTypeEnum.PURCHASE_RECEIPT.toString())) {
                 validatePurchaseOrder(materialReceiptDetail, materialReceipt.getReceivingStore().getCode(),
-                        materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId);
+                        materialReceipt.getReceiptDate(), materialReceipt.getSupplier().getCode(), tenantId , i);
             }
-            validateMaterial(materialReceiptDetail, tenantId);
-            validateQuantity(materialReceiptDetail);
+            validateMaterial(materialReceiptDetail, tenantId , i);
+            validateQuantity(materialReceiptDetail,i );
             if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
-                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId);
+                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId, i);
             }
         }
     }
@@ -296,50 +298,50 @@ public class ReceiptNoteService extends DomainService {
         }
     }
 
-    private void validateQuantity(MaterialReceiptDetail materialReceiptDetail) {
+    private void validateQuantity(MaterialReceiptDetail materialReceiptDetail, int i) {
 
 
         if (isEmpty(materialReceiptDetail.getReceivedQty())) {
-            throw new CustomException("inv.0023", "Received quantity is required");
+            throw new CustomException("inv.0023", "Received quantity is required at row " + i);
         }
 
         if (!isEmpty(materialReceiptDetail.getReceivedQty()) && materialReceiptDetail.getReceivedQty().doubleValue() <= 0) {
-            throw new CustomException("inv.0024", "Received quantity should be greater than zero");
+            throw new CustomException("inv.0024", "Received quantity should be greater than zero at row " + i);
         }
 
         if (!isEmpty(materialReceiptDetail.getAcceptedQty()) && materialReceiptDetail.getAcceptedQty().doubleValue() <= 0) {
-            throw new CustomException("inv.0025", "Accepted quantity should be greater than zero");
+            throw new CustomException("inv.0025", "Accepted quantity should be greater than zero at row " + i);
         }
 
     }
 
-    private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId) {
+    private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId, int i) {
 
         if (null != receiptDetail.getMaterial()) {
             Material material = materialService.fetchMaterial(tenantId, receiptDetail.getMaterial().getCode(), new RequestInfo());
 
             for (MaterialReceiptDetailAddnlinfo addnlinfo : receiptDetail.getReceiptDetailsAddnInfo()) {
                 if (true == material.getLotControl() && isEmpty(addnlinfo.getLotNo())) {
-                    throw new CustomException("inv.0020", "Lot number is required");
+                    throw new CustomException("inv.0020", "Lot number is required at row " + i);
                 }
 
                 if (true == material.getShelfLifeControl() && (isEmpty(addnlinfo.getExpiryDate()) ||
                         (!isEmpty(addnlinfo.getExpiryDate()) && !(addnlinfo.getExpiryDate().doubleValue() > 0)))) {
-                    throw new CustomException("inv.0021", "Expiry date is required");
+                    throw new CustomException("inv.0021", "Expiry date is required at row " + i);
                 }
             }
         } else
-            throw new CustomException("inv.0022", "material is not present");
+            throw new CustomException("inv.0022", "material is not present at row " + i);
     }
 
-    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId) {
+    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId,int i) {
         Long currentDate = currentEpochWithoutTime() + (24 * 60 * 60) - 1;
 
         for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
             {
                 if (null != addnlinfo.getExpiryDate()
                         && currentDate > addnlinfo.getExpiryDate()) {
-                    throw new CustomException("inv.0023", "Expiry date must be greater than today's date");
+                    throw new CustomException("inv.0023", "Expiry date must be greater than today's date at row " + i);
                 }
             }
         }
@@ -347,15 +349,17 @@ public class ReceiptNoteService extends DomainService {
 
     private void validateDuplicateMaterialDetails(List<MaterialReceiptDetail> materialReceiptDetails) {
         HashSet<String> hashSet = new HashSet<>();
+        int i = 0;
         for (MaterialReceiptDetail materialReceiptDetail : materialReceiptDetails) {
+            i++;
             if (false == hashSet.add(materialReceiptDetail.getPurchaseOrderDetail().getId() + "-" + materialReceiptDetail.getMaterial().getCode())) {
                 throw new CustomException("inv.0015", materialReceiptDetail.getPurchaseOrderDetail().getId() +
-                        " and " + materialReceiptDetail.getMaterial().getCode() + " combination is already entered");
+                        " and " + materialReceiptDetail.getMaterial().getCode() + " combination is already entered at row " + i);
             }
         }
     }
 
-    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate, String supplier, String tenantId) {
+    private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate, String supplier, String tenantId , int i) {
 
         if (null != materialReceiptDetail.getPurchaseOrderDetail()) {
             PurchaseOrderDetailSearch purchaseOrderDetailSearch = new PurchaseOrderDetailSearch();
@@ -369,12 +373,12 @@ public class ReceiptNoteService extends DomainService {
 
                     if (null != materialReceiptDetail.getReceivedQty() &&
                             materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getOrderQuantity().longValue()) {
-                        throw new CustomException("inv.0031", "Received quantity should be less than order quantity");
+                        throw new CustomException("inv.0031", "Received quantity should be less than order quantity at row " + i);
                     }
 
                     if (null != materialReceiptDetail.getReceivedQty() &&
                             materialReceiptDetail.getReceivedQty().longValue() > purchaseOrderDetail.getReceivedQuantity().longValue()) {
-                        throw new CustomException("inv.0032", "Received quantity should be not be greater than receieved quatity");
+                        throw new CustomException("inv.0032", "Received quantity should be not be greater than receieved quatity at row " + i);
                     }
 
                     PurchaseOrderSearch purchaseOrderSearch = new PurchaseOrderSearch();
@@ -389,21 +393,21 @@ public class ReceiptNoteService extends DomainService {
                         for (PurchaseOrder purchaseOrder : purchaseOrders.getPurchaseOrders()) {
                             if (null != purchaseOrder.getPurchaseOrderDate()
                                     && purchaseOrder.getPurchaseOrderDate() > receiptDate) {
-                                throw new CustomException("inv.00027", "Receipt Date must be greater than purchase order date");
+                                throw new CustomException("inv.00027", "Receipt Date must be greater than purchase order date at row " + i);
                             }
 
                             if (!isEmpty(supplier) && !isEmpty(purchaseOrder.getSupplier().getCode())
                                     && !supplier.equalsIgnoreCase(purchaseOrder.getSupplier().getCode())) {
-                                throw new CustomException("inv.0029", "Supplier doesn't match the purchase order supplier");
+                                throw new CustomException("inv.0029", "Supplier doesn't match the purchase order supplier at row " + i);
                             }
                         }
                     } else
                         throw new CustomException("inv.0016", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
-                                " is not present");
+                                " is not present at row " + i);
                 }
             } else
                 throw new CustomException("inv.0017", "purchase order - " + materialReceiptDetail.getPurchaseOrderDetail().getId() +
-                        " is not present");
+                        " is not present at row " + i);
         }
     }
 

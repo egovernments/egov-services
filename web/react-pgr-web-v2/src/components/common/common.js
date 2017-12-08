@@ -2,6 +2,7 @@ var localization_EN_Data = {
   //works Schedule Of rate
   "works.search.title":"Search Rate Master",
   "works.create.sorCodes":"SOR Code",
+  "works.create.code":"SOR Code",
   "works.create.scheduleCategoryCodes":"Schedule Categroy",
   "works.create.validSORRateDate":"SOR Rate Date",
   "works.create.validMarketRateDate":"Market Rate Date",
@@ -19,7 +20,7 @@ var localization_EN_Data = {
   "FromDate":"From Date",
   "ToDate":"To Date",
   "works.create.group.title.marketRateDetails":"Market Rate Details",
-  
+
   //works Detailed Estimate
   "works.create.group.title.workInfo":"Work Info",
   "works.create.estimateNumber": "Abstract Estimate No.",

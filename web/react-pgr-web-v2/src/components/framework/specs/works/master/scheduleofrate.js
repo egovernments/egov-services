@@ -3,7 +3,7 @@ var dat ={
       "numCols":4,
       "useTimestamp":true,
       "objectName":"scheduleofrates",
-      "url":"/works-masters/scheduleofrates/_search",
+      "url":"/works-masters/v1/scheduleofrates/_search",
       "groups":[
          {
             "name":"search",
@@ -77,6 +77,14 @@ var dat ={
       "numCols":4,
       "useTimestamp":true,
       "objectName":"scheduleOfRates",
+      "injectData": [{
+      "jsonPath": "scheduleOfRates[0].sorRates[0].tenantId",
+      "value": localStorage.getItem("tenantId")
+      }],
+      "injectData": [{
+      "jsonPath": "scheduleOfRates[0].marketRates[0].tenantId",
+      "value": localStorage.getItem("tenantId")
+      }],
       "idJsonPath":"scheduleOfRates[0].code",
       "groups":[
          {
@@ -205,7 +213,7 @@ var dat ={
                "name": "",
                "label": "",
                "type": "multiFieldAddToTable",
-               "jsonPath": "scheduleOfRates[0].sorRates",
+               "jsonPath": "scheduleOfRates[0].marketRates",
                "header": [{
                    "label": "Rate"
                  }, {
@@ -268,7 +276,7 @@ var dat ={
                {
                   "name":"code",
                   "jsonPath":"scheduleCategory.code",
-                  "label":"works.create.code",
+                  "label":"works.create.scheduleCategory",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
                   "type":"text",
                   "isRequired":false,
@@ -308,7 +316,7 @@ var dat ={
                {
                   "name":"code",
                   "jsonPath":"uom.code",
-                  "label":"works.create.code",
+                  "label":"works.create.uom",
                   "pattern":"",
                   "type":"text",
                   "isRequired":false,
@@ -396,5 +404,4 @@ var dat ={
       "searchUrl":"/works-masters/v1/scheduleofrates/_search?ids={ids}"
    }
 }
-
 export default dat;

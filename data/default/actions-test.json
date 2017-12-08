@@ -9958,7 +9958,7 @@
     "orderNumber": 1,
     "queryParams": null,
     "parentModule": "221",
-    "enabled": true,
+    "enabled": false,
     "serviceCode": "AccessControl",
     "code": "null",
     "path": "Access Control.Get Actions from MDMS"

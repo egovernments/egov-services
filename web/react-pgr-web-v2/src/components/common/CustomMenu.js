@@ -339,7 +339,16 @@ const menuConvention={
 "Legal Case Management.Legal Case Reports.Case Pendency Report":"/report/lcms/CasePendencyReport",
 "Legal Case Management.Legal Case Reports.Case Status Report":"/report/lcms/CaseStatusReport",
 "Legal Case Management.Legal Case Reports.Due Date Report":"/report/lcms/DueDateReport",
+//legal case master
 
+"Legal Case Management.Legal Case Masters.Court.Court":"/mdms/lcms/court",
+"Legal Case Management.Legal Case Masters.Case Type.Case Type":"/mdms/lcms/caseType",
+"Legal Case Management.Legal Case Masters.Case Category.Case Category":"/mdms/lcms/caseCategory",
+"Legal Case Management.Legal Case Masters.Bench.Bench":"/mdms/lcms/bench",
+"Legal Case Management.Legal Case Masters.Case Status.Case Status":"/mdms/lcms/casestatus",
+"Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register":"/mdms/lcms/register",
+"Legal Case Management.Legal Case Masters.Side.Side":"/mdms/lcms/side",
+	
 //Performance Assessment
 // "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterCreate":"/create/perfManagement/kpi",
 "Performance Assessment.Performance Assessment Masters.PerfAssmtKpiMasterCreate":"/search/perfManagement/kpi/update",

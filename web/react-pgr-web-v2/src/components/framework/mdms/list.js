@@ -72,21 +72,23 @@ class MdmsComponent extends Component {
 			master=lcms[res.header[0].label.split(".")[3]]||res.header[0].label.split(".")[3];
 
 			data.MdmsCriteria.moduleDetails[0].masterDetails[0].name=master;
-			// let headers=[];
-			// for (var i = 0; i < res.header.length; i++) {
-			// 	headers.push(res.header[i].label.split(".")[4]);
-			// }
+			let headers=[];
+			for (var i = 0; i < res.header.length; i++) {
+				headers.push(res.header[i].label.split(".")[4]);
+			}
 			// headers.push("modify");
 			Api.commonApiPost("/egov-mdms-service/v1/_search", {}, data, false, true).then(function(res2) {
 				let arr = _.get(res2, "MdmsRes." + module + "." + master) ||[];
-				// let temp=[];
+				let temp=[];
 				if(arr && arr.length) {
 
+					// let temp=[];
 
 					// self.props.setFormData(formData);
 					for(let i=0; i<arr.length; i++) {
+
 						// arr[i].modify = true;
-						// temp.push(_.pick(arr[i],headers));
+						temp.push(_.pick(arr[i],headers));
 					}
 
 					// self.setState({
@@ -94,7 +96,7 @@ class MdmsComponent extends Component {
 					// })
 
 					self.setState({
-						valueList: arr
+						valueList: temp
 					})
 				}
 

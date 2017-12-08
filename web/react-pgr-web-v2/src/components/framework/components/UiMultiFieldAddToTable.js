@@ -34,6 +34,15 @@ import RaisedButton from 'material-ui/RaisedButton';
 import _ from 'lodash';
 import Api from '../../../api/api';
 
+var dropDownData={
+  "MdmsMetadata.masterData[0].side":{
+    url:"/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$.MdmsRes.lcms.side.*.code|$.MdmsRes.lcms.side.*.name"
+  }
+};
+
+
+
+
 class UiMultiFieldAddToTable extends Component {
   constructor(props) {
     super(props);
@@ -63,6 +72,11 @@ class UiMultiFieldAddToTable extends Component {
         item.values[i].defaultValue=JSON.parse(localStorage.getItem("userRequest")).tenantId;
         item.values[i].isRequired=false;
       }
+      if (item.values[i].type=="singleValueList") {
+        if (dropDownData.hasOwnProperty(item.values[i].jsonPath)) {
+          item.values[i].url=dropDownData[item.values[i].jsonPath].url;
+        }
+      }
 
       else
       {
@@ -90,9 +104,15 @@ class UiMultiFieldAddToTable extends Component {
     // }
     // headers.push("modify");
 
+    let counter=0;
+
+    for (var i = 0; i < item.values.length; i++) {
+      item.values[i].name!="tenantId" && item.values[i].name!="id" && counter++;
+    }
+
     this.setState({
       requiredFields,
-      isInlineEdit: item.values.length < 5
+      isInlineEdit: counter < 5
     });
 
 
@@ -408,7 +428,7 @@ class UiMultiFieldAddToTable extends Component {
                 {
                   this.props.item.values.map((v, i) => {
                     return (
-                      <Col xs={12} md={6}>
+                      <Col xs={12} md={6} key={i}>
                         {this.renderFields(v, this.props.screen)}
                       </Col>
                     )
@@ -432,10 +452,10 @@ class UiMultiFieldAddToTable extends Component {
               <thead>
                 <tr>
                   <th>#</th>
-                  {this.props.item.header.map((v) => {
+                  {this.props.item.header.map((v,i) => {
                     if (v.label.split(".")[4]!="tenantId") {
                       return (
-                        <th>{translate(v.label)}</th>
+                        <th key={i}>{translate(v.label)}</th>
                       )
                     }
 
@@ -452,10 +472,10 @@ class UiMultiFieldAddToTable extends Component {
                       return (
                         <tr key={index}>
                           <td> {index + 1} </td>
-                          {this.props.item.values.map((v) => {
+                          {this.props.item.values.map((v,i) => {
                               if (v.name!="tenantId") {
                                 return (
-                                    <td >{this.renderFields(v)}</td>
+                                    <td key={i}>{this.renderFields(v)}</td>
                                 )
                               }
 

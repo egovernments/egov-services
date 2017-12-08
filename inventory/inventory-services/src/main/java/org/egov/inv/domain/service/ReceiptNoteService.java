@@ -202,7 +202,7 @@ public class ReceiptNoteService extends DomainService {
         }
 
         setUomAndQuantity(tenantId, materialReceiptDetail);
-        convertRate(tenantId,materialReceiptDetail);
+        convertRate(tenantId, materialReceiptDetail);
 
         materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
                 materialReceiptDetailAddnlInfo -> {
@@ -382,6 +382,11 @@ public class ReceiptNoteService extends DomainService {
                         (!isEmpty(addnlinfo.getExpiryDate()) && !(addnlinfo.getExpiryDate().doubleValue() > 0)))) {
                     throw new CustomException("inv.0021", "Expiry date is required at row " + i);
                 }
+
+                if (true == material.getSerialNumber() && isEmpty(addnlinfo.getSerialNo())) {
+                    throw new CustomException("inv.0020", "Serial number is required at row " + i);
+                }
+
             }
         } else
             throw new CustomException("inv.0022", "material is not present at row " + i);

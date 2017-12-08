@@ -1139,5 +1139,97 @@ serviceMaps:
             - jsonPath: $.materialReceipt.*.receiptDetails.*.purchaseOrderDetail.id
             - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
 
+    - version: 1.0
+      name: Material Reciept Note
+      description: Create/Update Miscellaneous Material Receipt Note
+      fromTopic: inv-miscellaneousreceiptnote-save-topic
+      isTransaction: true
+      queryMaps:
+        - query: >-
+               INSERT INTO materialreceipt(id, mrnnumber, issuenumber, receivingstore, receiptDate, receiptType, suppliercode, supplierbillno, supplierbilldate,
+               challanno, challandate, description, paymentterms, receivedby, designation, mrnstatus, inspectedby, inspectiondate, inspectionremarks,
+               tenantid, createdby, createdTime, lastmodifiedby,lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?, ?, ?, ?, ?, ?, ?, ? ,? ,? ,?, ?, ?)
+               ON CONFLICT (mrnnumber,tenantid) DO UPDATE SET
+               receivingstore = EXCLUDED.receivingstore, receiptDate  = EXCLUDED.receiptdate, receiptType = EXCLUDED.receiptType, suppliercode = EXCLUDED.suppliercode,
+               supplierbillno = EXCLUDED.supplierbillno, supplierbilldate = EXCLUDED.supplierbilldate, challanno = EXCLUDED.challanno, challandate = EXCLUDED.challandate,
+               description = EXCLUDED.description, paymentterms = EXCLUDED.paymentterms, receivedby = EXCLUDED.receivedby, designation = EXCLUDED.designation,
+               mrnstatus = EXCLUDED.mrnstatus, inspectedby = EXCLUDED.inspectedby, inspectiondate = EXCLUDED.inspectiondate,
+               inspectionremarks = EXCLUDED.inspectionremarks, lastmodifiedby = EXCLUDED.lastmodifiedby,
+               lastModifiedTime = EXCLUDED.lastmodifiedtime ;
+          basePath: $.materialReceipt.*
+          basePath: $.materialReceipt.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.id
+            - jsonPath: $.materialReceipt.*.mrnNumber
+            - jsonPath: $.materialReceipt.*.issueNumber
+            - jsonPath: $.materialReceipt.*.receivingStore.code
+            - jsonPath: $.materialReceipt.*.receiptDate
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptType
+            - jsonPath: $.materialReceipt.*.supplier.code
+            - jsonPath: $.materialReceipt.*.supplierBillNo
+            - jsonPath: $.materialReceipt.*.supplierBillDate
+            - jsonPath: $.materialReceipt.*.challanNo
+            - jsonPath: $.materialReceipt.*.challanDate
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.description
+            - jsonPath: $.materialReceipt.*.paymentTerms
+            - jsonPath: $.materialReceipt.*.receivedBy
+            - jsonPath: $.materialReceipt.*.designation
+            - jsonPath: $.materialReceipt.*.mrnStatus
+            - jsonPath: $.materialReceipt.*.inspectedBy
+            - jsonPath: $.materialReceipt.*.inspectionDate
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.inspectionRemarks
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.auditDetails.createdBy
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.auditDetails.lastModifiedBy
+            - type: CURRENTDATE
+              dbType: LONG
+        - query: >-
+                 INSERT INTO materialreceiptdetail(id, tenantId, material, uomNo, receivedQty, acceptedQty, unitRate, rejectionremark,
+                 mrnnumber, createdby, createdTime, lastmodifiedby, lastModifiedTime) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 material = EXCLUDED.material, uomno  = EXCLUDED.uomno, receivedQty = EXCLUDED.receivedQty,
+                 acceptedQty = EXCLUDED.acceptedQty, unitRate = EXCLUDED.unitRate, rejectionremark = EXCLUDED.rejectionremark,
+                 podetailid = EXCLUDED.podetailid, mrnnumber = EXCLUDED.mrnnumber, lastmodifiedby = EXCLUDED.lastmodifiedby,
+                 lastModifiedTime = EXCLUDED.lastmodifiedtime ;
+          basePath: $.materialReceipt.*.receiptDetails.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.material.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.uom.code
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receivedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.acceptedQty
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.unitRate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.rejectionRemark
+            - jsonPath: $.materialReceipt[?({id} in @.receiptDetails[*].id)].mrnNumber
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.createdBy
+            - type: CURRENTDATE
+              dbType: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.auditDetails.lastModifiedBy
+            - type: CURRENTDATE
+              dbType: LONG
+        - query: >-
+                 INSERT INTO materialreceiptdetailaddnlinfo(id, receiptDetailId, tenantId, manufacturedate, lotNo, expiryDate, batchno, serialno)
+                 VALUES ( ?, ?, ?, ?, ?, ?, ?, ?) ON CONFLICT (id,tenantid) DO UPDATE SET
+                 receiptDetailId = EXCLUDED.receiptdetailid, manufacturedate = EXCLUDED.manufacturedate,
+                 lotNo = EXCLUDED.lotno, batchNo = EXCLUDED.batchno,
+                 expiryDate = EXCLUDED.expirydate, serialno = EXCLUDED.serialno ;
+          basePath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*
+          jsonMaps:
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.id
+            - jsonPath: $.materialReceipt.*.receiptDetails[?({id} in @.receiptDetailsAddnInfo[*].id)].id
+            - jsonPath: $.materialReceipt.*.tenantId
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.manufactureDate
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.lotNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.expiryDate
+              type: LONG
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.batchNo
+            - jsonPath: $.materialReceipt.*.receiptDetails.*.receiptDetailsAddnInfo.*.serialNo
+              type: LONG
+
 
 

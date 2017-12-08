@@ -253,7 +253,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
     private Long getCurrentDate() {
-        return currentEpochWithoutTime() + (24 * 60 * 60) - 1;
+        return currentEpochWithoutTime() + (24 * 60 * 60 * 1000) - 1;
     }
 
     private void validateMaterialReceiptDetail(MaterialReceipt materialReceipt, String tenantId) {
@@ -354,7 +354,6 @@ public class ReceiptNoteService extends DomainService {
             }
         }
     }
-
 
     private void validatePurchaseOrder(MaterialReceiptDetail materialReceiptDetail, String store, Long receiptDate, String supplier, String tenantId) {
 

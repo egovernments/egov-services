@@ -9,6 +9,8 @@ import org.egov.inv.model.Supplier;
 import java.math.BigDecimal;
 import java.util.Collections;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,99 +24,102 @@ public class MaterialReceiptEntity {
 
     private String id;
 
-    private String mrnnumber;
+    private String mrnNumber;
 
-    private Long receiptdate;
+    private String issueNumber;
 
-    private String receipttype;
+    private Long receiptDate;
 
-    private String financialyear;
+    private String receiptType;
 
-    private String receiptpurpose;
+    private String financialYear;
 
-    private String receivingstore;
+    private String receiptPurpose;
 
-    private String issueingstore;
+    private String receivingStore;
 
-    private String suppliercode;
+    private String issueingStore;
 
-    private String supplierbillno;
+    private String supplierCode;
 
-    private Long supplierbilldate;
+    private String supplierBillNo;
 
-    private String challanno;
+    private Long supplierBillDate;
 
-    private Long challandate;
+    private String challanNo;
+
+    private Long challanDate;
 
     private String description;
 
-    private String receivedby;
+    private String receivedBy;
 
     private String designation;
 
     private String bill;
 
-    private String inspectedby;
+    private String inspectedBy;
 
-    private Long inspectiondate;
+    private Long inspectionDate;
 
-    private String mrnstatus;
+    private String mrnStatus;
 
-    private String inspectionremarks;
+    private String inspectionRemarks;
 
-    private String receiptdetailsid;
+    private String receiptdetailsId;
 
-    private BigDecimal totalreceiptvalue;
+    private BigDecimal totalReceiptValue;
 
-    private String filestoreid;
+    private String fileStoreId;
 
-    private String createdby;
+    private String createdBy;
 
-    private Long createdtime;
+    private Long createdTime;
 
-    private String lastmodifiedby;
+    private String lastModifiedBy;
 
-    private Long lastmodifiedtime;
+    private Long lastModifiedTime;
 
-    private String tenantid;
+    private String tenantId;
 
-    private String paymentterms;
+    private String paymentTerms;
 
     public MaterialReceipt toDomain() {
         MaterialReceipt materialReceipt = new MaterialReceipt();
 
         return materialReceipt.id(id)
-                .mrnNumber(mrnnumber)
-                .receiptDate(receiptdate)
-                .receiptType(MaterialReceipt.ReceiptTypeEnum.fromValue(receipttype))
-                .financialYear(financialyear)
-                .receiptPurpose(null != receiptpurpose ? MaterialReceipt.ReceiptPurposeEnum.fromValue(receiptpurpose) : null)
-                .receivingStore(buildStore(receivingstore))
-                .issueingStore(buildStore(issueingstore))
-                .supplier(buildSupplier())
-                .supplierBillNo(supplierbillno)
-                .supplierBillDate(supplierbilldate)
-                .challanNo(challanno)
-                .challanDate(challandate)
+                .mrnNumber(mrnNumber)
+                .issueNumber(issueNumber)
+                .receiptDate(receiptDate)
+                .receiptType(MaterialReceipt.ReceiptTypeEnum.fromValue(receiptType))
+                .financialYear(financialYear)
+                .receiptPurpose(null != receiptPurpose ? MaterialReceipt.ReceiptPurposeEnum.fromValue(receiptPurpose) : null)
+                .receivingStore(!isEmpty(receivingStore) ? buildStore(receivingStore) : null)
+                .issueingStore(!isEmpty(issueingStore) ? buildStore(issueingStore) : null)
+                .supplier(!isEmpty(supplierCode) ? buildSupplier() : null)
+                .supplierBillNo(supplierBillNo)
+                .supplierBillDate(supplierBillDate)
+                .challanNo(challanNo)
+                .challanDate(challanDate)
                 .description(description)
-                .receivedBy(receivedby)
+                .receivedBy(receivedBy)
                 .designation(designation)
                 .bill(bill)
-                .inspectedBy(inspectedby)
-                .inspectionDate(inspectiondate)
-                .mrnStatus(null != mrnstatus ? MaterialReceipt.MrnStatusEnum.valueOf(mrnstatus) : null)
-                .inspectionRemarks(inspectionremarks)
+                .inspectedBy(inspectedBy)
+                .inspectionDate(inspectionDate)
+                .mrnStatus(null != mrnStatus ? MaterialReceipt.MrnStatusEnum.valueOf(mrnStatus) : null)
+                .inspectionRemarks(inspectionRemarks)
                 .receiptDetails(Collections.emptyList())
-                .totalReceiptValue(totalreceiptvalue)
-                .fileStoreId(filestoreid)
-                .paymentTerms(paymentterms)
+                .totalReceiptValue(totalReceiptValue)
+                .fileStoreId(fileStoreId)
+                .paymentTerms(paymentTerms)
                 .auditDetails(buildAuditDetails());
     }
 
 
     private Supplier buildSupplier() {
         Supplier supplier = new Supplier();
-        return supplier.code(suppliercode);
+        return supplier.code(supplierCode);
     }
 
     private Store buildStore(String storeCode) {
@@ -125,9 +130,9 @@ public class MaterialReceiptEntity {
     private AuditDetails buildAuditDetails() {
         AuditDetails auditDetails = new AuditDetails();
         return auditDetails
-                .createdBy(createdby)
-                .createdTime(createdtime)
-                .lastModifiedBy(lastmodifiedby)
-                .lastModifiedTime(lastmodifiedtime);
+                .createdBy(createdBy)
+                .createdTime(createdTime)
+                .lastModifiedBy(lastModifiedBy)
+                .lastModifiedTime(lastModifiedTime);
     }
 }

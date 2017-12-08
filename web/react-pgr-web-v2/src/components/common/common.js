@@ -486,7 +486,7 @@ var localization_EN_Data = {
 
 "MdmsMetadata.masterData.lcms.CaseType.name": "CaseType Name",
 "MdmsMetadata.masterData.lcms.CaseType.code": "CaseType Code",
-"MdmsMetadata.masterData.lcms.CaseType.side": "CaseType Side",
+"MdmsMetadata.masterData.lcms.CaseType.sideCode": "CaseType Side",
 "MdmsMetadata.masterData.lcms.CaseType.active": "CaseType Active",
 "MdmsMetadata.masterData.lcms.CaseType.tenantId": "CaseType TenantId",
 

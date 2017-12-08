@@ -32,6 +32,7 @@ import UiFileTable from './UiFileTable';
 import { translate } from '../../common/common';
 import RaisedButton from 'material-ui/RaisedButton';
 import _ from 'lodash';
+import Api from '../../../api/api';
 
 class UiMultiFieldAddToTable extends Component {
   constructor(props) {
@@ -55,15 +56,35 @@ class UiMultiFieldAddToTable extends Component {
   componentDidMount() {
     let { item, valueList } = this.props;
     let requiredFields = [];
+    let headers=[];
     for (let i = 0; i < item.values.length; i++) {
+      if (item.values[i].name=="tenantId") {
+        item.values[i].isDisabled=true;
+        item.values[i].defaultValue=JSON.parse(localStorage.getItem("userRequest")).tenantId;
+        item.values[i].isRequired=false
+      }
       if (item.values[i].isRequired)
+      {
         requiredFields.push(item.values[i].jsonPath);
+      }
+
     }
+
+    // console.log(item);
+    // console.log(valueList);
+
+    // let headers=[];
+    // for (var i = 0; i < res.header.length; i++) {
+    // 	headers.push(res.header[i].label.split(".")[4]);
+    // }
+    // headers.push("modify");
 
     this.setState({
       requiredFields,
       isInlineEdit: item.values.length < 5
     });
+
+
 
     if (valueList && valueList.length) {
       this.setState({
@@ -121,51 +142,103 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   addToParent = (doNotOpen, ind) => {
+    var self=this;
     let {valueList}=this.props;
     let formData = _.cloneDeep(this.props.formData);
     let localFormData = _.cloneDeep(this.state.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
     let stateFormDataTable = _.get(localFormData, this.props.item.jsonPath);
     let indexes;
+
+    // formData.MasterMetaData.masterData=formData.hasOwnProperty("MdmsMetadata")?formData.MdmsMetadata.masterData:[];
+    // self.props.setLoadingStatus('loading');
+    var MasterMetaData= {
+      tenantId: localStorage.tenantId,
+      moduleName: formData.MasterMetaData.moduleName,
+      masterName: formData.MasterMetaData.masterName,
+      masterData: [stateFormDataTable[0]]
+    }
+
     // console.log(myTableInParent);
     // console.log(stateFormDataTable);
+    self.props.setLoadingStatus('loading');
     if(this.state.index == -1) {
-
-      if (!myTableInParent) {
-        stateFormDataTable[0].id=1;
-        this.props.handler({ target: { value: stateFormDataTable } }, this.props.item.jsonPath);
-      } else {
-        stateFormDataTable[0].id=myTableInParent.length+1;
-        myTableInParent.push(stateFormDataTable[0]);
-        this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
-      }
-    } else {
-      myTableInParent[this.state.index] = stateFormDataTable[0];
-      this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
-    }
-
-    let list = _.get(this.props.formData, this.props.item.jsonPath);
-
-    if(typeof ind != 'undefined') {
-      indexes = _.cloneDeep(this.state.indexes);
-      for(let i=0;i<indexes.length;i++){
-        if(indexes[i] == ind) {
-          indexes.splice(i, 1);
-          break;
+      Api.commonApiPost("/egov-mdms-create/v1/_create", {},{MasterMetaData:MasterMetaData}, false, true).then(function(res) {
+        // console.log(res);
+        if (!myTableInParent) {
+          stateFormDataTable[0].id=1;
+          self.props.handler({ target: { value: stateFormDataTable } }, self.props.item.jsonPath);
+        } else {
+          stateFormDataTable[0].id=myTableInParent.length+1;
+          myTableInParent.push(stateFormDataTable[0]);
+          self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
         }
-      }
+        self.props.setLoadingStatus('hide');
+        self.props.toggleSnackbarAndSetText(true, "Data Saved Successfully",true);
+        //need to clean this code
+        let list = _.get(self.props.formData, self.props.item.jsonPath);
+
+        if(typeof ind != 'undefined') {
+          indexes = _.cloneDeep(self.state.indexes);
+          for(let i=0;i<indexes.length;i++){
+            if(indexes[i] == ind) {
+              indexes.splice(i, 1);
+              break;
+            }
+          }
+        }
+
+        self.setState({
+          valueList: list,
+          formData: {},
+          open: doNotOpen ? false : (self.state.index > -1 ? false : true),
+          index: -1,
+          isAddAgain: true,
+          indexes: indexes || self.state.indexes
+        }, function() {
+          if(self.props.setDisabled) self.props.setDisabled(true);
+        })
+      }).catch(function(err) {
+        self.props.setLoadingStatus('hide');
+        self.props.toggleSnackbarAndSetText(true, err.message);
+      })
+
+    } else {
+      Api.commonApiPost("/egov-mdms-create/v1/_update", {},{MasterMetaData:MasterMetaData}, false, true).then(function(res) {
+        myTableInParent[self.state.index] = stateFormDataTable[0];
+        self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
+        self.props.setLoadingStatus('hide');
+        self.props.toggleSnackbarAndSetText(true, "Data Updated Successfully",true);
+        let list = _.get(self.props.formData, self.props.item.jsonPath);
+
+        if(typeof ind != 'undefined') {
+          indexes = _.cloneDeep(self.state.indexes);
+          for(let i=0;i<indexes.length;i++){
+            if(indexes[i] == ind) {
+              indexes.splice(i, 1);
+              break;
+            }
+          }
+        }
+
+        self.setState({
+          valueList: list,
+          formData: {},
+          open: doNotOpen ? false : (self.state.index > -1 ? false : true),
+          index: -1,
+          isAddAgain: true,
+          indexes: indexes || self.state.indexes
+        }, function() {
+          if(self.props.setDisabled) self.props.setDisabled(true);
+        })
+      }).catch(function(err) {
+        self.props.setLoadingStatus('hide');
+        self.props.toggleSnackbarAndSetText(true, err.message);
+      })
+
     }
 
-    this.setState({
-      valueList: list,
-      formData: {},
-      open: doNotOpen ? false : (this.state.index > -1 ? false : true),
-      index: -1,
-      isAddAgain: true,
-      indexes: indexes || this.state.indexes
-    }, function() {
-      if(this.props.setDisabled) this.props.setDisabled(true);
-    })
+
   }
 
   editRow = (index) => {
@@ -212,6 +285,9 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   renderFields = (item, screen) => {
+    if (item.name=="tenantId") {
+      return
+    }
     if (screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1) {
       if (item.type == "datePicker") {
         item.isDate = true;
@@ -288,7 +364,8 @@ class UiMultiFieldAddToTable extends Component {
               }
               modal={false}
               open={this.state.open}
-              onRequestClose={this.handleClose}>
+              onRequestClose={this.handleClose}
+              autoScrollBodyContent={true}>
               <Row>
                 {
                   this.props.item.values.map((v, i) => {
@@ -308,19 +385,24 @@ class UiMultiFieldAddToTable extends Component {
               <RaisedButton label={"Add"}
                 onClick={this.handleOpen}
                 disabled={!this.state.isAddAgain}
-                primary={true}/>
+                primary={true}
+                icon={<i style={{color:"white"}} className="material-icons">add</i>}
+                />
             </div>
             <br/>
             <Table className="table table-striped table-bordered" responsive>
               <thead>
                 <tr>
-
+                  <th>#</th>
                   {this.props.item.header.map((v) => {
-                    return (
-                      <th>{translate(v.label)}</th>
-                    )
+                    if (v.label.split(".")[4]!="tenantId") {
+                      return (
+                        <th>{translate(v.label)}</th>
+                      )
+                    }
+
                   })}
-                  {/*<th>Id</th>*/}
+
                   <th> Action</th>
                 </tr>
               </thead>
@@ -331,13 +413,13 @@ class UiMultiFieldAddToTable extends Component {
                     if(this.state.indexes.indexOf(index) > -1 || typeof item == "string") {
                       return (
                         <tr key={index}>
-                          {/*<td> {index + 1} </td>*/}
+                          <td> {index + 1} </td>
                           {this.props.item.values.map((v) => {
-
+                              if (v.name!="tenantId") {
                                 return (
                                     <td >{this.renderFields(v)}</td>
                                 )
-
+                              }
 
                             })
                           }
@@ -348,10 +430,10 @@ class UiMultiFieldAddToTable extends Component {
                               disabled={this.state.isBtnDisabled}
                               onClick={(e) => {this.addToParent(true, index)}}/>
                             <br/>
-                            <FlatButton
+                            {/*<FlatButton
                               label={translate("pgr.lbl.delete")}
                               secondary={true}
-                              onClick={(e) => {this.deleteRow(index)}}/>
+                              onClick={(e) => {this.deleteRow(index)}}/>*/}
                           </td>
                         </tr>
                       )
@@ -359,17 +441,22 @@ class UiMultiFieldAddToTable extends Component {
                       return (
 
                         <tr key={index}>
-                        {/*<td> {index + 1} </td>*/}
-                          {Object.values(item).map((v) => {
+                        <td> {index + 1} </td>
+                        {
+                          Object.keys(item).map(function(key, index) {
+                                if (key!="id" && key!="tenantId") {
+                                  return (
+                                      <td>{item[key]}</td>
+                                  )
+                                }
 
 
-                                return (
-                                    <td>{v}</td>
-                                )
+                          })
+
+                        }
 
 
-                            })
-                          }
+
                           <td>
                             {this.state.isInlineEdit ?
                             <IconButton
@@ -387,14 +474,14 @@ class UiMultiFieldAddToTable extends Component {
                                 disabled={!this.state.isAddAgain}>
                               <i className="material-icons" style={{"color":"#000000"}}>mode_edit</i>
                             </IconButton>}
-                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            {/*&nbsp;&nbsp;&nbsp;&nbsp;
                             <IconButton
                                 onClick={()=>{
                                   this.deleteRow(index)
                                 }}
                                 disabled={!this.state.isAddAgain}>
                               <i className="material-icons text-danger">delete</i>
-                            </IconButton>
+                            </IconButton>*/}
                           </td>
                         </tr>
                       )
@@ -422,6 +509,7 @@ class UiMultiFieldAddToTable extends Component {
 
       let list = _.cloneDeep(this.state.valueList);
       list.push(" ");
+      list.reverse();
       this.setState({
         isBtnDisabled: true,
         index: -1,
@@ -434,7 +522,7 @@ class UiMultiFieldAddToTable extends Component {
       })
     } else
       this.setState({
-        open: true,
+          open: true,
         isBtnDisabled: true,
         index: -1
       });
@@ -467,7 +555,7 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   render() {
-    console.log(this.props);
+    // console.log(this.props);
     return (<div>
       {this.renderArrayField(this.props.item)}
     </div>);
@@ -481,6 +569,12 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch => ({
   setFormData: (data) => {
     dispatch({ type: "SET_FORM_DATA", data });
+  },
+  toggleSnackbarAndSetText: (snackbarState, toastMsg, isSuccess, isError) => {
+    dispatch({type: "TOGGLE_SNACKBAR_AND_SET_TEXT", snackbarState, toastMsg, isSuccess, isError});
+  },
+  setLoadingStatus: (loadingStatus) => {
+    dispatch({type: "SET_LOADING_STATUS", loadingStatus});
   }
 })
 

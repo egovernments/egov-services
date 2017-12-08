@@ -1124,8 +1124,9 @@ definitions:
         maxLength: 100
         minLength: 1
         description: Unique code of the case type
-      side:
-        $ref: '#/definitions/Side'
+      sideCode:
+        type: string
+        description: Unique code of the side
       active:
         type: boolean
         default: true

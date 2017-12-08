@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -13,7 +12,6 @@ import org.egov.common.contract.request.RequestInfo;
 import org.egov.common.contract.response.ResponseInfo;
 import org.egov.lcms.config.PropertiesManager;
 import org.egov.lcms.factory.ResponseFactory;
-import org.egov.lcms.models.Address;
 import org.egov.lcms.models.AdvocateDetails;
 import org.egov.lcms.models.AuditDetails;
 import org.egov.lcms.models.Bench;
@@ -333,8 +331,11 @@ public class CaseService {
 
 			switch (masterName) {
 			case "court": {
-				JSONArray courts = mastersmap.get(masterName);
-				getCourtDetails(courts, caseObj);
+				List<Court> courts = objectMapper.readValue(mastersmap.get(masterName).toJSONString(),
+						new TypeReference<List<Court>>() {
+						});
+				if (courts != null && courts.size() > 0)
+					caseObj.getSummon().setCourtName(courts.get(0));
 				break;
 			}
 
@@ -458,36 +459,9 @@ public class CaseService {
 
 	}
 
-	@SuppressWarnings("unchecked")
-	private void getCourtDetails(JSONArray courts, Case caseObj) {
+	
 
-		for (int i = 0; i < courts.size(); i++) {
-			LinkedHashMap<String, Object> court = (LinkedHashMap<String, Object>) courts.get(i);
-			Court courtObj = new Court();
-			courtObj.setCode(getString(court.get("code")));
-			courtObj.setActive(getBoolean(court.get("active")));
-			courtObj.setName(getString(court.get("name")));
-			courtObj.setTenantId(getString(court.get("tenantId")));
-			courtObj.setType(getString(court.get("type")));
-
-			Address address = new Address();
-			address.setAddressLine1(getString(court.get("courtAddress1")));
-			address.setCity(getString(court.get("courtAddress2")));
-			address.setAddressLine2(getString(court.get("courtAddress3")));
-			address.setPincode(getString(court.get("pincode")));
-			courtObj.setAddress(address);
-
-			caseObj.getSummon().setCourtName(courtObj);
-		}
-	}
-
-	private Boolean getBoolean(Object object) {
-		return object == null ? null : Boolean.valueOf(object.toString());
-	}
-
-	private String getString(Object object) {
-		return object == null ? null : object.toString();
-	}
+	
 
 	/**
 	 * This will filter the Hearing detail

@@ -1,11 +1,7 @@
 package org.egov.works.estimate.domain.validator;
 
 import java.math.BigDecimal;
-import java.util.Arrays;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import org.apache.commons.lang3.StringUtils;
 import org.egov.tracer.model.CustomException;
@@ -308,9 +304,7 @@ public class EstimateValidator {
         validateFunction(abstractEstimate.getFunction(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateScheme(abstractEstimate.getScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateSubScheme(abstractEstimate.getSubScheme(), abstractEstimate.getTenantId(), requestInfo, messages);
-        // TODO: MDMS data needs to be added
-        // validateBudgetGroup(abstractEstimate.getBudgetGroup(),
-        // abstractEstimate.getTenantId(), requestInfo, messages);
+        validateBudgetGroup(abstractEstimate.getBudgetGroup(), abstractEstimate.getTenantId(), requestInfo, messages);
         validateAccountCode(abstractEstimate.getAccountCode(), isFinIntReq, messages);
     }
 
@@ -454,31 +448,35 @@ public class EstimateValidator {
                 if (abstactEstimate == null)
                     messages.put(Constants.KEY_INVALID_ABSTRACTESTIMATE_DETAILS,
                             Constants.MESSAGE_INVALID_ABSTRACTESTIMATE_DETAILS);
-                validateDetailedEstimateExists(detailedEstimate, abstactEstimate, requestInfo, messages);
-                validateMasterData(detailedEstimate, requestInfo, messages);
+                validateDetailedEstimateExists(detailedEstimate, abstactEstimate, messages);
+                if(!checkAbstractEstimateRequired(detailedEstimate,requestInfo)) {
+                    validateMasterData(detailedEstimate, requestInfo, messages);
+                    validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
+                }
                 validateEstimateAdminSanction(detailedEstimate, messages, abstactEstimate);
                 validateSpillOverEstimate(detailedEstimate, messages, abstactEstimate);
                 validateLocationDetails(detailedEstimate, requestInfo, messages);
-                validateAssetDetails(detailedEstimate, requestInfo, messages, abstactEstimate);
                 validateOverheads(detailedEstimate, requestInfo, messages);
                 validateDocuments(detailedEstimate, requestInfo, messages);
             }
             validateActivities(detailedEstimate, messages, requestInfo);
             if (StringUtils.isNotBlank(detailedEstimate.getId()))
                 validateIsModified(detailedEstimate, requestInfo, messages);
+            if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
+                messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
+                        Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
 
         }
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
     }
 
-    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,
-            RequestInfo requestInfo, Map<String, String> messages) {
+    private void validateDetailedEstimateExists(DetailedEstimate detailedEstimate, AbstractEstimate abstractEstimate,Map<String, String> messages) {
         if (abstractEstimate != null) {
+            String projectCode = abstractEstimate.getAbstractEstimateDetails().get(0).getProjectCode().getCode();
             DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                     .tenantId(detailedEstimate.getTenantId())
-                    .abstractEstimateNumbers(Arrays.asList(abstractEstimate.getAbstractEstimateNumber())).build();
-            //TODO search by projectcode 
+                    .workIdentificationNumbers(Arrays.asList(projectCode)).build();
             List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
             for (DetailedEstimateHelper detailedEstimateHelper : lists) {
                 if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
@@ -549,19 +547,18 @@ public class EstimateValidator {
                     .tenantId(detailedEstimate.getTenantId())
                     .workIdentificationNumbers(
                             Arrays.asList(detailedEstimate.getAbstractEstimateDetail().getProjectCode().getCode()))
+                    .statuses(Arrays.asList(AbstractEstimateStatus.ADMIN_SANCTIONED.toString()))
                     .build();
-            //TODO : status
             List<AbstractEstimate> abstractEstimates = abstractEstimateRepository
                     .search(abstractEstimateSearchContract);
             if (!abstractEstimates.isEmpty()) {
                 abstractEstimate = abstractEstimates.get(0);
-                if (abstractEstimate.getStatus().equals(AbstractEstimateStatus.ADMIN_SANCTIONED)) {
                     for (AbstractEstimateDetails abstractEstimateDetails : abstractEstimate.getAbstractEstimateDetails()) {
                         if (abstractEstimateDetails.getProjectCode() != null && abstractEstimateDetails.getProjectCode()
                                 .getCode().equalsIgnoreCase(workIdentificationNumber))
                             abstractEstimate.setAbstractEstimateDetails(Arrays.asList(abstractEstimateDetails));
                         return abstractEstimate;
-                    }
+
                 }
             }
         }
@@ -577,10 +574,6 @@ public class EstimateValidator {
             else
                 validateEstimateNumberUnique(detailedEstimate, messages);
 
-            //TODO both normal and spillover
-            if (detailedEstimate.getEstimateDate() != null && detailedEstimate.getEstimateDate() > new Date().getTime())
-                messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
-                        Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
             validateTechnicalSanctionDetail(detailedEstimate, messages);
         }
     }
@@ -591,7 +584,6 @@ public class EstimateValidator {
                 .detailedEstimateNumbers(Arrays.asList(detailedEstimate.getEstimateNumber())).build();
         if (detailedEstimate.getId() != null)
             detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
-        //TODO check other than cancelled
         List<DetailedEstimateHelper> lists = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
          for(DetailedEstimateHelper detailedEstimateHelper : lists) {
              if (!detailedEstimateHelper.getStatus().equals(DetailedEstimateStatus.CANCELLED.toString()))
@@ -602,10 +594,10 @@ public class EstimateValidator {
 
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
             Map<String, String> messages) {
+        Overhead overhead = null;
         for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
 
             if (estimateOverhead != null) {
-            	//TODO validate unique overhead 
                 validateEstimateOverHead(estimateOverhead.getOverhead(), requestInfo, messages);
 
                 if (estimateOverhead.getOverhead().getCode() == null) {
@@ -615,6 +607,10 @@ public class EstimateValidator {
                     messages.put(Constants.KEY_ESIMATE_OVERHEAD_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
                 }
 
+                if(overhead != null && overhead.getCode().equals(estimateOverhead.getOverhead().getCode())) {
+                    messages.put(Constants.KEY_ESIMATE_OVERHEAD_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
+                }
+                overhead = estimateOverhead.getOverhead();
             }
         }
     }
@@ -633,21 +629,21 @@ public class EstimateValidator {
     public void validateActivities(final DetailedEstimate detailedEstimate, Map<String, String> messages,
             final RequestInfo requestInfo) {
 
-    	//TODO spillover rejected and forward
         if (detailedEstimate.getWorkFlowDetails() != null && detailedEstimate.getWorkFlowDetails().getAction()
-                .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_CREATE))
+                .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_CREATE) || detailedEstimate.getWorkFlowDetails().getAction()
+                .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_FORWARD) || detailedEstimate.getWorkFlowDetails().getAction()
+                .equalsIgnoreCase(CommonConstants.WORKFLOW_ACTION_REJECTED))
             if (detailedEstimate.getEstimateActivities() == null || detailedEstimate.getEstimateActivities().isEmpty())
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
         ScheduleOfRate sor = null;
         for (final EstimateActivity activity : detailedEstimate.getEstimateActivities()) {
-        	//TODO 
+
             if ((activity.getScheduleOfRate() != null && activity.getScheduleOfRate().getId() == null)
-                    || (activity.getNonSor() != null && activity.getNonSor().getId() == null))
+                    || (activity.getNonSor() != null && activity.getNonSor().getId() == null)
+                    || activity.getScheduleOfRate() == null && activity.getNonSor() == null)
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_REQUIRED, Constants.MESSAGE_ESTIMATE_ACTIVITY_REQUIRED);
 
-            if (activity.getScheduleOfRate() == null && activity.getNonSor() == null)
-                messages.put(Constants.KEY_ESTIMATE_ACTIVITY_INVALID, Constants.MESSAGE_ESTIMATE_ACTIVITY_INVALID);
             // validate at pattern level
             if (activity.getQuantity() != null && activity.getQuantity() <= 0)
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_QUANTITY, Constants.MESSAGE_ESTIMATE_ACTIVITY_QUANTITY);
@@ -662,24 +658,43 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID,
                         Constants.MESSAGE_ESTIMATE_ACTIVITY_UNIT_RATE_INVALID);
 
-            if (activity.getScheduleOfRate() != null && StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
-                List<ScheduleOfRate> scheduleOfRates = worksMastersRepository.searchScheduleOfRates(
-                        activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
+            if (activity.getScheduleOfRate() != null) {
+                List<ScheduleOfRate> scheduleOfRates = new ArrayList<>();
+                if(StringUtils.isNotBlank(activity.getScheduleOfRate().getId())) {
+                    scheduleOfRates = worksMastersRepository.searchScheduleOfRatesById(
+                            activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getId()), requestInfo);
+                } else if(StringUtils.isNotBlank(activity.getScheduleOfRate().getCode()) && activity.getScheduleOfRate().getScheduleCategory() != null &&
+                        StringUtils.isNotBlank(activity.getScheduleOfRate().getScheduleCategory().getCode()))
+                    scheduleOfRates = worksMastersRepository.searchScheduleOfRatesByCodeAndCategory(
+                            activity.getTenantId(), Arrays.asList(activity.getScheduleOfRate().getCode()), Arrays.asList(activity.getScheduleOfRate().getScheduleCategory().getCode()), requestInfo);
+
                 if (scheduleOfRates != null && scheduleOfRates.isEmpty())
                     messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID,
                             Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_CODE_INVALID);
                 else if (sor != null && sor.getId().equals(activity.getScheduleOfRate().getId()))
                     messages.put(Constants.KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE,
                             Constants.MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE);
+
+                if(scheduleOfRates != null && !scheduleOfRates.isEmpty())
+                    activity.setScheduleOfRate(scheduleOfRates.get(0));
             }
 
-            if (activity.getEstimateMeasurementSheets() != null)
-            	//TODO quantity sum with activity
+            BigDecimal measurementQuantitySum = BigDecimal.ZERO;
+            if (activity.getEstimateMeasurementSheets() != null) {
                 for (final EstimateMeasurementSheet estimateMeasurementSheet : activity
                         .getEstimateMeasurementSheets()) {
+
                     if (StringUtils.isBlank(estimateMeasurementSheet.getIdentifier()))
                         messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED,
                                 Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED);
+                    else {
+                        if(estimateMeasurementSheet.getIdentifier().equals("+"))
+                            measurementQuantitySum = measurementQuantitySum.add(estimateMeasurementSheet.getQuantity());
+                        else
+                            measurementQuantitySum = measurementQuantitySum.subtract(estimateMeasurementSheet.getQuantity());
+                    }
+
+
                     if (estimateMeasurementSheet.getQuantity() == null)
                         messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED,
                                 Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_REQUIRED);
@@ -687,6 +702,12 @@ public class EstimateValidator {
                         messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID,
                                 Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID);
                 }
+            }
+
+            if(measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) > 1) {
+                messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER,
+                        Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER);
+            }
 
         }
 
@@ -694,14 +715,15 @@ public class EstimateValidator {
 
     private void validateUOM(final UOM uom, String tenantId, RequestInfo requestInfo, Map<String, String> messages) {
         JSONArray responseJSONArray;
-        //add required
-        if (uom != null && uom.getCode() != null) {
+
+        if (uom != null && StringUtils.isNotBlank(uom.getCode())) {
             responseJSONArray = estimateUtils.getMDMSData(Constants.UOM_OBJECT, CommonConstants.CODE, uom.getCode(),
                     tenantId, requestInfo, CommonConstants.MODULENAME_COMMON);
             if (responseJSONArray != null && responseJSONArray.isEmpty()) {
                 messages.put(Constants.KEY_UOM_INVALID, Constants.MESSAGE_UOM_INVALID);
             }
-        }
+        } else
+            messages.put(Constants.KEY_UOM_REQUIRED, Constants.MESSAGE_UOM_REQUIRED);
     }
 
     public void validateLocationDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
@@ -720,7 +742,6 @@ public class EstimateValidator {
         }
     }
 
-    //TODO : AE required flag
     public void validateAssetDetails(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
             Map<String, String> messages, AbstractEstimate abstractEstimate) {
 
@@ -880,22 +901,19 @@ public class EstimateValidator {
 
     private void validateUniqueTechnicalSanctionForDetailedEstimate(DetailedEstimate detailedEstimate,
             EstimateTechnicalSanction estimateTechnicalSanction, Map<String, String> messages) {
-        TechnicalSanctionSearchContract technicalSanctionSearchContract = TechnicalSanctionSearchContract.builder()
+        DetailedEstimateSearchContract detailedEstimateSearchContract = DetailedEstimateSearchContract.builder()
                 .tenantId(detailedEstimate.getTenantId())
                 .technicalSanctionNumbers(Arrays.asList(estimateTechnicalSanction.getTechnicalSanctionNumber()))
+                .statuses(Arrays.asList(DetailedEstimateStatus.TECHNICAL_SANCTIONED.toString()))
                 .build();
-        if (estimateTechnicalSanction.getId() != null) {
-            technicalSanctionSearchContract.setIds(Arrays.asList(estimateTechnicalSanction.getId()));
-            technicalSanctionSearchContract.setDetailedEstimateIds(Arrays.asList(detailedEstimate.getId()));
+        if (detailedEstimate.getId() != null) {
+            detailedEstimateSearchContract.setIds(Arrays.asList(detailedEstimate.getId()));
         }
-        List<EstimateTechnicalSanction> technicalSanctions = estimateTechnicalSanctionRepository
-                .search(technicalSanctionSearchContract);
-        if (technicalSanctions != null && !technicalSanctions.isEmpty())
-        	//TODO change the mesg
-            messages.put(Constants.KEY_INVALID_ADMINSANCTION_DATE, Constants.MESSAGE_INVALID_ADMINSANCTION_DATE);
+        List<DetailedEstimateHelper> detailedEstimates = detailedEstimateJdbcRepository.search(detailedEstimateSearchContract);
+        if (detailedEstimates != null && !detailedEstimates.isEmpty())
+            messages.put(Constants.KEY_INVALID_TECHNICALSANCTION_NUMBER, Constants.MESSAGE_INVALID_TECHNICALSANCTION_NUMBER);
     }
 
-    //TODO AE required or not
     private void validateMasterData(DetailedEstimate detailedEstimate, RequestInfo requestInfo,
             Map<String, String> messages) {
         JSONArray responseJSONArray = null;
@@ -968,6 +986,22 @@ public class EstimateValidator {
         validateScheme(detailedEstimate.getScheme(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateSubScheme(detailedEstimate.getSubScheme(), detailedEstimate.getTenantId(), requestInfo, messages);
         validateBudgetGroup(detailedEstimate.getBudgetGroup(), detailedEstimate.getTenantId(), requestInfo, messages);
+    }
+
+    public boolean checkAbstractEstimateRequired(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo) {
+        JSONArray responseJSONArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+                Constants.ABSTRACT_ESTIMATE_REQUIRED_APPCONFIG, detailedEstimate.getTenantId(), requestInfo,
+                CommonConstants.MODULENAME_WORKS);
+        boolean abstractEstimateRequired = false;
+        if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+            if (jsonMap.get("value").equals("Yes")) {
+                abstractEstimateRequired = true;
+            } else
+                abstractEstimateRequired = false;
+        }
+
+        return abstractEstimateRequired;
     }
 
 }

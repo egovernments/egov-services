@@ -696,6 +696,19 @@
       "createddate": null,
       "lastmodifiedby": null,
       "lastmodifieddate": null
+    },
+    {
+      "id": 5,
+      "code": "Abstract_Estimate_Required",
+      "keyName": "Abstract_Estimate_Required",
+      "tenantId": "default",
+      "description": "Abstract estimate is required or not to create Detailed estimate",
+      "value": "Yes",
+      "effectivefrom": "2017-08-22",
+      "createdby": null,
+      "createddate": null,
+      "lastmodifiedby": null,
+      "lastmodifieddate": null
     }
   ],
   "BudgetGroup": [

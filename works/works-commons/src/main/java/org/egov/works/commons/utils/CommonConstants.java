@@ -41,6 +41,9 @@ public class CommonConstants {
 
 
     public static final String WORKFLOW_ACTION_CREATE = "Create";
+    public static final String WORKFLOW_ACTION_FORWARD = "Forward";
+    public static final String WORKFLOW_ACTION_REJECTED = "Rejected";
+
     
     public static final String APPCONFIGURATION_OBJECT = "AppConfiguration";
     

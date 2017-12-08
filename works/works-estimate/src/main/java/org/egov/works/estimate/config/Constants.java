@@ -25,6 +25,7 @@ public class Constants {
     public static final String NATUREOFWORK_OBJECT = "NatureOfWork";
     public static final String REFERENCETYPE_OBJECT = "ReferenceType";
     public static final String MODEOFALLOTMENT_OBJECT = "ModeOfAllotment";
+    public static final String ABSTRACT_ESTIMATE_REQUIRED_APPCONFIG = "Abstract_Estimate_Required";
 
     public static final String BOUNDARY_OBJECT = "Boundary";
     public static final String GIS_INTEGRATION_APPCONFIG = "GIS_INTEGRATION";
@@ -41,6 +42,9 @@ public class Constants {
 
     public static final String KEY_ESIMATE_OVERHEAD_AMOUNT = "ESIMATE_OVERHEAD_AMOUNT";
     public static final String MESSAGE_ESIMATE_OVERHEAD_AMOUNT = "Overhead amount is required for estimate";
+
+    public static final String KEY_ESIMATE_OVERHEAD_UNIQUE = "ESIMATE_OVERHEAD_UNIQUE";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_UNIQUE = "Duplicate overheads for estimate";
 
     public static final String KEY_DUPLICATE_MULTIYEAR_ESTIMATE = "DUPLICATE_MULTIYEAR_ESTIMATE";
     public static final String MESSAGE_DUPLICATE_MULTIYEAR_ESTIMATE = "Duplicate multiyear estimates";
@@ -167,7 +171,7 @@ public class Constants {
     public static final String MESSAGE_ESTIMATE_ACTIVITY_INVALID = "Invalid data for estimate activity";
 
     public static final String KEY_ESTIMATE_ACTIVITY_REQUIRED= "ESTIMATE_ACTIVITY_REQUIRED";
-    public static final String MESSAGE_ESTIMATE_ACTIVITY_REQUIRED = "Atleast one activity is required to create an estimate";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_REQUIRED = "Atleast one sor or nonsor is required to create an estimate";
 
     public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE= "INVALID_ESTIMATE_ACTIVITY_ESTIMATE_RATE";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE = "Activity estimate rate should be greater than zero";
@@ -250,8 +254,8 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_ESTIMATE_RATE_REQUIRED= "Estimate rate is required for activity";
 
-    public static final String KEY_ESTIMATE_ACTIVITY_UOM_REQUIRED= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
-    public static final String MESSAGE_ESTIMATE_ACTIVITY_UOM_REQUIRED= "UOM is required for activity";
+    public static final String KEY_UOM_REQUIRED= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
+    public static final String MESSAGE_UOM_REQUIRED= "UOM is required for activity";
 
     public static final String KEY_ESTIMATE_ACTIVITY_UOM_CODE_INVALID= "ESTIMATE_ACTIVITY_UOM_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_UOM_CODE_INVALID= "Invalid data for UOM code";
@@ -267,6 +271,9 @@ public class Constants {
 
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED= "ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_IDENTIFIER_REQUIRED= "Estimate measurement sheet identifier is required";
+
+    public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER";
+    public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "Estimate measurement sheet quantity should not be greater than activity quantity";
 
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";

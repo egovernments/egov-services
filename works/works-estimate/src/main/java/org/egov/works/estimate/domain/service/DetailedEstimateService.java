@@ -1,5 +1,6 @@
 package org.egov.works.estimate.domain.service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,24 +12,7 @@ import org.egov.works.estimate.domain.repository.DetailedEstimateRepository;
 import org.egov.works.estimate.domain.validator.EstimateValidator;
 import org.egov.works.estimate.persistence.repository.IdGenerationRepository;
 import org.egov.works.estimate.utils.EstimateUtils;
-import org.egov.works.estimate.web.contract.AbstractEstimate;
-import org.egov.works.estimate.web.contract.AssetsForEstimate;
-import org.egov.works.estimate.web.contract.AuditDetails;
-import org.egov.works.estimate.web.contract.DetailedEstimate;
-import org.egov.works.estimate.web.contract.DetailedEstimateDeduction;
-import org.egov.works.estimate.web.contract.DetailedEstimateRequest;
-import org.egov.works.estimate.web.contract.DetailedEstimateResponse;
-import org.egov.works.estimate.web.contract.DetailedEstimateSearchContract;
-import org.egov.works.estimate.web.contract.DetailedEstimateStatus;
-import org.egov.works.estimate.web.contract.DocumentDetail;
-import org.egov.works.estimate.web.contract.EstimateActivity;
-import org.egov.works.estimate.web.contract.EstimateMeasurementSheet;
-import org.egov.works.estimate.web.contract.EstimateOverhead;
-import org.egov.works.estimate.web.contract.EstimateTechnicalSanction;
-import org.egov.works.estimate.web.contract.FinancialYear;
-import org.egov.works.estimate.web.contract.MultiYearEstimate;
-import org.egov.works.estimate.web.contract.RequestInfo;
-import org.egov.works.estimate.web.contract.WorkFlowDetails;
+import org.egov.works.estimate.web.contract.*;
 import org.egov.works.workflow.service.WorkflowService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -81,7 +65,6 @@ public class DetailedEstimateService {
 			if (detailedEstimate.getAbstractEstimateDetail() != null || (isRevision != null && isRevision)) {
 				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
                 detailedEstimate.setAbstractEstimateDetail(abstactEstimate.getAbstractEstimateDetails().get(0));
-                //TODO set all data from AE based on flag
 				if ((abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated())
 						 || (isRevision != null && isRevision)) {
 					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(
@@ -91,12 +74,39 @@ public class DetailedEstimateService {
 				}
 			}
 
-			if (isRevision == null || (isRevision != null && !isRevision)) {
-				for (final AssetsForEstimate assetsForEstimate : detailedEstimate.getAssets()) {
-					assetsForEstimate.setId(commonUtils.getUUID());
-					assetsForEstimate.setAuditDetails(auditDetails);
-				}
+            if(validator.checkAbstractEstimateRequired(detailedEstimate,detailedEstimateRequest.getRequestInfo())) {
+                if(abstactEstimate != null) {
+                    detailedEstimate.setNameOfWork(abstactEstimate.getNatureOfWork().getCode());
+                    detailedEstimate.setWard(abstactEstimate.getWard());
+                    detailedEstimate.setLocality(abstactEstimate.getLocality());
+                    detailedEstimate.setBillsCreated(abstactEstimate.getBillsCreated());
+                    detailedEstimate.setSpillOverFlag(abstactEstimate.getSpillOverFlag());
+                    detailedEstimate.setBeneficiary(abstactEstimate.getBeneficiary());
+                    detailedEstimate.setFunction(abstactEstimate.getFunction());
+                    detailedEstimate.setFund(abstactEstimate.getFund());
+                    detailedEstimate.setBudgetGroup(abstactEstimate.getBudgetGroup());
+                    detailedEstimate.setDepartment(abstactEstimate.getDepartment());
+                    detailedEstimate.setModeOfAllotment(abstactEstimate.getModeOfAllotment());
+                    detailedEstimate.setWorksType(abstactEstimate.getTypeOfWork());
+                    detailedEstimate.setWorksSubtype(abstactEstimate.getSubTypeOfWork());
+                    List<AssetsForEstimate> assetsForEstimates = new ArrayList<>();
+                    if(abstactEstimate.getAssetDetails() != null && !abstactEstimate.getAssetDetails().isEmpty()) {
+                        AssetsForEstimate assetsForEstimate = null;
+                        for(AbstractEstimateAssetDetail assets : abstactEstimate.getAssetDetails()) {
+                            assetsForEstimate = new AssetsForEstimate();
+                            assetsForEstimate.setLandAsset(assets.getLandAsset());
+                            assetsForEstimate.setAsset(assets.getAsset());
+                            assetsForEstimate.setAuditDetails(auditDetails);
+                            assetsForEstimate.setId(commonUtils.getUUID());
+                            assetsForEstimates.add(assetsForEstimate);
+                        }
+                    }
+                    detailedEstimate.setAssets(assetsForEstimates);
+                }
 
+            }
+
+			if (isRevision == null || (isRevision != null && !isRevision)) {
 				if (detailedEstimate.getMultiYearEstimates() != null) {
 					for (final MultiYearEstimate multiYearEstimate : detailedEstimate.getMultiYearEstimates()) {
 						multiYearEstimate.setId(commonUtils.getUUID());

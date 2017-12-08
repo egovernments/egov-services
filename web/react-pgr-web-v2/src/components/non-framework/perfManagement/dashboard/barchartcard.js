@@ -182,7 +182,7 @@ export default class BarChartCard extends Component {
                     <br /><br />
                     <Card className="uiCard">
                         <CardHeader
-                            title={<strong> insufficient data to draw the chart </strong>}
+                            title={<div style={{fontSize: '16px'}}> insufficient data to draw the chart </div>}
                         />
                     </Card>
                 </div>
@@ -194,6 +194,7 @@ export default class BarChartCard extends Component {
             marginLeft: '94%'
         };
 
+        let title = `KPI representation for ${this.props.kpis}`;
         return (
             <div>
             <br /><br />
@@ -202,7 +203,7 @@ export default class BarChartCard extends Component {
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
                 <CardHeader style={{paddingBottom: 0}}
-                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> KPI representation </div>}/>
+                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> {title} </div>}/>
                 
                 <BarChart style={{marginLeft: '30%'}} padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
                     <XAxis dataKey={this.state.dataKey}/>
@@ -235,7 +236,7 @@ export default class BarChartCard extends Component {
                 </div>
             )
         }
-
+        let title = `KPI representation for ${this.props.kpis}`;
         let headers = Object.keys(this.state.data[0]);
         const style = {
             marginTop: '15px',
@@ -250,7 +251,7 @@ export default class BarChartCard extends Component {
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
                 <CardHeader style={{paddingBottom: 0}}
-                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> KPI representation </div>}/>
+                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> {title} </div>}/>
                 <Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
                     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
                         <TableRow>

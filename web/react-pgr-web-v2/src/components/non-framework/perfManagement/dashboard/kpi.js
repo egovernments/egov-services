@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Snackbar from 'material-ui/Snackbar';
-import {Card, CardText} from 'material-ui/Card';
+import {Card, CardText, CardHeader} from 'material-ui/Card';
 import {Grid, Row, Col} from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import {
@@ -143,6 +143,12 @@ export default class Dashboard extends Component {
                                 this.fyRes  = res;
                                 this.busyUI(false)
 
+                                let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)
+                                if (departmentKPIs.length === 0) {
+                                    this.setState({
+                                        disableViewButton: true
+                                    })
+                                }
                                 this.setState({
                                     showDepartmentView: false,
                                     showKPIQueryView: true
@@ -163,6 +169,12 @@ export default class Dashboard extends Component {
             this.setState({
                 kpiTypeIndex: index
             })
+            let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)
+            if (departmentKPIs.length === 0) {
+                this.setState({
+                    disableViewButton: true
+                })
+            }
         }
 
         if (label === this.kpiLabel) {
@@ -226,14 +238,10 @@ export default class Dashboard extends Component {
         let finYears    = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',')
         let ulbs        = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',')
         let kpis        = this.state.kpiIndices.map((item, index)=> jp.query(this.kpiRes, `$.KPIs[${item}].code`)).join(',')
-        console.log(finYears)
-        console.log(ulbs)
-        console.log(kpis)
 
         this.busyUI(true)
         fetchCompareSearchAPI(finYears, kpis, ulbs, (err, res) => {
             this.busyUI(false)
-            console.log(res)
             if (err || !res) {
                 this.toast('Unable to get report data')
             } else {
@@ -334,15 +342,14 @@ export default class Dashboard extends Component {
         return (
             <div>
                 <br />
-                <RaisedButton label="Back" style={{'margin': '12px'}} primary={true} type="button" onClick={this.processOnClickBackButton} 
+                <RaisedButton label="Back" style={{'margin': '15px'}} primary={true} type="button" onClick={this.processOnClickBackButton} 
                                 icon={<i className="material-icons" style={{color:"white"}}>arrow_back</i>} 
                 />
                 <br />
                 <br />
-                <br />
                 <Card className="uiCard">
+                    <CardHeader title={<strong style={{fontSize:"18px"}}>{"Key Performance Indicator Dashboard"}</strong>}/>
                     <Grid fluid>
-                        <CardText>
                             <Row>
                                 <Col xs={12} sm={3} md={3} >
                                     <KPISelectField label={this.kpiTypeLabel} mandatory= {true} multiple={false} disabled={false} displayKey={"name"}
@@ -373,7 +380,6 @@ export default class Dashboard extends Component {
                                     />
                                 </Col>
                             </Row>
-                        </CardText>
                     </Grid>
                 </Card>
 
@@ -394,8 +400,16 @@ export default class Dashboard extends Component {
         if (!this.state.showChartView) {
             return (<div></div>)
         }
+        let finYears    = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',')
+        let ulbs        = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].name`)).join(',')
+        let kpis        = this.state.kpiIndices.map((item, index)=> jp.query(this.kpiRes, `$.KPIs[${item}].name`)).join(',')
+
         return(
-            <BarChartCard data={this.chartRes} />
+            <BarChartCard data={this.chartRes} 
+                    finYears={finYears}
+                    ulbs={ulbs}
+                    kpis={kpis}
+            />
         )
     }
 

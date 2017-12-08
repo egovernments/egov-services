@@ -34,7 +34,7 @@ public class ActionRestRepositoryTest {
 		server = MockRestServiceServer.bindTo(restTemplate).build();
 	}
 
-	@Test
+	/*@Test
 	public void testShouldGetActionByRole() {
 		server.expect(once(),
 				requestTo("http://host/access/v1/actions/_search"))
@@ -54,7 +54,7 @@ public class ActionRestRepositoryTest {
 		assertEquals("1", actions.get(0).getParentModule());
 		assertEquals("tenantId=", actions.get(0).getQueryParams());
 		assertEquals("PGR", actions.get(0).getServiceCode());
-	}
+	}*/
 
 	public List<String> getRoles() {
 		List<String> roleCodes = new ArrayList<String>();

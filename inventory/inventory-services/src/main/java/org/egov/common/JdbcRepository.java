@@ -1,5 +1,16 @@
 package org.egov.common;
 
+import java.lang.reflect.Field;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.apache.commons.lang3.reflect.FieldUtils;
 import org.egov.common.exception.InvalidDataException;
 import org.egov.inv.model.AuditDetails;
@@ -14,10 +25,6 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.lang.reflect.Field;
-import java.math.BigDecimal;
-import java.util.*;
 
 @Repository
 public abstract class JdbcRepository {
@@ -657,4 +664,38 @@ public abstract class JdbcRepository {
 
     }
 
+	@Transactional
+	public int changeStatus(Object ob, String status, String tableName, String columnName) {
+		StringBuilder updateQuery = new StringBuilder();
+		Map<String, Object> paramValues = new HashMap<>();
+		try {
+			String obName = ob.getClass().getSimpleName();
+			List<String> identifierFields = allIdentitiferFields.get(obName);
+			if (!status.isEmpty()) {
+				updateQuery.append("UPDATE " + tableName + " set " + columnName + "='" + status.toString() + "'");
+				for (String s : identifierFields) {
+					if (s.equalsIgnoreCase("tenantId")) {
+						updateQuery.append(" and ");
+						updateQuery.append(s).append("=:").append(s);
+						// implement fallback here
+						paramValues.put(s, getValue(getField(ob, s), ob));
+						continue;
+					}
+					if (getValue(getField(ob, s), ob) != null) {
+						updateQuery.append(" where ");
+						updateQuery.append(s).append("=:").append(s);
+						paramValues.put(s, getValue(getField(ob, s), ob));
+					}
+				}
+
+			}
+			int count=namedParameterJdbcTemplate.update(updateQuery.toString(), paramValues);
+			return count;
+		} catch (DataIntegrityViolationException ex) {
+			throw new CustomException("error", ex.getMessage());
+		} catch (Exception e) {
+			throw new CustomException("error", e.getMessage());
+		}
+	}
+	
 }

@@ -495,6 +495,11 @@ var localization_EN_Data = {
 "MdmsMetadata.masterData.lcms.CaseCategory.active": "CaseCategory Active",
 "MdmsMetadata.masterData.lcms.CaseCategory.tenantId": "CaseCategory TenantId",
 
+"MdmsMetadata.masterData.lcms.Register.name": "Register Name",
+"MdmsMetadata.masterData.lcms.Register.code": "Register Code",
+"MdmsMetadata.masterData.lcms.Register.active": "Register Active",
+"MdmsMetadata.masterData.lcms.Register.tenantId": "Register TenantId",
+
 "MdmsMetadata.masterData.lcms.Bench.name": "Bench Name",
 "MdmsMetadata.masterData.lcms.Bench.code": "Bench Code",
 "MdmsMetadata.masterData.lcms.Bench.active": "Bench Active",

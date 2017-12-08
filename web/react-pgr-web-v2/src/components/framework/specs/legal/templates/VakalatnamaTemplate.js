@@ -60,8 +60,8 @@ export default class VakalatnamaTemplate extends Component{
     pdfMake.fonts = fonts;
 
 var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtName.address.addressLine1 + ', ' : '';
-    addres += data.summon.courtName.address.city ? data.summon.courtName.address.city : '';
-    addres += data.summon.courtName.address.addressLine2 ? data.summon.courtName.address.addressLine2 + ', ' : '';
+    addres += data.summon.courtName.address.city ? data.summon.courtName.address.city + ', ' : '';
+    addres += data.summon.courtName.address.addressLine2 ? data.summon.courtName.address.addressLine2 : '';
 
    // console.log(data.witness);
     //console.log(data);
@@ -84,7 +84,14 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
       // witnessObj.ul = vit[i].split(',');
       }
     
-
+// var fonts = {
+//   Roboto: {
+//           normal: 'Roboto-Regular.ttf',
+//           bold: 'Roboto-Medium.ttf',
+//           italics: 'Roboto-Italic.ttf',
+//           bolditalics: 'Roboto-MediumItalic.ttf'
+//   }
+// };
     //document defintion
     var docDefinition = {
       pageSize: 'A4',
@@ -197,9 +204,9 @@ var addres =  data.summon.courtName.address.addressLine1  ? data.summon.courtNam
         bold:false
       },
       styles:{
-        test:{
-          bold:true
-        }
+      //   boldTd: {
+      //     bold: true
+      // }
       }
     }
 

@@ -5,7 +5,7 @@ var dat = {
         "useTimestamp": true,
         "objectName": "KPIs",
         "groups": [{
-                "label": "perfManagement.create.KPIs.groups.kpiMaster",
+                "label": "perfManagement.create.KPIs.groups.kpiMasterCreate",
                 "name": "kpiMaster",
                 "fields": [
                     //  {
@@ -90,6 +90,17 @@ var dat = {
                               }],
                         "defaultValue": "TEXT",
                         
+                    },
+                    {
+                        "name": "kpiCategory",
+                        "jsonPath": "KPIs[0].categoryId",
+                        "label": "KPI Category",
+                        "isRequired": false,
+                        "pattern": "",
+                        "type": "singleValueList",
+                        "url": "/egov-mdms-service/v1/_get?&moduleName=PM&masterName=KpiCategory|$..id|$..name",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
                     }
                 ]
             },
@@ -432,7 +443,7 @@ var dat = {
                         "isRequired": true,
                         "pattern": "",
                         "type": "text",
-                        "isDisabled": false,
+                        "isDisabled": true,
                         "requiredErrMsg": ""
                     }, {
                         "name": "updatekpitype",
@@ -456,13 +467,25 @@ var dat = {
                             "label": "perfManagement.update.KPIs.groups.updatekpitype.objective",
                             "value": "OBJECTIVE"
                         }]
+                    },
+
+                    {
+                        "name": "updatekpiCategory",
+                        "jsonPath": "KPIs[0].categoryId",
+                        "label": "KPI Category",
+                        "isRequired": false,
+                        "pattern": "",
+                        "type": "singleValueList",
+                        "url": "/egov-mdms-service/v1/_get?&moduleName=PM&masterName=KpiCategory|$..id|$..name",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
                     }
                 ]
             },
+
             {
                 "name": "updateKpiInstruc",
-                "label": "perfManagement.update.KPIs.groups.updatekpidocMandatory",
-                "name": "updateKpiInstruc",
+                "label": "perfManagement.update.KPIs.groups.updateKpiInstruc",
                 "fields": [{
                     "name": "updatekpiInstruction",
                     "jsonPath": "KPIs[0].instructions",

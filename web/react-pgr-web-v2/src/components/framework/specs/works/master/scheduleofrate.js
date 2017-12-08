@@ -86,6 +86,10 @@ var dat ={
       "value": localStorage.getItem("tenantId")
       }],
       "idJsonPath":"scheduleOfRates[0].code",
+      "injectData": [{
+        "jsonPath": "scheduleOfRates[0].sorRates[0].tenantId",
+        "value": localStorage.getItem("tenantId")
+      }],
       "groups":[
          {
             "name":"createRateMaster",

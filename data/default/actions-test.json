@@ -10064,7 +10064,8 @@
     "serviceCode": "NON INDENT ISSUES",
     "code": "null",
     "path": "Inventory.Inventory Transactions.Non Indent Issues.Non Indent Issue Search"
-  },{
+  },
+  {
     "id": 1101,
     "name": "PerfAssmtKpiValueCompareSearch",
     "url": "/perfmanagement/v1/kpivalue/_comparesearch",
@@ -10088,7 +10089,32 @@
     "serviceCode": "CASE",
     "code": "null",    
     "path": ""
-  }
-  
+  },
+  {
+    "id": 1409,
+    "name": "SWM Report MetaData",
+    "url": "/report/swm/metadata/_get",
+    "displayName": "Get SWM Report Metadata",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": false,
+    "serviceCode": "SWMRPT",
+    "code": "null",    
+    "path": ""
+  },
+  {
+    "id": 1410,
+    "name": "SWM Report",
+    "url": "/report/swm/_get",
+    "displayName": "Get SWM Report",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "308",
+    "enabled": false,
+    "serviceCode": "SWMRPT",
+    "code": null,
+    "path": ""
+  } 
 ]
 }

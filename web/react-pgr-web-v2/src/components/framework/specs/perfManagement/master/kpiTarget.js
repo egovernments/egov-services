@@ -245,20 +245,20 @@ var dat = {
             "values": ["kpiCode","finYear", "targetDescription"],
             "resultPath": "kpiTargets",
             "rowClickUrlUpdate": "/update/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}",
-            "rowClickUrlView": "/view/perfManagement/kpiTarget/{kpiCode}"
+            "rowClickUrlView": "/view/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}"
         }
     },
     "perfManagement.view": {
         "numCols": 12 / 2,
-        "url": "/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}",
+        "url": "/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}",
         "useTimestamp": true,
-        "objectName": "KPIs",
+        "objectName": "kpiTargets",
         "groups": [{
                 "label": "perfManagement.view.KPIs.groups.viewKPI",
                 "name": "viewKPI",
                 "fields": [{
                         "name": "viewkpiDepartment",
-                        "jsonPath": "kpiTargets[0].kpi.department",
+                        "jsonPath": "kpiTargets[0].kpi.department.name",
                         // "url": "egov-mdms-service/v1/_get?tenantId=default&tenantIdCustom={KPIs[0].tenantId}&moduleName=common-masters&masterName=Department|$..id|$..name",
                         "label": "perfManagement.view.KPIs.groups.viewkpiDepartment",
                         "pattern": "",

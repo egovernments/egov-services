@@ -258,7 +258,9 @@ renderFileObject = (item, i) => {
     } else {
       return (
         <div>
-        {(this.state.documents[item.valueid] && this.state.documents[item.valueid][item.period]) && <label>{this.state.documents[item.valueid][item.period].name}<br/></label>}
+        {(this.state.documents[item.valueid] && this.state.documents[item.valueid][item.period]) 
+          && <span><label>{this.state.documents[item.valueid][item.period].name}</label><br/></span>}
+        
         <label class="btn btn-primary" for={"file_"+item.valueid+item.period} style={{"color":"orange"}}>
             <input id={"file_"+item.valueid+item.period} type="file" style={{"display":"none"}}  onChange={e => this.handleFile(e,item.valueid,item.period)}/>
             <span className="glyphicon glyphicon-upload" aria-hidden="true"></span>&nbsp;

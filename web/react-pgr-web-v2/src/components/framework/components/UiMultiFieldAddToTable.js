@@ -61,8 +61,19 @@ class UiMultiFieldAddToTable extends Component {
       if (item.values[i].name=="tenantId") {
         item.values[i].isDisabled=true;
         item.values[i].defaultValue=JSON.parse(localStorage.getItem("userRequest")).tenantId;
-        item.values[i].isRequired=false
+        item.values[i].isRequired=false;
       }
+
+      else
+      {
+        if (item.values[i].name=="active") {
+          item.values[i].defaultValue=false;
+        } else {
+          item.values[i].defaultValue="";
+        }
+
+      }
+
       if (item.values[i].isRequired)
       {
         requiredFields.push(item.values[i].jsonPath);
@@ -143,12 +154,39 @@ class UiMultiFieldAddToTable extends Component {
 
   addToParent = (doNotOpen, ind) => {
     var self=this;
-    let {valueList}=this.props;
+    let {valueList,item}=this.props;
     let formData = _.cloneDeep(this.props.formData);
     let localFormData = _.cloneDeep(this.state.formData);
     let myTableInParent = _.get(formData, this.props.item.jsonPath);
     let stateFormDataTable = _.get(localFormData, this.props.item.jsonPath);
     let indexes;
+
+    // console.log(item);
+    // console.log(stateFormDataTable);
+    let temp=[];
+    temp[0]={};
+
+    for (var i = 0; i < item.values.length; i++) {
+      if (!stateFormDataTable[0].hasOwnProperty(item.values[i].name)) {
+        if (item.values[i].name=="active") {
+          stateFormDataTable[0][item.values[i].name]=false
+          temp[0][item.values[i].name]=stateFormDataTable[0][item.values[i].name];
+        } else if(item.values[i].name!="tenantId"){
+          stateFormDataTable[0][item.values[i].name]=""
+          temp[0][item.values[i].name]=stateFormDataTable[0][item.values[i].name];
+        }
+      }
+      else {
+        temp[0][item.values[i].name]=stateFormDataTable[0][item.values[i].name];
+      }
+
+    }
+
+
+
+
+
+
 
     // formData.MasterMetaData.masterData=formData.hasOwnProperty("MdmsMetadata")?formData.MdmsMetadata.masterData:[];
     // self.props.setLoadingStatus('loading');
@@ -156,7 +194,7 @@ class UiMultiFieldAddToTable extends Component {
       tenantId: localStorage.tenantId,
       moduleName: formData.MasterMetaData.moduleName,
       masterName: formData.MasterMetaData.masterName,
-      masterData: [stateFormDataTable[0]]
+      masterData: [temp[0]]
     }
 
     // console.log(myTableInParent);
@@ -166,11 +204,11 @@ class UiMultiFieldAddToTable extends Component {
       Api.commonApiPost("/egov-mdms-create/v1/_create", {},{MasterMetaData:MasterMetaData}, false, true).then(function(res) {
         // console.log(res);
         if (!myTableInParent) {
-          stateFormDataTable[0].id=1;
-          self.props.handler({ target: { value: stateFormDataTable } }, self.props.item.jsonPath);
+          temp[0].id=1;
+          self.props.handler({ target: { value: temp } }, self.props.item.jsonPath);
         } else {
-          stateFormDataTable[0].id=myTableInParent.length+1;
-          myTableInParent.push(stateFormDataTable[0]);
+          temp[0].id=myTableInParent.length+1;
+          myTableInParent.push(temp[0]);
           self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
         }
         self.props.setLoadingStatus('hide');
@@ -205,7 +243,7 @@ class UiMultiFieldAddToTable extends Component {
 
     } else {
       Api.commonApiPost("/egov-mdms-create/v1/_update", {},{MasterMetaData:MasterMetaData}, false, true).then(function(res) {
-        myTableInParent[self.state.index] = stateFormDataTable[0];
+        myTableInParent[self.state.index] = temp[0];
         self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
         self.props.setLoadingStatus('hide');
         self.props.toggleSnackbarAndSetText(true, "Data Updated Successfully",true);
@@ -253,14 +291,14 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   deleteRow = (index) => {
-    let formData = _.cloneDeep(this.props.formData);
-    let myTableInParent = _.get(formData, this.props.item.jsonPath);
-    if(myTableInParent) {
-      myTableInParent.splice(index, 1);
-      this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
-    }
+    // let formData = _.cloneDeep(this.props.formData);
+    // let myTableInParent = _.get(formData, this.props.item.jsonPath);
+    // if(myTableInParent) {
+    //   myTableInParent.splice(index, 1);
+    //   this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
+    // }
     let list = _.cloneDeep(this.state.valueList);
-    list.splice(index, 1)
+    // list.splice(index, 1)
     this.setState({
       valueList: list,
       isAddAgain: true,
@@ -431,7 +469,7 @@ class UiMultiFieldAddToTable extends Component {
                               onClick={(e) => {this.addToParent(true, index)}}/>
                             <br/>
                             {/*<FlatButton
-                              label={translate("pgr.lbl.delete")}
+                              label={translate("Reset")}
                               secondary={true}
                               onClick={(e) => {this.deleteRow(index)}}/>*/}
                           </td>
@@ -444,10 +482,18 @@ class UiMultiFieldAddToTable extends Component {
                         <td> {index + 1} </td>
                         {
                           Object.keys(item).map(function(key, index) {
+
                                 if (key!="id" && key!="tenantId") {
-                                  return (
-                                      <td>{item[key]}</td>
-                                  )
+                                  if (key=="active") {
+                                    return (
+                                        <td>{item[key]?"Active":"Inactive"}</td>
+                                    )
+                                  } else {
+                                    return (
+                                        <td>{item[key]}</td>
+                                    )
+                                  }
+
                                 }
 
 
@@ -504,11 +550,21 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   handleOpen = () => {
-
+    let {item}=this.props;
     if(this.state.isInlineEdit) {
 
       let list = _.cloneDeep(this.state.valueList);
-      list.push(" ");
+      let tempObject={};
+
+      // for (var i = 0; i < item.values.length; i++) {
+      //   if (item.values[i].name=="active") {
+      //     tempObject[item.values[i].name]=false
+      //   } else {
+      //     tempObject[item.values[i].name]=""
+      //   }
+      // }
+      list.push("");
+
       list.reverse();
       this.setState({
         isBtnDisabled: true,

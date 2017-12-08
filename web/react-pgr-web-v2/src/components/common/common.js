@@ -2857,6 +2857,7 @@ var localization_EN_Data = {
  "referenceEvidence.create.caseNo":"Case No",
 
 //Inventory Store Master
+"inventory.status":"Status",
  "inventory.store.title":"Store Master",
  "inventory.supplier.title":"Supplier Master",
  "inventory.pricelist.title":"PriceList Master",
@@ -2871,6 +2872,7 @@ var localization_EN_Data = {
  "inventory.store.search.title":"Search Store",
  "inventory.store.code" : "Store Code",
  "inventory.store.name" : "Store Name",
+ "inventory.currentRate":"Current Rate",
  "inventory.currentYear": "Current Year(From 01/Jan to 01/Mar)",
  "inventory.previousYear": "Previous Year(From 01/Jan to 31/Dec)",
 
@@ -2936,6 +2938,9 @@ var localization_EN_Data = {
 // indent
 
 "inventory.create.group.title.indent":"Add Indent",
+"inventory.update.group.title.indent":"Update Indent",
+"inventory.view.group.title.indent":"View Indent",
+"inventory.update.group.title.indent" :"Update Indent",
 "inventory.store.name":"Store Name",
 "inventory.indent.date": "Indent Date",
 "inventory.indent.number":"Indent Number",
@@ -2957,6 +2962,7 @@ var localization_EN_Data = {
 "inventory.totalValue":"Total Value",
 "inventory.assetCode":"Asset Code",
 "inventory.projectCode":"Project Code",
+"inventory.indent.certificate.title":"Indent Certificate",
 
 
 // Material Issue Lables
@@ -2973,7 +2979,7 @@ var localization_EN_Data = {
  "inventory.search.result.indentStatus":"Indent Status",
  "inventory.create.fromStore.name":"Issuing Store Name",
  "inventory.create.issueDate":"Issue Date",
- "inventory.create.department.name":"Indenting Department Name",
+ "inventory.create.department.name":"Issuing Department Name",
  "inventory.create.issuedToEmployee":"Issued To Employee",
  "inventory.create.designation":"Designation",
  "inventory.create.description":"Remarks",
@@ -3026,6 +3032,15 @@ var localization_EN_Data = {
  "inventory.pricelist.group.title":"Material Opening Balance Entry",
  "inventory.pricelist.search.title":"Search Price List",
     "inventory.supplierName":"Supplier Name",
+    "inventory.supplierCompanyName": "Supplier Company Name",
+    "inventory.poNo": "Po.No",
+    "inventory.poDate": "Po Date",
+    "inventory.poStatus": "Po Status",
+    "inventory.paymentDueDate": "Payment Due Date",
+    "inventory.qtyOrdered":"Qty Ordered",
+    "inventory.poTotal":"Po Total",
+    "inventory.amountPaid": "Amount Paid",
+    "inventory.balanceDue": "Balance Due",
     "inventory.agreementNumber":"Agreement Number",
     "inventory.rateContractNumber":"Rate Contract / Tender / Quotation No.",
     "inventory.rateContractDate":"Rate Contract Date",

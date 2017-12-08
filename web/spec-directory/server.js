@@ -57,13 +57,22 @@ function getType(type) {
 var getFieldsFromInnerObject = function(fields, header, properties, module, master, jPath, isArray, required) {
     // console.log("Iner object called with - " + jPath);
     for (let key in properties) {
-        if (["id", "tenantId", "auditDetails", "assigner"].indexOf(key) > -1) continue;
+    	//Adding tenantId and id as per discussion on Friday (08-12-2017)
+        if ([/*"id", "tenantId",*/ "auditDetails", "assigner"].indexOf(key) > -1) continue;
         if(properties[key].properties) 	{
         	//its an inner object - should be another MDMS object - make UI paint a singleValueList with appropriate URL
+            //Alert !!!! Hardcoding....
+
+            //Adding custom specs for Address Block as per discussion on Friday (08-12-2017)
+            if(key == "address"){
+            	console.log(properties[key].properties);
+            	getFieldsFromInnerObject(fields, header, properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []));
+            }
+	        
             fields.push({
                 "name": key,
                 "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
-                "label": module + ".create." + key,
+                "label": "MdmsMetadata.masterData." + module + "." + master + "." + key,	//Changes (08-12-2017)
                 "type": "singleValueList",
                 "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
                 "defaultValue": properties[key].default || "",
@@ -77,13 +86,13 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
             })
         } else if(properties[key].items && properties[key].items.properties) {
             if(jPath == "WasteSubType") console.log(jPath + " is an array");
-            if(jPath.search("." + key) < 2)
+            if(jPath.search("." + key) < 2)	//What is this for??
                 getFieldsFromInnerObject(fields, header, properties[key].items.properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].items.properties.required || []));
         } else {
             fields.push({
                 "name": key,
                 "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
-                "label": module + ".create." + key,
+                "label": "MdmsMetadata.masterData." + module + "." + master + "." + key,	//Changes (08-12-2017)
                 "pattern": properties[key].pattern || "",
                 "type": properties[key].enum ? "singleValueList" : properties[key].format && ["number", "integer", "double", "long", "float"].indexOf(properties[key].type) == -1 ? getType(properties[key].format) : getType(properties[key].type),
                 "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
@@ -120,9 +129,6 @@ for(module in configData){
 	modules.push(module);
 }
 
-console.log(urls);
-
-
 
 // for(module in modules){
 	for(var i = 0; i < urls.length; i++){
@@ -145,7 +151,6 @@ console.log(urls);
         	}
         	
         	completed_requests++;
-        	// console.log("completed_requests", completed_requests, urls.length);
 
         	if (completed_requests == urls.length) {
 	            // All downloads done, process responses array
@@ -183,8 +188,34 @@ console.log(urls);
 	            	
 	            }
 
-	            // console.log(finalSpecs.swm.masters.wastesubtype);
-	            console.log(finalSpecsRaw);
+	            // console.log(finalSpecs.lcms.masters.court.values);
+	            console.log(finalSpecsRaw.lcms);
+
+	            /*
+	            var run = false;
+	            var count = 0;
+	            if(run){
+	            	var temp = [];
+		            var result = [];
+
+	            	for(var i = 0; i < finalSpecs.lcms.masters.advocate.values.length; i++){
+	            		temp.push(finalSpecs.lcms.masters.advocate.values[i].name);
+	            		if(finalSpecs.lcms.masters.advocate.values[i].isRequired){
+	            			count++;
+	            		}
+	            	}
+	            	console.log(count);
+		            
+	            	for(property in finalSpecsRaw.lcms.advocate.properties){
+	            		if(!temp.includes(property)){
+	            			result.push(property)
+	            		}
+	            	}
+
+	            	console.log(result);
+					*/
+	            }
+	            
 	        
 	        }
 		})

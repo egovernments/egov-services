@@ -465,29 +465,40 @@ var localization_EN_Data = {
 "reports.lcms.remarksRegardingReferenceToCourt" : "Remarks regarding verification with the reference to court records, Adjustment of Advances",
 "reports.lcms.remarks" : "Remarks",
 
-// MDMS/LCMS Screens Specifications
+/*-------------------> MDMS/LCMS Screens Specifications <--------------------------*/
 
 "MdmsMetadata.masterData.lcms.Court.name": "Court Name",
 "MdmsMetadata.masterData.lcms.Court.code": "Court Code",
 "MdmsMetadata.masterData.lcms.Court.address": "Court Address",
 "MdmsMetadata.masterData.lcms.Court.active": "Court Active",
+"MdmsMetadata.masterData.lcms.Court.tenantId": "Court TenantId",
+
 
 "MdmsMetadata.masterData.lcms.CaseType.name": "CaseType Name",
 "MdmsMetadata.masterData.lcms.CaseType.code": "CaseType Code",
 "MdmsMetadata.masterData.lcms.CaseType.side": "CaseType Side",
 "MdmsMetadata.masterData.lcms.CaseType.active": "CaseType Active",
+"MdmsMetadata.masterData.lcms.CaseType.tenantId": "CaseType TenantId",
+
+"MdmsMetadata.masterData.lcms.CaseStatus.name": "CaseStatus Name",
+"MdmsMetadata.masterData.lcms.CaseStatus.code": "CaseStatus Code",
+"MdmsMetadata.masterData.lcms.CaseStatus.tenantId": "CaseStatus TenantId",
+"MdmsMetadata.masterData.lcms.CaseStatus.active": "CaseStatus Active",
 
 "MdmsMetadata.masterData.lcms.Side.name": "Side Name",
 "MdmsMetadata.masterData.lcms.Side.code": "Side Code",
 "MdmsMetadata.masterData.lcms.Side.active": "Side Active",
+"MdmsMetadata.masterData.lcms.Side.tenantId": "Side TenantId",
 
 "MdmsMetadata.masterData.lcms.CaseCategory.name": "CaseCategory Name",
 "MdmsMetadata.masterData.lcms.CaseCategory.code": "CaseCategory Code",
 "MdmsMetadata.masterData.lcms.CaseCategory.active": "CaseCategory Active",
+"MdmsMetadata.masterData.lcms.CaseCategory.tenantId": "CaseCategory TenantId",
 
 "MdmsMetadata.masterData.lcms.Bench.name": "Bench Name",
 "MdmsMetadata.masterData.lcms.Bench.code": "Bench Code",
 "MdmsMetadata.masterData.lcms.Bench.active": "Bench Active",
+"MdmsMetadata.masterData.lcms.Bench.tenantId": "Bench TenantId",
 
 "MdmsMetadata.masterData.lcms.Charge.name": "Charge Name",
 "MdmsMetadata.masterData.lcms.Charge.code": "Charge Code",
@@ -502,7 +513,48 @@ var localization_EN_Data = {
 "MdmsMetadata.masterData.lcms.Charge.court": "Charge Court",
 "MdmsMetadata.masterData.lcms.Charge.caseType": "Charge CaseType",
 "MdmsMetadata.masterData.lcms.Charge.active": "Charge Active",
+"MdmsMetadata.masterData.lcms.Bench.tenantId": "Charge TenantId",
 
+
+"MdmsMetadata.masterData.lcms.Advocate.name": "Advocate Name",
+"MdmsMetadata.masterData.lcms.Advocate.code": "Advocate Code",
+"MdmsMetadata.masterData.lcms.Advocate.agencyName": "Advocate Agency Name",
+"MdmsMetadata.masterData.lcms.Advocate.isIndividual": "Advocate IsIndividual",
+"MdmsMetadata.masterData.lcms.Advocate.title": "Advocate Title",
+"MdmsMetadata.masterData.lcms.Advocate.firstName": "Advocate First Name",
+"MdmsMetadata.masterData.lcms.Advocate.secondName": "Advocate Second Name",
+"MdmsMetadata.masterData.lcms.Advocate.lastName": "Advocate Last Name",
+"MdmsMetadata.masterData.lcms.Advocate.address": "Advocate Address",
+"MdmsMetadata.masterData.lcms.Advocate.contactNo": "Advocate Contact No",
+"MdmsMetadata.masterData.lcms.Advocate.dateOfEmpanelment": "Advocate DateOfEmpanelment",
+"MdmsMetadata.masterData.lcms.Advocate.standingCommitteeDecisionDate": "Advocate StandingCommitteeDecisionDate",
+"MdmsMetadata.masterData.lcms.Advocate.empanelmentFromDate": "Advocate EmpanelmentFromDate",
+"MdmsMetadata.masterData.lcms.Advocate.aadhar": "Advocate Aadhar",
+"MdmsMetadata.masterData.lcms.Advocate.gender": "Advocate Gender",
+"MdmsMetadata.masterData.lcms.Advocate.age": "Advocate Age",
+"MdmsMetadata.masterData.lcms.Advocate.dob": "Advocate DOB",
+"MdmsMetadata.masterData.lcms.Advocate.mobileNumber": "Advocate Mobile No",
+"MdmsMetadata.masterData.lcms.Advocate.emailId": "Advocate Email",
+"MdmsMetadata.masterData.lcms.Advocate.pan": "Advocate PAN",
+"MdmsMetadata.masterData.lcms.Advocate.vatTinNo": "Advocate VatTinNumber",
+"MdmsMetadata.masterData.lcms.Advocate.newsPaperAdvertismentDate": "Advocate NewsPaperAdvertismentDate",
+"MdmsMetadata.masterData.lcms.Advocate.empanelmentToDate": "Advocate EmpanelmentToDate",
+"MdmsMetadata.masterData.lcms.Advocate.bankName": "Advocate Bankname",
+"MdmsMetadata.masterData.lcms.Advocate.bankBranch": "Advocate BankBranch",
+"MdmsMetadata.masterData.lcms.Advocate.bankAccountNo": "Advocate Bank Account No",
+"MdmsMetadata.masterData.lcms.Advocate.isfcCode": "Advocate IFSC Code",
+"MdmsMetadata.masterData.lcms.Advocate.micr": "Advocate MICR",
+"MdmsMetadata.masterData.lcms.Advocate.isActive": "Advocate IsActive",
+"MdmsMetadata.masterData.lcms.Advocate.isTerminate": "Advocate Is Terminate",
+"MdmsMetadata.masterData.lcms.Advocate.inActiveDate": "Advocate IsActiveDate",
+"MdmsMetadata.masterData.lcms.Advocate.terminationDate": "Advocate TerminationDate",
+"MdmsMetadata.masterData.lcms.Advocate.reasonOfTermination": "Advocate ReasonOfTermination",
+"MdmsMetadata.masterData.lcms.Advocate.tenantId": "Advocate TenantId",
+"MdmsMetadata.masterData.lcms.Advocate.agencyCode": "Advocate AgencyCode",
+"MdmsMetadata.masterData.lcms.Advocate.status": "Advocate Status",
+
+
+/*------------------------------------------------------------------------------------------*/
 
       //Water Connection
       "reports.wcms.fromdate":"From Date",

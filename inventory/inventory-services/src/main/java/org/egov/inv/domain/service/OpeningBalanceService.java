@@ -71,6 +71,7 @@ public class OpeningBalanceService extends DomainService {
 					materialReceipt.getReceiptDetails().stream().forEach(detail -> {
 						detail.setId(jdbcRepository.getSequence("seq_materialreceiptdetail"));
 						setQuantity(tenantId, detail);
+						convertRate(tenantId, detail);
 						if (isEmpty(detail.getTenantId())) {
 							detail.setTenantId(tenantId);
 						}
@@ -276,6 +277,18 @@ public class OpeningBalanceService extends DomainService {
 			Double convertedReceivedQuantity = getSaveConvertedQuantity(detail.getReceivedQty().doubleValue(),
 					uom.getConversionFactor().doubleValue());
 			detail.setReceivedQty(BigDecimal.valueOf(convertedReceivedQuantity));
+		}
+
+	}
+	
+	private void convertRate(String tenantId, MaterialReceiptDetail detail) {
+		Uom uom = getUom(tenantId, detail.getUom().getCode(), new org.egov.inv.model.RequestInfo());
+		detail.setUom(uom);
+
+		if (null != detail.getUnitRate() && null != uom.getConversionFactor()) {
+			Double convertedRate = getSaveConvertedRate(detail.getUnitRate().doubleValue(),
+					uom.getConversionFactor().doubleValue());
+			detail.setUnitRate((BigDecimal.valueOf(convertedRate)));
 		}
 
 	}

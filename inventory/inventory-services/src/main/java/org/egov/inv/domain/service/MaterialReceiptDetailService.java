@@ -39,6 +39,10 @@ public class MaterialReceiptDetailService extends DomainService {
                     Double acceptedQuantity = getSearchConvertedQuantity(materialReceiptDetail.getAcceptedQty().doubleValue(), uom.getConversionFactor().doubleValue());
                     materialReceiptDetail.setAcceptedQty(BigDecimal.valueOf(acceptedQuantity));
                 }
+                if (null != materialReceiptDetail.getUnitRate() && null != uom.getConversionFactor()) {
+                    Double unitRate = getSearchConvertedRate((materialReceiptDetail.getUnitRate().doubleValue()), uom.getConversionFactor().doubleValue());
+                    materialReceiptDetail.setUnitRate(BigDecimal.valueOf(unitRate));
+                }
                 MaterialReceiptAddInfoSearch materialReceiptAddInfoSearch = MaterialReceiptAddInfoSearch.builder()
                         .receiptDetailId(Arrays.asList(materialReceiptDetail.getId()))
                         .tenantId(materialReceiptDetailSearch.getTenantId())

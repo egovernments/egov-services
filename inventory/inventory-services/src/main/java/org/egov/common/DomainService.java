@@ -101,6 +101,14 @@ public class DomainService {
         return quantity / conversionFactor;
     }
     
+    public Double getSaveConvertedRate(Double rate, Double conversionFactor) {
+        return rate / conversionFactor;
+    }
+
+    public Double getSearchConvertedRate(Double rate, Double conversionFactor) {
+        return rate * conversionFactor;
+    }
+    
     public  String 	toDateStr(Long epoch)
   	{
   		Date date=new Date(epoch);

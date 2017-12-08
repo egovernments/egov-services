@@ -465,6 +465,45 @@ var localization_EN_Data = {
 "reports.lcms.remarksRegardingReferenceToCourt" : "Remarks regarding verification with the reference to court records, Adjustment of Advances",
 "reports.lcms.remarks" : "Remarks",
 
+// MDMS/LCMS Screens Specifications
+
+"MdmsMetadata.masterData.lcms.Court.name": "Court Name",
+"MdmsMetadata.masterData.lcms.Court.code": "Court Code",
+"MdmsMetadata.masterData.lcms.Court.address": "Court Address",
+"MdmsMetadata.masterData.lcms.Court.active": "Court Active",
+
+"MdmsMetadata.masterData.lcms.CaseType.name": "CaseType Name",
+"MdmsMetadata.masterData.lcms.CaseType.code": "CaseType Code",
+"MdmsMetadata.masterData.lcms.CaseType.side": "CaseType Side",
+"MdmsMetadata.masterData.lcms.CaseType.active": "CaseType Active",
+
+"MdmsMetadata.masterData.lcms.Side.name": "Side Name",
+"MdmsMetadata.masterData.lcms.Side.code": "Side Code",
+"MdmsMetadata.masterData.lcms.Side.active": "Side Active",
+
+"MdmsMetadata.masterData.lcms.CaseCategory.name": "CaseCategory Name",
+"MdmsMetadata.masterData.lcms.CaseCategory.code": "CaseCategory Code",
+"MdmsMetadata.masterData.lcms.CaseCategory.active": "CaseCategory Active",
+
+"MdmsMetadata.masterData.lcms.Bench.name": "Bench Name",
+"MdmsMetadata.masterData.lcms.Bench.code": "Bench Code",
+"MdmsMetadata.masterData.lcms.Bench.active": "Bench Active",
+
+"MdmsMetadata.masterData.lcms.Charge.name": "Charge Name",
+"MdmsMetadata.masterData.lcms.Charge.code": "Charge Code",
+"MdmsMetadata.masterData.lcms.Charge.description": "Charge Description",
+"MdmsMetadata.masterData.lcms.Charge.fromDate": "Charge FromDate",
+"MdmsMetadata.masterData.lcms.Charge.toDate": "Charge ToDate",
+"MdmsMetadata.masterData.lcms.Charge.fromValue": "Charge FromValue",
+"MdmsMetadata.masterData.lcms.Charge.toValue": "Charge ToValue",
+"MdmsMetadata.masterData.lcms.Charge.chargePercentage": "Charge ChargePercentage",
+"MdmsMetadata.masterData.lcms.Charge.chargeAmount": "Charge ChargeAmount",
+"MdmsMetadata.masterData.lcms.Charge.isFlat": "Charge IsFlat",
+"MdmsMetadata.masterData.lcms.Charge.court": "Charge Court",
+"MdmsMetadata.masterData.lcms.Charge.caseType": "Charge CaseType",
+"MdmsMetadata.masterData.lcms.Charge.active": "Charge Active",
+
+
       //Water Connection
       "reports.wcms.fromdate":"From Date",
       "reports.wcms.todate":"To Date",

@@ -68,22 +68,24 @@ var getFieldsFromInnerObject = function(fields, header, properties, module, mast
             	console.log(properties[key].properties);
             	getFieldsFromInnerObject(fields, header, properties[key].properties, module, master, (isArray ? (jPath + "[0]") : jPath) + "." + key, true, (properties[key].properties.required || []));
             }
+            else{
 	        
-            fields.push({
-                "name": key,
-                "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
-                "label": "MdmsMetadata.masterData." + module + "." + master + "." + key,	//Changes (08-12-2017)
-                "type": "singleValueList",
-                "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
-                "defaultValue": properties[key].default || "",
-                "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
-                	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
-                "isStateLevel":true,
-                "apiKey": jPath + "." + key							
-            });
-            header.push({
-            	"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
-            })
+	            fields.push({
+	                "name": key,
+	                "jsonPath": (isArray ? "MdmsMetadata.masterData[0]" : "MdmsMetadata.masterData") + "." + key,
+	                "label": "MdmsMetadata.masterData." + module + "." + master + "." + key,	//Changes (08-12-2017)
+	                "type": "singleValueList",
+	                "isRequired": (properties[key].required || (required && required.constructor == Array && required.indexOf(key) > -1) ? true : false),
+	                "defaultValue": properties[key].default || "",
+	                "url": "/egov-mdms-service/v1/_get?&moduleName=" +  module + "&masterName=" 
+	                	+ master + "|$.MdmsRes." + module + "." + key + ".*.id|$.MdmsRes." + module + "." + key + ".*.name",
+	                "isStateLevel":true,
+	                "apiKey": jPath + "." + key							
+	            });
+	            header.push({
+	            	"label": "MdmsMetadata.masterData." + module + "." + master + "." + key
+	            })
+        	}
         } else if(properties[key].items && properties[key].items.properties) {
             if(jPath == "WasteSubType") console.log(jPath + " is an array");
             if(jPath.search("." + key) < 2)	//What is this for??
@@ -188,7 +190,7 @@ for(module in configData){
 	            	
 	            }
 
-	            // console.log(finalSpecs.lcms.masters.court.values);
+	            console.log(finalSpecs.lcms.masters.casetype);
 	            console.log(finalSpecsRaw.lcms);
 
 	            /*

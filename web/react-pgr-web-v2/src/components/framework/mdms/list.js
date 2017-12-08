@@ -77,13 +77,13 @@ class MdmsComponent extends Component {
 			// 	headers.push(res.header[i].label.split(".")[4]);
 			// }
 			// headers.push("modify");
-			Api.commonApiPost("/egov-mdms-service-test/v1/_search", {}, data, false, true).then(function(res2) {
-				let arr = _.get(res2, "MdmsRes." + module + "." + master);
+			Api.commonApiPost("/egov-mdms-service/v1/_search", {}, data, false, true).then(function(res2) {
+				let arr = _.get(res2, "MdmsRes." + module + "." + master) ||[];
 				// let temp=[];
 				if(arr && arr.length) {
 
 
-					self.props.setFormData(formData);
+					// self.props.setFormData(formData);
 					for(let i=0; i<arr.length; i++) {
 						// arr[i].modify = true;
 						// temp.push(_.pick(arr[i],headers));
@@ -97,10 +97,15 @@ class MdmsComponent extends Component {
 						valueList: arr
 					})
 				}
+
 				res.jsonPath="MdmsMetadata.masterData"
 				self.setState({
 					item:res
 				})
+
+
+				formData.MasterMetaData.masterData=arr;
+				console.log(formData);
 				self.props.setFormData(formData);
 				self.props.setLoadingStatus('hide');
 			}).catch(function(err) {
@@ -154,8 +159,8 @@ class MdmsComponent extends Component {
 	render() {
 		let {item, isBtnDisabled, valueList} = this.state;
 		let {handleChange, setDisabled, addOrUpdate} = this;
-		console.log(item);
-		console.log(valueList);
+		// console.log(item);
+		// console.log(valueList);
 		return (
 			<div style={{margin:"20px"}}>
 				{

@@ -157,7 +157,7 @@ class UiMultiFieldAddToTable extends Component {
     let {valueList,item}=this.props;
     let formData = _.cloneDeep(this.props.formData);
     let localFormData = _.cloneDeep(this.state.formData);
-    let myTableInParent = _.get(formData, this.props.item.jsonPath);
+    let myTableInParent = _.get(formData, this.props.item.jsonPath) ||_.get(formData, "MasterMetaData.masterData");
     let stateFormDataTable = _.get(localFormData, this.props.item.jsonPath);
     let indexes;
 

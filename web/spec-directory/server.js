@@ -213,9 +213,7 @@ for(module in configData){
 	            	}
 
 	            	console.log(result);
-					*/
-	            }
-	            
+					*/	            
 	        
 	        }
 		})

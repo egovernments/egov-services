@@ -792,6 +792,7 @@ paths:
         description: >-
           Create a new miscellaneous material receipt note.
         parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialReceipt
             in: body
             description: Details for the new material receipt.
@@ -816,6 +817,7 @@ paths:
         summary: Update existing Miscellaneous Material Receipts.
         description: Existing miscellaneous material receipt notes can be updated except the mrn number.
         parameters:
+          - $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/parameters/tenantId"
           - name: materialReceipt
             in: body
             description: Details for the new material receipts.

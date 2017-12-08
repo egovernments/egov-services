@@ -78,8 +78,12 @@ var dat ={
       "useTimestamp":true,
       "objectName":"scheduleOfRates",
       "injectData": [{
-      "jsonPath": "scheduleOfRates[0].marketRates[0].tenantId",
-      "value": localStorage.getItem("tenantId")
+        "jsonPath": "scheduleOfRates[0].sorRates[0].tenantId",
+        "value": localStorage.getItem("tenantId")
+      }],
+      "injectData": [{
+        "jsonPath": "scheduleOfRates[0].marketRates[0].tenantId",
+        "value": localStorage.getItem("tenantId")
       }],
       "idJsonPath":"scheduleOfRates[0].code",
       "groups":[
@@ -335,6 +339,10 @@ var dat ={
       "objectName":"scheduleOfRates",
       "injectData": [{
       "jsonPath": "scheduleOfRates[0].sorRates[0].tenantId",
+      "value": localStorage.getItem("tenantId")
+      }],
+      "injectData": [{
+      "jsonPath": "scheduleOfRates[0].marketRates[0].tenantId",
       "value": localStorage.getItem("tenantId")
       }],
       "groups":[

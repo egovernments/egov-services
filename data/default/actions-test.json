@@ -10075,6 +10075,19 @@
     "enabled": true,
     "serviceCode": "PERF_ASSESSMENT_DASHBOARD",
     "code": "null",    "path": "Performance Assessment.Dashboard.PerfAssmtKpiValueCompareSearch"
+  },
+  {
+    "id": 1414,
+    "name": "Update Summon",
+    "url": "/lcms-services/legalcase/summon/_update",
+    "displayName": "Update Summon",
+    "orderNumber": 1,
+    "queryParams": null,
+    "parentModule": "513",
+    "enabled": false,
+    "serviceCode": "CASE",
+    "code": "null",    
+    "path": ""
   }
   
 ]

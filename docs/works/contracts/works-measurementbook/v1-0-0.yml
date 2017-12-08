@@ -684,10 +684,10 @@ definitions:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/works/contracts/works-workorder/v1-0-0.yml#/definitions/LOAMeasurementSheet"
         auditDetails:
           $ref: "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/common/contracts/v1-0-0.yml#/definitions/AuditDetails"
-      deleted:
-        type: boolean
-        description: Boolean value to identify whether the object is deleted or not from UI.
-        default: false
+        deleted:
+          type: boolean
+          description: Boolean value to identify whether the object is deleted or not from UI.
+          default: false
       required:
         - tenantId
         - quantity
@@ -888,4 +888,5 @@ tags:
     description: APIs required for Measurement Book.
   - name: Contractor Bill
     description: APIs required for Contractor Bill.
+
 

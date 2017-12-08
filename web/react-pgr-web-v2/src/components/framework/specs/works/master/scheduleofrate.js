@@ -275,7 +275,7 @@ var dat ={
             "fields":[
                {
                   "name":"code",
-                  "jsonPath":"scheduleCategory.code",
+                  "jsonPath":"scheduleOfRates[0].scheduleCategory.code",
                   "label":"works.create.scheduleCategory",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
                   "type":"text",
@@ -289,7 +289,7 @@ var dat ={
                },
                {
                   "name":"code",
-                  "jsonPath":"code",
+                  "jsonPath":"scheduleOfRates[0].code",
                   "label":"works.create.code",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
                   "type":"text",
@@ -302,7 +302,7 @@ var dat ={
                },
                {
                   "name":"description",
-                  "jsonPath":"description",
+                  "jsonPath":"scheduleOfRates[0].description",
                   "label":"works.create.description",
                   "pattern":"[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+",
                   "type":"textarea",
@@ -315,7 +315,7 @@ var dat ={
                },
                {
                   "name":"code",
-                  "jsonPath":"uom.code",
+                  "jsonPath":"scheduleOfRates[0].uom.code",
                   "label":"works.create.uom",
                   "pattern":"",
                   "type":"text",
@@ -328,6 +328,119 @@ var dat ={
                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code"
                }
             ]
+         },
+         {
+           "name":"rateDetails",
+           "label":"works.create.group.title.rateDetails",
+           "fields": [
+             {
+               "name": "",
+               "label": "",
+               "type": "multiFieldAddToTable",
+               "jsonPath": "scheduleOfRates[0].sorRates",
+               "header": [
+                 {
+                   "label": "Rate"
+                 },
+                 {
+                   "label": "FromDate"
+                 },
+                 {
+                   "label": "ToDate"
+                 }
+               ],
+               "values": [
+                 {
+                   "name":"rate",
+                   "jsonPath":"scheduleOfRates[0].sorRates[0].rate",
+                   "label":"Rate",
+                   "type":"text",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"FromDate",
+                   "jsonPath":"scheduleOfRates[0].sorRates[0].fromDate",
+                   "label":"FromDate",
+                   "type":"datePicker",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"ToDate",
+                   "jsonPath":"scheduleOfRates[0].sorRates[0].toDate",
+                   "label":"ToDate",
+                   "type":"datePicker",
+                   "isRequired":false,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 }
+               ]
+             }
+           ]
+         },
+         {
+           "name":"marketRateDetails",
+           "label":"works.create.group.title.marketRateDetails",
+           "fields": [
+             {
+               "name": "",
+               "label": "",
+               "type": "multiFieldAddToTable",
+               "jsonPath": "scheduleOfRates[0].marketRates",
+               "header": [{
+                   "label": "Rate"
+                 }, {
+                   "label": "FromDate"
+                 },
+                 {
+                   "label": "ToDate"
+                 }],
+               "values": [
+                 {
+                   "name":"rate",
+                   "jsonPath":"scheduleOfRates[0].marketRates[0].rate",
+                   "label":"Rate",
+                   "type":"text",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"FromDate",
+                   "jsonPath":"scheduleOfRates[0].marketRates[0].fromDate",
+                   "label":"FromDate",
+                   "type":"datePicker",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"ToDate",
+                   "jsonPath":"scheduleOfRates[0].marketRates[0].toDate",
+                   "label":"ToDate",
+                   "type":"datePicker",
+                   "isRequired":false,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 }
+               ]
+             }
+           ]
          }
       ],
       "tenantIdRequired":true,
@@ -352,7 +465,7 @@ var dat ={
             "fields":[
                {
                   "name":"code",
-                  "jsonPath":"scheduleCategory.code",
+                  "jsonPath":"scheduleOfRates[0].scheduleCategory.code",
                   "label":"works.create.code",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
                   "type":"text",
@@ -366,7 +479,7 @@ var dat ={
                },
                {
                   "name":"code",
-                  "jsonPath":"code",
+                  "jsonPath":"scheduleOfRates[0].code",
                   "label":"works.create.code",
                   "pattern":"[a-zA-Z0-9-\\\\]+",
                   "type":"text",
@@ -379,7 +492,7 @@ var dat ={
                },
                {
                   "name":"description",
-                  "jsonPath":"description",
+                  "jsonPath":"scheduleOfRates[0].description",
                   "label":"works.create.description",
                   "pattern":"[0-9a-zA-Z_@./#&+-/!(){}\",^$%*|=;:<>?`~ ]+",
                   "type":"textarea",
@@ -392,7 +505,7 @@ var dat ={
                },
                {
                   "name":"code",
-                  "jsonPath":"uom.code",
+                  "jsonPath":"scheduleOfRates[0].uom.code",
                   "label":"works.create.code",
                   "pattern":"",
                   "type":"text",
@@ -405,6 +518,119 @@ var dat ={
                   "url":"/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code"
                }
             ]
+         },
+         {
+           "name":"rateDetails",
+           "label":"works.create.group.title.rateDetails",
+           "fields": [
+             {
+               "name": "",
+               "label": "",
+               "type": "multiFieldAddToTable",
+               "jsonPath": "scheduleOfRates[0].sorRates",
+               "header": [
+                 {
+                   "label": "Rate"
+                 },
+                 {
+                   "label": "FromDate"
+                 },
+                 {
+                   "label": "ToDate"
+                 }
+               ],
+               "values": [
+                 {
+                   "name":"rate",
+                   "jsonPath":"scheduleOfRates[0].sorRates[0].rate",
+                   "label":"Rate",
+                   "type":"text",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"FromDate",
+                   "jsonPath":"scheduleOfRates[0].sorRates[0].fromDate",
+                   "label":"FromDate",
+                   "type":"datePicker",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"ToDate",
+                   "jsonPath":"scheduleOfRates[0].sorRates[0].toDate",
+                   "label":"ToDate",
+                   "type":"datePicker",
+                   "isRequired":false,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 }
+               ]
+             }
+           ]
+         },
+         {
+           "name":"marketRateDetails",
+           "label":"works.create.group.title.marketRateDetails",
+           "fields": [
+             {
+               "name": "",
+               "label": "",
+               "type": "multiFieldAddToTable",
+               "jsonPath": "scheduleOfRates[0].marketRates",
+               "header": [{
+                   "label": "Rate"
+                 }, {
+                   "label": "FromDate"
+                 },
+                 {
+                   "label": "ToDate"
+                 }],
+               "values": [
+                 {
+                   "name":"rate",
+                   "jsonPath":"scheduleOfRates[0].marketRates[0].rate",
+                   "label":"Rate",
+                   "type":"text",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"FromDate",
+                   "jsonPath":"scheduleOfRates[0].marketRates[0].fromDate",
+                   "label":"FromDate",
+                   "type":"datePicker",
+                   "isRequired":true,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 },
+                 {
+                   "name":"ToDate",
+                   "jsonPath":"scheduleOfRates[0].marketRates[0].toDate",
+                   "label":"ToDate",
+                   "type":"datePicker",
+                   "isRequired":false,
+                   "isDisabled":false,
+                   "maxLength":128,
+                   "minLength":1,
+                   "patternErrorMsg":""
+                 }
+               ]
+             }
+           ]
          }
       ],
       "url":"/works-masters/v1/scheduleofrates/_update",

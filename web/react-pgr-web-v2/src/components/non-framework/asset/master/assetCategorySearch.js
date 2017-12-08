@@ -158,7 +158,7 @@ class assetCategorySearch extends Component {
         if(queryFilter == ''){
           queryFilter = `%20%40.${key}%3D%3D%27${formData[key]}%27`
         }else {
-            queryFilter+=`%27%20%26%26%20%40.${key}%3D%3D%27${formData[key]}%27`;
+            queryFilter+=`%20%26%26%20%40.${key}%3D%3D%27${formData[key]}%27`;
         }
       }
     }

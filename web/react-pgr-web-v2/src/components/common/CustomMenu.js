@@ -211,9 +211,9 @@ const menuConvention={
 "Water Charge.Wcms Reports.Connection Status Report":"/wcms-connection/report/_connectionstatusreport",
 
 // "Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/create/asset/createAssetCategroy",
-"Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/search/asset/createAssetCategroy/view",
-"Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/search/asset/createAssetCategroy/view",
-"Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/search/asset/createAssetCategroy/update",
+"Asset Management.Asset Masters.Asset Category.CreateAssetCategory":"/non-framework/asset/master/assetCategorySearch",
+"Asset Management.Asset Masters.Asset Category.ViewAssetCategory":"/non-framework/asset/master/assetCategorySearch",
+"Asset Management.Asset Masters.Asset Category.ModifyAssetCategory":"/non-framework/asset/master/assetCategorySearch",
 "Asset Management.Asset Masters.Immovable Asset.CreateImmovableAsset":"/non-framework/asset/master/assetImmovableCreate",
 "Asset Management.Asset Masters.Immovable Asset.ViewImmovableAsset":"/search/asset/assetImmovable/view",
 "Asset Management.Asset Masters.Immovable Asset.ModifyImmovableAsset":"/search/asset/assetImmovable/update",

@@ -26,6 +26,8 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import static org.springframework.util.StringUtils.isEmpty;
+
 @Repository
 public abstract class JdbcRepository {
     public static final Map<String, List<String>> allInsertFields = new HashMap<String, List<String>>();
@@ -358,11 +360,11 @@ public abstract class JdbcRepository {
         String updateQuery = null;
 
         if (operation.equalsIgnoreCase("ADD")) {
-            updateQuery = "update " + tableName + " set " + addColumn(columns, "+") + " where id = '" + id + "' and tenantid = " + tenantId ;
+            updateQuery = "update " + tableName + " set " + addColumn(columns, "+") + " where id = '" + id + "' and tenantid = " + tenantId;
         }
 
         if (operation.equalsIgnoreCase("SUBTRACT")) {
-            updateQuery = "update " + tableName + " set " + addColumn(columns, "-") + " where id = '" + "' and tenantid = " + tenantId ;
+            updateQuery = "update " + tableName + " set " + addColumn(columns, "-") + " where id = '" + "' and tenantid = " + tenantId;
         }
 
         try {
@@ -664,38 +666,85 @@ public abstract class JdbcRepository {
 
     }
 
-	@Transactional
-	public int changeStatus(Object ob, String status, String tableName, String columnName) {
-		StringBuilder updateQuery = new StringBuilder();
-		Map<String, Object> paramValues = new HashMap<>();
-		try {
-			String obName = ob.getClass().getSimpleName();
-			List<String> identifierFields = allIdentitiferFields.get(obName);
-			if (!status.isEmpty()) {
-				updateQuery.append("UPDATE " + tableName + " set " + columnName + "='" + status.toString() + "'");
-				for (String s : identifierFields) {
-					if (s.equalsIgnoreCase("tenantId")) {
-						updateQuery.append(" and ");
-						updateQuery.append(s).append("=:").append(s);
-						// implement fallback here
-						paramValues.put(s, getValue(getField(ob, s), ob));
-						continue;
-					}
-					if (getValue(getField(ob, s), ob) != null) {
-						updateQuery.append(" where ");
-						updateQuery.append(s).append("=:").append(s);
-						paramValues.put(s, getValue(getField(ob, s), ob));
-					}
-				}
+    @Transactional
+    public int changeStatus(Object ob, String status, String tableName, String columnName) {
+        StringBuilder updateQuery = new StringBuilder();
+        Map<String, Object> paramValues = new HashMap<>();
+        try {
+            String obName = ob.getClass().getSimpleName();
+            List<String> identifierFields = allIdentitiferFields.get(obName);
+            if (!status.isEmpty()) {
+                updateQuery.append("UPDATE " + tableName + " set " + columnName + "='" + status.toString() + "'");
+                for (String s : identifierFields) {
+                    if (s.equalsIgnoreCase("tenantId")) {
+                        updateQuery.append(" and ");
+                        updateQuery.append(s).append("=:").append(s);
+                        // implement fallback here
+                        paramValues.put(s, getValue(getField(ob, s), ob));
+                        continue;
+                    }
+                    if (getValue(getField(ob, s), ob) != null) {
+                        updateQuery.append(" where ");
+                        updateQuery.append(s).append("=:").append(s);
+                        paramValues.put(s, getValue(getField(ob, s), ob));
+                    }
+                }
 
-			}
-			int count=namedParameterJdbcTemplate.update(updateQuery.toString(), paramValues);
-			return count;
-		} catch (DataIntegrityViolationException ex) {
-			throw new CustomException("error", ex.getMessage());
-		} catch (Exception e) {
-			throw new CustomException("error", e.getMessage());
-		}
-	}
-	
+            }
+            int count = namedParameterJdbcTemplate.update(updateQuery.toString(), paramValues);
+            return count;
+        } catch (DataIntegrityViolationException ex) {
+            throw new CustomException("error", ex.getMessage());
+        } catch (Exception e) {
+            throw new CustomException("error", e.getMessage());
+        }
+    }
+
+
+    @Transactional
+    public int updateColumn(Object ob, String tableName, HashMap<String, String> columns, String condition) {
+        StringBuilder updateQuery = new StringBuilder();
+        Map<String, Object> paramValues = new HashMap<>();
+        try {
+            String obName = ob.getClass().getSimpleName();
+            List<String> identifierFields = allIdentitiferFields.get(obName);
+            updateQuery.append("UPDATE " + tableName + " set ");
+
+            if (columns.size() > 0) {
+                Iterator iterator = columns.entrySet().iterator();
+                while (iterator.hasNext()) {
+                    String query = "";
+                    Map.Entry pair = (Map.Entry) iterator.next();
+                     query = query + (pair.getKey() + " = " + pair.getValue() + ",");
+                    updateQuery.append(query.substring(0, query.length() - 1));
+                }
+            }
+
+            if (isEmpty(condition)) {
+                for (String s : identifierFields) {
+                    if (s.equalsIgnoreCase("tenantId")) {
+                        updateQuery.append(" and ");
+                        updateQuery.append(s).append("=:").append(s);
+                        // implement fallback here
+                        paramValues.put(s, getValue(getField(ob, s), ob));
+                        continue;
+                    }
+                    if (getValue(getField(ob, s), ob) != null) {
+                        updateQuery.append(" where ");
+                        updateQuery.append(s).append("=:").append(s);
+                        paramValues.put(s, getValue(getField(ob, s), ob));
+                    }
+                }
+            } else {
+                updateQuery.append(condition);
+            }
+
+            int count = namedParameterJdbcTemplate.update(updateQuery.toString(), paramValues);
+            return count;
+        } catch (DataIntegrityViolationException ex) {
+            throw new CustomException("error", ex.getMessage());
+        } catch (Exception e) {
+            throw new CustomException("error", e.getMessage());
+        }
+    }
 }

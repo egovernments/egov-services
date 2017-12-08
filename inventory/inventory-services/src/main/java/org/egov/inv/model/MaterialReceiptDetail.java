@@ -251,7 +251,7 @@ public class MaterialReceiptDetail {
      * @return acceptedQty
      **/
     @ApiModelProperty(value = "The quantity of the material accepted from the total quantity of materials received. All the quantity needs to be saved in the database in the based UOM. Accepted quantity cannot be greater than the received quantity. This field also contains Opening Quantity when the receipt purpose is OPENING BALANCE.")
-
+    @NotNull
     @Valid
 
     public BigDecimal getAcceptedQty() {

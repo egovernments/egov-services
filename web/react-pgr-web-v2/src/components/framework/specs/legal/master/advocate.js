@@ -2955,13 +2955,14 @@ var dat ={
             "patternErrMsg": ""
           },
           {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].advocates[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "reasonOfTermination",
+            jsonPath: "agencies[0].advocates[0].reasonOfTermination",
+            label: "advocates.create.reasonOfTerminationOrDeactivation",
+            type: "textarea",
+            fullWidth: true,
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
         ]
       },
@@ -3044,13 +3045,14 @@ var dat ={
             "patternErrMsg": ""
           },
           {
-            "name": "reasonOfTerminationOrDeactivation",
-            "jsonPath": "agencies[0].reasonOfTerminationOrDeactivation",
-            "label": "advocates.create.reasonOfTerminationOrDeactivation",
-            "type": "textArea",
-            "isRequired": false,
-            "isDisabled": false,
-            "patternErrorMsg": ""
+            name: "reasonOfTermination",
+            jsonPath: "agencies[0].reasonOfTermination",
+            label: "advocates.create.reasonOfTerminationOrDeactivation",
+            type: "textarea",
+            fullWidth: true,
+            isRequired: true,
+            isDisabled: true,
+            patternErrorMsg: ""
           }
         ]
       },

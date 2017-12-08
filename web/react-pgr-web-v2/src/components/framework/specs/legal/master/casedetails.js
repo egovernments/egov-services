@@ -36,15 +36,15 @@ var dat = {
                 name: "CaseTypeDetails",
                 label: "legal.create.group.title.CaseTypeDetails",
                 fields: [
-                {
-            name: "orignatedBYULB",
-            jsonPath: "cases[0].summon.orignatedBYULB",
-            label: "legal.create.orignatedBYULB",
-            type: "checkbox",
-            isRequired: false,
-            isDisabled: false,
-            patternErrorMsg: ""
-          },
+                    {
+                        name: "orignatedBYULB",
+                        jsonPath: "cases[0].summon.isUlbinitiated",
+                        label: "legal.create.orignatedBYULB",
+                        type: "checkbox",
+                        isRequired: false,
+                        isDisabled: false,
+                        patternErrorMsg: ""
+                    },
                     {
                         name: "referenceNo",
                         jsonPath: "cases[0].summon.summonReferenceNo",

@@ -270,9 +270,10 @@ class UiWindowForm extends Component {
                             }else{
                         this.props.item.style = {"display":"table-row"};
                             }
+                           
                return (
                    <tr style={item.style}>
-                      <td>{item.hidePrimaryRecord ? i : ++i}</td>
+                      <td>{item.hidePrimaryRecord ? i: i+1}</td>
                       {item.tableConfig.rows.map((value, idx) => {
                         return <td>{_.get(v, value.displayField)}</td>;
                         //this.renderFields(_.get(v,value.displayField),value.type)}</td>);

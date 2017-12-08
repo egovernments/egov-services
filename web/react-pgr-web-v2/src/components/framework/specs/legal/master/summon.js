@@ -226,7 +226,7 @@ var dat = {
         fields: [
           {
             name: "orignatedBYULB",
-            jsonPath: "summons[0].orignatedBYULB",
+            jsonPath: "summons[0].isUlbinitiated",
             label: "legal.create.orignatedBYULB",
             type: "checkbox",
             isRequired: false,

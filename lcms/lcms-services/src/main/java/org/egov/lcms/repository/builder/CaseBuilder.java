@@ -93,20 +93,26 @@ public class CaseBuilder {
 
 		if (caseSearchCriteria.getAdvocateName() != null && !caseSearchCriteria.getAdvocateName().isEmpty()) {
 			List<String> caseCodes = AdvocateRepository.getcaseCodeByAdvocateCode(caseSearchCriteria.getAdvocateName());
-
+				
 			int count = 1;
 			String code = "";
-			for (String caseCode : caseCodes) {
-				if (count < caseCodes.size())
-					code = code + "'" + caseCode + "',";
-				else
-					code = code + "'" + caseCode + "'";
-				count++;
+			
+			if (caseCodes.size() > 0) {
+				
+				for (String caseCode : caseCodes) {
+					if (count < caseCodes.size())
+						code = code + "'" + caseCode + "',";
+					else
+						code = code + "'" + caseCode + "'";
+					count++;
 
+				}
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" code IN(" + code + ")");
+			} else {
+				isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
+				selectQuery.append(" code IN('" + code + "')");
 			}
-			isAppendAndClause = addAndClauseIfRequired(isAppendAndClause, selectQuery);
-			selectQuery.append(" code IN(" + code + ")");
-
 		}
 
 		if (caseSearchCriteria.getFromDate() != null) {

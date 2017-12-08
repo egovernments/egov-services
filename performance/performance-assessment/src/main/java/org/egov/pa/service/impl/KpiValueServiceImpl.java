@@ -38,7 +38,7 @@ public class KpiValueServiceImpl implements KpiValueService {
 	@Autowired
 	@Qualifier("kpiMasterRepo")
 	private KpiMasterRepository kpiMasterRepository;
-
+	
 	@Override
 	public KPIValueRequest createKpiValue(KPIValueRequest kpiValueRequest) {
 		kpiValueDetailListUpdate(kpiValueRequest);

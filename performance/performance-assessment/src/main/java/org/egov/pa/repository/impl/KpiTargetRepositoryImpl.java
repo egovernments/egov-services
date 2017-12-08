@@ -1,15 +1,18 @@
 package org.egov.pa.repository.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.egov.pa.model.Department;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiTarget;
 import org.egov.pa.repository.KpiTargetRepository;
 import org.egov.pa.repository.builder.PerformanceAssessmentQueryBuilder;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper;
 import org.egov.pa.repository.rowmapper.PerformanceAssessmentRowMapper.KPITargetRowMapper;
+import org.egov.pa.validator.RestCallService;
 import org.egov.pa.web.contract.KPITargetGetRequest;
 import org.egov.pa.web.contract.KPITargetRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +41,9 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
 
     @Autowired
     private PerformanceAssessmentQueryBuilder queryBuilder;
+    
+    @Autowired
+    private RestCallService restCallService; 
 	
 	@Override
 	public void persistNewTarget(KPITargetRequest kpiTargetRequest) {
@@ -58,13 +64,32 @@ public class KpiTargetRepositoryImpl implements KpiTargetRepository {
     	KPITargetRowMapper mapper = new PerformanceAssessmentRowMapper().new KPITargetRowMapper(); 
     	List<KpiTarget> list = jdbcTemplate.query(query, preparedStatementValues.toArray(), mapper);
     	Map<String, KPI> kpiMap = mapper.kpiMap; 
+    	List<Department> deptList = restCallService.getDepartmentForId("mh");
+    	Map<String, Department> deptMap = new HashMap<>(); 
+    	sortDepartmentToMap(deptList, deptMap);
     	if(null != list && list.size() > 0) {
     		for(KpiTarget target : list) { 
     			KPI kpi = kpiMap.get(target.getKpiCode());
+    			try {
+    				arrangeDeptToKpi(kpi, deptMap);
+    			}
+    			catch (Exception e) {
+    				log.error("Encountered an exception while adding Department : " + e);
+    			}
     			target.setKpi(kpi); 
     		}
     	}
 		return list;
+	}
+	
+	private void arrangeDeptToKpi(KPI kpi, Map<String, Department> deptMap) {
+		kpi.setDepartment(deptMap.get(String.valueOf(kpi.getDepartmentId())));
+	}
+	
+	private void sortDepartmentToMap(List<Department> deptList, Map<String, Department> deptMap) { 
+		for(Department dept : deptList) { 
+			deptMap.put(dept.getId(), dept); 
+		}
 	}
 	
 

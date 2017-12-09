@@ -104,7 +104,9 @@ public enum ErrorCode {
 	EXP_DATE_GE_PODATE("exp.date.ge.podate",
 			  "Expected delivery date should be greater than or eqaul to po date  {0} ",
 			  "Expected delivery date should be greater than or eqaul to po date  {0}."),
-
+	ORDQTY_LE_INDQTY("ordqty.le.indqty",
+			  "order quantity should be less than or equal to indent quantity {0} ",
+			  "order quantity should be less than or equal to indent quantity {0}."),
 	QUANTITY_GT_ZERO("quantity.greaterthan.zero",
 			"the field {0} should have a value greater than zero. ",
 			"the value {1} for the field {0} is not valid, it should be greater than zero."), 

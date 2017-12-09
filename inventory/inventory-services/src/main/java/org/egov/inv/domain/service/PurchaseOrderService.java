@@ -237,6 +237,17 @@ public class PurchaseOrderService extends DomainService {
             		errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString());
                 }
             	}
+            	if (null != eachPurchaseOrder.getPurchaseOrderDetails()){
+            for (PurchaseOrderDetail poDetail :eachPurchaseOrder.getPurchaseOrderDetails())
+            {
+            	if(null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()){
+            		int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
+            		if(res == 1){
+                	errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString());
+            	}
+            	}
+            }
+            }
             }
             
         } catch (IllegalArgumentException e) {

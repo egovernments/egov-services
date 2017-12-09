@@ -100,7 +100,7 @@ class kpivalues  extends Component{
        });
 
 
-        url = "egf-master/financialyears/_search";
+        url = "egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master";
         query = [];
        Api.commonApiPost(url, query, {}, false, false).then(function(res){
            if (res) {

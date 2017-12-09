@@ -44,6 +44,10 @@ public class DataUploadService {
 	private DataUploadUtils dataUploadUtils;
 	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
+	
+	public void getFile(RequestInfo requestInfo, String fileStoreId){
+		
+	}
 
 	public UploaderResponse doInterServiceCall(MultipartFile file, String moduleName,
 			String defName, RequestInfo requestInfo) throws Exception {

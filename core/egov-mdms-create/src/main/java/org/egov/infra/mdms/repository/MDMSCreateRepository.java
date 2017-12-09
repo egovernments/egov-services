@@ -34,9 +34,12 @@ public class MDMSCreateRepository {
 	
 	@Value("${reload.path.host}")
 	private String reloadPathHost;
-		
+			
 	@Value("${reload.path.endpoint}")
 	private String reloadPathEndpoint;
+	
+	@Value("${reloadobj.path.endpoint}")
+	private String reloadobjPathEndpoint;
 	
 	public Object get(String uri, String userName, String password){
 		Object result = null;
@@ -109,6 +112,18 @@ public class MDMSCreateRepository {
 			 restTemplate.postForObject(uri.toString(), requestInfo, String.class);
 		}catch(Exception e){
 			logger.error("Exception while updating cache for: "+filePath+" = ",e);
+		}
+	}
+	
+	public void updateCache(String request){
+		StringBuilder uri = new StringBuilder();
+		uri.append(reloadPathHost)
+		   .append(reloadobjPathEndpoint);
+		logger.info("URI: "+uri.toString());
+		try{
+			 restTemplate.postForObject(uri.toString(), request, String.class);
+		}catch(Exception e){
+			logger.error("Exception while updating cache for data: "+request+" = ",e);
 		}
 	}
 

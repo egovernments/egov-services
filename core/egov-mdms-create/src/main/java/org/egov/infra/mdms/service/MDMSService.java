@@ -46,6 +46,12 @@ public class MDMSService {
 	@Value("${git.repo.path}")
 	private String gitRepoPath;
 	
+	@Value("${reload.enabled}")
+	private Boolean isReloadEnabled;
+	
+	@Value("${filepath.reload}")
+	private Boolean isFilePathReload;
+	
 	@Autowired
 	private MDMSCreateRepository mDMSCreateRepository;
 	
@@ -102,12 +108,23 @@ public class MDMSService {
 		endTime = new Date().getTime();
 		logger.info("Time taken for this step: "+(endTime - startTime)+"ms");
 		
-		/*startTime = new Date().getTime();
-		updateCache(gitRepoPath + filePath, 
-				mDMSCreateRequest.getMasterMetaData().getTenantId(), 
-				mDMSCreateRequest.getRequestInfo());
-		endTime = new Date().getTime();
-		logger.info("Time taken for this step: "+(endTime - startTime)+"ms"); */
+		if(isReloadEnabled){
+			if(isFilePathReload){
+				logger.info("Filepath reload....");
+				startTime = new Date().getTime();
+				updateCache(gitRepoPath + filePath, 
+						mDMSCreateRequest.getMasterMetaData().getTenantId(), 
+						mDMSCreateRequest.getRequestInfo());
+				endTime = new Date().getTime();
+				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
+			}else{
+				logger.info("Object reload....");
+				startTime = new Date().getTime();
+				updateCache(content);
+				endTime = new Date().getTime();
+				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
+			}
+		}
 
 		logger.info("Find your changes at: "+ MDMSConstants.FINAL_FILE_PATH_APPEND + filePath);
 		
@@ -134,6 +151,11 @@ public class MDMSService {
 	public void updateCache(String filePath, String tenantId, RequestInfo requestInfo){
 		logger.info("Updating cache......");
 		mDMSCreateRepository.updateCache(filePath, tenantId, requestInfo);
+	}
+	
+	public void updateCache(String content){
+		logger.info("Updating cache......");
+		mDMSCreateRepository.updateCache(content);
 	}
 	
 	public String getContentForPush(Object fileContents, 

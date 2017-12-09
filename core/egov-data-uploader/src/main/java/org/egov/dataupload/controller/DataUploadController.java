@@ -56,20 +56,20 @@ public class DataUploadController {
 		}
 	}
 	
-/*	@PostMapping("/_upload")
+	@PostMapping("/_upload")
 	@ResponseBody
 	public ResponseEntity<?> upload(@RequestBody @Valid UploaderRequest uploaderRequest) throws Exception {
 		try {
 				logger.info("Inside controller");
 				RequestInfo requestInfo = RequestInfo.builder().action("create").apiId("dataup").authToken("867ab332-5a3e-4b13-8c71-338bfeb80e44")
 				.did("1").msgId("20170310130900").ts(10032017L).build();
-				UploaderResponse result = dataUploadService.doInterServiceCall(inputFile, moduleName, defName, requestInfo);
+				UploaderResponse result = null;
 				result.setResponseInfo(responseInfoFactory.createResponseInfoFromRequestInfo(requestInfo, true));
 				return new ResponseEntity<>(result, HttpStatus.OK);
 		} catch(Exception e){
 			throw e;
 		}
-	} */
+	}
 
 		
 }

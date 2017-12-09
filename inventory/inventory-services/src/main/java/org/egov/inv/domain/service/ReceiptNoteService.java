@@ -362,10 +362,17 @@ public class ReceiptNoteService extends DomainService {
             throw new CustomException("inv.0024", "Received quantity should be greater than zero at row " + i);
         }
 
-        if (!isEmpty(materialReceiptDetail.getAcceptedQty()) && materialReceiptDetail.getAcceptedQty().doubleValue() <= 0) {
-            throw new CustomException("inv.0025", "Accepted quantity should be greater than zero at row " + i);
+        if (isEmpty(materialReceiptDetail.getAcceptedQty())) {
+            throw new CustomException("inv.0025", "Accepted quantity is required at row " + i);
         }
 
+        if (!isEmpty(materialReceiptDetail.getAcceptedQty()) && materialReceiptDetail.getAcceptedQty().doubleValue() <= 0) {
+            throw new CustomException("inv.0033", "Accepted quantity should be greater than zero at row " + i);
+        }
+
+        if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()){
+            throw new CustomException("inv.0034", "Accepted quantity should be less than or equal to receiving quantity at row " + i);
+        }
     }
 
     private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId, int i) {

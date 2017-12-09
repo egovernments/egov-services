@@ -79,10 +79,14 @@ public class MDMSService {
 				Map<String, Object> map = jsonReader.readValue(new InputStreamReader(jsonFileData.openStream()), Map.class);
 				kafkaTemplate.send(reloadTopic, map);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
+				throw new CustomException("mdms_invalid_file_path","invalid file path");
 			}
 
 
+	}
+	
+	public void reloadObj(Map<String, Object> map) {
+		kafkaTemplate.send(reloadTopic, map);
 	}
 }

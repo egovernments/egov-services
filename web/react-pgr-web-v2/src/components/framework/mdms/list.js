@@ -12,8 +12,10 @@ class MdmsComponent extends Component {
     	this.state = {
     		item: {},
     		isBtnDisabled: false,
-    		valueList: []
-    	};
+        valueList: [],
+          pathname:""
+      };
+      this.initData=this.initData.bind(this);
 	}
 
 	// checkColumnName(headers,column)
@@ -33,7 +35,21 @@ class MdmsComponent extends Component {
 		//URL path to this page /mdms/:module/:master
 		//Get all the fields and pass to table component directly
 		//After successful edit/create, make call to mdms _create/_update
-		let self = this;
+	
+		// Api.commonApiPost("/specs/yaml/_search", {
+		// 	module,
+		// 	master
+		// }).then(function(res) {
+    //
+		// }).catch(function(err) {
+		// 	self.props.setLoadingStatus('hide');
+		// 	self.props.toggleSnackbarAndSetText(true, err.message);
+		// })
+		this.initData();
+  }
+  
+  initData(){
+    let self = this;
 		let module = this.props.match.params.module;
 		let master = this.props.match.params.master;
 
@@ -107,7 +123,8 @@ class MdmsComponent extends Component {
 
 				res.jsonPath="MdmsMetadata.masterData"
 				self.setState({
-					item:res
+          item:res,
+          pathname:self.props.history.location.pathname
 				})
 
 
@@ -124,16 +141,13 @@ class MdmsComponent extends Component {
 			self.props.toggleSnackbarAndSetText(true, err.message);
 		})
 
-		// Api.commonApiPost("/specs/yaml/_search", {
-		// 	module,
-		// 	master
-		// }).then(function(res) {
-    //
-		// }).catch(function(err) {
-		// 	self.props.setLoadingStatus('hide');
-		// 	self.props.toggleSnackbarAndSetText(true, err.message);
-		// })
-	}
+  }
+
+componentWillReceiveProps(nextProps) {
+    if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
+      this.initData();
+    }
+  }
 
 	handleChange=(e, property)=> {
 		let {formData} = this.props;
@@ -207,6 +221,9 @@ const mapDispatchToProps = dispatch => ({
   },
   setLoadingStatus: (loadingStatus) => {
     dispatch({type: "SET_LOADING_STATUS", loadingStatus});
+  },
+   handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg)=>{
+    dispatch({type:"HANDLE_CHANGE_FRAMEWORK", property,value: e.target.value, isRequired, pattern, requiredErrMsg, patternErrMsg});
   }
 })
 

@@ -204,14 +204,19 @@ public class ReceiptNoteService extends DomainService {
         setUomAndQuantity(tenantId, materialReceiptDetail);
         convertRate(tenantId, materialReceiptDetail);
 
-        materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
-                materialReceiptDetailAddnlInfo -> {
-                    materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
-                    if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
-                        materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+        Material material = materialService.fetchMaterial(tenantId, materialReceiptDetail.getMaterial().getCode(), new RequestInfo());
+        if (false == material.getSerialNumber() && false == material.getShelfLifeControl() && false == material.getLotControl()) {
+            materialReceiptDetail.setReceiptDetailsAddnInfo(Collections.EMPTY_LIST);
+        } else {
+            materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
+                    materialReceiptDetailAddnlInfo -> {
+                        materialReceiptDetailAddnlInfo.setId(receiptNoteRepository.getSequence("seq_materialreceiptdetailaddnlinfo"));
+                        if (isEmpty(materialReceiptDetailAddnlInfo.getTenantId())) {
+                            materialReceiptDetailAddnlInfo.setTenantId(tenantId);
+                        }
                     }
-                }
-        );
+            );
+        }
     }
 
     private void setUomAndQuantity(String tenantId, MaterialReceiptDetail materialReceiptDetail) {
@@ -370,7 +375,7 @@ public class ReceiptNoteService extends DomainService {
             throw new CustomException("inv.0033", "Accepted quantity should be greater than zero at row " + i);
         }
 
-        if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()){
+        if (materialReceiptDetail.getAcceptedQty().longValue() > materialReceiptDetail.getReceivedQty().longValue()) {
             throw new CustomException("inv.0034", "Accepted quantity should be less than or equal to receiving quantity at row " + i);
         }
     }

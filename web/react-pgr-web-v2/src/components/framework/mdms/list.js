@@ -45,13 +45,14 @@ class MdmsComponent extends Component {
 		// 	self.props.setLoadingStatus('hide');
 		// 	self.props.toggleSnackbarAndSetText(true, err.message);
 		// })
-		this.initData();
+		this.initData(this.props);
   }
   
-  initData(){
+  initData(props){
     let self = this;
-		let module = this.props.match.params.module;
-		let master = this.props.match.params.master;
+    
+		let module = props.match.params.module;
+		let master = props.match.params.master;
 
 
 		let data = {
@@ -75,7 +76,7 @@ class MdmsComponent extends Component {
 			}
 		};
 
-		self.props.setLoadingStatus('loading');
+		props.setLoadingStatus('loading');
 
 		//Fetch specs from specs service
 
@@ -124,28 +125,28 @@ class MdmsComponent extends Component {
 				res.jsonPath="MdmsMetadata.masterData"
 				self.setState({
           item:res,
-          pathname:self.props.history.location.pathname
+          pathname:props.history.location.pathname
 				})
 
 
 				formData.MasterMetaData.masterData=arr;
 				console.log(formData);
-				self.props.setFormData(formData);
-				self.props.setLoadingStatus('hide');
+				props.setFormData(formData);
+				props.setLoadingStatus('hide');
 			}).catch(function(err) {
-				self.props.setLoadingStatus('hide');
-				self.props.toggleSnackbarAndSetText(true, err.message);
+				props.setLoadingStatus('hide');
+				props.toggleSnackbarAndSetText(true, err.message);
 			})
 		}).catch(function(err) {
-			self.props.setLoadingStatus('hide');
-			self.props.toggleSnackbarAndSetText(true, err.message);
+			props.setLoadingStatus('hide');
+			props.toggleSnackbarAndSetText(true, err.message);
 		})
 
   }
 
 componentWillReceiveProps(nextProps) {
     if (this.state.pathname && this.state.pathname!=nextProps.history.location.pathname) {
-      this.initData();
+      this.initData(nextProps);
     }
   }
 

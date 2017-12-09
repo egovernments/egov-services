@@ -1030,19 +1030,7 @@
     "code": "null",
     "path": "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register Search"
   },
-    {
-    "id": 1214,
-    "name": "Stamp/Register Search",
-    "url": "/lcms-services/legalcase/register/_search",
-    "displayName": "Stamp/Register",
-    "orderNumber": 0,
-    "queryParams": null,
-    "parentModule": "517",
-    "enabled": true,
-    "serviceCode": "REGISTER",
-    "code": "null",
-    "path": "Legal Case Management.Legal Case Masters.Stamp/Register.Stamp/Register"
-  },
+    
   {
     "id": 1006,
     "name": "Side",

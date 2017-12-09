@@ -189,6 +189,9 @@ public class MDMSService {
 			masterData.addAll(mDMSCreateRequest.getMasterMetaData().getMasterData());
 	    	result = buildPushContent(moduleContentJson, mDMSCreateRequest, masterData);
 		}else{
+		     if(null == masterData){
+					throw new CustomException("400","No master data available for this master");
+		    }
 			List<String> keys = mDMSUtils.getUniqueKeys(mDMSCreateRequest, moduleDataMap);
 			if(null == keys){
 				throw new CustomException("400", "There are duplicate mdms-configs for this master: "+mDMSCreateRequest.getMasterMetaData().getMasterName());

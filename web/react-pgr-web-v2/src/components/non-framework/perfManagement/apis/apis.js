@@ -42,8 +42,9 @@ export const fetchULBsAPI = (cb) => {
 }
 
 export const fetchFinancialYearsAPI = (cb) => {
-    Api.commonApiPost("egf-master/financialyears/_search", [], {}, false, false).then(function(res) {
-        if (res.financialYears) {
+    Api.commonApiPost("egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master", [], {}, false, false).then(function(res) {
+        console.log(res)
+        if (res.MdmsRes && res.MdmsRes['egf-master']) {
             cb (null, res)
         } else {
             cb (null, null)
@@ -54,8 +55,8 @@ export const fetchFinancialYearsAPI = (cb) => {
 }
 
 export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
-    Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18,2018-19&ulbs=default&kpiCodes=PFP`, [], {}, false, true).then(function(res) {
-    // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
+    // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18,2018-19&ulbs=default&kpiCodes=PFP`, [], {}, false, true).then(function(res) {
+    Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(function(res) {
         if (res && res.ulbs) {
             cb (null, res)
         } else {
@@ -92,7 +93,7 @@ export const parseFinancialYearResponse = (res) => {
     //         name: finYear.finYearRange
     //     }
     // });
-    return jp.query(res, '$.financialYears[*]').filter((el) => {
+    return jp.query(res, '$.MdmsRes["egf-master"].financialYears[*]').filter((el) => {
         if (new Date(el.startingDate) <= Date.now()) {
             return el
         }

@@ -11973,9 +11973,21 @@
       "actioncode": "",
       "tenantid": "default"
     },
+{
+      "rolecode": "SUPERUSER",
+      "actionid": 1210,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "EMPLOYEE ADMIN",
+      "actionid": 1210,
+      "actioncode": "",
+      "tenantid": "default"
+    },
     {
       "rolecode": "EMPLOYEE",
-      "actionid": 1211,
+      "actionid": 1210,
       "actioncode": "",
       "tenantid": "default"
     },
@@ -11985,7 +11997,7 @@
       "actioncode": "",
       "tenantid": "default"
     },
-    {
+	{
       "rolecode": "SUPERUSER",
       "actionid": 1213,
       "actioncode": "",

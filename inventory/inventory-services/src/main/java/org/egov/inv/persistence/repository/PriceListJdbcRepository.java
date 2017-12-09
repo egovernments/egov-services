@@ -82,6 +82,11 @@ public class PriceListJdbcRepository extends JdbcRepository {
         this.namedParameterJdbcTemplate = namedParameterJdbcTemplate;
     }
 
+    public Long getTenderQty(String supplier, String material, String rateType) {
+    	String tenderQtyQuery = "select quantity from pricelist where active=true and deleted=false and material ='" + material + "' and pricelist in (select id from pricelist where ratetype='" + rateType + "' and supplier='" + supplier + "') and extract(epoch from now())::bigint * 1000 between agreementstartdate::bigint and agreementenddate::bigint";
+    	Long tenderQty=namedParameterJdbcTemplate.queryForObject(tenderQtyQuery, new HashMap(), Long.class);
+    	return tenderQty;
+    }
 
     public List <PriceList> searchPriceList(PriceListSearchRequest priceListSearchRequest)
    	{
@@ -259,6 +264,15 @@ public class PriceListJdbcRepository extends JdbcRepository {
             params.append("rateContractNumber =:rateContractNumber");
             paramValues.put("rateContractNumber", priceListSearchRequest.getRateContractNumber().toUpperCase());
         }
+        
+		if (priceListSearchRequest.getRateContractNumbers() != null) {
+			if (params.length() > 0) {
+				params.append(" and ");
+			}
+			params.append("rateContractNumber in(:rateContractNumbers) ");
+			paramValues.put("rateContractNumbers",
+					new ArrayList<String>(Arrays.asList(priceListSearchRequest.getRateContractNumbers().split(","))));
+		}
         
         if (priceListSearchRequest.getAgreementNumber()!=null) {
         	if (params.length() > 0) {

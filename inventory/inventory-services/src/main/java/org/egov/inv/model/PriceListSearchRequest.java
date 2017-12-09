@@ -1,8 +1,5 @@
 package org.egov.inv.model;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -29,6 +26,8 @@ public class PriceListSearchRequest {
     private String rateType;
 
     private String rateContractNumber;
+    
+    private String rateContractNumbers;
 
     private String agreementNumber;
     

@@ -28,6 +28,8 @@ public class PriceListDetailsEntity {
     
     private String material;
     
+    private String priceList;
+    
     private Double ratePerUnit;
     
     private Double quantity;

@@ -27,6 +27,7 @@ import org.egov.inv.model.PurchaseOrderDetailSearch;
 import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
+import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,6 +44,9 @@ public class PurchaseOrderService extends DomainService {
 
     @Autowired
     private PurchaseOrderDetailService purchaseOrderDetailService;
+    
+    @Autowired
+    private PriceListJdbcRepository priceListjdbcRepository;
 
     @Autowired
     private IndentService indentService;
@@ -339,6 +343,8 @@ public class PurchaseOrderService extends DomainService {
                         purchaseOrderDetail.setMaterial(indentDetail.getMaterial());
                         purchaseOrderDetail.setUom(indentDetail.getMaterial().getPurchaseUom());
                         purchaseOrderDetail.setIndentQuantity(pendingQty);
+                        purchaseOrderDetail.setTenderQuantity(new BigDecimal(priceListjdbcRepository.getTenderQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
+                        purchaseOrderDetail.setUsedQuantity(new BigDecimal(purchaseOrderRepository.getUsedQty(purchaseOrder.getSupplier().getCode(), indentDetail.getMaterial().getCode(), purchaseOrder.getRateType().name())));
                         purchaseOrderDetail.setIndentNumber(indent.getIndentNumber());
                         purchaseOrderDetail.setTenantId(tenantId);
                         buildPurchaseOrderIndentDetail(purchaseOrderRequest, purchaseOrder, indentDetail,

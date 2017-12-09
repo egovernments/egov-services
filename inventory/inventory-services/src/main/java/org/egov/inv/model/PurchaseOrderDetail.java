@@ -61,6 +61,9 @@ public class PurchaseOrderDetail {
     @JsonProperty("tenderQuantity")
     private BigDecimal tenderQuantity = null;
     
+    @JsonProperty("usedQuantity")
+    private BigDecimal usedQuantity = null;
+    
     @JsonProperty("tenderAvailableQuantity")
     private BigDecimal tenderAvailableQuantity = null;
      
@@ -377,6 +380,27 @@ public class PurchaseOrderDetail {
         this.tenderAvailableQuantity = tenderAvailableQuantity;
         return this;
       }
+      
+      public PurchaseOrderDetail usedQuantity(BigDecimal usedQuantity) {
+          this.usedQuantity = usedQuantity;
+          return this;
+        }
+
+         /**
+         * temporary field used to show used quantity.   
+         * @return usedQuantity
+        **/
+        @ApiModelProperty(value = "temporary field used to show used quantity.")
+
+        @Valid
+
+        public BigDecimal getUsedQuantity() {
+          return usedQuantity;
+        }
+
+        public void setUsedQuantity(BigDecimal usedQuantity) {
+          this.usedQuantity = usedQuantity;
+        }
 
        /**
        * temporary field used to show tender available quantity. If rate type is tender, then show tender quantity which are already used in purchase orders.   
@@ -449,13 +473,14 @@ public class PurchaseOrderDetail {
                 Objects.equals(this.indentNumber, purchaseOrderDetail.indentNumber) &&
                 Objects.equals(this.indentQuantity, purchaseOrderDetail.indentQuantity) &&
                 Objects.equals(this.tenderQuantity, purchaseOrderDetail.tenderQuantity) &&
+                Objects.equals(this.usedQuantity, purchaseOrderDetail.usedQuantity) &&
                 Objects.equals(this.tenderAvailableQuantity, purchaseOrderDetail.tenderAvailableQuantity) &&
                 Objects.equals(this.purchaseIndentDetails, purchaseOrderDetail.purchaseIndentDetails);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, tenantId, material, purchaseOrderNumber, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, indentNumber,indentQuantity, tenderQuantity, tenderAvailableQuantity, purchaseIndentDetails);
+        return Objects.hash(id, tenantId, material, purchaseOrderNumber, orderNumber, uom, priceList, orderQuantity, receivedQuantity, unitPrice, description, indentNumber,indentQuantity, tenderQuantity, usedQuantity, tenderAvailableQuantity, purchaseIndentDetails);
     }
 
     @Override
@@ -477,6 +502,7 @@ public class PurchaseOrderDetail {
         sb.append("    indentNumber: ").append(toIndentedString(indentNumber)).append("\n");
         sb.append("    indentQuantity: ").append(toIndentedString(indentQuantity)).append("\n");
         sb.append("    tenderQuantity: ").append(toIndentedString(tenderQuantity)).append("\n");
+        sb.append("    usedQuantity: ").append(toIndentedString(usedQuantity)).append("\n");
         sb.append("    tenderAvailableQuantity: ").append(toIndentedString(tenderAvailableQuantity)).append("\n");
         sb.append("    purchaseIndentDetails: ").append(toIndentedString(purchaseIndentDetails)).append("\n");
         sb.append("}");

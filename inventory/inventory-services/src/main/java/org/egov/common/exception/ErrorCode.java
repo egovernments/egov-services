@@ -101,6 +101,9 @@ public enum ErrorCode {
 	PO_DATE_LE_TODAY("po.date.le.today",
 			  "Purchase Order Date Should Be Less Than Or Equal To Today Date  {0} ",
 			  "Purchase Order Date Should Be Less Than Or Equal To Today Date  {0}."),
+	EXP_DATE_GE_PODATE("exp.date.ge.podate",
+			  "Expected delivery date should be greater than or eqaul to po date  {0} ",
+			  "Expected delivery date should be greater than or eqaul to po date  {0}."),
 	; 
 
 	 

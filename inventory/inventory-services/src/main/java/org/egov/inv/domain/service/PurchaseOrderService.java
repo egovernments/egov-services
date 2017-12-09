@@ -228,6 +228,11 @@ public class PurchaseOrderService extends DomainService {
             	if(eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis){
             		errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString());
                 }
+            	if(null != eachPurchaseOrder.getExpectedDeliveryDate()){
+            	if(eachPurchaseOrder.getExpectedDeliveryDate()  < eachPurchaseOrder.getPurchaseOrderDate()){
+            		errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString());
+                }
+            	}
             }
             
         } catch (IllegalArgumentException e) {

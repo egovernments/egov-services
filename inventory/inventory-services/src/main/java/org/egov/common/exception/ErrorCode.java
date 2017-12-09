@@ -97,10 +97,13 @@ public enum ErrorCode {
 			  "Receipt Date Should Be Less Than Or Equal To Today Date  {0}."),
 	EXP_DATE_GE_TODAY("exp.date.ge.today",
 			  "Expiry Date Should Be Greater Than Or Equal To Today Date  {0} ",
-			  "Expiry Date Should Be Greater Than Or Equal To Today Date  {0}.")
+			  "Expiry Date Should Be Greater Than Or Equal To Today Date  {0}."),
+	PO_DATE_LE_TODAY("po.date.le.today",
+			  "Purchase Order Date Should Be Less Than Or Equal To Today Date  {0} ",
+			  "Purchase Order Date Should Be Less Than Or Equal To Today Date  {0}."),
 	; 
 
-	
+	 
 	private final String code;
 	private final String message;
 	private final String description;

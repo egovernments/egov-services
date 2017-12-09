@@ -201,20 +201,21 @@ public class PurchaseOrderService extends DomainService {
     }
 
     private void validate(List<PurchaseOrder> pos, String method) {
+		InvalidDataException errors = new InvalidDataException();
 
         try {
             switch (method) {
 
                 case Constants.ACTION_CREATE: {
                     if (pos == null) {
-                        throw new InvalidDataException("purchaseOrders", ErrorCode.NOT_NULL.getCode(), null);
+                    	errors.addDataError(ErrorCode.NOT_NULL.getCode(),"purchaseOrders", null);
                     }
                 }
                 break;
 
                 case Constants.ACTION_UPDATE: {
                     if (pos == null) {
-                        throw new InvalidDataException("purchaseOrders", ErrorCode.NOT_NULL.getCode(), null);
+                       errors.addDataError(ErrorCode.NOT_NULL.getCode(),"purchaseOrders",  null);
                     }
                 }
                 break;
@@ -225,13 +226,15 @@ public class PurchaseOrderService extends DomainService {
                         
             for(PurchaseOrder eachPurchaseOrder : pos){
             	if(eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis){
-            		throw new CustomException("purchaseOrderDate", "PurchaseOrder Date must be less than or equal to Today's date");
+            		errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString());
                 }
             }
             
         } catch (IllegalArgumentException e) {
 
         }
+    	if (errors.getValidationErrors().size() > 0)
+			throw errors;
 
     }
 

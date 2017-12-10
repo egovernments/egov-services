@@ -466,6 +466,19 @@ public class EstimateValidator {
                 messages.put(Constants.KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER,
                         Constants.MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER);
 
+            if(detailedEstimate.getWorkValue() != null && detailedEstimate.getWorkValue().compareTo(BigDecimal.ZERO) <= 0)
+                messages.put(Constants.KEY_WORK_VALUE_INVALID,
+                        Constants.MESSAGE_WORK_VALUE_INVALID);
+
+            if(detailedEstimate.getEstimateValue() != null && detailedEstimate.getEstimateValue().compareTo(BigDecimal.ZERO) <= 0)
+                messages.put(Constants.KEY_ESTIMATE_VALUE_INVALID,
+                        Constants.MESSAGE_ESTIMATE_VALUE_INVALID);
+
+            if(detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
+                    detailedEstimate.getEstimateValue().compareTo(detailedEstimate.getWorkValue()) < 0)
+                messages.put(Constants.KEY_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE,
+                        Constants.MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE);
+
         }
         if (messages != null && !messages.isEmpty())
             throw new CustomException(messages);
@@ -595,6 +608,7 @@ public class EstimateValidator {
     public void validateOverheads(final DetailedEstimate detailedEstimate, final RequestInfo requestInfo,
             Map<String, String> messages) {
         Overhead overhead = null;
+        BigDecimal totalOverAmount = BigDecimal.ZERO;
         for (final EstimateOverhead estimateOverhead : detailedEstimate.getEstimateOverheads()) {
 
             if (estimateOverhead != null) {
@@ -605,13 +619,19 @@ public class EstimateValidator {
                 }
                 if (estimateOverhead.getAmount().compareTo(BigDecimal.ZERO) <= 0) {
                     messages.put(Constants.KEY_ESIMATE_OVERHEAD_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
-                }
+                } else
+                    totalOverAmount = totalOverAmount.add(estimateOverhead.getAmount());
 
                 if(overhead != null && overhead.getCode().equals(estimateOverhead.getOverhead().getCode())) {
-                    messages.put(Constants.KEY_ESIMATE_OVERHEAD_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_AMOUNT);
+                    messages.put(Constants.KEY_ESIMATE_OVERHEAD_UNIQUE, Constants.MESSAGE_ESIMATE_OVERHEAD_UNIQUE);
                 }
                 overhead = estimateOverhead.getOverhead();
             }
+        }
+
+        if(detailedEstimate.getWorkValue() != null && detailedEstimate.getEstimateValue() != null &&
+                totalOverAmount != null && totalOverAmount.add(detailedEstimate.getWorkValue()).compareTo(detailedEstimate.getEstimateValue()) != 0 ) {
+            messages.put(Constants.KEY_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT, Constants.MESSAGE_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT);
         }
     }
 
@@ -704,12 +724,19 @@ public class EstimateValidator {
                 }
             }
 
-            if(measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) > 1) {
+            if(measurementQuantitySum.compareTo(BigDecimal.valueOf(activity.getQuantity())) == 0) {
                 messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER,
                         Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER);
             }
 
         }
+
+
+        ////TODO Sum of all the activity value should be equal to Estimate value
+       /* if(detailedEstimate.getEstimateValue() != null && activity.getEstimateRate() != null && detailedEstimate.getEstimateValue().compareTo(BigDecimal.valueOf(activity.getQuantity())) == 0)
+            messages.put(Constants.KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER,
+                    Constants.MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER);*/
+
 
     }
 
@@ -993,14 +1020,13 @@ public class EstimateValidator {
                 Constants.ABSTRACT_ESTIMATE_REQUIRED_APPCONFIG, detailedEstimate.getTenantId(), requestInfo,
                 CommonConstants.MODULENAME_WORKS);
         boolean abstractEstimateRequired = false;
-        if (responseJSONArray != null && responseJSONArray.isEmpty()) {
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
             Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
             if (jsonMap.get("value").equals("Yes")) {
                 abstractEstimateRequired = true;
             } else
                 abstractEstimateRequired = false;
         }
-
         return abstractEstimateRequired;
     }
 

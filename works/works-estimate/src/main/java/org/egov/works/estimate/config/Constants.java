@@ -43,6 +43,9 @@ public class Constants {
     public static final String KEY_ESIMATE_OVERHEAD_AMOUNT = "ESIMATE_OVERHEAD_AMOUNT";
     public static final String MESSAGE_ESIMATE_OVERHEAD_AMOUNT = "Overhead amount is required for estimate";
 
+    public static final String KEY_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT = "ESIMATE_OVERHEAD_WORKVALUE_AMOUNT";
+    public static final String MESSAGE_ESIMATE_OVERHEAD_WORKVALUE_AMOUNT = "Sum of workvalue and overhead amount should be equal to estimate amount";
+
     public static final String KEY_ESIMATE_OVERHEAD_UNIQUE = "ESIMATE_OVERHEAD_UNIQUE";
     public static final String MESSAGE_ESIMATE_OVERHEAD_UNIQUE = "Duplicate overheads for estimate";
 
@@ -81,6 +84,15 @@ public class Constants {
 
     public static final String KEY_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "INVALID_ESTIMATE_DATE_SPILLOVER";
     public static final String MESSAGE_FUTUREDATE_ESTIMATEDATE_SPILLOVER = "Estimate Date cannot be future date";
+
+    public static final String KEY_WORK_VALUE_INVALID = "WORK_VALUE_INVALID";
+    public static final String MESSAGE_WORK_VALUE_INVALID = "Work value should be greater than zero";
+
+    public static final String KEY_ESTIMATE_VALUE_INVALID = "ESTIMATE_VALUE_INVALID";
+    public static final String MESSAGE_ESTIMATE_VALUE_INVALID = "Estimate value should be greater than zero";
+
+    public static final String KEY_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE = "WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE";
+    public static final String MESSAGE_WORK_VALUE_GREATERTHAN_ESTIMATE_VALUE = "Work value should not be greater estimate value";
 
     public static final String KEY_INVALID_ESTIMATNUMBER_SPILLOVER = "INVALID_ESTIMATNUMBER_SPILLOVER";
     public static final String MESSAGE_INVALID_ESTIMATNUMBER_SPILLOVER = "Duplicate estimate number";

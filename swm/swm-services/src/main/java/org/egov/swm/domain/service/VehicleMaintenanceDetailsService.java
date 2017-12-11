@@ -187,7 +187,7 @@ public class VehicleMaintenanceDetailsService {
             final Long vehicleMaintenanceAfter) {
         final VehicleScheduleSearch vehicleScheduleSearch = new VehicleScheduleSearch();
         vehicleScheduleSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-        vehicleScheduleSearch.setVehicle(vehicleMaintenanceDetail.getVehicle());
+        vehicleScheduleSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
 
         final Pagination<VehicleSchedule> vehicleSchedulePage = vehicleScheduleService.search(vehicleScheduleSearch);
 
@@ -211,8 +211,8 @@ public class VehicleMaintenanceDetailsService {
                 final Pagination<Route> routePage = routeService.search(routeSearch);
 
                 if (!routePage.getPagedData().isEmpty()) {
-                    final Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledFrom()
-                            - vehicleSchedule.getScheduledTo();
+                    final Long dateDifferenceInMilliseconds = vehicleSchedule.getScheduledTo()
+                            - vehicleSchedule.getScheduledFrom();
                     final Long days = TimeUnit.DAYS.convert(dateDifferenceInMilliseconds, TimeUnit.MILLISECONDS);
                     totalDays = totalDays + days;
                     final Double totalKilometersOnRoute = days * routePage.getPagedData().get(0).getDistance();

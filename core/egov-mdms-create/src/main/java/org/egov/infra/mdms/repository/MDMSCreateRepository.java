@@ -9,7 +9,6 @@ import java.util.WeakHashMap;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.egov.common.contract.request.RequestInfo;
-import org.egov.mdms.model.MDMSReloadReq;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -116,15 +115,15 @@ public class MDMSCreateRepository {
 		}
 	}
 	
-	public void updateCache(MDMSReloadReq mDMSReloadReq){
+	public void updateCache(String reloadReq){
 		StringBuilder uri = new StringBuilder();
 		uri.append(reloadPathHost)
 		   .append(reloadobjPathEndpoint);
 		logger.info("URI: "+uri.toString());
 		try{
-			 restTemplate.postForObject(uri.toString(), mDMSReloadReq, String.class);
+			 restTemplate.postForObject(uri.toString(), reloadReq, String.class);
 		}catch(Exception e){
-			logger.error("Exception while updating cache for data: "+mDMSReloadReq+" = ",e);
+			logger.error("Exception while updating cache for data: "+reloadReq+" = ",e);
 		}
 	}
 

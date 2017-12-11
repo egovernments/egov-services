@@ -14,7 +14,6 @@ import org.egov.infra.mdms.repository.MDMSCreateRepository;
 import org.egov.infra.mdms.utils.MDMSConstants;
 import org.egov.infra.mdms.utils.MDMSUtils;
 import org.egov.mdms.model.MDMSCreateRequest;
-import org.egov.mdms.model.MDMSReloadReq;
 import org.egov.mdms.model.MasterMetaData;
 import org.egov.tracer.model.CustomException;
 import org.slf4j.Logger;
@@ -120,11 +119,11 @@ public class MDMSService {
 				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
 			}else{
 				logger.info("Object reload....");
-				MDMSReloadReq mDMSReloadReq = new MDMSReloadReq();
-				mDMSReloadReq.setRequestInfo(mDMSCreateRequest.getRequestInfo());
-				mDMSReloadReq.setMdmsReq(content);
+				DocumentContext docContext = JsonPath.parse(MDMSConstants.MDMS_RELOAD_RES);
+				docContext.put("$", "RequestInfo", mDMSCreateRequest.getRequestInfo());
+				docContext.put("$", "MdmsReq", content);
 				startTime = new Date().getTime();
-				updateCache(mDMSReloadReq);
+				updateCache(docContext.jsonString().toString());
 				endTime = new Date().getTime();
 				logger.info("Time taken for this step: "+(endTime - startTime)+"ms");	
 			}
@@ -157,9 +156,10 @@ public class MDMSService {
 		mDMSCreateRepository.updateCache(filePath, tenantId, requestInfo);
 	}
 	
-	public void updateCache(MDMSReloadReq mDMSReloadReq){
+	public void updateCache(String reloadReq){
 		logger.info("Updating cache......");
-		mDMSCreateRepository.updateCache(mDMSReloadReq);
+		logger.info("ReloadReq: "+reloadReq);
+		mDMSCreateRepository.updateCache(reloadReq);
 	}
 	
 	public String getContentForPush(Object fileContents, 

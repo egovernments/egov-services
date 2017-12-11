@@ -2,6 +2,7 @@ package org.egov.inv.domain.service;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -17,6 +18,7 @@ import org.egov.inv.model.Indent;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
+import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.PurchaseIndentDetail;
@@ -28,6 +30,7 @@ import org.egov.inv.model.PurchaseOrderDetailSearch;
 import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
+import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
 import org.egov.tracer.model.CustomException;
@@ -81,6 +84,9 @@ public class PurchaseOrderService extends DomainService {
 
     @Value("${usetotal.indent.quantity}")
     private boolean isTotalIndentQuantityUsedInPo;
+    
+    @Autowired
+	private MaterialReceiptJdbcRepository jdbcRepository;
 
     private String INDENT_MULTIPLE = "Multiple";
 
@@ -94,6 +100,7 @@ public class PurchaseOrderService extends DomainService {
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
             	purchaseOrder.setStatus(StatusEnum.APPROVED);
+				String purchaseOrderNumber = appendString(purchaseOrder);
                 purchaseOrder.setId(sequenceNos.get(i));
 
                 if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {
@@ -102,7 +109,7 @@ public class PurchaseOrderService extends DomainService {
                     purchaseOrder.setPurchaseType(PurchaseTypeEnum.INDENT);
 
                 //TODO: move to id-gen with format <ULB short code>/<Store Code>/<fin. Year>/<serial No.>
-                purchaseOrder.setPurchaseOrderNumber(sequenceNos.get(i));
+				purchaseOrder.setPurchaseOrderNumber(purchaseOrderNumber);
                 i++;
                 int j = 0;
                 purchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_CREATE));
@@ -447,5 +454,15 @@ public class PurchaseOrderService extends DomainService {
         poIndentDetail.setIndentDetail(indentDetail);
         purchaseOrderDetail.addPurchaseIndentDetailsItem(poIndentDetail);
     }
+    
+    private String appendString(PurchaseOrder poOrder) {
+		Calendar cal = Calendar.getInstance();
+		int year = cal.get(Calendar.YEAR);
+		String code = "PO/";
+		int id = Integer.valueOf(jdbcRepository.getSequence(poOrder));
+		String idgen = String.format("%05d", id);
+		String purchaseOrderNumber = code + idgen + "/" + year;
+		return purchaseOrderNumber;
+	}
 
 }

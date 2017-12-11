@@ -330,7 +330,7 @@ public class ReceiptNoteService extends DomainService {
             validateMaterial(materialReceiptDetail, tenantId, i, errors);
             validateQuantity(materialReceiptDetail, i, errors);
             if (materialReceiptDetail.getReceiptDetailsAddnInfo().size() > 0) {
-                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), tenantId, i, errors);
+                validateDetailsAddnInfo(materialReceiptDetail.getReceiptDetailsAddnInfo(), materialReceiptDetail.getAcceptedQty().longValue(), tenantId, i, errors);
             }
         }
     }
@@ -408,11 +408,13 @@ public class ReceiptNoteService extends DomainService {
 
     }
 
-    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId, int i, InvalidDataException errors) {
+    private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, Long acceptedQuantity, String tenantId, int i, InvalidDataException errors) {
         Long currentDate = currentEpochWithoutTime() + (24 * 60 * 60) - 1;
-
+        Long totalQuantity = 0L;
         for (MaterialReceiptDetailAddnlinfo addnlinfo : materialReceiptDetailAddnlinfos) {
             {
+                totalQuantity = totalQuantity + addnlinfo.getQuantity().longValue();
+
                 if (null != addnlinfo.getExpiryDate()
                         && currentDate > addnlinfo.getExpiryDate()) {
 
@@ -421,6 +423,10 @@ public class ReceiptNoteService extends DomainService {
 
                 }
             }
+        }
+
+        if (totalQuantity.longValue() != acceptedQuantity.longValue()) {
+            errors.addDataError(ErrorCode.FIELD_DOESNT_MATCH.getCode(), "Accepted Quantity", "Sum of quantity of additional details");
         }
     }
 

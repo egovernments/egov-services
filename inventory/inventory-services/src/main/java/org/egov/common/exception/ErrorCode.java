@@ -154,7 +154,10 @@ public enum ErrorCode {
             "the field {0} must be greater than {1} at row {1}"),
     QTY_LE_SCND_ROW("quantity.lesser.other",
             "the field {0} must be less than or equal to {1} at row {1}",
-            "the field {0} must be less than or equal to at row {1}");
+            "the field {0} must be less than or equal to at row {1}"),
+    FIELD_DOESNT_MATCH("field.doesnt.match",
+            "field {0} doesnt match with {1} field",
+            "field {0} doesnt match with {1} field");
 
 
     private final String code;

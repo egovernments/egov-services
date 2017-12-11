@@ -50,7 +50,8 @@ public class CommonConstants {
     public static final String ASSET_DETAILES_REQUIRED_APPCONFIG = "ASSET_MANDATORY";
     public static final String FINANCIAL_INTEGRATION_KEY = "Financial_Integration_Required";
     public static final String SPILLOVER_WORKFLOW_MANDATORY = "Spillover_Workflow_Mandatory";
-
+    public static final String BUDGET_CHECK_REQUIRED = "Budget_Check_Required";
+    
     public static  final String TENANT_MODULENAME = "tenant";
     public static  final String TENANT_OBJECTNAME = "tenants";
 

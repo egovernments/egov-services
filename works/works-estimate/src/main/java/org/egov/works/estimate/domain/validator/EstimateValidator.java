@@ -59,6 +59,9 @@ public class EstimateValidator {
 
     public void validateEstimates(AbstractEstimateRequest abstractEstimateRequest, Boolean isNew) {
         Map<String, String> messages = new HashMap<>();
+        if(abstractEstimateRequest.getAbstractEstimates().size() > 1) {
+            validateDuplicateAbstractEstimateNumber(messages,abstractEstimateRequest);
+        }
         for (final AbstractEstimate estimate : abstractEstimateRequest.getAbstractEstimates()) {
             validateEstimateDetails(estimate, messages);
             validatePMCData(messages, estimate);
@@ -72,6 +75,8 @@ public class EstimateValidator {
             if (estimate.getSpillOverFlag())
                 validateDuplicateWINCode(messages, estimate);
             
+            if (!messages.isEmpty())
+                throw new CustomException(messages);
             if (StringUtils.isNotBlank(estimate.getAbstractEstimateNumber()))
                 validateAbstractEstimateNumber(abstractEstimateRequest.getRequestInfo(), isNew, messages, estimate);
             if (StringUtils.isNotBlank(estimate.getAdminSanctionNumber()))
@@ -89,9 +94,10 @@ public class EstimateValidator {
         int size = estimate.getAbstractEstimateDetails().size();
         boolean validProjectCodes = true;
         for (int i = 0; i<= size-1; i++) {
-            for(int j = 0; j<= size-1; j++) {
-                if(i != j && estimate.getAbstractEstimateDetails().get(i).getProjectCode().getCode().equalsIgnoreCase(estimate.getAbstractEstimateDetails().get(j).getProjectCode().getCode())) {
+            for(int j = i+1; j<= size-1; j++) {
+                if(estimate.getAbstractEstimateDetails().get(i).getProjectCode().getCode().equalsIgnoreCase(estimate.getAbstractEstimateDetails().get(j).getProjectCode().getCode())) {
                     validProjectCodes = false;
+                    break;
                 }
             }
         }
@@ -99,6 +105,24 @@ public class EstimateValidator {
         if(!validProjectCodes) {
             messages.put(Constants.KEY_DUPLICATE_WINCODES,
                     Constants.MESSAGE_DUPLICATE_WINCODES);
+        }
+    }
+    
+    private void validateDuplicateAbstractEstimateNumber(Map<String, String> messages, final AbstractEstimateRequest abstractEstimateRequest) {
+        int size = abstractEstimateRequest.getAbstractEstimates().size();
+        boolean validAbstractEstimateNumbers = true;
+        for (int i = 0; i<= size-1; i++) {
+            for(int j = i+1; j<= size-1; j++) {
+                if(abstractEstimateRequest.getAbstractEstimates().get(i).getAbstractEstimateNumber().equalsIgnoreCase(abstractEstimateRequest.getAbstractEstimates().get(j).getAbstractEstimateNumber())) {
+                    validAbstractEstimateNumbers = false;
+                    break;
+                }
+            }
+        }
+
+        if(!validAbstractEstimateNumbers) {
+            messages.put(Constants.KEY_DUPLICATE_ABSTRACTESTIMATENUMBERS,
+                    Constants.MESSAGE_DUPLICATE_ABSTRACTESTIMATENUMBERS);
         }
     }
 

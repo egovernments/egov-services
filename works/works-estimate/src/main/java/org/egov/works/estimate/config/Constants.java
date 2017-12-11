@@ -361,6 +361,8 @@ public class Constants {
     public static final String KEY_DUPLICATE_WINCODES = "KEY_DUPLICATE_WINCODES";
     public static final String MESSAGE_DUPLICATE_WINCODES = "Please provide Unique work identification numbers in abstract estimate details";
 
+    public static final String KEY_DUPLICATE_ABSTRACTESTIMATENUMBERS = "works.abstractestimate.duplicate.abstractestimatenumber";
+    public static final String MESSAGE_DUPLICATE_ABSTRACTESTIMATENUMBERS = "Please provide Unique abstract estimate numbers";
 
     
 }

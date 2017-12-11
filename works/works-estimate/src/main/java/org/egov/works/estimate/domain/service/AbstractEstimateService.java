@@ -96,7 +96,8 @@ public class AbstractEstimateService {
                 }
             }
 
-            // TODO: do budget appropriation if spillover
+            Boolean isBudgetCheckReq = isBudgetCheckRequired(CommonConstants.BUDGET_CHECK_REQUIRED,
+                    abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
             
             if (!estimate.getSpillOverFlag()) {
                 String abstractEstimateNumber = idGenerationRepository.generateAbstractEstimateNumber(
@@ -125,6 +126,8 @@ public class AbstractEstimateService {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate));
                     abstractEstimateDetails.setProjectCode(projectCode);
+                    if(isBudgetCheckReq)
+                        setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
                 }
             }
             else {
@@ -154,6 +157,18 @@ public class AbstractEstimateService {
         }
         return isSpilloverWFReq;
     }
+    
+    private Boolean isBudgetCheckRequired(String keyName, RequestInfo requestInfo, final String tenantId) {
+        Boolean isBudgetCheckReq = false;
+        JSONArray responseJSONArray = estimateUtils.getMDMSData(CommonConstants.APPCONFIGURATION_OBJECT, CommonConstants.CODE,
+                keyName, tenantId, requestInfo, CommonConstants.MODULENAME_WORKS);
+        if (responseJSONArray != null && !responseJSONArray.isEmpty()) {
+            Map<String, Object> jsonMap = (Map<String, Object>) responseJSONArray.get(0);
+            if (jsonMap.get("value").equals("Yes"))
+                isBudgetCheckReq = true;
+        }
+        return isBudgetCheckReq;
+    }
 
     public AbstractEstimateResponse update(AbstractEstimateRequest abstractEstimateRequest) {
         validator.validateEstimates(abstractEstimateRequest, false);
@@ -176,25 +191,21 @@ public class AbstractEstimateService {
 
             Boolean isFinIntReq = isConfigRequired(CommonConstants.FINANCIAL_INTEGRATION_KEY,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
+            
+            Boolean isBudgetCheckReq = isBudgetCheckRequired(CommonConstants.BUDGET_CHECK_REQUIRED,
+                    abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
-            // TODO: check if budget check required
             if (isFinIntReq && estimate.getStatus().toString()
                     .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
-                for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
-                    setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
-
-                }
-            }
-
-            if ((estimate.getStatus().toString()
-                    .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) || (estimate.getStatus().toString()
-                            .equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString()) && estimate.getSpillOverFlag())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate));
                     abstractEstimateDetails.setProjectCode(projectCode);
+                    if(isBudgetCheckReq)
+                        setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
                 }
             }
+
         }
         kafkaTemplate.send(propertiesManager.getWorksAbstractEstimateCreateAndUpdateTopic(), abstractEstimateRequest);
         final AbstractEstimateResponse response = new AbstractEstimateResponse();

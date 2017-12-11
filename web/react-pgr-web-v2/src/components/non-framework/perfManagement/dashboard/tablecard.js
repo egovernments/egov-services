@@ -1,26 +1,24 @@
 import React, { Component } from 'react';
 import {
-    BarChart, 
-    Bar, 
-    XAxis, 
-    YAxis, 
-    CartesianGrid, 
-    Tooltip, 
-    Legend
-} from 'recharts';
-import {
     Card, 
     CardText, 
     CardMedia, 
     CardHeader, 
     CardTitle
 } from 'material-ui/Card';
-
+import {
+    Table,
+    TableBody,
+    TableHeader,
+    TableHeaderColumn,
+    TableRow,
+    TableRowColumn,
+  } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
   
 var jp = require('jsonpath')
 
-export default class BarChartCard extends Component {
+export default class TableCard extends Component {
     constructor(props) {
         super(props)
         this.state  = {
@@ -129,7 +127,7 @@ export default class BarChartCard extends Component {
     }
 
     processOnClickKPIDataRepresentation = () => {
-        this.props.toggleDataViewFormat('chartview')
+        this.props.toggleDataViewFormat('tableview')
     }
 
     render () {
@@ -148,58 +146,60 @@ export default class BarChartCard extends Component {
      */
     renderKPIData = () => {
         if (this.state.showChartView) {
-            return this.renderChart()
+            return this.renderTable()
         }
     }
 
     /**
      * render
-     * presents chart
+     * presents same data in tabular format
      */
-    renderChart = () => {
-
+    renderTable = () => {
         if (this.state.data.length < 1) {
             return (
                 <div style={{"textAlign": "center"}}>
                     <br /><br />
                     <Card className="uiCard">
                         <CardHeader
-                            title={<div style={{fontSize: '16px'}}> insufficient data to draw the chart </div>}
+                            title={<strong> insufficient data to draw the chart </strong>}
                         />
                     </Card>
                 </div>
             )
         }
-
+        let title = `KPI representation for ${this.props.kpis}`;
+        let headers = Object.keys(this.state.data[0]);
         const style = {
             marginTop: '15px',
-            marginLeft: '90%'
+            marginLeft: '94%'
         };
 
-        let title = `KPI representation for ${this.props.kpis}`;
         return (
             <div>
             <br /><br />
             <Card className="uiCard" style={{"textAlign": "center"}}>
-                <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false}
+                <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false} 
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
                 <CardHeader style={{paddingBottom: 0}}
                                     title={<div style={{fontSize: 16, marginBottom: '20px'}}> {title} </div>}/>
-                
-                <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
-                    <XAxis dataKey={this.state.dataKey}/>
-                    <YAxis yAxisId="left" orientation="left" stroke="#8884d8"/>
-                    <YAxis yAxisId="right" orientation="right" stroke="#82ca9d"/>
-                    <Tooltip/>
-                    <Legend />
-                    <Bar yAxisId="left" dataKey="target" fill="#8884d8" />
-                    <Bar yAxisId="right" dataKey="value" fill="#82ca9d" />
-                </BarChart>
+                <Table style={{color:"black",fontWeight: "normal"}} bordered responsive className="table-striped">
+                    <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
+                        <TableRow>
+                            {
+                                headers.map((item, index) => <TableHeaderColumn>{item.toUpperCase()}</TableHeaderColumn>)
+                            }
+                        </TableRow>
+                    </TableHeader>
+
+                    <TableBody displayRowCheckbox={false}>
+                        {
+                            this.state.data.map((item, index) => <TableRow> {headers.map((el, index) => <TableRowColumn>{item[el]} </TableRowColumn>)} </TableRow>)
+                        }
+                    </TableBody>
+                </Table>
             </Card>
         </div>
         )
     }
-
-    
 }

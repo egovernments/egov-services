@@ -42,6 +42,7 @@ export default class KPIDashboardQuery extends Component {
             kpis: [],
             showKPIQueryView:false,
             showChartView: false,
+            showTableView: false,
             showToast: false,
 
             disableViewButton: false,
@@ -187,7 +188,8 @@ export default class KPIDashboardQuery extends Component {
             } else {
                 this.chartRes   = res;
                 this.setState({
-                    showChartView: true
+                    showChartView: true,
+                    showTableView: false
                 });
             }
         })
@@ -206,7 +208,7 @@ export default class KPIDashboardQuery extends Component {
                     this.renderKPIQueryView()
                 }
                 {
-                    this.renderChart()
+                    this.renderKPIData()
                 }
                 {
                     this.renderToast()
@@ -289,24 +291,47 @@ export default class KPIDashboardQuery extends Component {
     }
 
     /**
+     * callback
+     * toggle between tablecard and barchartcard
+     */
+    processOnClickKPIDataRepresentation = (view) => {
+        console.log('processOnClickKPIDataRepresentation %s', view)
+    }
+
+    /**
      * render
      * display charts for the selected values
      */
-    renderChart = () => {
-        if (!this.state.showChartView) {
+    renderKPIData = () => {
+        if (!this.state.showChartView && !this.state.showTableView) {
             return (<div></div>)
         }
+
         let finYears    = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',')
         let ulbs        = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].name`)).join(',')
         let kpis        = this.state.kpiIndices.map((item, index)=> jp.query(this.kpiRes, `$.KPIs[${item}].name`)).join(',')
 
-        return(
-            <BarChartCard data={this.chartRes} 
-                    finYears={finYears}
-                    ulbs={ulbs}
-                    kpis={kpis}
-            />
-        )
+        if (this.state.showChartView) {
+            return(
+                <BarChartCard data={this.chartRes} 
+                        finYears={finYears}
+                        ulbs={ulbs}
+                        kpis={kpis}
+                        toggleDataViewFormat={this.processOnClickKPIDataRepresentation}
+                />
+            )
+        }
+
+        if (this.state.showTableView) {
+            return(
+                <BarChartCard data={this.chartRes} 
+                        finYears={finYears}
+                        ulbs={ulbs}
+                        kpis={kpis}
+                        toggleDataViewFormat={this.processOnClickKPIDataRepresentation}
+                />
+            )
+        }
     }
 
     /**

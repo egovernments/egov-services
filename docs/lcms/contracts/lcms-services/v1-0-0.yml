@@ -1083,6 +1083,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
  
   Side:
     type: object
@@ -1111,6 +1112,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
   CaseType:
     type: object
     properties:
@@ -1141,6 +1143,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
   Bench:
     type: object
     properties:
@@ -1168,6 +1171,7 @@ definitions:
     required:
       - code
       - tenantId
+      - name
   Register:
     type: object
     properties:
@@ -1195,6 +1199,7 @@ definitions:
     required:
       - tenantId
       - code
+      - name
       
   Agency:
     type: object

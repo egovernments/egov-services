@@ -43,7 +43,6 @@ export const fetchULBsAPI = (cb) => {
 
 export const fetchFinancialYearsAPI = (cb) => {
     Api.commonApiPost("egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master", [], {}, false, false).then(function(res) {
-        console.log(res)
         if (res.MdmsRes && res.MdmsRes['egf-master']) {
             cb (null, res)
         } else {

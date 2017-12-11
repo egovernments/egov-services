@@ -17,6 +17,8 @@ import {
 import LoadingIndicator from '../../../common/LoadingIndicator';
 import KPISelectField from './kpiselectfield';
 import BarChartCard from './barchartcard';
+import TableCard from './tablecard'
+
 var jp = require('jsonpath');
 
 const kpiTypes = [
@@ -295,7 +297,17 @@ export default class KPIDashboardQuery extends Component {
      * toggle between tablecard and barchartcard
      */
     processOnClickKPIDataRepresentation = (view) => {
-        console.log('processOnClickKPIDataRepresentation %s', view)
+        if (view === 'chartview') {
+            this.setState({
+                showChartView: false,
+                showTableView: true
+            })
+        } else {
+            this.setState({
+                showChartView: true,
+                showTableView: false
+            })
+        }
     }
 
     /**
@@ -324,7 +336,7 @@ export default class KPIDashboardQuery extends Component {
 
         if (this.state.showTableView) {
             return(
-                <BarChartCard data={this.chartRes} 
+                <TableCard data={this.chartRes} 
                         finYears={finYears}
                         ulbs={ulbs}
                         kpis={kpis}
@@ -332,6 +344,8 @@ export default class KPIDashboardQuery extends Component {
                 />
             )
         }
+
+        return (<div></div>)
     }
 
     /**

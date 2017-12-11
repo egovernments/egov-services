@@ -62,7 +62,6 @@ export default class Dashboard extends Component {
 
     processOnClickOnCard = (index) => {
         let departments = parseDepartmentResponse(this.departments);
-        console.log(departments[index])
         this.setState({
             department: departments[index],
             showDepartmentView: false,
@@ -81,8 +80,6 @@ export default class Dashboard extends Component {
      * helpers
      */
     toast = (msg) => {
-        console.log(msg)
-
         this.setState({
             showToast: true,
             toastMsg: msg
@@ -163,7 +160,6 @@ export default class Dashboard extends Component {
                 <div></div>
             )
         }
-        console.log('renderQueryDashboard')
         return (
             <KPIQueryDashboard department={this.state.department} onBackClicked={this.processOnClickBackButton}/>
         )

@@ -181,7 +181,7 @@ export default class BarChartCard extends Component {
             <div>
             <br /><br />
             <Card className="uiCard" style={{"textAlign": "center"}}>
-                <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false}
+                <RaisedButton style={style} label={"Tabular"} primary={true} type="button" disabled={false}
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
                 <CardHeader style={{paddingBottom: 0}}

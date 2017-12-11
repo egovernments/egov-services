@@ -171,14 +171,14 @@ export default class TableCard extends Component {
         let headers = Object.keys(this.state.data[0]);
         const style = {
             marginTop: '15px',
-            marginLeft: '94%'
+            marginLeft: '90%'
         };
 
         return (
             <div>
             <br /><br />
             <Card className="uiCard" style={{"textAlign": "center"}}>
-                <RaisedButton style={style} label={this.state.showChartView ? "Tabular" : "Charts"} primary={true} type="button" disabled={false} 
+                <RaisedButton style={style} label={"Charts"} primary={true} type="button" disabled={false} 
                                 onClick={this.processOnClickKPIDataRepresentation}
                 />
                 <CardHeader style={{paddingBottom: 0}}
@@ -187,14 +187,14 @@ export default class TableCard extends Component {
                     <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
                         <TableRow>
                             {
-                                headers.map((item, index) => <TableHeaderColumn>{item.toUpperCase()}</TableHeaderColumn>)
+                                headers.map((item, index) => <TableHeaderColumn key={index}>{item.toUpperCase()}</TableHeaderColumn>)
                             }
                         </TableRow>
                     </TableHeader>
 
                     <TableBody displayRowCheckbox={false}>
                         {
-                            this.state.data.map((item, index) => <TableRow> {headers.map((el, index) => <TableRowColumn>{item[el]} </TableRowColumn>)} </TableRow>)
+                            this.state.data.map((item, index) => <TableRow key={index}> {headers.map((el, index) => <TableRowColumn key={index}>{item[el]} </TableRowColumn>)} </TableRow>)
                         }
                     </TableBody>
                 </Table>

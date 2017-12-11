@@ -42,8 +42,6 @@ public class PriceListSearchRequest {
     private Long agreementEndDate;
     
     private Boolean active;
-    
-    private Boolean configfurable;
 
     private Integer pageSize;
 

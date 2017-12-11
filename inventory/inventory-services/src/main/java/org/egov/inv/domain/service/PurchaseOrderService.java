@@ -22,6 +22,7 @@ import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.PurchaseIndentDetail;
 import org.egov.inv.model.PurchaseOrder;
 import org.egov.inv.model.PurchaseOrder.PurchaseTypeEnum;
+import org.egov.inv.model.PurchaseOrder.StatusEnum;
 import org.egov.inv.model.PurchaseOrderDetail;
 import org.egov.inv.model.PurchaseOrderDetailSearch;
 import org.egov.inv.model.PurchaseOrderRequest;
@@ -92,6 +93,7 @@ public class PurchaseOrderService extends DomainService {
             List<String> sequenceNos = purchaseOrderRepository.getSequence(PurchaseOrder.class.getSimpleName(), purchaseOrders.size());
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
+            	purchaseOrder.setStatus(StatusEnum.APPROVED);
                 purchaseOrder.setId(sequenceNos.get(i));
 
                 if (purchaseOrders.size() > 0 && purchaseOrders.get(0).getPurchaseType() != null) {

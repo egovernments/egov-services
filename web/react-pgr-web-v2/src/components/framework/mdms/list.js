@@ -55,8 +55,26 @@ class MdmsComponent extends Component {
 		let master = props.match.params.master;
 		this.masterAllLowerCase = props.match.params.master.toLowerCase();
 		this.masterMapping = {
-      wastetype: {
-      	addupdate: "WasteType"
+      		wastetype: {
+      			addupdate: "WasteType"
+			},
+			vehicletype: {
+      			addupdate: "VehicleType"
+			},
+			wastesubtype: {
+      			addupdate: "WasteSubType"
+			},
+			shifttype: {
+      			addupdate: "ShiftType"
+			},
+			collectiontype: {
+      			addupdate: "CollectionType"
+			},
+			population: {
+      			addupdate: "Population"
+			},
+			toilet: {
+      			addupdate: "Toilet"
 			}
 		};
 

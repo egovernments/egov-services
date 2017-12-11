@@ -106,6 +106,7 @@ public class PurchaseOrderService extends DomainService {
             List<String> sequenceNos = purchaseOrderRepository.getSequence(PurchaseOrder.class.getSimpleName(), purchaseOrders.size());
             int i = 0;
             for (PurchaseOrder purchaseOrder : purchaseOrders) {
+            	BigDecimal totalAmount = new BigDecimal(0);
             	purchaseOrder.setStatus(StatusEnum.APPROVED);
 				String purchaseOrderNumber = appendString(purchaseOrder);
                 purchaseOrder.setId(sequenceNos.get(i));
@@ -141,6 +142,7 @@ public class PurchaseOrderService extends DomainService {
                         }
 
                     }
+                    
                     purchaseOrderDetail.setUom(uomService.getUom(purchaseOrderDetail.getTenantId(), purchaseOrderDetail.getUom().getCode(),new RequestInfo()));
         			if (purchaseOrderDetail.getOrderQuantity() != null) {
         				purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
@@ -158,7 +160,9 @@ public class PurchaseOrderService extends DomainService {
         				purchaseOrderDetail.setUnitPrice(purchaseOrderDetail.getUnitPrice().divide(purchaseOrderDetail.getUom().getConversionFactor()));
 	       			}
                     j++;
+                    totalAmount = totalAmount.add(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUnitPrice()).add(totalAmount));
                 }
+                purchaseOrder.setTotalAmount(totalAmount);
             }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
@@ -191,7 +195,7 @@ public class PurchaseOrderService extends DomainService {
             validate(purchaseOrder, Constants.ACTION_UPDATE);
 
             for (PurchaseOrder eachPurchaseOrder : purchaseOrder){
-            	
+            	BigDecimal totalAmount = new BigDecimal(0);
             	eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
             	
 	               for(PurchaseOrderDetail eachPurchaseOrderDetail:eachPurchaseOrder.getPurchaseOrderDetails()) {
@@ -211,8 +215,9 @@ public class PurchaseOrderService extends DomainService {
 		       			if(eachPurchaseOrderDetail.getUnitPrice() != null) {
 		       				eachPurchaseOrderDetail.setUnitPrice(eachPurchaseOrderDetail.getUnitPrice().divide(eachPurchaseOrderDetail.getUom().getConversionFactor()));
 		       			}
+		       			totalAmount = totalAmount.add(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUnitPrice()).add(totalAmount));
 	               }
-	               
+	               eachPurchaseOrder.setTotalAmount(totalAmount);
             }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,

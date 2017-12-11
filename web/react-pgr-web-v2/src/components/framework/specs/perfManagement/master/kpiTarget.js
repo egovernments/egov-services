@@ -379,7 +379,8 @@ var dat = {
                         "isRequired": true,
                         "pattern": "",
                         "type": "singleValueList",
-                        "url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+                        //"url": "egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange",
+                        "url":"egov-mdms-service/v1/_get?tenantId="+localStorage.tenantId.split(".")[0]+"&masterName=financialYears&moduleName=egf-master|$..finYearRange|$..finYearRange",
                         "isDisabled": false,
                         "requiredErrMsg": ""
                     },

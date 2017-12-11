@@ -92,7 +92,7 @@ public class SupplierService extends DomainService {
 
     public SupplierResponse create(SupplierRequest supplierRequest, String tenantId) {
         try {
-            validate(supplierRequest.getSuppliers(), Constants.ACTION_CREATE);
+            validate(supplierRequest.getSuppliers(), Constants.ACTION_CREATE, tenantId);
             List<String> sequenceNos = supplierJdbcRepository.getSequence(Supplier.class.getSimpleName(), supplierRequest.getSuppliers().size());
             int i = 0;
             for (Supplier supplier : supplierRequest.getSuppliers()) {
@@ -118,7 +118,7 @@ public class SupplierService extends DomainService {
     public SupplierResponse update(SupplierRequest supplierRequest, String tenantId) {
 
         try {
-            validate(supplierRequest.getSuppliers(), Constants.ACTION_UPDATE);
+            validate(supplierRequest.getSuppliers(), Constants.ACTION_UPDATE, tenantId);
 
             for (Supplier supplier : supplierRequest.getSuppliers()) {
                 if (isEmpty(supplier.getTenantId())) {
@@ -139,7 +139,7 @@ public class SupplierService extends DomainService {
         }
     }
 
-    private void validate(List<Supplier> suppliers, String method) {
+    private void validate(List<Supplier> suppliers, String method, String tenantId) {
         try {
             switch (method) {
 
@@ -148,6 +148,9 @@ public class SupplierService extends DomainService {
                         throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Supplier supplier : suppliers) {
+                        if (isEmpty(supplier.getTenantId())) {
+                            supplier.setTenantId(tenantId);
+                        }
                         if (!supplierJdbcRepository.uniqueCheck("code",
                                 new SupplierEntity().toEntity(supplier))) {
                             throw new CustomException("inv.004",
@@ -160,6 +163,9 @@ public class SupplierService extends DomainService {
                         throw new InvalidDataException("suppliers", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Supplier supplier : suppliers) {
+                        if (isEmpty(supplier.getTenantId())) {
+                            supplier.setTenantId(tenantId);
+                        }
                         if (supplier.getId() == null) {
                             throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), supplier.getId());
                         }

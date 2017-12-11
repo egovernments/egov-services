@@ -54,10 +54,12 @@ import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
 public class StoreService extends DomainService {
@@ -145,7 +147,9 @@ public class StoreService extends DomainService {
                         throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Store store : stores) {
-                        store.setTenantId(tenantId);
+                        if (isEmpty(store.getTenantId())) {
+                            store.setTenantId(tenantId);
+                        }
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
                             throw new CustomException("inv.005",
@@ -158,7 +162,9 @@ public class StoreService extends DomainService {
                         throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Store store : stores) {
-                        store.setTenantId(tenantId);
+                        if (isEmpty(store.getTenantId())) {
+                            store.setTenantId(tenantId);
+                        }
                         if (store.getId() == null) {
                             throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
                         }

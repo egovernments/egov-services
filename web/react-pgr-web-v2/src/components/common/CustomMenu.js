@@ -313,6 +313,15 @@ const menuConvention={
 "Solid Waste Management.SWM Reports.Dumping Ground Detail Report": "/report/swm/DumpingGroundDetailReport",
 "Solid Waste Management.SWM Reports.Expenditure Incurred On Transportation Report": "/report/swm/ExpenditureIncurredReport",
 
+//SWM mdms Menu
+"Solid Waste Management.SWM Masters.Vehicle type.Vehicle type": "/mdms/swm/VehicleType",
+"Solid Waste Management.SWM Masters.Waste Type.Waste Type": "/mdms/swm/WasteType",
+"Solid Waste Management.SWM Masters.Waste Subtype.Waste Subtype": "/mdms/swm/WasteSubType",
+"Solid Waste Management.SWM Masters.Shift Type.Shift Type": "/mdms/swm/ShiftType",
+"Solid Waste Management.SWM Masters.Collection type.Collection type": "/mdms/swm/CollectionType",
+"Solid Waste Management.SWM Masters.Population.Population": "/mdms/swm/Population",
+"Solid Waste Management.SWM Masters.Toilet.Toilet": "/mdms/swm/Toilet",	
+	
 //legal case
 "Legal Case Management.Legal Case Transactions.Case.Legacy Case Create":"/create/legal/legacycase",
 "Legal Case Management.Legal Case Transactions.Case.New Case Create":"/create/legal/summon",

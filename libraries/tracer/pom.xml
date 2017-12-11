@@ -95,14 +95,14 @@
         <snapshotRepository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Snapshots Repository</name>
-            <url>https://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
+            <url>http://nexus-repo.egovernments.org/nexus/content/repositories/snapshots/</url>
         </snapshotRepository>
     </distributionManagement>
     <repositories>
     <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>
-            <url>https://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
+            <url>http://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
         </repository>
     </repositories>
 

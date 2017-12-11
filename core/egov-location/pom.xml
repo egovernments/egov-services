@@ -165,12 +165,12 @@
         <repository>
             <id>repo.egovernments.org</id>
             <name>eGov ERP Releases Repository</name>
-            <url>http://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
+            <url>https://nexus-repo.egovernments.org/nexus/content/repositories/releases/</url>
         </repository>
         <repository>
             <id>nexus</id>
             <name>central</name>
-            <url>http://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
+            <url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
         </repository>
         <repository>
 	      <id>Jrepo.egovernments.org</id>

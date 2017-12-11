@@ -19,6 +19,8 @@ public interface KpiValueRepository {
     public List<KpiValue> searchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
     
     public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq);
+    
+    public List<ULBKpiValueList> compareSearchObjectiveKpiValue(KPIValueSearchRequest kpiValueSearchReq); 
 
     public List<KPI> checkKpiExists(String kpiCode); 
     

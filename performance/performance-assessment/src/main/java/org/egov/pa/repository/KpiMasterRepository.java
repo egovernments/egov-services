@@ -33,6 +33,8 @@ public interface KpiMasterRepository {
     
     public List<DocumentTypeContract> getDocumentForKpi(String kpiCode);
     
-    public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq); 
+    public List<KPI> getKpiByCode(Boolean getTargets, List<String> kpiCodeList, KPIValueSearchRequest kpiValueSearchReq);
+    
+    public List<String> getTargetTypeForKpiCodes(List<String> kpiCodeList);
     
 }

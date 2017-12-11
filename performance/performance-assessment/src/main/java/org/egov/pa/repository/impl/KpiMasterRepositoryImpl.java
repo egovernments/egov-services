@@ -1,5 +1,7 @@
 package org.egov.pa.repository.impl;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -26,6 +28,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Component;
@@ -239,6 +242,21 @@ public class KpiMasterRepositoryImpl implements KpiMasterRepository {
 		for(Department dept : deptList) { 
 			deptMap.put(dept.getId(), dept); 
 		}
+	}
+	
+	@Override
+	public List<String> getTargetTypeForKpiCodes(List<String> kpiCodeList) { 
+		final HashMap<String, Object> parametersMap = new HashMap<>();
+		String query = queryBuilder.getTargetTypeForKpi(); 
+		parametersMap.put("kpiCodeList", kpiCodeList);
+		List<String> targetTypeList= namedParameterJdbcTemplate.query(query,
+                parametersMap, new RowMapper<String>() {
+			@Override
+			public String mapRow(ResultSet rs, int rowNum) throws SQLException {
+				return rs.getString("targettype");
+			}
+		});
+		return targetTypeList;
 	}
 
 	@Override

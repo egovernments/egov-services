@@ -10,6 +10,7 @@ import org.egov.pa.model.AuditDetails;
 import org.egov.pa.model.KPI;
 import org.egov.pa.model.KpiValue;
 import org.egov.pa.model.KpiValueDetail;
+import org.egov.pa.model.TargetType;
 import org.egov.pa.model.ULBKpiValueList;
 import org.egov.pa.model.ValueDocument;
 import org.egov.pa.repository.KpiMasterRepository;
@@ -97,7 +98,16 @@ public class KpiValueServiceImpl implements KpiValueService {
 
 	@Override
 	public List<ULBKpiValueList> compareSearchKpiValue(KPIValueSearchRequest kpiValueSearchReq) {
-		List<ULBKpiValueList> list = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
+		List<String> targetTypes = kpiMasterRepository.getTargetTypeForKpiCodes(kpiValueSearchReq.getKpiCodes());
+		log.info("Target Types of the KPIs are : " + targetTypes.toString());
+		List<ULBKpiValueList> list = new ArrayList<>();
+		if(null != targetTypes && targetTypes.size() == 1 && targetTypes.get(0).equals(TargetType.OBJECTIVE.toString())) {
+			log.info("Objective Target Search Methods Invoked");
+			list = kpiValueRepository.compareSearchObjectiveKpiValue(kpiValueSearchReq);
+		}
+		else { 
+			list = kpiValueRepository.compareSearchKpiValue(kpiValueSearchReq);
+		}
 		return list;
 	}
 

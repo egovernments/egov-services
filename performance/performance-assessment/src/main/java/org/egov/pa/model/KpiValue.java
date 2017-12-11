@@ -32,6 +32,9 @@ public class KpiValue {
 	@JsonProperty("consolidatedValue")
 	private String consolidatedValue = null;
 	
+	@JsonProperty("valueDescription")
+	private String valueDescription = null ; 
+	
 	@JsonProperty("finYear")
 	private String finYear=null; 
 
@@ -46,6 +49,14 @@ public class KpiValue {
 
 	
 	
+	public String getValueDescription() {
+		return valueDescription;
+	}
+
+	public void setValueDescription(String valueDescription) {
+		this.valueDescription = valueDescription;
+	}
+
 	public String getFinYear() {
 		return finYear;
 	}

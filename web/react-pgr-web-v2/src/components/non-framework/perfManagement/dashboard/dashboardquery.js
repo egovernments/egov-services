@@ -182,6 +182,11 @@ export default class KPIDashboardQuery extends Component {
         let ulbs        = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',')
         let kpis        = this.state.kpiIndices.map((item, index)=> jp.query(this.kpiRes, `$.KPIs[${item}].code`)).join(',')
 
+        this.setState({
+            showChartView: false,
+            showTableView: false
+        });
+
         this.busyUI(true)
         fetchCompareSearchAPI(finYears, kpis, ulbs, (err, res) => {
             this.busyUI(false)

@@ -7,12 +7,8 @@ import java.util.Map;
 
 import org.egov.common.JdbcRepository;
 import org.egov.common.Pagination;
-import org.egov.inv.model.Indent;
 import org.egov.inv.model.MaterialIssue;
-import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
-import org.egov.inv.model.MaterialIssueDetail;
 import org.egov.inv.model.MaterialIssueSearchContract;
-import org.egov.inv.persistence.entity.MaterialIssueDetailEntity;
 import org.egov.inv.persistence.entity.MaterialIssueEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
@@ -23,6 +19,9 @@ import org.springframework.stereotype.Service;
 public class MaterialIssueJdbcRepository extends JdbcRepository {
 	@Autowired
 	public JdbcTemplate jdbcTemplate;
+	
+	@Autowired
+	private StoreJdbcRepository storeJdbcRepository;
 
 	public Pagination<MaterialIssue> search(final MaterialIssueSearchContract searchContract, String issueType) {
 		String searchQuery = "select * from materialissue :condition :orderby";
@@ -91,6 +90,12 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 			params.append("tenantid = :tenantid");
 			paramValues.put("tenantid", searchContract.getTenantId());
 		}
+		if (issueType != null) {
+			if (params.length() > 0)
+				params.append(" and ");
+			params.append("issuetype = :issuetype");
+			paramValues.put("issuetype", issueType);
+		}
 		Pagination<MaterialIssue> page = new Pagination<>();
 		if (searchContract.getPageSize() != null)
 			page.setPageSize(searchContract.getPageSize());
@@ -125,9 +130,6 @@ public class MaterialIssueJdbcRepository extends JdbcRepository {
 
 		return page;
 	}
-
-	
-
 
 
 

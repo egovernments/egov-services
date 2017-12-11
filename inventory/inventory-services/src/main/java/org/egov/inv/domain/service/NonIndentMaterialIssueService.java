@@ -27,6 +27,7 @@ import org.egov.inv.model.MaterialIssuedFromReceipt;
 import org.egov.inv.model.RequestInfo;
 import org.egov.inv.model.StoreGetRequest;
 import org.egov.inv.model.Uom;
+import org.egov.inv.model.MaterialIssue.IssuePurposeEnum;
 import org.egov.inv.model.MaterialIssue.IssueTypeEnum;
 import org.egov.inv.model.MaterialIssue.MaterialIssueStatusEnum;
 import org.egov.inv.persistence.repository.MaterialIssueDetailsJdbcRepository;
@@ -189,6 +190,13 @@ public class NonIndentMaterialIssueService extends DomainService {
 									errors.addDataError(ErrorCode.QUANTITY1_LTE_QUANTITY2.getCode(), "quantityIssued",
 											"balanceQuantity", materialIssueDetail.getQuantityIssued().toString(),
 											materialIssueDetail.getBalanceQuantity().toString());
+								}
+							}
+							if(materialIssue.getIssuePurpose() != null)
+							if(materialIssue.getIssuePurpose().equals(IssuePurposeEnum.WRITEOFFORSCRAP)){
+								if(materialIssueDetail.getMaterial() != null && materialIssueDetail.getMaterial().getScrapable() != null){
+								if(!materialIssueDetail.getMaterial().getScrapable())
+									errors.addDataError(ErrorCode.ALLOW_SCRAP_MATERIALS.getCode(), IssuePurposeEnum.WRITEOFFORSCRAP.toString());
 								}
 							}
 						}

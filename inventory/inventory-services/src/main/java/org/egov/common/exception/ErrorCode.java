@@ -9,7 +9,6 @@ import java.util.Map;
  * Donot auto format this file
  */
 public enum ErrorCode {
-
     KAFKA_TIMEOUT_ERROR(
             "org.egov.service.kafka.timeout",
             "time out while waiting for kafka",
@@ -163,7 +162,11 @@ public enum ErrorCode {
             "rate contract required {0}"),
 	MAT_DETAIL("mat.detail.required",
             "Material Detail required {0}",
-            "Material Detail required {0}");;
+            "Material Detail required {0}"),
+	ALLOW_SCRAP_MATERIALS("scrap.material.allowed",
+			"In case of write off or scrap,only scrapable items are allowed","when issue purpose is {0} allow only"
+					+ " scrapable materials")
+	; 
 
 
     private final String code;

@@ -69,7 +69,8 @@ class UiMultiFieldAddToTable extends Component {
     for (let i = 0; i < item.values.length; i++) {
       if (item.values[i].name=="tenantId") {
         item.values[i].isDisabled=true;
-        item.values[i].defaultValue=JSON.parse(localStorage.getItem("userRequest")).tenantId;
+        item.values[i].hide=true;
+        item.values[i].defaultValue=localStorage.getItem("tenantId");
         item.values[i].isRequired=false;
       }
       if (item.values[i].type=="singleValueList") {
@@ -107,7 +108,7 @@ class UiMultiFieldAddToTable extends Component {
     let counter=0;
 
     for (var i = 0; i < item.values.length; i++) {
-      item.values[i].name!="tenantId" && item.values[i].name!="id" && counter++;
+      item.values[i].name!="id" && counter++;
     }
 
     this.setState({
@@ -193,6 +194,9 @@ class UiMultiFieldAddToTable extends Component {
           temp[0][item.values[i].name]=stateFormDataTable[0][item.values[i].name];
         } else if(item.values[i].name!="tenantId"){
           stateFormDataTable[0][item.values[i].name]=""
+          temp[0][item.values[i].name]=stateFormDataTable[0][item.values[i].name];
+        } else if(item.values[i].name === "tenantId"){
+          stateFormDataTable[0][item.values[i].name]= localStorage.getItem("tenantId");
           temp[0][item.values[i].name]=stateFormDataTable[0][item.values[i].name];
         }
       }
@@ -343,9 +347,7 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   renderFields = (item, screen) => {
-    if (item.name=="tenantId") {
-      return
-    }
+    console.log("item", item);
     if (screen == "view" && ["documentList", "fileTable", "arrayText", "arrayNumber"].indexOf(item.type) > -1) {
       if (item.type == "datePicker") {
         item.isDate = true;
@@ -453,12 +455,9 @@ class UiMultiFieldAddToTable extends Component {
                 <tr>
                   <th>#</th>
                   {this.props.item.header.map((v,i) => {
-                    if (v.label.split(".")[4]!="tenantId") {
-                      return (
-                        <th key={i}>{translate(v.label)}</th>
-                      )
-                    }
-
+                    return (
+                      <th className={"HideIt_" + v.label.split(".")[v.label.split(".").length -1]} key={i}>{translate(v.label)}</th>
+                    )
                   })}
 
                   <th> Action</th>
@@ -473,12 +472,9 @@ class UiMultiFieldAddToTable extends Component {
                         <tr key={index}>
                           <td> {index + 1} </td>
                           {this.props.item.values.map((v,i) => {
-                              if (v.name!="tenantId") {
-                                return (
-                                    <td key={i}>{this.renderFields(v)}</td>
-                                )
-                              }
-
+                            return (
+                              <td className={"HideIt_" + v.name} key={i}>{this.renderFields(v)}</td>
+                            )
                             })
                           }
                           <td>
@@ -503,14 +499,14 @@ class UiMultiFieldAddToTable extends Component {
                         {
                           Object.keys(item).map(function(key, index) {
 
-                                if (key!="id" && key!="tenantId") {
+                                if (key!="id") {
                                   if (key=="active") {
                                     return (
                                         <td>{item[key]?"Active":"Inactive"}</td>
                                     )
                                   } else {
                                     return (
-                                        <td>{item[key]}</td>
+                                        <td className={"HideIt_" + key}>{item[key]}</td>
                                     )
                                   }
 

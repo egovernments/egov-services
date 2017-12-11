@@ -53,6 +53,12 @@ class MdmsComponent extends Component {
     
 		let module = props.match.params.module;
 		let master = props.match.params.master;
+		this.masterAllLowerCase = props.match.params.master.toLowerCase();
+		this.masterMapping = {
+      wastetype: {
+      	addupdate: "WasteType"
+			}
+		};
 
 
 		let data = {
@@ -76,7 +82,10 @@ class MdmsComponent extends Component {
 			}
 		};
 
-		props.setLoadingStatus('loading');
+    if(this.masterMapping[this.masterAllLowerCase] !== undefined){
+      formData.MasterMetaData.masterName = this.masterMapping[this.masterAllLowerCase].addupdate
+    }
+    props.setLoadingStatus('loading');
 
 		//Fetch specs from specs service
 

@@ -150,6 +150,9 @@ public class PurchaseOrderService extends DomainService {
         			if (purchaseOrderDetail.getUsedQuantity() != null) {
         				purchaseOrderDetail.setUsedQuantity(purchaseOrderDetail.getUsedQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
         			}
+        			if(purchaseOrderDetail.getUnitPrice() != null) {
+        				purchaseOrderDetail.setUnitPrice(purchaseOrderDetail.getUnitPrice().divide(purchaseOrderDetail.getUom().getConversionFactor()));
+	       			}
                     j++;
                 }
             }
@@ -200,6 +203,9 @@ public class PurchaseOrderService extends DomainService {
 		       			}
 		       			if (eachPurchaseOrderDetail.getUsedQuantity() != null) {
 		       				eachPurchaseOrderDetail.setUsedQuantity(eachPurchaseOrderDetail.getUsedQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+		       			}
+		       			if(eachPurchaseOrderDetail.getUnitPrice() != null) {
+		       				eachPurchaseOrderDetail.setUnitPrice(eachPurchaseOrderDetail.getUnitPrice().divide(eachPurchaseOrderDetail.getUom().getConversionFactor()));
 		       			}
 	               }
 	               

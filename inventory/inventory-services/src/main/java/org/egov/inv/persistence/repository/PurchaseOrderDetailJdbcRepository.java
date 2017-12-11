@@ -180,6 +180,9 @@ public class PurchaseOrderDetailJdbcRepository extends org.egov.common.JdbcRepos
 			if (eachPoDetail.getUsedQuantity() != null) {
 				eachPoDetail.setUsedQuantity(eachPoDetail.getUsedQuantity().divide(eachPoDetail.getUom().getConversionFactor()));
 			}
+			if (eachPoDetail.getUnitPrice() != null) {
+				eachPoDetail.setUnitPrice(eachPoDetail.getUnitPrice().multiply(eachPoDetail.getUom().getConversionFactor()));
+			}
 		}
         page.setPagedData(purchaseOrderDetails);
 

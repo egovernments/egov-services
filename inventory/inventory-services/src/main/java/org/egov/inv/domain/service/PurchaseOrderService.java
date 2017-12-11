@@ -18,7 +18,6 @@ import org.egov.inv.model.Indent;
 import org.egov.inv.model.IndentDetail;
 import org.egov.inv.model.IndentResponse;
 import org.egov.inv.model.IndentSearch;
-import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.PriceListResponse;
 import org.egov.inv.model.PriceListSearchRequest;
 import org.egov.inv.model.PurchaseIndentDetail;
@@ -30,6 +29,7 @@ import org.egov.inv.model.PurchaseOrderDetailSearch;
 import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
+import org.egov.inv.model.RequestInfo;
 import org.egov.inv.persistence.repository.MaterialReceiptJdbcRepository;
 import org.egov.inv.persistence.repository.PriceListJdbcRepository;
 import org.egov.inv.persistence.repository.PurchaseOrderJdbcRepository;
@@ -57,6 +57,9 @@ public class PurchaseOrderService extends DomainService {
 
     @Autowired
     private PriceListService priceListService;
+    
+    @Autowired
+    private UomService uomService;
 
     @Value("${inv.purchaseorders.save.topic}")
     private String saveTopic;
@@ -134,6 +137,19 @@ public class PurchaseOrderService extends DomainService {
                         }
 
                     }
+                    purchaseOrderDetail.setUom(uomService.getUom(purchaseOrderDetail.getTenantId(), purchaseOrderDetail.getUom().getCode(),new RequestInfo()));
+        			if (purchaseOrderDetail.getOrderQuantity() != null) {
+        				purchaseOrderDetail.setOrderQuantity(purchaseOrderDetail.getOrderQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
+        			}
+        			if (purchaseOrderDetail.getIndentQuantity() != null) {
+        				purchaseOrderDetail.setIndentQuantity(purchaseOrderDetail.getIndentQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
+        			}
+        			if (purchaseOrderDetail.getTenderQuantity() != null) {
+        				purchaseOrderDetail.setTenderQuantity(purchaseOrderDetail.getTenderQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
+        			}
+        			if (purchaseOrderDetail.getUsedQuantity() != null) {
+        				purchaseOrderDetail.setUsedQuantity(purchaseOrderDetail.getUsedQuantity().multiply(purchaseOrderDetail.getUom().getConversionFactor()));
+        			}
                     j++;
                 }
             }
@@ -167,8 +183,27 @@ public class PurchaseOrderService extends DomainService {
             List<PurchaseOrder> purchaseOrder = purchaseOrderRequest.getPurchaseOrders();
             validate(purchaseOrder, Constants.ACTION_UPDATE);
 
-            for (PurchaseOrder eachPurchaseOrder : purchaseOrder)
-                eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+            for (PurchaseOrder eachPurchaseOrder : purchaseOrder){
+            	
+            	eachPurchaseOrder.setAuditDetails(getAuditDetails(purchaseOrderRequest.getRequestInfo(), Constants.ACTION_UPDATE));
+            	
+	               for(PurchaseOrderDetail eachPurchaseOrderDetail:eachPurchaseOrder.getPurchaseOrderDetails()) {
+	            	   	eachPurchaseOrderDetail.setUom(uomService.getUom(eachPurchaseOrderDetail.getTenantId(), eachPurchaseOrderDetail.getUom().getCode(),new RequestInfo()));
+		       			if (eachPurchaseOrderDetail.getOrderQuantity() != null) {
+		       				eachPurchaseOrderDetail.setOrderQuantity(eachPurchaseOrderDetail.getOrderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+		       			}
+		       			if (eachPurchaseOrderDetail.getIndentQuantity() != null) {
+		       				eachPurchaseOrderDetail.setIndentQuantity(eachPurchaseOrderDetail.getIndentQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+		       			}
+		       			if (eachPurchaseOrderDetail.getTenderQuantity() != null) {
+		       				eachPurchaseOrderDetail.setTenderQuantity(eachPurchaseOrderDetail.getTenderQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+		       			}
+		       			if (eachPurchaseOrderDetail.getUsedQuantity() != null) {
+		       				eachPurchaseOrderDetail.setUsedQuantity(eachPurchaseOrderDetail.getUsedQuantity().multiply(eachPurchaseOrderDetail.getUom().getConversionFactor()));
+		       			}
+	               }
+	               
+            }
 
             // TODO: ITERATE MULTIPLE PURCHASE ORDERS, BASED ON PURCHASE TYPE,
             // PUSH DATA TO KAFKA.

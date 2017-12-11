@@ -1,6 +1,8 @@
 package org.egov.inv.api;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
@@ -13,6 +15,7 @@ import org.egov.inv.model.MaterialReceipt;
 import org.egov.inv.model.MaterialReceiptSearch;
 import org.egov.inv.model.OpeningBalanceRequest;
 import org.egov.inv.model.OpeningBalanceResponse;
+import org.egov.inv.model.MaterialReceipt.MrnStatusEnum;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,26 +63,27 @@ public class OpeningbalanceApiController implements OpeningbalanceApi {
 	
 	    }
     
-	    public ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( 
-	    		@NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
+	    public ResponseEntity<OpeningBalanceResponse> openingbalanceSearchPost( @NotNull@ApiParam(value = "Unique id for a tenant.", required = true) 
 	    		@RequestParam(value = "tenantId", required = true) String tenantId,
 	    		@NotNull@ApiParam(value = "Unique id .", required = false) @RequestParam(value = "ids", required = false) String ids,
+	            @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
 	            @ApiParam(value = "Parameter to carry Request metadata in the request body"  )  @Valid @RequestBody RequestInfo requestInfo,
 	            @ApiParam(value = "search on basis of financial year ") @RequestParam(value = "financialYear", required = false) String financialYear,
-	            @ApiParam(value = "search on basis of storeName ") @RequestParam(value = "storeName", required = false) String storeName,
-	            @ApiParam(value = "search on basis of materialTypeName ") @RequestParam(value = "materialTypeName", required = false) String materialTypeName,
-	            @Min(0) @Max(100) @ApiParam(value = "Number of records returned.", defaultValue = "20") 
-	    		@RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
-	            @ApiParam(value = "Page number", defaultValue = "1")
-	    		@RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
+	            @ApiParam(value = "search on basis of mrnNumber ") @RequestParam(value = "mrnNumber", required = false) String mrnNumber,
+	            @ApiParam(value = "search on basis of materialName ") @RequestParam(value = "materialName", required = false) String receiptType,
+	             @Min(0) @Max(100)@ApiParam(value = "Number of records returned.", defaultValue = "20") @RequestParam(value = "pageSize", required = false, defaultValue="20") Integer pageSize,
+	            @ApiParam(value = "Page number", defaultValue = "1") @RequestParam(value = "pageNumber", required = false, defaultValue="1") Integer pageNumber,
 	            @ApiParam(value = "This takes any field from the Object seperated by comma and asc,desc keywords. example name asc,code desc or name,code or name,code desc", defaultValue = "id") @RequestParam(value = "sortBy", required = false, defaultValue="id") String sortBy) {
+	            // do some magic!
 	    	MaterialReceiptSearch receiptSearch = MaterialReceiptSearch
 	    			.builder()
 	    			.ids(null != ids ? Arrays.asList(ids) : null)
 	    			.tenantId(tenantId)
 					.financialYear(financialYear)
-					.receiptType(null != materialTypeName ? Arrays.asList(materialTypeName) : null)
 					.receivingStore(storeName)
+					//.mrnNumber(Collections.singletonList(receiptNumber))
+					.mrnNumber(null != mrnNumber ? Arrays.asList(mrnNumber) : null)
+					.receiptType(null != receiptType ? Arrays.asList(receiptType) : null)
 					.pageNumber(pageNumber)
 					.pageSize(pageSize)
 					.build();

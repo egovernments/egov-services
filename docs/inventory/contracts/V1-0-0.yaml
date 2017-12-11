@@ -3078,6 +3078,10 @@ definitions:
           description: Tenant id of the Material Receipt Header
           maxLength: 128
           minLength: 4
+        quantity:
+          type: number
+          format: BigDecimal
+          description: The quantity at material detail additional info
         lotNo:
           type: string
           description: LOT number for the materials that are of LOT control.

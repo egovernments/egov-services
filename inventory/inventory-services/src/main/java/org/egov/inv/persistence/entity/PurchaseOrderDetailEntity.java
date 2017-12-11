@@ -42,7 +42,7 @@ public class PurchaseOrderDetailEntity  {
 		poDetails.setOrderNumber(this.orderNumber);
 		poDetails.setPriceList(new PriceList().id(priceList));
 		poDetails.setOrderQuantity(orderQuantity);
-		poDetails.setOrderQuantity(usedQuantity);
+		poDetails.setUsedQuantity(usedQuantity);
 		poDetails.setReceivedQuantity(receivedQuantity);
 		poDetails.setUnitPrice(unitPrice);
 		poDetails.setDescription(description);

@@ -152,7 +152,7 @@ public enum ErrorCode {
     QTY_GTR_SCND_ROW("quantity.greater.other",
             "the field {0} must be greater than {1} at row {1}",
             "the field {0} must be greater than {1} at row {1}"),
-    QTY_LE_SCND_ROW("quantity.greater.other",
+    QTY_LE_SCND_ROW("quantity.lesser.other",
             "the field {0} must be less than or equal to {1} at row {1}",
             "the field {0} must be less than or equal to at row {1}");
 

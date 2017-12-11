@@ -206,7 +206,7 @@ public class ReceiptNoteService extends DomainService {
         convertRate(tenantId, materialReceiptDetail);
 
         Material material = materialService.fetchMaterial(tenantId, materialReceiptDetail.getMaterial().getCode(), new RequestInfo());
-        if (false == material.getSerialNumber() && false == material.getShelfLifeControl() && false == material.getLotControl()) {
+        if (false == material.getShelfLifeControl() && false == material.getLotControl()) {
             materialReceiptDetail.setReceiptDetailsAddnInfo(Collections.EMPTY_LIST);
         } else {
             materialReceiptDetail.getReceiptDetailsAddnInfo().forEach(
@@ -385,7 +385,6 @@ public class ReceiptNoteService extends DomainService {
     }
 
     private void validateMaterial(MaterialReceiptDetail receiptDetail, String tenantId, int i, InvalidDataException errors) {
-
         if (null != receiptDetail.getMaterial()) {
             Material material = materialService.fetchMaterial(tenantId, receiptDetail.getMaterial().getCode(), new RequestInfo());
 
@@ -394,18 +393,19 @@ public class ReceiptNoteService extends DomainService {
                     errors.addDataError(ErrorCode.LOT_NO_NOT_EXIST.getCode(), addnlinfo.getLotNo() + " at serial no." + i);
                 }
 
-                if (true == material.getShelfLifeControl() && (isEmpty(addnlinfo.getExpiryDate()) ||
-                        (!isEmpty(addnlinfo.getExpiryDate()) && !(addnlinfo.getExpiryDate().doubleValue() > 0)))) {
-                    errors.addDataError(ErrorCode.EXP_DATE_NOT_EXIST.getCode(), addnlinfo.getExpiryDate() + " at serial no." + i);
-                }
+/*                if (true == material.getShelfLifeControl() && (isEmpty(addnlinfo.getExpiryDate()) ||*/
+/*                        (!isEmpty(addnlinfo.getExpiryDate()) && !(addnlinfo.getExpiryDate().doubleValue() > 0)))) {*/
+/*                    errors.addDataError(ErrorCode.EXP_DATE_NOT_EXIST.getCode(), addnlinfo.getExpiryDate() + " at serial no." + i);*/
+/*                    if (true == material.getSerialNumber() && isEmpty(addnlinfo.getSerialNo())) {*/
+/*                        errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSINGROW.getCode(), "Serial number ", String.valueOf(i));*/
+/*                    }*/
+/*                }*/
 
-                if (true == material.getSerialNumber() && isEmpty(addnlinfo.getSerialNo())) {
-                    errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSINGROW.getCode(), "Serial number ", String.valueOf(i));
-                }
 
             }
         } else
             errors.addDataError(ErrorCode.MANDATORY_VALUE_MISSINGROW.getCode(), "Material ", String.valueOf(i));
+
     }
 
     private void validateDetailsAddnInfo(List<MaterialReceiptDetailAddnlinfo> materialReceiptDetailAddnlinfos, String tenantId, int i, InvalidDataException errors) {

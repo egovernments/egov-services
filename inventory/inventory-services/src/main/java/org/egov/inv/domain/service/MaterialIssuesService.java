@@ -300,6 +300,7 @@ public class MaterialIssuesService extends DomainService {
 							if (materialIssueDetail.getQuantityIssued().compareTo(BigDecimal.ZERO) <= 0)
 								errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantityIssued",
 										materialIssueDetail.getQuantityIssued().toString());
+							if(materialIssueDetail.getBalanceQuantity() != null)
 							if (StringUtils.isNotBlank(materialIssueDetail.getBalanceQuantity().toString())) {
 								if (materialIssueDetail.getBalanceQuantity().compareTo(BigDecimal.ZERO) <= 0)
 									errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "balanceQuantity",

@@ -46,12 +46,8 @@ import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
 import org.egov.common.exception.InvalidDataException;
-import org.egov.inv.model.Store;
-import org.egov.inv.model.StoreGetRequest;
-import org.egov.inv.model.StoreRequest;
-import org.egov.inv.model.StoreResponse;
+import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.StoreEntity;
-import org.egov.inv.persistence.repository.StoreESRepository;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
 import org.egov.tracer.model.CustomException;
@@ -87,12 +83,9 @@ public class StoreService extends DomainService {
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
-    @Autowired
-    private StoreESRepository storeESRepository;
-
     public StoreResponse create(StoreRequest storeRequest, String tenantId) {
         try {
-            validate(storeRequest.getStores(), Constants.ACTION_CREATE);
+            validate(storeRequest.getStores(), Constants.ACTION_CREATE, tenantId);
             List<String> sequenceNos = storeJdbcRepository.getSequence(Store.class.getSimpleName(), storeRequest.getStores().size());
             int i = 0;
             for (Store store : storeRequest.getStores()) {
@@ -117,7 +110,7 @@ public class StoreService extends DomainService {
     public StoreResponse update(StoreRequest storeRequest, String tenantId) {
 
         try {
-            validate(storeRequest.getStores(), Constants.ACTION_UPDATE);
+            validate(storeRequest.getStores(), Constants.ACTION_UPDATE, tenantId);
 
             for (Store store : storeRequest.getStores()) {
                 if (isEmpty(store.getTenantId())) {
@@ -143,7 +136,7 @@ public class StoreService extends DomainService {
         //	return isESEnabled ? storeESRepository.search(storeGetRequest):
     }
 
-    private void validate(List<Store> stores, String method) {
+    private void validate(List<Store> stores, String method, String tenantId) {
         try {
             switch (method) {
 
@@ -152,6 +145,7 @@ public class StoreService extends DomainService {
                         throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Store store : stores) {
+                        store.setTenantId(tenantId);
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
                             throw new CustomException("inv.005",
@@ -164,9 +158,12 @@ public class StoreService extends DomainService {
                         throw new InvalidDataException("stores", ErrorCode.NOT_NULL.getCode(), null);
                     }
                     for (Store store : stores) {
+                        store.setTenantId(tenantId);
                         if (store.getId() == null) {
                             throw new InvalidDataException("id", ErrorCode.MANDATORY_VALUE_MISSING.getCode(), store.getId());
                         }
+                        store.setTenantId(tenantId);
+
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
                             throw new CustomException("inv.004",
@@ -180,6 +177,5 @@ public class StoreService extends DomainService {
         }
 
     }
-
 
 }

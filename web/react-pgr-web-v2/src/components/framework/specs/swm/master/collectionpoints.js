@@ -1,51 +1,3 @@
-var collectionPointDetails ={
-  "name": "collectionPointDetails",
-  "version": "v1",
-  "level": 2,
-  "hide":false,
-  "jsonPath": "collectionPoints[0].collectionPointDetails[0]",
-  "groups":[{
-    "name": "details",
-    "multiple":true,
-    "jsonPath": "collectionPoints[0].collectionPointDetails[0]",
-    "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
-    "fields": [
-      {  
-        "name":"name",
-        "jsonPath":"collectionPoints[0].collectionPointDetails[0].collectionType.code",
-        "label":"swm.collectionpoints.create.group.title.CollectionType",
-        "type":"singleValueList",
-        "isRequired":true,
-        "isDisabled":false,
-        "maxLength":128,
-        "minLength":1,
-        "patternErrorMsg":"",
-        "url":"/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name"
-     },
-     {  
-        "name":"garbageEstimate",
-        "jsonPath":"collectionPoints[0].collectionPointDetails[0].garbageEstimate",
-        "label":"swm.collectionpoints.create.garbageEstimate",
-        "type":"number",
-        "isRequired":true,
-        "isDisabled":false,
-        "patternErrorMsg":""
-     },
-     {  
-        "name":"description",
-        "jsonPath":"collectionPoints[0].collectionPointDetails[0].description",
-        "label":"swm.collectionpoints.create.description",
-        "type":"textarea",
-        "isRequired":false,
-        "isDisabled":false,
-        "maxLength":300,
-        "minLength":15,
-        "patternErrorMsg":""
-     }
-    ]
-  }]
-}
-
 var dat ={  
   "swm.search":{  
      "numCols":4,
@@ -164,7 +116,7 @@ var dat ={
         {  
           "name":"CollectionPointDetails",
           "label":"",
-          "children":[collectionPointDetails],
+          "multiple": false,
           "fields":[  
             {  
                 "name":"name",
@@ -180,9 +132,49 @@ var dat ={
           ]
         },
         {
+          "name": "collectionPointDetails",
+          "multiple":true,
+          "jsonPath": "collectionPoints[0].collectionPointDetails",
+          "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
+          "fields": [
+            {  
+              "name":"name",
+              "jsonPath":"collectionPoints[0].collectionPointDetails[0].collectionType.code",
+              "label":"swm.collectionpoints.create.group.title.CollectionType",
+              "type":"singleValueList",
+              "isRequired":true,
+              "isDisabled":false,
+              "maxLength":128,
+              "minLength":1,
+              "patternErrorMsg":"",
+              "url":"/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name"
+            },
+            {  
+              "name":"garbageEstimate",
+              "jsonPath":"collectionPoints[0].collectionPointDetails[0].garbageEstimate",
+              "label":"swm.collectionpoints.create.garbageEstimate",
+              "type":"number",
+              "isRequired":true,
+              "isDisabled":false,
+              "patternErrorMsg":""
+            },
+            {  
+              "name":"description",
+              "jsonPath":"collectionPoints[0].collectionPointDetails[0].description",
+              "label":"swm.collectionpoints.create.description",
+              "type":"textarea",
+              "isRequired":false,
+              "isDisabled":false,
+              "maxLength":300,
+              "minLength":15,
+              "patternErrorMsg":""
+            }
+          ]
+        },
+        {
           "name": "BinDetails",
           "label":"swm.collectionpoints.create.group.title.BinDetails",
-          "jsonPath":"collectionPoints[0].binDetails[0]",
+          "jsonPath":"collectionPoints[0].binDetails",
           "multiple":true,
           "fields": [
             {  
@@ -276,7 +268,6 @@ var dat ={
       {  
         "name":"CollectionPointDetails",
         "label":"",
-        "children":[collectionPointDetails],
         "fields":[  
           {  
               "name":"name",
@@ -288,6 +279,46 @@ var dat ={
               "maxLength":128,
               "minLength":1,
               "patternErrorMsg":""
+          }
+        ]
+      },
+      {
+        "name": "collectionPointDetails",
+        "multiple":true,
+        "jsonPath": "collectionPoints[0].collectionPointDetails",
+        "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
+        "fields": [
+          {  
+            "name":"name",
+            "jsonPath":"collectionPoints[0].collectionPointDetails[0].collectionType.code",
+            "label":"swm.collectionpoints.create.group.title.CollectionType",
+            "type":"singleValueList",
+            "isRequired":true,
+            "isDisabled":false,
+            "maxLength":128,
+            "minLength":1,
+            "patternErrorMsg":"",
+            "url":"/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name"
+          },
+          {  
+            "name":"garbageEstimate",
+            "jsonPath":"collectionPoints[0].collectionPointDetails[0].garbageEstimate",
+            "label":"swm.collectionpoints.create.garbageEstimate",
+            "type":"number",
+            "isRequired":true,
+            "isDisabled":false,
+            "patternErrorMsg":""
+          },
+          {  
+            "name":"description",
+            "jsonPath":"collectionPoints[0].collectionPointDetails[0].description",
+            "label":"swm.collectionpoints.create.description",
+            "type":"textarea",
+            "isRequired":false,
+            "isDisabled":false,
+            "maxLength":300,
+            "minLength":15,
+            "patternErrorMsg":""
           }
         ]
       },

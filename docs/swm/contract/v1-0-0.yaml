@@ -1869,13 +1869,11 @@ definitions:
           minLength: 1
         name:
           type: string
-          format: singleValueList
           description: name of the FuelType. e.g  Diesel, Petrol etc
           maxLength: 128
           minLength: 1
         code:
           type: string
-          format: singleValueList
           description: code of the FuelType. Unique code assigned to the FuelType. Shall be of at least 2 digits. fuelCode will be system generated
           maxLength: 128
           minLength: 1
@@ -1894,13 +1892,11 @@ definitions:
           minLength: 1
         name:
           type: string
-          format: singleValueList
           description: name of the VehicleType
           maxLength: 128
           minLength: 1
         code:
           type: string
-          format: singleValueList
           description: code of the VehicleType
           maxLength: 128
           minLength: 1
@@ -2412,7 +2408,7 @@ definitions:
     SwmProcess:
       type: object
       properties:
-        id:
+        code:
           type: string
           description: Unique Identifier of the Vendor
           maxLength: 256

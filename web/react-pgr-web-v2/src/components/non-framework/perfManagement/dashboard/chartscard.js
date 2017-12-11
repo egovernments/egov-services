@@ -6,8 +6,10 @@ import {
     YAxis, 
     CartesianGrid, 
     Tooltip, 
-    Legend
+    Legend,
+    PieChart, Pie, Sector, Cell
 } from 'recharts';
+
 import {
     Card, 
     CardText, 
@@ -179,14 +181,40 @@ export default class BarChartCard extends Component {
         let title = `KPI representation for ${this.props.kpis}`;
         return (
             <div>
-            <br /><br />
-            <Card className="uiCard" style={{"textAlign": "center"}}>
-                <RaisedButton style={style} label={"Tabular"} primary={true} type="button" disabled={false}
-                                onClick={this.processOnClickKPIDataRepresentation}
-                />
-                <CardHeader style={{paddingBottom: 0}}
-                                    title={<div style={{fontSize: 16, marginBottom: '20px'}}> {title} </div>}/>
-                
+                <br /><br />
+                <Card className="uiCard" style={{"textAlign": "center"}}>
+                    <RaisedButton style={style} label={"Tabular"} primary={true} type="button" disabled={false}
+                                    onClick={this.processOnClickKPIDataRepresentation}
+                    />
+                    <CardHeader style={{paddingBottom: 0}}
+                                        title={<div style={{fontSize: 16, marginBottom: '20px'}}> {title} </div>}/>
+                    {
+                        this.renderChartType()
+                    }
+                    
+                </Card>
+            </div>
+        )
+    }
+
+    /**
+     * render
+     * render BarChart or PieChart base upon the KPITypes selected
+     */
+    renderChartType = () => {
+        if (this.props.kpiType === 'VALUE') {
+            return this.renderBarChart()
+        }
+
+        return this.renderPieChart();
+    }
+    /**
+     * render
+     * renders BarChart for VALUE type KPI
+     */
+    renderBarChart = () => {
+        return (
+            <div>
                 <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{top: 20, right: 30, left: 30, bottom: 5}}>
                     <XAxis dataKey={this.state.dataKey}/>
                     <YAxis yAxisId="left" orientation="left" stroke="#8884d8"/>
@@ -196,10 +224,41 @@ export default class BarChartCard extends Component {
                     <Bar yAxisId="left" dataKey="target" fill="#8884d8" />
                     <Bar yAxisId="right" dataKey="value" fill="#82ca9d" />
                 </BarChart>
-            </Card>
-        </div>
+            </div>
         )
     }
 
-    
+    /**
+     * render
+     * renders PieChart for OBJECTIVE type KPI
+     */
+    renderPieChart = () => {
+        let data = [
+            {
+                'name' : 'YES',
+                'value': this.state.data.filter((el) => el.value === 1).length
+            },
+            {
+                'name' : 'NO',
+                'value': this.state.data.filter((el) => el.value === 2).length
+            },
+            {
+                'name' : 'IN PROGRESS',
+                'value': this.state.data.filter((el) => el.value === 3).length
+            }
+        ];
+        const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
+
+        return (
+            <PieChart padding={'50%'} width={800} height={500} margin={{top: 20, right: 30, left: 300, bottom: 5}}>
+                <Pie dataKey={"value"} isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={180} fill="#8884d8" labelLine={false}>
+                    {
+                        data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]}/>)
+                    }
+                </Pie>
+                <Tooltip/>
+                <Legend />
+           </PieChart>
+        )
+    }
 }

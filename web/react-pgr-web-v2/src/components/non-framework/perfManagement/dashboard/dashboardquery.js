@@ -16,7 +16,7 @@ import {
 } from '../apis/apis';
 import LoadingIndicator from '../../../common/LoadingIndicator';
 import KPISelectField from './kpiselectfield';
-import BarChartCard from './barchartcard';
+import ChartCard from './chartscard';
 import TableCard from './tablecard'
 
 var jp = require('jsonpath');
@@ -110,8 +110,11 @@ export default class KPIDashboardQuery extends Component {
     processSelectOnKPISelectField = (index, values, label) => {
         if (label === this.kpiTypeLabel) {
             this.setState({
-                kpiTypeIndex: index
+                kpiTypeIndex: index,
+                showChartView: false,
+                showTableView: false
             })
+            
             let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name)
             if (departmentKPIs.length === 0) {
                 this.setState({
@@ -330,10 +333,11 @@ export default class KPIDashboardQuery extends Component {
 
         if (this.state.showChartView) {
             return(
-                <BarChartCard data={this.chartRes} 
+                <ChartCard data={this.chartRes} 
                         finYears={finYears}
                         ulbs={ulbs}
                         kpis={kpis}
+                        kpiType={kpiTypes[this.state.kpiTypeIndex].name}
                         toggleDataViewFormat={this.processOnClickKPIDataRepresentation}
                 />
             )

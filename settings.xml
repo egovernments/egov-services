@@ -10,14 +10,4 @@
             <url>https://nexus-repo.egovernments.org/nexus/content/groups/public/</url>
         </mirror>
     </mirrors>
-    <servers>
-        <server>
-            <id>repo.egovernments.org</id>
-            <username>${nexus.user}</username>
-            <password>${nexus.password}</password>
-        </server>
-    </servers>
-    <pluginGroups>
-        <pluginGroup>com.versioneye</pluginGroup>
-    </pluginGroups>
 </settings>

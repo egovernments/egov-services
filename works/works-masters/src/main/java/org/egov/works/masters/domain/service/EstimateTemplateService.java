@@ -52,7 +52,8 @@ public class EstimateTemplateService {
             for (final EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
                 estimateTemplateActivities.setId(commonUtils.getUUID());
                 estimateTemplateActivities.setAuditDetails(masterUtils.getAuditDetails(estimateTemplateRequest.getRequestInfo(), false));
-                estimateTemplateActivities.getNonSOR().setId(commonUtils.getUUID());
+                if (estimateTemplateActivities.getNonSOR() != null)
+                    estimateTemplateActivities.getNonSOR().setId(commonUtils.getUUID());
                 estimateTemplateActivities.setEstimateTemplate(estimateTemplate.getId());
             }
         }
@@ -67,6 +68,7 @@ public class EstimateTemplateService {
         EstimateTemplateResponse response = new EstimateTemplateResponse();
 
         estimateTemplateValidator.validate(estimateTemplateRequest);
+        estimateTemplateValidator.validateForUpdate(estimateTemplateRequest);
 
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
             estimateTemplate.setAuditDetails(masterUtils.getAuditDetails(estimateTemplateRequest.getRequestInfo(), true));

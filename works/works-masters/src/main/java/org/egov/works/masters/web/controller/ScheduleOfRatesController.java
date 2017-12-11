@@ -16,30 +16,30 @@ import java.util.List;
 @RequestMapping("/scheduleofrates")
 public class ScheduleOfRatesController {
 
-	@Autowired
-	private ScheduleOfRateService scheduleOfRatesService;
+    @Autowired
+    private ScheduleOfRateService scheduleOfRatesService;
 
-	@Autowired
-	private MasterUtils masterUtils;
+    @Autowired
+    private MasterUtils masterUtils;
 
-	@PostMapping("/_create")
-	public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
-		return scheduleOfRatesService.create(scheduleOfRateRequest);
-	}
+    @PostMapping("/_create")
+    public ResponseEntity<?> create(@Valid @RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
+        return scheduleOfRatesService.create(scheduleOfRateRequest);
+    }
 
-	@PostMapping("/_search")
-	public ResponseEntity<?> search(
-			@ModelAttribute @Valid ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria,
-			@RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
-		final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.search(scheduleOfRateSearchCriteria);
-		final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
-		response.setScheduleOfRates(scheduleOfRates);
-		response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(requestInfo, true));
-		return new ResponseEntity<>(response, HttpStatus.OK);
-	}
+    @PostMapping("/_search")
+    public ResponseEntity<?> search(
+            @ModelAttribute @Valid ScheduleOfRateSearchCriteria scheduleOfRateSearchCriteria,
+            @RequestBody RequestInfo requestInfo, BindingResult errors, @RequestParam String tenantId) {
+        final List<ScheduleOfRate> scheduleOfRates = scheduleOfRatesService.search(scheduleOfRateSearchCriteria);
+        final ScheduleOfRateResponse response = new ScheduleOfRateResponse();
+        response.setScheduleOfRates(scheduleOfRates);
+        response.setResponseInfo(masterUtils.createResponseInfoFromRequestInfo(requestInfo, true));
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
 
-	@PostMapping("/_update")
-	public ResponseEntity<?> update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
-		return scheduleOfRatesService.update(scheduleOfRateRequest);
-	}
+    @PostMapping("/_update")
+    public ResponseEntity<?> update(@RequestBody ScheduleOfRateRequest scheduleOfRateRequest) {
+        return scheduleOfRatesService.update(scheduleOfRateRequest);
+    }
 }

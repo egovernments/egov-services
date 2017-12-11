@@ -259,9 +259,9 @@ serviceMaps:
 
        - jsonPath: $.estimateTemplates[?({id} in @.estimateTemplateActivities[*].id)].id
 
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.scheduleOfRate.id
 
-       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom
+       - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.uom.code
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.id
 
@@ -290,4 +290,5 @@ serviceMaps:
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.uom
 
        - jsonPath: $.estimateTemplates.*.estimateTemplateActivities.*.nonSOR.deleted
+
 

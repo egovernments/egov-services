@@ -13,8 +13,7 @@ import org.egov.works.masters.web.repository.MdmsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by ramki on 3/11/17.
@@ -34,14 +33,15 @@ public class EstimateTemplateValidator {
         JSONArray mdmsResponse = null;
         Map<String, String> validationMessages = new HashMap<>();
         Boolean isDataValid = Boolean.FALSE;
-
+        List<String> codeList = new ArrayList<>();
         for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
+            //TODO only type of work is mandatory
             if ((estimateTemplate.getTypeOfWork() != null && !estimateTemplate.getTypeOfWork().isEmpty())
                     && (estimateTemplate.getSubTypeOfWork() != null && !estimateTemplate.getSubTypeOfWork().isEmpty())) {
                 validationMessages.put(Constants.KEY_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY,
                         Constants.MESSAGE_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY + estimateTemplate.getTypeOfWork()
                                 + ", " + estimateTemplate.getSubTypeOfWork());
-                isDataValid=Boolean.TRUE;
+                isDataValid = Boolean.TRUE;
             }
 
             if (estimateTemplate.getTypeOfWork() != null && !estimateTemplate.getTypeOfWork().isEmpty()) {
@@ -50,7 +50,7 @@ public class EstimateTemplateValidator {
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     validationMessages.put(Constants.KEY_TYPEOFWORK_CODE_INVALID, Constants.MESSAGE_TYPEOFWORK_CODE_INVALID + estimateTemplate.getTypeOfWork());
-                    isDataValid=Boolean.TRUE;
+                    isDataValid = Boolean.TRUE;
                 }
             }
 
@@ -60,41 +60,72 @@ public class EstimateTemplateValidator {
                         estimateTemplateRequest.getRequestInfo());
                 if (mdmsResponse == null || mdmsResponse.size() == 0) {
                     validationMessages.put(Constants.KEY_SUBTYPEOFWORK_CODE_INVALID, Constants.MESSAGE_SUBTYPEOFWORK_CODE_INVALID + estimateTemplate.getSubTypeOfWork());
-                    isDataValid=Boolean.TRUE;
+                    isDataValid = Boolean.TRUE;
                 }
             }
-
-            for(EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
-                if (estimateTemplateActivities.getScheduleOfRate() != null && !estimateTemplateActivities.getScheduleOfRate().isEmpty()) {
-                    if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate(), estimateTemplateActivities.getTenantId()) == null) {
-                        validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate());
+            //TODO min one ETA is required
+            //TODO for ETA, either sor or nonsor is mandatory, both sor and nonsor cannot be there. duplicate SOR should not be
+            if (estimateTemplate.getEstimateTemplateActivities() != null && estimateTemplate.getEstimateTemplateActivities().size() > 0) {
+                for (EstimateTemplateActivities estimateTemplateActivities : estimateTemplate.getEstimateTemplateActivities()) {
+                    if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getNonSOR() != null) {
+                        validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_BOTH_SORANDNONSOR_SHOULDNOT_PRESENT, Constants.MESSAGE_ESTIMATETEMPLATE_BOTH_SORANDNONSOR_SHOULDNOT_PRESENT);
                         isDataValid = Boolean.TRUE;
+                    } else if (estimateTemplateActivities.getScheduleOfRate() == null && estimateTemplateActivities.getNonSOR() == null) {
+                        validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_EITHER_SOR_OR_NONSOR_ISREQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_EITHER_SOR_OR_NONSOR_ISREQUIRED);
+                        isDataValid = Boolean.TRUE;
+                    } else {
+                        if (estimateTemplateActivities.getUom() != null && estimateTemplateActivities.getUom().getCode() != null) {
+                            mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
+                                    CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getUom().getCode(),
+                                    estimateTemplateRequest.getRequestInfo());
+                            if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                                validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getUom());
+                                isDataValid = Boolean.TRUE;
+                            }
+                        } else {
+                            validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_UOM_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_UOM_REQUIRED);
+                            isDataValid = Boolean.TRUE;
+                        }
+
+                        if (estimateTemplateActivities.getScheduleOfRate() != null && estimateTemplateActivities.getScheduleOfRate().getId() != null) {
+                            if (scheduleOfRateService.getById(estimateTemplateActivities.getScheduleOfRate().getId(), estimateTemplateActivities.getTenantId()) == null) {
+                                validationMessages.put(Constants.KEY_SCHEDULEOFRATE_ID_INVALID, Constants.MESSAGE_SCHEDULEOFRATE_ID_INVALID + estimateTemplateActivities.getScheduleOfRate());
+                                isDataValid = Boolean.TRUE;
+                            }
+                        }
+
+                        if (estimateTemplateActivities.getNonSOR() != null) {
+                            if (!estimateTemplateActivities.getNonSOR().getUom().isEmpty()) {
+                                mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
+                                        CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom(),
+                                        estimateTemplateRequest.getRequestInfo());
+                                if (mdmsResponse == null || mdmsResponse.size() == 0) {
+                                    validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom());
+                                    isDataValid = Boolean.TRUE;
+                                }
+                            } else {
+                                validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_UOM_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_UOM_REQUIRED);
+                                isDataValid = Boolean.TRUE;
+                            }
+                            if (!(estimateTemplateActivities.getNonSOR().getDescription() != null && !estimateTemplateActivities.getNonSOR().getDescription().isEmpty())) {
+                                validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_NONSOR_DESCRIPTION_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_NONSOR_DESCRIPTION_REQUIRED);
+                                isDataValid = Boolean.TRUE;
+                            }
+                        }
                     }
                 }
-
-                if (estimateTemplateActivities.getUom() != null && !estimateTemplateActivities.getUom().isEmpty()) {
-                    mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
-                            CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getUom(),
-                            estimateTemplateRequest.getRequestInfo());
-                    if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                        validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getUom());
-                        isDataValid = Boolean.TRUE;
-                    }
-                }
-
-                if (estimateTemplateActivities.getNonSOR() != null && !estimateTemplateActivities.getNonSOR().getUom().isEmpty()) {
-                    mdmsResponse = mdmsRepository.getByCriteria(estimateTemplate.getTenantId(), CommonConstants.MODULENAME_COMMON,
-                            CommonConstants.MASTERNAME_UOM, "code", estimateTemplateActivities.getNonSOR().getUom(),
-                            estimateTemplateRequest.getRequestInfo());
-                    if (mdmsResponse == null || mdmsResponse.size() == 0) {
-                        validationMessages.put(Constants.KEY_UOM_CODE_INVALID, Constants.MESSAGE_UOM_CODE_INVALID + estimateTemplateActivities.getNonSOR().getUom());
-                        isDataValid = Boolean.TRUE;
-                    }
-                }
+            } else {
+                validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_MIN_ONE_ETA_REQUIRED, Constants.MESSAGE_ESTIMATETEMPLATE_MIN_ONE_ETA_REQUIRED);
+                isDataValid = Boolean.TRUE;
             }
+            codeList.add(estimateTemplate.getCode());
         }
-
-        if(isDataValid) throw new CustomException(validationMessages);
+        Set<String> filteredCode = new HashSet<String>(codeList);
+        if (codeList.size() != filteredCode.size()) {
+            validationMessages.put(Constants.KEY_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES, Constants.MESSAGE_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES);
+            isDataValid = Boolean.TRUE;
+        }
+        if (isDataValid) throw new CustomException(validationMessages);
     }
 
     public void validateForExistance(EstimateTemplateRequest estimateTemplateRequest) {
@@ -109,6 +140,25 @@ public class EstimateTemplateValidator {
                 }
             }
         }
-        if(isDataValid) throw new CustomException(validationMessages);
+        if (isDataValid) throw new CustomException(validationMessages);
+    }
+
+    public void validateForUpdate(EstimateTemplateRequest estimateTemplateRequest) {
+        Map<String, String> messages = new HashMap<>();
+        Boolean isDataValid = Boolean.FALSE;
+        EstimateTemplate dbET = null;
+        for (final EstimateTemplate estimateTemplate : estimateTemplateRequest.getEstimateTemplates()) {
+            dbET = estimateTemplateService.getById(estimateTemplate.getId(), estimateTemplate.getTenantId());
+            if (dbET != null) {
+                if (!dbET.getCode().equals(estimateTemplate.getCode())) {
+                    messages.put(Constants.KEY_ESTIMATETEMPLATE_CODE_UPDATE_NOTALLOWED, Constants.MESSAGE_ESTIMATETEMPLATE_CODE_UPDATE_NOTALLOWED);
+                    isDataValid = Boolean.TRUE;
+                }
+            } else {
+                messages.put(Constants.KEY_ESTIMATETEMPLATE_KEY_INVALID, Constants.MESSAGE_ESTIMATETEMPLATE_KEY_INVALID + estimateTemplate.getId());
+                isDataValid = Boolean.TRUE;
+            }
+        }
+        if (isDataValid) throw new CustomException(messages);
     }
 }

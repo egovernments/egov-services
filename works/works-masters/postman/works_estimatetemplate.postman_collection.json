@@ -1,7 +1,7 @@
 {
 	"info": {
 		"name": "WMS-Masters-ET",
-		"_postman_id": "ef592990-ec31-53ef-da52-0c0d614a4aaf",
+		"_postman_id": "3bf86f09-9ecb-80b1-19de-20e39f9361cc",
 		"description": "",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -18,7 +18,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"66d3aa78-bfd3-4698-bc56-3d5ce2c8cbd5\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"estimateTemplates\":[{\n      \"tenantId\":\"default\",\n      \"name\":\"Road Estimate Template\",\n      \"code\":\"ET3\",\n      \"active\":true,\n      \"description\":\"First Estimate Template for Road\",\n      \"typeOfWork\":\"Buildings\",\n      \"estimateTemplateActivities\":[{  \n         \"tenantId\":\"default\",\n         \"scheduleOfRate\":\"2bd44c2eefc546fdaeaa0b3576f38979\",\n         \"uom\":\"TON\",\n         \"nonSOR\":{\n         \t\"tenantId\":\"default\",\n         \t\"description\":\"description\",\n         \t\"uom\":\"TON\"\n         },\n         \"unitRate\":452\n      }]\n        \n    }]\n}"
+					"raw": "{\n    \"RequestInfo\": {\n        \"apiId\": \"emp\",\n        \"ver\": \"1.0\",\n        \"ts\": \"10032017\",\n        \"action\": \"create\",\n        \"did\": \"1\",\n        \"key\": \"abcdkey\",\n        \"msgId\": \"20170310130900\",\n        \"requesterId\": \"rajesh\",\n        \"authToken\": \"66d3aa78-bfd3-4698-bc56-3d5ce2c8cbd5\",\n        \"userInfo\":{\n          \"tenantId\":\"default\",\n          \"userName\":\"ramki\"\n        }\n    },\n    \"estimateTemplates\":[{\n      \"tenantId\":\"default\",\n      \"name\":\"Road Estimate Template\",\n      \"code\":\"ET1\",\n      \"active\":true,\n      \"description\":\"First Estimate Template for Road\",\n      \"typeOfWork\":\"Buildings\",\n      \"estimateTemplateActivities\":[{  \n         \"tenantId\":\"default\",\n         \"uom\":{\n         \t\"code\":\"TON\"\n         },\n         \"nonSOR\":{\n         \t\"tenantId\":\"default\",\n         \t\"description\":\"description\",\n         \t\"uom\":\"TON\"\n         },\n         \"unitRate\":452\n      }]\n        \n    }]\n}"
 				},
 				"url": {
 					"raw": "http://localhost:8280/works-masters/v1/estimatetemplates/_create",
@@ -33,8 +33,7 @@
 						"estimatetemplates",
 						"_create"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -77,8 +76,7 @@
 							"equals": true
 						}
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		},
@@ -109,8 +107,7 @@
 						"estimatetemplates",
 						"_update"
 					]
-				},
-				"description": ""
+				}
 			},
 			"response": []
 		}

@@ -42,6 +42,7 @@ package org.egov.inv.domain.service;
 
 import org.egov.common.Constants;
 import org.egov.common.DomainService;
+import org.egov.common.MdmsRepository;
 import org.egov.common.Pagination;
 import org.egov.common.exception.CustomBindException;
 import org.egov.common.exception.ErrorCode;
@@ -50,15 +51,12 @@ import org.egov.inv.model.*;
 import org.egov.inv.persistence.entity.StoreEntity;
 import org.egov.inv.persistence.repository.StoreJdbcRepository;
 import org.egov.tracer.kafka.LogAwareKafkaTemplate;
-import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.util.StringUtils;
 
 import java.util.List;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
 import static org.springframework.util.StringUtils.isEmpty;
 
 @Service
@@ -85,9 +83,13 @@ public class StoreService extends DomainService {
     @Autowired
     private LogAwareKafkaTemplate<String, Object> kafkaTemplate;
 
+    @Autowired
+    private MdmsRepository mdmsRepository;
+
     public StoreResponse create(StoreRequest storeRequest, String tenantId) {
         try {
-            validate(storeRequest.getStores(), Constants.ACTION_CREATE, tenantId);
+            StoreRequest fetchRelated = fetchRelated(storeRequest, tenantId);
+            validate(fetchRelated.getStores(), Constants.ACTION_CREATE, tenantId);
             List<String> sequenceNos = storeJdbcRepository.getSequence(Store.class.getSimpleName(), storeRequest.getStores().size());
             int i = 0;
             for (Store store : storeRequest.getStores()) {
@@ -139,6 +141,8 @@ public class StoreService extends DomainService {
     }
 
     private void validate(List<Store> stores, String method, String tenantId) {
+        InvalidDataException errors = new InvalidDataException();
+
         try {
             switch (method) {
 
@@ -152,10 +156,12 @@ public class StoreService extends DomainService {
                         }
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
-                            throw new CustomException("inv.005",
-                                    "Store Code Already Exists");
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getName());
                         }
+
+                        validateStore(errors, store);
                     }
+
                     break;
                 case Constants.ACTION_UPDATE:
                     if (stores == null) {
@@ -172,16 +178,52 @@ public class StoreService extends DomainService {
 
                         if (!storeJdbcRepository.uniqueCheck("code",
                                 new StoreEntity().toEntity(store))) {
-                            throw new CustomException("inv.004",
-                                    "Store Code Already Exists");
+                            errors.addDataError(ErrorCode.CODE_ALREADY_EXISTS.getCode(), "Store", store.getName());
+
                         }
+
+                        validateStore(errors, store);
 
                     }
             }
         } catch (IllegalArgumentException e) {
 
         }
+        if (errors.getValidationErrors().size() > 0)
+            throw errors;
+    }
 
+    private void validateStore(InvalidDataException errors, Store store) {
+        if (null == store.getDepartment()) {
+            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Department ", "", "store " + store.getName());
+        }
+
+        if (null == store.getOfficeLocation()) {
+            errors.addDataError(ErrorCode.OBJECT_NOT_FOUND.getCode(), "Office Location ", "", "store " + store.getName());
+        }
+    }
+
+    private StoreRequest fetchRelated(StoreRequest storeRequest, String tenantId) {
+
+        List<Store> stores = storeRequest.getStores();
+
+        for (Store store : stores) {
+            //fetch and set department
+            if (null != store && null != store.getDepartment()) {
+                Object object = mdmsRepository.fetchObject(tenantId, "common-masters", "Department", store.getDepartment().getCode(), Department.class);
+                store.setDepartment((Department) object);
+            }
+
+            //fetch and add office location
+            if (null != store && null != store.getOfficeLocation()) {
+                Object object = mdmsRepository.fetchObject(tenantId, "inventory", "Location", store.getOfficeLocation().getCode(), Location.class);
+
+                store.setOfficeLocation((Location) object);
+            }
+
+        }
+
+        return storeRequest;
     }
 
 }

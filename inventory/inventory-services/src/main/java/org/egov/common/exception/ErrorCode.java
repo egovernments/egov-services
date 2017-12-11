@@ -157,16 +157,21 @@ public enum ErrorCode {
     FIELD_DOESNT_MATCH("field.doesnt.match",
             "field {0} doesnt match with {1} field",
             "field {0} doesnt match with {1} field"),
-	RATE_CONTRACT("rate.contract.required",
+    RATE_CONTRACT("rate.contract.required",
             "rate contract required {0}",
             "rate contract required {0}"),
-	MAT_DETAIL("mat.detail.required",
+    MAT_DETAIL("mat.detail.required",
             "Material Detail required {0}",
             "Material Detail required {0}"),
-	ALLOW_SCRAP_MATERIALS("scrap.material.allowed",
-			"In case of write off or scrap,only scrapable items are allowed","when issue purpose is {0} allow only"
-					+ " scrapable materials")
-	; 
+    ALLOW_SCRAP_MATERIALS("scrap.material.allowed",
+            "In case of write off or scrap,only scrapable items are allowed", "when issue purpose is {0} allow only"
+            + " scrapable materials"),
+    CODE_ALREADY_EXISTS("code.already.exist",
+            "{0} code {1} already exists ",
+            "{0} code {1} already exists"),
+    OBJECT_NOT_FOUND("object.not.found",
+            "{0} {1} not found for {2}",
+            "{0} {1} not found for {2}");
 
 
     private final String code;

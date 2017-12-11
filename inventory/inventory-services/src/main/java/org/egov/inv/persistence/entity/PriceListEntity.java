@@ -49,6 +49,8 @@ public class PriceListEntity {
     
     private Boolean active;
     
+    private Boolean configurable;
+    
     private String fileStoreId;
     
     private String priceListDetails;
@@ -73,6 +75,7 @@ public class PriceListEntity {
                 .agreementStartDate(agreementStartDate)
                 .agreementEndDate(agreementEndDate)
                 .active( null != active ? active :null )
+                .configurable(null!= configurable ? configurable :null )
                 .fileStoreId(fileStoreId)
                 .priceListDetails(getPriceListDetails(priceListDetails))
                 .auditDetails(mapAuditDetails(tenantId, createdBy, createdTime, lastModifiedBy, lastModifiedTime))
@@ -85,6 +88,7 @@ public class PriceListEntity {
     			.supplier(priceList.getSupplier().getCode())
     			.rateType(priceList.getRateType().name())
     			.rateContractNumber(priceList.getRateContractNumber())
+    			.configurable(priceList.getConfigurable())
     			.rateContractDate(priceList.getRateContractDate())
     			.agreementNumber(priceList.getAgreementNumber())
     			.agreementStartDate(priceList.getAgreementStartDate())

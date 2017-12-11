@@ -80,6 +80,10 @@ public class PriceList   {
 
   @JsonProperty("rateContractDate")
   private Long rateContractDate = null;
+  
+  @JsonProperty("configurable")
+  private Boolean configurable =true;
+
 
   @JsonProperty("agreementNumber")
   private String agreementNumber = null;
@@ -324,7 +328,14 @@ public class PriceList   {
   @ApiModelProperty(required = true, value = "active or inactive flag of the supplier price detail ")
   @NotNull
 
-
+  public Boolean getConfigurable() {
+	    return configurable;
+	  }
+  
+  public void setConfigurable(Boolean configurable) {
+	    this.configurable = configurable;
+	  } 
+  
   public Boolean getActive() {
     return active;
   }
@@ -335,6 +346,11 @@ public class PriceList   {
 
   public PriceList fileStoreId(String fileStoreId) {
     this.fileStoreId = fileStoreId;
+    return this;
+  }
+
+  public PriceList configurable(Boolean configurable) {
+    this.configurable = configurable;
     return this;
   }
 
@@ -424,6 +440,7 @@ public class PriceList   {
         Objects.equals(this.agreementStartDate, priceList.agreementStartDate) &&
         Objects.equals(this.agreementEndDate, priceList.agreementEndDate) &&
         Objects.equals(this.active, priceList.active) &&
+        Objects.equals(this.configurable,priceList.configurable)&&
         Objects.equals(this.fileStoreId, priceList.fileStoreId) &&
         Objects.equals(this.priceListDetails, priceList.priceListDetails) &&
         Objects.equals(this.auditDetails, priceList.auditDetails);
@@ -450,6 +467,7 @@ public class PriceList   {
     sb.append("    agreementStartDate: ").append(toIndentedString(agreementStartDate)).append("\n");
     sb.append("    agreementEndDate: ").append(toIndentedString(agreementEndDate)).append("\n");
     sb.append("    active: ").append(toIndentedString(active)).append("\n");
+    sb.append("    configurable: ").append(toIndentedString(configurable)).append("\n");
     sb.append("    fileStoreId: ").append(toIndentedString(fileStoreId)).append("\n");
     sb.append("    priceListDetails: ").append(toIndentedString(priceListDetails)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");

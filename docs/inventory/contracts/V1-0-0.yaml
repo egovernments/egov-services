@@ -467,6 +467,11 @@ paths:
             in: query
             description: |
               store of the PurchaseOrder
+          - name: configurable
+            type: boolean
+            in: query
+            description: |
+              configure flag for rate contract
           - name: purchaseOrderNumber
             type: string
             in: query
@@ -3078,10 +3083,6 @@ definitions:
           description: Tenant id of the Material Receipt Header
           maxLength: 128
           minLength: 4
-        quantity:
-          type: number
-          format: BigDecimal
-          description: The quantity at material detail additional info
         lotNo:
           type: string
           description: LOT number for the materials that are of LOT control.
@@ -4528,6 +4529,10 @@ definitions:
           description: |
             type of the information about the material we are getting from the supplier
           $ref: "#/definitions/RateTypes"
+        configurable:
+          type: boolean
+          description: |
+            active or inactive flag of the rate contract
         rateContractNumber:
           type: string
           description: |

@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
 @Service
 @Transactional(readOnly = true)
@@ -64,6 +65,9 @@ public class PurchaseOrderService extends DomainService {
     @Value("${inv.purchaseorders.save.topic}")
     private String saveTopic;
 
+    @Value("${inv.pricelists.podetail.required}")
+    private Boolean  priceListConfig;
+    
     @Value("${inv.purchaseorders.save.key}")
     private String saveKey;
 
@@ -292,6 +296,16 @@ public class PurchaseOrderService extends DomainService {
             for (PurchaseOrderDetail poDetail :eachPurchaseOrder.getPurchaseOrderDetails())
             {
 				int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
+				if(null !=  poDetail.getMaterial() && StringUtils.isEmpty(poDetail.getMaterial().getCode()))
+				{
+            		errors.addDataError(ErrorCode.MAT_DETAIL.getCode()," at serial no."+detailIndex);
+
+				}
+
+				if(priceListConfig && null == poDetail.getPriceList().getId()){
+            		errors.addDataError(ErrorCode.RATE_CONTRACT.getCode(), " at serial no."+detailIndex);
+
+				}
 
             	if(null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()){
             		int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
@@ -300,7 +314,8 @@ public class PurchaseOrderService extends DomainService {
             	}
             	}
             }
-            }
+            }else
+            	errors.addDataError(ErrorCode.NOT_NULL.getCode(),"purchaseOrdersDetail",  null);
             }
             
             

@@ -157,7 +157,13 @@ public enum ErrorCode {
             "the field {0} must be less than or equal to at row {1}"),
     FIELD_DOESNT_MATCH("field.doesnt.match",
             "field {0} doesnt match with {1} field",
-            "field {0} doesnt match with {1} field");
+            "field {0} doesnt match with {1} field"),
+	RATE_CONTRACT("rate.contract.required",
+            "rate contract required {0}",
+            "rate contract required {0}"),
+	MAT_DETAIL("mat.detail.required",
+            "Material Detail required {0}",
+            "Material Detail required {0}");;
 
 
     private final String code;

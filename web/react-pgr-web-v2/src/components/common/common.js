@@ -465,7 +465,7 @@ var localization_EN_Data = {
 "reports.lcms.remarksRegardingReferenceToCourt" : "Remarks regarding verification with the reference to court records, Adjustment of Advances",
 "reports.lcms.remarks" : "Remarks",
 
-/*-------------------> MDMS/LCMS Screens Specifications <--------------------------*/
+/*-----------------------------> MDMS/LCMS Screens Specifications <--------------------------*/
 
 "MdmsMetadata.masterData.lcms.Court.name": "Court Name",
 "MdmsMetadata.masterData.lcms.Court.code": "Court Code",
@@ -568,6 +568,48 @@ var localization_EN_Data = {
 "MdmsMetadata.masterData.lcms.Advocate.agencyCode": "Advocate AgencyCode",
 "MdmsMetadata.masterData.lcms.Advocate.status": "Advocate Status",
 
+
+/*------------------------------------------------------------------------------------------*/
+
+
+/*----------------------------> SWM Screens Specifications <--------------------------*/
+
+"MdmsMetadata.masterData.swm.VehicleType.tenantId": "VehicleType TenantID",
+"MdmsMetadata.masterData.swm.VehicleType.name": "VehicleType Name",
+"MdmsMetadata.masterData.swm.VehicleType.code": "VehicleType Code",
+
+"MdmsMetadata.masterData.swm.WasteType.tenantId": "WasteType TenantID",
+"MdmsMetadata.masterData.swm.WasteType.name": "WasteType Name",
+"MdmsMetadata.masterData.swm.WasteType.code": "WasteType Code",
+
+"MdmsMetadata.masterData.swm.WasteSubType.tenantId": "WasteSubType TenantID",
+"MdmsMetadata.masterData.swm.WasteSubType.name": "WasteSubType Name",
+"MdmsMetadata.masterData.swm.WasteSubType.code": "WasteSubType Code",
+"MdmsMetadata.masterData.swm.WasteSubType.wasteType": "WasteSubType Waste Type",
+
+"MdmsMetadata.masterData.swm.ShiftType.tenantId": "ShiftType TenantID",
+"MdmsMetadata.masterData.swm.ShiftType.name": "ShiftType Name",
+"MdmsMetadata.masterData.swm.ShiftType.code": "ShiftType Code",
+
+"MdmsMetadata.masterData.swm.CollectionType.tenantId": "CollectionType TenantID",
+"MdmsMetadata.masterData.swm.CollectionType.name": "CollectionType Name",
+"MdmsMetadata.masterData.swm.CollectionType.code": "CollectionType Code",
+
+"MdmsMetadata.masterData.swm.Population.tenantId": "Population TenantID",
+"MdmsMetadata.masterData.swm.Population.location": "Population Location",
+"MdmsMetadata.masterData.swm.Population.code": "Population Code",
+"MdmsMetadata.masterData.swm.Population.censusYear": "Population Census Year",
+"MdmsMetadata.masterData.swm.Population.population": "Population Population",
+"MdmsMetadata.masterData.swm.Population.garbageToBeCollected": "Population Garbage To Be Collected",
+
+"MdmsMetadata.masterData.swm.Toilet.tenantId": "Toilet TenantID",
+"MdmsMetadata.masterData.swm.Toilet.name": "Toilet Name",
+"MdmsMetadata.masterData.swm.Toilet.location": "Toilet Location",
+"MdmsMetadata.masterData.swm.Toilet.code": "Toilet Code",
+"MdmsMetadata.masterData.swm.Toilet.publicToilet": "Toilet Public Toilet",
+"MdmsMetadata.masterData.swm.Toilet.latitude": "Toilet Latitude",
+"MdmsMetadata.masterData.swm.Toilet.longitude": "Toilet Longitude",
+"MdmsMetadata.masterData.swm.Toilet.seatCount": "Toilet Seat Count",
 
 /*------------------------------------------------------------------------------------------*/
 

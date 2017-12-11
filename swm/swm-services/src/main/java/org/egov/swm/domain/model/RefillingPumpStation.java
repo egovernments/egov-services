@@ -40,7 +40,7 @@ public class RefillingPumpStation {
 
     @NotNull
     @JsonProperty("typeOfPump")
-    private OilCompanyName typeOfPump = null;
+    private OilCompany typeOfPump = null;
 
     @Size(min = 0, max = 300)
     @JsonProperty("remarks")

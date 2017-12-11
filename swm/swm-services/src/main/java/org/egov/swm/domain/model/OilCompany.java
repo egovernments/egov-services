@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class OilCompanyName {
+public class OilCompany {
 
     @NotNull
     @Length(min = 1, max = 256)

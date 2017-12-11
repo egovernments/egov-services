@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.constants.Constants;
-import org.egov.swm.domain.model.OilCompanyName;
+import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.web.repository.MdmsRepository;
 import org.egov.tracer.model.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +23,7 @@ public class OilCompanyService {
     @Autowired
     private MdmsRepository mdmsRepository;
 
-    public OilCompanyName getOilCompany(final String tenantId, final String code, final RequestInfo requestInfo) {
+    public OilCompany getOilCompany(final String tenantId, final String code, final RequestInfo requestInfo) {
 
         JSONArray responseJSONArray;
         final ObjectMapper mapper = new ObjectMapper();
@@ -32,15 +32,15 @@ public class OilCompanyService {
                 Constants.OILCOMPANY_MASTER_NAME, "code", code, requestInfo);
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
-            return mapper.convertValue(responseJSONArray.get(0), OilCompanyName.class);
+            return mapper.convertValue(responseJSONArray.get(0), OilCompany.class);
         else
             throw new CustomException("OilCompany", "Given OilCompany is invalid: " + code);
 
     }
 
-    public List<OilCompanyName> getAll(final String tenantId, final RequestInfo requestInfo) {
+    public List<OilCompany> getAll(final String tenantId, final RequestInfo requestInfo) {
 
-        List<OilCompanyName> ocs = new ArrayList<>();
+        List<OilCompany> ocs = new ArrayList<>();
 
         JSONArray responseJSONArray;
         final ObjectMapper mapper = new ObjectMapper();
@@ -50,7 +50,7 @@ public class OilCompanyService {
 
         if (responseJSONArray != null && responseJSONArray.size() > 0)
             for (Object obj : responseJSONArray)
-                ocs.add(mapper.convertValue(obj, OilCompanyName.class));
+                ocs.add(mapper.convertValue(obj, OilCompany.class));
 
         return ocs;
 

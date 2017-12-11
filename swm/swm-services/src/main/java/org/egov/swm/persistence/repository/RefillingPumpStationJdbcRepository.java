@@ -11,7 +11,7 @@ import java.util.Set;
 import org.egov.common.contract.request.RequestInfo;
 import org.egov.swm.domain.model.Boundary;
 import org.egov.swm.domain.model.FuelType;
-import org.egov.swm.domain.model.OilCompanyName;
+import org.egov.swm.domain.model.OilCompany;
 import org.egov.swm.domain.model.Pagination;
 import org.egov.swm.domain.model.RefillingPumpStation;
 import org.egov.swm.domain.model.RefillingPumpStationSearch;
@@ -180,15 +180,15 @@ public class RefillingPumpStationJdbcRepository extends JdbcRepository {
     }
 
     private void populateTypeOfPumps(List<RefillingPumpStation> refillingPumpStationList) {
-        Map<String, OilCompanyName> typeOfPumpMap = new HashMap<>();
+        Map<String, OilCompany> typeOfPumpMap = new HashMap<>();
         String tenantId = null;
 
         if (refillingPumpStationList != null && !refillingPumpStationList.isEmpty())
             tenantId = refillingPumpStationList.get(0).getTenantId();
 
-        List<OilCompanyName> typeOfPumps = oilCompanyService.getAll(tenantId, new RequestInfo());
+        List<OilCompany> typeOfPumps = oilCompanyService.getAll(tenantId, new RequestInfo());
 
-        for (OilCompanyName top : typeOfPumps) {
+        for (OilCompany top : typeOfPumps) {
             typeOfPumpMap.put(top.getCode(), top);
         }
 

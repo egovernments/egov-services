@@ -112,7 +112,7 @@ var dat = {
               "masterName": "DumpingGround",
               "filter": "",
               "key": "$..ulbs.*.code",
-              "value": "$..ulbs.*.code",
+              "value": "$..ulbs.*.name",
               "dependant": {
                 "jsonExp": "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]"
               }
@@ -330,7 +330,7 @@ var dat = {
               "masterName": "DumpingGround",
               "filter": "",
               "key": "$..ulbs.*.code",
-              "value": "$..ulbs.*.code",
+              "value": "$..ulbs.*.name",
               "dependant": {
                 "jsonExp": "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]"
               }

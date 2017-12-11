@@ -135,7 +135,7 @@ var dat = {
       },
       {
         "name": "VehicleMaintenanceDeatils",
-        "label": "swm.create.group.title.VehicleMaintenanceDeatils",
+        "label": "swm.create.group.title.VehicleMaintenanceDetails",
         "fields": [
           {
             "name": "regNumber",
@@ -337,7 +337,7 @@ var dat = {
       },
       {
         "name": "VehicleMaintenanceDeatils",
-        "label": "swm.create.group.title.VehicleMaintenanceDeatils",
+        "label": "swm.create.group.title.VehicleMaintenanceDetails",
         "fields": [
           {
             "name": "regNumber",
@@ -530,7 +530,7 @@ var dat = {
       },
       {
         "name": "VehicleMaintenanceDeatils",
-        "label": "swm.create.group.title.VehicleMaintenanceDeatils",
+        "label": "swm.create.group.title.VehicleMaintenanceDetails",
         "fields": [
           {
             "name": "regNumber",

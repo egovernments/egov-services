@@ -2361,7 +2361,7 @@ var localization_EN_Data = {
 "swm.search.result.name": "Name",
 "swm.create.vehicleReadingDuringMaintenance": "Vehicle Reading during Maintenance (Kms)",
 "swm.create.remarks": "Remarks",
-"swm.create.group.title.VehicleMaintenanceDeatils": "Vehicle Maintenance Deatils",
+"swm.create.group.title.VehicleMaintenanceDetails": "Vehicle Maintenance Details",
 "swm.create.isScheduled": "Is Scheduled",
 "swm.create.DowntimeDefined": "Downtime Defined",
 "swm.create.tripStartDate": "Schedule Date From ",

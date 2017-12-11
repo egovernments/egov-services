@@ -109,7 +109,8 @@ public class VehicleMaintenanceDetailsService {
 
             return DateUtils.addDays(new Date(lastServiceDate), noOfDays).getTime();
         } else
-            throw new CustomException("VehicleMaintenanceDetail", "Invalid Vehicle Maintenance Detatils:");
+            throw new CustomException("VehicleMaintenanceDetail", "Next Scheduled Date is not applicable for vehicle :" +
+            vehicleRegNumber);
     }
 
     private void validateForUniqueCodesInRequest(final VehicleMaintenanceDetailsRequest vehicleMaintenanceDetailsRequest) {
@@ -176,7 +177,8 @@ public class VehicleMaintenanceDetailsService {
                 return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
                         vehicleMaintenanceDetail, vehicleMaintenance.getMaintenanceAfter()));
         } else
-            throw new CustomException("VehicleMaintenance", "Vehicle Maintenance not defin:");
+            throw new CustomException("VehicleMaintenance", "Next scheduled date not applicable since Vehicle Maintenance not defined for vehicle :"
+                    + vehicleMaintenanceDetail.getVehicle().getRegNumber());
 
         return 0;
     }
@@ -225,10 +227,12 @@ public class VehicleMaintenanceDetailsService {
                         return totalDays.intValue();
                     }
                 } else
-                    throw new CustomException("Route", "Route not defined:");
+                    throw new CustomException("Route", "Next scheduled date not applicable since Route not defined for veicle :" +
+                            vehicleMaintenanceDetail.getVehicle().getRegNumber());
             }
         else
-            throw new CustomException("VehicleSchedule", "Vehicle Schedule not defined:");
+            throw new CustomException("VehicleSchedule", "Next scheduled date not applicable since Vehicle Schedule not defined for vehicle :" +
+                    vehicleMaintenanceDetail.getVehicle().getRegNumber());
         return totalDays.intValue();
     }
 

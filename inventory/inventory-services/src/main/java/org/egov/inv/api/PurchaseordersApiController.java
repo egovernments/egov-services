@@ -1,5 +1,7 @@
 package org.egov.inv.api;
 
+import io.swagger.annotations.ApiParam;
+
 import java.util.List;
 
 import javax.validation.Valid;
@@ -12,15 +14,12 @@ import org.egov.inv.domain.service.PurchaseOrderService;
 import org.egov.inv.model.PurchaseOrderRequest;
 import org.egov.inv.model.PurchaseOrderResponse;
 import org.egov.inv.model.PurchaseOrderSearch;
-import org.egov.inv.model.RequestInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import io.swagger.annotations.ApiParam;
 @javax.annotation.Generated(value = "org.egov.inv.codegen.languages.SpringCodegen", date = "2017-11-08T13:51:07.770Z")
 
 @Controller

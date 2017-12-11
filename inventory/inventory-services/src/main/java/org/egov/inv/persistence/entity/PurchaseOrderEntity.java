@@ -33,6 +33,7 @@ public class PurchaseOrderEntity {
 	private String rateType;
 	private String supplier;
 	private BigDecimal advanceAmount;
+	private BigDecimal totalAmount;
 	private BigDecimal advancePercentage;
 	private Long expectedDeliveryDate;
 	private String deliveryTerms;
@@ -54,6 +55,7 @@ public class PurchaseOrderEntity {
 		purchaseOrder.setStore(new Store().code(store));
 		purchaseOrder.setPurchaseOrderNumber(this.purchaseOrderNumber);
 		purchaseOrder.setAdvanceAmount(this.advanceAmount);
+		purchaseOrder.setTotalAmount(this.totalAmount);
 
 		AuditDetails auditDetail = new AuditDetails().createdBy(createdBy).lastModifiedBy(lastModifiedBy)
 				.createdTime(createdTime).lastModifiedTime(lastModifiedTime);
@@ -85,6 +87,7 @@ public class PurchaseOrderEntity {
 		this.id = po.getId();
 		this.tenantId = po.getTenantId();
 		this.advanceAmount = po.getAdvanceAmount() != null ? po.getAdvanceAmount() : null;
+		this.totalAmount = po.getTotalAmount() != null ? po.getTotalAmount() : null;
 		this.advancePercentage = po.getAdvancePercentage() != null ? po.getAdvancePercentage() : null;
 		this.deliveryTerms = po.getDeliveryTerms() != null ? po.getDeliveryTerms() : null;
 		this.designation = po.getDesignation() != null ? po.getDesignation() : null;

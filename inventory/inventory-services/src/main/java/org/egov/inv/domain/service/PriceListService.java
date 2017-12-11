@@ -206,21 +206,21 @@ public class PriceListService extends DomainService {
 	} 
 	
 	private void validate(List<PriceList> priceLists, String method) {
-
+		InvalidDataException errors = new InvalidDataException();
 		try {
 
 			switch (method) {
 
 			case Constants.ACTION_CREATE: {
 				if (priceLists == null) {
-					throw new InvalidDataException("priceLists", ErrorCode.NOT_NULL.getCode(), null);
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "pricelists", "null");
 				}
 			}
 				break;
 
 			case Constants.ACTION_UPDATE: {
 				if (priceLists == null) {
-					throw new InvalidDataException("priceLists", ErrorCode.NOT_NULL.getCode(), null);
+					errors.addDataError(ErrorCode.NOT_NULL.getCode(), "pricelists", "null");
 				}
 			}
 				break;
@@ -245,22 +245,22 @@ public class PriceListService extends DomainService {
 				}
 				
 				if(Long.valueOf(pl.getAgreementDate()) > currentMilllis){
-					throw new CustomException("agreementDate", "Agreement Date must be less than or equal to Today's date");
+					errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementDate",pl.getAgreementDate().toString());
 				}
 				
 				if(Long.valueOf(pl.getRateContractDate()) > currentMilllis){
-					throw new CustomException("rateContractDate", "Rate Contract Date must be less than or equal to Today's date");
+					errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "rateContractDate",pl.getRateContractDate().toString());
 				}
 				
 				if(Long.valueOf(pl.getAgreementStartDate()) > currentMilllis){
-					throw new CustomException("agreementStartDate", "Agreement Start Date must be less than or equal to Today's date");
+					errors.addDataError(ErrorCode.DATE_LE_CURRENTDATE.getCode(), "agreementStartDate",pl.getAgreementStartDate().toString());
 				}
 				
 				if(Long.valueOf(pl.getAgreementEndDate()) < Long.valueOf(pl.getAgreementStartDate())){
 					if(Long.valueOf(pl.getAgreementEndDate()) < 0){
 						throw new CustomException("agreementEndDate", "Enter a valid Agreement End Date");
 					}
-					throw new CustomException("agreementEndDate", "Agreement End Date must be greater than or equal to Agreement start date");
+					errors.addDataError(ErrorCode.DATE1_GE_DATE2.getCode(), "agreementStartDate", "agreementEndDate", pl.getAgreementStartDate().toString(), pl.getAgreementEndDate().toString());
 				}
 				
 				// Negative epoch time is for years below 1970
@@ -279,11 +279,11 @@ public class PriceListService extends DomainService {
 				for(PriceListDetails priceListDetail : pl.getPriceListDetails()){
 					if(priceListDetail.getQuantity()!=null)
 					if(priceListDetail.getQuantity().doubleValue()<0){
-						throw new CustomException("quantity", "Material "+ priceListDetail.getMaterial().getCode() + "'s quantity should be positive");
+						errors.addDataError(ErrorCode.QUANTITY_GT_ZERO.getCode(), "quantity",priceListDetail.getQuantity().toString());
 					}
 					if(pl.getRateType().name().equals(PriceList.RateTypeEnum.ONE_TIME_TENDER.name())){
 						if(priceListDetail.getQuantity()==null){
-							throw new CustomException("quantity", "Material "+ priceListDetail.getMaterial().getCode() + "'s quantity should be provided incase of Tender");
+							errors.addDataError(ErrorCode.QUANTITY_GT_ZERO_TENDER.getCode(), "quantity",priceListDetail.getQuantity().toString());
 						}
 					}
 				}

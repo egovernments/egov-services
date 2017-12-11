@@ -240,7 +240,7 @@ public class PriceListService extends DomainService {
 					}
 				}
 				
-				if(!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.name().equals(pl.getRateType()))) {
+				if(!Arrays.stream(PriceList.RateTypeEnum.values()).anyMatch((t) -> t.equals(PriceList.RateTypeEnum.fromValue(pl.getRateType().toString())))) {
 					throw new CustomException("rateType", "Please enter a valid RateType");
 				}
 				

@@ -39,7 +39,7 @@ public class WorksMastersRepository {
     public List<ScheduleOfRate> searchScheduleOfRatesByCodeAndCategory(final String tenantId, final List<String> codes, final List<String> categoryCodes, final RequestInfo requestInfo) {
         String sorCodes = String.join(",", codes);
         String scheduleCategoryCodes = String.join(",", categoryCodes);
-        return restTemplate.postForObject(searchSorUrl,
+        return restTemplate.postForObject(searchSorByCodeUrl,
                 requestInfo, ScheduleOfRateResponse.class, tenantId, sorCodes, scheduleCategoryCodes).getScheduleOfRates();
     }
 }

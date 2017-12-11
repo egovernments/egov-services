@@ -287,6 +287,9 @@ public class Constants {
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_GREATER= "Estimate measurement sheet quantity should not be greater than activity quantity";
 
+    public static final String KEY_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT= "ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT";
+    public static final String MESSAGE_ACTIVITY_AMOUNT_TOTAL_NOTEQUALSTO_ESTIMATE_AMOUNT= "Total Estimate activity amount should be equal to estimate amount";
+
     public static final String KEY_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_MEASUREMENT_QUANTITY_INVALID= "Estimate measurement sheet quantity should be greater than zero";
 
@@ -304,6 +307,9 @@ public class Constants {
 
     public static final String KEY_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE";
     public static final String MESSAGE_ESTIMATE_ACTIVITY_SCHEDULEOFRATE_DUPLICATE= "Duplicate value for Estimate activity schedule of rate";
+
+    public static final String KEY_INVALID_SOR_RATES= "INVALID_SOR_RATES";
+    public static final String MESSAGE_INVALID_SOR_RATES= "No valid rates defined for activity";
 
     public static final String KEY_WORKS_ESTIMATE_ASSET_CODE_INVALID= "WORKS_ESTIMATE_ASSET_CODE_INVALID";
     public static final String MESSAGE_WORKS_ESTIMATE_ASSET_CODE_INVALID= "Invalid data for estimate asset code";

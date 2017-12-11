@@ -709,6 +709,19 @@
       "createddate": null,
       "lastmodifiedby": null,
       "lastmodifieddate": null
+    },
+    {
+      "id": 6,
+      "code": "Workflow_Required",
+      "keyName": "Workflow_Required",
+      "tenantId": "default",
+      "description": "Workflow for an object is required or not",
+      "value": "No",
+      "effectivefrom": "2017-08-22",
+      "createdby": null,
+      "createddate": null,
+      "lastmodifiedby": null,
+      "lastmodifieddate": null
     }
   ],
   "BudgetGroup": [

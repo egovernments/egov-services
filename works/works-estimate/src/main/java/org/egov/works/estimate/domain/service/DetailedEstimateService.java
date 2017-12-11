@@ -65,6 +65,7 @@ public class DetailedEstimateService {
 			if (detailedEstimate.getAbstractEstimateDetail() != null || (isRevision != null && isRevision)) {
 				abstactEstimate = validator.searchAbstractEstimate(detailedEstimate);
                 detailedEstimate.setAbstractEstimateDetail(abstactEstimate.getAbstractEstimateDetails().get(0));
+                detailedEstimate.setProjectCode(abstactEstimate.getAbstractEstimateDetails().get(0).getProjectCode());
 				if ((abstactEstimate != null && !abstactEstimate.getDetailedEstimateCreated())
 						 || (isRevision != null && isRevision)) {
 					String estimateNumber = idGenerationRepository.generateDetailedEstimateNumber(
@@ -157,7 +158,8 @@ public class DetailedEstimateService {
 				}
 			}
 
-			if (isRevision == null || (isRevision != null && !isRevision)) {
+            if(validator.workflowRequired(detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo()) &&
+                 isRevision == null || (isRevision != null && !isRevision)) {
 				populateWorkFlowDetails(detailedEstimate, detailedEstimateRequest.getRequestInfo(), abstactEstimate);
 				Map<String, String> workFlowResponse = workflowService.enrichWorkflow(detailedEstimate.getWorkFlowDetails(),
 						detailedEstimate.getTenantId(), detailedEstimateRequest.getRequestInfo());

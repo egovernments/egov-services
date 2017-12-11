@@ -17,7 +17,7 @@ import java.util.Objects;
  * An Object holds the basic data for a Detailed Estimate
  */
 @ApiModel(description = "An Object holds the basic data for a Detailed Estimate")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-11T07:31:23.845Z")
 
 public class DetailedEstimate   {
   @JsonProperty("id")
@@ -321,10 +321,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Department for which Detailed Estimate belongs to
+   * Department for which Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return department
   **/
-  @ApiModelProperty(required = true, value = "Department for which Detailed Estimate belongs to")
+  @ApiModelProperty(required = true, value = "Department for which Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 //  @NotNull
 
   //@Valid
@@ -590,10 +590,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * The Beneficiary of this work
+   * The Beneficiary of this work. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return beneficiary
   **/
-  @ApiModelProperty(value = "The Beneficiary of this work")
+  @ApiModelProperty(value = "The Beneficiary of this work. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   @Valid
 
@@ -633,10 +633,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * The Type of work for which this Detailed Estimate belongs to
+   * The Type of work for which this Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return worksType
   **/
-  @ApiModelProperty(required = true, value = "The Type of work for which this Detailed Estimate belongs to")
+  @ApiModelProperty(required = true, value = "The Type of work for which this Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 //  @NotNull
 
   //@Valid
@@ -656,10 +656,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * The Sub Type of work for which this Detailed Estimate belongs to
+   * The Sub Type of work for which this Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return worksSubtype
   **/
-  @ApiModelProperty(value = "The Sub Type of work for which this Detailed Estimate belongs to")
+  @ApiModelProperty(value = "The Sub Type of work for which this Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   //@Valid
   //TODO Handle only code validation
@@ -678,10 +678,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * The Nature of work for which this Detailed Estimate belongs to
+   * The Nature of work for which this Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return natureOfWork
   **/
-  @ApiModelProperty(required = true, value = "The Nature of work for which this Detailed Estimate belongs to")
+  @ApiModelProperty(required = true, value = "The Nature of work for which this Detailed Estimate belongs to. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 //  @NotNull
 
   //@Valid
@@ -700,10 +700,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Ward of the Detailed Estimate
+   * Ward of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return ward
   **/
-  @ApiModelProperty(required = true, value = "Ward of the Detailed Estimate")
+  @ApiModelProperty(required = true, value = "Ward of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 //  @NotNull
 
   //@Valid
@@ -783,10 +783,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * The Work Category of the Detailed Estimate
+   * The Work Category of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return workCategory
   **/
-  @ApiModelProperty(value = "The Work Category of the Detailed Estimate")
+  @ApiModelProperty(value = "The Work Category of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   @Valid
 
@@ -885,10 +885,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Boolean value to identify whether the bills created or not for spillover data. The grossAmountBilled field needs to be shown if the billsCreated flag is true.
+   * Boolean value to identify whether the bills created or not for spillover data. The grossAmountBilled field needs to be shown if the billsCreated flag is true. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return billsCreated
   **/
-  @ApiModelProperty(value = "Boolean value to identify whether the bills created or not for spillover data. The grossAmountBilled field needs to be shown if the billsCreated flag is true.")
+  @ApiModelProperty(value = "Boolean value to identify whether the bills created or not for spillover data. The grossAmountBilled field needs to be shown if the billsCreated flag is true. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
 
   public Boolean getBillsCreated() {
@@ -905,10 +905,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Boolean value to identify whether the Detailed Estimate is spillover or not.
+   * Boolean value to identify whether the Detailed Estimate is spillover or not. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return spillOverFlag
   **/
-  @ApiModelProperty(value = "Boolean value to identify whether the Detailed Estimate is spillover or not.")
+  @ApiModelProperty(value = "Boolean value to identify whether the Detailed Estimate is spillover or not. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
 
   public Boolean getSpillOverFlag() {
@@ -1182,10 +1182,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Asset Referencs for the Detailed Estimate
+   * Asset Referencs for the Detailed Estimate.Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return assets
   **/
-  @ApiModelProperty(value = "Asset Referencs for the Detailed Estimate")
+  @ApiModelProperty(value = "Asset Referencs for the Detailed Estimate.Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   //@Valid
 
@@ -1273,10 +1273,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Fund of the Detailed Estimate
+   * Fund of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return fund
   **/
-  @ApiModelProperty(value = "Fund of the Detailed Estimate")
+  @ApiModelProperty(value = "Fund of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   //@Valid
   //TODO Only fund code is required based on configuration
@@ -1295,10 +1295,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Function of the Detailed Estimate
+   * Function of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return function
   **/
-  @ApiModelProperty(value = "Function of the Detailed Estimate")
+  @ApiModelProperty(value = "Function of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   //@Valid
   //TODO Only function code is required based on configuration
@@ -1383,10 +1383,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Budget Group of the Detailed Estimate
+   * Budget Group of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return budgetGroup
   **/
-  @ApiModelProperty(value = "Budget Group of the Detailed Estimate")
+  @ApiModelProperty(value = "Budget Group of the Detailed Estimate. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
   //@Valid
   ////TODO Only budgetgroup name is required based on configuration
@@ -1405,10 +1405,10 @@ public class DetailedEstimate   {
   }
 
    /**
-   * Boolean value to identify whether the object is deleted or not from UI.
+   * Boolean value to identify whether the object is deleted or not from UI. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.
    * @return deleted
   **/
-  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI.")
+  @ApiModelProperty(value = "Boolean value to identify whether the object is deleted or not from UI. Value will be copied from abstract estimate based on configuration flag AbstractEstimate required or not.")
 
 
   public Boolean getDeleted() {

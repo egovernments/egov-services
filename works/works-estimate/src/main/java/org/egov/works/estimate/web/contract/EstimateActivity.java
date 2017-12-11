@@ -16,7 +16,7 @@ import java.util.Objects;
  * An Object holds the basic data of Estimate Activity
  */
 @ApiModel(description = "An Object holds the basic data of Estimate Activity")
-@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-11-29T09:03:53.949Z")
+@javax.annotation.Generated(value = "io.swagger.codegen.languages.SpringCodegen", date = "2017-12-11T07:31:23.845Z")
 
 public class EstimateActivity   {
   @JsonProperty("id")
@@ -60,6 +60,9 @@ public class EstimateActivity   {
 
   @JsonProperty("deleted")
   private Boolean deleted = false;
+
+  @JsonProperty("activityAmount")
+  private BigDecimal activityAmount = null;
 
   @JsonProperty("auditDetails")
   private AuditDetails auditDetails = null;
@@ -368,6 +371,27 @@ public class EstimateActivity   {
     this.deleted = deleted;
   }
 
+  public EstimateActivity activityAmount(BigDecimal activityAmount) {
+    this.activityAmount = activityAmount;
+    return this;
+  }
+
+   /**
+   * Amount of the Estimate Activity(unitrate * quantity)
+   * @return activityAmount
+  **/
+  @ApiModelProperty(value = "Amount of the Estimate Activity(unitrate * quantity)")
+
+  @Valid
+
+  public BigDecimal getActivityAmount() {
+    return activityAmount;
+  }
+
+  public void setActivityAmount(BigDecimal activityAmount) {
+    this.activityAmount = activityAmount;
+  }
+
   public EstimateActivity auditDetails(AuditDetails auditDetails) {
     this.auditDetails = auditDetails;
     return this;
@@ -413,12 +437,13 @@ public class EstimateActivity   {
         Objects.equals(this.detailedEstimate, estimateActivity.detailedEstimate) &&
         Objects.equals(this.estimateMeasurementSheets, estimateActivity.estimateMeasurementSheets) &&
         Objects.equals(this.deleted, estimateActivity.deleted) &&
+        Objects.equals(this.activityAmount, estimateActivity.activityAmount) &&
         Objects.equals(this.auditDetails, estimateActivity.auditDetails);
   }
 
   @Override
   public int hashCode() {
-    return Objects.hash(id, tenantId, scheduleOfRate, nonSor, uom, unitRate, estimateRate, quantity, serviceTaxPerc, revisionType, parent, detailedEstimate, estimateMeasurementSheets, deleted, auditDetails);
+    return Objects.hash(id, tenantId, scheduleOfRate, nonSor, uom, unitRate, estimateRate, quantity, serviceTaxPerc, revisionType, parent, detailedEstimate, estimateMeasurementSheets, deleted, activityAmount, auditDetails);
   }
 
   @Override
@@ -440,6 +465,7 @@ public class EstimateActivity   {
     sb.append("    detailedEstimate: ").append(toIndentedString(detailedEstimate)).append("\n");
     sb.append("    estimateMeasurementSheets: ").append(toIndentedString(estimateMeasurementSheets)).append("\n");
     sb.append("    deleted: ").append(toIndentedString(deleted)).append("\n");
+    sb.append("    activityAmount: ").append(toIndentedString(activityAmount)).append("\n");
     sb.append("    auditDetails: ").append(toIndentedString(auditDetails)).append("\n");
     sb.append("}");
     return sb.toString();

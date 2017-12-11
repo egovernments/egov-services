@@ -70,7 +70,7 @@ public class ScheduleOfRateQueryBuilder {
         }
 
         if (scheduleOfRateSearchCriteria.getSorCodes() != null && !scheduleOfRateSearchCriteria.getSorCodes().isEmpty() && scheduleOfRateSearchCriteria.getSorCodes().size() == 1) {
-            selectQuery.append("lower(sor.code) like :sorCodes ");
+            selectQuery.append(" and lower(sor.code) like :sorCodes ");
             params.put("sorCodes", '%' + scheduleOfRateSearchCriteria.getSorCodes().get(0).toLowerCase() + '%' );
         } else if (scheduleOfRateSearchCriteria.getSorCodes() != null) {
             selectQuery.append(" and sor.code in (:sorCodes)");
@@ -78,7 +78,7 @@ public class ScheduleOfRateQueryBuilder {
         }
 
         if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null && !scheduleOfRateSearchCriteria.getScheduleCategoryCodes().isEmpty() && scheduleOfRateSearchCriteria.getScheduleCategoryCodes().size() == 1) {
-            selectQuery.append("lower(sor.schedulecategory) like :scheduleCategoryCodes ");
+            selectQuery.append(" and lower(sor.schedulecategory) like :scheduleCategoryCodes ");
             params.put("scheduleCategoryCodes", '%' + scheduleOfRateSearchCriteria.getScheduleCategoryCodes().get(0).toLowerCase() + '%' );
         } else if (scheduleOfRateSearchCriteria.getScheduleCategoryCodes() != null) {
             selectQuery.append(" and sor.schedulecategory in (:scheduleCategoryCodes)");

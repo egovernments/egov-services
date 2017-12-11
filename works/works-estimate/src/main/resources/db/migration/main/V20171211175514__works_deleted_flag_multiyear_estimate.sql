@@ -1,0 +1,1 @@
+ALTER TABLE egw_multiyear_estimate ADD COLUMN deleted boolean DEFAULT false;

@@ -2774,7 +2774,7 @@ definitions:
           maxLength: 256
           minLength: 1
         typeOfPump:
-          $ref: '#/definitions/OilCompanyName'
+          $ref: '#/definitions/OilCompany'
           format: singleValueList
           description: pump Type of the RefillingPumpStation. e.g. HP, Indian Oil etc
         remarks:
@@ -2822,7 +2822,7 @@ definitions:
           items:
             $ref: '#/definitions/RefillingPumpStation'
     
-    OilCompanyName:
+    OilCompany:
       type: object
       description: This object captures name of Oil Companies operating petrol pumps. e.g Indian Oil 
       properties:

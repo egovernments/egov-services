@@ -1,6 +1,120 @@
 {
   "tenantId": "mh",
   "moduleName": "swm",
+  "mdms-config": [
+    {
+      "masterName": "VehicleType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/VehicleType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "FuelType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/FuelType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "OilCompany",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/OilCompany",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "WasteType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/WasteType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "WasteSubType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/WasteSubType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "DumpingGround",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/DumpingGround",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "ProcessingSite",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/ProcessingSite",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "ShiftType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/ShiftType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "Shift",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/Shift",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "CollectionType",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/CollectionType",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "Population",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/Population",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "Toilet",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/Toilet",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "SwmProcess",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/SwmProcess",
+      "uniqueKeys": [
+        "$.code",
+        "$.tenantId"
+      ]
+    },
+    {
+      "masterName": "PaymentTerms",
+      "moduleDefinition": "https://raw.githubusercontent.com/egovernments/egov-services/master/docs/swm/contract/v1-0-0.yml#/definitions/PaymentTerms",
+      "uniqueKeys": [
+        "$.label",
+        "$.tenantId"
+      ]
+    }
+  ],
   "VehicleType": [
     {
       "tenantId": "mh",
@@ -111,14 +225,14 @@
       "tenantId": "mh",
       "name": "Trimbak Muncipal Council",
       "ulbs": [
-	{
-	  "code": "default",
-	  "name": "ULB:Trimbak Muncipal Council",
-	  "imageId": "Fake image ID 1",
-	  "logoId": "Fake logo ID 1",
-	  "type": "Fake type 1"
-	},
-	{
+        {
+          "code": "default",
+          "name": "ULB:Trimbak Muncipal Council",
+          "imageId": "Fake image ID 1",
+          "logoId": "Fake logo ID 1",
+          "type": "Fake type 1"
+        },
+        {
           "code": "mh.roha",
           "name": "Fake ULB 2",
           "imageId": "Fake image ID 2",
@@ -155,9 +269,8 @@
       "code": "DG Code 2",
       "tenantId": "mh",
       "name": "Fake dumping ground 2",
-      "ulbs":
-      [
-	{
+      "ulbs": [
+        {
           "code": "mh.roha",
           "name": "Fake ULB 2",
           "imageId": "Fake image ID 2",
@@ -190,10 +303,9 @@
       },
       "isProcessingSite": false,
       "distanceFromProcessingSite": 20.75,
-      "processingSite": 
-	{
-	   "code":"Fake Pro. Plant 1"
-	}
+      "processingSite": {
+        "code": "Fake Pro. Plant 1"
+      }
     }
   ],
   "ProcessingSite": [
@@ -285,7 +397,7 @@
       "shiftEndTime": 1512059400000,
       "lunchStartTime": 1512046800000,
       "lunchEndTime": 1512050400000,
-       "graceTimeFrom": 1512016200000,
+      "graceTimeFrom": 1512016200000,
       "graceTimeTo": 1512019800000
     },
     {
@@ -312,7 +424,7 @@
       "shiftEndTime": 1512030600000,
       "lunchStartTime": 1512016200000,
       "lunchEndTime": 1512019800000,
-       "graceTimeFrom": 1512016200000,
+      "graceTimeFrom": 1512016200000,
       "graceTimeTo": 1512019800000
     },
     {

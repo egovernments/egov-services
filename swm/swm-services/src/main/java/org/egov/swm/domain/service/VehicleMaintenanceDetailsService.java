@@ -95,8 +95,8 @@ public class VehicleMaintenanceDetailsService {
         // Fetch vehicle maintenance detail using code and tenantid
         final VehicleMaintenanceDetailsSearch vehicleMaintenanceDetailsSearch = new VehicleMaintenanceDetailsSearch();
         vehicleMaintenanceDetailsSearch.setTenantId(tenantId);
-        vehicleMaintenanceDetailsSearch.setVehicle(Vehicle.builder().regNumber(vehicleRegNumber).build());
-        vehicleMaintenanceDetailsSearch.setSortBy("createddate");
+        vehicleMaintenanceDetailsSearch.setRegNumber(vehicleRegNumber);
+        vehicleMaintenanceDetailsSearch.setSortBy("createdTime");
 
         final Pagination<VehicleMaintenanceDetails> vehicleMaintenanceDetailsPage = vehicleMaintenanceDetailsRepository
                 .search(vehicleMaintenanceDetailsSearch);
@@ -162,7 +162,7 @@ public class VehicleMaintenanceDetailsService {
 
         final VehicleMaintenanceSearch vehicleMaintenanceSearch = new VehicleMaintenanceSearch();
         vehicleMaintenanceSearch.setTenantId(vehicleMaintenanceDetail.getTenantId());
-        vehicleMaintenanceDetail.setVehicle(vehicleMaintenanceDetail.getVehicle());
+        vehicleMaintenanceSearch.setRegNumber(vehicleMaintenanceDetail.getVehicle().getRegNumber());
 
         final Pagination<VehicleMaintenance> vehicleMaintenancePage = vehicleMaintenanceService
                 .search(vehicleMaintenanceSearch);
@@ -171,9 +171,9 @@ public class VehicleMaintenanceDetailsService {
 
             final VehicleMaintenance vehicleMaintenance = vehicleMaintenancePage.getPagedData().get(0);
 
-            if (vehicleMaintenance.getMaintenanceUom().equals("DAYS"))
+            if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("days"))
                 return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter());
-            else if (vehicleMaintenance.getMaintenanceUom().equals("KMS"))
+            else if (vehicleMaintenance.getMaintenanceUom().equalsIgnoreCase("kms"))
                 return Math.toIntExact(vehicleMaintenance.getMaintenanceAfter() / fetchkilometersFromRoutes(
                         vehicleMaintenanceDetail, vehicleMaintenance.getMaintenanceAfter()));
         } else

@@ -71,14 +71,25 @@ public abstract class JdbcRepository {
         else
             sortByList = Arrays.asList(sortBy);
         Boolean isFieldExist = Boolean.FALSE;
+        Boolean isAuditableFieldExist = Boolean.FALSE;
         for (final String s : sortByList) {
-            for (int i = 0; i < object.getDeclaredFields().length; i++)
+            for (int i = 0; i < object.getDeclaredFields().length; i++) {
+                if (object.getDeclaredFields()[i].getName().equalsIgnoreCase("auditDetails")) {
+                    for (int j = 0; j < object.getDeclaredFields()[i].getType().getDeclaredFields().length; j++) {
+                        if (object.getDeclaredFields()[i].getType().getDeclaredFields()[j].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
+                            isAuditableFieldExist = Boolean.TRUE;
+                            break;
+                        } else
+                            isAuditableFieldExist = Boolean.FALSE;
+                    }
+                }
                 if (object.getDeclaredFields()[i].getName().equals(s.contains(" ") ? s.split(" ")[0] : s)) {
                     isFieldExist = Boolean.TRUE;
                     break;
                 } else
                     isFieldExist = Boolean.FALSE;
-            if (!isFieldExist)
+            }
+            if (!isFieldExist && !isAuditableFieldExist)
                 throw new CustomException(s.contains(" ") ? s.split(" ")[0] : s, "Please send the proper Field Names ");
         }
 

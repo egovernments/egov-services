@@ -60,7 +60,7 @@ public class VehicleMaintenanceDetails {
     private Double vehicleReadingDuringMaintenance = null;
 
     @JsonProperty("remarks")
-    @Size(min = 15, max = 300)
+    @Size(min = 0, max = 300)
     private String remarks = null;
 
     @NotNull

@@ -457,7 +457,7 @@ var dat = {
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 300,
-            "minLength": 15,
+            "minLength": 0,
             "patternErrorMsg": ""
           }
         ]
@@ -693,7 +693,7 @@ var dat = {
             "isDisabled": false,
             "defaultValue": "",
             "maxLength": 300,
-            "minLength": 15,
+            "minLength": 0,
             "patternErrorMsg": ""
           }
         ]

@@ -123,6 +123,12 @@ public class SourceSegregationService {
             else
                 throw new CustomException("DumpingGround", "DumpingGround is required");
 
+            if (sourceSegregation.getSourceSegregationDate() != null)
+                if (new Date()
+                        .before(new Date(sourceSegregation.getSourceSegregationDate())))
+                    throw new CustomException("SourceSegregationDate ", "Given Source Segregation Date is invalid: "
+                            + new Date(sourceSegregation.getSourceSegregationDate()));
+
             for (final CollectionDetails cd : sourceSegregation.getCollectionDetails()) {
 
                 // Validate Collection Type

@@ -69,8 +69,8 @@ public class Constants {
     public static final String MESSAGE_ESTIMATETEMPLATE_THEREARE_DUPLICATE_CODES="There are duplicate of code in given list ";
 
 
-    public static final String KEY_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY="WMS.ESTIMATETEMPLATE.TYPEOFWORK.SUBTYPEOFWORK.ONEMANDATORY";
-    public static final String MESSAGE_TYPEOFWORK_SUBTYPEOFWORK_EITHER_ONE_MANDATORY="Either one of Type of work or Sub Type of Work is mandatory: ";
+    public static final String KEY_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED="WMS.ESTIMATETEMPLATE.DUPLICATE.SOR.NOTALLOWED";
+    public static final String MESSAGE_ESTIMATETEMPLATE_DUPLICATE_SOR_NOTALLOWED="Duplicate SORs not allowed for activity in a Template";
 
     public static final String KEY_TYPEOFWORK_CODE_INVALID="WMS.TYPEOFWORK.CODE.INVALID";
     public static final String MESSAGE_TYPEOFWORK_CODE_INVALID="Given Type Of Work is invalid: ";

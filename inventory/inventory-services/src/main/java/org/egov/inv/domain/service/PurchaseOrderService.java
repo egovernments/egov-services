@@ -231,26 +231,30 @@ public class PurchaseOrderService extends DomainService {
             Long currentMilllis = System.currentTimeMillis();
                         
             for(PurchaseOrder eachPurchaseOrder : pos){
+				int index = pos.indexOf(eachPurchaseOrder) + 1;
             	if(eachPurchaseOrder.getPurchaseOrderDate() > currentMilllis){
-            		errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString());
+            		errors.addDataError(ErrorCode.PO_DATE_LE_TODAY.getCode(), eachPurchaseOrder.getPurchaseOrderDate().toString()+" at serial no."+index);
                 }
             	if(null != eachPurchaseOrder.getExpectedDeliveryDate()){
             	if(eachPurchaseOrder.getExpectedDeliveryDate()  < eachPurchaseOrder.getPurchaseOrderDate()){
-            		errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString());
+            		errors.addDataError(ErrorCode.EXP_DATE_GE_PODATE.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString()+" at serial no."+index);
                 }
             	}
             	if (null != eachPurchaseOrder.getPurchaseOrderDetails()){
             for (PurchaseOrderDetail poDetail :eachPurchaseOrder.getPurchaseOrderDetails())
             {
+				int detailIndex = eachPurchaseOrder.getPurchaseOrderDetails().indexOf(poDetail) + 1;
+
             	if(null != poDetail.getOrderQuantity() && null != poDetail.getIndentQuantity()){
             		int res = poDetail.getOrderQuantity().compareTo(poDetail.getIndentQuantity());
             		if(res == 1){
-                	errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString());
+                	errors.addDataError(ErrorCode.ORDQTY_LE_INDQTY.getCode(), eachPurchaseOrder.getExpectedDeliveryDate().toString()+" at serial no."+detailIndex);
             	}
             	}
             }
             }
             }
+            
             
         } catch (IllegalArgumentException e) {
 

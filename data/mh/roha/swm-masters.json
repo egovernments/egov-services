@@ -117,7 +117,14 @@
 	  "imageId": "Fake image ID 1",
 	  "logoId": "Fake logo ID 1",
 	  "type": "Fake type 1"
-	}
+	},
+	{
+          "code": "mh.roha",
+          "name": "Fake ULB 2",
+          "imageId": "Fake image ID 2",
+          "logoId": "Fake logo ID 2",
+          "type": "Fake type 2"
+        }
       ],
       "siteDetails": {
         "area": 0.025,

@@ -517,6 +517,8 @@ class Report extends Component {
     Api.commonApiPost((url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url), "", formData, "", true).then(function(response){
       self.props.setLoadingStatus('hide');
       self.initData();
+       console.log('Back response');
+       console.log(response);
        if(response.summons){
           if(response.summons.length>0){
           self.props.toggleSnackbarAndSetText(true, translate(self.props.actionName == "create" ? "Created Successfully Ref No. is " + response.summons[0].summonReferenceNo : "wc.update.message.success"), true);
@@ -593,16 +595,19 @@ class Report extends Component {
     }
   }
 
-  //to inject any needed data in api request
   checkifHasInjectData = (_mockData) => {
     let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = _.cloneDeep(this.props.formData);
-    if(_mockData[moduleName + "." + actionName].injectData){
-      for(let i=0; i<_mockData[moduleName + "." + actionName].injectData.length; i++) {
-        _.set(this.props.formData, _mockData[moduleName + "." + actionName].injectData[i].jsonPath,  _mockData[moduleName + "." + actionName].injectData[i].value)
-      }
+    if(_mockData[moduleName + "." + actionName].injectData.length){
+      _mockData[moduleName + "." + actionName].injectData.forEach((item) => {
+        let path = item.jsonPath.split(".");
+        path = path.splice(0,path.length-1).join(".");
+        if(this.getVal(path)!="") {
+          _.set(this.props.formData, item.jsonPath,  item.value)
+        } 
+      })
     }
-  }
+  }  
 
   checkForOtherFiles = (formData, _url) => {
     // console.log(_url);
@@ -1344,8 +1349,6 @@ class Report extends Component {
                     object.target.value=arr[i][propertyRelToDepedant];
                   }
                 }
-
-                console.log(object);
 
                 handleChange(object, value.jsonPath,"","","","");
               }

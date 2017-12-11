@@ -598,7 +598,7 @@ class Report extends Component {
   checkifHasInjectData = (_mockData) => {
     let {moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields} = this.props;
     let _formData = _.cloneDeep(this.props.formData);
-    if(_mockData[moduleName + "." + actionName].injectData.length){
+    if(_mockData[moduleName + "." + actionName].injectData){
       _mockData[moduleName + "." + actionName].injectData.forEach((item) => {
         let path = item.jsonPath.split(".");
         path = path.splice(0,path.length-1).join(".");

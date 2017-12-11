@@ -109,10 +109,11 @@ public class MDMSApplicationRunnerImpl {
 		Map<String, JSONArray> masterDataMap = new HashMap<>();
 		
 		Iterator<String> masterKeyIterator = masterKeys.iterator();
-		
+		String masterName = null;
+		JSONArray masterDataJsonArray = null;
 		while(masterKeyIterator.hasNext()) {
-			String masterName = masterKeyIterator.next();
-			JSONArray masterDataJsonArray = null;
+			masterName = masterKeyIterator.next();
+			
 			try {
 				masterDataJsonArray = JsonPath.read(objectMapper.writeValueAsString((List<Object>)map.get(masterName)),"$");
 			} catch (JsonProcessingException e) {
@@ -129,7 +130,15 @@ public class MDMSApplicationRunnerImpl {
 		}
 		else {
 			Map<String, Map<String, JSONArray>> tenantModule= tenantMap.get(tenantId);
-			tenantModule.put(moduleName, masterDataMap);
+			
+			if(!tenantModule.containsKey(moduleName)) {
+				tenantModule.put(moduleName, masterDataMap);
+			} else {
+				Map<String, JSONArray> moduleMaster = tenantModule.get(moduleName);
+				moduleMaster.put(masterName, masterDataJsonArray);
+				tenantModule.put(moduleName, moduleMaster);
+			}
+			
 			tenantMap.put(tenantId, tenantModule);
 		}
 

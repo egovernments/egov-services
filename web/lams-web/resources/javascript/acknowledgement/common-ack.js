@@ -1,8 +1,6 @@
 class AckOfAgreement extends React.Component {
-  constructor(props) {
-    super(props);
-    this.close = this.close.bind(this);
-  }
+
+  
 
   close() {
     open(location, '_self').close();
@@ -17,6 +15,8 @@ class AckOfAgreement extends React.Component {
        }
      }
   }
+
+  
     render() {
       let {close} = this;
 

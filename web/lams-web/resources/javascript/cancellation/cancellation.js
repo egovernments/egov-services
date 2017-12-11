@@ -179,7 +179,21 @@ class CancellationAgreement extends React.Component {
                 },
                 success: function (res) {
 
-                  showSuccess("Forwarded successfully");
+                  $.ajax({
+                    url: baseUrl + "/hr-employee/employees/_search?tenantId=" + tenantId+"&positionId="+agreement.workflowDetails.assignee,
+                    type: 'POST',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    headers: {
+                      'auth-token': authToken
+                    },
+                    success: function (res1) {
+                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=${res1.Employee[0].name}&ackNo=${res.Agreement.acknowledgementNumber}`;
+                    },
+                    error: function (err) {
+                      window.location.href = `app/hr/movements/ack-page.html?wftype=Cancel&action=forward&name=&ackNo=${res.Agreement.acknowledgementNumber}`;                      
+                    }
+                  })
 
                 },
                 error: function (err) {

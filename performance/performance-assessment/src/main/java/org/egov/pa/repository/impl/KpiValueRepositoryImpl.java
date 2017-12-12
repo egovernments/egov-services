@@ -169,6 +169,7 @@ public class KpiValueRepositoryImpl implements KpiValueRepository{
 					for(KpiValueDetail detail : detailList) { 
 						if(StringUtils.isNotBlank(detail.getValue())) { 
 							value.setConsolidatedValue(detail.getValue());
+							value.setPeriod(detail.getPeriod());
 							if(detail.getValue().equals("1")) value.setValueDescription("Yes");
 							else if (detail.getValue().equals("2")) value.setValueDescription("No");
 							else if (detail.getValue().equals("3")) value.setValueDescription("Work In Progress");

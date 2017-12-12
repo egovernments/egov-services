@@ -32,6 +32,9 @@ public class KpiValue {
 	@JsonProperty("consolidatedValue")
 	private String consolidatedValue = null;
 	
+	@JsonProperty("period")
+	private String period=null;
+	
 	@JsonProperty("valueDescription")
 	private String valueDescription = null ; 
 	
@@ -49,6 +52,15 @@ public class KpiValue {
 
 	
 	
+	
+	public String getPeriod() {
+		return period;
+	}
+
+	public void setPeriod(String period) {
+		this.period = period;
+	}
+
 	public String getValueDescription() {
 		return valueDescription;
 	}

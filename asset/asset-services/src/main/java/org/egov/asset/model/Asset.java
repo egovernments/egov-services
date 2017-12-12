@@ -104,4 +104,6 @@ public class Asset {
 	
 	@Valid
 	private List<YearWiseDepreciation> yearWiseDepreciation = new ArrayList<>();
+	private String surveyNumber;
+	private BigDecimal marketValue;
 }

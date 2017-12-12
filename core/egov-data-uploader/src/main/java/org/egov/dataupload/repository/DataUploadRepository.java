@@ -47,7 +47,7 @@ public class DataUploadRepository {
 		return response;
 	}
 	
-	public void getFileContents(String filePath) throws Exception{
+	public String getFileContents(String filePath) throws Exception{
 		List<HttpMessageConverter<?>> messageConverters = new ArrayList<HttpMessageConverter<?>>();
 		messageConverters.add(new ByteArrayHttpMessageConverter());
 		RestTemplate restTemplate = new RestTemplate(messageConverters);
@@ -56,15 +56,19 @@ public class DataUploadRepository {
 	    headers.setAccept(Arrays.asList(MediaType.APPLICATION_OCTET_STREAM));
 
 	    HttpEntity<String> entity = new HttpEntity<String>(headers);
-
-	    ResponseEntity<byte[]> response = restTemplate.exchange(
-	    		filePath, HttpMethod.GET, entity, byte[].class, "1");
-
-	    if (response.getStatusCode() == HttpStatus.OK) {
-	        Files.write(Paths.get(writeFilePath), response.getBody());
+	    try{
+		    ResponseEntity<byte[]> response = restTemplate.exchange(
+		    		filePath, HttpMethod.GET, entity, byte[].class, "1");
+	
+		    if (response.getStatusCode() == HttpStatus.OK) {
+		        Files.write(Paths.get(writeFilePath), response.getBody());
+		    }
+	    }catch(Exception e){
+			LOGGER.error("Exception while fetching file from: "+filePath, e);
+			throw e;
 	    }
 	    
-	    LOGGER.info("response: "+response.getBody());
+	    return writeFilePath;
 	}
 
 }

@@ -1,5 +1,6 @@
 package org.egov.dataupload.service;
 
+import java.io.File;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,11 +12,15 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
 import org.egov.DataUploadApplicationRunnerImpl;
 import org.egov.common.contract.request.RequestInfo;
+import org.egov.dataupload.model.ConsumerRequest;
 import org.egov.dataupload.model.Definition;
+import org.egov.dataupload.model.ProcessMetaData;
 import org.egov.dataupload.model.ResponseMetaData;
 import org.egov.dataupload.model.UploadDefinition;
+import org.egov.dataupload.model.UploadDefinitions;
 import org.egov.dataupload.model.UploaderRequest;
-import org.egov.dataupload.model.UploaderResponse;
+import org.egov.dataupload.model.SuccessFailure;
+import org.egov.dataupload.producer.DataUploadProducer;
 import org.egov.dataupload.repository.DataUploadRepository;
 import org.egov.dataupload.utils.DataUploadUtils;
 import org.egov.tracer.model.CustomException;
@@ -23,6 +28,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -47,32 +53,51 @@ public class DataUploadService {
 	private DataUploadUtils dataUploadUtils;
 	
 	@Value("${filestore.host}")
-	private String fileStorePath;
+	private String fileStoreHost;
 	
 	@Value("${filestore.get.endpoint}")
 	private String getFileEndpoint;
 	
+	@Autowired
+	private DataUploadProducer dataUploadProducer;
+	
 	public static final Logger logger = LoggerFactory.getLogger(DataUploadService.class);
 	
-	public void getFile(UploaderRequest uploaderRequest){
+	public ProcessMetaData getFileContents(UploaderRequest uploaderRequest){
 		StringBuilder uri = new StringBuilder();
-		uri.append(fileStorePath).append(getFileEndpoint);
+		uri.append(fileStoreHost).append(getFileEndpoint);
 		uri.append("?fileStoreId="+uploaderRequest.getFileStoreId())
 		   .append("&tenantId="+uploaderRequest.getTenantId());
+		String filePath = null;
 		try{
-			dataUploadRepository.getFileContents(uri.toString());
+			filePath = dataUploadRepository.getFileContents(uri.toString());
 		}catch(Exception e){
-			logger.error("Exception",e);
+			throw new CustomException(HttpStatus.INTERNAL_SERVER_ERROR.toString(), 
+					"No .xls file found for: fileStoreId="+uploaderRequest.getFileStoreId()
+					+"AND tenantId="+uploaderRequest.getTenantId());		
 		}
+		ProcessMetaData processMetaData = ProcessMetaData.builder().finalfileStoreId("")
+				.jobId("").localFilePath(null).message("Upload process has begun....").build();
 		
+		ProcessMetaData procMetaData = ProcessMetaData.builder().finalfileStoreId("")
+				.jobId("").localFilePath(filePath).message("Upload process has begun....").build();
+		ConsumerRequest consumerRequest = ConsumerRequest.builder().uploaderRequest(uploaderRequest)
+				.processMetaData(procMetaData).build();
+		
+		dataUploadProducer.producer(consumerRequest);
+		return processMetaData;
 	}
 
-	public UploaderResponse doInterServiceCall(MultipartFile file, String moduleName,
-			String defName, RequestInfo requestInfo) throws Exception {
+
+	public SuccessFailure doInterServiceCall(ConsumerRequest consumerRequest) throws Exception {
+		logger.info("Recived from consumer: "+consumerRequest.toString());
 		Map<String, UploadDefinition> uploadDefinitionMap = runner.getUploadDefinitionMap();
-	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, moduleName, defName);
+		UploaderRequest uploaderRequest = consumerRequest.getUploaderRequest();
+	    Definition uploadDefinition = dataUploadUtils.getUploadDefinition(uploadDefinitionMap, 
+	    		uploaderRequest.getModuleName(), uploaderRequest.getDefName());
 	    List<ResponseMetaData> success = new ArrayList<>();
 	    List<ResponseMetaData> failure = new ArrayList<>();
+	    MultipartFile file = (MultipartFile) new File(consumerRequest.getProcessMetaData().getLocalFilePath());
 		HSSFWorkbook wb = new HSSFWorkbook(file.getInputStream());
         HSSFSheet sheet = wb.getSheetAt(0);
         logger.info("Workbook: "+sheet);
@@ -80,13 +105,15 @@ public class DataUploadService {
         List<List<Object>> excelData = dataUploadUtils.readExcelFile(sheet, jsonPathList);
         try{
 		    if(uploadDefinition.getIsBulkApi()){
-		    	String request = prepareDataForBulkApi(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
+		    	String request = prepareDataForBulkApi(excelData, jsonPathList, 
+		    			uploadDefinition, uploaderRequest.getRequestInfo(), success, failure);
 		        hitApi(request, uploadDefinition.getUri());
 				ResponseMetaData responseMetaData= new ResponseMetaData();
 				responseMetaData.setRowData(excelData);
 	        	success.add(responseMetaData);
 		    } else{
-		    	callNonBulkApis(excelData, jsonPathList, uploadDefinition, requestInfo, success, failure);
+		    	callNonBulkApis(excelData, jsonPathList, 
+		    			uploadDefinition, uploaderRequest.getRequestInfo(), success, failure);
 		    }
         }catch(Exception e){
 			ResponseMetaData responseMetaData= new ResponseMetaData();
@@ -94,7 +121,7 @@ public class DataUploadService {
         	failure.add(responseMetaData);
         }
         
-        UploaderResponse uploaderResponse = new UploaderResponse();
+        SuccessFailure uploaderResponse = new SuccessFailure();
         uploaderResponse.setSuccess(success);
         uploaderResponse.setFailure(failure);
         
@@ -110,8 +137,8 @@ public class DataUploadService {
 			try{
 				if(!row.isEmpty()){
 					for(int i = 0; i < jsonPathList.size(); i++){
-						StringBuilder expression = new StringBuilder();
-				        String key = dataUploadUtils.getJsonPathKey(jsonPathList.get(i), expression);
+		            	StringBuilder expression = new StringBuilder();
+		            	String key = dataUploadUtils.getJsonPathKey(jsonPathList.get(i), expression);
 				        documentContext.put(expression.toString(), key, row.get(i));	            	
 					} 	
 				    logger.info("RequestInfo: "+requestInfo);

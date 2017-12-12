@@ -9,9 +9,11 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
+@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -23,8 +25,8 @@ public class UploaderRequest {
 	@JsonProperty("moduleName")
 	public String moduleName;
 	
-	@JsonProperty("masterName")
-	public String masterName;
+	@JsonProperty("defName")
+	public String defName;
 	
 	@JsonProperty("tenantId")
 	public String tenantId;

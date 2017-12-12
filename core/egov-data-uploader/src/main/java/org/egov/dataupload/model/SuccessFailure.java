@@ -1,6 +1,7 @@
 package org.egov.dataupload.model;
 
-import org.egov.common.contract.response.ResponseInfo;
+import java.util.List;
+
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -17,12 +18,13 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UploaderResponse {
+public class SuccessFailure {
+		
+	@JsonProperty("Success")
+	private List<ResponseMetaData> success;
 	
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
-	
-	@JsonProperty("ProccessMetadata")
-	private ProcessMetaData proccessMetadata;
+	@JsonProperty("Failure")
+	private List<ResponseMetaData> failure;
+
 
 }

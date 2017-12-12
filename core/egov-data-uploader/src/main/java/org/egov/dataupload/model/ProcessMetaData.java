@@ -1,28 +1,32 @@
 package org.egov.dataupload.model;
 
-import org.egov.common.contract.response.ResponseInfo;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import groovy.transform.ToString;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import lombok.ToString;
 
 @Getter
 @Setter
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class UploaderResponse {
+@ToString
+public class ProcessMetaData {
 	
-	@JsonProperty("ResponseInfo")
-	private ResponseInfo responseInfo;
+	@JsonProperty("Message")
+	public String message;
 	
-	@JsonProperty("ProccessMetadata")
-	private ProcessMetaData proccessMetadata;
+	@JsonProperty("Job Id")
+	public String jobId;
+	
+	@JsonProperty("FinalFileStoreId")
+	public String finalfileStoreId;
+	
+	@JsonProperty("localFilePath")
+	public String localFilePath;
 
 }

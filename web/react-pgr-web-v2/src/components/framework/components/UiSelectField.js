@@ -15,6 +15,7 @@ class UiSelectField extends Component {
   }
 
   initData(props) {
+    //console.log("UiSelectField, initData() called", props);
     let { item, setDropDownData, setDropDownOriginalData, useTimestamp, dropDownOringalData } = props;
     if (
       item.hasOwnProperty('url') &&
@@ -114,15 +115,12 @@ class UiSelectField extends Component {
   }
 
   componentDidMount() {
+    //console.log("UiSelectField, componentDidMount() called");
     this.initData(this.props);
   }
 
-  shouldComponentUpdate(nextProps, nextState) {
-    //  console.log('shouldComponentUpdate:', !(_.isEqual(this.props, nextProps)));
-    return !_.isEqual(this.props, nextProps);
-  }
-
   componentWillReceiveProps(nextProps) {
+    //console.log("UiSelectField, componentWillReceiveProps() called,  nextProps = ", nextProps, "currentProps", this.props);
     let { dropDownData, dropDownOringalData, value } = this.props;
 
     //load dependant field values on update/view screen
@@ -179,7 +177,7 @@ class UiSelectField extends Component {
             style={{ display: item.hide ? 'none' : 'inline-block' }}
             errorStyle={{ float: 'left' }}
             fullWidth={true}
-            value={value}
+            value={this.props.getVal(this.props.item.jsonPath)}
             underlineDisabledStyle={{ backgroundColor: '#eee!important' }}
             {...labelProperty}
             onChange={(event, key, value) => {
@@ -205,6 +203,7 @@ class UiSelectField extends Component {
   };
 
   render() {
+    console.log('UiSelectField, render() called', 'value is ', this.props.getVal(this.props.item.jsonPath));
     return this.renderSelect(this.props.item);
   }
 }

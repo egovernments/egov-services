@@ -54,7 +54,7 @@ var dropDownData = {
   },
 };
 
-class UiMultiFieldAddToTable extends Component {
+class UiMultiFieldAddToTableForMDMS extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -423,7 +423,7 @@ class UiMultiFieldAddToTable extends Component {
     });
   };
 
-  deleteRow = (index) => {
+  deleteRow = index => {
     // let formData = _.cloneDeep(this.props.formData);
     // let myTableInParent = _.get(formData, this.props.item.jsonPath);
     // if(myTableInParent) {
@@ -432,8 +432,8 @@ class UiMultiFieldAddToTable extends Component {
     // }
 
     let list = _.cloneDeep(this.state.valueList);
-    let {indexes,isInlineEdit}=this.state;
-    if (indexes.indexOf(index)==-1) {
+    let { indexes, isInlineEdit } = this.state;
+    if (indexes.indexOf(index) == -1) {
       list.splice(index, 1);
     }
     this.setState(
@@ -441,7 +441,7 @@ class UiMultiFieldAddToTable extends Component {
         valueList: list,
         isAddAgain: true,
         formData: {},
-        indexes:[]
+        indexes: [],
       },
       function() {
         if (this.props.setDisabled) this.props.setDisabled(true);
@@ -450,7 +450,6 @@ class UiMultiFieldAddToTable extends Component {
   };
 
   editInline = index => {
-
     let { indexes } = this.state;
     let list = _.cloneDeep(this.state.valueList);
     indexes.push(index);
@@ -670,9 +669,13 @@ class UiMultiFieldAddToTable extends Component {
                           {Object.keys(item).map(function(key, index) {
                             if (key != 'id') {
                               if (key == 'active') {
-                                return <td>{item[key] ? 'Active' : 'Inactive'}</td>;
+                                return <td key={index}>{item[key] ? 'Active' : 'Inactive'}</td>;
                               } else {
-                                return <td className={'HideIt_' + key}>{item[key]}</td>;
+                                return (
+                                  <td key={index} className={'HideIt_' + key}>
+                                    {item[key]}
+                                  </td>
+                                );
                               }
                             }
                           })}
@@ -835,4 +838,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(UiMultiFieldAddToTable);
+export default connect(mapStateToProps, mapDispatchToProps)(UiMultiFieldAddToTableForMDMS);

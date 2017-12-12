@@ -530,9 +530,13 @@ class UiMultiFieldAddToTable extends Component {
                           {Object.keys(item).map(function(key, index) {
                             if (key != 'id') {
                               if (key == 'active') {
-                                return <td>{item[key] ? 'Active' : 'Inactive'}</td>;
+                                return <td key={index}>{item[key] ? 'Active' : 'Inactive'}</td>;
                               } else {
-                                return <td className={'HideIt_' + key}>{item[key]}</td>;
+                                return (
+                                  <td key={index} className={'HideIt_' + key}>
+                                    {item[key]}
+                                  </td>
+                                );
                               }
                             }
                           })}

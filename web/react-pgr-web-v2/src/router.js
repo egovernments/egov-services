@@ -170,6 +170,7 @@ import assetImmovableView from './components/non-framework/asset/master/assetImm
 import assetMovableView from './components/non-framework/asset/master/assetMovableView';
 import assetCategoryCreate from './components/non-framework/asset/master/assetCategoryCreate';
 import assetCategorySearch from './components/non-framework/asset/master/assetCategorySearch';
+import ComponentLoader from './components/framework/ComponentLoader.js';
 
 //inventory
 import SupplierSearch from './components/non-framework/inventory/master/supplier/SupplierSearch';
@@ -246,6 +247,7 @@ const Main = () => {
         <Route exact path={base + '/pgr/createServiceType'} component={ServiceTypeCreate} />
         <Route exact path={base + '/report/:moduleName/:reportName'} component={Report} />
         <Route exact path={base + '/pgr/dashboard'} component={PGRDashboard} />
+        <Route exact path={base + '/component/:componentName?'} component={ComponentLoader} />
         <Route exact path={base + '/update/:moduleName/:master?/:id?'} component={Create} />
         <Route exact path={base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction} />
         <Route exact path={base + '/views/:moduleName/:master?/:id'} component={Inbox} />

@@ -194,18 +194,32 @@ public class AbstractEstimateService {
             Boolean isBudgetCheckReq = isBudgetCheckRequired(CommonConstants.BUDGET_CHECK_REQUIRED,
                     abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
 
-            if (isFinIntReq && estimate.getStatus().toString()
+            
+            Boolean isSpilloverWFReq = isConfigRequired(CommonConstants.SPILLOVER_WORKFLOW_MANDATORY,
+                    abstractEstimateRequest.getRequestInfo(), estimate.getTenantId());
+            
+            if(isSpilloverWFReq && estimate.getStatus().toString()
+                    .equalsIgnoreCase(AbstractEstimateStatus.ADMIN_SANCTIONED.toString())) {
+                for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
+                    projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
+                            abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
+                    abstractEstimateDetails.setProjectCode(projectCode);
+                    if (isFinIntReq && isBudgetCheckReq)
+                        setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
+                }
+            }
+            if (estimate.getStatus().toString()
                     .equalsIgnoreCase(AbstractEstimateStatus.FINANCIAL_SANCTIONED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),
                             abstractEstimateRequest.getRequestInfo(), estimate, Boolean.FALSE));
                     abstractEstimateDetails.setProjectCode(projectCode);
-                    if (isBudgetCheckReq)
+                    if (isFinIntReq && isBudgetCheckReq)
                         setEstimateAppropriation(abstractEstimateDetails, abstractEstimateRequest.getRequestInfo());
                 }
             }
 
-            if (isFinIntReq && estimate.getStatus().toString()
+            if (estimate.getStatus().toString()
                     .equalsIgnoreCase(AbstractEstimateStatus.CANCELLED.toString())) {
                 for (AbstractEstimateDetails abstractEstimateDetails : estimate.getAbstractEstimateDetails()) {
                     projectCode.setCode(setProjectCode(abstractEstimateDetails, estimate.getSpillOverFlag(),

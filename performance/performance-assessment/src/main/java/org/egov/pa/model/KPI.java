@@ -217,7 +217,7 @@ public void setCode(String code) {
    * @return instructions
   **/
 
- @Pattern(regexp="^[a-zA-Z0-9 ]+$")
+ @Pattern(regexp="^[a-zA-Z0-9 -:;]+$")
   public String getInstructions() {
     return instructions;
   }

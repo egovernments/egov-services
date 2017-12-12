@@ -12087,6 +12087,36 @@
       "actionid": 1414,
       "actioncode": "",
       "tenantid": "default"
+    },
+	      {
+      "rolecode": "SUPERUSER",
+      "actionid": 1216,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1217,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1218,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1219,
+      "actioncode": "",
+      "tenantid": "default"
+    },
+    {
+      "rolecode": "SUPERUSER",
+      "actionid": 1220,
+      "actioncode": "",
+      "tenantid": "default"
     }
 
   ]

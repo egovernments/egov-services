@@ -34,9 +34,20 @@ import RaisedButton from 'material-ui/RaisedButton';
 import _ from 'lodash';
 import Api from '../../../api/api';
 
+// import $ from 'jquery';
+// import 'datatables.net-buttons/js/buttons.html5.js'; // HTML 5 file export
+// import 'datatables.net-buttons/js/buttons.flash.js'; // Flash file export
+// import jszip from 'jszip/dist/jszip';
+// import pdfMake from 'pdfmake/build/pdfmake';
+// import pdfFonts from 'pdfmake/build/vfs_fonts';
+// import 'datatables.net-buttons/js/buttons.flash.js';
+// import 'datatables.net-buttons-bs';
+//
+// pdfMake.vfs = pdfFonts.pdfMake.vfs;
+
 var dropDownData = {
-  'MdmsMetadata.masterData[0].side': {
-    url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$.MdmsRes.lcms.side.*.code|$.MdmsRes.lcms.side.*.name',
+  'MdmsMetadata.masterData[0].wasteType': {
+    url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteSubType|$.MdmsRes.swm.WasteSubType.*.code|$.MdmsRes.swm.WasteSubType.*.name',
   },
   'MdmsMetadata.masterData[0].wasteType': {
     url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$.MdmsRes.swm.WasteType.*.code|$.MdmsRes.swm.WasteType.*.name',
@@ -61,6 +72,114 @@ class UiMultiFieldAddToTable extends Component {
       isAddAgain: true,
     };
   }
+
+  // componentWillMount()
+  // {
+  //   $('#mdmsTable').DataTable({
+  //     dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+  //     buttons: [
+  //       'excel',
+  //       {
+  //         extend: 'pdf',
+  //         orientation: 'landscape',
+  //         pageSize: 'LEGAL',
+  //         exportOptions: {
+  //           modifier: {
+  //             page: 'current',
+  //           },
+  //         },
+  //         customize: function(doc) {
+  //           doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
+  //           // doc.style.tableBorder=5;
+  //         },
+  //         text: 'Pdf/Print',
+  //       },
+  //       'copy',
+  //       'csv',
+  //       // , {
+  //       //     extend: 'print',
+  //       //     customize: function ( win ) {
+  //       //         $(win.document.body)
+  //       //             .css( 'font-size', '6pt' )
+  //       //             // .prepend(
+  //       //             //     '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+  //       //             // );
+  //       //
+  //       //         // $(win.document.body).find( 'table' )
+  //       //         //     .addClass( 'compact' )
+  //       //         //     .css( 'font-size', 'inherit' );
+  //       //     }
+  //       // }
+  //     ],
+  //     bDestroy: true,
+  //     language: {
+  //       emptyTable: 'No Records',
+  //     },
+  //   });
+  //
+  // }
+  //
+  // componentWillUnmount() {
+  //   $('#mdmsTable')
+  //     .DataTable()
+  //     .destroy(true);
+  // }
+  //
+  // componentWillUpdate() {
+  //   let { flag } = this.props;
+  //   if (flag == 1) {
+  //     flag = 0;
+  //     $('#mdmsTable')
+  //       .dataTable()
+  //       .fnDestroy();
+  //   }
+  // }
+  //
+  // componentDidUpdate() {
+  //   $('#mdmsTable').DataTable({
+  //     dom: '<"col-md-4"l><"col-md-4"B><"col-md-4"f>rtip',
+  //     buttons: [
+  //       'excel',
+  //       {
+  //         extend: 'pdf',
+  //         orientation: 'landscape',
+  //         pageSize: 'LEGAL',
+  //         exportOptions: {
+  //           modifier: {
+  //             page: 'current',
+  //           },
+  //         },
+  //         customize: function(doc) {
+  //           doc.defaultStyle.fontSize = 10; //<-- set fontsize to 16 instead of 10
+  //           // var myTable = document.getElementById('mdmsTable');
+  //           // myTable.style.border="1px solid black";
+  //         },
+  //         text: 'Pdf/Print',
+  //       },
+  //       'copy',
+  //       'csv',
+  //       // ,  {
+  //       //   extend: 'print',
+  //       //   customize: function ( win ) {
+  //       //       $(win.document.body)
+  //       //           .css( 'font-size', '8pt' )
+  //       //       //     .prepend(
+  //       //       //         '<img src="http://datatables.net/media/images/logo-fade.png" style="position:absolute; top:0; left:0;" />'
+  //       //       //     );
+  //       // 			//
+  //       //       // $(win.document.body).find( 'table' )
+  //       //       //     .addClass( 'compact' )
+  //       //       //     .css( 'font-size', 'inherit' );
+  //       //   }
+  //       // }
+  //     ],
+  //     ordering: false,
+  //     bDestroy: true,
+  //     language: {
+  //       emptyTable: 'No Records',
+  //     },
+  //   });
+  // }
 
   componentDidMount() {
     let { item, valueList } = this.props;
@@ -304,15 +423,18 @@ class UiMultiFieldAddToTable extends Component {
     });
   };
 
-  deleteRow = index => {
+  deleteRow = (index,isEdit=false) => {
     // let formData = _.cloneDeep(this.props.formData);
     // let myTableInParent = _.get(formData, this.props.item.jsonPath);
     // if(myTableInParent) {
     //   myTableInParent.splice(index, 1);
     //   this.props.handler({ target: { value: myTableInParent } }, this.props.item.jsonPath);
     // }
+
     let list = _.cloneDeep(this.state.valueList);
-    // list.splice(index, 1)
+    if (!isEdit) {
+      list.splice(index, 1)
+    }
     this.setState(
       {
         valueList: list,
@@ -323,9 +445,12 @@ class UiMultiFieldAddToTable extends Component {
         if (this.props.setDisabled) this.props.setDisabled(true);
       }
     );
+
+
   };
 
   editInline = index => {
+    debugger;
     let { indexes } = this.state;
     let list = _.cloneDeep(this.state.valueList);
     indexes.push(index);
@@ -432,6 +557,7 @@ class UiMultiFieldAddToTable extends Component {
   };
 
   renderArrayField = item => {
+    // console.log(this.props.match);
     switch (this.props.ui) {
       case 'google':
         return (
@@ -466,21 +592,29 @@ class UiMultiFieldAddToTable extends Component {
               </Row>
               <br />
             </Dialog>
-            <div style={{ textAlign: 'right' }}>
-              <RaisedButton
-                label={'Add'}
-                onClick={this.handleOpen}
-                disabled={!this.state.isAddAgain}
-                primary={true}
-                icon={
-                  <i style={{ color: 'white' }} className="material-icons">
-                    add
-                  </i>
-                }
-              />
+            <div className="row">
+              <div className="col-md-6">
+                  <h4>Master Data of {this.props.item && this.props.item.header[0].label.split(".")[3]}</h4>
+              </div>
+              <div className="col-md-6 text-right">
+                <RaisedButton
+                  label={'Add'}
+                  onClick={this.handleOpen}
+                  disabled={!this.state.isAddAgain}
+                  primary={true}
+                  icon={
+                    <i style={{ color: 'white' }} className="material-icons">
+                      add
+                    </i>
+                  }
+                />
+              </div>
             </div>
+            {/*<div style={{ textAlign: 'right' }}>
+
+            </div>*/}
             <br />
-            <Table className="table table-striped table-bordered" responsive>
+            <Table className="table table-striped table-bordered" id="mdmsTable" responsive>
               <thead>
                 <tr>
                   <th>#</th>
@@ -519,10 +653,10 @@ class UiMultiFieldAddToTable extends Component {
                               }}
                             />
                             <br />
-                            {/*<FlatButton
+                            <FlatButton
                               label={translate("Reset")}
                               secondary={true}
-                              onClick={(e) => {this.deleteRow(index)}}/>*/}
+                              onClick={(e) => {this.deleteRow(index)}}/>
                           </td>
                         </tr>
                       );
@@ -564,10 +698,10 @@ class UiMultiFieldAddToTable extends Component {
                                 </i>
                               </IconButton>
                             )}
-                            {/*&nbsp;&nbsp;&nbsp;&nbsp;
-                            <IconButton
+
+                            {/*this.state.isInlineEdit && <IconButton
                                 onClick={()=>{
-                                  this.deleteRow(index)
+                                  this.deleteRow(index,true)
                                 }}
                                 disabled={!this.state.isAddAgain}>
                               <i className="material-icons text-danger">delete</i>

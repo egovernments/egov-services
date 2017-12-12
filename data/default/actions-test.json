@@ -1,6 +1,6 @@
 {
 "tenantId" : "default",
-"moduleName" : "ACCESSCONTROL",
+"moduleName" : "ACCESSCONTROL-ACTIONS-TEST",
 "actions-test" : [
   
   {

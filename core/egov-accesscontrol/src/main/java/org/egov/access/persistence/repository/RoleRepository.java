@@ -46,6 +46,10 @@ public class RoleRepository {
 	private String url;
 	@Value("${mdms.role.path}")
 	private String rolePath;
+	@Value("${mdms.rolemodule.name}")
+    private String moduleName;
+	@Value("${mdms.rolemaster.name}")
+	private String rolesMaster;
 	
 	@Autowired
 	private RestTemplate restTemplate;
@@ -146,6 +150,10 @@ public List<Role> getAllMDMSRoles(RoleSearchCriteria roleSearchCriteria) throws 
 	}
 
 private MdmsCriteriaReq getRoleMDMSCriteria(RoleSearchCriteria roleSearchCriteria,String roleFilter) {
+	String mName = "";
+	String rMaster = "";
+	mName = moduleName;
+    rMaster = rolesMaster;			
 	MdmsCriteriaReq mcq = new MdmsCriteriaReq();
 	List<MasterDetail> masterDetails = new ArrayList<MasterDetail>();
 	List<ModuleDetail> moduleDetail = new ArrayList<ModuleDetail>();
@@ -153,9 +161,9 @@ private MdmsCriteriaReq getRoleMDMSCriteria(RoleSearchCriteria roleSearchCriteri
 	MdmsCriteria mc = new MdmsCriteria();
 	mc.setTenantId(roleSearchCriteria.getTenantId());
 	ModuleDetail md = new ModuleDetail();
-	md.setModuleName("ACCESSCONTROL");
+	md.setModuleName(mName);
 	MasterDetail masterDetail = new MasterDetail();
-	masterDetail.setName("roles");
+	masterDetail.setName(rolesMaster);
 	masterDetail.setFilter(roleFilter);
 	masterDetails.add(masterDetail);
 	md.setMasterDetails(masterDetails);

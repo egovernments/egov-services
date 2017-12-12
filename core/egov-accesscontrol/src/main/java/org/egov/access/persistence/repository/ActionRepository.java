@@ -95,6 +95,22 @@ public class ActionRepository {
 	@Value("${mdms.actions.path}")
 	private String actionPath;
 	
+	@Value("${mdms.roleactionmodule.name}")
+	private String roleActionModule;
+	@Value("${mdms.actionstestmodule.name}")
+	private String actionTestModule;
+	@Value("${mdms.actionsmodule.name}")
+	private String actionModule;
+	@Value("${mdms.roleactionmaster.names}")
+	private String roleActionMaster;
+	@Value("${mdms.actiontestmaster.names}")
+	private String actionTestMaster;
+	@Value("${mdms.actionmaster.names}")
+	private String actionMaster;
+	@Value("${mdms.actionstest.path}")
+	private String actionTestPath;
+	
+	
 
 	@Autowired
 	private NamedParameterJdbcTemplate namedParameterJdbcTemplate;
@@ -570,7 +586,7 @@ public List<Action> getAllMDMSActions(ActionRequest actionRequest) throws JSONEx
 		actionres = restTemplate.postForObject(url, actionmcq,String.class);
 		String jsonpath = "";
 		if(actionRequest.getActionMaster() != null){
-			jsonpath = "$.MdmsRes.ACCESSCONTROL."+ actionRequest.getActionMaster();
+			jsonpath = actionTestPath + actionRequest.getActionMaster();
 		} else{
 		jsonpath = actionPath;
 		}
@@ -593,9 +609,9 @@ private MdmsCriteriaReq getRoleActionMDMSCriteria(ActionRequest actionRequest, S
 	MdmsCriteria mc = new MdmsCriteria();
 	mc.setTenantId(actionRequest.getTenantId());
 	ModuleDetail md = new ModuleDetail();
-	md.setModuleName("ACCESSCONTROL");
+	md.setModuleName(roleActionModule);
 	MasterDetail masterDetail = new MasterDetail();
-	masterDetail.setName("roleactions");
+	masterDetail.setName(roleActionMaster);
 	masterDetail.setFilter(roleFilter);
 	masterDetails.add(masterDetail);
 	md.setMasterDetails(masterDetails);
@@ -608,12 +624,15 @@ private MdmsCriteriaReq getRoleActionMDMSCriteria(ActionRequest actionRequest, S
 private void getMdmsActionCriteria(ActionRequest actionRequest, String actionFilter, MdmsCriteriaReq actionmcq,
 		List<MasterDetail> actionmasterDetails, List<ModuleDetail> actionmoduleDetail, MdmsCriteria actionmc) {
 	ModuleDetail actionmd = new ModuleDetail();
-	actionmd.setModuleName("ACCESSCONTROL");
+	
+	
 	MasterDetail actionmasterDetail = new MasterDetail();
 	if(actionRequest.getActionMaster() != null){
+		actionmd.setModuleName(actionTestModule);
 		actionmasterDetail.setName(actionRequest.getActionMaster()); 
 	} else {
-		actionmasterDetail.setName("actions");
+		actionmd.setModuleName(actionModule);
+		actionmasterDetail.setName(actionMaster);
 	}
 	
 	actionmasterDetail.setFilter(actionFilter);

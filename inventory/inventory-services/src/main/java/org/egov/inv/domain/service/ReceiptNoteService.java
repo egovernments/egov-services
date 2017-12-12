@@ -365,7 +365,7 @@ public class ReceiptNoteService extends DomainService {
     }
 
 
-    private void validateUom(Uom uom, String tenantId, Long i, InvalidDataException errors) {
+    private void validateUom(Uom uom, String tenantId, int i, InvalidDataException errors) {
         if (null != uom && !isEmpty(uom.getCode())) {
             mdmsRepository.fetchObject(tenantId, "common-masters", "Uom", uom.getCode(), Uom.class);
         } else

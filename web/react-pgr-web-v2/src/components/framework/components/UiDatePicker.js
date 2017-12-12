@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
 import TextField from 'material-ui/TextField';
 import { translate } from '../../common/common';
 var DateTime = require('react-datetime');
 var moment = require('moment');
 
 const datePat = /^(((0[1-9]|[12]\d|3[01])\/(0[13578]|1[02])\/((19|[2-9]\d)\d{2}))|((0[1-9]|[12]\d|30)\/(0[13456789]|1[012])\/((19|[2-9]\d)\d{2}))|((0[1-9]|1\d|2[0-8])\/02\/((19|[2-9]\d)\d{2}))|(29\/02\/((1[6-9]|[2-9]\d)(0[48]|[2468][048]|[13579][26])|((16|[2468][048]|[3579][26])00))))$/g;
-export default class UiEmailField extends Component {
+class UiDatePicker extends Component {
   constructor(props) {
     super(props);
   }
@@ -159,17 +160,7 @@ export default class UiEmailField extends Component {
               closeOnSelect={true}
               closeOnTab={true}
               onChange={e => {
-                this.props.handler(
-                  { target: { value: typeof e == 'string' ? e : e.valueOf() } },
-                  item.jsonPath,
-                  item.isRequired ? true : false,
-                  /\d{12,13}/,
-                  item.requiredErrMsg,
-                  item.patternErrMsg || translate('framework.date.error.message'),
-                  item.expression,
-                  item.expressionMsg,
-                  true
-                );
+                this.minMaxvalidation(e, item);
               }}
             />
             <div
@@ -191,7 +182,68 @@ export default class UiEmailField extends Component {
     }
   };
 
+  minMaxvalidation = (e, item) => {
+    //chosen date
+    if (typeof e === 'object') {
+      if (item.minDate || item.maxDate) {
+        if (moment().diff(moment(e.toDate()), 'days') < 0 && item.maxDate === 'today') {
+          this.props.handler(
+            { target: { value: '' } },
+            item.jsonPath,
+            item.isRequired ? true : false,
+            /\d{12,13}/,
+            item.requiredErrMsg,
+            item.patternErrMsg || translate('framework.date.error.message'),
+            item.expression,
+            item.expressionMsg,
+            true
+          );
+          let { toggleDailogAndSetText } = this.props;
+          toggleDailogAndSetText(true, translate('framework.date.futureEror.message'));
+        } else {
+          //random string - not proper date
+          this.props.handler(
+            { target: { value: typeof e == 'string' ? e : e.valueOf() } },
+            item.jsonPath,
+            item.isRequired ? true : false,
+            /\d{12,13}/,
+            item.requiredErrMsg,
+            item.patternErrMsg || translate('framework.date.error.message'),
+            item.expression,
+            item.expressionMsg,
+            true
+          );
+        }
+      } else {
+        this.props.handler(
+          { target: { value: typeof e == 'string' ? e : e.valueOf() } },
+          item.jsonPath,
+          item.isRequired ? true : false,
+          /\d{12,13}/,
+          item.requiredErrMsg,
+          item.patternErrMsg || translate('framework.date.error.message'),
+          item.expression,
+          item.expressionMsg,
+          true
+        );
+      }
+    }
+  };
+
   render() {
     return this.renderDatePicker(this.props.item);
   }
 }
+
+const mapStateToProps = state => {
+  // console.log(state.form.form);
+  return {};
+};
+
+const mapDispatchToProps = dispatch => ({
+  toggleDailogAndSetText: (dailogState, msg) => {
+    dispatch({ type: 'TOGGLE_DAILOG_AND_SET_TEXT', dailogState, msg });
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(UiDatePicker);

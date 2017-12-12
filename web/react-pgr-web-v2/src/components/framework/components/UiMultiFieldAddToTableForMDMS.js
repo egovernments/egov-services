@@ -38,6 +38,9 @@ var dropDownData = {
   'MdmsMetadata.masterData[0].side': {
     url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$.MdmsRes.lcms.side.*.code|$.MdmsRes.lcms.side.*.name',
   },
+  'MdmsMetadata.masterData[0].wasteType': {
+    url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=WasteType|$.MdmsRes.swm.WasteType.*.code|$.MdmsRes.swm.WasteType.*.name',
+  },
 };
 
 class UiMultiFieldAddToTable extends Component {

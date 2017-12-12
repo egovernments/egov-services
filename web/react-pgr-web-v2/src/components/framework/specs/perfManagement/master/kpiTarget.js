@@ -285,6 +285,7 @@ var dat = {
       rowClickUrlView: '/view/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
     },
   },
+<<<<<<< Updated upstream
   'perfManagement.view': {
     numCols: 12 / 2,
     url: '/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
@@ -343,6 +344,102 @@ var dat = {
           },
         ],
       },
+=======
+    "perfManagement.search": {
+        "numCols": 12 / 2,
+        "url": "perfmanagement/v1/kpitarget/_search",
+        "useTimestamp": true,
+        "objectName": "KPIs.kpiList",
+        "groups": [{
+            "label": "perfManagement.search.KPIs.groups.kpiSearch",
+            "name": "kpiSearch",
+            "fields": [{
+                    "name": "searchkpiDepartment",
+                    "jsonPath": "departmentId",
+                    "label": "perfManagement.search.KPIs.groups.searchkpiDepartment",
+                    "pattern": "",
+                    "type": "singleValueList",
+                    "url": "egov-mdms-service/v1/_get?tenantId="+localStorage.tenantId.split(".")[0]+"&moduleName=common-masters&masterName=Department|$..id|$..name",
+                    "isDisabled": false,
+                    "isRequired" : true,
+                    "requiredErrMsg": ""
+                },
+                {
+                    "name": "searchkpiCode",
+                    "jsonPath": "kpiCodes",
+                    "label": "perfManagement.search.KPIs.groups.searchkpiCode",
+                    "pattern": "",
+                    "type": "text",
+                    "isDisabled": false,
+                    "requiredErrMsg": ""
+                }
+            ]
+        }],
+        "result": {
+            "header": [ { label: "perfManagement.search.KPIs.groups.searchkpiName" },{ label : "perfManagement.create.KPIs.groups.kpiDate"}, { label: "perfManagement.search.KPIs.groups.searchkpiTarget" }],
+            "values": ["kpi.name","finYear", "targetDescription"],
+            "resultPath": "kpiTargets",
+            "rowClickUrlUpdate": "/update/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}",
+            "rowClickUrlView": "/view/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}"
+        }
+    },
+    "perfManagement.view": {
+        "numCols": 12 / 2,
+        "url": "/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}",
+        "useTimestamp": true,
+        "objectName": "kpiTargets",
+        "groups": [{
+                "label": "perfManagement.view.KPIs.groups.viewKPI",
+                "name": "viewKPI",
+                "fields": [{
+                        "name": "viewkpiDepartment",
+                        "jsonPath": "kpiTargets[0].kpi.department.name",
+                        // "url": "egov-mdms-service/v1/_get?tenantId=default&tenantIdCustom={KPIs[0].tenantId}&moduleName=common-masters&masterName=Department|$..id|$..name",
+                        "label": "perfManagement.view.KPIs.groups.viewkpiDepartment",
+                        "pattern": "",
+                        "type": "text",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    },
+                    {
+                        "name": "viewkpiDate",
+                        "jsonPath": "kpiTargets[0].kpi.financialYear",
+                        "label": "perfManagement.view.KPIs.groups.viewkpiDate",
+                        "isRequired": true,
+                        "pattern": "",
+                        "type": "singleValueList",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    }
+                ]
+            },
+            {
+                "label": "",
+                "name": "viewKpiNameBlock",
+                "fields": [{
+                        "name": "viewkpiName",
+                        "jsonPath": "kpiTargets[0].kpi.name",
+                        "label": "perfManagement.view.KPIs.groups.viewkpiName",
+                        "isRequired": true,
+                        "pattern": "",
+                        "type": "text",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    },
+                    {
+                        "name": "viewkpiCode",
+                        "jsonPath": "kpiTargets[0].kpi.code",
+                        "label": "perfManagement.view.KPIs.groups.viewkpiCode",
+                        "isRequired": true,
+                        "pattern": "",
+                        "type": "text",
+                        "isDisabled": false,
+                        "requiredErrMsg": ""
+                    }
+                ]
+            },
+
+>>>>>>> Stashed changes
 
       {
         label: 'perfManagement.view.KPIs.groups.viewkpiTargetBlock',

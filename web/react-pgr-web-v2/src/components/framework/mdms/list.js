@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import RaisedButton from 'material-ui/RaisedButton';
-import UiMultiFieldAddToTable from '../components/UiMultiFieldAddToTable';
+import UiMultiFieldAddToTableForMDMS from '../components/UiMultiFieldAddToTableForMDMS';
 import { translate } from '../../common/common';
 import Api from '../../../api/api';
 import _ from 'lodash';
@@ -35,7 +35,7 @@ class MdmsComponent extends Component {
 		//URL path to this page /mdms/:module/:master
 		//Get all the fields and pass to table component directly
 		//After successful edit/create, make call to mdms _create/_update
-	
+
 		// Api.commonApiPost("/specs/yaml/_search", {
 		// 	module,
 		// 	master
@@ -47,10 +47,10 @@ class MdmsComponent extends Component {
 		// })
 		this.initData(this.props);
   }
-  
+
   initData(props){
     let self = this;
-    
+
 		let module = props.match.params.module;
 		let master = props.match.params.master;
 		this.masterAllLowerCase = props.match.params.master.toLowerCase();
@@ -75,6 +75,27 @@ class MdmsComponent extends Component {
 			},
 			toilet: {
       			addupdate: "Toilet"
+			},
+			casestatus:{
+				addupdate:"caseStatus"
+			},
+			Court:{
+				addupdate:"Court"
+			},
+			Side:{
+				addupdate:"side"
+			},
+			CaseType:{
+				addupdate:"caseType"
+			},
+			Bench:{
+				addupdate:"bench"
+			},
+			Register:{
+				addupdate:"stamp"
+			},
+			CaseCategory:{
+				addupdate:"caseCategory"
 			}
 		};
 
@@ -215,7 +236,7 @@ componentWillReceiveProps(nextProps) {
 				{
 					item && (Object.keys(item).length && item.values && item.values.length)
 					?
-					<UiMultiFieldAddToTable
+					<UiMultiFieldAddToTableForMDMS
 						ui="google"
 						useTimestamp={true}
 						handler={handleChange}

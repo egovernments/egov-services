@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import {
-  Grid,
-  Row,
-  Col,
-  Table,
-  DropdownButton,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Grid, Row, Col, Table, DropdownButton, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import TextField from 'material-ui/TextField';
 import { brown500, red500, white, orange800 } from 'material-ui/styles/colors';
@@ -154,10 +146,7 @@ class Workflow extends Component {
     super(props);
     this.state = {
       resultList: [],
-      unitType: [
-        { code: 'FLAT', name: 'Flat' },
-        { code: 'ROOM', name: 'Room' },
-      ],
+      unitType: [{ code: 'FLAT', name: 'Flat' }, { code: 'ROOM', name: 'Room' }],
       floorNumber: [
         { code: 1, name: 'Basement-3' },
         { code: 2, name: 'Basement-2' },
@@ -170,11 +159,7 @@ class Workflow extends Component {
         { code: 'MOTHER', name: 'Mother' },
         { code: 'OTHERS', name: 'Others' },
       ],
-      gender: [
-        { code: 'MALE', name: 'Male' },
-        { code: 'FEMALE', name: 'Female' },
-        { code: 'OTHERS', name: 'Others' },
-      ],
+      gender: [{ code: 'MALE', name: 'Male' }, { code: 'FEMALE', name: 'Female' }, { code: 'OTHERS', name: 'Others' }],
       ownerType: [
         { code: 'Ex_Service_man', name: 'Ex-Service man' },
         { code: 'Freedom_Fighter', name: 'Freedom Fighter' },
@@ -198,10 +183,7 @@ class Workflow extends Component {
       revanue: [],
       election: [],
       usages: [],
-      creationReason: [
-        { code: 'NEWPROPERTY', name: 'New Property' },
-        { code: 'SUBDIVISION', name: 'Bifurcation' },
-      ],
+      creationReason: [{ code: 'NEWPROPERTY', name: 'New Property' }, { code: 'SUBDIVISION', name: 'Bifurcation' }],
       demands: [],
       revenueBoundary: [],
       adminBoundary: [],
@@ -246,35 +228,23 @@ class Workflow extends Component {
       .then(res => {
         setLoadingStatus('hide');
         if (res.hasOwnProperty('Errors')) {
-          toggleSnackbarAndSetText(
-            true,
-            'Server returned unexpected error. Please contact system administrator.'
-          );
+          toggleSnackbarAndSetText(true, 'Server returned unexpected error. Please contact system administrator.');
         } else {
           var userRequest = JSON.parse(localStorage.getItem('userRequest'));
           if (res.hasOwnProperty('properties') && res.properties.length > 0) {
-            var workflowDetails =
-              res.properties[0].propertyDetail.workFlowDetails;
+            var workflowDetails = res.properties[0].propertyDetail.workFlowDetails;
             if (workflowDetails) {
               workflow.workflowDepartment = workflowDetails.department || null;
-              workflow.workflowDesignation =
-                workflowDetails.designation || null;
+              workflow.workflowDesignation = workflowDetails.designation || null;
               workflow.approver = workflowDetails.assignee || null;
-              workflow.initiatorPosition =
-                workflowDetails.initiatorPosition || null;
+              workflow.initiatorPosition = workflowDetails.initiatorPosition || null;
             }
 
             var processQuery = {
               id: res.properties[0].propertyDetail.stateId,
             };
 
-            Api.commonApiPost(
-              'egov-common-workflows/process/_search',
-              processQuery,
-              {},
-              false,
-              true
-            )
+            Api.commonApiPost('egov-common-workflows/process/_search', processQuery, {}, false, true)
               .then(res => {
                 currentThis.setState({
                   process: res.processInstance,
@@ -302,10 +272,7 @@ class Workflow extends Component {
                           });
                           currentThis.setState({
                             ...currentThis.state,
-                            designation: [
-                              ...currentThis.state.designation,
-                              ...response.Designation,
-                            ],
+                            designation: [...currentThis.state.designation, ...response.Designation],
                           });
                         })
                         .catch(err => {
@@ -395,13 +362,7 @@ class Workflow extends Component {
             var ptQuery = {
               parent: res.properties[0].propertyDetail.propertyType,
             };
-            Api.commonApiPost(
-              'pt-property/property/propertytypes/_search',
-              ptQuery,
-              {},
-              false,
-              true
-            )
+            Api.commonApiPost('pt-property/property/propertytypes/_search', ptQuery, {}, false, true)
               .then(res => {
                 currentThis.setState({ propertysubtypes: res.propertyTypes });
                 console.log('Property Sub Type', res);
@@ -431,9 +392,7 @@ class Workflow extends Component {
 
           var tQuery = {
             businessService: 'PT',
-            consumerCode:
-              res.properties[0].upicNumber ||
-              res.properties[0].propertyDetail.applicationNo,
+            consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo,
           };
 
           Api.commonApiPost('billing-service/demand/_search', tQuery, {})
@@ -454,13 +413,7 @@ class Workflow extends Component {
         });
       });
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', {}, {}, false, true)
       .then(res => {
         currentThis.setState({ propertytypes: res.propertyTypes });
       })
@@ -470,13 +423,7 @@ class Workflow extends Component {
         });
       });
 
-    Api.commonApiPost(
-      'pt-property/property/departments/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/departments/_search', {}, {}, false, true)
       .then(res => {
         currentThis.setState({
           departments: res.departments,
@@ -487,10 +434,10 @@ class Workflow extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         currentThis.setState({ locality: res.Boundary });
       })
@@ -501,13 +448,7 @@ class Workflow extends Component {
         console.log(err.message);
       });
 
-    Api.commonApiPost(
-      'pt-property/property/apartment/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/apartment/_search', {}, {}, false, true)
       .then(res => {
         currentThis.setState({ apartments: res.apartments });
       })
@@ -518,10 +459,10 @@ class Workflow extends Component {
         console.log(err.message);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'STREET', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'STREET',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         currentThis.setState({ street: res.Boundary });
       })
@@ -529,10 +470,10 @@ class Workflow extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'WARD', hierarchyTypeName: 'ADMINISTRATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'WARD',
+      hierarchyTypeName: 'ADMINISTRATION',
+    })
       .then(res => {
         currentThis.setState({ election: res.Boundary });
       })
@@ -569,19 +510,11 @@ class Workflow extends Component {
       keyName: 'PT_RevenueBoundaryHierarchy',
     })
       .then(res1 => {
-        if (
-          res1.appConfigurations &&
-          res1.appConfigurations[0] &&
-          res1.appConfigurations[0].values &&
-          res1.appConfigurations[0].values[0]
-        ) {
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'ZONE',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+        if (res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'ZONE',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               currentThis.setState({ zone: res.Boundary });
             })
@@ -592,13 +525,10 @@ class Workflow extends Component {
               console.log(err);
             });
 
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'WARD',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'WARD',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               currentThis.setState({ ward: res.Boundary });
             })
@@ -609,13 +539,10 @@ class Workflow extends Component {
               console.log(err);
             });
 
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'BLOCK',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'BLOCK',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               currentThis.setState({ block: res.Boundary });
             })
@@ -623,13 +550,10 @@ class Workflow extends Component {
               console.log(err);
             });
 
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'REVENUE',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'REVENUE',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               currentThis.setState({ revanue: res.Boundary });
             })
@@ -690,22 +614,14 @@ class Workflow extends Component {
 
     let hasData = false;
 
-    if (
-      type == 'department' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDesignation
-    ) {
+    if (type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
       console.log(type);
       query = {
         departmentId: e.target.value,
         designationId: this.props.workflow.workflowDesignation,
       };
       hasData = true;
-    } else if (
-      type == 'designation' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDepartment
-    ) {
+    } else if (type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
       console.log(type);
       query = {
         departmentId: this.props.workflow.workflowDepartment,
@@ -749,15 +665,12 @@ class Workflow extends Component {
     };
 
     if (actionName == 'Forward') {
-      workFlowDetails.assignee =
-        getPosition(this.state.approver, workflow.approver) || null;
-      workFlowDetails.initiatorPosition =
-        this.state.process.initiatorPosition || null;
+      workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+      workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
       localStorage.setItem('inboxStatus', 'Forwarded');
     } else if (actionName == 'Approve') {
       workFlowDetails.assignee = this.state.process.initiatorPosition || null;
-      workFlowDetails.initiatorPosition =
-        this.state.process.initiatorPosition || null;
+      workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
       localStorage.setItem('inboxStatus', 'Approved');
     } else if (actionName == 'Reject') {
       workFlowDetails.assignee = this.state.process.initiatorPosition || null;
@@ -765,18 +678,10 @@ class Workflow extends Component {
     } else if (actionName == 'Print Notice') {
       var body = {
         upicNo: data[0].upicNumber,
-        tenantId: localStorage.getItem('tenantId')
-          ? localStorage.getItem('tenantId')
-          : 'default',
+        tenantId: localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default',
       };
 
-      Api.commonApiPost(
-        'pt-property/properties/specialnotice/_generate',
-        {},
-        body,
-        false,
-        true
-      )
+      Api.commonApiPost('pt-property/properties/specialnotice/_generate', {}, body, false, true)
         .then(res => {
           currentThis.setState({
             specialNotice: res.notice,
@@ -785,10 +690,7 @@ class Workflow extends Component {
 
           var taxHeadsArray = [];
 
-          if (
-            res.notice.hasOwnProperty('taxDetails') &&
-            res.notice.taxDetails.hasOwnProperty('headWiseTaxes')
-          ) {
+          if (res.notice.hasOwnProperty('taxDetails') && res.notice.taxDetails.hasOwnProperty('headWiseTaxes')) {
             res.notice.taxDetails.headWiseTaxes.map((item, index) => {
               taxHeadsArray.push(item.taxName);
             });
@@ -803,13 +705,7 @@ class Workflow extends Component {
             code: taxHeadsArray,
           };
 
-          Api.commonApiPost(
-            '/billing-service/taxheads/_search',
-            query,
-            {},
-            false,
-            true
-          )
+          Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true)
             .then(res => {
               currentThis.setState({
                 taxHeads: res.TaxHeadMasters,
@@ -898,9 +794,7 @@ class Workflow extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -924,11 +818,7 @@ class Workflow extends Component {
                 <Card className="uiCard">
                   <CardHeader
                     style={{ paddingBottom: 0 }}
-                    title={
-                      <div style={styles.headerStyle}>
-                        {translate('pt.create.groups.ownerDetails')}
-                      </div>
-                    }
+                    title={<div style={styles.headerStyle}>{translate('pt.create.groups.ownerDetails')}</div>}
                   />
                   <CardText>
                     <Col xs={12} md={12}>
@@ -944,51 +834,15 @@ class Workflow extends Component {
                       >
                         <thead>
                           <th>#</th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.aadhaarNumber'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.phoneNumber'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.ownerName'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.gender'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.email'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.pan'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.guardian'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.primaryOwner'
-                            )}
-                          </th>
-                          <th>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip'
-                            )}
-                          </th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.primaryOwner')}</th>
+                          <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                         </thead>
                         <tbody>
                           {item.owners.length != 0 &&
@@ -996,69 +850,20 @@ class Workflow extends Component {
                               return (
                                 <tr key={index}>
                                   <td>{index + 1}</td>
-                                  <td>
-                                    {' '}
-                                    {owner.aadhaarNumber
-                                      ? owner.aadhaarNumber
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
-                                  <td>
-                                    {' '}
-                                    {owner.mobileNumber
-                                      ? owner.mobileNumber
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
-                                  <td>
-                                    {owner.name
-                                      ? owner.name
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
+                                  <td> {owner.aadhaarNumber ? owner.aadhaarNumber : translate('pt.search.searchProperty.fields.na')}</td>
+                                  <td> {owner.mobileNumber ? owner.mobileNumber : translate('pt.search.searchProperty.fields.na')}</td>
+                                  <td>{owner.name ? owner.name : translate('pt.search.searchProperty.fields.na')}</td>
                                   <td>
                                     {' '}
                                     {owner.gender
-                                      ? getNameByCode(
-                                          currentThis.state.gender,
-                                          owner.gender
-                                        )
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
+                                      ? getNameByCode(currentThis.state.gender, owner.gender)
+                                      : translate('pt.search.searchProperty.fields.na')}
                                   </td>
-                                  <td>
-                                    {owner.emailId
-                                      ? owner.emailId
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
-                                  <td>
-                                    {owner.pan
-                                      ? owner.pan
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
-                                  <td>
-                                    {owner.fatherOrHusbandName
-                                      ? owner.fatherOrHusbandName
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
+                                  <td>{owner.emailId ? owner.emailId : translate('pt.search.searchProperty.fields.na')}</td>
+                                  <td>{owner.pan ? owner.pan : translate('pt.search.searchProperty.fields.na')}</td>
+                                  <td>{owner.fatherOrHusbandName ? owner.fatherOrHusbandName : translate('pt.search.searchProperty.fields.na')}</td>
                                   <td>{owner.isPrimaryOwner ? 'Yes' : 'No'}</td>
-                                  <td>
-                                    {owner.ownerShipPercentage
-                                      ? owner.ownerShipPercentage
-                                      : translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                  </td>
+                                  <td>{owner.ownerShipPercentage ? owner.ownerShipPercentage : translate('pt.search.searchProperty.fields.na')}</td>
                                 </tr>
                               );
                             })}
@@ -1071,121 +876,63 @@ class Workflow extends Component {
                 <Card className="uiCard">
                   <CardHeader
                     style={{ paddingBottom: 0 }}
-                    title={
-                      <div style={styles.headerStyle}>
-                        {translate('pt.create.groups.propertyDetails')}
-                      </div>
-                    }
+                    title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyDetails')}</div>}
                   />
                   <CardText>
                     <Col md={12} xs={12}>
                       <Row>
                         <Col xs={12} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate('pt.create.groups.oldPropertyNo')}
-                          </div>
-                          {item.oldUpicNumber ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.oldPropertyNo')}</div>
+                          {item.oldUpicNumber || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={12} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate('pt.create.groups.propertyNo')}
-                          </div>
-                          {item.upicNumber ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyNo')}</div>
+                          {item.upicNumber || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={12} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.propertyType'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.propertytypes,
-                            item.propertyDetail.propertyType
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
+                          {getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) ||
+                            translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.extentOfSite'
-                            )}
-                          </div>
-                          {item.propertyDetail.sitalArea ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
+                          {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                       </Row>
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.registrationDocNo'
-                            )}
-                          </div>
-                          {item.propertyDetail.regdDocNo ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.registrationDocNo')}</div>
+                          {item.propertyDetail.regdDocNo || translate('pt.search.searchProperty.fields.na')}
+                        </Col>
+                        <Col xs={4} md={3} style={styles.bold}>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
+                          {getNameByCode(this.state.creationReason, item.creationReason) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
                           <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.creationReason'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.creationReason,
-                            item.creationReason
-                          ) || translate('pt.search.searchProperty.fields.na')}
-                        </Col>
-                        <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty'
-                            )}
+                            {translate('pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty')}
                           </div>
                           {translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.effectiveDate'
-                            )}
-                          </div>
-                          {item.occupancyDate
-                            ? item.occupancyDate.split(' ')[0]
-                            : translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.effectiveDate')}</div>
+                          {item.occupancyDate ? item.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                       </Row>
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.appartment'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.apartments,
-                            item.propertyDetail.apartment
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.appartment')}</div>
+                          {getNameByCode(this.state.apartments, item.propertyDetail.apartment) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.registrationDocDate'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.registrationDocDate')}</div>
                           {item.propertyDetail.regdDocDate
                             ? item.propertyDetail.regdDocDate.split(' ')[0]
                             : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.assessmentDate'
-                            )}
-                          </div>
-                          {item.assessmentDate
-                            ? item.assessmentDate.split(' ')[0]
-                            : translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.assessmentDate')}</div>
+                          {item.assessmentDate ? item.assessmentDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                       </Row>
                     </Col>
@@ -1196,122 +943,58 @@ class Workflow extends Component {
                 <Card className="uiCard">
                   <CardHeader
                     style={{ paddingBottom: 0 }}
-                    title={
-                      <div style={styles.headerStyle}>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.addressDetails'
-                        )}
-                      </div>
-                    }
+                    title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyAddress.fields.addressDetails')}</div>}
                   />
                   <CardText>
                     <Col md={12} xs={12}>
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.doorNo'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.doorNo')}</div>
                           {item.address.addressNumber}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.propertyAddress'
-                            )}
-                          </div>
-                          {item.address.addressNumber
-                            ? item.address.addressNumber + ', '
-                            : ''}
-                          {item.address.addressLine1
-                            ? getNameByCode(
-                                this.state.locality,
-                                item.address.addressLine1
-                              ) + ', '
-                            : ''}
-                          {item.address.addressLine2
-                            ? item.address.addressLine2 + ', '
-                            : ''}
-                          {item.address.landmark
-                            ? item.address.landmark + ', '
-                            : ''}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.propertyAddress')}</div>
+                          {item.address.addressNumber ? item.address.addressNumber + ', ' : ''}
+                          {item.address.addressLine1 ? getNameByCode(this.state.locality, item.address.addressLine1) + ', ' : ''}
+                          {item.address.addressLine2 ? item.address.addressLine2 + ', ' : ''}
+                          {item.address.landmark ? item.address.landmark + ', ' : ''}
                           {item.address.city ? item.address.city : ''}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.zoneNo'
-                            )}
-                          </div>
-                          {this.state.revenueBoundary.name ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.zoneNo')}</div>
+                          {this.state.revenueBoundary.name || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.blockNo'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.blockNo')}</div>
                           NA
                         </Col>
                       </Row>
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.electionWard'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.election,
-                            item.boundary.adminBoundary.code
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.electionWard')}</div>
+                          {getNameByCode(this.state.election, item.boundary.adminBoundary.code) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'employee.Employee.fields.correspondenceAddress'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('employee.Employee.fields.correspondenceAddress')}</div>
                           NA
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.wardNo'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.wardNo')}</div>
                           NA
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.locality'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.locality,
-                            item.address.addressLine1
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.locality')}</div>
+                          {getNameByCode(this.state.locality, item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                       </Row>
 
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.ebBlock'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.ebBlock')}</div>
                           NA
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.pin'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.pin')}</div>
                           {item.address.pincode}
                         </Col>
                       </Row>
@@ -1323,103 +1006,48 @@ class Workflow extends Component {
                 <Card className="uiCard">
                   <CardHeader
                     style={{ paddingBottom: 0 }}
-                    title={
-                      <div style={styles.headerStyle}>
-                        {translate('pt.create.groups.assessmentDetails')}
-                      </div>
-                    }
+                    title={<div style={styles.headerStyle}>{translate('pt.create.groups.assessmentDetails')}</div>}
                   />
                   <CardText>
                     <Col md={12} xs={12}>
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.creationReason'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.creationReason,
-                            item.creationReason
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.creationReason')}</div>
+                          {getNameByCode(this.state.creationReason, item.creationReason) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.propertyType'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.propertytypes,
-                            item.propertyDetail.propertyType
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.propertyType')}</div>
+                          {getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) ||
+                            translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.propertySubType'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.propertysubtypes,
-                            item.propertyDetail.category
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</div>
+                          {getNameByCode(this.state.propertysubtypes, item.propertyDetail.category) ||
+                            translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.usageType'
-                            )}
-                          </div>
-                          {getNameByCode(
-                            this.state.usages,
-                            item.propertyDetail.usage
-                          ) || translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.usageType')}</div>
+                          {getNameByCode(this.state.usages, item.propertyDetail.usage) || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.usageSubType'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.usageSubType')}</div>
                           {translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.extentOfSite'
-                            )}
-                          </div>
-                          {item.propertyDetail.sitalArea ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</div>
+                          {item.propertyDetail.sitalArea || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.sequenceNo'
-                            )}
-                          </div>
-                          {item.sequenceNo ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}</div>
+                          {item.sequenceNo || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.buildingPermissionNumber'
-                            )}
-                          </div>
-                          {item.propertyDetail.bpaNo ||
-                            translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}</div>
+                          {item.propertyDetail.bpaNo || translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.buildingPermissionDate'
-                            )}
-                          </div>
-                          {item.propertyDetail.bpaDate
-                            ? item.propertyDetail.bpaDate.split(' ')[0]
-                            : translate('pt.search.searchProperty.fields.na')}
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}</div>
+                          {item.propertyDetail.bpaDate ? item.propertyDetail.bpaDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                       </Row>
                     </Col>
@@ -1429,68 +1057,40 @@ class Workflow extends Component {
                 <Card className="uiCard">
                   <CardHeader
                     style={{ paddingBottom: 0 }}
-                    title={
-                      <div style={styles.headerStyle}>
-                        {translate('pt.create.groups.propertyFactors')}
-                      </div>
-                    }
+                    title={<div style={styles.headerStyle}>{translate('pt.create.groups.propertyFactors')}</div>}
                   />
                   <CardText>
                     <Col md={12} xs={12}>
                       <Row>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyFactors.fields.toiletFactor'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyFactors.fields.toiletFactor')}</div>
                           {item.propertyDetail.hasOwnProperty('factors')
-                            ? item.propertyDetail.factors != null &&
-                              item.propertyDetail.factors.length != 0
-                              ? item.propertyDetail.factors[0].value ||
-                                translate('pt.search.searchProperty.fields.na')
+                            ? item.propertyDetail.factors != null && item.propertyDetail.factors.length != 0
+                              ? item.propertyDetail.factors[0].value || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')
                             : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyFactors.fields.roadFactor'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyFactors.fields.roadFactor')}</div>
                           {item.propertyDetail.hasOwnProperty('factors')
-                            ? item.propertyDetail.factors != null &&
-                              item.propertyDetail.factors.length != 0
-                              ? item.propertyDetail.factors[1].value ||
-                                translate('pt.search.searchProperty.fields.na')
+                            ? item.propertyDetail.factors != null && item.propertyDetail.factors.length != 0
+                              ? item.propertyDetail.factors[1].value || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')
                             : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyFactors.fields.liftFactor'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyFactors.fields.liftFactor')}</div>
                           {item.propertyDetail.hasOwnProperty('factors')
-                            ? item.propertyDetail.factors != null &&
-                              item.propertyDetail.factors.length != 0
-                              ? item.propertyDetail.factors[2].value ||
-                                translate('pt.search.searchProperty.fields.na')
+                            ? item.propertyDetail.factors != null && item.propertyDetail.factors.length != 0
+                              ? item.propertyDetail.factors[2].value || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')
                             : translate('pt.search.searchProperty.fields.na')}
                         </Col>
                         <Col xs={4} md={3} style={styles.bold}>
-                          <div style={{ fontWeight: 500 }}>
-                            {translate(
-                              'pt.create.groups.propertyFactors.fields.parkingFactor'
-                            )}
-                          </div>
+                          <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyFactors.fields.parkingFactor')}</div>
                           {item.propertyDetail.hasOwnProperty('factors')
-                            ? item.propertyDetail.factors != null &&
-                              item.propertyDetail.factors.length != 0
-                              ? item.propertyDetail.factors[3].value ||
-                                translate('pt.search.searchProperty.fields.na')
+                            ? item.propertyDetail.factors != null && item.propertyDetail.factors.length != 0
+                              ? item.propertyDetail.factors[3].value || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')
                             : translate('pt.search.searchProperty.fields.na')}
                         </Col>
@@ -1502,11 +1102,7 @@ class Workflow extends Component {
                 <Card className="uiCard">
                   <CardHeader
                     style={{ paddingBottom: 0 }}
-                    title={
-                      <div style={styles.headerStyle}>
-                        {translate('pt.create.groups.floorDetails')}
-                      </div>
-                    }
+                    title={<div style={styles.headerStyle}>{translate('pt.create.groups.floorDetails')}</div>}
                   />
                   <CardText>
                     <Col xs={12} md={12}>
@@ -1520,136 +1116,34 @@ class Workflow extends Component {
                         bordered
                         responsive
                       >
-                        <thead
-                          style={{ backgroundColor: '#607b84', color: 'white' }}
-                        >
+                        <thead style={{ backgroundColor: '#607b84', color: 'white' }}>
                           <tr>
                             <th>#</th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.floorNumber'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.unitType'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.unitNumber'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.constructionClass'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.usageType'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.usageSubType'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.firmName'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.occupancy'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.occupantName'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.annualRent'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.manualArv'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.constructionStartDate'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.constructionEndDate'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.effectiveFromDate'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.unstructuredLand'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.length'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.breadth'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.plinthArea'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.occupancyCertificateNumber'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.buildingCost'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.landCost'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.carpetArea'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.assessableArea'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.exemptedArea'
-                              )}
-                            </th>
-                            <th>
-                              {translate(
-                                'pt.create.groups.assessmentDetails.fields.isLegal'
-                              )}
-                            </th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.firmName')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.occupancy')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+                            <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
+                            <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
+                            <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+                            <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+                            <th>{translate('pt.create.groups.propertyAddress.fields.assessableArea')}</th>
+                            <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
+                            <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
                           </tr>
                         </thead>
                         <tbody>
@@ -1660,172 +1154,48 @@ class Workflow extends Component {
                                   <tr key={index}>
                                     <td>{index + 1}</td>
                                     <td>
-                                      {getNameByCode(
-                                        currentThis.state.floorNumber,
-                                        parseInt(i.floorNo) + 1
-                                      ) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
+                                      {getNameByCode(currentThis.state.floorNumber, parseInt(i.floorNo) + 1) ||
+                                        translate('pt.search.searchProperty.fields.na')}
                                     </td>
                                     <td>
-                                      {getNameByCode(
-                                        currentThis.state.unitType,
-                                        i.unitType
-                                      ) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
+                                      {getNameByCode(currentThis.state.unitType, i.unitType) || translate('pt.search.searchProperty.fields.na')}
                                     </td>
+                                    <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
-                                      {i.unitNo ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
+                                      {getNameByCode(currentThis.state.structureclasses, i.structure) ||
+                                        translate('pt.search.searchProperty.fields.na')}
                                     </td>
+                                    <td>{getNameByCode(currentThis.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
-                                      {getNameByCode(
-                                        currentThis.state.structureclasses,
-                                        i.structure
-                                      ) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
+                                      {getNameByCode(currentThis.state.usages, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}
                                     </td>
+                                    <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
-                                      {getNameByCode(
-                                        currentThis.state.usages,
-                                        i.usage
-                                      ) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
+                                      {getNameByCode(currentThis.state.occupancies, i.occupancyType) ||
+                                        translate('pt.search.searchProperty.fields.na')}
                                     </td>
-                                    <td>
-                                      {getNameByCode(
-                                        currentThis.state.usages,
-                                        i.usageSubType
-                                      ) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.firmName ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {getNameByCode(
-                                        currentThis.state.occupancies,
-                                        i.occupancyType
-                                      ) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.occupierName ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.annualRent ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {parseFloat(i.manualArv).toString() ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
+                                    <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{parseFloat(i.manualArv).toString() || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>
                                       {i.constructionStartDate
                                         ? i.constructionStartDate.split(' ')[0]
-                                        : translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
+                                        : translate('pt.search.searchProperty.fields.na')}
                                     </td>
                                     <td>
-                                      {i.constCompletionDate
-                                        ? i.constCompletionDate.split(' ')[0]
-                                        : translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
+                                      {i.constCompletionDate ? i.constCompletionDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}
                                     </td>
-                                    <td>
-                                      {i.occupancyDate
-                                        ? i.occupancyDate.split(' ')[0]
-                                        : translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                    </td>
-                                    <td>
-                                      {(i.isStructured == true
-                                        ? 'Yes'
-                                        : i.isStructured) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {parseFloat(i.length) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {parseFloat(i.width) ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.builtupArea ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.occupancyCertiNumber ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.buildingCost ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.landCost ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.carpetArea ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.assessableArea ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
-                                    <td>
-                                      {i.exemptionArea ||
-                                        translate(
-                                          'pt.search.searchProperty.fields.na'
-                                        )}
-                                    </td>
+                                    <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{(i.isStructured == true ? 'Yes' : i.isStructured) || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{parseFloat(i.length) || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{parseFloat(i.width) || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.assessableArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                    <td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
                                     <td>{i.isAuthorised ? 'Yes' : 'No'}</td>
                                   </tr>
                                 );
@@ -1841,176 +1211,79 @@ class Workflow extends Component {
                   <Card className="uiCard">
                     <CardHeader
                       style={{ paddingBottom: 0 }}
-                      title={
-                        <div style={styles.headerStyle}>
-                          {translate('pt.create.groups.constructionDetails')}
-                        </div>
-                      }
+                      title={<div style={styles.headerStyle}>{translate('pt.create.groups.constructionDetails')}</div>}
                     />
                     <CardText>
                       <Col md={12} xs={12}>
                         <Row>
                           <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.currentAssessmentDate'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'assessmentDates'
-                            ) && item.propertyDetail.assessmentDates != null
-                              ? item.propertyDetail.assessmentDates[1] !=
-                                undefined
-                                ? item.propertyDetail.assessmentDates[1].date ||
-                                  translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
-                                : translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}</div>
+                            {item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates != null
+                              ? item.propertyDetail.assessmentDates[1] != undefined
+                                ? item.propertyDetail.assessmentDates[1].date || translate('pt.search.searchProperty.fields.na')
+                                : translate('pt.search.searchProperty.fields.na')
+                              : translate('pt.search.searchProperty.fields.na')}
+                          </Col>
+                          <Col xs={4} md={3} style={styles.bold}>
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}</div>
+                            {item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates != null
+                              ? item.propertyDetail.assessmentDates[0] != undefined
+                                ? item.propertyDetail.assessmentDates[0].date || translate('pt.search.searchProperty.fields.na')
+                                : translate('pt.search.searchProperty.fields.na')
+                              : translate('pt.search.searchProperty.fields.na')}
+                          </Col>
+                          <Col xs={4} md={3} style={styles.bold}>
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}</div>
+                            {item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates != null
+                              ? item.propertyDetail.assessmentDates[2] != undefined
+                                ? item.propertyDetail.assessmentDates[2].date || translate('pt.search.searchProperty.fields.na')
+                                : translate('pt.search.searchProperty.fields.na')
+                              : translate('pt.search.searchProperty.fields.na')}
+                          </Col>
+                          <Col xs={4} md={3} style={styles.bold}>
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}</div>
+                            {item.propertyDetail.hasOwnProperty('assessmentDates') && item.propertyDetail.assessmentDates != null
+                              ? item.propertyDetail.assessmentDates[3] != undefined
+                                ? item.propertyDetail.assessmentDates[3].date || translate('pt.search.searchProperty.fields.na')
+                                : translate('pt.search.searchProperty.fields.na')
+                              : translate('pt.search.searchProperty.fields.na')}
+                          </Col>
+                          <Col xs={4} md={3} style={styles.bold}>
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.constructionDetails.fields.certificateNumber')}</div>
+                            {item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails != null
+                              ? item.propertyDetail.builderDetails.certificateNumber || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')}
                           </Col>
                           <Col xs={4} md={3} style={styles.bold}>
                             <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.firstAssessmentDate'
-                              )}
+                              {translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}
                             </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'assessmentDates'
-                            ) && item.propertyDetail.assessmentDates != null
-                              ? item.propertyDetail.assessmentDates[0] !=
-                                undefined
-                                ? item.propertyDetail.assessmentDates[0].date ||
-                                  translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
-                                : translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
+                            {item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails != null
+                              ? item.propertyDetail.builderDetails.certificateCompletionDate || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')}
                           </Col>
                           <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.revisedAssessmentDate'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'assessmentDates'
-                            ) && item.propertyDetail.assessmentDates != null
-                              ? item.propertyDetail.assessmentDates[2] !=
-                                undefined
-                                ? item.propertyDetail.assessmentDates[2].date ||
-                                  translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
-                                : translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}</div>
+                            {item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails != null
+                              ? item.propertyDetail.builderDetails.certificateReceiveDate || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')}
                           </Col>
                           <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.propertyAddress.fields.lastAssessmentDate'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'assessmentDates'
-                            ) && item.propertyDetail.assessmentDates != null
-                              ? item.propertyDetail.assessmentDates[3] !=
-                                undefined
-                                ? item.propertyDetail.assessmentDates[3].date ||
-                                  translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
-                                : translate(
-                                    'pt.search.searchProperty.fields.na'
-                                  )
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.constructionDetails.fields.agencyName')}</div>
+                            {item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails != null
+                              ? item.propertyDetail.builderDetails.agencyName || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')}
                           </Col>
                           <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.constructionDetails.fields.certificateNumber'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'builderDetails'
-                            ) && item.propertyDetail.builderDetails != null
-                              ? item.propertyDetail.builderDetails
-                                  .certificateNumber ||
-                                translate('pt.search.searchProperty.fields.na')
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.constructionDetails.fields.licenseType')}</div>
+                            {item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails != null
+                              ? item.propertyDetail.builderDetails.licenseType || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')}
                           </Col>
                           <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.constructionDetails.fields.certificateCompletionDate'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'builderDetails'
-                            ) && item.propertyDetail.builderDetails != null
-                              ? item.propertyDetail.builderDetails
-                                  .certificateCompletionDate ||
-                                translate('pt.search.searchProperty.fields.na')
-                              : translate('pt.search.searchProperty.fields.na')}
-                          </Col>
-                          <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.constructionDetails.fields.certificateReceivedDate'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'builderDetails'
-                            ) && item.propertyDetail.builderDetails != null
-                              ? item.propertyDetail.builderDetails
-                                  .certificateReceiveDate ||
-                                translate('pt.search.searchProperty.fields.na')
-                              : translate('pt.search.searchProperty.fields.na')}
-                          </Col>
-                          <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.constructionDetails.fields.agencyName'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'builderDetails'
-                            ) && item.propertyDetail.builderDetails != null
-                              ? item.propertyDetail.builderDetails.agencyName ||
-                                translate('pt.search.searchProperty.fields.na')
-                              : translate('pt.search.searchProperty.fields.na')}
-                          </Col>
-                          <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.constructionDetails.fields.licenseType'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'builderDetails'
-                            ) && item.propertyDetail.builderDetails != null
-                              ? item.propertyDetail.builderDetails
-                                  .licenseType ||
-                                translate('pt.search.searchProperty.fields.na')
-                              : translate('pt.search.searchProperty.fields.na')}
-                          </Col>
-                          <Col xs={4} md={3} style={styles.bold}>
-                            <div style={{ fontWeight: 500 }}>
-                              {translate(
-                                'pt.create.groups.constructionDetails.fields.licenseNumber'
-                              )}
-                            </div>
-                            {item.propertyDetail.hasOwnProperty(
-                              'builderDetails'
-                            ) && item.propertyDetail.builderDetails != null
-                              ? item.propertyDetail.builderDetails
-                                  .licenseNumber ||
-                                translate('pt.search.searchProperty.fields.na')
+                            <div style={{ fontWeight: 500 }}>{translate('pt.create.groups.constructionDetails.fields.licenseNumber')}</div>
+                            {item.propertyDetail.hasOwnProperty('builderDetails') && item.propertyDetail.builderDetails != null
+                              ? item.propertyDetail.builderDetails.licenseNumber || translate('pt.search.searchProperty.fields.na')
                               : translate('pt.search.searchProperty.fields.na')}
                           </Col>
                         </Row>
@@ -2020,8 +1293,7 @@ class Workflow extends Component {
                   </Card>
                 )}
                 {this.state.buttons.hasOwnProperty('attributes') &&
-                  this.state.buttons.attributes.validActions.values.length >
-                    0 &&
+                  this.state.buttons.attributes.validActions.values.length > 0 &&
                   this.state.forward && (
                     <Card className="uiCard">
                       <CardHeader
@@ -2046,9 +1318,7 @@ class Workflow extends Component {
                                 className="fullWidth selectOption"
                                 floatingLabelText={
                                   <span>
-                                    {translate(
-                                      'pt.create.groups.workflow.departmentName'
-                                    )}
+                                    {translate('pt.create.groups.workflow.departmentName')}
                                     <span style={{ color: '#FF0000' }}> *</span>
                                   </span>
                                 }
@@ -2066,11 +1336,7 @@ class Workflow extends Component {
                                     ''
                                   )
                                 }
-                                value={
-                                  workflow.workflowDepartment
-                                    ? workflow.workflowDepartment
-                                    : ''
-                                }
+                                value={workflow.workflowDepartment ? workflow.workflowDepartment : ''}
                                 onChange={(event, index, value) => {
                                   value == -1 ? (value = '') : '';
                                   var e = {
@@ -2079,16 +1345,9 @@ class Workflow extends Component {
                                     },
                                   };
                                   handleWorkFlowChange(e, 'department');
-                                  handleChange(
-                                    e,
-                                    'workflowDepartment',
-                                    true,
-                                    ''
-                                  );
+                                  handleChange(e, 'workflowDepartment', true, '');
                                 }}
-                                floatingLabelFocusStyle={
-                                  styles.floatingLabelFocusStyle
-                                }
+                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                 underlineStyle={styles.underlineStyle}
                                 underlineFocusStyle={styles.underlineFocusStyle}
                                 floatingLabelStyle={{
@@ -2103,9 +1362,7 @@ class Workflow extends Component {
                                 className="fullWidth selectOption"
                                 floatingLabelText={
                                   <span>
-                                    {translate(
-                                      'pt.create.groups.workflow.designationName'
-                                    )}
+                                    {translate('pt.create.groups.workflow.designationName')}
                                     <span style={{ color: '#FF0000' }}> *</span>
                                   </span>
                                 }
@@ -2123,11 +1380,7 @@ class Workflow extends Component {
                                     ''
                                   )
                                 }
-                                value={
-                                  workflow.workflowDesignation
-                                    ? workflow.workflowDesignation
-                                    : ''
-                                }
+                                value={workflow.workflowDesignation ? workflow.workflowDesignation : ''}
                                 onChange={(event, index, value) => {
                                   value == -1 ? (value = '') : '';
                                   var e = {
@@ -2136,16 +1389,9 @@ class Workflow extends Component {
                                     },
                                   };
                                   handleWorkFlowChange(e, 'designation');
-                                  handleChange(
-                                    e,
-                                    'workflowDesignation',
-                                    true,
-                                    ''
-                                  );
+                                  handleChange(e, 'workflowDesignation', true, '');
                                 }}
-                                floatingLabelFocusStyle={
-                                  styles.floatingLabelFocusStyle
-                                }
+                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                 underlineStyle={styles.underlineStyle}
                                 underlineFocusStyle={styles.underlineFocusStyle}
                                 floatingLabelStyle={{
@@ -2160,9 +1406,7 @@ class Workflow extends Component {
                                 className="fullWidth selectOption"
                                 floatingLabelText={
                                   <span>
-                                    {translate(
-                                      'pt.create.groups.workflow.approverName'
-                                    )}
+                                    {translate('pt.create.groups.workflow.approverName')}
                                     <span style={{ color: '#FF0000' }}> *</span>
                                   </span>
                                 }
@@ -2180,9 +1424,7 @@ class Workflow extends Component {
                                     ''
                                   )
                                 }
-                                value={
-                                  workflow.approver ? workflow.approver : ''
-                                }
+                                value={workflow.approver ? workflow.approver : ''}
                                 onChange={(event, index, value) => {
                                   value == -1 ? (value = '') : '';
                                   var e = {
@@ -2192,9 +1434,7 @@ class Workflow extends Component {
                                   };
                                   handleChange(e, 'approver', true, '');
                                 }}
-                                floatingLabelFocusStyle={
-                                  styles.floatingLabelFocusStyle
-                                }
+                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                 underlineStyle={styles.underlineStyle}
                                 underlineFocusStyle={styles.underlineFocusStyle}
                                 floatingLabelStyle={{
@@ -2207,9 +1447,7 @@ class Workflow extends Component {
                             <Col xs={12} md={3} sm={6}>
                               <TextField
                                 className="fullWidth"
-                                floatingLabelText={translate(
-                                  'pt.create.groups.workflow.comment'
-                                )}
+                                floatingLabelText={translate('pt.create.groups.workflow.comment')}
                                 errorText={
                                   fieldErrors.comments ? (
                                     <span
@@ -2224,15 +1462,11 @@ class Workflow extends Component {
                                     ''
                                   )
                                 }
-                                value={
-                                  workflow.comments ? workflow.comments : ''
-                                }
+                                value={workflow.comments ? workflow.comments : ''}
                                 onChange={e => {
                                   handleChange(e, 'comments', false, '');
                                 }}
-                                floatingLabelFocusStyle={
-                                  styles.floatingLabelFocusStyle
-                                }
+                                floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                                 underlineStyle={styles.underlineStyle}
                                 underlineFocusStyle={styles.underlineFocusStyle}
                                 floatingLabelStyle={{
@@ -2247,27 +1481,21 @@ class Workflow extends Component {
                   )}
                 <div style={{ textAlign: 'center' }}>
                   {this.state.buttons.hasOwnProperty('attributes') &&
-                    this.state.buttons.attributes.validActions.values.length >
-                      0 &&
-                    this.state.buttons.attributes.validActions.values.map(
-                      (item, index) => {
-                        return (
-                          <RaisedButton
-                            key={index}
-                            type="button"
-                            primary={true}
-                            label={item.name}
-                            style={{ margin: '0 5px' }}
-                            onClick={() => {
-                              this.updateInbox(
-                                item.name,
-                                currentThis.state.buttons.status
-                              );
-                            }}
-                          />
-                        );
-                      }
-                    )}
+                    this.state.buttons.attributes.validActions.values.length > 0 &&
+                    this.state.buttons.attributes.validActions.values.map((item, index) => {
+                      return (
+                        <RaisedButton
+                          key={index}
+                          type="button"
+                          primary={true}
+                          label={item.name}
+                          style={{ margin: '0 5px' }}
+                          onClick={() => {
+                            this.updateInbox(item.name, currentThis.state.buttons.status);
+                          }}
+                        />
+                      );
+                    })}
                 </div>
               </Grid>
             );

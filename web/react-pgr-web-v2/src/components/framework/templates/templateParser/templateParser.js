@@ -77,11 +77,7 @@ class TemplateParser extends Component {
           </div>
         </div>
         <div style={{ textAlign: 'center' }}>
-          <RaisedButton
-            label={'Print'}
-            primary={true}
-            onClick={this.printTemplate}
-          />
+          <RaisedButton label={'Print'} primary={true} onClick={this.printTemplate} />
         </div>
       </div>
     );
@@ -94,6 +90,4 @@ const mapDispatchToProps = dispatch => ({
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(TemplateParser)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(TemplateParser));

@@ -203,8 +203,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              'egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name',
+            url: 'egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name',
             requiredErrMsg: '',
             patternErrMsg: '',
           },

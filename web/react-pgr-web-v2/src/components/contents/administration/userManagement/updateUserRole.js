@@ -51,11 +51,7 @@ class updateUserRole extends Component {
           return el.code !== constants.ROLE_CITIZEN;
         });
         _this.setState({ allRoles: ALL_ROLES });
-        Api.commonApiPost(
-          '/user/v1/_search',
-          {},
-          { tenantId: tenantId, id: [_this.props.match.params.userId] }
-        ).then(
+        Api.commonApiPost('/user/v1/_search', {}, { tenantId: tenantId, id: [_this.props.match.params.userId] }).then(
           function(response) {
             _this.setState({ userName: response.user[0].userName });
             _this.setState({ name: response.user[0].name });
@@ -84,11 +80,7 @@ class updateUserRole extends Component {
 
   renderChip(data) {
     return (
-      <Chip
-        key={data.code}
-        onRequestDelete={() => this.handleRequestDelete(data.code)}
-        style={styles.chip}
-      >
+      <Chip key={data.code} onRequestDelete={() => this.handleRequestDelete(data.code)} style={styles.chip}>
         {data.name}
       </Chip>
     );
@@ -125,17 +117,10 @@ class updateUserRole extends Component {
     var index = this.props.updateUserRole.userRoles.indexOf(removekey);
     if (index !== -1) {
       this.props.updateUserRole.userRoles.splice(index, 1);
-      this.props.handleChange(
-        this.props.updateUserRole.userRoles,
-        'userRoles',
-        false,
-        ''
-      );
+      this.props.handleChange(this.props.updateUserRole.userRoles, 'userRoles', false, '');
       // console.log('removed user role:', removekey, index);
     }
-    var filteredPeople = this.state.userRoles.filter(
-      item => item.code !== removekey
-    );
+    var filteredPeople = this.state.userRoles.filter(item => item.code !== removekey);
     this.setState({
       userRoles: filteredPeople,
     });
@@ -145,12 +130,7 @@ class updateUserRole extends Component {
     var allRoleIndex = this.props.updateUserRole.allRoles.indexOf(code);
     if (allRoleIndex !== -1) {
       this.props.updateUserRole.allRoles.splice(allRoleIndex, 1);
-      this.props.handleChange(
-        this.props.updateUserRole.allRoles,
-        'allRoles',
-        false,
-        ''
-      );
+      this.props.handleChange(this.props.updateUserRole.allRoles, 'allRoles', false, '');
       // console.log('removed all role:', code, allRoleIndex);
       this.removeUserRole(code);
     }
@@ -182,16 +162,10 @@ class updateUserRole extends Component {
     userObj.roles = roles;
     userObj.dob = null;
     userObj.bloodGroup = null;
-    Api.commonApiPost(
-      '/user/users/' + this.props.match.params.userId + '/_updatenovalidate',
-      {},
-      { user: userObj }
-    ).then(
+    Api.commonApiPost('/user/users/' + this.props.match.params.userId + '/_updatenovalidate', {}, { user: userObj }).then(
       function(response) {
         _this.props.setLoadingStatus('hide');
-        let msg = `${translate('core.lbl.urmapping')} ${translate(
-          'core.lbl.updatedsuccessful'
-        )}`;
+        let msg = `${translate('core.lbl.urmapping')} ${translate('core.lbl.updatedsuccessful')}`;
         _this.handleError(msg);
       },
       function(err) {
@@ -217,9 +191,7 @@ class updateUserRole extends Component {
             title={
               <div style={styles.headerStyle}>
                 {' '}
-                {translate('core.lbl.urinfo')} : {this.state.userName} ({
-                  this.state.name
-                })
+                {translate('core.lbl.urinfo')} : {this.state.userName} ({this.state.name})
               </div>
             }
           />
@@ -232,9 +204,7 @@ class updateUserRole extends Component {
                     maxHeight={300}
                     floatingLabelText={translate('core.lbl.allroles')}
                     multiple={true}
-                    value={
-                      updateUserRole.allRoles ? updateUserRole.allRoles : ''
-                    }
+                    value={updateUserRole.allRoles ? updateUserRole.allRoles : ''}
                     onChange={(event, key, value) => {
                       handleChange(value, 'allRoles', false, '');
                       this.updateUserRole(value);
@@ -247,11 +217,7 @@ class updateUserRole extends Component {
                             key={index}
                             primaryText={allRoles.name}
                             insetChildren={true}
-                            checked={
-                              updateUserRole.allRoles &&
-                              updateUserRole.allRoles.indexOf(allRoles.code) >
-                                -1
-                            }
+                            checked={updateUserRole.allRoles && updateUserRole.allRoles.indexOf(allRoles.code) > -1}
                           />
                         ))
                       : ''}
@@ -259,11 +225,7 @@ class updateUserRole extends Component {
                 </Col>
                 <Col sm={12} md={6} lg={6}>
                   <Subheader>{translate('core.lbl.assgnedroles')}</Subheader>
-                  <div style={styles.wrapper}>
-                    {this.state.userRoles
-                      ? this.state.userRoles.map(this.renderChip, this)
-                      : ''}
-                  </div>
+                  <div style={styles.wrapper}>{this.state.userRoles ? this.state.userRoles.map(this.renderChip, this) : ''}</div>
                 </Col>
               </Row>
             </Grid>
@@ -277,12 +239,7 @@ class updateUserRole extends Component {
             label={translate('pgr.lbl.update')}
             primary={true}
           />
-          <RaisedButton
-            style={{ margin: '15px 5px' }}
-            onTouchTap={e => search(e)}
-            label={translate('core.lbl.search')}
-            primary={true}
-          />
+          <RaisedButton style={{ margin: '15px 5px' }} onTouchTap={e => search(e)} label={translate('core.lbl.search')} primary={true} />
         </div>
       </div>
     );

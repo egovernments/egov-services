@@ -45,23 +45,11 @@ export default class UiImage extends Component {
       let queryStringObject = splitArray[1].split('|')[0].split('&');
       for (var i = 0; i < queryStringObject.length; i++) {
         if (i) {
-          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split(
-            '='
-          )[1];
+          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
         }
       }
 
-      var response = Api.commonApiPost(
-        context,
-        id,
-        {},
-        '',
-        useTimestamp || false,
-        false,
-        '',
-        '',
-        item.isStateLevel
-      ).then(
+      var response = Api.commonApiPost(context, id, {}, '', useTimestamp || false, false, '', '', item.isStateLevel).then(
         function(response) {
           if (response) {
             let pipe = splitArray[1].split('|')[1];
@@ -84,10 +72,7 @@ export default class UiImage extends Component {
   renderImage = item => {
     // console.log(item);
     var disabledValue = false;
-    if (
-      item.isDisablePath &&
-      typeof this.props.getVal(item.isDisablePath) == 'boolean'
-    ) {
+    if (item.isDisablePath && typeof this.props.getVal(item.isDisablePath) == 'boolean') {
       disabledValue = !this.props.getVal(item.isDisablePath);
     } else {
       disabledValue = item.isDisabled;
@@ -100,12 +85,7 @@ export default class UiImage extends Component {
               <span>{item.label}</span>
             </label>{' '}
             <br />
-            <img
-              src={this.state.image || item.imagePath}
-              width={item.width || '20%'}
-              height={item.height || '60%'}
-              label={item.label}
-            />
+            <img src={this.state.image || item.imagePath} width={item.width || '20%'} height={item.height || '60%'} label={item.label} />
           </div>
         );
     }

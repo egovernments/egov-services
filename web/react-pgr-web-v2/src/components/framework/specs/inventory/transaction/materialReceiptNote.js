@@ -102,13 +102,7 @@ var dat = {
           label: 'inventory.search.result.mrnStatus',
         },
       ],
-      values: [
-        'mrnNumber',
-        'supplier',
-        'challanNo',
-        'challanDate',
-        'mrnStatus',
-      ],
+      values: ['mrnNumber', 'supplier', 'challanNo', 'challanDate', 'mrnStatus'],
       resultPath: 'materialReceipt',
       rowClickUrlUpdate: '/update/materialReceipt/{mrnNumber}',
       rowClickUrlView: '/view/materialReceipt/{mrnNumber}',
@@ -134,8 +128,7 @@ var dat = {
             defaultValue: '',
             maxLength: 50,
             minLength: 5,
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..code',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..code',
           },
           {
             name: 'receiptDate',
@@ -186,8 +179,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name|$..name|$..code',
+            url: 'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name|$..name|$..code',
           },
           {
             name: 'supplierBillNo',
@@ -349,8 +341,7 @@ var dat = {
               tables: [
                 {
                   name: 'receiptDetaillsAddnInfo',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo',
                   type: 'nestedTableList',
                   tableList: {
                     colsWeight: {
@@ -388,8 +379,7 @@ var dat = {
                         pattern: '',
                         type: 'text',
                         isHideLabel: true,
-                        jsonPath:
-                          'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
+                        jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
                         isRequired: false,
                         isDisabled: false,
                       },
@@ -398,8 +388,7 @@ var dat = {
                         pattern: '',
                         type: 'text',
                         isHideLabel: true,
-                        jsonPath:
-                          'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].serialNumber',
+                        jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].serialNumber',
                         isRequired: false,
                         isDisabled: true,
                       },
@@ -408,8 +397,7 @@ var dat = {
                         pattern: '',
                         type: 'text',
                         isHideLabel: true,
-                        jsonPath:
-                          'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
+                        jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
                         isRequired: false,
                         isDisabled: true,
                       },
@@ -418,8 +406,7 @@ var dat = {
                         pattern: '',
                         type: 'datePicker',
                         isHideLabel: true,
-                        jsonPath:
-                          'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].manufactureDate',
+                        jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].manufactureDate',
                         isRequired: true,
                         isDisabled: true,
                       },
@@ -428,8 +415,7 @@ var dat = {
                         pattern: '',
                         type: 'datePicker',
                         isHideLabel: true,
-                        jsonPath:
-                          'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
+                        jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
                         isRequired: true,
                         isDisabled: true,
                       },
@@ -482,12 +468,10 @@ var dat = {
                   pattern: '',
                   type: 'singleValueList',
                   isHideLabel: true,
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].purchaseOrderDetail.id',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].purchaseOrderDetail.id',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
+                  url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
                   depedants: [
                     {
                       jsonPath: 'materials[0].storeMapping[0].department.code',
@@ -507,10 +491,8 @@ var dat = {
                   pattern: '',
                   type: 'singleValueList',
                   isHideLabel: true,
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.code',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].material.code',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
                   isRequired: false,
                   isDisabled: true,
                 },
@@ -564,8 +546,7 @@ var dat = {
                   pattern: '',
                   type: 'number',
                   isHideLabel: true,
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].totalValueAccepted',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].totalValueAccepted',
                   isRequired: true,
                   isDisabled: true,
                 },
@@ -583,8 +564,7 @@ var dat = {
                   pattern: '',
                   type: 'textarea',
                   isHideLabel: true,
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].rejectedRemark',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].rejectedRemark',
                   isRequired: true,
                   isDisabled: false,
                 },
@@ -618,8 +598,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..code',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..code',
           },
           {
             name: 'receiptDate',
@@ -655,8 +634,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name|$..name|$..code',
+            url: 'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name|$..name|$..code',
           },
           {
             name: 'supplierBillNo',
@@ -820,8 +798,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..code',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..code',
           },
           {
             name: 'receiptDate',
@@ -857,8 +834,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name|$..name|$..code',
+            url: 'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name|$..name|$..code',
           },
           {
             name: 'supplierBillNo',
@@ -1000,8 +976,7 @@ var dat = {
     ],
     url: '/inventory-inventory/v110/receiptnotes/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-inventory/v110/receiptnotes/_search?mrnNumber={mrnNumber}',
+    searchUrl: '/inventory-inventory/v110/receiptnotes/_search?mrnNumber={mrnNumber}',
   },
 };
 export default dat;

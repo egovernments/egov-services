@@ -6,11 +6,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Api from '../../../../api/api';
 import { translate, epochToDate, dataURItoBlob } from '../../../common/common';
-import {
-  fonts,
-  writeMultiLanguageText,
-  getBase64FromImageUrl,
-} from '../../../common/pdf-generation/PdfConfig';
+import { fonts, writeMultiLanguageText, getBase64FromImageUrl } from '../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../common/pdf-generation/PdfViewer';
 import styles from '../../../../styles/material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -173,10 +169,7 @@ class RejectionNotice extends Component {
         },
 
         {
-          text: [
-            { text: 'Subject : ', bold: true },
-            ...writeMultiLanguageText(serviceName),
-          ],
+          text: [{ text: 'Subject : ', bold: true }, ...writeMultiLanguageText(serviceName)],
           margin: [0, 0, 0, 18],
         },
 
@@ -226,9 +219,7 @@ class RejectionNotice extends Component {
               [
                 '',
                 {
-                  text: writeMultiLanguageText(
-                    '\n\n\n\n\nSigning Authority\nअधिक्षक,'
-                  ),
+                  text: writeMultiLanguageText('\n\n\n\n\nSigning Authority\nअधिक्षक,'),
                 },
               ],
               ['', { text: writeMultiLanguageText(`${ulbName}`), bold: true }],
@@ -273,11 +264,7 @@ class RejectionNotice extends Component {
 
       let formData = new FormData();
       var blob = dataURItoBlob(dataUrl);
-      formData.append(
-        'file',
-        blob,
-        `PT_REJECTION_${applicationNumber || '0'}.pdf`
-      );
+      formData.append('file', blob, `PT_REJECTION_${applicationNumber || '0'}.pdf`);
       formData.append('tenantId', localStorage.getItem('tenantId'));
       formData.append('module', constants.PTIS_FILE_TAG);
 
@@ -288,9 +275,7 @@ class RejectionNotice extends Component {
         _this.props.errorCallback(err.message);
       };
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         if (response.files && response.files.length > 0) {
           response.files[0].fileStoreId;
           var noticeDocument = {
@@ -314,8 +299,7 @@ class RejectionNotice extends Component {
             //setLoadingStatus('hide');
           }, errorFunction);
         } else setLoadingStatus('hide');
-      },
-      errorFunction);
+      }, errorFunction);
     });
   };
 
@@ -323,14 +307,7 @@ class RejectionNotice extends Component {
     return (
       <PdfViewer pdfData={this.state.pdfData} title="pt.rejectionnotice.title">
         <div className="text-center">
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );
@@ -347,8 +324,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const ViewRejectionNotice = connect(mapStateToProps, mapDispatchToProps)(
-  RejectionNotice
-);
+const ViewRejectionNotice = connect(mapStateToProps, mapDispatchToProps)(RejectionNotice);
 
 export default ViewRejectionNotice;

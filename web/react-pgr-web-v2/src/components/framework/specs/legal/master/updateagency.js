@@ -287,8 +287,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The UID number is as follows:412521475850 : all 12 digits',
+            patternErrMsg: 'The UID number is as follows:412521475850 : all 12 digits',
           },
           {
             name: 'gender',
@@ -353,8 +352,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The Phone number structure is as follows: 999XXXX999 ',
+            patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
           },
           {
             name: 'contactNumber',
@@ -365,8 +363,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The Phone number structure is as follows: 999XXXX999 ',
+            patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
           },
           {
             name: 'email',
@@ -477,8 +474,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The UID number is as follows:412521475850 : all 12 digits',
+            patternErrMsg: 'The UID number is as follows:412521475850 : all 12 digits',
           },
           {
             name: 'gender',
@@ -543,8 +539,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The Phone number structure is as follows: 999XXXX999 ',
+            patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
           },
           {
             name: 'contactNumber',
@@ -555,8 +550,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The Phone number structure is as follows: 999XXXX999 ',
+            patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
           },
           {
             name: 'email',
@@ -729,8 +723,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name',
             depedants: [
               {
                 jsonPath: 'agencies[0].bankBranch',
@@ -816,11 +809,7 @@ var dat = {
               {
                 ifValue: 'active',
                 enable: [],
-                disable: [
-                  'terminationDate',
-                  'inActivationDate',
-                  'reasonOfTermination',
-                ],
+                disable: ['terminationDate', 'inActivationDate', 'reasonOfTermination'],
               },
               {
                 ifValue: 'inactive',
@@ -899,11 +888,7 @@ var dat = {
               {
                 ifValue: 'active',
                 enable: [],
-                disable: [
-                  'terminationDate',
-                  'inActivationDate',
-                  'reasonOfTermination',
-                ],
+                disable: ['terminationDate', 'inActivationDate', 'reasonOfTermination'],
               },
               {
                 ifValue: 'inactive',

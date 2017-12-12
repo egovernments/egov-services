@@ -11,22 +11,13 @@ export default class CommentDoc extends Component {
       <Card className="uiCard">
         <CardHeader
           style={{ paddingTop: 4, paddingBottom: 0 }}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              Comments & Documents
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>Comments & Documents</div>}
         />
         <CardText style={{ paddingTop: 0, paddingBottom: 0 }}>
           <Grid>
             <Row>
               <Col md={6} xs={12}>
-                <Table
-                  responsive
-                  style={{ fontSize: 'bold' }}
-                  bordered
-                  condensed
-                >
+                <Table responsive style={{ fontSize: 'bold' }} bordered condensed>
                   <thead>
                     <tr>
                       <th>By</th>
@@ -35,19 +26,13 @@ export default class CommentDoc extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {self.props.ServiceRequest &&
-                    self.props.ServiceRequest.comments &&
-                    self.props.ServiceRequest.comments.length ? (
+                    {self.props.ServiceRequest && self.props.ServiceRequest.comments && self.props.ServiceRequest.comments.length ? (
                       self.props.ServiceRequest.comments.map(function(v, i) {
                         return (
                           <tr
                             key={i}
                             style={{
-                              backgroundColor:
-                                v.from ==
-                                JSON.parse(localStorage.userRequest).userName
-                                  ? '#EEE'
-                                  : '#FFFFFF',
+                              backgroundColor: v.from == JSON.parse(localStorage.userRequest).userName ? '#EEE' : '#FFFFFF',
                             }}
                           >
                             <td>{v.from}</td>
@@ -67,12 +52,7 @@ export default class CommentDoc extends Component {
                 </Table>
               </Col>
               <Col md={6} xs={12}>
-                <Table
-                  responsive
-                  style={{ fontSize: 'bold' }}
-                  bordered
-                  condensed
-                >
+                <Table responsive style={{ fontSize: 'bold' }} bordered condensed>
                   <thead>
                     <tr>
                       <th>By</th>
@@ -84,19 +64,11 @@ export default class CommentDoc extends Component {
                     </tr>
                   </thead>
                   <tbody>
-                    {self.props.ServiceRequest &&
-                    self.props.ServiceRequest.documents &&
-                    self.props.ServiceRequest.documents.length ? (
+                    {self.props.ServiceRequest && self.props.ServiceRequest.documents && self.props.ServiceRequest.documents.length ? (
                       self.props.ServiceRequest.documents.map(function(v, i) {
                         return (
                           <tr key={i}>
-                            <td>
-                              {v.from +
-                                (v.from ==
-                                JSON.parse(localStorage.userRequest).userName
-                                  ? ' (You)'
-                                  : '')}
-                            </td>
+                            <td>{v.from + (v.from == JSON.parse(localStorage.userRequest).userName ? ' (You)' : '')}</td>
                             <td>{self.props.getFullDate(v.timeStamp)}</td>
                             <td>{v.name}</td>
                             {self.props.showRemarks ? <td>{v.remarks}</td> : ''}
@@ -104,12 +76,7 @@ export default class CommentDoc extends Component {
                             <td>
                               <a
                                 target="_blank"
-                                href={
-                                  '/filestore/v1/files/id?tenantId=' +
-                                  localStorage.getItem('tenantId') +
-                                  '&fileStoreId=' +
-                                  v.filePath
-                                }
+                                href={'/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + v.filePath}
                               >
                                 Download
                               </a>
@@ -119,10 +86,7 @@ export default class CommentDoc extends Component {
                       })
                     ) : (
                       <tr>
-                        <td
-                          style={{ textAlign: 'center' }}
-                          colSpan={self.props.showRemarks ? 5 : 4}
-                        >
+                        <td style={{ textAlign: 'center' }} colSpan={self.props.showRemarks ? 5 : 4}>
                           No documents uploaded!
                         </td>
                       </tr>

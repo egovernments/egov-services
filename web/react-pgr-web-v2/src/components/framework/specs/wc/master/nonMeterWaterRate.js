@@ -17,8 +17,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -27,8 +26,7 @@ var dat = {
               {
                 jsonPath: 'NonMeterWaterRates[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -49,8 +47,7 @@ var dat = {
             label: 'wc.create.groups.fields.sourceTypeName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -64,8 +61,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -75,8 +71,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -203,8 +198,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -216,8 +210,7 @@ var dat = {
             label: 'wc.create.groups.fields.sourceTypeName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -229,8 +222,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -257,12 +249,7 @@ var dat = {
         { label: 'wc.create.groups.fields.sourceTypeName' },
         { label: 'wc.create.pipeSize' },
       ],
-      values: [
-        'usageTypeName',
-        'subUsageTypeName',
-        'sourceTypeName',
-        'pipeSizeInInch',
-      ],
+      values: ['usageTypeName', 'subUsageTypeName', 'sourceTypeName', 'pipeSizeInInch'],
       resultPath: 'NonMeterWaterRates',
       rowClickUrlUpdate: '/update/wc/nonMeterWaterRate/{id}',
       rowClickUrlView: '/view/wc/nonMeterWaterRate/{id}',
@@ -285,8 +272,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -295,8 +281,7 @@ var dat = {
               {
                 jsonPath: 'NonMeterWaterRates[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -329,8 +314,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -344,8 +328,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -470,8 +453,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -480,8 +462,7 @@ var dat = {
               {
                 jsonPath: 'NonMeterWaterRates[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={NonMeterWaterRates[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -502,8 +483,7 @@ var dat = {
             label: 'wc.create.groups.fields.sourceTypeName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -515,8 +495,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -530,8 +509,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },

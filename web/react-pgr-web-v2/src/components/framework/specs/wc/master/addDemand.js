@@ -2,8 +2,7 @@ var dat = {
   'wc.view': {
     numCols: 12 / 3,
     version: 'v1',
-    url:
-      '/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}',
+    url: '/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}',
     useTimestamp: true,
     tenantIdRequired: true, //Instead of boolean value give json path
     objectName: 'Connection',
@@ -25,10 +24,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'With Property', value: true },
-              { label: 'Without Property', value: false },
-            ],
+            values: [{ label: 'With Property', value: true }, { label: 'Without Property', value: false }],
             defaultValue: true,
             showHideFields: [
               {
@@ -290,8 +286,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -303,8 +298,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -428,8 +422,7 @@ var dat = {
           {
             name: ' ',
             jsonPath: 'Connection.documents[1]',
-            label:
-              'wc.create.groups.fileDetails.fields.DistributionLineLocationMap',
+            label: 'wc.create.groups.fileDetails.fields.DistributionLineLocationMap',
             pattern: '',
             type: 'singleFileUpload',
             isRequired: true,
@@ -474,8 +467,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-common-masters/departments/_search?tenantId=default|$..id|$..name',
+            url: '/egov-common-masters/departments/_search?tenantId=default|$..id|$..name',
             requiredErrMsg: '',
             patternErrMsg: '',
             depedants: [

@@ -11,15 +11,7 @@ import UiDynamicTable from '../../framework/components/UiDynamicTable';
 import { fileUpload } from '../../framework/utility/utility';
 import UiTable from '../../framework/components/UiTable';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
-import {
-  Grid,
-  Row,
-  Col,
-  DropdownButton,
-  Table,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Grid, Row, Col, DropdownButton, Table, ListGroup, ListGroupItem } from 'react-bootstrap';
 
 var specifications = {};
 
@@ -36,15 +28,10 @@ class Report extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -61,31 +48,19 @@ class Report extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -94,37 +69,18 @@ class Report extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -132,36 +88,12 @@ class Report extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -176,37 +108,18 @@ class Report extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -214,36 +127,12 @@ class Report extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -260,24 +149,13 @@ class Report extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         if (arr != null) {
@@ -286,91 +164,47 @@ class Report extends Component {
             specs[moduleName + '.' + actionName].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                    '[' +
-                    j +
-                    ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
             );
-            specs[moduleName + '.' + actionName].groups[ind + 1].index =
-              ind + 1;
+            specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
           }
         }
       }
 
-      for (
-        var j = 0;
-        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            var k = 0;
-            k <
-            specs[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
+          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue ==
-              _.get(
-                form,
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
+              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide.length;
-                  a++
-                ) {
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
                   specs = this.hideField(
                     specs,
                     moduleName,
                     actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].hide[a]
+                    specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]
                   );
                 }
               }
 
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show.length;
-                  a++
-                ) {
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
                   specs = this.showField(
                     specs,
                     moduleName,
                     actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].show[a]
+                    specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]
                   );
                 }
               }
@@ -379,14 +213,8 @@ class Report extends Component {
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -411,31 +239,16 @@ class Report extends Component {
       consumerNumber: decodeURIComponent(this.props.match.params.id),
     };
     var hideCard;
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[`wc.view`].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`wc.view`].useTimestamp).then(
       function(res) {
-        if (
-          res.Connection[0].withProperty == true ||
-          res.Connection[0].withProperty == 'true'
-        ) {
+        if (res.Connection[0].withProperty == true || res.Connection[0].withProperty == 'true') {
           hideCard = JSON.parse(JSON.stringify(specifications));
 
           hideCard['wc.view'].groups[1].multiple = false;
           self.props.setMockData(hideCard);
         }
         self.props.setFormData(res);
-        self.setInitialUpdateData(
-          res,
-          hideCard || JSON.parse(JSON.stringify(specifications)),
-          'wc',
-          'view',
-          specifications[`wc.view`].objectName
-        );
+        self.setInitialUpdateData(res, hideCard || JSON.parse(JSON.stringify(specifications)), 'wc', 'view', specifications[`wc.view`].objectName);
       },
       function(err) {}
     );
@@ -483,30 +296,14 @@ class Report extends Component {
   getVal = (path, isDate) => {
     var val = _.get(this.props.formData, path);
 
-    if (
-      isDate &&
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (isDate && val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     } else if (isDate && val === 0) {
       return 'NA';
     }
 
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
-      ? val + ''
-      : '';
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean') ? val + '' : '';
   };
 
   printer = () => {
@@ -536,28 +333,12 @@ class Report extends Component {
   };
 
   dcbButton = () => {
-    this.props.setRoute(
-      '/wc/addDemand/' +
-        encodeURIComponent(this.props.formData.Connection[0].consumerNumber)
-    );
+    this.props.setRoute('/wc/addDemand/' + encodeURIComponent(this.props.formData.Connection[0].consumerNumber));
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-    } = this.props;
-    let {
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      printer,
-      dcbButton,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors } = this.props;
+    let { handleChange, getVal, addNewCard, removeCard, printer, dcbButton } = this;
 
     console.log(formData);
 
@@ -576,15 +357,7 @@ class Report extends Component {
                 <td>{v.name}</td>
                 <td>
                   <a
-                    href={
-                      window.location.origin +
-                      '/' +
-                      CONST_API_GET_FILE +
-                      '?tenantId=' +
-                      localStorage.tenantId +
-                      '&fileStoreId=' +
-                      v.fileStoreId
-                    }
+                    href={window.location.origin + '/' + CONST_API_GET_FILE + '?tenantId=' + localStorage.tenantId + '&fileStoreId=' + v.fileStoreId}
                     target="_blank"
                   >
                     {translate('wc.craete.file.Download')}
@@ -633,9 +406,7 @@ class Report extends Component {
                       <thead>
                         <tr>
                           <th>#</th>
-                          <th>
-                            {translate('tl.create.license.table.documentName')}
-                          </th>
+                          <th>{translate('tl.create.license.table.documentName')}</th>
                           <th>{translate('tl.create.license.table.file')}</th>
                         </tr>
                       </thead>
@@ -653,10 +424,7 @@ class Report extends Component {
     const renderTable = function() {
       if (moduleName && actionName && formData && formData[objectName]) {
         var objectName = mockData[`${moduleName}.${actionName}`].objectName;
-        if (
-          formData[objectName].documents &&
-          formData[objectName].documents.length
-        ) {
+        if (formData[objectName].documents && formData[objectName].documents.length) {
           var dataList = {
             resultHeader: ['#', 'Name', 'File'],
             resultValues: [],

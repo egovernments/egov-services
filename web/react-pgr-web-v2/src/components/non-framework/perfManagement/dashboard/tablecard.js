@@ -1,19 +1,6 @@
 import React, { Component } from 'react';
-import {
-  Card,
-  CardText,
-  CardMedia,
-  CardHeader,
-  CardTitle,
-} from 'material-ui/Card';
-import {
-  Table,
-  TableBody,
-  TableHeader,
-  TableHeaderColumn,
-  TableRow,
-  TableRowColumn,
-} from 'material-ui/Table';
+import { Card, CardText, CardMedia, CardHeader, CardTitle } from 'material-ui/Card';
+import { Table, TableBody, TableHeader, TableHeaderColumn, TableRow, TableRowColumn } from 'material-ui/Table';
 import RaisedButton from 'material-ui/RaisedButton';
 
 var jp = require('jsonpath');
@@ -29,18 +16,15 @@ export default class TableCard extends Component {
   }
 
   componentDidMount() {
-    this.formatParsedChartData(
-      this.parseCompareSearchResponse(this.props.data),
-      (data, dataKey) => {
-        if (!data || !dataKey) {
-        } else {
-          this.setState({
-            data: data,
-            dataKey: dataKey,
-          });
-        }
+    this.formatParsedChartData(this.parseCompareSearchResponse(this.props.data), (data, dataKey) => {
+      if (!data || !dataKey) {
+      } else {
+        this.setState({
+          data: data,
+          dataKey: dataKey,
+        });
       }
-    );
+    });
   }
 
   /**
@@ -63,9 +47,7 @@ export default class TableCard extends Component {
               ulbName: jp.query(ulbs, '$.ulbName').join(''),
               finYear: jp.query(finYears, '$.finYear').join(''),
               kpiName: jp.query(kpis, '$.kpi.name').join(''),
-              target: parseInt(
-                jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join('')
-              ),
+              target: parseInt(jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join('')),
               value: parseInt(jp.query(kpis, '$.consolidatedValue').join('')),
             };
           });
@@ -161,9 +143,7 @@ export default class TableCard extends Component {
           <br />
           <br />
           <Card className="uiCard">
-            <CardHeader
-              title={<strong> insufficient data to draw the chart </strong>}
-            />
+            <CardHeader title={<strong> insufficient data to draw the chart </strong>} />
           </Card>
         </div>
       );
@@ -188,39 +168,15 @@ export default class TableCard extends Component {
             disabled={false}
             onClick={this.processOnClickKPIDataRepresentation}
           />
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={{ fontSize: 16, marginBottom: '20px' }}>
-                {' '}
-                {title}{' '}
-              </div>
-            }
-          />
-          <Table
-            style={{ color: 'black', fontWeight: 'normal' }}
-            bordered
-            responsive
-            className="table-striped"
-          >
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '20px' }}> {title} </div>} />
+          <Table style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
             <TableHeader adjustForCheckbox={false} displaySelectAll={false}>
-              <TableRow>
-                {headers.map((item, index) => (
-                  <TableHeaderColumn key={index}>
-                    {item.toUpperCase()}
-                  </TableHeaderColumn>
-                ))}
-              </TableRow>
+              <TableRow>{headers.map((item, index) => <TableHeaderColumn key={index}>{item.toUpperCase()}</TableHeaderColumn>)}</TableRow>
             </TableHeader>
 
             <TableBody displayRowCheckbox={false}>
               {this.state.data.map((item, index) => (
-                <TableRow key={index}>
-                  {' '}
-                  {headers.map((el, index) => (
-                    <TableRowColumn key={index}>{item[el]} </TableRowColumn>
-                  ))}{' '}
-                </TableRow>
+                <TableRow key={index}> {headers.map((el, index) => <TableRowColumn key={index}>{item[el]} </TableRowColumn>)} </TableRow>
               ))}
             </TableBody>
           </Table>

@@ -65,11 +65,7 @@ export default (state = defaultState, action) => {
     case 'REMOVE_FROM_FIELD_ERRORS':
       var _fieldErrors = { ...state.fieldErrors };
       delete _fieldErrors[action.key];
-      var _isFormValid = reValidate(
-        state.form,
-        _fieldErrors,
-        state.requiredFields
-      );
+      var _isFormValid = reValidate(state.form, _fieldErrors, state.requiredFields);
       return {
         ...state,
         fieldErrors: _fieldErrors,
@@ -84,10 +80,7 @@ export default (state = defaultState, action) => {
       };
     case 'HANDLE_CHANGE_FRAMEWORK':
       var currentState = { ...state };
-      action.value =
-        typeof action.value == 'undefined' || action.value == null
-          ? ''
-          : action.value;
+      action.value = typeof action.value == 'undefined' || action.value == null ? '' : action.value;
       _.set(currentState.form, action.property, action.value);
       var validationDat = validate(
         currentState.fieldErrors,
@@ -157,42 +150,21 @@ export default (state = defaultState, action) => {
   }
 };
 
-function validate(
-  fieldErrors,
-  property,
-  value,
-  isRequired,
-  form,
-  requiredFields,
-  pattern,
-  patErrMsg
-) {
-  let errorText =
-    isRequired && (typeof value == 'undefined' || value === '')
-      ? translate('ui.framework.required')
-      : '';
+function validate(fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) {
+  let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
   let isFormValid = true;
   // console.log(requiredFields);
   for (var i = 0; i < requiredFields.length; i++) {
-    if (
-      typeof _.get(form, requiredFields[i]) == 'undefined' ||
-      _.get(form, requiredFields[i]) === ''
-    ) {
+    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '') {
       // console.log(requiredFields[i], _.get(form, requiredFields[i]));
       isFormValid = false;
       break;
     }
   }
 
-  if (
-    pattern &&
-    _.get(form, property) &&
-    !new RegExp(pattern).test(_.get(form, property))
-  ) {
+  if (pattern && _.get(form, property) && !new RegExp(pattern).test(_.get(form, property))) {
     // console.log(property, _.get(form, property));
-    errorText = patErrMsg
-      ? translate(patErrMsg)
-      : translate('ui.framework.patternMessage');
+    errorText = patErrMsg ? translate(patErrMsg) : translate('ui.framework.patternMessage');
     isFormValid = false;
   }
 
@@ -230,10 +202,7 @@ function reValidate(form, fieldErrors, requiredFields) {
   }
 
   for (var i = 0; i < requiredFields.length; i++) {
-    if (
-      typeof _.get(form, requiredFields[i]) == 'undefined' ||
-      _.get(form, requiredFields[i]) === ''
-    ) {
+    if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '') {
       // console.log(requiredFields[i], _.get(form, requiredFields[i]));
       return false;
     }

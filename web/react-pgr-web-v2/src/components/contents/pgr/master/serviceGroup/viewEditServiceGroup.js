@@ -73,11 +73,7 @@ class ViewEditServiceGroup extends Component {
     var body = {};
     let current = this;
     current.props.setLoadingStatus('loading');
-    Api.commonApiPost(
-      '/pgr-master/serviceGroup/v1/_search',
-      { keyword: 'complaint' },
-      body
-    )
+    Api.commonApiPost('/pgr-master/serviceGroup/v1/_search', { keyword: 'complaint' }, body)
       .then(function(response) {
         current.setState({
           data: response.ServiceGroups,
@@ -117,20 +113,12 @@ class ViewEditServiceGroup extends Component {
     return (
       <div className="viewEditServiceGroup">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={<div style={styles.headerStyle}>All Categories</div>}
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>All Categories</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <Row>
                 <Col xs={12} md={12}>
-                  <Table
-                    id="searchTable"
-                    bordered
-                    responsive
-                    className="table-striped"
-                  >
+                  <Table id="searchTable" bordered responsive className="table-striped">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -148,13 +136,9 @@ class ViewEditServiceGroup extends Component {
                               key={i}
                               onClick={() => {
                                 if (url == '/pgr/serviceGroup/view') {
-                                  this.props.history.push(
-                                    '/pgr/viewServiceGroup/' + e.id
-                                  );
+                                  this.props.history.push('/pgr/viewServiceGroup/' + e.id);
                                 } else {
-                                  this.props.history.push(
-                                    '/pgr/updateServiceGroup/' + e.id
-                                  );
+                                  this.props.history.push('/pgr/updateServiceGroup/' + e.id);
                                 }
                               }}
                             >
@@ -221,6 +205,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ViewEditServiceGroup
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEditServiceGroup);

@@ -14,10 +14,7 @@ import { translate } from '../../common/common';
 import Api from '../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../framework/components/UiButton';
-import {
-  fileUpload,
-  getInitiatorPosition,
-} from '../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition } from '../../framework/utility/utility';
 import $ from 'jquery';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -101,15 +98,10 @@ class acknowldgeDepreciation extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -143,37 +135,18 @@ class acknowldgeDepreciation extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -181,36 +154,12 @@ class acknowldgeDepreciation extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -223,37 +172,18 @@ class acknowldgeDepreciation extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -261,36 +191,12 @@ class acknowldgeDepreciation extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -404,29 +310,13 @@ class acknowldgeDepreciation extends Component {
   getVal = (path, isDate) => {
     var val = _.get(this.props.formData, path);
 
-    if (
-      isDate &&
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (isDate && val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     }
 
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
-      ? (val === true || val === 'true'
-          ? 'Yes'
-          : val === 'false' || val === false ? 'No' : val) + ''
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean')
+      ? (val === true || val === 'true' ? 'Yes' : val === 'false' || val === false ? 'No' : val) + ''
       : '';
   };
 
@@ -457,22 +347,8 @@ class acknowldgeDepreciation extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      date,
-    } = this.props;
-    let {
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      printer,
-      feeMatrices,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, date } = this.props;
+    let { handleChange, getVal, addNewCard, removeCard, printer, feeMatrices } = this;
     console.log(formData);
 
     const renderBody = function() {
@@ -484,28 +360,14 @@ class acknowldgeDepreciation extends Component {
         formData.Depreciation.DepreciationDetail.length
       ) {
         if (formData.Depreciation.DepreciationDetail.length >= 0) {
-          for (
-            var i = 0;
-            i < formData.Depreciation.DepreciationDetail.length;
-            i++
-          ) {
+          for (var i = 0; i < formData.Depreciation.DepreciationDetail.length; i++) {
             var ackCodeDetail = {};
-            ackCodeDetail.assetCode =
-              formData.Depreciation.DepreciationDetail[i].assetCode;
-            ackCodeDetail.valueBeforeDepreciation =
-              formData.Depreciation.DepreciationDetail[
-                i
-              ].valueBeforeDepreciation;
-            ackCodeDetail.depreciationValue =
-              formData.Depreciation.DepreciationDetail[i].depreciationValue;
-            ackCodeDetail.valueAfterDepreciation =
-              formData.Depreciation.DepreciationDetail[
-                i
-              ].valueAfterDepreciation;
-            ackCodeDetail.status =
-              formData.Depreciation.DepreciationDetail[i].status;
-            ackCodeDetail.reasonForFailure =
-              formData.Depreciation.DepreciationDetail[i].reasonForFailure;
+            ackCodeDetail.assetCode = formData.Depreciation.DepreciationDetail[i].assetCode;
+            ackCodeDetail.valueBeforeDepreciation = formData.Depreciation.DepreciationDetail[i].valueBeforeDepreciation;
+            ackCodeDetail.depreciationValue = formData.Depreciation.DepreciationDetail[i].depreciationValue;
+            ackCodeDetail.valueAfterDepreciation = formData.Depreciation.DepreciationDetail[i].valueAfterDepreciation;
+            ackCodeDetail.status = formData.Depreciation.DepreciationDetail[i].status;
+            ackCodeDetail.reasonForFailure = formData.Depreciation.DepreciationDetail[i].reasonForFailure;
             ackCode.push(ackCodeDetail);
           }
         }
@@ -534,9 +396,7 @@ class acknowldgeDepreciation extends Component {
                         <td>{item.depreciationValue}</td>
                         <td>{item.valueAfterDepreciation}</td>
                         <td>{item.status}</td>
-                        <td>
-                          {item.reasonForFailure ? item.reasonForFailure : 'NA'}
-                        </td>
+                        <td>{item.reasonForFailure ? item.reasonForFailure : 'NA'}</td>
                       </tr>
                     );
                   })}
@@ -570,11 +430,7 @@ class acknowldgeDepreciation extends Component {
           {renderBody()}
         </form>
         <div style={{ textAlign: 'center' }}>
-          <UiButton
-            item={{ label: 'Print', uiType: 'view' }}
-            ui="google"
-            handler={printer}
-          />
+          <UiButton item={{ label: 'Print', uiType: 'view' }} ui="google" handler={printer} />
         </div>
       </div>
     );
@@ -619,6 +475,4 @@ const mapDispatchToProps = dispatch => ({
     });
   },
 });
-export default connect(mapStateToProps, mapDispatchToProps)(
-  acknowldgeDepreciation
-);
+export default connect(mapStateToProps, mapDispatchToProps)(acknowldgeDepreciation);

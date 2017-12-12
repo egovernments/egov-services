@@ -104,13 +104,7 @@ class CreateNewProperty extends Component {
     //call boundary service fetch wards,location,zone data
     var currentThis = this;
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', {}, {}, false, true)
       .then(res => {
         console.log(res);
         currentThis.setState({ propertytypes: res.propertyTypes });
@@ -122,13 +116,7 @@ class CreateNewProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'pt-property/property/apartments/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/apartments/_search', {}, {}, false, true)
       .then(res => {
         console.log(res);
         currentThis.setState({ apartments: res.apartments });
@@ -140,13 +128,7 @@ class CreateNewProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'pt-property/property/departments/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/departments/_search', {}, {}, false, true)
       .then(res => {
         console.log(res);
         currentThis.setState({
@@ -162,9 +144,7 @@ class CreateNewProperty extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -191,14 +171,7 @@ class CreateNewProperty extends Component {
 
     return (
       <Card>
-        <CardHeader
-          style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              Create New Property
-            </div>
-          }
-        />
+        <CardHeader style={styles.reducePadding} title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>Create New Property</div>} />
         <CardText style={styles.reducePadding}>
           <Card className="darkShadow">
             <CardText style={styles.reducePadding}>
@@ -208,20 +181,8 @@ class CreateNewProperty extends Component {
                     <SelectField
                       className="fullWidth selectOption"
                       floatingLabelText="Category of ownership"
-                      errorText={
-                        fieldErrors.ownerShip ? (
-                          <span style={{ position: 'absolute', bottom: -13 }}>
-                            {fieldErrors.ownerShip}
-                          </span>
-                        ) : (
-                          ''
-                        )
-                      }
-                      value={
-                        createNewProperty.ownerShip
-                          ? createNewProperty.ownerShip
-                          : ''
-                      }
+                      errorText={fieldErrors.ownerShip ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.ownerShip}</span> : ''}
+                      value={createNewProperty.ownerShip ? createNewProperty.ownerShip : ''}
                       onChange={(event, index, value) => {
                         var e = {
                           target: {
@@ -244,19 +205,9 @@ class CreateNewProperty extends Component {
                         className="fullWidth selectOption"
                         floatingLabelText="Property type"
                         errorText={
-                          fieldErrors.propertyType ? (
-                            <span style={{ position: 'absolute', bottom: -13 }}>
-                              {fieldErrors.propertyType}
-                            </span>
-                          ) : (
-                            ''
-                          )
+                          fieldErrors.propertyType ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.propertyType}</span> : ''
                         }
-                        value={
-                          createNewProperty.propertyType
-                            ? createNewProperty.propertyType
-                            : ''
-                        }
+                        value={createNewProperty.propertyType ? createNewProperty.propertyType : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -280,19 +231,9 @@ class CreateNewProperty extends Component {
                         className="fullWidth selectOption"
                         floatingLabelText="Property type"
                         errorText={
-                          fieldErrors.propertyType ? (
-                            <span style={{ position: 'absolute', bottom: -13 }}>
-                              {fieldErrors.propertyType}
-                            </span>
-                          ) : (
-                            ''
-                          )
+                          fieldErrors.propertyType ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.propertyType}</span> : ''
                         }
-                        value={
-                          createNewProperty.propertyType
-                            ? createNewProperty.propertyType
-                            : ''
-                        }
+                        value={createNewProperty.propertyType ? createNewProperty.propertyType : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -315,20 +256,8 @@ class CreateNewProperty extends Component {
                     <SelectField
                       className="fullWidth selectOption"
                       floatingLabelText="Apartment/ Complex name"
-                      errorText={
-                        fieldErrors.appartment ? (
-                          <span style={{ position: 'absolute', bottom: -13 }}>
-                            {fieldErrors.appartment}
-                          </span>
-                        ) : (
-                          ''
-                        )
-                      }
-                      value={
-                        createNewProperty.appartment
-                          ? createNewProperty.appartment
-                          : ''
-                      }
+                      errorText={fieldErrors.appartment ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.appartment}</span> : ''}
+                      value={createNewProperty.appartment ? createNewProperty.appartment : ''}
                       onChange={(event, index, value) => {
                         var e = {
                           target: {
@@ -352,21 +281,9 @@ class CreateNewProperty extends Component {
                           className="fullWidth selectOption"
                           floatingLabelText="Department"
                           errorText={
-                            fieldErrors.department ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.department}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.department ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.department}</span> : ''
                           }
-                          value={
-                            createNewProperty.department
-                              ? createNewProperty.department
-                              : ''
-                          }
+                          value={createNewProperty.department ? createNewProperty.department : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -375,9 +292,7 @@ class CreateNewProperty extends Component {
                             };
                             handleChange(e, 'department', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}

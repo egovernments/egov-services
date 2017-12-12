@@ -130,13 +130,8 @@ class DataEntryAcknowledgement extends Component {
                         fontSize: 16,
                       }}
                     >
-                      {translate(
-                        'pt.create.groups.acknowledgement.dataEntrySuccess'
-                      )}{' '}
-                      :{' '}
-                      <span style={{ fontWeight: 500 }}>
-                        {this.state.upicNumber}
-                      </span>
+                      {translate('pt.create.groups.acknowledgement.dataEntrySuccess')} :{' '}
+                      <span style={{ fontWeight: 500 }}>{this.state.upicNumber}</span>
                     </Col>
                     <Col
                       xs={12}
@@ -149,15 +144,11 @@ class DataEntryAcknowledgement extends Component {
                     >
                       <RaisedButton
                         type="button"
-                        label={translate(
-                          'pt.search.groups.dropdown.addEditDcb'
-                        )}
+                        label={translate('pt.search.groups.dropdown.addEditDcb')}
                         disabled={!this.state.upicNumber}
                         primary={true}
                         onClick={() => {
-                          this.props.history.push(
-                            `/propertyTax/addDemand/${this.state.upicNumber}`
-                          );
+                          this.props.history.push(`/propertyTax/addDemand/${this.state.upicNumber}`);
                         }}
                       />
                     </Col>
@@ -178,6 +169,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DataEntryAcknowledgement
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DataEntryAcknowledgement);

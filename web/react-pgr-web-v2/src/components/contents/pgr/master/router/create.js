@@ -105,37 +105,15 @@ class createRouter extends Component {
               position: response.RouterTypRes[0].position,
               complaintType: response.RouterTypRes[0].service,
               boundary: response.RouterTypRes[0].boundary,
-              boundaryType: getIdByBoundary(
-                self.state.boundaryInitialList,
-                response.RouterTypRes[0].boundary
-              ),
+              boundaryType: getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary),
             };
 
-            self.loadBoundaries(
-              getIdByBoundary(
-                self.state.boundaryInitialList,
-                response.RouterTypRes[0].boundary
-              )
-            );
+            self.loadBoundaries(getIdByBoundary(self.state.boundaryInitialList, response.RouterTypRes[0].boundary));
             searchTextCom = response.RouterTypRes[0].service
-              ? getNameById(
-                  self.state.complaintSource,
-                  response.RouterTypRes[0].service,
-                  'serviceName'
-                )
+              ? getNameById(self.state.complaintSource, response.RouterTypRes[0].service, 'serviceName')
               : '';
-            searchTextBoun =
-              getNameById(
-                self.state.boundaryInitialList,
-                response.RouterTypRes[0].boundary,
-                'name'
-              ) || '';
-            searchTextPos =
-              getNameById(
-                self.state.positionSource,
-                response.RouterTypRes[0].position,
-                'name'
-              ) || '';
+            searchTextBoun = getNameById(self.state.boundaryInitialList, response.RouterTypRes[0].boundary, 'name') || '';
+            searchTextPos = getNameById(self.state.positionSource, response.RouterTypRes[0].position, 'name') || '';
             setForm(routerType);
             if (type == 'view') {
               self.setState({
@@ -288,12 +266,7 @@ class createRouter extends Component {
       tenantId: localStorage.getItem('tenantId'),
     };
 
-    Api.commonApiPost(
-      '/workflow/router/v1/' +
-        (self.props.routerCreateSet.id ? '_update' : '_create'),
-      {},
-      { router: routerType }
-    ).then(
+    Api.commonApiPost('/workflow/router/v1/' + (self.props.routerCreateSet.id ? '_update' : '_create'), {}, { router: routerType }).then(
       function(response) {
         if (!self.props.routerCreateSet.id) {
           self.props.initForm();
@@ -369,14 +342,7 @@ class createRouter extends Component {
 
   render() {
     _this = this;
-    let {
-      isFormValid,
-      routerCreateSet,
-      fieldErrors,
-      handleChange,
-      handleAutoCompleteKeyUp,
-      match,
-    } = this.props;
+    let { isFormValid, routerCreateSet, fieldErrors, handleChange, handleAutoCompleteKeyUp, match } = this.props;
     let { loadBoundaries, create, handleOpenNClose, close } = this;
     let {
       allSourceConfig,
@@ -395,11 +361,7 @@ class createRouter extends Component {
           <RaisedButton
             style={{ margin: '15px 5px' }}
             type="submit"
-            label={
-              match.params && match.params.type == 'edit'
-                ? translate('pgr.lbl.update')
-                : translate('pgr.lbl.create')
-            }
+            label={match.params && match.params.type == 'edit' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             disabled={!isFormValid}
             primary={true}
           />
@@ -418,9 +380,7 @@ class createRouter extends Component {
                   <div style={styles.headerStyle}>
                     {match.params && match.params.type == 'view'
                       ? translate('pgr.lbl.view.router')
-                      : match.params && match.params.type == 'edit'
-                        ? translate('pgr.lbl.edit.router')
-                        : translate('pgr.lbl.create.router')}
+                      : match.params && match.params.type == 'edit' ? translate('pgr.lbl.edit.router') : translate('pgr.lbl.create.router')}
                   </div>
                 }
               />
@@ -430,45 +390,25 @@ class createRouter extends Component {
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('pgr.lbl.grievance.type')}
-                        secondaryText={
-                          <p style={styles.customColumnStyle}>
-                            {this.getComplaintTypeName(
-                              routerCreateSet.complaintType
-                            )}
-                          </p>
-                        }
+                        secondaryText={<p style={styles.customColumnStyle}>{this.getComplaintTypeName(routerCreateSet.complaintType)}</p>}
                       />
                     </Col>
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('pgr.lbl.boundarytype')}
-                        secondaryText={
-                          <p style={styles.customColumnStyle}>
-                            {this.getBoundaryTypeName(
-                              routerCreateSet.boundaryType
-                            )}
-                          </p>
-                        }
+                        secondaryText={<p style={styles.customColumnStyle}>{this.getBoundaryTypeName(routerCreateSet.boundaryType)}</p>}
                       />
                     </Col>
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('pgr.lbl.boundary')}
-                        secondaryText={
-                          <p style={styles.customColumnStyle}>
-                            {this.getBoundaryName(routerCreateSet.boundary)}
-                          </p>
-                        }
+                        secondaryText={<p style={styles.customColumnStyle}>{this.getBoundaryName(routerCreateSet.boundary)}</p>}
                       />
                     </Col>
                     <Col xs={12} sm={6} md={4} lg={3}>
                       <ListItem
                         primaryText={translate('pgr.lbl.position')}
-                        secondaryText={
-                          <p style={styles.customColumnStyle}>
-                            {this.getPositionName(routerCreateSet.position)}
-                          </p>
-                        }
+                        secondaryText={<p style={styles.customColumnStyle}>{this.getPositionName(routerCreateSet.position)}</p>}
                       />
                     </Col>
                   </Row>
@@ -495,9 +435,7 @@ class createRouter extends Component {
                     {' '}
                     {match.params && match.params.type == 'view'
                       ? translate('pgr.lbl.view.router')
-                      : match.params && match.params.type == 'edit'
-                        ? translate('pgr.lbl.edit.router')
-                        : translate('pgr.lbl.create.router')}{' '}
+                      : match.params && match.params.type == 'edit' ? translate('pgr.lbl.edit.router') : translate('pgr.lbl.create.router')}{' '}
                   </div>
                 }
               />
@@ -510,9 +448,7 @@ class createRouter extends Component {
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={
-                          translate('pgr.lbl.grievance.type') + ' *'
-                        }
+                        floatingLabelText={translate('pgr.lbl.grievance.type') + ' *'}
                         filter={AutoComplete.caseInsensitiveFilter}
                         dataSource={this.state.complaintSource}
                         dataSourceConfig={this.state.complaintSourceConfig}
@@ -549,9 +485,7 @@ class createRouter extends Component {
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={
-                          translate('pgr.lbl.boundarytype') + ' *'
-                        }
+                        floatingLabelText={translate('pgr.lbl.boundarytype') + ' *'}
                         errorText={fieldErrors.boundaryType || ''}
                         value={routerCreateSet.boundaryType + '' || ''}
                         onChange={(e, i, val) => {
@@ -562,13 +496,7 @@ class createRouter extends Component {
                         }}
                       >
                         <MenuItem value="" primaryText="Select" />
-                        {boundaryTypeList.map((item, index) => (
-                          <MenuItem
-                            value={item.id}
-                            key={index}
-                            primaryText={item.name}
-                          />
-                        ))}
+                        {boundaryTypeList.map((item, index) => <MenuItem value={item.id} key={index} primaryText={item.name} />)}
                       </SelectField>
                     </Col>
                     <Col xs={12} sm={6} md={6} lg={6}>
@@ -648,20 +576,12 @@ class createRouter extends Component {
           </form>
           <Dialog
             title={translate('pgr.lbl.success')}
-            actions={[
-              <FlatButton
-                label={translate('core.lbl.close')}
-                primary={true}
-                onTouchTap={handleOpenNClose}
-              />,
-            ]}
+            actions={[<FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={handleOpenNClose} />]}
             modal={false}
             open={open}
             onRequestClose={handleOpenNClose}
           >
-            {match.params && match.params.type == 'edit'
-              ? translate('pgr.lbl.router.update.success')
-              : translate('pgr.lbl.router.create.success')}
+            {match.params && match.params.type == 'edit' ? translate('pgr.lbl.router.update.success') : translate('pgr.lbl.router.create.success')}
           </Dialog>
         </div>
       );

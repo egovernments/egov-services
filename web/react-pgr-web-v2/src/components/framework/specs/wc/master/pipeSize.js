@@ -24,8 +24,7 @@ var dat = {
               {
                 jsonPath: 'PipeSizes[0].sizeInInch',
                 type: 'textField',
-                pattern:
-                  "`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
+                pattern: "`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',
@@ -115,13 +114,7 @@ var dat = {
         { label: 'wc.create.description' },
         { label: 'wc.create.active' },
       ],
-      values: [
-        'code',
-        'sizeInInch',
-        'sizeInMilimeter',
-        'description',
-        'active',
-      ],
+      values: ['code', 'sizeInInch', 'sizeInMilimeter', 'description', 'active'],
       resultPath: 'PipeSizes',
       rowClickUrlUpdate: '/update/wc/pipeSize/{id}',
       rowClickUrlView: '/view/wc/pipeSize/{id}',
@@ -223,8 +216,7 @@ var dat = {
               {
                 jsonPath: 'PipeSizes[0].sizeInInch',
                 type: 'textField',
-                pattern:
-                  "`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
+                pattern: "`${getVal('PipeSizes[0].sizeInMilimeter')!='' ? getVal('PipeSizes[0].sizeInMilimeter'):0} * 0.039370`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',

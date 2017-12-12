@@ -112,24 +112,12 @@ class viewOrUpdateReceivingMode extends Component {
     return (
       <div className="receivingModeCreate">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={styles.headerStyle}>
-                {translate('pgr.lbl.receivingmode')}
-              </div>
-            }
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>{translate('pgr.lbl.receivingmode')}</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <Row>
                 <Col xs={12} md={12}>
-                  <Table
-                    id="searchTable"
-                    bordered
-                    responsive
-                    className="table-striped"
-                  >
+                  <Table id="searchTable" bordered responsive className="table-striped">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -147,20 +135,10 @@ class viewOrUpdateReceivingMode extends Component {
                             <tr
                               key={i}
                               onClick={() => {
-                                if (
-                                  url == '/pgr/viewOrUpdateReceivingMode/view'
-                                ) {
-                                  this.props.history.push(
-                                    `/pgr/viewReceivingMode/${
-                                      this.props.match.params.type
-                                    }/${e.id}`
-                                  );
+                                if (url == '/pgr/viewOrUpdateReceivingMode/view') {
+                                  this.props.history.push(`/pgr/viewReceivingMode/${this.props.match.params.type}/${e.id}`);
                                 } else {
-                                  this.props.history.push(
-                                    `/pgr/receivingModeCreate/${
-                                      this.props.match.params.type
-                                    }/${e.id}`
-                                  );
+                                  this.props.history.push(`/pgr/receivingModeCreate/${this.props.match.params.type}/${e.id}`);
                                 }
                               }}
                             >
@@ -228,6 +206,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  viewOrUpdateReceivingMode
-);
+export default connect(mapStateToProps, mapDispatchToProps)(viewOrUpdateReceivingMode);

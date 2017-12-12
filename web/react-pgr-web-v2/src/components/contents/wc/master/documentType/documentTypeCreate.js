@@ -80,13 +80,7 @@ class DocumentTypeCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/documenttype/_search',
-        { id: this.props.match.params.id },
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/documenttype/_search', { id: this.props.match.params.id }, body, false, true).then(
         function(response) {
           console.log('response', response);
           console.log('response object', response.documentTypes[0]);
@@ -124,22 +118,14 @@ class DocumentTypeCreate extends Component {
         id: this.props.createDocumentType.id,
         name: this.props.createDocumentType.name,
         code: this.props.createDocumentType.code,
-        active: !this.props.createDocumentType.active
-          ? false
-          : this.props.createDocumentType.active,
+        active: !this.props.createDocumentType.active ? false : this.props.createDocumentType.active,
         description: this.props.createDocumentType.description,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/wcms/masters/documenttype/' + body.DocumentType.code + '/_update',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/documenttype/' + body.DocumentType.code + '/_update', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -152,13 +138,7 @@ class DocumentTypeCreate extends Component {
         }
       );
     } else {
-      Api.commonApiPost(
-        '/wcms/masters/documenttype/_create',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/documenttype/_create', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -206,14 +186,7 @@ class DocumentTypeCreate extends Component {
           <Card style={styles.marginStyle}>
             <CardHeader
               style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {this.state.id != ''
-                    ? 'Update Document Type'
-                    : 'Create Document Type'}{' '}
-                </div>
-              }
+              title={<div style={styles.headerStyle}> {this.state.id != '' ? 'Update Document Type' : 'Create Document Type'} </div>}
             />
             <CardText style={{ padding: 0 }}>
               <Grid>
@@ -222,9 +195,7 @@ class DocumentTypeCreate extends Component {
                     <TextField
                       fullWidth={true}
                       floatingLabelText={'Document Type' + '*'}
-                      value={
-                        createDocumentType.name ? createDocumentType.name : ''
-                      }
+                      value={createDocumentType.name ? createDocumentType.name : ''}
                       errorText={fieldErrors.name ? fieldErrors.name : ''}
                       maxLength={100}
                       onChange={e => {
@@ -239,21 +210,10 @@ class DocumentTypeCreate extends Component {
                       fullWidth={true}
                       maxLength={250}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createDocumentType.description
-                          ? createDocumentType.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createDocumentType.description ? createDocumentType.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^[a-zA-Z0-9 ]*$/g
-                        );
+                        handleChange(e, 'description', false, /^[a-zA-Z0-9 ]*$/g);
                       }}
                       multiLine={true}
                       id="description"
@@ -265,11 +225,7 @@ class DocumentTypeCreate extends Component {
                     <Checkbox
                       label={translate('pgr.lbl.active')}
                       style={styles.checkbox}
-                      defaultChecked={
-                        this.state.id != ''
-                          ? createDocumentType.active || false
-                          : createDocumentType.active || true
-                      }
+                      defaultChecked={this.state.id != '' ? createDocumentType.active || false : createDocumentType.active || true}
                       onCheck={(e, i, v) => {
                         console.log(createDocumentType.active, i);
 
@@ -293,11 +249,7 @@ class DocumentTypeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id != ''
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
@@ -305,27 +257,15 @@ class DocumentTypeCreate extends Component {
         <Dialog
           title={
             this.state.id != ''
-              ? 'Document Type ' +
-                createDocumentType.name +
-                ' Updated Successfully'
-              : 'Document Type ' +
-                createDocumentType.name +
-                ' Created Successfully'
+              ? 'Document Type ' + createDocumentType.name + ' Updated Successfully'
+              : 'Document Type ' + createDocumentType.name + ' Created Successfully'
           }
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         />
       </div>
     );

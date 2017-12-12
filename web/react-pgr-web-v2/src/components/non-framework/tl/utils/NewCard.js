@@ -20,12 +20,8 @@ export default class NewCard extends Component {
             field={field}
             error={this.props.fieldErrors[field.code] || ''}
             isDisabled={field.isDisabled || false}
-            autocompleteDataSource={
-              this.props.autocompleteDataSource[field.code] || []
-            }
-            autocompleteDataSourceConfig={
-              this.props.autocompleteDataSource[field.code + 'Config']
-            }
+            autocompleteDataSource={this.props.autocompleteDataSource[field.code] || []}
+            autocompleteDataSourceConfig={this.props.autocompleteDataSource[field.code + 'Config']}
             autocompleteKeyUp={this.props.autoCompleteKeyUp}
             value={this.props.form[field.code] || ''}
             handleChange={this.props.handleChange}
@@ -39,12 +35,8 @@ export default class NewCard extends Component {
             error={this.props.fieldErrors[field.code] || ''}
             isDisabled={field.isDisabled || false}
             dropdownDataSource={this.props.dropdownDataSource[field.code] || []}
-            nameValue={
-              field.codeName ? this.props.form[field.codeName] || '' : ''
-            }
-            dropdownDataSourceConfig={
-              this.props.dropdownDataSource[field.code + 'Config']
-            }
+            nameValue={field.codeName ? this.props.form[field.codeName] || '' : ''}
+            dropdownDataSourceConfig={this.props.dropdownDataSource[field.code + 'Config']}
             value={this.props.form[field.code] || ''}
             handleChange={this.props.handleChange}
           />
@@ -76,10 +68,7 @@ export default class NewCard extends Component {
 
     return (
       <Card>
-        <CardTitle
-          style={customStyles.cardTitle}
-          title={translate(this.props.title)}
-        />
+        <CardTitle style={customStyles.cardTitle} title={translate(this.props.title)} />
         <CardText>
           <Grid fluid={true}>
             <Row>{renderedFields}</Row>

@@ -43,8 +43,7 @@ var dat = {
             maxLength: 12,
             minLength: 6,
             patternErrorMsg: '',
-            url:
-              'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
+            url: 'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
           },
         ],
       },
@@ -64,12 +63,7 @@ var dat = {
           label: 'swm.create.costIncurred',
         },
       ],
-      values: [
-        'vehicle.regNumber',
-        'vehicle.vehicleType.name',
-        'vehicleScheduledMaintenanceDate',
-        'costIncurred',
-      ],
+      values: ['vehicle.regNumber', 'vehicle.vehicleType.name', 'vehicleScheduledMaintenanceDate', 'costIncurred'],
       resultPath: 'vehicleMaintenanceDetails',
       rowClickUrlUpdate: '/update/swm/vehiclemaintenancedetails/{code}',
       rowClickUrlView: '/view/swm/vehiclemaintenancedetails/{code}',
@@ -158,24 +152,19 @@ var dat = {
             maxLength: 12,
             minLength: 6,
             patternErrorMsg: '',
-            url:
-              'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
+            url: 'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}',
+              autoCompleteUrl: '/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}',
               autoFillFields: {
-                'vehicleMaintenanceDetails[0].vehicle.vehicleType.code':
-                  'vehicleMaintenances[0].vehicle.vehicleType.name',
+                'vehicleMaintenanceDetails[0].vehicle.vehicleType.code': 'vehicleMaintenances[0].vehicle.vehicleType.name',
                 'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate':
                   'vehicleMaintenances[0].vehicle.insuranceDetails.insuranceValidityDate',
-                'vehicleMaintenanceDetails[0].downtimeDefined':
-                  'vehicleMaintenances[0].downtimeforMaintenance',
+                'vehicleMaintenanceDetails[0].downtimeDefined': 'vehicleMaintenances[0].downtimeforMaintenance',
               },
             },
             depedants: [
               {
-                jsonPath:
-                  'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
+                jsonPath: 'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
                 type: 'date',
                 pattern:
                   '/swm-services/vehiclemaintenancedetails/_getnextscheduleddate?vehicleRegNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name',
@@ -198,8 +187,7 @@ var dat = {
           },
           {
             name: 'vehicleScheduledMaintenanceDate',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
             label: 'swm.create.vehicleScheduledMaintenanceDate',
             pattern: '',
             hide: true,
@@ -235,8 +223,7 @@ var dat = {
           },
           {
             name: 'insuranceValidityDate',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate',
             label: 'swm.create.insuranceDetails.insuranceValidityDate',
             pattern: '',
             type: 'date',
@@ -261,8 +248,7 @@ var dat = {
           },
           {
             name: 'vehicleReadingDuringMaintenance',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance',
             label: 'swm.create.vehicleReadingDuringMaintenance',
             pattern: '',
             type: 'number',
@@ -387,8 +373,7 @@ var dat = {
           },
           {
             name: 'vehicleScheduledMaintenanceDate',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
             label: 'swm.create.vehicleScheduledMaintenanceDate',
             pattern: '',
             hide: true,
@@ -424,8 +409,7 @@ var dat = {
           },
           {
             name: 'insuranceValidityDate',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate',
             label: 'swm.create.insuranceDetails.insuranceValidityDate',
             pattern: '',
             type: 'datePicker',
@@ -437,8 +421,7 @@ var dat = {
           },
           {
             name: 'vehicleReadingDuringMaintenance',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance',
             label: 'swm.create.vehicleReadingDuringMaintenance',
             pattern: '',
             type: 'number',
@@ -570,24 +553,19 @@ var dat = {
             maxLength: 12,
             minLength: 6,
             patternErrorMsg: '',
-            url:
-              'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
+            url: 'swm-services/vehicles/_search?|$.vehicles.*.regNumber|$.vehicles.*.regNumber',
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}',
+              autoCompleteUrl: '/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}',
               autoFillFields: {
-                'vehicleMaintenanceDetails[0].vehicle.vehicleType.code':
-                  'vehicleMaintenances[0].vehicle.vehicleType.name',
+                'vehicleMaintenanceDetails[0].vehicle.vehicleType.code': 'vehicleMaintenances[0].vehicle.vehicleType.name',
                 'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate':
                   'vehicleMaintenances[0].vehicle.insuranceDetails.insuranceValidityDate',
-                'vehicleMaintenanceDetails[0].downtimeDefined':
-                  'vehicleMaintenances[0].downtimeforMaintenance',
+                'vehicleMaintenanceDetails[0].downtimeDefined': 'vehicleMaintenances[0].downtimeforMaintenance',
               },
             },
             depedants: [
               {
-                jsonPath:
-                  'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
+                jsonPath: 'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
                 type: 'date',
                 pattern:
                   '/swm-services/vehiclemaintenancedetails/_getnextscheduleddate?vehicleRegNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name',
@@ -595,8 +573,7 @@ var dat = {
               {
                 jsonPath: 'vehicleMaintenanceDetails[0].downtime',
                 type: 'text',
-                pattern:
-                  '/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name',
+                pattern: '/swm-services/vehiclemaintenances/_search?regNumber={vehicleMaintenanceDetails[0].vehicle.regNumber}|$..*.id|$..*.name',
               },
             ],
           },
@@ -616,8 +593,7 @@ var dat = {
           },
           {
             name: 'vehicleScheduledMaintenanceDate',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicleScheduledMaintenanceDate',
             label: 'swm.create.vehicleScheduledMaintenanceDate',
             pattern: '',
             hide: true,
@@ -653,8 +629,7 @@ var dat = {
           },
           {
             name: 'insuranceValidityDate',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicle.insuranceDetails.insuranceValidityDate',
             label: 'swm.create.insuranceDetails.insuranceValidityDate',
             pattern: '',
             type: 'date',
@@ -679,8 +654,7 @@ var dat = {
           },
           {
             name: 'vehicleReadingDuringMaintenance',
-            jsonPath:
-              'vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance',
+            jsonPath: 'vehicleMaintenanceDetails[0].vehicleReadingDuringMaintenance',
             label: 'swm.create.vehicleReadingDuringMaintenance',
             pattern: '',
             type: 'number',

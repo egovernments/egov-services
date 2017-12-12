@@ -85,13 +85,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/categorytype/_search',
-        { id: this.props.match.params.id },
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/categorytype/_search', { id: this.props.match.params.id }, body, false, true).then(
         function(response) {
           console.log('response', response);
           console.log('response object', response.CategoryTypes[0]);
@@ -112,13 +106,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
   componentDidMount() {
     let self = this;
 
-    Api.commonApiPost(
-      '/wcms/masters/master/_getapplicationtypes',
-      { pageSize: 500 },
-      {},
-      false,
-      true
-    ).then(
+    Api.commonApiPost('/wcms/masters/master/_getapplicationtypes', { pageSize: 500 }, {}, false, true).then(
       function(response) {
         var array = $.map(response, function(value, index) {
           return [value];
@@ -134,13 +122,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
       }
     );
 
-    Api.commonApiPost(
-      '/wcms/masters/documenttype/_search',
-      { pageSize: 500 },
-      {},
-      false,
-      true
-    ).then(
+    Api.commonApiPost('/wcms/masters/documenttype/_search', { pageSize: 500 }, {}, false, true).then(
       function(response) {
         console.log('response', response);
         self.setState({
@@ -167,25 +149,16 @@ class DocumentTypeApplicationTypeCreate extends Component {
     var body = {
       documentTypeApplicationType: {
         id: this.props.createDocumentTypeApplicationType.id,
-        applicationType: this.props.createDocumentTypeApplicationType
-          .applicationType,
+        applicationType: this.props.createDocumentTypeApplicationType.applicationType,
         documentType: this.props.createDocumentTypeApplicationType.documentType,
-        active: !this.props.createDocumentTypeApplicationType.active
-          ? false
-          : this.props.createDocumentTypeApplicationType.active,
+        active: !this.props.createDocumentTypeApplicationType.active ? false : this.props.createDocumentTypeApplicationType.active,
         description: this.props.createDocumentTypeApplicationType.description,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/wcms/masters/categorytype/' + body.CategoryType.code + '/_update',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/categorytype/' + body.CategoryType.code + '/_update', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -198,13 +171,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
         }
       );
     } else {
-      Api.commonApiPost(
-        '/wcms/masters/categorytype/_create',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/categorytype/_create', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -239,10 +206,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
     } = this.props;
 
     let { submitForm, handleOpenNClose } = this;
-    console.log(
-      'createDocumentTypeApplicationType',
-      createDocumentTypeApplicationType
-    );
+    console.log('createDocumentTypeApplicationType', createDocumentTypeApplicationType);
 
     return (
       <div className="createDocumentTypeApplicationType">
@@ -258,9 +222,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
               title={
                 <div style={styles.headerStyle}>
                   {' '}
-                  {this.state.id != ''
-                    ? 'Update Application Type Document Type'
-                    : 'Create Application Type Document Type'}{' '}
+                  {this.state.id != '' ? 'Update Application Type Document Type' : 'Create Application Type Document Type'}{' '}
                 </div>
               }
             />
@@ -271,11 +233,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
                     <SelectField
                       floatingLabelText={'Application Type*'}
                       fullWidth={true}
-                      value={
-                        createDocumentTypeApplicationType.applicationType
-                          ? createDocumentTypeApplicationType.applicationType
-                          : ''
-                      }
+                      value={createDocumentTypeApplicationType.applicationType ? createDocumentTypeApplicationType.applicationType : ''}
                       onChange={(e, index, values) => {
                         var e = {
                           target: {
@@ -286,24 +244,15 @@ class DocumentTypeApplicationTypeCreate extends Component {
                         handleChange(e, 'applicationType', true, '');
                       }}
                     >
-                      {console.log(
-                        'this.state.category',
-                        this.state.applicationTypeArray
-                      )}
-                      {this.state.applicationTypeArray.map((item, index) => (
-                        <MenuItem value={item} key={index} primaryText={item} />
-                      ))}
+                      {console.log('this.state.category', this.state.applicationTypeArray)}
+                      {this.state.applicationTypeArray.map((item, index) => <MenuItem value={item} key={index} primaryText={item} />)}
                     </SelectField>
                   </Col>
                   <Col xs={12} md={3} sm={6}>
                     <SelectField
                       floatingLabelText={'Document Type*'}
                       fullWidth={true}
-                      value={
-                        createDocumentTypeApplicationType.documentType
-                          ? createDocumentTypeApplicationType.documentType
-                          : ''
-                      }
+                      value={createDocumentTypeApplicationType.documentType ? createDocumentTypeApplicationType.documentType : ''}
                       onChange={(e, index, values) => {
                         var e = {
                           target: {
@@ -313,17 +262,8 @@ class DocumentTypeApplicationTypeCreate extends Component {
                         handleChange(e, 'documentType', true, '');
                       }}
                     >
-                      {console.log(
-                        'this.state.category',
-                        this.state.documentNameArray
-                      )}
-                      {this.state.documentNameArray.map((item, index) => (
-                        <MenuItem
-                          value={item.name}
-                          key={index}
-                          primaryText={item.name}
-                        />
-                      ))}
+                      {console.log('this.state.category', this.state.documentNameArray)}
+                      {this.state.documentNameArray.map((item, index) => <MenuItem value={item.name} key={index} primaryText={item.name} />)}
                     </SelectField>
                   </Col>
 
@@ -334,15 +274,10 @@ class DocumentTypeApplicationTypeCreate extends Component {
                       label={translate('pgr.lbl.active')}
                       style={styles.checkbox}
                       defaultChecked={
-                        this.state.id != ''
-                          ? createDocumentTypeApplicationType.active || false
-                          : createDocumentTypeApplicationType.active || true
+                        this.state.id != '' ? createDocumentTypeApplicationType.active || false : createDocumentTypeApplicationType.active || true
                       }
                       onCheck={(e, i, v) => {
-                        console.log(
-                          createDocumentTypeApplicationType.active,
-                          i
-                        );
+                        console.log(createDocumentTypeApplicationType.active, i);
 
                         var e = {
                           target: {
@@ -359,14 +294,9 @@ class DocumentTypeApplicationTypeCreate extends Component {
                     <Checkbox
                       label={'Mandatory'}
                       style={styles.checkbox}
-                      checked={
-                        createDocumentTypeApplicationType.Mandatory || false
-                      }
+                      checked={createDocumentTypeApplicationType.Mandatory || false}
                       onCheck={(e, i, v) => {
-                        console.log(
-                          createDocumentTypeApplicationType.Mandatory,
-                          i
-                        );
+                        console.log(createDocumentTypeApplicationType.Mandatory, i);
 
                         var e = {
                           target: {
@@ -388,11 +318,7 @@ class DocumentTypeApplicationTypeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id != ''
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
@@ -400,27 +326,15 @@ class DocumentTypeApplicationTypeCreate extends Component {
         <Dialog
           title={
             this.state.id != ''
-              ? 'Category Type ' +
-                createDocumentTypeApplicationType.name +
-                ' Updated Successfully'
-              : 'Category Type ' +
-                createDocumentTypeApplicationType.name +
-                ' Created Successfully'
+              ? 'Category Type ' + createDocumentTypeApplicationType.name + ' Updated Successfully'
+              : 'Category Type ' + createDocumentTypeApplicationType.name + ' Created Successfully'
           }
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         />
       </div>
     );
@@ -507,6 +421,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DocumentTypeApplicationTypeCreate
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DocumentTypeApplicationTypeCreate);

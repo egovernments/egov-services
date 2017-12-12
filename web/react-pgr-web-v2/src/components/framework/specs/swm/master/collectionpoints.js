@@ -17,8 +17,7 @@ var dat = {
             isDisabled: false,
             maxLength: 256,
             patternErrorMsg: 'swm.create.field.message.name',
-            url:
-              'swm-services/collectionpoints/_search?|$..collectionPoints.*.name|$..collectionPoints.*.name',
+            url: 'swm-services/collectionpoints/_search?|$..collectionPoints.*.name|$..collectionPoints.*.name',
           },
         ],
       },
@@ -147,8 +146,7 @@ var dat = {
         fields: [
           {
             name: 'name',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].collectionType.code',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].collectionType.code',
             label: 'swm.collectionpoints.create.group.title.CollectionType',
             type: 'singleValueList',
             isRequired: true,
@@ -156,13 +154,11 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name',
           },
           {
             name: 'garbageEstimate',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].garbageEstimate',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].garbageEstimate',
             label: 'swm.collectionpoints.create.garbageEstimate',
             type: 'number',
             isRequired: true,
@@ -171,8 +167,7 @@ var dat = {
           },
           {
             name: 'description',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].description',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].description',
             label: 'swm.collectionpoints.create.description',
             type: 'textarea',
             isRequired: false,
@@ -306,8 +301,7 @@ var dat = {
         fields: [
           {
             name: 'name',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].collectionType.code',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].collectionType.code',
             label: 'swm.collectionpoints.create.group.title.CollectionType',
             type: 'singleValueList',
             isRequired: true,
@@ -315,13 +309,11 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name',
           },
           {
             name: 'garbageEstimate',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].garbageEstimate',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].garbageEstimate',
             label: 'swm.collectionpoints.create.garbageEstimate',
             type: 'number',
             isRequired: true,
@@ -330,8 +322,7 @@ var dat = {
           },
           {
             name: 'description',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].description',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].description',
             label: 'swm.collectionpoints.create.description',
             type: 'textarea',
             isRequired: false,
@@ -525,8 +516,7 @@ var dat = {
         fields: [
           {
             name: 'name',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].collectionType.code',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].collectionType.code',
             label: 'swm.collectionpoints.create.group.title.CollectionType',
             type: 'singleValueList',
             isRequired: true,
@@ -534,13 +524,11 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name',
           },
           {
             name: 'garbageEstimate',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].garbageEstimate',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].garbageEstimate',
             label: 'swm.collectionpoints.create.garbageEstimate',
             type: 'number',
             isRequired: true,
@@ -549,8 +537,7 @@ var dat = {
           },
           {
             name: 'description',
-            jsonPath:
-              'collectionPoints[0].collectionPointDetails[0].description',
+            jsonPath: 'collectionPoints[0].collectionPointDetails[0].description',
             label: 'swm.collectionpoints.create.description',
             type: 'textarea',
             isRequired: false,

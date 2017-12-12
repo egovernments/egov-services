@@ -88,8 +88,7 @@ var dat = {
               {
                 jsonPath: 'name',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={parent}|$..name|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={parent}|$..name|$..name',
               },
             ],
           },
@@ -140,10 +139,8 @@ var dat = {
       ],
       values: ['parentName', 'name', 'description', 'active'],
       resultPath: 'UsageTypes',
-      rowClickUrlUpdate:
-        '/update/wc/subUsageType/{id}?parent={parent}&isSubUsageType=true',
-      rowClickUrlView:
-        '/view/wc/subUsageType/{id}?parent={parent}&isSubUsageType=true',
+      rowClickUrlUpdate: '/update/wc/subUsageType/{id}?parent={parent}&isSubUsageType=true',
+      rowClickUrlView: '/view/wc/subUsageType/{id}?parent={parent}&isSubUsageType=true',
     },
   },
   'wc.view': {
@@ -208,8 +205,7 @@ var dat = {
   },
   'wc.update': {
     numCols: 12 / 3,
-    searchUrl:
-      '/wcms/masters/usagetypes/_search?parent={parent}&isSubUsageType=true',
+    searchUrl: '/wcms/masters/usagetypes/_search?parent={parent}&isSubUsageType=true',
     url: '/wcms/masters/usagetypes/_update',
     tenantIdRequired: true,
     useTimestamp: true,

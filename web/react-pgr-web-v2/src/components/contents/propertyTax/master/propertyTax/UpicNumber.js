@@ -102,9 +102,7 @@ class UpicNumber extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -132,11 +130,7 @@ class UpicNumber extends Component {
       <Card className="uiCard">
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.oldPropertyNo')}{' '}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.oldPropertyNo')} </div>}
         />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
@@ -151,25 +145,10 @@ class UpicNumber extends Component {
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
-                  errorText={
-                    fieldErrors.oldUpicNumber ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.oldUpicNumber}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ''
-                  }
+                  errorText={fieldErrors.oldUpicNumber ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.oldUpicNumber}</span> : ''}
+                  value={upicNumber.oldUpicNumber ? upicNumber.oldUpicNumber : ''}
                   onChange={e => {
-                    handleChange(
-                      e,
-                      'oldUpicNumber',
-                      true,
-                      /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g
-                    );
+                    handleChange(e, 'oldUpicNumber', true, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g);
                   }}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   id="oldUpicNumber"

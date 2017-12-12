@@ -27,18 +27,8 @@ const style = {
 export default class LoadingIndicator extends Component {
   render() {
     return (
-      <div
-        style={
-          this.props.status === 'hide' ? style.containerHide : style.container
-        }
-      >
-        <RefreshIndicator
-          size={40}
-          left={10}
-          top={0}
-          status={this.props.status}
-          style={style.refresh}
-        />
+      <div style={this.props.status === 'hide' ? style.containerHide : style.container}>
+        <RefreshIndicator size={40} left={10} top={0} status={this.props.status} style={style.refresh} />
       </div>
     );
   }

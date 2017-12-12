@@ -128,13 +128,7 @@ class AssessmentDetails extends Component {
 
     let { toggleSnackbarAndSetText } = this.props;
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', {}, {}, false, true)
       .then(res => {
         console.log(res);
         currentThis.setState({ propertytypes: res.propertyTypes });
@@ -158,21 +152,13 @@ class AssessmentDetails extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.propertySubTypes &&
-      nextProps.propertySubTypes.length &&
-      !this.state.propertySubType.length
-    ) {
+    if (nextProps.propertySubTypes && nextProps.propertySubTypes.length && !this.state.propertySubType.length) {
       this.setState({
         propertySubType: nextProps.propertySubTypes,
       });
     }
 
-    if (
-      nextProps.propertySubUsage &&
-      nextProps.propertySubUsage.length &&
-      !this.state.subUsage.length
-    ) {
+    if (nextProps.propertySubUsage && nextProps.propertySubUsage.length && !this.state.subUsage.length) {
       this.setState({
         subUsage: nextProps.propertySubUsage,
       });
@@ -217,13 +203,7 @@ class AssessmentDetails extends Component {
       parent: e.target.value,
     };
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      pQuery,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', pQuery, {}, false, true)
       .then(res => {
         res.propertyTypes.unshift({ id: -1, name: 'None' });
         console.log(res);
@@ -237,13 +217,7 @@ class AssessmentDetails extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'pt-property/property/departments/_search',
-      query,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/departments/_search', query, {}, false, true)
       .then(res => {
         res.departments.unshift({ id: -1, name: 'None' });
         console.log(res);
@@ -261,10 +235,7 @@ class AssessmentDetails extends Component {
 
   formatDate(date) {
     var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-    var month =
-      date.getMonth() + 1 < 10
-        ? '0' + (date.getMonth() + 1)
-        : date.getMonth() + 1;
+    var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
 
     return day + '/' + month + '/' + date.getFullYear();
   }
@@ -287,9 +258,7 @@ class AssessmentDetails extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.code} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -319,11 +288,7 @@ class AssessmentDetails extends Component {
       <Card className="uiCard">
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.assessmentDetails')}{' '}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.assessmentDetails')} </div>}
         />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
@@ -333,26 +298,14 @@ class AssessmentDetails extends Component {
                   className="fullWidth selectOption"
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.assessmentDetails.fields.creationReason'
-                      )}
+                      {translate('pt.create.groups.assessmentDetails.fields.creationReason')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   errorText={
-                    fieldErrors.reasonForCreation ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.reasonForCreation}
-                      </span>
-                    ) : (
-                      ''
-                    )
+                    fieldErrors.reasonForCreation ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.reasonForCreation}</span> : ''
                   }
-                  value={
-                    assessmentDetails.reasonForCreation
-                      ? assessmentDetails.reasonForCreation
-                      : ''
-                  }
+                  value={assessmentDetails.reasonForCreation ? assessmentDetails.reasonForCreation : ''}
                   floatingLabelFixed={true}
                   onChange={(event, index, value) => {
                     value == -1 ? (value = '') : '';
@@ -390,26 +343,12 @@ class AssessmentDetails extends Component {
                     className="fullWidth"
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.assessmentDetails.fields.parentUpicNo'
-                        )}
+                        {translate('pt.create.groups.assessmentDetails.fields.parentUpicNo')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors.parentUpicNo ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.parentUpicNo}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
-                    value={
-                      assessmentDetails.parentUpicNo
-                        ? assessmentDetails.parentUpicNo
-                        : ''
-                    }
+                    errorText={fieldErrors.parentUpicNo ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.parentUpicNo}</span> : ''}
+                    value={assessmentDetails.parentUpicNo ? assessmentDetails.parentUpicNo : ''}
                     onChange={e => {
                       handleChange(e, 'parentUpicNo', true, '');
                     }}
@@ -428,26 +367,12 @@ class AssessmentDetails extends Component {
                   className="fullWidth selectOption"
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.assessmentDetails.fields.propertyType'
-                      )}
+                      {translate('pt.create.groups.assessmentDetails.fields.propertyType')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
-                  errorText={
-                    fieldErrors.propertyType ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.propertyType}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    assessmentDetails.propertyType
-                      ? assessmentDetails.propertyType
-                      : ''
-                  }
+                  errorText={fieldErrors.propertyType ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.propertyType}</span> : ''}
+                  value={assessmentDetails.propertyType ? assessmentDetails.propertyType : ''}
                   floatingLabelFixed={true}
                   dropDownMenuProps={{
                     animated: false,
@@ -499,23 +424,11 @@ class AssessmentDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <SelectField
                   className="fullWidth selectOption"
-                  floatingLabelText={translate(
-                    'pt.create.groups.assessmentDetails.fields.propertySubType'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.propertySubType')}
                   errorText={
-                    fieldErrors.propertySubType ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.propertySubType}
-                      </span>
-                    ) : (
-                      ''
-                    )
+                    fieldErrors.propertySubType ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.propertySubType}</span> : ''
                   }
-                  value={
-                    assessmentDetails.propertySubType
-                      ? assessmentDetails.propertySubType
-                      : ''
-                  }
+                  value={assessmentDetails.propertySubType ? assessmentDetails.propertySubType : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -545,21 +458,11 @@ class AssessmentDetails extends Component {
                   className="fullWidth selectOption"
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.assessmentDetails.fields.usageType'
-                      )}
+                      {translate('pt.create.groups.assessmentDetails.fields.usageType')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
-                  errorText={
-                    fieldErrors.usage ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.usage}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
+                  errorText={fieldErrors.usage ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.usage}</span> : ''}
                   value={assessmentDetails.usage ? assessmentDetails.usage : ''}
                   dropDownMenuProps={{
                     animated: false,
@@ -589,23 +492,9 @@ class AssessmentDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <SelectField
                   className="fullWidth selectOption"
-                  floatingLabelText={translate(
-                    'pt.create.groups.assessmentDetails.fields.usageSubType'
-                  )}
-                  errorText={
-                    fieldErrors.usageSubType ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.usageSubType}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    assessmentDetails.usageSubType
-                      ? assessmentDetails.usageSubType
-                      : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageSubType')}
+                  errorText={fieldErrors.usageSubType ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.usageSubType}</span> : ''}
+                  value={assessmentDetails.usageSubType ? assessmentDetails.usageSubType : ''}
                   floatingLabelFixed={true}
                   dropDownMenuProps={{
                     animated: false,
@@ -630,34 +519,14 @@ class AssessmentDetails extends Component {
                   {renderOption(this.state.subUsage)}
                 </SelectField>
               </Col>
-              {(getNameByCode(
-                this.state.propertytypes,
-                assessmentDetails.propertyType
-              ).match('Central Government') ||
-                getNameByCode(
-                  this.state.propertytypes,
-                  assessmentDetails.propertyType
-                ).match('State Government')) && (
+              {(getNameByCode(this.state.propertytypes, assessmentDetails.propertyType).match('Central Government') ||
+                getNameByCode(this.state.propertytypes, assessmentDetails.propertyType).match('State Government')) && (
                 <Col xs={12} md={3} sm={6}>
                   <SelectField
                     className="fullWidth selectOption"
-                    floatingLabelText={translate(
-                      'pt.create.groups.assessmentDetails.fields.department'
-                    )}
-                    errorText={
-                      fieldErrors.department ? (
-                        <span style={{ position: 'absolute', bottom: -41 }}>
-                          {fieldErrors.department}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
-                    value={
-                      assessmentDetails.department
-                        ? assessmentDetails.department
-                        : ''
-                    }
+                    floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.department')}
+                    errorText={fieldErrors.department ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.department}</span> : ''}
+                    value={assessmentDetails.department ? assessmentDetails.department : ''}
                     floatingLabelFixed={true}
                     dropDownMenuProps={{
                       animated: false,
@@ -685,28 +554,10 @@ class AssessmentDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <TextField
                   className="fullWidth"
-                  floatingLabelText={
-                    <span>
-                      {translate(
-                        'pt.create.groups.assessmentDetails.fields.extentOfSite'
-                      )}
-                    </span>
-                  }
+                  floatingLabelText={<span>{translate('pt.create.groups.assessmentDetails.fields.extentOfSite')}</span>}
                   hintText="876"
-                  errorText={
-                    fieldErrors.extentOfSite ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.extentOfSite}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    assessmentDetails.extentOfSite
-                      ? assessmentDetails.extentOfSite
-                      : ''
-                  }
+                  errorText={fieldErrors.extentOfSite ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.extentOfSite}</span> : ''}
+                  value={assessmentDetails.extentOfSite ? assessmentDetails.extentOfSite : ''}
                   floatingLabelFixed={true}
                   onChange={e => {
                     handleChange(e, 'extentOfSite', false, /^\d+$/g);
@@ -724,27 +575,13 @@ class AssessmentDetails extends Component {
                   className="fullWidth"
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.assessmentDetails.fields.sequenceNo'
-                      )}
+                      {translate('pt.create.groups.assessmentDetails.fields.sequenceNo')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   hintText="14"
-                  errorText={
-                    fieldErrors.sequenceNo ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.sequenceNo}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    assessmentDetails.sequenceNo
-                      ? assessmentDetails.sequenceNo
-                      : ''
-                  }
+                  errorText={fieldErrors.sequenceNo ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.sequenceNo}</span> : ''}
+                  value={assessmentDetails.sequenceNo ? assessmentDetails.sequenceNo : ''}
                   floatingLabelFixed={true}
                   onChange={e => {
                     handleChange(e, 'sequenceNo', true, /^\d+$/g);
@@ -760,27 +597,12 @@ class AssessmentDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <TextField
                   className="fullWidth"
-                  floatingLabelText={translate(
-                    'pt.create.groups.floorDetails.fields.buildingPermissionNumber'
-                  )}
-                  errorText={
-                    fieldErrors.bpaNo ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.bpaNo}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
+                  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionNumber')}
+                  errorText={fieldErrors.bpaNo ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.bpaNo}</span> : ''}
                   value={assessmentDetails.bpaNo ? assessmentDetails.bpaNo : ''}
                   floatingLabelFixed={true}
                   onChange={e => {
-                    handleChange(
-                      e,
-                      'bpaNo',
-                      false,
-                      /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g
-                    );
+                    handleChange(e, 'bpaNo', false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g);
                   }}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
@@ -795,21 +617,9 @@ class AssessmentDetails extends Component {
                   className="fullWidth"
                   hintText="dd/mm/yyyy"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.floorDetails.fields.buildingPermissionDate'
-                  )}
-                  errorText={
-                    fieldErrors.bpaDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.bpaDate}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.floorDetails.fields.buildingPermissionDate')}
+                  errorText={fieldErrors.bpaDate ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.bpaDate}</span> : ''}
+                  value={assessmentDetails.bpaDate ? assessmentDetails.bpaDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {

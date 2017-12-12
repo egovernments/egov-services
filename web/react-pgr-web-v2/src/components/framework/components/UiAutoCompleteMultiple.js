@@ -19,12 +19,7 @@ class UiAutoCompleteMultiple extends Component {
     let { item, setDropDownData, useTimestamp } = props;
     let values = [];
     // console.log(this.props.item);
-    if (
-      item.hasOwnProperty('url') &&
-      item.url &&
-      item.url.search('\\|') > -1 &&
-      item.url.search('{') == -1
-    ) {
+    if (item.hasOwnProperty('url') && item.url && item.url.search('\\|') > -1 && item.url.search('{') == -1) {
       let splitArray = item.url.split('?');
       let context = '';
       let id = {};
@@ -40,43 +35,26 @@ class UiAutoCompleteMultiple extends Component {
       let queryStringObject = splitArray[1].split('|')[0].split('&');
       for (var i = 0; i < queryStringObject.length; i++) {
         if (i) {
-          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split(
-            '='
-          )[1];
+          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
         }
       }
 
-      var response = Api.commonApiPost(
-        context,
-        id,
-        {},
-        '',
-        useTimestamp || false
-      ).then(
+      var response = Api.commonApiPost(context, id, {}, '', useTimestamp || false).then(
         function(response) {
           if (response) {
             let keys = jp.query(response, splitArray[1].split('|')[1]);
             let valueList = splitArray[1].split('|')[2].split(',');
 
             if (valueList.length > 1) {
-              for (var l = 0; l < valueList.length; l++)
-                values[l] = jp.query(
-                  response,
-                  splitArray[1].split('|')[2].split(',')[l]
-                );
+              for (var l = 0; l < valueList.length; l++) values[l] = jp.query(response, splitArray[1].split('|')[2].split(',')[l]);
             } else {
-              values[0] = jp.query(
-                response,
-                splitArray[1].split('|')[2].split(',')[0]
-              );
+              values[0] = jp.query(response, splitArray[1].split('|')[2].split(',')[0]);
             }
 
             let dropDownData = [];
             for (var k = 0; k < keys.length; k++) {
               let obj = {};
-              obj['key'] = item.convertToString
-                ? keys[k].toString()
-                : item.convertToNumber ? Number(keys[k]) : keys[k];
+              obj['key'] = item.convertToString ? keys[k].toString() : item.convertToNumber ? Number(keys[k]) : keys[k];
               for (var l = 0; l < values.length; l++) {
                 if (l > 0) {
                   obj['value'] += '-';
@@ -85,10 +63,7 @@ class UiAutoCompleteMultiple extends Component {
                   obj['value'] = values[l][k];
                 }
               }
-              if (
-                item.hasOwnProperty('isKeyValuePair') &&
-                item.isKeyValuePair
-              ) {
+              if (item.hasOwnProperty('isKeyValuePair') && item.isKeyValuePair) {
                 obj['value'] = keys[k] + obj['value'];
               }
               dropDownData.push(obj);
@@ -101,10 +76,7 @@ class UiAutoCompleteMultiple extends Component {
           console.log(err);
         }
       );
-    } else if (
-      item.hasOwnProperty('defaultValue') &&
-      typeof item.defaultValue == 'object'
-    ) {
+    } else if (item.hasOwnProperty('defaultValue') && typeof item.defaultValue == 'object') {
       setDropDownData(item.jsonPath, item.defaultValue);
     }
   }
@@ -140,18 +112,11 @@ class UiAutoCompleteMultiple extends Component {
               floatingLabelFixed={true}
               style={{ display: item.hide ? 'none' : 'inline-block' }}
               errorStyle={{ float: 'left' }}
-              dataSource={
-                dropDownData.hasOwnProperty(item.jsonPath)
-                  ? dropDownData[item.jsonPath]
-                  : []
-              }
+              dataSource={dropDownData.hasOwnProperty(item.jsonPath) ? dropDownData[item.jsonPath] : []}
               dataSourceConfig={dataSourceConfig}
               floatingLabelText={
                 <span>
-                  {item.label}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {item.isRequired ? ' *' : ''}
-                  </span>
+                  {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
                 </span>
               }
               fullWidth={true}
@@ -178,10 +143,7 @@ class UiAutoCompleteMultiple extends Component {
                   item.patternErrMsg
                 );
                 if (this.props.autoComHandler && item.autoCompleteDependancy) {
-                  this.props.autoComHandler(
-                    item.autoCompleteDependancy,
-                    item.jsonPath
-                  );
+                  this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath);
                 }
               }}
             />
@@ -204,6 +166,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: 'SET_DROPDWON_DATA', fieldName, dropDownData });
   },
 });
-export default connect(mapStateToProps, mapDispatchToProps)(
-  UiAutoCompleteMultiple
-);
+export default connect(mapStateToProps, mapDispatchToProps)(UiAutoCompleteMultiple);

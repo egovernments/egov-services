@@ -53,13 +53,7 @@ class BuildingClassification extends Component {
     return (
       <div className="buildingClassification">
         <Card>
-          <CardHeader
-            title={
-              <strong style={{ color: brown500 }}>
-                Building Classification
-              </strong>
-            }
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Building Classification</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -115,23 +109,14 @@ class BuildingClassification extends Component {
                       />
                     </Col>
                     <Col xs={12} md={6}>
-                      <Checkbox
-                        label="Active"
-                        style={styles.checkbox}
-                        style={styles.topGap}
-                      />
+                      <Checkbox label="Active" style={styles.checkbox} style={styles.topGap} />
                     </Col>
                   </Row>
                 </Grid>
               </CardText>
             </Card>
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="submit"
-                label="Add"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="submit" label="Add" backgroundColor={brown500} labelColor={white} />
               <RaisedButton type="button" label="Close" />
             </div>
           </CardText>

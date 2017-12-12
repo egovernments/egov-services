@@ -68,8 +68,7 @@ var dat = {
             label: 'tl.create.groups.feematrixtype.licensecategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -164,8 +163,7 @@ var dat = {
             label: 'tl.create.groups.feematrixtype.effectivefinancialyear',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange',
+            url: '/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -270,8 +268,7 @@ var dat = {
             label: 'tl.search.groups.feematrixtype.licensecategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -300,8 +297,7 @@ var dat = {
               {
                 jsonPath: 'feeType',
                 type: 'dropDown',
-                pattern:
-                  '/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&codes={subCategory}|$..feeType|$..feeType',
+                pattern: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=subcategory&codes={subCategory}|$..feeType|$..feeType',
               },
             ],
           },
@@ -311,8 +307,7 @@ var dat = {
             label: 'tl.search.groups.feematrixtype.effectivefinancialyear',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange',
+            url: '/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -348,14 +343,7 @@ var dat = {
         { label: 'tl.create.groups.feematrixtype.feetype' },
         { label: 'tl.create.groups.feematrixtype.effectivefinancialyear' },
       ],
-      values: [
-        'businessNature',
-        'applicationType',
-        'categoryName',
-        'subCategoryName',
-        'feeType',
-        'financialYear',
-      ],
+      values: ['businessNature', 'applicationType', 'categoryName', 'subCategoryName', 'feeType', 'financialYear'],
       resultPath: 'feeMatrices',
       rowClickUrlUpdate: '/non-framework/tl/masters/updateFeeMatrix/{id}',
       rowClickUrlView: '/non-framework/tl/masters/viewFeeMatrix/{id}',
@@ -520,8 +508,7 @@ var dat = {
             label: 'tl.update.groups.feematrixtype.licensecategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: true,
             isDisabled: true,
             requiredErrMsg: '',
@@ -580,8 +567,7 @@ var dat = {
             label: 'tl.update.groups.feematrixtype.effectivefinancialyear',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange',
+            url: '/egf-masters/financialyears/_search?tenantId=default|$..finYearRange|$..finYearRange',
             isRequired: true,
             isDisabled: true,
             requiredErrMsg: '',

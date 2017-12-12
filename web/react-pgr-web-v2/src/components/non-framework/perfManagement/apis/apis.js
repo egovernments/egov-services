@@ -6,13 +6,7 @@ var jp = require('jsonpath');
  * PMS module
  */
 export const fetchDepartmentAPI = cb => {
-  Api.commonApiPost(
-    'egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department',
-    [],
-    {},
-    false,
-    true
-  ).then(
+  Api.commonApiPost('egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department', [], {}, false, true).then(
     function(res) {
       if (
         res &&
@@ -33,13 +27,7 @@ export const fetchDepartmentAPI = cb => {
 };
 
 export const fetchDepartmentKPIsAPI = (departmentId, cb) => {
-  Api.commonApiPost(
-    `perfmanagement/v1/kpimaster/_search?departmentId=${departmentId}`,
-    [],
-    {},
-    false,
-    true
-  ).then(
+  Api.commonApiPost(`perfmanagement/v1/kpimaster/_search?departmentId=${departmentId}`, [], {}, false, true).then(
     function(res) {
       if (res && res.KPIs) {
         cb(null, res);
@@ -54,19 +42,9 @@ export const fetchDepartmentKPIsAPI = (departmentId, cb) => {
 };
 
 export const fetchULBsAPI = cb => {
-  Api.commonApiPost(
-    'egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant',
-    [],
-    {},
-    false,
-    false
-  ).then(
+  Api.commonApiPost('egov-mdms-service/v1/_get?masterName=tenants&moduleName=tenant', [], {}, false, false).then(
     function(res) {
-      if (
-        res.MdmsRes &&
-        res.MdmsRes['tenant'] &&
-        res.MdmsRes['tenant'].tenants
-      ) {
+      if (res.MdmsRes && res.MdmsRes['tenant'] && res.MdmsRes['tenant'].tenants) {
         cb(null, res);
       } else {
         cb(null, null);
@@ -79,13 +57,7 @@ export const fetchULBsAPI = cb => {
 };
 
 export const fetchFinancialYearsAPI = cb => {
-  Api.commonApiPost(
-    'egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master',
-    [],
-    {},
-    false,
-    false
-  ).then(
+  Api.commonApiPost('egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master', [], {}, false, false).then(
     function(res) {
       if (res.MdmsRes && res.MdmsRes['egf-master']) {
         cb(null, res);
@@ -108,13 +80,7 @@ export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
   // Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=2017-18,2018-19&ulbs=default&kpiCodes=PFP`, [], {}, false, true).then(function(res) {
 
   // ACTUAL API CALLING
-  Api.commonApiPost(
-    `perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`,
-    [],
-    {},
-    false,
-    true
-  ).then(
+  Api.commonApiPost(`perfmanagement/v1/kpivalue/_comparesearch?finYear=${finYears}&kpiCodes=${kpis}&ulbs=${ulbs}`, [], {}, false, true).then(
     function(res) {
       if (res && res.ulbs) {
         cb(null, res);
@@ -129,26 +95,22 @@ export const fetchCompareSearchAPI = (finYears, kpis, ulbs, cb) => {
 };
 
 export const parseDepartmentResponse = res => {
-  return jp
-    .query(res, '$.MdmsRes["common-masters"].Department[*]')
-    .map((department, index) => {
-      return {
-        code: department.code,
-        name: department.name,
-        id: department.id,
-      };
-    });
+  return jp.query(res, '$.MdmsRes["common-masters"].Department[*]').map((department, index) => {
+    return {
+      code: department.code,
+      name: department.name,
+      id: department.id,
+    };
+  });
 };
 
 export const parseULBResponse = res => {
-  return jp
-    .query(res, '$.MdmsRes["tenant"].tenants[*]')
-    .map((tenant, index) => {
-      return {
-        code: tenant.code,
-        name: tenant.name,
-      };
-    });
+  return jp.query(res, '$.MdmsRes["tenant"].tenants[*]').map((tenant, index) => {
+    return {
+      code: tenant.code,
+      name: tenant.name,
+    };
+  });
 };
 
 export const parseFinancialYearResponse = res => {
@@ -177,13 +139,11 @@ export const parseFinancialYearResponse = res => {
 };
 
 export const parseDepartmentKPIsAsPerKPIType = (res, type) => {
-  return jp
-    .query(res, `$.KPIs[?(@.targetType==\"${type}\")]`)
-    .map((kpi, index) => {
-      return {
-        code: kpi.code,
-        name: kpi.name,
-        type: kpi.targetType,
-      };
-    });
+  return jp.query(res, `$.KPIs[?(@.targetType==\"${type}\")]`).map((kpi, index) => {
+    return {
+      code: kpi.code,
+      name: kpi.name,
+      type: kpi.targetType,
+    };
+  });
 };

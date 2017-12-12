@@ -33,23 +33,11 @@ class UiMultiSelectField extends Component {
       let queryStringObject = splitArray[1].split('|')[0].split('&');
       for (var i = 0; i < queryStringObject.length; i++) {
         if (i) {
-          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split(
-            '='
-          )[1];
+          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
         }
       }
 
-      Api.commonApiPost(
-        context,
-        id,
-        {},
-        '',
-        useTimestamp || false,
-        false,
-        '',
-        '',
-        item.isStateLevel
-      ).then(
+      Api.commonApiPost(context, id, {}, '', useTimestamp || false, false, '', '', item.isStateLevel).then(
         function(response) {
           if (response) {
             let keys = jp.query(response, splitArray[1].split('|')[1]);
@@ -57,9 +45,7 @@ class UiMultiSelectField extends Component {
             let dropDownData = [];
             for (var k = 0; k < keys.length; k++) {
               let obj = {};
-              obj['key'] = item.convertToString
-                ? keys[k].toString()
-                : item.convertToNumber ? Number(keys[k]) : keys[k];
+              obj['key'] = item.convertToString ? keys[k].toString() : item.convertToNumber ? Number(keys[k]) : keys[k];
               obj['value'] = values[k];
               dropDownData.push(obj);
             }
@@ -109,10 +95,7 @@ class UiMultiSelectField extends Component {
               multiple={true}
               floatingLabelText={
                 <span>
-                  {item.label}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {item.isRequired ? ' *' : ''}
-                  </span>
+                  {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
                 </span>
               }
               value={this.props.getVal(item.jsonPath)}
@@ -133,9 +116,7 @@ class UiMultiSelectField extends Component {
               maxHeight={200}
             >
               {dropDownData.hasOwnProperty(item.jsonPath) &&
-                dropDownData[item.jsonPath].map((dd, index) => (
-                  <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-                ))}
+                dropDownData[item.jsonPath].map((dd, index) => <MenuItem value={dd.key} key={index} primaryText={dd.value} />)}
             </SelectField>
           </div>
         );

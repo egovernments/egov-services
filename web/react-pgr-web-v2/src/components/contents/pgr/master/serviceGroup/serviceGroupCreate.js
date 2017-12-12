@@ -39,11 +39,7 @@ class ServiceGroupCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/serviceGroup/v1/_search',
-        { id: this.props.match.params.id },
-        body
-      ).then(
+      Api.commonApiPost('/pgr-master/serviceGroup/v1/_search', { id: this.props.match.params.id }, body).then(
         function(response) {
           current.setState({ data: response.ServiceGroups });
           setForm(response.ServiceGroups[0]);
@@ -162,10 +158,7 @@ class ServiceGroupCreate extends Component {
               title={
                 <div style={styles.headerStyle}>
                   {' '}
-                  {this.state.id != ''
-                    ? translate('pgr.lbl.update')
-                    : translate('pgr.lbl.create')}{' '}
-                  {translate('pgr.lbl.grievance.category')}
+                  {this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.grievance.category')}
                 </div>
               }
             />
@@ -179,20 +172,10 @@ class ServiceGroupCreate extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('core.lbl.code') + '*'}
-                      value={
-                        createServiceGroup.code ? createServiceGroup.code : ''
-                      }
+                      value={createServiceGroup.code ? createServiceGroup.code : ''}
                       errorText={fieldErrors.code ? fieldErrors.code : ''}
                       maxLength="20"
-                      onChange={e =>
-                        handleChange(
-                          e,
-                          'code',
-                          true,
-                          /^[A-Z0-9]{0,20}$/,
-                          'Please use only upper case alphabets and numbers'
-                        )
-                      }
+                      onChange={e => handleChange(e, 'code', true, /^[A-Z0-9]{0,20}$/, 'Please use only upper case alphabets and numbers')}
                       id="code"
                       disabled={this.state.id ? true : false}
                     />
@@ -204,19 +187,11 @@ class ServiceGroupCreate extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('core.lbl.add.name') + '*'}
-                      value={
-                        createServiceGroup.name ? createServiceGroup.name : ''
-                      }
+                      value={createServiceGroup.name ? createServiceGroup.name : ''}
                       errorText={fieldErrors.name ? fieldErrors.name : ''}
                       maxLength="100"
                       onChange={e =>
-                        handleChange(
-                          e,
-                          'name',
-                          true,
-                          /^[a-zA-Z\s'_.]{0,100}$/,
-                          'Please use only alphabets, space and special characters'
-                        )
+                        handleChange(e, 'name', true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters')
                       }
                       id="name"
                     />
@@ -228,25 +203,11 @@ class ServiceGroupCreate extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('pgr.service.localName')}
-                      value={
-                        createServiceGroup.localName
-                          ? createServiceGroup.localName
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.localName ? fieldErrors.localName : ''
-                      }
+                      value={createServiceGroup.localName ? createServiceGroup.localName : ''}
+                      errorText={fieldErrors.localName ? fieldErrors.localName : ''}
                       maxLength="250"
                       onChange={e =>
-                        handleChange(
-                          e,
-                          'localName',
-                          false,
-                          /^.[^]{0,250}$/,
-                          translate('pgr.lbl.max') +
-                            ' 250 ' +
-                            translate('pgr.lbl.characters')
-                        )
+                        handleChange(e, 'localName', false, /^.[^]{0,250}$/, translate('pgr.lbl.max') + ' 250 ' + translate('pgr.lbl.characters'))
                       }
                       id="localName"
                     />
@@ -258,25 +219,11 @@ class ServiceGroupCreate extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createServiceGroup.description
-                          ? createServiceGroup.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createServiceGroup.description ? createServiceGroup.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       maxLength="250"
                       onChange={e =>
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^.[^]{0,250}$/,
-                          translate('pgr.lbl.max') +
-                            ' 250 ' +
-                            translate('pgr.lbl.characters')
-                        )
+                        handleChange(e, 'description', false, /^.[^]{0,250}$/, translate('pgr.lbl.max') + ' 250 ' + translate('pgr.lbl.characters'))
                       }
                       multiLine={true}
                       id="description"
@@ -292,35 +239,21 @@ class ServiceGroupCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
         <Dialog
           title={translate('pgr.lbl.success')}
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         >
           {translate('pgr.lbl.grievance.category')}{' '}
-          {this.state.id != ''
-            ? translate('core.lbl.updatedsuccessful')
-            : translate('core.lbl.createdsuccessful')}
+          {this.state.id != '' ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
         </Dialog>
       </div>
     );

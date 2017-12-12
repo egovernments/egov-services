@@ -10,13 +10,7 @@ class MaterialStoreMappingSearch extends Component {
   }
 
   render() {
-    return (
-      <CustomSearch
-        {...this.props}
-        templateObj={template}
-        actionKey="inventory.search"
-      />
-    );
+    return <CustomSearch {...this.props} templateObj={template} actionKey="inventory.search" />;
   }
 }
 
@@ -52,14 +46,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,
@@ -100,6 +87,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  MaterialStoreMappingSearch
-);
+export default connect(mapStateToProps, mapDispatchToProps)(MaterialStoreMappingSearch);

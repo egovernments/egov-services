@@ -46,17 +46,11 @@ class Report extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -74,17 +68,10 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -95,19 +82,9 @@ class Report extends Component {
 
   getVal = path => {
     var val = _.get(this.props.formData, path);
-    if (
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     }
 
     return typeof val != 'undefined' ? val : '';
@@ -116,24 +93,14 @@ class Report extends Component {
   initData() {
     let self = this;
     let hashLocation = window.location.hash;
-    specifications = require('../../../../framework/specs/collection/master/receipt')
-      .default;
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    specifications = require('../../../../framework/specs/collection/master/receipt').default;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications[`collection.view`];
 
     Api.commonApiPost(
       obj.url,
       {
-        transactionId: this.props.match.params.hasOwnProperty('id')
-          ? this.props.match.params.id
-          : '',
+        transactionId: this.props.match.params.hasOwnProperty('id') ? this.props.match.params.id : '',
         receiptDetailsRequired: true,
       },
       {},
@@ -142,13 +109,7 @@ class Report extends Component {
     ).then(
       function(res) {
         // console.log(res);
-        self.handleChange(
-          { target: { value: res.Receipt } },
-          'Receipt',
-          false,
-          '',
-          ''
-        );
+        self.handleChange({ target: { value: res.Receipt } }, 'Receipt', false, '', '');
         self.props.setLoadingStatus('hide');
         var resultList = {
           resultHeader: [{ label: '#' }, ...obj.result.header],
@@ -197,8 +158,7 @@ class Report extends Component {
     setModuleName('collection');
     setActionName('view');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
       pathname: this.props.history.location.pathname,
@@ -254,35 +214,17 @@ class Report extends Component {
   //   })
   // }
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { handleChange } = this.props;
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
   };
 
   rowClickHandler = index => {
     var value = this.state.values[index];
     var _url =
       window.location.hash.split('/').indexOf('update') > -1
-        ? this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlUpdate
-        : this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlView;
+        ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate
+        : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
     var key = _url.split('{')[1].split('}')[0];
     _url = _url.replace('{' + key + '}', _.get(value, key));
     this.props.setRoute(_url);
@@ -308,12 +250,9 @@ class Report extends Component {
     let sum = 0;
     if (purpose) {
       _.forEach(item, (value, key) => {
-        _.forEach(
-          _.filter(value.billAccountDetails, { purpose: purpose }),
-          (value1, key1) => {
-            sum += value1.creditAmount;
-          }
-        );
+        _.forEach(_.filter(value.billAccountDetails, { purpose: purpose }), (value1, key1) => {
+          sum += value1.creditAmount;
+        });
       });
     } else {
       _.forEach(item, (value, key) => {
@@ -351,18 +290,7 @@ class Report extends Component {
       'eighteen',
       'nineteen',
     ];
-    var TENS = [
-      '',
-      '',
-      'twenty',
-      'thirty',
-      'fourty',
-      'fifty',
-      'sixty',
-      'seventy',
-      'eighty',
-      'ninety',
-    ];
+    var TENS = ['', '', 'twenty', 'thirty', 'fourty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
     var SCALE = [
       '',
       'thousand',
@@ -398,23 +326,12 @@ class Report extends Component {
 
     // Add to words, triplet words with scale word
     function add_to_words(words, triplet_words, scale_word) {
-      return triplet_words
-        ? triplet_words + ((scale_word && ' ' + scale_word) || '') + ' ' + words
-        : words;
+      return triplet_words ? triplet_words + ((scale_word && ' ' + scale_word) || '') + ' ' + words : words;
     }
 
     function iter(words, i, first, rest) {
       if (first == '000' && rest.length === 0) return words;
-      return iter(
-        add_to_words(
-          words,
-          triplet_to_words(first[0], first[1], first[2]),
-          SCALE[i]
-        ),
-        ++i,
-        get_first(rest),
-        get_rest(rest)
-      );
+      return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
     }
 
     return iter('', 0, get_first(String(int)), get_rest(String(int)));
@@ -447,12 +364,7 @@ class Report extends Component {
     if (localStorage.getItem('type') != 'EMPLOYEE') {
       doc.setFontSize(14);
       doc.setFontType('bold');
-      doc.text(
-        originalX + 100,
-        originalY + 5,
-        translate(tenantInfo[0].city.name),
-        'center'
-      );
+      doc.text(originalX + 100, originalY + 5, translate(tenantInfo[0].city.name), 'center');
       doc.text(originalX + 170, originalY + 5, 'Original');
       doc.setFontType('normal');
       doc.setFontSize(10);
@@ -484,12 +396,7 @@ class Report extends Component {
     } else {
       doc.setFontSize(14);
       doc.setFontType('bold');
-      doc.text(
-        originalX + 100,
-        originalY + 5,
-        translate(tenantInfo[0].city.name),
-        'center'
-      );
+      doc.text(originalX + 100, originalY + 5, translate(tenantInfo[0].city.name), 'center');
       doc.text(originalX + 170, originalY + 5, 'Original');
       doc.setFontType('normal');
       doc.setFontSize(10);
@@ -521,25 +428,11 @@ class Report extends Component {
 
       doc.setFontSize(14);
       doc.setFontType('bold');
-      doc.text(
-        originalX + 100,
-        doc.autoTable.previous.finalY + 25,
-        translate(tenantInfo[0].city.name),
-        'center'
-      );
-      doc.text(
-        originalX + 170,
-        doc.autoTable.previous.finalY + 25,
-        'Duplicate'
-      );
+      doc.text(originalX + 100, doc.autoTable.previous.finalY + 25, translate(tenantInfo[0].city.name), 'center');
+      doc.text(originalX + 170, doc.autoTable.previous.finalY + 25, 'Duplicate');
       doc.setFontType('normal');
       doc.setFontSize(10);
-      doc.text(
-        originalX + 100,
-        doc.autoTable.previous.finalY + 30,
-        'Receipt',
-        'center'
-      );
+      doc.text(originalX + 100, doc.autoTable.previous.finalY + 30, 'Receipt', 'center');
 
       var elem = document.getElementById('basic-table1');
       var res = doc.autoTableHtmlToJson(elem);
@@ -567,25 +460,11 @@ class Report extends Component {
 
       doc.setFontSize(14);
       doc.setFontType('bold');
-      doc.text(
-        originalX + 100,
-        doc.autoTable.previous.finalY + 25,
-        translate(tenantInfo[0].city.name),
-        'center'
-      );
-      doc.text(
-        originalX + 170,
-        doc.autoTable.previous.finalY + 25,
-        'Triplicate'
-      );
+      doc.text(originalX + 100, doc.autoTable.previous.finalY + 25, translate(tenantInfo[0].city.name), 'center');
+      doc.text(originalX + 170, doc.autoTable.previous.finalY + 25, 'Triplicate');
       doc.setFontType('normal');
       doc.setFontSize(10);
-      doc.text(
-        originalX + 100,
-        doc.autoTable.previous.finalY + 30,
-        'Receipt',
-        'center'
-      );
+      doc.text(originalX + 100, doc.autoTable.previous.finalY + 30, 'Receipt', 'center');
 
       var elem = document.getElementById('basic-table1');
       var res = doc.autoTableHtmlToJson(elem);
@@ -654,15 +533,7 @@ class Report extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-      tenantInfo,
-    } = this.props;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid, tenantInfo } = this.props;
     let {
       search,
       handleChange,
@@ -683,9 +554,7 @@ class Report extends Component {
     return (
       <div className="SearchResult">
         {pdfData != undefined && (
-          <div
-            style={{ visibility: 'hidden', position: 'absolute', zIndex: '-2' }}
-          >
+          <div style={{ visibility: 'hidden', position: 'absolute', zIndex: '-2' }}>
             <iframe src={this.state.pdfData} height="200" width="300" />
           </div>
         )}
@@ -722,20 +591,11 @@ class Report extends Component {
                       <tbody>
                         <tr>
                           <td>
-                            <strong>
-                              {translate('collection.reciept.id')}
-                            </strong>{' '}
-                            - {getVal('Receipt[0].transactionId')}
+                            <strong>{translate('collection.reciept.id')}</strong> - {getVal('Receipt[0].transactionId')}
                           </td>
 
                           <td>
-                            <strong>
-                              {translate('wc.create.receiptDate')}
-                            </strong>{' '}
-                            -{' '}
-                            {getVal(
-                              'Receipt[0].Bill[0].billDetails[0].receiptDate'
-                            )}
+                            <strong>{translate('wc.create.receiptDate')}</strong> - {getVal('Receipt[0].Bill[0].billDetails[0].receiptDate')}
                           </td>
 
                           {/*<td></td>
@@ -743,19 +603,11 @@ class Report extends Component {
                         </tr>
                         <tr>
                           <td>
-                            <strong>
-                              {translate('collection.reciept.name')}
-                            </strong>{' '}
-                            - {getVal('Receipt[0].Bill[0].paidBy')}
+                            <strong>{translate('collection.reciept.name')}</strong> - {getVal('Receipt[0].Bill[0].paidBy')}
                           </td>
 
                           <td>
-                            <strong>
-                              {translate(
-                                'wc.create.groups.applicantDetails.address'
-                              )}
-                            </strong>{' '}
-                            - {getVal('Receipt[0].Bill[0].payeeAddress')}
+                            <strong>{translate('wc.create.groups.applicantDetails.address')}</strong> - {getVal('Receipt[0].Bill[0].payeeAddress')}
                           </td>
 
                           {/*<td></td>
@@ -787,15 +639,10 @@ class Report extends Component {
                     {/*<Col xs={12} md={3}><strong>Receipt Date - </strong>{getVal("Receipt[0].instrument") && getVal("Receipt[0].instrument.transactionDate").split("-")[2]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[1]+"-"+getVal("Receipt[0].instrument.transactionDate").split("-")[0]} </Col>*/}
                     <Col xs={12} md={3}>
                       <strong>{translate('wc.create.receiptDate')} - </strong>
-                      {getVal(
-                        'Receipt[0].Bill[0].billDetails[0].receiptDate'
-                      )}{' '}
+                      {getVal('Receipt[0].Bill[0].billDetails[0].receiptDate')}{' '}
                     </Col>
                     <Col xs={12} md={3}>
-                      <strong>
-                        {translate('wc.create.groups.applicantDetails.address')}{' '}
-                        -{' '}
-                      </strong>
+                      <strong>{translate('wc.create.groups.applicantDetails.address')} - </strong>
                       {getVal('Receipt[0].Bill[0].payeeAddress')}{' '}
                     </Col>
                     <Col xs={12} md={3} style={{ textAlign: 'right' }}>
@@ -808,98 +655,38 @@ class Report extends Component {
                   <Row>
                     <Col className="text-center" xs={12} md={12}>
                       {showResult && (
-                        <Table
-                          bordered
-                          condensed
-                          responsive
-                          id="basic-table2"
-                          className="table-striped"
-                        >
+                        <Table bordered condensed responsive id="basic-table2" className="table-striped">
                           <thead>
                             <tr>
-                              <th>
-                                {translate('collection.create.serviceType')}
-                              </th>
-                              <th>
-                                {translate('collection.create.receiptNumber')}
-                              </th>
-                              <th>
-                                {translate('collection.create.consumerCode')}
-                              </th>
+                              <th>{translate('collection.create.serviceType')}</th>
+                              <th>{translate('collection.create.receiptNumber')}</th>
+                              <th>{translate('collection.create.consumerCode')}</th>
                               {/*<th>{translate("collection.search.period")}</th>*/}
-                              {getGrandTotal(
-                                'ARREAR_AMOUNT',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate('collection.search.arrears')}
-                                </th>
+                              {getGrandTotal('ARREAR_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.search.arrears')}</th>
                               )}
-                              {getGrandTotal(
-                                'CURRENT_AMOUNT',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate('collection.search.current')}
-                                </th>
+                              {getGrandTotal('CURRENT_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.search.current')}</th>
                               )}
-                              {getGrandTotal(
-                                'OTHERS',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate('collection.search.interest')}
-                                </th>
+                              {getGrandTotal('OTHERS', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.search.interest')}</th>
                               )}
-                              {getGrandTotal(
-                                'REBATE',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate('collection.search.rebate')}
-                                </th>
+                              {getGrandTotal('REBATE', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.search.rebate')}</th>
                               )}
-                              {getGrandTotal(
-                                'ADVANCE_AMOUNT',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate('collection.create.advance')}
-                                </th>
+                              {getGrandTotal('ADVANCE_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.create.advance')}</th>
                               )}
-                              {getGrandTotal(
-                                'ARREAR_LATEPAYMENT_CHARGES',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate(
-                                    'collection.create.arrearLatePayment'
-                                  )}
-                                </th>
+                              {getGrandTotal('ARREAR_LATEPAYMENT_CHARGES', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.create.arrearLatePayment')}</th>
                               )}
-                              {getGrandTotal(
-                                'CURRENT_LATEPAYMENT_CHARGES',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate(
-                                    'collection.create.currentLatePayment'
-                                  )}
-                                </th>
+                              {getGrandTotal('CURRENT_LATEPAYMENT_CHARGES', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.create.currentLatePayment')}</th>
                               )}
-                              {getGrandTotal(
-                                'CHEQUE_BOUNCE_PENALTY',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && (
-                                <th style={{ textAlign: 'right' }}>
-                                  {translate(
-                                    'collection.create.checkLatePayment'
-                                  )}
-                                </th>
+                              {getGrandTotal('CHEQUE_BOUNCE_PENALTY', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                <th style={{ textAlign: 'right' }}>{translate('collection.create.checkLatePayment')}</th>
                               )}
-                              <th style={{ textAlign: 'right' }}>
-                                {translate('collection.create.total')}
-                              </th>
+                              <th style={{ textAlign: 'right' }}>{translate('collection.create.total')}</th>
 
                               {/*resultList.resultHeader && resultList.resultHeader.length && resultList.resultHeader.map((item, i) => {
                           return (
@@ -909,153 +696,56 @@ class Report extends Component {
                             </tr>
                           </thead>
                           <tbody>
-                            {formData.Receipt[0].Bill[0].billDetails.map(
-                              (item, index) => {
-                                return (
-                                  <tr key={index}>
-                                    <td>{item.businessService} </td>
-                                    <td>{item.receiptNumber} </td>
-                                    <td>{item.consumerCode} </td>
-                                    {/*<td>{item.period} </td>*/}
-                                    {getGrandTotal(
-                                      'ARREAR_AMOUNT',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'ARREAR_AMOUNT',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'CURRENT_AMOUNT',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'CURRENT_AMOUNT',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'OTHERS',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'OTHERS',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'REBATE',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'REBATE',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'ADVANCE_AMOUNT',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'ADVANCE_AMOUNT',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'ARREAR_LATEPAYMENT_CHARGES',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'ARREAR_LATEPAYMENT_CHARGES',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'CURRENT_LATEPAYMENT_CHARGES',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'CURRENT_LATEPAYMENT_CHARGES',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    {getGrandTotal(
-                                      'CHEQUE_BOUNCE_PENALTY',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    ) > 0 && (
-                                      <td style={{ textAlign: 'right' }}>
-                                        {getPurposeTotal(
-                                          'CHEQUE_BOUNCE_PENALTY',
-                                          item.billAccountDetails
-                                        )}
-                                      </td>
-                                    )}
-                                    <td style={{ textAlign: 'right' }}>
-                                      {getTotal(item.billAccountDetails)}
-                                    </td>
-                                  </tr>
-                                );
-                              }
-                            )}
+                            {formData.Receipt[0].Bill[0].billDetails.map((item, index) => {
+                              return (
+                                <tr key={index}>
+                                  <td>{item.businessService} </td>
+                                  <td>{item.receiptNumber} </td>
+                                  <td>{item.consumerCode} </td>
+                                  {/*<td>{item.period} </td>*/}
+                                  {getGrandTotal('ARREAR_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('ARREAR_AMOUNT', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('CURRENT_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('CURRENT_AMOUNT', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('OTHERS', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('OTHERS', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('REBATE', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('REBATE', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('ADVANCE_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('ADVANCE_AMOUNT', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('ARREAR_LATEPAYMENT_CHARGES', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('ARREAR_LATEPAYMENT_CHARGES', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('CURRENT_LATEPAYMENT_CHARGES', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('CURRENT_LATEPAYMENT_CHARGES', item.billAccountDetails)}</td>
+                                  )}
+                                  {getGrandTotal('CHEQUE_BOUNCE_PENALTY', formData.Receipt[0].Bill[0].billDetails) > 0 && (
+                                    <td style={{ textAlign: 'right' }}>{getPurposeTotal('CHEQUE_BOUNCE_PENALTY', item.billAccountDetails)}</td>
+                                  )}
+                                  <td style={{ textAlign: 'right' }}>{getTotal(item.billAccountDetails)}</td>
+                                </tr>
+                              );
+                            })}
                             <tr>
                               <td />
                               <td />
                               <td />
                               {/*<td></td>*/}
-                              {getGrandTotal(
-                                'ARREAR_AMOUNT',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'CURRENT_AMOUNT',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'OTHERS',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'REBATE',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'ADVANCE_AMOUNT',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'ARREAR_LATEPAYMENT_CHARGES',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'CURRENT_LATEPAYMENT_CHARGES',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
-                              {getGrandTotal(
-                                'CHEQUE_BOUNCE_PENALTY',
-                                formData.Receipt[0].Bill[0].billDetails
-                              ) > 0 && <td />}
+                              {getGrandTotal('ARREAR_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('CURRENT_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('OTHERS', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('REBATE', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('ADVANCE_AMOUNT', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('ARREAR_LATEPAYMENT_CHARGES', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('CURRENT_LATEPAYMENT_CHARGES', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
+                              {getGrandTotal('CHEQUE_BOUNCE_PENALTY', formData.Receipt[0].Bill[0].billDetails) > 0 && <td />}
                               <td style={{ textAlign: 'right' }}>
-                                <strong>
-                                  {getGrandTotal(
-                                    '',
-                                    formData.Receipt[0].Bill[0].billDetails
-                                  )}
-                                </strong>
+                                <strong>{getGrandTotal('', formData.Receipt[0].Bill[0].billDetails)}</strong>
                               </td>
                             </tr>
 
@@ -1086,48 +776,19 @@ class Report extends Component {
                             <tr>
                               <td>
                                 {translate('collection.reciept.amount')} -{' '}
-                                <strong>
-                                  {int_to_words(
-                                    getGrandTotal(
-                                      '',
-                                      formData.Receipt[0].Bill[0].billDetails
-                                    )
-                                  ).toUpperCase() + ' ONLY'}
-                                </strong>
+                                <strong>{int_to_words(getGrandTotal('', formData.Receipt[0].Bill[0].billDetails)).toUpperCase() + ' ONLY'}</strong>
                               </td>
                             </tr>
                             {formData.Receipt[0].instrument &&
-                              formData.Receipt[0].instrument.instrumentType
-                                .name != 'Cash' && (
+                              formData.Receipt[0].instrument.instrumentType.name != 'Cash' && (
                                 <tr>
                                   <td>
-                                    Cheque/DD No{' '}
-                                    <strong>
-                                      {
-                                        formData.Receipt[0].instrument
-                                          .transactionNumber
-                                      }
-                                    </strong>{' '}
-                                    drawn on{' '}
-                                    <strong>
-                                      {formData.Receipt[0].instrument.bank.name}
-                                    </strong>,{' '}
-                                    <strong>
-                                      {
-                                        formData.Receipt[0].instrument
-                                          .branchName
-                                      }
-                                    </strong>{' '}
-                                    Dated{' '}
-                                    <strong>
-                                      {
-                                        formData.Receipt[0].instrument
-                                          .transactionDate
-                                      }
-                                    </strong>
+                                    Cheque/DD No <strong>{formData.Receipt[0].instrument.transactionNumber}</strong> drawn on{' '}
+                                    <strong>{formData.Receipt[0].instrument.bank.name}</strong>,{' '}
+                                    <strong>{formData.Receipt[0].instrument.branchName}</strong> Dated{' '}
+                                    <strong>{formData.Receipt[0].instrument.transactionDate}</strong>
                                     <br />
-                                    Cheque/DD payments are subject to
-                                    realisation
+                                    Cheque/DD payments are subject to realisation
                                   </td>
                                 </tr>
                               )}
@@ -1142,11 +803,7 @@ class Report extends Component {
             <Grid>
               <Row>
                 <Col className="text-center" xs={12} md={12}>
-                  <span
-                    style={{ fontSize: '20px' }}
-                    className="glyphicon glyphicon-print"
-                    onClick={e => generatePdf()}
-                  />
+                  <span style={{ fontSize: '20px' }} className="glyphicon glyphicon-print" onClick={e => generatePdf()} />
                 </Col>
               </Row>
             </Grid>
@@ -1188,14 +845,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

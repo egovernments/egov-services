@@ -17,8 +17,7 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: true,
-            url:
-              '/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name',
+            url: '/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name',
             patternErrorMsg: '',
           },
           {
@@ -138,12 +137,10 @@ var dat = {
                   name: 'case',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo',
+                  jsonPath: 'advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
+                  url: '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
                   // "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                 },
                 {

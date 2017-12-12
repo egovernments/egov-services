@@ -44,12 +44,7 @@ class UiAutoComplete extends Component {
   callAPI = keyUpValue => {
     let { item, setDropDownData, useTimestamp } = this.props;
     // console.log('API called:', item.hasOwnProperty("url"), item.url.search("\\|"), item.url.search("{"));
-    if (
-      item.hasOwnProperty('url') &&
-      item.url &&
-      item.url.search('\\|') > -1 &&
-      item.url.search('{') == -1
-    ) {
+    if (item.hasOwnProperty('url') && item.url && item.url.search('\\|') > -1 && item.url.search('{') == -1) {
       //console.log(item.url.split("?"));
       let splitArray = item.url.split('?');
       let context = '';
@@ -67,26 +62,14 @@ class UiAutoComplete extends Component {
       for (var i = 0; i < queryStringObject.length; i++) {
         //console.log(queryStringObject[i], queryStringObject[i].split("=")[0], queryStringObject[i].split("=")[1]);
         if (i) {
-          if (keyUpValue)
-            id[queryStringObject[i].split('=')[0]] = keyUpValue
-              ? keyUpValue
-              : queryStringObject[i].split('=')[1];
-          else
-            id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split(
-              '='
-            )[1];
+          if (keyUpValue) id[queryStringObject[i].split('=')[0]] = keyUpValue ? keyUpValue : queryStringObject[i].split('=')[1];
+          else id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
         }
       }
 
       //console.log(id);
 
-      var response = Api.commonApiPost(
-        context,
-        id,
-        {},
-        '',
-        useTimestamp || false
-      ).then(
+      var response = Api.commonApiPost(context, id, {}, '', useTimestamp || false).then(
         function(response) {
           if (response) {
             let queries = splitArray[1].split('|');
@@ -114,10 +97,7 @@ class UiAutoComplete extends Component {
                 obj['others'] = otherItemDatas;
               }
 
-              if (
-                item.hasOwnProperty('isKeyValuePair') &&
-                item.isKeyValuePair
-              ) {
+              if (item.hasOwnProperty('isKeyValuePair') && item.isKeyValuePair) {
                 obj['value'] = keys[k] + '-' + values[k];
               }
               dropDownData.push(obj);
@@ -129,10 +109,7 @@ class UiAutoComplete extends Component {
           console.log(err);
         }
       );
-    } else if (
-      item.hasOwnProperty('defaultValue') &&
-      typeof item.defaultValue == 'object'
-    ) {
+    } else if (item.hasOwnProperty('defaultValue') && typeof item.defaultValue == 'object') {
       setDropDownData(item.jsonPath, item.defaultValue);
     }
   };
@@ -170,18 +147,11 @@ class UiAutoComplete extends Component {
               floatingLabelFixed={true}
               style={{ display: item.hide ? 'none' : 'inline-block' }}
               errorStyle={{ float: 'left' }}
-              dataSource={
-                dropDownData.hasOwnProperty(item.jsonPath)
-                  ? dropDownData[item.jsonPath]
-                  : []
-              }
+              dataSource={dropDownData.hasOwnProperty(item.jsonPath) ? dropDownData[item.jsonPath] : []}
               dataSourceConfig={dataSourceConfig}
               floatingLabelText={
                 <span>
-                  {item.label}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {item.isRequired ? ' *' : ''}
-                  </span>
+                  {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
                 </span>
               }
               fullWidth={true}
@@ -203,10 +173,7 @@ class UiAutoComplete extends Component {
                 );
                 this.handleUpdateInput(value.value);
                 if (this.props.autoComHandler && item.autoCompleteDependancy) {
-                  this.props.autoComHandler(
-                    item.autoCompleteDependancy,
-                    item.jsonPath
-                  );
+                  this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath);
                 }
               }}
             />

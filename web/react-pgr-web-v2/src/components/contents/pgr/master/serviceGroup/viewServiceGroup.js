@@ -24,11 +24,7 @@ class ViewServiceGroup extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/serviceGroup/v1/_search',
-        { id: this.props.match.params.id },
-        {}
-      )
+      Api.commonApiPost('/pgr-master/serviceGroup/v1/_search', { id: this.props.match.params.id }, {})
         .then(function(response) {
           current.setState({ data: response.ServiceGroups });
           setForm(response.ServiceGroups[0]);
@@ -64,8 +60,7 @@ class ViewServiceGroup extends Component {
               style={{ paddingBottom: 0 }}
               title={
                 <div style={styles.headerStyle}>
-                  {translate('pgr.lbl.view')}{' '}
-                  {translate('pgr.lbl.grievance.category')}
+                  {translate('pgr.lbl.view')} {translate('pgr.lbl.grievance.category')}
                 </div>
               }
             />
@@ -75,45 +70,25 @@ class ViewServiceGroup extends Component {
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.add.name')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceGroup.name ? viewServiceGroup.name : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.name ? viewServiceGroup.name : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.code')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceGroup.code ? viewServiceGroup.code : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.code ? viewServiceGroup.code : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.service.localName')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceGroup.localName
-                            ? viewServiceGroup.localName
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.localName ? viewServiceGroup.localName : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.description')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceGroup.description
-                            ? viewServiceGroup.description
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceGroup.description ? viewServiceGroup.description : ''}</p>}
                     />
                   </Col>
                 </Row>

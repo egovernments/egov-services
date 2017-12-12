@@ -29,18 +29,11 @@ class employeeDocs extends Component {
     return this.state.docs.map((attrib, index) => {
       if (attrib['key'].indexOf('employeeDocs') !== -1) {
         let key =
-          attrib['key'].split(/_(.+)/)[1].length > 15
-            ? attrib['key'].split(/_(.+)/)[1].substr(0, 12) + '...'
-            : attrib['key'].split(/_(.+)/)[1];
+          attrib['key'].split(/_(.+)/)[1].length > 15 ? attrib['key'].split(/_(.+)/)[1].substr(0, 12) + '...' : attrib['key'].split(/_(.+)/)[1];
         return (
           <Col xs={12} sm={6} md={4} lg={3} key={index}>
             <RaisedButton
-              href={
-                '/filestore/v1/files/id?fileStoreId=' +
-                attrib['name'] +
-                '&tenantId=' +
-                localStorage.getItem('tenantId')
-              }
+              href={'/filestore/v1/files/id?fileStoreId=' + attrib['name'] + '&tenantId=' + localStorage.getItem('tenantId')}
               download
               label={key}
               primary={true}
@@ -60,14 +53,7 @@ class employeeDocs extends Component {
         {this.state.docs != undefined && this.state.docs.length > 0 ? (
           <div>
             <Card style={styles.cardMargin}>
-              <CardHeader
-                style={styles.cardHeaderPadding}
-                title={
-                  <div style={styles.headerStyle}>
-                    {translate('core.documents')}
-                  </div>
-                }
-              />
+              <CardHeader style={styles.cardHeaderPadding} title={<div style={styles.headerStyle}>{translate('core.documents')}</div>} />
               <CardText style={styles.cardTextPadding}>
                 <Row>{this.docs()}</Row>
               </CardText>

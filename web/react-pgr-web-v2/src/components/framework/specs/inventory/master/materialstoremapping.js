@@ -30,8 +30,7 @@ var dat = {
             jsonPath: 'store',
             isRequired: false,
             isDisabled: false,
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'isActive',
@@ -58,11 +57,7 @@ var dat = {
           label: 'inventory.search.result.Dtore',
         },
       ],
-      values: [
-        'material.code',
-        'store.name',
-        { valuePath: 'active', type: 'checkbox' },
-      ],
+      values: ['material.code', 'store.name', { valuePath: 'active', type: 'checkbox' }],
       resultPath: 'materialStoreMappings',
       resultIdKey: 'id',
       rowClickUrlUpdate: '/update/inventory/materialstoremapping/{code}',
@@ -88,8 +83,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             hide: true,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
 
           {
@@ -132,8 +126,7 @@ var dat = {
                   jsonPath: 'materialStoreMappings[0].store.code',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
+                  url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
                   depedants: [
                     {
                       jsonPath: 'materialStoreMappings[0].department.code',
@@ -144,8 +137,7 @@ var dat = {
                     {
                       jsonPath: 'materialStoreMappings[0].department.name',
                       type: 'textField',
-                      valExp:
-                        "getValFromDropdownData('departmentMaster', getVal('materialStoreMappings[*].department.code'), 'value')",
+                      valExp: "getValFromDropdownData('departmentMaster', getVal('materialStoreMappings[*].department.code'), 'value')",
                     },
                   ],
                 },
@@ -164,8 +156,7 @@ var dat = {
                   jsonPath: 'materialStoreMappings[0].chartofAccount.glCode',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+                  url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
                 },
                 {
                   name: 'active',
@@ -234,8 +225,7 @@ var dat = {
                   jsonPath: 'materialStoreMappings[0].store.code',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
+                  url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
                   depedants: [
                     {
                       jsonPath: 'materialStoreMappings[0].department.name',
@@ -260,8 +250,7 @@ var dat = {
                   jsonPath: 'materialStoreMappings[0].chartofAccount.glCode',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+                  url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
                 },
                 {
                   name: 'active',
@@ -320,8 +309,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
           },
           {
             name: 'name',
@@ -385,8 +373,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
           },
           {
             name: 'glCode',
@@ -513,8 +500,7 @@ var dat = {
     ],
     url: '/inventory-services/materialstoremapping/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/materialstoremapping/_search?tenantId={tenantId}',
+    searchUrl: '/inventory-services/materialstoremapping/_search?tenantId={tenantId}',
   },
 };
 export default dat;

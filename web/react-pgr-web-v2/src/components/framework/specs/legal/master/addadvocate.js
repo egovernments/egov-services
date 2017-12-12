@@ -17,12 +17,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            defaultValue: [
-              { key: 'Mr', value: 'Mr' },
-              { key: 'Mrs', value: 'Mrs' },
-              { key: 'Ms', value: 'Ms' },
-              { key: 'Miss', value: 'Miss' },
-            ],
+            defaultValue: [{ key: 'Mr', value: 'Mr' }, { key: 'Mrs', value: 'Mrs' }, { key: 'Ms', value: 'Ms' }, { key: 'Miss', value: 'Miss' }],
           },
           {
             name: 'firstName',
@@ -66,8 +61,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              ' The UID number is as follows:412521475850 : all 12 digits',
+            patternErrMsg: ' The UID number is as follows:412521475850 : all 12 digits',
           },
           {
             name: 'gender',
@@ -79,10 +73,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'Male', value: 'Male' },
-              { key: 'Female', value: 'Female' },
-            ],
+            defaultValue: [{ key: 'Male', value: 'Male' }, { key: 'Female', value: 'Female' }],
           },
           {
             name: 'age',
@@ -126,8 +117,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The Phone number structure is as follows: 999XXXX999 ',
+            patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
           },
           {
             name: 'contactNumber',
@@ -138,8 +128,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'The Phone number structure is as follows: 999XXXX999 ',
+            patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
           },
           {
             name: 'email',
@@ -191,8 +180,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bank|$..name|$..name',
             depedants: [
               {
                 jsonPath: 'bankBranch',

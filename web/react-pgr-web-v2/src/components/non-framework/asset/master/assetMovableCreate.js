@@ -16,10 +16,7 @@ import { translate } from '../../../common/common';
 import Api from '../../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../../framework/components/UiButton';
-import {
-  fileUpload,
-  getInitiatorPosition,
-} from '../../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition } from '../../../framework/utility/utility';
 import $ from 'jquery';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -50,21 +47,12 @@ class assetMovableCreate extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -82,11 +70,7 @@ class assetMovableCreate extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
         if (groups[i].children && groups[i].children.length) {
@@ -102,15 +86,10 @@ class assetMovableCreate extends Component {
     let self = this;
     for (let i = 0; i < groups.length; i++) {
       for (let j = 0; j < groups[i].fields.length; j++) {
-        if (
-          groups[i].fields[j].depedants &&
-          groups[i].fields[j].depedants.length
-        ) {
+        if (groups[i].fields[j].depedants && groups[i].fields[j].depedants.length) {
           for (let k = 0; k < groups[i].fields[j].depedants.length; k++) {
             if (groups[i].fields[j].depedants[k].type == 'dropDown') {
-              let splitArray = groups[i].fields[j].depedants[k].pattern.split(
-                '?'
-              );
+              let splitArray = groups[i].fields[j].depedants[k].pattern.split('?');
               let context = '';
               let id = {};
               // id[splitArray[1].split("&")[1].split("=")[0]]=e.target.value;
@@ -129,9 +108,7 @@ class assetMovableCreate extends Component {
                         .split('}')[0]
                     );
                   } else {
-                    id[queryStringObject[m].split('=')[0]] = queryStringObject[
-                      m
-                    ].split('=')[1];
+                    id[queryStringObject[m].split('=')[0]] = queryStringObject[m].split('=')[1];
                   }
                 }
               }
@@ -140,10 +117,7 @@ class assetMovableCreate extends Component {
                 function(response) {
                   if (response) {
                     let keys = jp.query(response, splitArray[1].split('|')[1]);
-                    let values = jp.query(
-                      response,
-                      splitArray[1].split('|')[2]
-                    );
+                    let values = jp.query(response, splitArray[1].split('|')[2]);
                     let dropDownData = [];
                     for (let t = 0; t < keys.length; t++) {
                       let obj = {};
@@ -152,18 +126,13 @@ class assetMovableCreate extends Component {
                       dropDownData.push(obj);
                     }
                     dropDownData.sort(function(s1, s2) {
-                      return s1.value < s2.value
-                        ? -1
-                        : s1.value > s2.value ? 1 : 0;
+                      return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
                     });
                     dropDownData.unshift({
                       key: null,
                       value: '-- Please Select --',
                     });
-                    self.props.setDropDownData(
-                      groups[i].fields[j].depedants[k].jsonPath,
-                      dropDownData
-                    );
+                    self.props.setDropDownData(groups[i].fields[j].depedants[k].jsonPath, dropDownData);
                   }
                 },
                 function(err) {
@@ -174,10 +143,7 @@ class assetMovableCreate extends Component {
           }
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             self.depedantValue(groups[i].fields[j].children[k].groups);
           }
@@ -194,32 +160,19 @@ class assetMovableCreate extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -262,24 +215,13 @@ class assetMovableCreate extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -287,28 +229,14 @@ class assetMovableCreate extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = j;
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -318,36 +246,17 @@ class assetMovableCreate extends Component {
   modifyData(urlId) {
     let self = this;
     let assetCheck = {};
-    let specifications = require(`../../../framework/specs/asset/master/assetMovable`)
-      .default;
+    let specifications = require(`../../../framework/specs/asset/master/assetMovable`).default;
 
-    Api.commonApiPost(
-      'asset-services-maha/assets/_search',
-      { id: urlId },
-      {},
-      false,
-      false,
-      false,
-      '',
-      '',
-      false
-    ).then(
+    Api.commonApiPost('asset-services-maha/assets/_search', { id: urlId }, {}, false, false, false, '', '', false).then(
       function(response) {
         for (var i = 0; i < response.Assets[0].assetAttributes.length; i++) {
           assetCheck[response.Assets[0].assetAttributes[i].key] = {
-            [response.Assets[0].assetAttributes[i].type]:
-              response.Assets[0].assetAttributes[i].value,
+            [response.Assets[0].assetAttributes[i].type]: response.Assets[0].assetAttributes[i].value,
           };
         }
-        if (
-          response &&
-          response.Assets &&
-          response.Assets[0] &&
-          response.Assets[0].titleDocumentsAvailable
-        ) {
-          response.Assets[0].titleDocumentsAvailable = response.Assets[0].titleDocumentsAvailable.join(
-            ','
-          );
+        if (response && response.Assets && response.Assets[0] && response.Assets[0].titleDocumentsAvailable) {
+          response.Assets[0].titleDocumentsAvailable = response.Assets[0].titleDocumentsAvailable.join(',');
         }
         response.Assets[0].assetAttributesCheck = assetCheck;
         self.props.setFormData({ Asset: response.Assets[0] });
@@ -358,9 +267,7 @@ class assetMovableCreate extends Component {
           'update',
           specifications[`asset.update`].objectName
         );
-        self.customFieldDataFun(
-          self.state.customFieldsGen[response.Assets[0].assetCategory.id]
-        );
+        self.customFieldDataFun(self.state.customFieldsGen[response.Assets[0].assetCategory.id]);
         self.warrantyFunction(response.Assets[0].warrantyAvailable);
       },
       function(err) {
@@ -370,14 +277,7 @@ class assetMovableCreate extends Component {
   }
 
   displayUI(results) {
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
     var action = '';
@@ -403,8 +303,7 @@ class assetMovableCreate extends Component {
       // self.modifyData(self.props.match.params.id);
     } else {
       var formData = {};
-      if (obj && obj.groups && obj.groups.length)
-        self.setDefaultValues(obj.groups, formData);
+      if (obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
     }
 
@@ -428,8 +327,7 @@ class assetMovableCreate extends Component {
     //   console.log(e);
     // }
 
-    specifications = require(`../../../framework/specs/asset/master/assetMovable`)
-      .default;
+    specifications = require(`../../../framework/specs/asset/master/assetMovable`).default;
     self.displayUI(specifications);
   }
 
@@ -460,33 +358,18 @@ class assetMovableCreate extends Component {
         response &&
         response.MdmsRes &&
         response.MdmsRes.ASSET &&
-        response.MdmsRes.ASSET.Assetconfiguration[0].keyname ==
-          'EnableVoucherGeneration'
+        response.MdmsRes.ASSET.Assetconfiguration[0].keyname == 'EnableVoucherGeneration'
       ) {
-        if (
-          response.MdmsRes.ASSET.Assetconfiguration[0].values[0].value == 'true'
-        ) {
+        if (response.MdmsRes.ASSET.Assetconfiguration[0].values[0].value == 'true') {
           self.props.addRequiredFields(['Asset.assetAccount']);
-          self.props.addRequiredFields([
-            'Asset.accumulatedDepreciationAccount',
-          ]);
+          self.props.addRequiredFields(['Asset.accumulatedDepreciationAccount']);
           self.props.addRequiredFields(['Asset.revaluationReserveAccount']);
           self.props.addRequiredFields(['Asset.depreciationExpenseAccount']);
         }
       }
     });
 
-    Api.commonApiPost(
-      '/egf-masters/accountcodepurposes/_search',
-      { name: 'Fixed Assets' },
-      {},
-      false,
-      false,
-      false,
-      '',
-      '',
-      false
-    ).then(
+    Api.commonApiPost('/egf-masters/accountcodepurposes/_search', { name: 'Fixed Assets' }, {}, false, false, false, '', '', false).then(
       function(response) {
         if (response) {
           let keys = jp.query(response, '$..name');
@@ -511,17 +394,7 @@ class assetMovableCreate extends Component {
       }
     );
 
-    Api.commonApiPost(
-      '/egf-masters/accountcodepurposes/_search',
-      { name: 'Accumulated Depreciation' },
-      {},
-      false,
-      false,
-      false,
-      '',
-      '',
-      false
-    ).then(
+    Api.commonApiPost('/egf-masters/accountcodepurposes/_search', { name: 'Accumulated Depreciation' }, {}, false, false, false, '', '', false).then(
       function(response) {
         if (response) {
           let keys = jp.query(response, '$..name');
@@ -538,10 +411,7 @@ class assetMovableCreate extends Component {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
           dropDownData.unshift({ key: null, value: '-- Please Select --' });
-          self.props.setDropDownData(
-            'Asset.accumulatedDepreciationAccount',
-            dropDownData
-          );
+          self.props.setDropDownData('Asset.accumulatedDepreciationAccount', dropDownData);
         }
       },
       function(err) {
@@ -576,10 +446,7 @@ class assetMovableCreate extends Component {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
           dropDownData.unshift({ key: null, value: '-- Please Select --' });
-          self.props.setDropDownData(
-            'Asset.revaluationReserveAccount',
-            dropDownData
-          );
+          self.props.setDropDownData('Asset.revaluationReserveAccount', dropDownData);
         }
       },
       function(err) {
@@ -614,10 +481,7 @@ class assetMovableCreate extends Component {
             return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
           });
           dropDownData.unshift({ key: null, value: '-- Please Select --' });
-          self.props.setDropDownData(
-            'Asset.depreciationExpenseAccount',
-            dropDownData
-          );
+          self.props.setDropDownData('Asset.depreciationExpenseAccount', dropDownData);
         }
       },
       function(err) {
@@ -630,8 +494,7 @@ class assetMovableCreate extends Component {
       {
         moduleName: 'ASSET',
         masterName: 'AssetCategory',
-        filter:
-          '%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D%0A',
+        filter: '%5B%3F(%20%40.isAssetAllow%20%3D%3D%20true%20%26%26%20%40.assetCategoryType%20%3D%3D%20%22MOVABLE%22)%5D%0A',
       },
       {},
       false,
@@ -644,10 +507,7 @@ class assetMovableCreate extends Component {
       function(response) {
         if (response) {
           let keys = jp.query(response, '$.MdmsRes.ASSET.AssetCategory.*.id');
-          let values = jp.query(
-            response,
-            '$.MdmsRes.ASSET.AssetCategory.*.name'
-          );
+          let values = jp.query(response, '$.MdmsRes.ASSET.AssetCategory.*.name');
           let dropDownData = [];
           for (var k = 0; k < keys.length; k++) {
             let obj = {};
@@ -665,44 +525,20 @@ class assetMovableCreate extends Component {
 
         for (var i = 0; i < response.MdmsRes.ASSET.AssetCategory.length; i++) {
           catId = response.MdmsRes.ASSET.AssetCategory[i].id;
-          if (
-            response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination !=
-            null
-          ) {
+          if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination != null) {
             var customFieldsArray = [];
-            for (
-              var j = 0;
-              j <
-              response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination
-                .length;
-              j++
-            ) {
+            for (var j = 0; j < response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination.length; j++) {
               var customTemp = {};
-              customTemp.name =
-                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[
-                  j
-                ].name;
+              customTemp.name = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
               customTemp.jsonPath =
                 'Asset.assetAttributesCheck.' +
-                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j]
-                  .name +
+                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name +
                 '.' +
-                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j]
-                  .type;
-              customTemp.label =
-                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[
-                  j
-                ].name;
-              customTemp.type =
-                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[
-                  j
-                ].type;
-              customTemp.isRequired =
-                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[
-                  j
-                ].isMandatory;
-              customTemp.isDisabled = !response.MdmsRes.ASSET.AssetCategory[i]
-                .assetFieldsDefination[j].isActive;
+                response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
+              customTemp.label = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].name;
+              customTemp.type = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].type;
+              customTemp.isRequired = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isMandatory;
+              customTemp.isDisabled = !response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].isActive;
               switch (customTemp.type) {
                 case 'Text':
                   customTemp.type = 'text';
@@ -731,14 +567,8 @@ class assetMovableCreate extends Component {
               //
               // }
               if (customTemp.type == 'singleValueList') {
-                if (
-                  response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[
-                    j
-                  ].values.length
-                ) {
-                  var handleDropdown =
-                    response.MdmsRes.ASSET.AssetCategory[i]
-                      .assetFieldsDefination[j].values;
+                if (response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values.length) {
+                  var handleDropdown = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].values;
                   var dropdownSplit = handleDropdown.split(',');
                   var valueHolder = [];
                   for (var y = 0; y < dropdownSplit.length; y++) {
@@ -752,10 +582,7 @@ class assetMovableCreate extends Component {
                     value: '-- Please Select --',
                   });
                 } else {
-                  customTemp.url =
-                    response.MdmsRes.ASSET.AssetCategory[
-                      i
-                    ].assetFieldsDefination[j].url;
+                  customTemp.url = response.MdmsRes.ASSET.AssetCategory[i].assetFieldsDefination[j].url;
                 }
                 customTemp.defaultValue = valueHolder;
               }
@@ -764,8 +591,7 @@ class assetMovableCreate extends Component {
             customSpecs[catId] = customFieldsArray;
           }
           cateoryObject[catId] = response.MdmsRes.ASSET.AssetCategory[i];
-          depericiationValue[catId] =
-            response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
+          depericiationValue[catId] = response.MdmsRes.ASSET.AssetCategory[i].depreciationRate;
           self.setState(
             {
               customFieldsGen: customSpecs,
@@ -790,10 +616,7 @@ class assetMovableCreate extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      this.state.pathname &&
-      this.state.pathname != nextProps.history.location.pathname
-    ) {
+    if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
       this.initData();
     }
   }
@@ -807,13 +630,7 @@ class assetMovableCreate extends Component {
     var query = {
       [autoObject.autoCompleteUrl.split('?')[1].split('=')[0]]: value,
     };
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[`asset.create`].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`asset.create`].useTimestamp).then(
       function(res) {
         var formData = { ...self.props.formData };
         for (var key in autoObject.autoFillFields) {
@@ -826,14 +643,7 @@ class assetMovableCreate extends Component {
           for (let i = 0; i < formData.Asset.landDetails.length; i++) {
             area += formData.Asset.landDetails[i].area || 0;
           }
-          self.props.handleChange(
-            { target: { value: area } },
-            'Asset.totalArea',
-            false,
-            '',
-            '',
-            ''
-          );
+          self.props.handleChange({ target: { value: area } }, 'Asset.totalArea', false, '', '', '');
         }
       },
       function(err) {
@@ -846,71 +656,36 @@ class assetMovableCreate extends Component {
     let self = this;
     //delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(
-      url ||
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url,
-      '',
-      formData,
-      '',
-      true
-    ).then(
+    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
         self.props.toggleSnackbarAndSetText(
           true,
-          translate(
-            self.props.actionName == 'create'
-              ? 'wc.create.message.success'
-              : 'wc.update.message.success'
-          ),
+          translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
           true
         );
         console.log(response);
         setTimeout(function() {
           if (self.props.actionName == 'update') {
             console.log('update');
-            var hash =
-              '/non-framework/asset/master/assetMovableView/' +
-              response.Assets[0].id;
+            var hash = '/non-framework/asset/master/assetMovableView/' + response.Assets[0].id;
           }
-          if (
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].idJsonPath
-          ) {
-            if (
-              self.props.metaData[
-                `${self.props.moduleName}.${self.props.actionName}`
-              ].ackUrl
-            ) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+            if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
               var hash =
-                self.props.metaData[
-                  `${self.props.moduleName}.${self.props.actionName}`
-                ].ackUrl +
+                self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl +
                 '/' +
-                encodeURIComponent(
-                  _.get(
-                    response,
-                    self.props.metaData[
-                      `${self.props.moduleName}.${self.props.actionName}`
-                    ].idJsonPath
-                  )
-                );
+                encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
               console.log('check');
             } else {
               console.log('check1');
               if (self.props.actionName == 'update') {
                 console.log('update');
-                var hash =
-                  '/non-framework/asset/master/assetMovableView/' +
-                  response.Assets[0].id;
+                var hash = '/non-framework/asset/master/assetMovableView/' + response.Assets[0].id;
               } else {
                 console.log(formData);
-                var hash =
-                  '/non-framework/asset/master/assetMovableView/' +
-                  response.Assets[0].id;
+                var hash = '/non-framework/asset/master/assetMovableView/' + response.Assets[0].id;
               }
             }
 
@@ -929,14 +704,10 @@ class assetMovableCreate extends Component {
   checkCustomFields = (formData, cb) => {
     var self = this;
     if (
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields.initiatorPosition
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields &&
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition
     ) {
-      var jPath =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .customFields.initiatorPosition;
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
       getInitiatorPosition(function(err, pos) {
         if (err) {
           self.toggleSnackbarAndSetText(true, err.message);
@@ -958,79 +729,35 @@ class assetMovableCreate extends Component {
     var formData = JSON.parse(JSON.stringify(this.props.formData));
     if (formData.Asset.titleDocumentsAvailable) {
       console.log(formData.Asset.titleDocumentsAvailable);
-      formData.Asset.titleDocumentsAvailable = formData.Asset.titleDocumentsAvailable.split(
-        ','
-      );
+      formData.Asset.titleDocumentsAvailable = formData.Asset.titleDocumentsAvailable.split(',');
     } else {
       formData.Asset.titleDocumentsAvailable = [];
     }
     if (formData.Asset.assetCategory.id) {
-      formData.Asset.assetCategory =
-        self.state.cateoryObject[formData.Asset.assetCategory.id];
+      formData.Asset.assetCategory = self.state.cateoryObject[formData.Asset.assetCategory.id];
     }
 
     if (
       self.props.moduleName &&
       self.props.actionName &&
       self.props.metaData &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .tenantIdRequired
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired
     ) {
-      if (
-        !formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]
-      )
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ] = {};
+      if (!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
-      if (
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ].constructor == Array
-      ) {
-        for (
-          var i = 0;
-          i <
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ].length;
-          i++
-        ) {
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ][i]['tenantId'] =
+      if (formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for (var i = 0; i < formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]['tenantId'] =
             localStorage.getItem('tenantId') || 'default';
         }
       } else
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['tenantId'] =
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['tenantId'] =
           localStorage.getItem('tenantId') || 'default';
     }
 
-    if (
-      /\{.*\}/.test(
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url
-      )
-    ) {
-      _url =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url;
+    if (/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g, '');
       _url = _url.replace(match, _.get(formData, jPath));
@@ -1055,10 +782,7 @@ class assetMovableCreate extends Component {
 
     if (formData && formData.Asset && formData.Asset.fundSource) {
       console.log(formData.Asset.fundSource.code);
-      if (
-        formData.Asset.fundSource.code == null ||
-        formData.Asset.fundSource.code == ''
-      ) {
+      if (formData.Asset.fundSource.code == null || formData.Asset.fundSource.code == '') {
         delete formData.Asset.fundSource;
       }
       console.log(formData.Asset);
@@ -1069,30 +793,15 @@ class assetMovableCreate extends Component {
 
     //Check if documents, upload and get fileStoreId
     if (
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'] &&
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'].length
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] &&
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'].length
     ) {
-      let documents = [
-        ...formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['documents'],
-      ];
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents']];
       let _docs = [];
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(
-          err,
-          res
-        ) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
@@ -1105,11 +814,7 @@ class assetMovableCreate extends Component {
             });
             counter--;
             if (counter == 0 && breakOut == 0) {
-              formData[
-                self.props.metaData[
-                  `${self.props.moduleName}.${self.props.actionName}`
-                ].objectName
-              ]['documents'] = _docs;
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] = _docs;
               self.makeAjaxCall(formData, _url);
             }
           }
@@ -1131,63 +836,23 @@ class assetMovableCreate extends Component {
   };
 
   hideField = (_mockData, hideObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? false : true;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                delRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              addRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
             }
 
             break;
@@ -1196,65 +861,26 @@ class assetMovableCreate extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? false
-            : true;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -1263,85 +889,28 @@ class assetMovableCreate extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? false : true;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if (!reset) {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      _.set(
-                        _formData,
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].jsonPath,
-                        ''
-                      );
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      ) {
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
-                        removeFieldErrors(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                       }
                     }
                     delRequiredFields(_rReq);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      )
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                     }
                     addRequiredFields(_rReq);
                   }
@@ -1357,62 +926,22 @@ class assetMovableCreate extends Component {
   };
 
   showField = (_mockData, showObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? true : false;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                addRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              delRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
-              removeFieldErrors(
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -1420,106 +949,36 @@ class assetMovableCreate extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? true
-            : false;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
 
             addRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
 
-            if (
-              _mockData[moduleName + '.' + actionName].groups[i].children &&
-              _mockData[moduleName + '.' + actionName].groups[i].children.length
-            ) {
-              for (
-                var z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].children
-                  .length;
-                z++
-              ) {
-                for (
-                  var y = 0;
-                  y <
-                  _mockData[moduleName + '.' + actionName].groups[i].children[z]
-                    .groups.length;
-                  y++
-                ) {
-                  for (
-                    var x = 0;
-                    x <
-                    _mockData[moduleName + '.' + actionName].groups[i].children[
-                      z
-                    ].groups[y].fields.length;
-                    x++
-                  ) {
-                    if (
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[z].groups[y].fields[x].isRequired
-                    ) {
-                      _rReq.push(
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[z].groups[y].fields[x].jsonPath
-                      );
-                      removeFieldErrors(
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[z].groups[y].fields[x].jsonPath
-                      );
+            if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+              for (var z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].children.length; z++) {
+                for (var y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].children[z].groups.length; y++) {
+                  for (var x = 0; x < _mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields.length; x++) {
+                    if (_mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields[x].isRequired) {
+                      _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                      removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
                     }
                   }
                 }
@@ -1533,37 +992,12 @@ class assetMovableCreate extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? true : false;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 
                   } else {
@@ -1583,30 +1017,12 @@ class assetMovableCreate extends Component {
   enField = (_mockData, enableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          enableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? true : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (enableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
           break;
@@ -1620,30 +1036,12 @@ class assetMovableCreate extends Component {
   disField = (_mockData, disableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          disableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? false : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (disableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
 
@@ -1658,91 +1056,35 @@ class assetMovableCreate extends Component {
   checkIfHasEnDisFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .enableDisableFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .enableDisableFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
-                _mockData = this.disField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
-                _mockData = this.enField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
                 _mockData = this.disField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y],
                   true
                 );
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
                 _mockData = this.enField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z],
                   true
                 );
               }
@@ -1758,93 +1100,29 @@ class assetMovableCreate extends Component {
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y],
-                  true
-                );
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z],
-                  true
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
           }
@@ -1862,25 +1140,14 @@ class assetMovableCreate extends Component {
 
     for (var q = 0; q < spec[`asset.${self.state.action}`].groups.length; q++) {
       if (spec[`asset.${self.state.action}`].groups[q].name == 'AssetField') {
-        for (
-          var l = 0;
-          l < spec[`asset.${self.state.action}`].groups[q].fields.length;
-          l++
-        ) {
-          if (
-            spec[`asset.${self.state.action}`].groups[q].fields[l].name ==
-            'WarrantyExpiryDate'
-          ) {
+        for (var l = 0; l < spec[`asset.${self.state.action}`].groups[q].fields.length; l++) {
+          if (spec[`asset.${self.state.action}`].groups[q].fields[l].name == 'WarrantyExpiryDate') {
             if (valueWarranty == false) {
-              spec[`asset.${self.state.action}`].groups[q].fields[
-                l
-              ].isRequired = false;
+              spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = false;
               self.props.delRequiredFields(['Asset.warrantyExpiryDate']);
               self.props.setMockData(JSON.parse(JSON.stringify(spec)));
             } else if (valueWarranty == true) {
-              spec[`asset.${self.state.action}`].groups[q].fields[
-                l
-              ].isRequired = true;
+              spec[`asset.${self.state.action}`].groups[q].fields[l].isRequired = true;
               self.props.addRequiredFields(['Asset.warrantyExpiryDate']);
               self.props.setMockData(JSON.parse(JSON.stringify(spec)));
             }
@@ -1890,17 +1157,7 @@ class assetMovableCreate extends Component {
     }
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch',
-    expression,
-    expErr,
-    isDate
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch', expression, expErr, isDate) => {
     let { getVal } = this;
     let self = this;
     let { handleChange, mockData, setDropDownData, formData } = this.props;
@@ -1909,17 +1166,8 @@ class assetMovableCreate extends Component {
 
     if (property == 'Asset.assetCategory.id') {
       if (self.state.depericiationValue[e.target.value]) {
-        var newVal = Math.round(
-          100 / self.state.depericiationValue[e.target.value]
-        );
-        this.props.handleChange(
-          { target: { value: newVal } },
-          'Asset.anticipatedLife',
-          true,
-          '',
-          '',
-          ''
-        );
+        var newVal = Math.round(100 / self.state.depericiationValue[e.target.value]);
+        this.props.handleChange({ target: { value: newVal } }, 'Asset.anticipatedLife', true, '', '', '');
       }
 
       self.customFieldDataFun(self.state.customFieldsGen[e.target.value]);
@@ -1936,15 +1184,11 @@ class assetMovableCreate extends Component {
       while (pos < str.length) {
         if (str.indexOf('$', pos) > -1) {
           let ind = str.indexOf('$', pos);
-          let spaceInd =
-            str.indexOf(' ', ind) > -1 ? str.indexOf(' ', ind) : str.length - 1;
+          let spaceInd = str.indexOf(' ', ind) > -1 ? str.indexOf(' ', ind) : str.length - 1;
           let value = str.substr(ind, spaceInd);
           if (value != '$' + property) {
             values.push(value.substr(1));
-            str = str.replace(
-              value,
-              "getVal('" + value.substr(1, value.length) + "')"
-            );
+            str = str.replace(value, "getVal('" + value.substr(1, value.length) + "')");
           } else str = str.replace(value, 'e.target.value');
           pos++;
         } else {
@@ -1959,39 +1203,20 @@ class assetMovableCreate extends Component {
         }
       }
 
-      if (
-        isDate &&
-        e.target.value &&
-        [12, 13].indexOf((e.target.value + '').length) == -1
-      ) {
+      if (isDate && e.target.value && [12, 13].indexOf((e.target.value + '').length) == -1) {
         _flag = 1;
       }
 
       if (_flag == 0) {
         if (!eval(str)) {
-          return this.props.toggleSnackbarAndSetText(
-            true,
-            translate(expErr),
-            false,
-            true
-          );
+          return this.props.toggleSnackbarAndSetText(true, translate(expErr), false, true);
         }
       }
     }
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     this.checkIfHasShowHideFields(property, e.target.value);
     this.checkIfHasEnDisFields(property, e.target.value);
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
         let splitArray = value.pattern.split('?');
@@ -2021,9 +1246,7 @@ class assetMovableCreate extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -2060,14 +1283,7 @@ class assetMovableCreate extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       } else if (value.type == 'autoFill') {
         let splitArray = value.pattern.split('?');
         let context = '';
@@ -2096,9 +1312,7 @@ class assetMovableCreate extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -2131,9 +1345,7 @@ class assetMovableCreate extends Component {
 
   incrementIndexValue = (group, jsonPath) => {
     let { formData } = this.props;
-    var length = _.get(formData, jsonPath)
-      ? _.get(formData, jsonPath).length
-      : 0;
+    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
     var _group = JSON.stringify(group);
     var regexp = new RegExp(jsonPath + '\\[\\d{1}\\]', 'g');
     _group = _group.replace(regexp, jsonPath + '[' + length + ']');
@@ -2157,15 +1369,7 @@ class assetMovableCreate extends Component {
             if (groups[i].children[j].jsonPath == value) {
               return 'groups[' + i + '].children[' + j + '].groups';
             } else {
-              return (
-                'groups[' +
-                i +
-                '].children[' +
-                j +
-                '][' +
-                getFromGroup(groups[i].children[j].groups) +
-                ']'
-              );
+              return 'groups[' + i + '].children[' + j + '][' + getFromGroup(groups[i].children[j].groups) + ']';
             }
           }
         }
@@ -2177,56 +1381,26 @@ class assetMovableCreate extends Component {
 
   addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    let {
-      setMockData,
-      metaData,
-      moduleName,
-      actionName,
-      setFormData,
-      formData,
-      addRequiredFields,
-    } = this.props;
+    let { setMockData, metaData, moduleName, actionName, setFormData, formData, addRequiredFields } = this.props;
     let mockData = { ...this.props.mockData };
     let reqFields = [];
     if (!jsonPath) {
-      for (
-        var i = 0;
-        i < metaData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          groupName == metaData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (var i = 0; i < metaData[moduleName + '.' + actionName].groups.length; i++) {
+        if (groupName == metaData[moduleName + '.' + actionName].groups[i].name) {
           var _groupToBeInserted = {
             ...metaData[moduleName + '.' + actionName].groups[i],
           };
-          for (
-            var j = mockData[moduleName + '.' + actionName].groups.length - 1;
-            j >= 0;
-            j--
-          ) {
-            if (
-              groupName ==
-              mockData[moduleName + '.' + actionName].groups[j].name
-            ) {
+          for (var j = mockData[moduleName + '.' + actionName].groups.length - 1; j >= 0; j--) {
+            if (groupName == mockData[moduleName + '.' + actionName].groups[j].name) {
               var regexp = new RegExp(
-                mockData[moduleName + '.' + actionName].groups[j].jsonPath
-                  .replace(/\[/g, '\\[')
-                  .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+                mockData[moduleName + '.' + actionName].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
                 'g'
               );
               var stringified = JSON.stringify(_groupToBeInserted);
-              var ind =
-                mockData[moduleName + '.' + actionName].groups[j].index || 0;
+              var ind = mockData[moduleName + '.' + actionName].groups[j].index || 0;
               //console.log(ind);
               _groupToBeInserted = JSON.parse(
-                stringified.replace(
-                  regexp,
-                  mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                    '[' +
-                    (ind + 1) +
-                    ']'
-                )
+                stringified.replace(regexp, mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (ind + 1) + ']')
               );
               _groupToBeInserted.index = ind + 1;
 
@@ -2237,18 +1411,11 @@ class assetMovableCreate extends Component {
               }
 
               if (reqFields.length) addRequiredFields(reqFields);
-              mockData[moduleName + '.' + actionName].groups.splice(
-                j + 1,
-                0,
-                _groupToBeInserted
-              );
+              mockData[moduleName + '.' + actionName].groups.splice(j + 1, 0, _groupToBeInserted);
               //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = { ...formData };
-              self.setDefaultValues(
-                mockData[moduleName + '.' + actionName].groups,
-                temp
-              );
+              self.setDefaultValues(mockData[moduleName + '.' + actionName].groups, temp);
               //console.log(temp);
               setFormData(temp);
               break;
@@ -2260,17 +1427,10 @@ class assetMovableCreate extends Component {
     } else {
       group = JSON.parse(JSON.stringify(group));
       //Increment the values of indexes
-      var grp = _.get(
-        metaData[moduleName + '.' + actionName],
-        self.getPath(jsonPath) + '[0]'
-      );
+      var grp = _.get(metaData[moduleName + '.' + actionName], self.getPath(jsonPath) + '[0]');
       group = this.incrementIndexValue(grp, jsonPath);
       //Push to the path
-      var updatedSpecs = this.getNewSpecs(
-        group,
-        JSON.parse(JSON.stringify(mockData)),
-        self.getPath(jsonPath)
-      );
+      var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
       //Create new mock data
       setMockData(updatedSpecs);
     }
@@ -2278,13 +1438,7 @@ class assetMovableCreate extends Component {
 
   removeCard = (jsonPath, index, groupName) => {
     //Remove at that index and update upper array values
-    let {
-      setMockData,
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-    } = this.props;
+    let { setMockData, moduleName, actionName, setFormData, delRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     let self = this;
     let mockData = { ...this.props.mockData };
@@ -2292,103 +1446,48 @@ class assetMovableCreate extends Component {
 
     if (!jsonPath) {
       var ind = 0;
-      for (
-        let i = 0;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          index == i &&
-          groupName == mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (index == i && groupName == mockData[moduleName + '.' + actionName].groups[i].name) {
           mockData[moduleName + '.' + actionName].groups.splice(i, 1);
           ind = i;
-          for (
-            var k = 0;
-            k <
-            mockData[moduleName + '.' + actionName].groups[ind].fields.length;
-            k++
-          ) {
-            if (
-              mockData[moduleName + '.' + actionName].groups[ind].fields[k]
-                .isRequired
-            )
-              notReqFields.push(
-                mockData[moduleName + '.' + actionName].groups[ind].fields[k]
-                  .jsonPath
-              );
+          for (var k = 0; k < mockData[moduleName + '.' + actionName].groups[ind].fields.length; k++) {
+            if (mockData[moduleName + '.' + actionName].groups[ind].fields[k].isRequired)
+              notReqFields.push(mockData[moduleName + '.' + actionName].groups[ind].fields[k].jsonPath);
           }
           delRequiredFields(notReqFields);
           break;
         }
       }
 
-      for (
-        let i = ind;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          mockData[moduleName + '.' + actionName].groups[i].name == groupName
-        ) {
+      for (let i = ind; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (mockData[moduleName + '.' + actionName].groups[i].name == groupName) {
           var regexp = new RegExp(
-            mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            mockData[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
             'g'
           );
           //console.log(regexp);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-          var stringified = JSON.stringify(
-            mockData[moduleName + '.' + actionName].groups[i]
-          );
+          var stringified = JSON.stringify(mockData[moduleName + '.' + actionName].groups[i]);
           mockData[moduleName + '.' + actionName].groups[i] = JSON.parse(
             stringified.replace(
               regexp,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                '[' +
-                (mockData[moduleName + '.' + actionName].groups[i].index - 1) +
-                ']'
+              mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (mockData[moduleName + '.' + actionName].groups[i].index - 1) + ']'
             )
           );
 
-          if (
-            _.get(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath
-            )
-          ) {
-            var grps = [
-              ..._.get(
-                _formData,
-                mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              ),
-            ];
+          if (_.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)) {
+            var grps = [..._.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)];
             //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
             //console.log(mockData[moduleName + "." + actionName].groups);
-            grps.splice(
-              mockData[moduleName + '.' + actionName].groups[i].index - 1,
-              1
-            );
-            _.set(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath,
-              grps
-            );
+            grps.splice(mockData[moduleName + '.' + actionName].groups[i].index - 1, 1);
+            _.set(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath, grps);
             //console.log(_formData);
             setFormData(_formData);
 
             //Reduce index values
-            for (
-              let k = ind;
-              k < mockData[moduleName + '.' + actionName].groups.length;
-              k++
-            ) {
-              if (
-                mockData[moduleName + '.' + actionName].groups[k].name ==
-                groupName
-              ) {
+            for (let k = ind; k < mockData[moduleName + '.' + actionName].groups.length; k++) {
+              if (mockData[moduleName + '.' + actionName].groups[k].name == groupName) {
                 mockData[moduleName + '.' + actionName].groups[k].index -= 1;
               }
             }
@@ -2399,10 +1498,7 @@ class assetMovableCreate extends Component {
       //console.log(mockData[moduleName + "." + actionName].groups);
       setMockData(mockData);
     } else {
-      var _groups = _.get(
-        mockData[moduleName + '.' + actionName],
-        self.getPath(jsonPath)
-      );
+      var _groups = _.get(mockData[moduleName + '.' + actionName], self.getPath(jsonPath));
       _groups.splice(index, 1);
       var regexp = new RegExp('\\[\\d{1}\\]', 'g');
       for (var i = index; i < _groups.length; i++) {
@@ -2416,27 +1512,10 @@ class assetMovableCreate extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      create,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      autoComHandler,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { create, handleChange, getVal, addNewCard, removeCard, autoComHandler } = this;
     let customActionsAndUrl =
-      !_.isEmpty(mockData[`${moduleName}.${actionName}`]) &&
-      mockData[`${moduleName}.${actionName}`].hasOwnProperty(
-        'customActionsAndUrl'
-      )
+      !_.isEmpty(mockData[`${moduleName}.${actionName}`]) && mockData[`${moduleName}.${actionName}`].hasOwnProperty('customActionsAndUrl')
         ? mockData[`${moduleName}.${actionName}`]['customActionsAndUrl'][0].url
         : '';
     let self = this;
@@ -2523,10 +1602,7 @@ class assetMovableCreate extends Component {
                   handler={handleChange}
                   getVal={getVal}
                   fieldErrors={fieldErrors}
-                  useTimestamp={
-                    mockData[`${moduleName}.${actionName}`].useTimestamp ||
-                    false
-                  }
+                  useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                   addNewCard={addNewCard}
                   removeCard={removeCard}
                   autoComHandler={autoComHandler}
@@ -2539,10 +1615,7 @@ class assetMovableCreate extends Component {
                     handler={handleChange}
                     getVal={getVal}
                     fieldErrors={fieldErrors}
-                    useTimestamp={
-                      mockData[`${moduleName}.${actionName}`].useTimestamp ||
-                      false
-                    }
+                    useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                     addNewCard={addNewCard}
                     removeCard={removeCard}
                     autoComHandler={autoComHandler}
@@ -2577,13 +1650,7 @@ class assetMovableCreate extends Component {
                         floatingLabelText={
                           <span>
                             {translate('ac.create.Asset.account.code')}{' '}
-                            <span style={{ color: '#FF0000' }}>
-                              {self.props.requiredFields.indexOf(
-                                'Asset.assetAccount'
-                              ) > -1
-                                ? ' *'
-                                : ''}
-                            </span>
+                            <span style={{ color: '#FF0000' }}>{self.props.requiredFields.indexOf('Asset.assetAccount') > -1 ? ' *' : ''}</span>
                           </span>
                         }
                         value={this.getVal('Asset.assetAccount')}
@@ -2591,11 +1658,7 @@ class assetMovableCreate extends Component {
                           this.handleChange(
                             { target: { value: value } },
                             'Asset.assetAccount',
-                            self.props.requiredFields.indexOf(
-                              'Asset.assetAccount'
-                            ) > -1
-                              ? true
-                              : false,
+                            self.props.requiredFields.indexOf('Asset.assetAccount') > -1 ? true : false,
                             '',
                             false,
                             false,
@@ -2607,18 +1670,10 @@ class assetMovableCreate extends Component {
                         maxHeight={200}
                       >
                         {self.props.dropDownData &&
-                          self.props.dropDownData.hasOwnProperty(
-                            'Asset.assetAccount'
-                          ) &&
-                          self.props.dropDownData['Asset.assetAccount'].map(
-                            (dd, index) => (
-                              <MenuItem
-                                value={dd.key}
-                                key={index}
-                                primaryText={dd.value}
-                              />
-                            )
-                          )}
+                          self.props.dropDownData.hasOwnProperty('Asset.assetAccount') &&
+                          self.props.dropDownData['Asset.assetAccount'].map((dd, index) => (
+                            <MenuItem value={dd.key} key={index} primaryText={dd.value} />
+                          ))}
                       </SelectField>
 
                       <SelectField
@@ -2643,30 +1698,18 @@ class assetMovableCreate extends Component {
                         hintText="Please Select"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'ac.create.Accumulated.Depreciation.Account'
-                            )}{' '}
+                            {translate('ac.create.Accumulated.Depreciation.Account')}{' '}
                             <span style={{ color: '#FF0000' }}>
-                              {self.props.requiredFields.indexOf(
-                                'Asset.accumulatedDepreciationAccount'
-                              ) > -1
-                                ? ' *'
-                                : ''}
+                              {self.props.requiredFields.indexOf('Asset.accumulatedDepreciationAccount') > -1 ? ' *' : ''}
                             </span>
                           </span>
                         }
-                        value={this.getVal(
-                          'Asset.accumulatedDepreciationAccount'
-                        )}
+                        value={this.getVal('Asset.accumulatedDepreciationAccount')}
                         onChange={(event, key, value) => {
                           this.handleChange(
                             { target: { value: value } },
                             'Asset.accumulatedDepreciationAccount',
-                            self.props.requiredFields.indexOf(
-                              'Asset.accumulatedDepreciationAccount'
-                            ) > -1
-                              ? true
-                              : false,
+                            self.props.requiredFields.indexOf('Asset.accumulatedDepreciationAccount') > -1 ? true : false,
                             '',
                             false,
                             false,
@@ -2677,17 +1720,9 @@ class assetMovableCreate extends Component {
                         maxHeight={200}
                       >
                         {self.props.dropDownData &&
-                          self.props.dropDownData.hasOwnProperty(
-                            'Asset.accumulatedDepreciationAccount'
-                          ) &&
-                          self.props.dropDownData[
-                            'Asset.accumulatedDepreciationAccount'
-                          ].map((dd, index) => (
-                            <MenuItem
-                              value={dd.key}
-                              key={index}
-                              primaryText={dd.value}
-                            />
+                          self.props.dropDownData.hasOwnProperty('Asset.accumulatedDepreciationAccount') &&
+                          self.props.dropDownData['Asset.accumulatedDepreciationAccount'].map((dd, index) => (
+                            <MenuItem value={dd.key} key={index} primaryText={dd.value} />
                           ))}
                       </SelectField>
 
@@ -2715,11 +1750,7 @@ class assetMovableCreate extends Component {
                           <span>
                             {translate('ac.create.Revaluation.Reserve.Account')}{' '}
                             <span style={{ color: '#FF0000' }}>
-                              {self.props.requiredFields.indexOf(
-                                'Asset.revaluationReserveAccount'
-                              ) > -1
-                                ? ' *'
-                                : ''}
+                              {self.props.requiredFields.indexOf('Asset.revaluationReserveAccount') > -1 ? ' *' : ''}
                             </span>
                           </span>
                         }
@@ -2728,11 +1759,7 @@ class assetMovableCreate extends Component {
                           this.handleChange(
                             { target: { value: value } },
                             'Asset.revaluationReserveAccount',
-                            self.props.requiredFields.indexOf(
-                              'Asset.revaluationReserveAccount'
-                            ) > -1
-                              ? true
-                              : false,
+                            self.props.requiredFields.indexOf('Asset.revaluationReserveAccount') > -1 ? true : false,
                             '',
                             false,
                             false,
@@ -2744,17 +1771,9 @@ class assetMovableCreate extends Component {
                         maxHeight={200}
                       >
                         {self.props.dropDownData &&
-                          self.props.dropDownData.hasOwnProperty(
-                            'Asset.revaluationReserveAccount'
-                          ) &&
-                          self.props.dropDownData[
-                            'Asset.revaluationReserveAccount'
-                          ].map((dd, index) => (
-                            <MenuItem
-                              value={dd.key}
-                              key={index}
-                              primaryText={dd.value}
-                            />
+                          self.props.dropDownData.hasOwnProperty('Asset.revaluationReserveAccount') &&
+                          self.props.dropDownData['Asset.revaluationReserveAccount'].map((dd, index) => (
+                            <MenuItem value={dd.key} key={index} primaryText={dd.value} />
                           ))}
                       </SelectField>
 
@@ -2780,15 +1799,9 @@ class assetMovableCreate extends Component {
                         hintText="Please Select"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'ac.create.Depreciation.Expenses.Account'
-                            )}{' '}
+                            {translate('ac.create.Depreciation.Expenses.Account')}{' '}
                             <span style={{ color: '#FF0000' }}>
-                              {self.props.requiredFields.indexOf(
-                                'Asset.depreciationExpenseAccount'
-                              ) > -1
-                                ? ' *'
-                                : ''}
+                              {self.props.requiredFields.indexOf('Asset.depreciationExpenseAccount') > -1 ? ' *' : ''}
                             </span>
                           </span>
                         }
@@ -2797,11 +1810,7 @@ class assetMovableCreate extends Component {
                           this.handleChange(
                             { target: { value: value } },
                             'Asset.depreciationExpenseAccount',
-                            self.props.requiredFields.indexOf(
-                              'Asset.depreciationExpenseAccount'
-                            ) > -1
-                              ? true
-                              : false,
+                            self.props.requiredFields.indexOf('Asset.depreciationExpenseAccount') > -1 ? true : false,
                             '',
                             false,
                             false,
@@ -2813,17 +1822,9 @@ class assetMovableCreate extends Component {
                         maxHeight={200}
                       >
                         {self.props.dropDownData &&
-                          self.props.dropDownData.hasOwnProperty(
-                            'Asset.depreciationExpenseAccount'
-                          ) &&
-                          self.props.dropDownData[
-                            'Asset.depreciationExpenseAccount'
-                          ].map((dd, index) => (
-                            <MenuItem
-                              value={dd.key}
-                              key={index}
-                              primaryText={dd.value}
-                            />
+                          self.props.dropDownData.hasOwnProperty('Asset.depreciationExpenseAccount') &&
+                          self.props.dropDownData['Asset.depreciationExpenseAccount'].map((dd, index) => (
+                            <MenuItem value={dd.key} key={index} primaryText={dd.value} />
                           ))}
                       </SelectField>
                     </Grid>
@@ -2871,14 +1872,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

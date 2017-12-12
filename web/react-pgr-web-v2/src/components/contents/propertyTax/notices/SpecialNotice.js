@@ -6,11 +6,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Api from '../../../../api/api';
 import { translate, epochToDate, dataURItoBlob } from '../../../common/common';
-import {
-  fonts,
-  writeMultiLanguageText,
-  getBase64FromImageUrl,
-} from '../../../common/pdf-generation/PdfConfig';
+import { fonts, writeMultiLanguageText, getBase64FromImageUrl } from '../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../common/pdf-generation/PdfViewer';
 import styles from '../../../../styles/material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -64,43 +60,23 @@ class SpecialNoticeCertificate extends Component {
   };
 
   generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName) => {
-    let {
-      specialNotice,
-      getNameByCode,
-      floors,
-      getNameById,
-      locality,
-      usages,
-      structureclasses,
-      taxHeads,
-    } = this.props;
+    let { specialNotice, getNameByCode, floors, getNameById, locality, usages, structureclasses, taxHeads } = this.props;
     let ownersText = [specialNotice.owners.map(owner => owner.name)].join(', ');
     let propertyAddress = '-';
     let floorTableBody = [];
     let taxDetailsTableBody = [];
 
     if (specialNotice.address) {
-      propertyAddress = specialNotice.address.addressNumber
-        ? specialNotice.address.addressNumber + ', '
-        : '';
-      propertyAddress += specialNotice.address.addressLine1
-        ? getNameById(locality, specialNotice.address.addressLine1) + ', '
-        : '';
-      propertyAddress += specialNotice.address.addressLine2
-        ? specialNotice.address.addressLine2 + ', '
-        : '';
-      propertyAddress += specialNotice.address.landmark
-        ? specialNotice.address.landmark + ', '
-        : '';
-      propertyAddress += specialNotice.address.city
-        ? specialNotice.address.city + '.'
-        : '';
+      propertyAddress = specialNotice.address.addressNumber ? specialNotice.address.addressNumber + ', ' : '';
+      propertyAddress += specialNotice.address.addressLine1 ? getNameById(locality, specialNotice.address.addressLine1) + ', ' : '';
+      propertyAddress += specialNotice.address.addressLine2 ? specialNotice.address.addressLine2 + ', ' : '';
+      propertyAddress += specialNotice.address.landmark ? specialNotice.address.landmark + ', ' : '';
+      propertyAddress += specialNotice.address.city ? specialNotice.address.city + '.' : '';
     }
 
     if (specialNotice.floors) {
       specialNotice.floors.map((item, index) => {
-        let varFloor =
-          floors.find(floor => floor.code == item.floorNo) || 'Empty';
+        let varFloor = floors.find(floor => floor.code == item.floorNo) || 'Empty';
 
         floorTableBody[floorTableBody.length] = [
           varFloor.name || '',
@@ -117,10 +93,7 @@ class SpecialNoticeCertificate extends Component {
     if (specialNotice.taxDetails.headWiseTaxes) {
       specialNotice.taxDetails.headWiseTaxes.map((item, index) => {
         let tax = taxHeads.find(taxHead => taxHead.code === item.taxName) || {};
-        taxDetailsTableBody[taxDetailsTableBody.length] = [
-          tax.name || 'NA',
-          { text: item.taxValue, alignment: 'right' },
-        ];
+        taxDetailsTableBody[taxDetailsTableBody.length] = [tax.name || 'NA', { text: item.taxValue, alignment: 'right' }];
       });
     }
 
@@ -149,10 +122,7 @@ class SpecialNoticeCertificate extends Component {
               width: '*',
               text: [
                 { text: `${ulbName}\n`, style: 'title' },
-                ...writeMultiLanguageText(
-                  'Property Tax Department / करनिर्धारण विभाग',
-                  { fontSize: 13 }
-                ),
+                ...writeMultiLanguageText('Property Tax Department / करनिर्धारण विभाग', { fontSize: 13 }),
               ],
               margin: [0, 10, 0, 0],
               alignment: 'center',
@@ -195,9 +165,7 @@ class SpecialNoticeCertificate extends Component {
         },
 
         {
-          text: writeMultiLanguageText(
-            '(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये)'
-          ),
+          text: writeMultiLanguageText('(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये)'),
           alignment: 'center',
           margin: [0, 0, 0, 10],
         },
@@ -241,8 +209,7 @@ class SpecialNoticeCertificate extends Component {
         {
           text: writeMultiLanguageText(
             `Subject / विषय :  Special Notice – New Assessment\nReference / संदर्भ : आपला अर्ज क्रमांक ${specialNotice.applicationNo ||
-              'ERROR'} दिनांक ${epochToDate(specialNotice.applicationDate) ||
-              'ERROR'}`
+              'ERROR'} दिनांक ${epochToDate(specialNotice.applicationDate) || 'ERROR'}`
           ),
           margin: [0, 0, 0, 10],
           alignment: 'center',
@@ -260,8 +227,7 @@ class SpecialNoticeCertificate extends Component {
         {
           text: writeMultiLanguageText(
             `संदर्भिय विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी करण्यात आलेली आहे.  मालमत्ता क्रमांक ${specialNotice.upicNo ||
-              'ERROR'} - ${ownersText ||
-              'ERROR'} यांच्या नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.`
+              'ERROR'} - ${ownersText || 'ERROR'} यांच्या नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.`
           ),
           margin: [0, 0, 0, 10],
         },
@@ -335,10 +301,7 @@ class SpecialNoticeCertificate extends Component {
         {
           table: {
             widths: ['*', 'auto'],
-            body: [
-              ['', { text: writeMultiLanguageText('\nकर अधिक्षक,') }],
-              ['', { text: writeMultiLanguageText(`${ulbName}`), bold: true }],
-            ],
+            body: [['', { text: writeMultiLanguageText('\nकर अधिक्षक,') }], ['', { text: writeMultiLanguageText(`${ulbName}`), bold: true }]],
           },
           layout: 'noBorders',
           margin: [0, 0, 0, 10],
@@ -379,11 +342,7 @@ class SpecialNoticeCertificate extends Component {
 
       let formData = new FormData();
       var blob = dataURItoBlob(dataUrl);
-      formData.append(
-        'file',
-        blob,
-        `PT_SPCNOT_${specialNotice.noticeNumber || '0'}.pdf`
-      );
+      formData.append('file', blob, `PT_SPCNOT_${specialNotice.noticeNumber || '0'}.pdf`);
       formData.append('tenantId', localStorage.getItem('tenantId'));
       formData.append('module', constants.PTIS_FILE_TAG);
 
@@ -394,9 +353,7 @@ class SpecialNoticeCertificate extends Component {
         _this.props.errorCallback(err.message);
       };
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         if (response.files && response.files.length > 0) {
           response.files[0].fileStoreId;
           var noticeDocument = {
@@ -422,8 +379,7 @@ class SpecialNoticeCertificate extends Component {
             //setLoadingStatus('hide');
           }, errorFunction);
         } else setLoadingStatus('hide');
-      },
-      errorFunction);
+      }, errorFunction);
     });
   };
 
@@ -431,14 +387,7 @@ class SpecialNoticeCertificate extends Component {
     return (
       <PdfViewer pdfData={this.state.pdfData} title="pt.specialnotice.title">
         <div className="text-center">
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );
@@ -455,9 +404,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const ViewSpecialNoticeCertificate = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(SpecialNoticeCertificate);
+const ViewSpecialNoticeCertificate = connect(mapStateToProps, mapDispatchToProps)(SpecialNoticeCertificate);
 
 export default ViewSpecialNoticeCertificate;

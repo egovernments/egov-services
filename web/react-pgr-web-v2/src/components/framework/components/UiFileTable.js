@@ -102,8 +102,7 @@ class UiFileTable extends Component {
         {arr &&
           arr.length &&
           arr.map((v, i) => {
-            let fileListName =
-              item.jsonPath + '[' + i + '].' + item.fileList.name;
+            let fileListName = item.jsonPath + '[' + i + '].' + item.fileList.name;
             let fileStoreId = item.jsonPath + '[' + i + '].' + item.fileList.id;
 
             value = this.props.getVal(fileListName);
@@ -128,14 +127,7 @@ class UiFileTable extends Component {
                       disabled={readOnly}
                       value={value}
                       onChange={e => {
-                        this.props.handler(
-                          e,
-                          fileListName,
-                          item.isRequired,
-                          '',
-                          item.requiredErrMsg,
-                          item.patternErrMsg
-                        );
+                        this.props.handler(e, fileListName, item.isRequired, '', item.requiredErrMsg, item.patternErrMsg);
                       }}
                     />
                   </td>
@@ -173,11 +165,7 @@ class UiFileTable extends Component {
                   <th>#</th>
                   <th>{translate('tl.create.license.table.documentName')}</th>
                   <th>{translate('wc.create.groups.fileDetails.title')}</th>
-                  {this.props.readonly ? (
-                    ''
-                  ) : (
-                    <th>{translate('reports.common.action')}</th>
-                  )}
+                  {this.props.readonly ? '' : <th>{translate('reports.common.action')}</th>}
                 </tr>
               </thead>
               {this.renderRowList(item)}

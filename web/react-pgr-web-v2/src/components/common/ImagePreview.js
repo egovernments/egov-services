@@ -24,11 +24,7 @@ const renderImage = props => {
   return (
     <Col xs={12} md={3}>
       <RaisedButton
-        label={
-          props.file.name.length > 15
-            ? props.file.name.substr(0, 12) + '...'
-            : props.file.name
-        }
+        label={props.file.name.length > 15 ? props.file.name.substr(0, 12) + '...' : props.file.name}
         primary={true}
         fullWidth={true}
         icon={<FileRemove />}

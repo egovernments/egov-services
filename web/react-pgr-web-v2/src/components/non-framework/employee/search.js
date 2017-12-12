@@ -49,17 +49,11 @@ class Report extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -77,17 +71,10 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -97,9 +84,7 @@ class Report extends Component {
   }
 
   getVal = path => {
-    return typeof _.get(this.props.formData, path) != 'undefined'
-      ? _.get(this.props.formData, path)
-      : '';
+    return typeof _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
 
   fetchURLData(url, query = {}, defaultObject, cb) {
@@ -114,16 +99,8 @@ class Report extends Component {
   }
 
   initData() {
-    specifications = require(`../../framework/specs/employee/master/searchEmployee`)
-      .default;
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    specifications = require(`../../framework/specs/employee/master/searchEmployee`).default;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications['employee.empsearch'];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
@@ -133,8 +110,7 @@ class Report extends Component {
     setModuleName('employee');
     setActionName('empsearch');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
       pathname: this.props.history.location.pathname,
@@ -160,14 +136,9 @@ class Report extends Component {
     self.fetchURLData('hr-masters/designations/_search', {}, [], function(res) {
       checkCountAndSetState('designationList', res['Designation']);
     });
-    self.fetchURLData(
-      'egov-common-masters/departments/_search',
-      {},
-      [],
-      function(res) {
-        checkCountAndSetState('departmentList', res['Department']);
-      }
-    );
+    self.fetchURLData('egov-common-masters/departments/_search', {}, [], function(res) {
+      checkCountAndSetState('departmentList', res['Department']);
+    });
   }
   componentWillReceiveProps(nextProps) {
     if (this.state.pathname != nextProps.history.location.pathname) {
@@ -181,20 +152,17 @@ class Report extends Component {
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
     for (var key in formData) {
-      if (formData[key] !== '' && typeof formData[key] == 'undefined')
-        delete formData[key];
+      if (formData[key] !== '' && typeof formData[key] == 'undefined') delete formData[key];
     }
 
     formData.pageSize = self.state.pageSize;
     if (typeof pageNumber != undefined) formData.pageNumber = pageNumber;
     Api.commonApiPost(
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .url,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url,
       formData,
       {},
       null,
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .useTimestamp,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp,
       true
     ).then(
       function(res) {
@@ -221,29 +189,13 @@ class Report extends Component {
     return _.get(this.props.formData, path) || '';
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { handleChange } = this.props;
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
   };
 
   handleNavigation = row => {
-    this.props.setRoute(
-      '/employee/' + this.props.match.params.actionName + '/' + row.id
-    );
+    this.props.setRoute('/employee/' + this.props.match.params.actionName + '/' + row.id);
   };
 
   handlePageClick = data => {
@@ -252,34 +204,9 @@ class Report extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      search,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      rowClickHandler,
-      handlePageClick,
-      handleNavigation,
-    } = this;
-    let {
-      showResult,
-      resultList,
-      pageCount,
-      designationList,
-      departmentList,
-      positionList,
-      pageSize,
-      currentPage,
-    } = this.state;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { search, handleChange, getVal, addNewCard, removeCard, rowClickHandler, handlePageClick, handleNavigation } = this;
+    let { showResult, resultList, pageCount, designationList, departmentList, positionList, pageSize, currentPage } = this.state;
 
     const renderBody = function() {
       if (resultList.length) {
@@ -292,19 +219,11 @@ class Report extends Component {
               }}
               style={{ cursor: 'pointer' }}
             >
-              <td>
-                {currentPage == 1
-                  ? i + 1
-                  : (currentPage - 1) * pageSize + (i + 1)}
-              </td>
+              <td>{currentPage == 1 ? i + 1 : (currentPage - 1) * pageSize + (i + 1)}</td>
               <td>{val.code}</td>
               <td>{val.name}</td>
-              <td>
-                {getNameById(departmentList, val.assignments[0].department)}
-              </td>
-              <td>
-                {getNameById(designationList, val.assignments[0].designation)}
-              </td>
+              <td>{getNameById(departmentList, val.assignments[0].department)}</td>
+              <td>{getNameById(designationList, val.assignments[0].designation)}</td>
               <td>{getNameById(positionList, val.assignments[0].position)}</td>
             </tr>
           );
@@ -334,35 +253,17 @@ class Report extends Component {
     const displayTableCard = function() {
       return (
         <Card className="uiCard">
-          <CardHeader
-            title={<strong> {translate('ui.table.title')} </strong>}
-          />
+          <CardHeader title={<strong> {translate('ui.table.title')} </strong>} />
           <CardText>
             <Table bordered responsive className="table-striped">
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>
-                    {translate('employee.searchEmployee.groups.fields.code')}
-                  </th>
-                  <th>
-                    {translate('employee.searchEmployee.groups.fields.name')}
-                  </th>
-                  <th>
-                    {translate(
-                      'employee.searchEmployee.groups.fields.department'
-                    )}
-                  </th>
-                  <th>
-                    {translate(
-                      'employee.searchEmployee.groups.fields.designation'
-                    )}
-                  </th>
-                  <th>
-                    {translate(
-                      'employee.searchEmployee.groups.fields.position'
-                    )}
-                  </th>
+                  <th>{translate('employee.searchEmployee.groups.fields.code')}</th>
+                  <th>{translate('employee.searchEmployee.groups.fields.name')}</th>
+                  <th>{translate('employee.searchEmployee.groups.fields.department')}</th>
+                  <th>{translate('employee.searchEmployee.groups.fields.designation')}</th>
+                  <th>{translate('employee.searchEmployee.groups.fields.position')}</th>
                 </tr>
               </thead>
               <tbody>{renderBody()}</tbody>
@@ -391,9 +292,7 @@ class Report extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData['employee.empsearch'].useTimestamp || false
-                }
+                useTimestamp={mockData['employee.empsearch'].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
               />
@@ -447,14 +346,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

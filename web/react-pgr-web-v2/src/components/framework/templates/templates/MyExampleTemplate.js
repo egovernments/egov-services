@@ -12,11 +12,7 @@ export default class MyExampleTemplate extends Component {
             <tbody>
               <tr>
                 <td style={{ textAlign: 'left' }}>
-                  <img
-                    src="./temp/images/headerLogo.png"
-                    height="60"
-                    width="60"
-                  />
+                  <img src="./temp/images/headerLogo.png" height="60" width="60" />
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b>Roha Municipal Council</b>
@@ -28,15 +24,12 @@ export default class MyExampleTemplate extends Component {
               </tr>
               <tr>
                 <td style={{ textAlign: 'left' }}>Receipt Number : 123</td>
-                <td style={{ textAlign: 'center' }}>
-                  Receipt For : Application Fee
-                </td>
+                <td style={{ textAlign: 'center' }}>Receipt For : Application Fee</td>
                 <td style={{ textAlign: 'right' }}>Receipt Date: 12/02/2017</td>
               </tr>
               <tr>
                 <td colSpan={3} style={{ textAlign: 'left' }}>
-                  Service Request Number: 21212<br /> Applicant Name: John Doe<br />{' '}
-                  Amount : Rs. 20<br />
+                  Service Request Number: 21212<br /> Applicant Name: John Doe<br /> Amount : Rs. 20<br />
                 </td>
               </tr>
             </tbody>

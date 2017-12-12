@@ -50,8 +50,7 @@ var dat = {
           {
             name: 'FatherSpouseName',
             jsonPath: 'licenses[0].fatherSpouseName',
-            label:
-              'tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName',
+            label: 'tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName',
             pattern: '^.[a-zA-Z. ]{2,99}$',
             type: 'text',
             isRequired: true,
@@ -75,8 +74,7 @@ var dat = {
           {
             name: 'TradeOwnerAddress',
             jsonPath: 'licenses[0].ownerAddress',
-            label:
-              'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress',
+            label: 'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress',
             pattern: '^[a-zA-Z0-9:@&*_+#()/,. -]*$',
             type: 'text',
             isRequired: true,
@@ -95,8 +93,7 @@ var dat = {
           {
             name: 'PropertyAssessmentNo',
             jsonPath: 'licenses[0].propertyAssesmentNo',
-            label:
-              'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo',
+            label: 'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo',
             pattern: '^[a-zA-Z0-9/-]*$',
             type: 'text',
             isRequired: false,
@@ -133,8 +130,7 @@ var dat = {
           {
             name: 'revenueWardId',
             jsonPath: 'licenses[0].revenueWardId',
-            label:
-              'tl.create.licenses.groups.TradeLocationDetails.revenueWardId',
+            label: 'tl.create.licenses.groups.TradeLocationDetails.revenueWardId',
             pattern: '',
             type: 'singleValueList',
             url:
@@ -147,8 +143,7 @@ var dat = {
           {
             name: 'OwnershipType',
             jsonPath: 'licenses[0].ownerShipType',
-            label:
-              'tl.create.licenses.groups.TradeLocationDetails.OwnershipType',
+            label: 'tl.create.licenses.groups.TradeLocationDetails.OwnershipType',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -182,8 +177,7 @@ var dat = {
           {
             name: 'TradeAddress',
             jsonPath: 'licenses[0].tradeAddress',
-            label:
-              'tl.create.licenses.groups.TradeLocationDetails.TradeAddress',
+            label: 'tl.create.licenses.groups.TradeLocationDetails.TradeAddress',
             pattern: '^[a-zA-Z0-9:@&*_+#()/,. -]*$',
             type: 'text',
             isRequired: true,
@@ -238,8 +232,7 @@ var dat = {
             label: 'tl.create.licenses.groups.TradeDetails.TradeCategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&type=category|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -319,8 +312,7 @@ var dat = {
           {
             name: 'TradeCommencementDate',
             jsonPath: 'licenses[0].tradeCommencementDate',
-            label:
-              'tl.create.licenses.groups.TradeDetails.TradeCommencementDate',
+            label: 'tl.create.licenses.groups.TradeDetails.TradeCommencementDate',
             pattern: '',
             type: 'datePicker',
             isRequired: true,

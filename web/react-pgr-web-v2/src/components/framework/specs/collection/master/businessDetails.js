@@ -17,8 +17,7 @@ var dat = {
             label: 'wc.create.groups.fields.businessCategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
+            url: '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -52,8 +51,7 @@ var dat = {
             label: 'wc.create.groups.fields.classification',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name',
+            url: '/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -133,11 +131,9 @@ var dat = {
             patternErrMsg: '',
             url: 'egf-masters/chartofaccounts/_search?|$..id|$..name',
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/egf-masters/chartofaccounts/_search?id={value}',
+              autoCompleteUrl: '/egf-masters/chartofaccounts/_search?id={value}',
               autoFillFields: {
-                'BusinessDetails[0].accountDetails[0].chartOfAccounts':
-                  'chartOfAccounts[0].glcode',
+                'BusinessDetails[0].accountDetails[0].chartOfAccounts': 'chartOfAccounts[0].glcode',
               },
             },
           },
@@ -233,8 +229,7 @@ var dat = {
             label: 'wc.create.groups.fields.businessType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
+            url: '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -268,8 +263,7 @@ var dat = {
             label: 'wc.create.groups.fields.classification',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
+            url: '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -351,8 +345,7 @@ var dat = {
             url: 'egf-masters/chartofaccounts/_search?|$..id|$..name',
             depedants: [
               {
-                jsonPath:
-                  'BusinessDetails[0].accountDetails[0].chartOfAccounts',
+                jsonPath: 'BusinessDetails[0].accountDetails[0].chartOfAccounts',
                 type: 'textField',
                 rg: '',
                 isRequired: false,
@@ -395,8 +388,7 @@ var dat = {
             label: 'wc.create.groups.fields.businessType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
+            url: '/egov-common-masters/businessCategory/_search?&active=true|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -430,8 +422,7 @@ var dat = {
             label: 'wc.create.groups.fields.classification',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name',
+            url: '/egov-common-masters/businessCategory/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -513,11 +504,9 @@ var dat = {
             patternErrMsg: '',
             url: 'egf-masters/chartofaccounts/_search?|$..id|$..name',
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/egf-masters/chartofaccounts/_search?id={value}',
+              autoCompleteUrl: '/egf-masters/chartofaccounts/_search?id={value}',
               autoFillFields: {
-                'BusinessDetails[0].accountDetails[0].chartOfAccounts':
-                  'chartOfAccounts[0].glcode',
+                'BusinessDetails[0].accountDetails[0].chartOfAccounts': 'chartOfAccounts[0].glcode',
               },
             },
           },

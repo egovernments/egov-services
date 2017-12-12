@@ -3,16 +3,8 @@ import { connect } from 'react-redux';
 import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Api from '../../../../api/api';
-import {
-  translate,
-  dataURItoBlob,
-  epochToDate,
-  epochToTime,
-} from '../../../common/common';
-import {
-  fonts,
-  getBase64FromImageUrl,
-} from '../../../common/pdf-generation/PdfConfig';
+import { translate, dataURItoBlob, epochToDate, epochToTime } from '../../../common/common';
+import { fonts, getBase64FromImageUrl } from '../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../common/pdf-generation/PdfViewer';
 import styles from '../../../../styles/material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -40,13 +32,7 @@ export default class Acknowledgement extends Component {
     Promise.all([
       ulbLogoPromise,
       stateLogoPromise,
-      Api.commonApiPost(
-        '/tl-services/configurations/v1/_search',
-        {},
-        { tenantId: this.getTenantId() },
-        false,
-        true
-      ),
+      Api.commonApiPost('/tl-services/configurations/v1/_search', {}, { tenantId: this.getTenantId() }, false, true),
       Api.commonApiGet(
         'https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json',
         { timestamp: new Date().getTime() },
@@ -57,12 +43,7 @@ export default class Acknowledgement extends Component {
     ])
       .then(response => {
         var cityName = response[3]['details'][this.getTenantId()]['name'];
-        this.generatePdf(
-          response[0].image,
-          response[1].image,
-          response[2].TLConfiguration,
-          cityName
-        );
+        this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, cityName);
       })
       .catch(function(err) {
         handleError(err.message);
@@ -146,11 +127,7 @@ export default class Acknowledgement extends Component {
                 { text: `${translate('tl.acknowledgement.departmentName')}` },
                 { text: ':', alignment: 'left' },
                 {
-                  text: `${
-                    certificateConfigDetails[
-                      'default.citizen.workflow.initiator.department.name'
-                    ]
-                  }`,
+                  text: `${certificateConfigDetails['default.citizen.workflow.initiator.department.name']}`,
                   alignment: 'left',
                 },
               ],
@@ -261,9 +238,7 @@ export default class Acknowledgement extends Component {
         handleError(err.message);
       };
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         var noticearray = [];
         var noticeObj = {};
         noticeObj['licenseId'] = license.id;
@@ -271,17 +246,10 @@ export default class Acknowledgement extends Component {
         noticeObj['documentName'] = 'ACKNOWLEDGEMENT';
         noticeObj['fileStoreId'] = response.files[0].fileStoreId;
         noticearray.push(noticeObj);
-        Api.commonApiPost(
-          'tl-services/noticedocument/v1/_create',
-          {},
-          { NoticeDocument: noticearray },
-          false,
-          true
-        ).then(function(response) {
+        Api.commonApiPost('tl-services/noticedocument/v1/_create', {}, { NoticeDocument: noticearray }, false, true).then(function(response) {
           setLoadingStatus('hide');
         }, errorFunction);
-      },
-      errorFunction);
+      }, errorFunction);
     });
   };
 
@@ -295,20 +263,10 @@ export default class Acknowledgement extends Component {
             label={translate('tl.view.title')}
             primary={true}
             onClick={e => {
-              setRoute(
-                '/non-framework/tl/transaction/viewLicense/' +
-                  this.props.license.id
-              );
+              setRoute('/non-framework/tl/transaction/viewLicense/' + this.props.license.id);
             }}
           />
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );

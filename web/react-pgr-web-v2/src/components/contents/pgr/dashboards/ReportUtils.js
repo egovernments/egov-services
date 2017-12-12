@@ -37,35 +37,14 @@ function increaseColorBrightness(hex, lum) {
 
 const PageLoadingIndicator = () => (
   <div style={{ textAlign: 'center', paddingTop: 10 }}>
-    <RefreshIndicator
-      size={40}
-      left={0}
-      top={0}
-      status="loading"
-      style={{ display: 'inline-block', position: 'relative' }}
-    />
+    <RefreshIndicator size={40} left={0} top={0} status="loading" style={{ display: 'inline-block', position: 'relative' }} />
   </div>
 );
 
 const CustomizedAxisTick = props => {
-  const MONTH_NAMES = [
-    'JAN',
-    'FEB',
-    'MAR',
-    'APR',
-    'MAY',
-    'JUN',
-    'JUL',
-    'AUG',
-    'SEP',
-    'OCT',
-    'NOV',
-    'DEC',
-  ];
+  const MONTH_NAMES = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
   const { x, y, payload, isMonthNumber } = props;
-  let value = isMonthNumber
-    ? MONTH_NAMES[parseInt(payload.value) - 1]
-    : payload.value;
+  let value = isMonthNumber ? MONTH_NAMES[parseInt(payload.value) - 1] : payload.value;
 
   return (
     <text x={x} y={y + 15} textAnchor="middle" fill="#666">
@@ -79,13 +58,7 @@ const CustomizedYAxisLabel = props => {
   let yVal = posY || 15;
   return (
     <g transform={`translate(${viewBox.x},${viewBox.y})`}>
-      <text
-        x={-(viewBox.height / 2)}
-        y={viewBox.y + yVal}
-        textAnchor="middle"
-        fill="#666"
-        transform="rotate(-90)"
-      >
+      <text x={-(viewBox.height / 2)} y={viewBox.y + yVal} textAnchor="middle" fill="#666" transform="rotate(-90)">
         {title}
       </text>
     </g>
@@ -119,17 +92,9 @@ const CustomizedLegend = props => {
             marginRight: 4,
           }}
         >
-          <path
-            stroke="none"
-            fill={data.color}
-            d="M0,4h32v24h-32z"
-            className="recharts-legend-icon"
-          />
+          <path stroke="none" fill={data.color} d="M0,4h32v24h-32z" className="recharts-legend-icon" />
         </svg>
-        <span
-          className="recharts-legend-item-text"
-          style={{ fontSize: 12, ...activeStyle }}
-        >{`${data.value} - ${data.payload.value} (${(
+        <span className="recharts-legend-item-text" style={{ fontSize: 12, ...activeStyle }}>{`${data.value} - ${data.payload.value} (${(
           data.payload.percent * 100
         ).toFixed(2)}%)`}</span>
       </li>
@@ -144,11 +109,7 @@ const CustomizedLineChartLegend = props => {
 
   const legendsList = legends.map((legend, idx) => {
     return (
-      <li
-        key={idx}
-        className={`recharts-legend-item legend-item-${0}`}
-        style={{ display: 'inline-block', marginRight: 10 }}
-      >
+      <li key={idx} className={`recharts-legend-item legend-item-${0}`} style={{ display: 'inline-block', marginRight: 10 }}>
         <svg
           className="recharts-surface"
           width="14"
@@ -161,16 +122,9 @@ const CustomizedLineChartLegend = props => {
             marginRight: 4,
           }}
         >
-          <path
-            stroke="none"
-            fill={colors[idx]}
-            d="M0,4h32v24h-32z"
-            className="recharts-legend-icon"
-          />
+          <path stroke="none" fill={colors[idx]} d="M0,4h32v24h-32z" className="recharts-legend-icon" />
         </svg>
-        <span className="recharts-legend-item-text">
-          {legend[legendNameKey]}
-        </span>
+        <span className="recharts-legend-item-text">{legend[legendNameKey]}</span>
       </li>
     );
   });
@@ -180,41 +134,13 @@ const CustomizedLineChartLegend = props => {
 
 const RenderActiveShape = props => {
   const RADIAN = Math.PI / 180;
-  const {
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-    payload,
-    percent,
-    value,
-  } = props;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, payload, percent, value } = props;
 
   return (
     <g>
       {/* <text x={cx} y={cy} dy={8} textAnchor="middle" fill={fill}>{payload.name}</text> */}
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius} startAngle={startAngle} endAngle={endAngle} fill={fill} />
+      <Sector cx={cx} cy={cy} startAngle={startAngle} endAngle={endAngle} innerRadius={outerRadius + 6} outerRadius={outerRadius + 10} fill={fill} />
     </g>
   );
 };
@@ -233,8 +159,7 @@ const CustomTooltip = props => {
       let sortedDatas = _.orderBy(payload[0].payload.data, ['count'], ['desc']);
       return sortedDatas.map(data => {
         for (let i = 0; i < payload.length; i++) {
-          let isMatchesName =
-            _.get(payload[i], `payload.${payload[i].name}`) === data.name;
+          let isMatchesName = _.get(payload[i], `payload.${payload[i].name}`) === data.name;
           if (isMatchesName) return payload[i];
         }
       });
@@ -248,13 +173,7 @@ const CustomTooltip = props => {
 
     const labels = payloadSorted.map((area, idx) => {
       let labelName = _.get(area, `payload.${area.name}`);
-      return (
-        <p
-          key={idx}
-          className="label"
-          style={{ ...styles.p, color: area.color }}
-        >{`${labelName} : ${area.value}`}</p>
-      );
+      return <p key={idx} className="label" style={{ ...styles.p, color: area.color }}>{`${labelName} : ${area.value}`}</p>;
     });
 
     return (
@@ -266,18 +185,9 @@ const CustomTooltip = props => {
   return null;
 };
 
-const extractManipulateCityAndWardsPath = (
-  wardResponse,
-  kmlText,
-  cityLatLng,
-  color,
-  totalComplaints
-) => {
+const extractManipulateCityAndWardsPath = (wardResponse, kmlText, cityLatLng, color, totalComplaints) => {
   const removeZDepth = latOrLonval => {
-    return (
-      (latOrLonval && parseFloat(`${latOrLonval}`.replace(/\d+\s/, ''))) ||
-      undefined
-    );
+    return (latOrLonval && parseFloat(`${latOrLonval}`.replace(/\d+\s/, ''))) || undefined;
   };
 
   const convertCoordinatesToPolygonPaths = coordinatesStr => {

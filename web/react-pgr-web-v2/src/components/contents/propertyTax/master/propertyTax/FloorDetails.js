@@ -118,11 +118,7 @@ class FloorDetails extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      unitType: [
-        { code: -1, name: 'None' },
-        { code: 'FLAT', name: 'Flat' },
-        { code: 'ROOM', name: 'Room' },
-      ],
+      unitType: [{ code: -1, name: 'None' }, { code: 'FLAT', name: 'Flat' }, { code: 'ROOM', name: 'Room' }],
       floorNumber: [
         { code: -1, name: 'None' },
         { code: 1, name: 'Basement-3' },
@@ -363,10 +359,7 @@ class FloorDetails extends Component {
 
   formatDate(date) {
     var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-    var month =
-      date.getMonth() + 1 < 10
-        ? '0' + (date.getMonth() + 1)
-        : date.getMonth() + 1;
+    var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
 
     return day + '/' + month + '/' + date.getFullYear();
   }
@@ -381,14 +374,8 @@ class FloorDetails extends Component {
       if (TempDate < SmallestDate) SmallestDate = TempDate;
     }
 
-    var date =
-      new Date(SmallestDate).getDate() < 10
-        ? '0' + new Date(SmallestDate).getDate()
-        : new Date(SmallestDate).getDate();
-    var month =
-      new Date(SmallestDate).getMonth() + 1 < 10
-        ? '0' + (new Date(SmallestDate).getMonth() + 1)
-        : new Date(SmallestDate).getMonth() + 1;
+    var date = new Date(SmallestDate).getDate() < 10 ? '0' + new Date(SmallestDate).getDate() : new Date(SmallestDate).getDate();
+    var month = new Date(SmallestDate).getMonth() + 1 < 10 ? '0' + (new Date(SmallestDate).getMonth() + 1) : new Date(SmallestDate).getMonth() + 1;
 
     var e = {
       target: {
@@ -415,8 +402,7 @@ class FloorDetails extends Component {
 
     if (floorDetails.hasOwnProperty('floor')) {
       if (type == 'length' && floorDetails.floor.hasOwnProperty('width')) {
-        f.target.value =
-          parseFloat(e.target.value) * parseFloat(floorDetails.floor.width);
+        f.target.value = parseFloat(e.target.value) * parseFloat(floorDetails.floor.width);
 
         if (!f.target.value) {
           hasLW = false;
@@ -425,12 +411,8 @@ class FloorDetails extends Component {
         }
 
         handleChangeFloor(f, 'floor', 'builtupArea', true, '');
-      } else if (
-        type == 'width' &&
-        floorDetails.floor.hasOwnProperty('length')
-      ) {
-        f.target.value =
-          parseFloat(floorDetails.floor.length) * parseFloat(e.target.value);
+      } else if (type == 'width' && floorDetails.floor.hasOwnProperty('length')) {
+        f.target.value = parseFloat(floorDetails.floor.length) * parseFloat(e.target.value);
 
         if (!f.target.value) {
           hasLW = false;
@@ -485,13 +467,8 @@ class FloorDetails extends Component {
     };
 
     if (floorDetails.hasOwnProperty('floor')) {
-      if (
-        type == 'exempted' &&
-        floorDetails.floor.hasOwnProperty('carpetArea')
-      ) {
-        if (
-          parseFloat(floorDetails.floor.carpetArea) < parseFloat(e.target.value)
-        ) {
+      if (type == 'exempted' && floorDetails.floor.hasOwnProperty('carpetArea')) {
+        if (parseFloat(floorDetails.floor.carpetArea) < parseFloat(e.target.value)) {
           this.setState({
             negativeValue: true,
           });
@@ -499,18 +476,12 @@ class FloorDetails extends Component {
           this.setState({
             negativeValue: false,
           });
-          f.target.value = String(
-            parseFloat(floorDetails.floor.carpetArea) -
-              parseFloat(e.target.value)
-          );
+          f.target.value = String(parseFloat(floorDetails.floor.carpetArea) - parseFloat(e.target.value));
           handleChangeNextOne(f, 'floor', 'assessableArea', false, '');
         }
       } else if (type == 'carpet') {
         if (floorDetails.floor.hasOwnProperty('exemptionArea')) {
-          if (
-            parseFloat(e.target.value) <
-            parseFloat(floorDetails.floor.exemptionArea)
-          ) {
+          if (parseFloat(e.target.value) < parseFloat(floorDetails.floor.exemptionArea)) {
             this.setState({
               negativeValue: true,
             });
@@ -518,10 +489,7 @@ class FloorDetails extends Component {
             this.setState({
               negativeValue: false,
             });
-            f.target.value = String(
-              parseFloat(e.target.value) -
-                parseFloat(floorDetails.floor.exemptionArea)
-            );
+            f.target.value = String(parseFloat(e.target.value) - parseFloat(floorDetails.floor.exemptionArea));
             handleChangeNextOne(f, 'floor', 'assessableArea', false, '');
           }
         } else {
@@ -613,13 +581,7 @@ class FloorDetails extends Component {
       },
     };
 
-    this.props.handleChangeNextOne(
-      e,
-      'floor',
-      'occupierName',
-      false,
-      /^[a-zA-Z,\s]+$/g
-    );
+    this.props.handleChangeNextOne(e, 'floor', 'occupierName', false, /^[a-zA-Z,\s]+$/g);
   };
 
   deleteOccupantName = index => {
@@ -635,13 +597,7 @@ class FloorDetails extends Component {
       },
     };
 
-    this.props.handleChangeNextOne(
-      e,
-      'floor',
-      'occupierName',
-      false,
-      /^[a-zA-Z,\s]+$/g
-    );
+    this.props.handleChangeNextOne(e, 'floor', 'occupierName', false, /^[a-zA-Z,\s]+$/g);
   };
 
   handleUsage = value => {
@@ -670,13 +626,7 @@ class FloorDetails extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem
-              key={item.code}
-              value={item.code}
-              primaryText={item.name}
-            />
-          );
+          return <MenuItem key={item.code} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -716,15 +666,11 @@ class FloorDetails extends Component {
                   className="fullWidth"
                   hintText="Mano, Ranjan"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.floorDetails.fields.occupantName'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
                   errorText={
                     fieldErrors.floor ? (
                       fieldErrors.floor.occupierName ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.floor.occupierName}
-                        </span>
+                        <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.occupierName}</span>
                       ) : (
                         ''
                       )
@@ -732,17 +678,9 @@ class FloorDetails extends Component {
                       ''
                     )
                   }
-                  value={
-                    floorDetails.floor ? floorDetails.floor.occupierName : ''
-                  }
+                  value={floorDetails.floor ? floorDetails.floor.occupierName : ''}
                   onChange={e => {
-                    handleChangeFloor(
-                      e,
-                      'floor',
-                      'occupierName',
-                      false,
-                      /^[a-zA-Z,\s]+$/g
-                    );
+                    handleChangeFloor(e, 'floor', 'occupierName', false, /^[a-zA-Z,\s]+$/g);
                   }}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
@@ -754,13 +692,7 @@ class FloorDetails extends Component {
                 <RaisedButton
                   type="button"
                   label={translate('pt.create.groups.propertyAddress.addName')}
-                  disabled={
-                    floorDetails.floor &&
-                    floorDetails.floor.occupierName &&
-                    floorDetails.occupantName != ''
-                      ? false
-                      : true
-                  }
+                  disabled={floorDetails.floor && floorDetails.floor.occupierName && floorDetails.occupantName != '' ? false : true}
                   primary={true}
                   onClick={() => {
                     this.setOccupantName(floorDetails.floor.occupierName);
@@ -823,11 +755,7 @@ class FloorDetails extends Component {
         {showDialog()}
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.floorDetails')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.floorDetails')}</div>}
         />
         <CardText>
           <Grid fluid>
@@ -841,20 +769,14 @@ class FloorDetails extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.floorNumber'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.floorNumber')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.floorNo ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.floorNo}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.floorNo}</span>
                             ) : (
                               ''
                             )
@@ -862,9 +784,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.floorNo : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.floorNo : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -896,9 +816,7 @@ class FloorDetails extends Component {
                         className="fullWidth selectOption"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.unitType'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.unitType')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
@@ -906,11 +824,7 @@ class FloorDetails extends Component {
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.unitType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.unitType}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.unitType}</span>
                             ) : (
                               ''
                             )
@@ -918,9 +832,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.unitType : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.unitType : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -954,24 +866,16 @@ class FloorDetails extends Component {
                         {renderOption(_this.state.unitType)}
                       </SelectField>
                     </Col>
-                    {(floorDetails.floor
-                      ? floorDetails.floor.unitType == 'FLAT' ? true : false
-                      : false) && (
+                    {(floorDetails.floor ? (floorDetails.floor.unitType == 'FLAT' ? true : false) : false) && (
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           className="fullWidth selectOption"
                           floatingLabelFixed={true}
-                          floatingLabelText={translate(
-                            'pt.create.groups.floorDetails.fields.isRoomFlat'
-                          )}
+                          floatingLabelText={translate('pt.create.groups.floorDetails.fields.isRoomFlat')}
                           errorText={
                             fieldErrors.roomInFlat ? (
                               fieldErrors.floor.roomInFlat ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -41 }}
-                                >
-                                  {fieldErrors.floor.roomInFlat}
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.roomInFlat}</span>
                               ) : (
                                 ''
                               )
@@ -979,11 +883,7 @@ class FloorDetails extends Component {
                               ''
                             )
                           }
-                          value={
-                            floorDetails.floor
-                              ? floorDetails.floor.roomInFlat
-                              : ''
-                          }
+                          value={floorDetails.floor ? floorDetails.floor.roomInFlat : ''}
                           dropDownMenuProps={{
                             animated: false,
                             targetOrigin: {
@@ -1011,20 +911,12 @@ class FloorDetails extends Component {
                                 value: value,
                               },
                             };
-                            handleChangeFloor(
-                              e,
-                              'floor',
-                              'roomInFlat',
-                              false,
-                              ''
-                            );
+                            handleChangeFloor(e, 'floor', 'roomInFlat', false, '');
                             if (value == 2) {
                               this.setState({ addRoom: false });
                             }
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           id="roomInFlat"
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
@@ -1034,9 +926,7 @@ class FloorDetails extends Component {
                         </SelectField>
                       </Col>
                     )}
-                    {(floorDetails.floor
-                      ? floorDetails.floor.roomInFlat == '1' ? true : false
-                      : false) && (
+                    {(floorDetails.floor ? (floorDetails.floor.roomInFlat == '1' ? true : false) : false) && (
                       <Col xs={12} md={3} sm={6}>
                         <TextField
                           className="fullWidth"
@@ -1044,20 +934,14 @@ class FloorDetails extends Component {
                           floatingLabelFixed={true}
                           floatingLabelText={
                             <span>
-                              {translate(
-                                'pt.create.groups.floorDetails.fields.flatNo'
-                              )}
+                              {translate('pt.create.groups.floorDetails.fields.flatNo')}
                               <span style={{ color: '#FF0000' }}> *</span>
                             </span>
                           }
                           errorText={
                             fieldErrors.floor ? (
                               fieldErrors.floor.flatNo ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -13 }}
-                                >
-                                  {fieldErrors.floor.flatNo}
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.flatNo}</span>
                               ) : (
                                 ''
                               )
@@ -1065,22 +949,12 @@ class FloorDetails extends Component {
                               ''
                             )
                           }
-                          value={
-                            floorDetails.floor ? floorDetails.floor.flatNo : ''
-                          }
+                          value={floorDetails.floor ? floorDetails.floor.flatNo : ''}
                           onChange={e => {
-                            handleChangeFloor(
-                              e,
-                              'floor',
-                              'flatNo',
-                              true,
-                              /^\d+$/g
-                            );
+                            handleChangeFloor(e, 'floor', 'flatNo', true, /^\d+$/g);
                           }}
                           id="flatNo"
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           maxLength={3}
@@ -1093,9 +967,7 @@ class FloorDetails extends Component {
                         className="fullWidth"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.unitNumber'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.unitNumber')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
@@ -1104,11 +976,7 @@ class FloorDetails extends Component {
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.unitNo ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.unitNo}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.unitNo}</span>
                             ) : (
                               ''
                             )
@@ -1116,17 +984,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.unitNo : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.unitNo : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'unitNo',
-                            true,
-                            /^[a-zA-Z0-9]*$/g
-                          );
+                          handleChangeFloor(e, 'floor', 'unitNo', true, /^[a-zA-Z0-9]*$/g);
                         }}
                         id="unitNo"
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1142,20 +1002,14 @@ class FloorDetails extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.constructionClass'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.constructionClass')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.structure ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.structure}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.structure}</span>
                             ) : (
                               ''
                             )
@@ -1163,9 +1017,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.structure : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.structure : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -1197,20 +1049,14 @@ class FloorDetails extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.usageType'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.usageType')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.usage ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.usage}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.usage}</span>
                             ) : (
                               ''
                             )
@@ -1218,9 +1064,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.usage : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.usage : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -1251,17 +1095,11 @@ class FloorDetails extends Component {
                       <SelectField
                         className="fullWidth selectOption"
                         floatingLabelFixed={true}
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.usageSubType'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.usageSubType')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.usageSubType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.usageSubType}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.usageSubType}</span>
                             ) : (
                               ''
                             )
@@ -1269,11 +1107,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.usageSubType
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.usageSubType : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -1288,13 +1122,7 @@ class FloorDetails extends Component {
                               value: value,
                             },
                           };
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'usageSubType',
-                            false,
-                            ''
-                          );
+                          handleChangeFloor(e, 'floor', 'usageSubType', false, '');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -1309,17 +1137,11 @@ class FloorDetails extends Component {
                       <TextField
                         className="fullWidth"
                         floatingLabelFixed={true}
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.firmName'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.firmName')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.firmName ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.firmName}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.firmName}</span>
                             ) : (
                               ''
                             )
@@ -1327,9 +1149,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.firmName : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.firmName : ''}
                         onChange={e => {
                           handleChangeFloor(e, 'floor', 'firmName', false, '');
                         }}
@@ -1347,20 +1167,14 @@ class FloorDetails extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.occupancy'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.occupancy')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.occupancyType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.occupancyType}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.occupancyType}</span>
                             ) : (
                               ''
                             )
@@ -1368,11 +1182,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.occupancyType
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.occupancyType : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -1387,13 +1197,7 @@ class FloorDetails extends Component {
                               value: value,
                             },
                           };
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'occupancyType',
-                            true,
-                            ''
-                          );
+                          handleChangeFloor(e, 'floor', 'occupancyType', true, '');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -1410,9 +1214,7 @@ class FloorDetails extends Component {
                           <TextField
                             className="fullWidth"
                             floatingLabelFixed={true}
-                            floatingLabelText={translate(
-                              'pt.create.groups.floorDetails.fields.occupantName'
-                            )}
+                            floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupantName')}
                             errorText={
                               fieldErrors.floor ? (
                                 fieldErrors.floor.occupierName ? (
@@ -1431,23 +1233,11 @@ class FloorDetails extends Component {
                                 ''
                               )
                             }
-                            value={
-                              floorDetails.floor
-                                ? floorDetails.floor.occupierName
-                                : ''
-                            }
+                            value={floorDetails.floor ? floorDetails.floor.occupierName : ''}
                             onChange={e => {
-                              handleChangeFloor(
-                                e,
-                                'floor',
-                                'occupierName',
-                                false,
-                                /^[a-zA-Z,\s]+$/g
-                              );
+                              handleChangeFloor(e, 'floor', 'occupierName', false, /^[a-zA-Z,\s]+$/g);
                             }}
-                            floatingLabelFocusStyle={
-                              styles.floatingLabelFocusStyle
-                            }
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             id="occupierName"
                             underlineFocusStyle={styles.underlineFocusStyle}
@@ -1460,24 +1250,12 @@ class FloorDetails extends Component {
                             mini={true}
                             id="addOccupierName"
                             disabled={
-                              floorDetails.floor
-                                ? floorDetails.floor.occupierName &&
-                                  floorDetails.floor.occupierName != ''
-                                  ? false
-                                  : true
-                                : true
+                              floorDetails.floor ? (floorDetails.floor.occupierName && floorDetails.floor.occupierName != '' ? false : true) : true
                             }
                             onClick={() => {
-                              if (
-                                floorDetails.hasOwnProperty('floor') &&
-                                floorDetails.floor.hasOwnProperty(
-                                  'occupierName'
-                                )
-                              ) {
+                              if (floorDetails.hasOwnProperty('floor') && floorDetails.floor.hasOwnProperty('occupierName')) {
                                 this.handleDialogOpen();
-                                this.setOccupantName(
-                                  floorDetails.floor.occupierName
-                                );
+                                this.setOccupantName(floorDetails.floor.occupierName);
                               }
                             }}
                             style={{ marginTop: 15 }}
@@ -1487,27 +1265,16 @@ class FloorDetails extends Component {
                         </Col>
                       </Row>
                     </Col>
-                    {(floorDetails.floor
-                      ? !getNameById(
-                          this.state.occupancies,
-                          floorDetails.floor.occupancyType
-                        ).match('Owner')
-                      : true) && (
+                    {(floorDetails.floor ? !getNameById(this.state.occupancies, floorDetails.floor.occupancyType).match('Owner') : true) && (
                       <Col xs={12} md={3} sm={6}>
                         <TextField
                           className="fullWidth"
-                          floatingLabelText={translate(
-                            'pt.create.groups.floorDetails.fields.annualRent'
-                          )}
+                          floatingLabelText={translate('pt.create.groups.floorDetails.fields.annualRent')}
                           hintText="15000"
                           errorText={
                             fieldErrors.floor ? (
                               fieldErrors.floor.annualRent ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -13 }}
-                                >
-                                  {fieldErrors.floor.annualRent}
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.annualRent}</span>
                               ) : (
                                 ''
                               )
@@ -1515,23 +1282,11 @@ class FloorDetails extends Component {
                               ''
                             )
                           }
-                          value={
-                            floorDetails.floor
-                              ? floorDetails.floor.annualRent
-                              : ''
-                          }
+                          value={floorDetails.floor ? floorDetails.floor.annualRent : ''}
                           onChange={e => {
-                            handleChangeFloor(
-                              e,
-                              'floor',
-                              'annualRent',
-                              false,
-                              /^\d{1,64}$/g
-                            );
+                            handleChangeFloor(e, 'floor', 'annualRent', false, /^\d{1,64}$/g);
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           floatingLabelFixed={true}
                           underlineFocusStyle={styles.underlineFocusStyle}
@@ -1545,17 +1300,11 @@ class FloorDetails extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <TextField
                           className="fullWidth"
-                          floatingLabelText={translate(
-                            'pt.create.groups.floorDetails.fields.Arv'
-                          )}
+                          floatingLabelText={translate('pt.create.groups.floorDetails.fields.Arv')}
                           errorText={
                             fieldErrors.floor ? (
                               fieldErrors.floor.arv ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -13 }}
-                                >
-                                  {fieldErrors.floor.arv}
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.arv}</span>
                               ) : (
                                 ''
                               )
@@ -1563,22 +1312,12 @@ class FloorDetails extends Component {
                               ''
                             )
                           }
-                          value={
-                            floorDetails.floor ? floorDetails.floor.arv : ''
-                          }
+                          value={floorDetails.floor ? floorDetails.floor.arv : ''}
                           onChange={e => {
-                            handleChangeFloor(
-                              e,
-                              'floor',
-                              'arv',
-                              false,
-                              /^[0-9]*$/g
-                            );
+                            handleChangeFloor(e, 'floor', 'arv', false, /^[0-9]*$/g);
                           }}
                           id="arv"
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           floatingLabelFixed={true}
                           underlineFocusStyle={styles.underlineFocusStyle}
@@ -1590,17 +1329,11 @@ class FloorDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.manualArv'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.manualArv')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.manualArv ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.manualArv}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.manualArv}</span>
                             ) : (
                               ''
                             )
@@ -1608,17 +1341,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.manualArv : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.manualArv : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'manualArv',
-                            false,
-                            /^[0-9]*$/g
-                          );
+                          handleChangeFloor(e, 'floor', 'manualArv', false, /^[0-9]*$/g);
                         }}
                         id="manualArv"
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -1634,24 +1359,14 @@ class FloorDetails extends Component {
                         className="fullWidth"
                         hintText="dd/mm/yyyy"
                         floatingLabelFixed={true}
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.constructionStartDate'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.constructionStartDate')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.constructionStartDate ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.constructionStartDate}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.constructionStartDate}</span>
                             ) : isDatesValid.error ? (
                               isDatesValid.type == 'constructionStartDate' ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -13 }}
-                                >
-                                  This should be less/equal to const. end date
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -13 }}>This should be less/equal to const. end date</span>
                               ) : (
                                 ''
                               )
@@ -1660,11 +1375,7 @@ class FloorDetails extends Component {
                             )
                           ) : isDatesValid.error ? (
                             isDatesValid.type == 'constructionStartDate' ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                This should be less/equal to const. end date
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>This should be less/equal to const. end date</span>
                             ) : (
                               ''
                             )
@@ -1674,11 +1385,7 @@ class FloorDetails extends Component {
                         }
                         value={
                           floorDetails.floor
-                            ? floorDetails.floor.constructionStartDate
-                              ? floorDetails.floor.constructionStartDate.split(
-                                  ' '
-                                )[0]
-                              : ''
+                            ? floorDetails.floor.constructionStartDate ? floorDetails.floor.constructionStartDate.split(' ')[0] : ''
                             : ''
                         }
                         onChange={(e, value) => {
@@ -1720,27 +1427,17 @@ class FloorDetails extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.constructionEndDate'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.constructionEndDate')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.constCompletionDate ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.constCompletionDate}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.constCompletionDate}</span>
                             ) : isDatesValid.error ? (
                               isDatesValid.type == 'constCompletionDate' ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -13 }}
-                                >
-                                  This should be more/equal to const. start date
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -13 }}>This should be more/equal to const. start date</span>
                               ) : (
                                 ''
                               )
@@ -1749,11 +1446,7 @@ class FloorDetails extends Component {
                             )
                           ) : isDatesValid.error ? (
                             isDatesValid.type == 'constCompletionDate' ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                This should be more/equal to const start date
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>This should be more/equal to const start date</span>
                             ) : (
                               ''
                             )
@@ -1763,11 +1456,7 @@ class FloorDetails extends Component {
                         }
                         value={
                           floorDetails.floor
-                            ? floorDetails.floor.constCompletionDate
-                              ? floorDetails.floor.constCompletionDate.split(
-                                  ' '
-                                )[0]
-                              : ''
+                            ? floorDetails.floor.constCompletionDate ? floorDetails.floor.constCompletionDate.split(' ')[0] : ''
                             : ''
                         }
                         onChange={(e, value) => {
@@ -1810,27 +1499,17 @@ class FloorDetails extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.effectiveFromDate'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.occupancyDate ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.occupancyDate}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.occupancyDate}</span>
                             ) : isDatesValid.error ? (
                               isDatesValid.type == 'occupancyDate' ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -13 }}
-                                >
-                                  This should be less/equal to const. start date
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -13 }}>This should be less/equal to const. start date</span>
                               ) : (
                                 ''
                               )
@@ -1839,11 +1518,7 @@ class FloorDetails extends Component {
                             )
                           ) : isDatesValid.error ? (
                             isDatesValid.type == 'occupancyDate' ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                This should be less/equal to const start date
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>This should be less/equal to const start date</span>
                             ) : (
                               ''
                             )
@@ -1851,13 +1526,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.occupancyDate
-                              ? floorDetails.floor.occupancyDate.split(' ')[0]
-                              : ''
-                            : ''
-                        }
+                        value={floorDetails.floor ? (floorDetails.floor.occupancyDate ? floorDetails.floor.occupancyDate.split(' ')[0] : '') : ''}
                         onChange={(e, value) => {
                           var val = value;
                           if (value.length == 2 && !value.match('/')) {
@@ -1895,20 +1564,14 @@ class FloorDetails extends Component {
                         className="fullWidth selectOption"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.unstructuredLand'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.unstructuredLand')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.isStructured ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.floor.isStructured}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.floor.isStructured}</span>
                             ) : (
                               ''
                             )
@@ -1916,11 +1579,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.isStructured
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.isStructured : ''}
                         dropDownMenuProps={{
                           animated: false,
                           targetOrigin: {
@@ -1936,39 +1595,15 @@ class FloorDetails extends Component {
                               value: value,
                             },
                           };
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'isStructured',
-                            true,
-                            ''
-                          );
+                          handleChangeFloor(e, 'floor', 'isStructured', true, '');
                           var f = {
                             target: {
                               value: '',
                             },
                           };
-                          handleChangeFloor(
-                            f,
-                            'floor',
-                            'width',
-                            false,
-                            /^[0-9.]+$/
-                          );
-                          handleChangeFloor(
-                            f,
-                            'floor',
-                            'length',
-                            false,
-                            /^[0-9.]+$/
-                          );
-                          handleChangeFloor(
-                            f,
-                            'floor',
-                            'builtupArea',
-                            true,
-                            /^[0-9.]+$/
-                          );
+                          handleChangeFloor(f, 'floor', 'width', false, /^[0-9.]+$/);
+                          handleChangeFloor(f, 'floor', 'length', false, /^[0-9.]+$/);
+                          handleChangeFloor(f, 'floor', 'builtupArea', true, /^[0-9.]+$/);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         id="isStructured"
@@ -1985,18 +1620,12 @@ class FloorDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.length'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.length')}
                         hintText="12.50"
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.length ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.length}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.length}</span>
                             ) : (
                               ''
                             )
@@ -2004,17 +1633,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.length : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.length : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'length',
-                            false,
-                            /^[0-9.]+$/
-                          );
+                          handleChangeFloor(e, 'floor', 'length', false, /^[0-9.]+$/);
                           cThis.calcArea(e, 'length');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -2025,11 +1646,8 @@ class FloorDetails extends Component {
                         maxLength={6}
                         floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                         disabled={
-                          floorDetails.hasOwnProperty('floor') &&
-                          floorDetails.floor != null
-                            ? floorDetails.floor.isStructured == 'YES'
-                              ? true
-                              : false
+                          floorDetails.hasOwnProperty('floor') && floorDetails.floor != null
+                            ? floorDetails.floor.isStructured == 'YES' ? true : false
                             : false
                         }
                       />
@@ -2038,17 +1656,11 @@ class FloorDetails extends Component {
                       <TextField
                         className="fullWidth"
                         hintText="15.25"
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.breadth'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.breadth')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.width ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.width}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.width}</span>
                             ) : (
                               ''
                             )
@@ -2056,17 +1668,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.width : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.width : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'width',
-                            false,
-                            /^[0-9.]+$/
-                          );
+                          handleChangeFloor(e, 'floor', 'width', false, /^[0-9.]+$/);
                           cThis.calcArea(e, 'width');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -2077,11 +1681,8 @@ class FloorDetails extends Component {
                         maxLength={6}
                         floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                         disabled={
-                          floorDetails.hasOwnProperty('floor') &&
-                          floorDetails.floor != null
-                            ? floorDetails.floor.isStructured == 'YES'
-                              ? true
-                              : false
+                          floorDetails.hasOwnProperty('floor') && floorDetails.floor != null
+                            ? floorDetails.floor.isStructured == 'YES' ? true : false
                             : false
                         }
                       />
@@ -2091,9 +1692,7 @@ class FloorDetails extends Component {
                         className="fullWidth"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.floorDetails.fields.plinthArea'
-                            )}
+                            {translate('pt.create.groups.floorDetails.fields.plinthArea')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
@@ -2101,11 +1700,7 @@ class FloorDetails extends Component {
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.builtupArea ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.builtupArea}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.builtupArea}</span>
                             ) : (
                               ''
                             )
@@ -2113,19 +1708,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.builtupArea
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.builtupArea : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'builtupArea',
-                            true,
-                            /^[0-9.]+$/
-                          );
+                          handleChangeFloor(e, 'floor', 'builtupArea', true, /^[0-9.]+$/);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         id="builtupArea"
@@ -2135,11 +1720,8 @@ class FloorDetails extends Component {
                         maxLength={5}
                         floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                         disabled={
-                          floorDetails.hasOwnProperty('floor') &&
-                          floorDetails.floor != null
-                            ? floorDetails.floor.isStructured == 'NO'
-                              ? true
-                              : false
+                          floorDetails.hasOwnProperty('floor') && floorDetails.floor != null
+                            ? floorDetails.floor.isStructured == 'NO' ? true : false
                             : false
                         }
                       />
@@ -2149,20 +1731,14 @@ class FloorDetails extends Component {
                         className="fullWidth"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.propertyAddress.fields.carpetArea'
-                            )}
+                            {translate('pt.create.groups.propertyAddress.fields.carpetArea')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.carpetArea ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.carpetArea}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.carpetArea}</span>
                             ) : (
                               ''
                             )
@@ -2170,11 +1746,7 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.carpetArea
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.carpetArea : ''}
                         onChange={e => {
                           calcAssessableArea(e, 'carpet');
                           handleChangeFloor(e, 'floor', 'carpetArea', true, '');
@@ -2191,52 +1763,26 @@ class FloorDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={translate(
-                          'pt.create.groups.propertyAddress.fields.exemptedArea'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.exemptedArea')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.exemptionArea ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.exemptionArea}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.exemptionArea}</span>
                             ) : this.state.negativeValue ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {translate(
-                                  'pt.create.groups.propertyAddress.invalidValue'
-                                )}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>
                             ) : (
                               ''
                             )
                           ) : this.state.negativeValue ? (
-                            <span style={{ position: 'absolute', bottom: -13 }}>
-                              {translate(
-                                'pt.create.groups.propertyAddress.invalidValue'
-                              )}
-                            </span>
+                            <span style={{ position: 'absolute', bottom: -13 }}>{translate('pt.create.groups.propertyAddress.invalidValue')}</span>
                           ) : (
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.exemptionArea
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.exemptionArea : ''}
                         onChange={e => {
                           calcAssessableArea(e, 'exempted');
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'exemptionArea',
-                            false,
-                            /^[0-9]+$/i
-                          );
+                          handleChangeFloor(e, 'floor', 'exemptionArea', false, /^[0-9]+$/i);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         id="exemptionArea"
@@ -2250,17 +1796,11 @@ class FloorDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={translate(
-                          'pt.create.groups.floorDetails.fields.occupancyCertificateNumber'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.occupancyCertiNumber ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.occupancyCertiNumber}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.occupancyCertiNumber}</span>
                             ) : (
                               ''
                             )
@@ -2268,19 +1808,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.occupancyCertiNumber
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.occupancyCertiNumber : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'occupancyCertiNumber',
-                            false,
-                            /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g
-                          );
+                          handleChangeFloor(e, 'floor', 'occupancyCertiNumber', false, /^[0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         id="occupancyCertiNumber"
@@ -2294,17 +1824,11 @@ class FloorDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={translate(
-                          'pt.create.groups.propertyAddress.fields.buildingCost'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.buildingCost')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.buildingCost ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.buildingCost}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.buildingCost}</span>
                             ) : (
                               ''
                             )
@@ -2312,19 +1836,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor
-                            ? floorDetails.floor.buildingCost
-                            : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.buildingCost : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'buildingCost',
-                            false,
-                            /^[0-9]+$/i
-                          );
+                          handleChangeFloor(e, 'floor', 'buildingCost', false, /^[0-9]+$/i);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         id="buildingCost"
@@ -2338,17 +1852,11 @@ class FloorDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={translate(
-                          'pt.create.groups.propertyAddress.fields.landCost'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.propertyAddress.fields.landCost')}
                         errorText={
                           fieldErrors.floor ? (
                             fieldErrors.floor.landCost ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.floor.landCost}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.floor.landCost}</span>
                             ) : (
                               ''
                             )
@@ -2356,17 +1864,9 @@ class FloorDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          floorDetails.floor ? floorDetails.floor.landCost : ''
-                        }
+                        value={floorDetails.floor ? floorDetails.floor.landCost : ''}
                         onChange={e => {
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'landCost',
-                            false,
-                            /^[0-9]+$/i
-                          );
+                          handleChangeFloor(e, 'floor', 'landCost', false, /^[0-9]+$/i);
                         }}
                         id="landCost"
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -2381,9 +1881,7 @@ class FloorDetails extends Component {
                       <Checkbox
                         label={
                           <span>
-                            {translate(
-                              'pt.create.groups.assessmentDetails.fields.isLegal'
-                            )}
+                            {translate('pt.create.groups.assessmentDetails.fields.isLegal')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
@@ -2395,52 +1893,27 @@ class FloorDetails extends Component {
                               value: i,
                             },
                           };
-                          handleChangeFloor(
-                            e,
-                            'floor',
-                            'isAuthorised',
-                            false,
-                            ''
-                          );
+                          handleChangeFloor(e, 'floor', 'isAuthorised', false, '');
                         }}
                         id="isAuthorised"
                       />
                     </Col>
                     <Col xs={12} md={12}>
                       {this.state.negativeValue && (
-                        <p style={{ marginTop: 15, color: 'red' }}>
-                          {translate(
-                            'pt.create.groups.propertyAddress.exemptedAreaError'
-                          )}
-                        </p>
+                        <p style={{ marginTop: 15, color: 'red' }}>{translate('pt.create.groups.propertyAddress.exemptedAreaError')}</p>
                       )}
                       {this.state.newFloorError && (
-                        <p style={{ marginTop: 15, color: 'red' }}>
-                          {translate(
-                            'pt.create.groups.propertyAddress.totalFloorsError'
-                          )}
-                        </p>
+                        <p style={{ marginTop: 15, color: 'red' }}>{translate('pt.create.groups.propertyAddress.totalFloorsError')}</p>
                       )}
                     </Col>
-                    <Col
-                      xs={12}
-                      md={12}
-                      style={{ textAlign: 'right', float: 'right' }}
-                    >
+                    <Col xs={12} md={12} style={{ textAlign: 'right', float: 'right' }}>
                       <br />
                       {(editIndex == -1 || editIndex == undefined) && (
                         <RaisedButton
                           type="button"
-                          label={translate(
-                            'pt.create.groups.propertyAddress.addRoom'
-                          )}
+                          label={translate('pt.create.groups.propertyAddress.addRoom')}
                           id="addRoom"
-                          disabled={
-                            !isFloorValid ||
-                            this.state.newFloorError ||
-                            this.state.negativeValue ||
-                            isDatesValid.error
-                          }
+                          disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error}
                           primary={true}
                           onClick={() => {
                             this.props.addNestedFormData('floors', 'floor');
@@ -2458,23 +1931,12 @@ class FloorDetails extends Component {
                       {editIndex > -1 && (
                         <RaisedButton
                           type="button"
-                          label={translate(
-                            'pt.create.groups.propertyAddress.updateRoom'
-                          )}
+                          label={translate('pt.create.groups.propertyAddress.updateRoom')}
                           id="updateRoom"
-                          disabled={
-                            !isFloorValid ||
-                            this.state.newFloorError ||
-                            this.state.negativeValue ||
-                            isDatesValid.error
-                          }
+                          disabled={!isFloorValid || this.state.newFloorError || this.state.negativeValue || isDatesValid.error}
                           primary={true}
                           onClick={() => {
-                            this.props.updateObject(
-                              'floors',
-                              'floor',
-                              editIndex
-                            );
+                            this.props.updateObject('floors', 'floor', editIndex);
                             this.props.resetObject('floor', false);
                             this.props.resetObject('owner', false);
 
@@ -2512,126 +1974,30 @@ class FloorDetails extends Component {
                           >
                             <tr>
                               <th>#</th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.floorNumber'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.unitType'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.unitNumber'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.constructionClass'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.usageType'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.usageSubType'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.firmName'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.occupancy'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.occupantName'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.annualRent'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.manualArv'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.constructionStartDate'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.constructionEndDate'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.effectiveFromDate'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.unstructuredLand'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.length'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.breadth'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.propertyAddress.fields.carpetArea'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.propertyAddress.fields.exemptedArea'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.propertyAddress.fields.buildingCost'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.propertyAddress.fields.landCost'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.plinthArea'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.floorDetails.fields.occupancyCertificateNumber'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.assessmentDetails.fields.isLegal'
-                                )}
-                              </th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.floorNumber')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.unitType')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.unitNumber')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.constructionClass')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.usageType')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.usageSubType')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.firmName')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.occupancy')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.occupantName')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.annualRent')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.manualArv')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.constructionStartDate')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.constructionEndDate')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.effectiveFromDate')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.unstructuredLand')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.length')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.breadth')}</th>
+                              <th>{translate('pt.create.groups.propertyAddress.fields.carpetArea')}</th>
+                              <th>{translate('pt.create.groups.propertyAddress.fields.exemptedArea')}</th>
+                              <th>{translate('pt.create.groups.propertyAddress.fields.buildingCost')}</th>
+                              <th>{translate('pt.create.groups.propertyAddress.fields.landCost')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.plinthArea')}</th>
+                              <th>{translate('pt.create.groups.floorDetails.fields.occupancyCertificateNumber')}</th>
+                              <th>{translate('pt.create.groups.assessmentDetails.fields.isLegal')}</th>
                               <th style={{ minWidth: 70 }} />
                             </tr>
                           </thead>
@@ -2642,162 +2008,41 @@ class FloorDetails extends Component {
                                   return (
                                     <tr key={index}>
                                       <td>{index + 1}</td>
+                                      <td>{getNameById(_this.state.floorNumber, i.floorNo) || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{getNameById(_this.state.unitType, i.unitType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.unitNo || translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>
-                                        {getNameById(
-                                          _this.state.floorNumber,
-                                          i.floorNo
-                                        ) ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
+                                        {getNameById(_this.state.structureclasses, i.structure) || translate('pt.search.searchProperty.fields.na')}
                                       </td>
+                                      <td>{getNameById(_this.state.usages, i.usage) || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{getNameById(_this.state.subUsage, i.usageSubType) || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.firmName || translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>
-                                        {getNameById(
-                                          _this.state.unitType,
-                                          i.unitType
-                                        ) ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
+                                        {getNameById(_this.state.occupancies, i.occupancyType) || translate('pt.search.searchProperty.fields.na')}
                                       </td>
-                                      <td>
-                                        {i.unitNo ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {getNameById(
-                                          _this.state.structureclasses,
-                                          i.structure
-                                        ) ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {getNameById(
-                                          _this.state.usages,
-                                          i.usage
-                                        ) ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {getNameById(
-                                          _this.state.subUsage,
-                                          i.usageSubType
-                                        ) ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.firmName ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {getNameById(
-                                          _this.state.occupancies,
-                                          i.occupancyType
-                                        ) ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.occupierName ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.annualRent ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.manualArv ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
+                                      <td>{i.occupierName || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.annualRent || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.manualArv || translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>
                                         {i.constructionStartDate
-                                          ? i.constructionStartDate.split(
-                                              ' '
-                                            )[0]
-                                          : translate(
-                                              'pt.search.searchProperty.fields.na'
-                                            )}
+                                          ? i.constructionStartDate.split(' ')[0]
+                                          : translate('pt.search.searchProperty.fields.na')}
                                       </td>
                                       <td>
                                         {i.constCompletionDate
                                           ? i.constCompletionDate.split(' ')[0]
-                                          : translate(
-                                              'pt.search.searchProperty.fields.na'
-                                            )}
+                                          : translate('pt.search.searchProperty.fields.na')}
                                       </td>
-                                      <td>
-                                        {i.occupancyDate
-                                          ? i.occupancyDate.split(' ')[0]
-                                          : translate(
-                                              'pt.search.searchProperty.fields.na'
-                                            )}
-                                      </td>
+                                      <td>{i.occupancyDate ? i.occupancyDate.split(' ')[0] : translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>{i.isStructured ? 'Yes' : 'No'}</td>
-                                      <td>
-                                        {i.length ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.width ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.carpetArea ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.exemptionArea ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.buildingCost ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.landCost ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.builtupArea ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.occupancyCertiNumber ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
+                                      <td>{i.length || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.width || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.carpetArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.exemptionArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.buildingCost || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.landCost || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.builtupArea || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.occupancyCertiNumber || translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>{i.isAuthorised ? 'Yes' : 'No'}</td>
                                       <td>
                                         <i
@@ -2812,10 +2057,7 @@ class FloorDetails extends Component {
                                             }
                                             editObject('floor', i, true);
                                             cThis.props.setForm();
-                                            toggleSnackbarAndSetText(
-                                              true,
-                                              'Edit room details and update.'
-                                            );
+                                            toggleSnackbarAndSetText(true, 'Edit room details and update.');
                                             isEditIndex(index);
                                           }}
                                         >

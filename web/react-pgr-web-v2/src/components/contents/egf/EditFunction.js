@@ -47,9 +47,7 @@ class EditFunction extends Component {
     return (
       <div className="ViewFunction">
         <Card>
-          <CardHeader
-            title={<strong style={{ color: brown500 }}>Search Function</strong>}
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Search Function</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -93,12 +91,8 @@ class EditFunction extends Component {
 
                     <Col xs={12} md={6}>
                       <SelectField
-                        errorText={
-                          fieldErrors.parentType ? fieldErrors.parentType : ''
-                        }
-                        value={
-                          viewFunction.parentType ? viewFunction.parentType : ''
-                        }
+                        errorText={fieldErrors.parentType ? fieldErrors.parentType : ''}
+                        value={viewFunction.parentType ? viewFunction.parentType : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -113,10 +107,7 @@ class EditFunction extends Component {
                         <MenuItem value={2} primaryText="Welfare of Children" />
                         <MenuItem value={3} primaryText="Welfare of Aged" />
                         <MenuItem value={4} primaryText="Slum Improvements" />
-                        <MenuItem
-                          value={5}
-                          primaryText="Urban Poverty Alleviation"
-                        />
+                        <MenuItem value={5} primaryText="Urban Poverty Alleviation" />
                       </SelectField>
                     </Col>
                   </Row>
@@ -125,12 +116,7 @@ class EditFunction extends Component {
             </Card>
 
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="button"
-                label="Search"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="button" label="Search" backgroundColor={brown500} labelColor={white} />
               <RaisedButton label="Close" />
             </div>
           </CardText>

@@ -41,21 +41,12 @@ export default class SearchForCreate extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -73,17 +64,10 @@ export default class SearchForCreate extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -93,9 +77,7 @@ export default class SearchForCreate extends Component {
   }
 
   getVal = path => {
-    return typeof _.get(this.props.formData, path) != 'undefined'
-      ? _.get(this.props.formData, path)
-      : '';
+    return typeof _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
 
   initData() {
@@ -112,15 +94,7 @@ export default class SearchForCreate extends Component {
     // } catch(e) {}
 
     specifications = this.props.templateObj;
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-      setTableSelectionData,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData, setTableSelectionData } = this.props;
     let obj = specifications[this.props.actionKey];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
@@ -130,8 +104,7 @@ export default class SearchForCreate extends Component {
     setModuleName('inventory');
     setActionName('search');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     setTableSelectionData([]);
 
@@ -147,10 +120,7 @@ export default class SearchForCreate extends Component {
     this.hasReturnUrl();
   }
   componentWillReceiveProps(nextProps) {
-    if (
-      this.state.pathname &&
-      this.state.pathname != nextProps.history.location.pathname
-    ) {
+    if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
       this.props.resetDropdownData();
       this.initData();
     }
@@ -164,71 +134,42 @@ export default class SearchForCreate extends Component {
   }
 
   view = () => {
-    let {
-      moduleName,
-      actionName,
-      metaData,
-      formData,
-      setRoute,
-      tableSelectionData,
-    } = this.props;
+    let { moduleName, actionName, metaData, formData, setRoute, tableSelectionData } = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     localStorage.setItem('formData', JSON.stringify(formData));
     localStorage.setItem('returnUrl', window.location.hash.split('#/')[1]);
     if (tableSelectionData && tableSelectionData.length === 1) {
-      let url = obj.result['rowClickUrlView'].replace(
-        REGEXP_MATCH_PARAM,
-        encodeURIComponent(tableSelectionData[0])
-      );
+      let url = obj.result['rowClickUrlView'].replace(REGEXP_MATCH_PARAM, encodeURIComponent(tableSelectionData[0]));
       setRoute(url);
     }
   };
 
   update = () => {
-    let {
-      moduleName,
-      actionName,
-      metaData,
-      setRoute,
-      tableSelectionData,
-    } = this.props;
+    let { moduleName, actionName, metaData, setRoute, tableSelectionData } = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     if (tableSelectionData && tableSelectionData.length === 1) {
-      let url = obj.result['rowClickUrlUpdate'].replace(
-        REGEXP_MATCH_PARAM,
-        encodeURIComponent(tableSelectionData[0])
-      );
+      let url = obj.result['rowClickUrlUpdate'].replace(REGEXP_MATCH_PARAM, encodeURIComponent(tableSelectionData[0]));
       setRoute(url);
     }
   };
 
   delete = () => {
     let self = this;
-    let {
-      moduleName,
-      actionName,
-      metaData,
-      setRoute,
-      tableSelectionData,
-      setLoadingStatus,
-    } = this.props;
+    let { moduleName, actionName, metaData, setRoute, tableSelectionData, setLoadingStatus } = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     let resultIdKey = obj.result.resultIdKey;
 
     let deleteRequestBodyParams = obj.result.rowClickUrlDelete.body;
 
     Object.keys(deleteRequestBodyParams).map(key => {
-      if (typeof deleteRequestBodyParams[key] === 'function')
-        deleteRequestBodyParams[key] = deleteRequestBodyParams[key]();
+      if (typeof deleteRequestBodyParams[key] === 'function') deleteRequestBodyParams[key] = deleteRequestBodyParams[key]();
     });
 
     if (tableSelectionData && tableSelectionData.length > 0) {
-      let inActiveDatas = this.state.values
-        .filter(value => tableSelectionData.indexOf(value[resultIdKey]) > -1)
-        .map(value => {
-          value = { ...value, ...deleteRequestBodyParams };
-          return value;
-        });
+      let inActiveDatas = this.state.values.filter(value => tableSelectionData.indexOf(value[resultIdKey]) > -1).map(value => {
+        value = { ...value, ...deleteRequestBodyParams };
+        return value;
+      });
 
       setLoadingStatus('loading');
 
@@ -236,13 +177,7 @@ export default class SearchForCreate extends Component {
         [obj.result.resultPath]: inActiveDatas,
       };
 
-      Api.commonApiPost(
-        obj.result.rowClickUrlDelete.url,
-        '',
-        formData,
-        '',
-        true
-      ).then(function(response) {
+      Api.commonApiPost(obj.result.rowClickUrlDelete.url, '', formData, '', true).then(function(response) {
         setLoadingStatus('hide');
         self.search();
       });
@@ -256,8 +191,7 @@ export default class SearchForCreate extends Component {
     self.props.setTableSelectionData([]);
     var formData = { ...this.props.formData };
     for (var key in formData) {
-      if (formData[key] == '' || typeof formData[key] == 'undefined')
-        delete formData[key];
+      if (formData[key] == '' || typeof formData[key] == 'undefined') delete formData[key];
     }
 
     self.setState({
@@ -265,13 +199,11 @@ export default class SearchForCreate extends Component {
     });
 
     Api.commonApiPost(
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .url,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url,
       formData,
       {},
       null,
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .useTimestamp
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp
     ).then(
       function(res) {
         self.props.setLoadingStatus('hide');
@@ -279,47 +211,26 @@ export default class SearchForCreate extends Component {
           resultHeader: [
             { label: 'Select' },
             { label: '#' },
-            ...self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].result.header,
+            ...self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
           ],
           resultValues: [],
         };
-        var specsValuesList =
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.values;
-        var values = _.get(
-          res,
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.resultPath
-        );
+        var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
+        var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
         let { getVal, getValFromDropdownData } = self;
-        let resultIdKey =
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.resultIdKey;
-        let isMutlipleSelection =
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.isMultipleSelection || false;
+        let resultIdKey = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultIdKey;
+        let isMutlipleSelection = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.isMultipleSelection || false;
 
         if (values && values.length) {
           for (var i = 0; i < values.length; i++) {
             var tmp = [_.get(values[i], resultIdKey), i + 1];
             for (var j = 0; j < specsValuesList.length; j++) {
               let valuePath = specsValuesList[j];
-              if (
-                typeof valuePath === 'object' &&
-                valuePath.type === 'checkbox'
-              ) {
+              if (typeof valuePath === 'object' && valuePath.type === 'checkbox') {
                 let val = _.get(values[i], valuePath.valuePath);
                 tmp.push({
                   ...valuePath,
-                  value:
-                    (valuePath.mappingValues && valuePath.mappingValues[val]) ||
-                    val,
+                  value: (valuePath.mappingValues && valuePath.mappingValues[val]) || val,
                 });
                 continue;
               } else if (typeof valuePath === 'object' && valuePath.valExp) {
@@ -364,63 +275,23 @@ export default class SearchForCreate extends Component {
   };
 
   hideField = (_mockData, hideObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? false : true;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                delRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              addRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
             }
 
             break;
@@ -429,65 +300,26 @@ export default class SearchForCreate extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? false
-            : true;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -496,85 +328,28 @@ export default class SearchForCreate extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? false : true;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if (!reset) {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      _.set(
-                        _formData,
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].jsonPath,
-                        ''
-                      );
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      ) {
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
-                        removeFieldErrors(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                       }
                     }
                     delRequiredFields(_rReq);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      )
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                     }
                     addRequiredFields(_rReq);
                   }
@@ -590,62 +365,22 @@ export default class SearchForCreate extends Component {
   };
 
   showField = (_mockData, showObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? true : false;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                addRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              delRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
-              removeFieldErrors(
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -653,106 +388,36 @@ export default class SearchForCreate extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? true
-            : false;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
 
             addRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
 
-            if (
-              _mockData[moduleName + '.' + actionName].groups[i].children &&
-              _mockData[moduleName + '.' + actionName].groups[i].children.length
-            ) {
-              for (
-                var z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].children
-                  .length;
-                z++
-              ) {
-                for (
-                  var y = 0;
-                  y <
-                  _mockData[moduleName + '.' + actionName].groups[i].children[z]
-                    .groups.length;
-                  y++
-                ) {
-                  for (
-                    var x = 0;
-                    x <
-                    _mockData[moduleName + '.' + actionName].groups[i].children[
-                      z
-                    ].groups[y].fields.length;
-                    x++
-                  ) {
-                    if (
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[z].groups[y].fields[x].isRequired
-                    ) {
-                      _rReq.push(
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[z].groups[y].fields[x].jsonPath
-                      );
-                      removeFieldErrors(
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[z].groups[y].fields[x].jsonPath
-                      );
+            if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+              for (var z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].children.length; z++) {
+                for (var y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].children[z].groups.length; y++) {
+                  for (var x = 0; x < _mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields.length; x++) {
+                    if (_mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields[x].isRequired) {
+                      _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
+                      removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[z].groups[y].fields[x].jsonPath);
                     }
                   }
                 }
@@ -766,37 +431,12 @@ export default class SearchForCreate extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? true : false;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 
                   } else {
@@ -816,93 +456,29 @@ export default class SearchForCreate extends Component {
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y],
-                  true
-                );
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z],
-                  true
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
           }
@@ -913,36 +489,16 @@ export default class SearchForCreate extends Component {
     setMockData(_mockData);
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal, getValFromDropdownData } = this;
     let { handleChange, mockData, setDropDownData } = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications[this.props.actionKey];
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
-    let fieldObj = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")]`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+    let fieldObj = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")]`);
 
     this.checkIfHasShowHideFields(property, e.target.value);
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -975,9 +531,7 @@ export default class SearchForCreate extends Component {
                   );
                 }
               } else {
-                id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                  i
-                ].split('=')[1];
+                id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
               }
             }
           }
@@ -1020,14 +574,7 @@ export default class SearchForCreate extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
@@ -1036,12 +583,8 @@ export default class SearchForCreate extends Component {
     var value = this.state.values[index];
     var _url =
       window.location.hash.split('/').indexOf('update') > -1
-        ? this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlUpdate
-        : this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlView;
+        ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate
+        : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
 
     //======================Check if direct URL or array====================>>
     if (typeof _url == 'object') {
@@ -1085,26 +628,16 @@ export default class SearchForCreate extends Component {
       this.props.setRoute(url + queryString);
     } else {
       var key = _url.split('{')[1].split('}')[0];
-      _url = _url.replace(
-        '{' + key + '}',
-        encodeURIComponent(_.get(value, key))
-      );
+      _url = _url.replace('{' + key + '}', encodeURIComponent(_.get(value, key)));
       this.props.setRoute(_url);
     }
   };
 
   resetForm = () => {
-    let {
-      moduleName,
-      actionName,
-      metaData,
-      setFormData,
-      setTableSelectionData,
-    } = this.props;
+    let { moduleName, actionName, metaData, setFormData, setTableSelectionData } = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     setTableSelectionData([]);
     this.setState({
@@ -1140,13 +673,7 @@ export default class SearchForCreate extends Component {
   };
 
   onClickCustomButton = buttonObj => {
-    let {
-      moduleName,
-      actionName,
-      metaData,
-      setRoute,
-      tableSelectionData,
-    } = this.props;
+    let { moduleName, actionName, metaData, setRoute, tableSelectionData } = this.props;
     // let obj = metaData[`${moduleName}.${actionName}`];
     // let resultIdKey = obj.result.resultIdKey;
 
@@ -1168,12 +695,7 @@ export default class SearchForCreate extends Component {
         }
       }
       if (errorFields.length > 0) {
-        this.props.toggleSnackbarAndSetText(
-          translate(buttonObj.validationMessage).replace(
-            /\{(.*?)\}/g,
-            errorFields.join(',')
-          )
-        );
+        this.props.toggleSnackbarAndSetText(translate(buttonObj.validationMessage).replace(/\{(.*?)\}/g, errorFields.join(',')));
         return false;
       }
     }
@@ -1184,32 +706,14 @@ export default class SearchForCreate extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-      tableSelectionData,
-    } = this.props;
-    let {
-      search,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      rowClickHandler,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid, tableSelectionData } = this.props;
+    let { search, handleChange, getVal, addNewCard, removeCard, rowClickHandler } = this;
     let { showResult, resultList } = this.state;
 
     //let isEnableUpdateViewBtn = tableSelectionData && tableSelectionData.length === 1 || false;
-    let isEnableCustomButtons =
-      (tableSelectionData && tableSelectionData.length > 0) || false;
+    let isEnableCustomButtons = (tableSelectionData && tableSelectionData.length > 0) || false;
 
-    let customButtons =
-      mockData[`${moduleName}.${actionName}`] &&
-      mockData[`${moduleName}.${actionName}`].customButtons;
+    let customButtons = mockData[`${moduleName}.${actionName}`] && mockData[`${moduleName}.${actionName}`].customButtons;
 
     return (
       <div className="SearchResult">
@@ -1232,9 +736,7 @@ export default class SearchForCreate extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
               />
@@ -1249,51 +751,12 @@ export default class SearchForCreate extends Component {
               }}
               ui="google"
             />&nbsp;&nbsp;
-            <UiButton
-              item={{ label: 'Reset', uiType: 'button', primary: false }}
-              ui="google"
-              handler={this.resetForm}
-            />&nbsp;&nbsp;
+            <UiButton item={{ label: 'Reset', uiType: 'button', primary: false }} ui="google" handler={this.resetForm} />&nbsp;&nbsp;
             {customButtons &&
-              customButtons
-                .filter(button => !button.groups)
-                .map((button, idx) => {
-                  return (
-                    <span key={idx}>
-                      <UiButton
-                        handler={e => {
-                          this.onClickCustomButton(button);
-                        }}
-                        item={{
-                          label: button.buttonText,
-                          uiType: 'button',
-                          isDisabled: !isEnableCustomButtons,
-                        }}
-                        ui="google"
-                      />&nbsp;&nbsp;
-                    </span>
-                  );
-                })}
-            {/* <UiButton item={{"label": "View", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.view}/>&nbsp;&nbsp;
-            <UiButton item={{"label": "Update", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.update}/>&nbsp;&nbsp;
-            <UiButton item={{"label": "Delete", "uiType":"button", "primary": true, "isDisabled":!isEnableDeleteBtn}} ui="google" handler={this.delete} />&nbsp;&nbsp;
-            <UiButton item={{"label": "Add", "uiType":"button", "primary": true}} ui="google" handler={this.redirectToUrl.bind(this, "rowClickUrlAdd")}/> */}
-            <br />
-            {showResult && (
-              <CustomUiTable
-                resultList={resultList}
-                rowClickHandler={rowClickHandler}
-              />
-            )}
-            {isEnableCustomButtons &&
-              customButtons &&
-              customButtons
-                .filter(button => button.groups)
-                .map((button, idx) => {
-                  return [
-                    this.renderFieldGroupForCustomButtons(button),
+              customButtons.filter(button => !button.groups).map((button, idx) => {
+                return (
+                  <span key={idx}>
                     <UiButton
-                      key={idx}
                       handler={e => {
                         this.onClickCustomButton(button);
                       }}
@@ -1303,10 +766,36 @@ export default class SearchForCreate extends Component {
                         isDisabled: !isEnableCustomButtons,
                       }}
                       ui="google"
-                    />,
-                    <br />,
-                  ];
-                })}
+                    />&nbsp;&nbsp;
+                  </span>
+                );
+              })}
+            {/* <UiButton item={{"label": "View", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.view}/>&nbsp;&nbsp;
+            <UiButton item={{"label": "Update", "uiType":"button", "primary": true, "isDisabled":!isEnableUpdateViewBtn}} ui="google" handler={this.update}/>&nbsp;&nbsp;
+            <UiButton item={{"label": "Delete", "uiType":"button", "primary": true, "isDisabled":!isEnableDeleteBtn}} ui="google" handler={this.delete} />&nbsp;&nbsp;
+            <UiButton item={{"label": "Add", "uiType":"button", "primary": true}} ui="google" handler={this.redirectToUrl.bind(this, "rowClickUrlAdd")}/> */}
+            <br />
+            {showResult && <CustomUiTable resultList={resultList} rowClickHandler={rowClickHandler} />}
+            {isEnableCustomButtons &&
+              customButtons &&
+              customButtons.filter(button => button.groups).map((button, idx) => {
+                return [
+                  this.renderFieldGroupForCustomButtons(button),
+                  <UiButton
+                    key={idx}
+                    handler={e => {
+                      this.onClickCustomButton(button);
+                    }}
+                    item={{
+                      label: button.buttonText,
+                      uiType: 'button',
+                      isDisabled: !isEnableCustomButtons,
+                    }}
+                    ui="google"
+                  />,
+                  <br />,
+                ];
+              })}
           </div>
         </form>
       </div>

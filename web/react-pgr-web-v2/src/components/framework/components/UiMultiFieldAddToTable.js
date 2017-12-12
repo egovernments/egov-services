@@ -36,8 +36,7 @@ import Api from '../../../api/api';
 
 var dropDownData = {
   'MdmsMetadata.masterData[0].side': {
-    url:
-      '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$.MdmsRes.lcms.side.*.code|$.MdmsRes.lcms.side.*.name',
+    url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$.MdmsRes.lcms.side.*.code|$.MdmsRes.lcms.side.*.name',
   },
 };
 
@@ -122,28 +121,14 @@ class UiMultiFieldAddToTable extends Component {
   }
 
   updateValueList = nProps => {
-    if (
-      nProps.valueList &&
-      nProps.valueList.length &&
-      !_.isEqual(nProps.valueList, this.state.valueList)
-    ) {
+    if (nProps.valueList && nProps.valueList.length && !_.isEqual(nProps.valueList, this.state.valueList)) {
       this.setState({
         valueList: _.cloneDeep(nProps.valueList),
       });
     }
   };
 
-  handler = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch',
-    expression,
-    expErr,
-    isDate
-  ) => {
+  handler = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch', expression, expErr, isDate) => {
     let { formData } = this.state;
     let fieldErrors = _.cloneDeep(this.state.fieldErrors);
     let isFormValid = true;
@@ -157,23 +142,14 @@ class UiMultiFieldAddToTable extends Component {
     }
 
     //Check for pattern match
-    if (
-      pattern &&
-      _.get(formData, property) &&
-      !new RegExp(pattern).test(_.get(formData, property))
-    ) {
-      fieldErrors[property] = patternErrMsg
-        ? translate(patternErrMsg)
-        : translate('ui.framework.patternMessage');
+    if (pattern && _.get(formData, property) && !new RegExp(pattern).test(_.get(formData, property))) {
+      fieldErrors[property] = patternErrMsg ? translate(patternErrMsg) : translate('ui.framework.patternMessage');
       isFormValid = false;
     }
 
     //Check if any other field is required
     for (let i = 0; i < this.state.requiredFields.length; i++) {
-      if (
-        typeof _.get(formData, this.state.requiredFields[i]) == 'undefined' ||
-        _.get(formData, this.state.requiredFields[i]) == ''
-      ) {
+      if (typeof _.get(formData, this.state.requiredFields[i]) == 'undefined' || _.get(formData, this.state.requiredFields[i]) == '') {
         isFormValid = false;
         break;
       }
@@ -191,9 +167,7 @@ class UiMultiFieldAddToTable extends Component {
     let { valueList, item } = this.props;
     let formData = _.cloneDeep(this.props.formData);
     let localFormData = _.cloneDeep(this.state.formData);
-    let myTableInParent =
-      _.get(formData, this.props.item.jsonPath) ||
-      _.get(formData, 'MasterMetaData.masterData');
+    let myTableInParent = _.get(formData, this.props.item.jsonPath) || _.get(formData, 'MasterMetaData.masterData');
     let stateFormDataTable = _.get(localFormData, this.props.item.jsonPath);
     let indexes;
 
@@ -206,22 +180,16 @@ class UiMultiFieldAddToTable extends Component {
       if (!stateFormDataTable[0].hasOwnProperty(item.values[i].name)) {
         if (item.values[i].name == 'active') {
           stateFormDataTable[0][item.values[i].name] = false;
-          temp[0][item.values[i].name] =
-            stateFormDataTable[0][item.values[i].name];
+          temp[0][item.values[i].name] = stateFormDataTable[0][item.values[i].name];
         } else if (item.values[i].name != 'tenantId') {
           stateFormDataTable[0][item.values[i].name] = '';
-          temp[0][item.values[i].name] =
-            stateFormDataTable[0][item.values[i].name];
+          temp[0][item.values[i].name] = stateFormDataTable[0][item.values[i].name];
         } else if (item.values[i].name === 'tenantId') {
-          stateFormDataTable[0][item.values[i].name] = localStorage.getItem(
-            'tenantId'
-          );
-          temp[0][item.values[i].name] =
-            stateFormDataTable[0][item.values[i].name];
+          stateFormDataTable[0][item.values[i].name] = localStorage.getItem('tenantId');
+          temp[0][item.values[i].name] = stateFormDataTable[0][item.values[i].name];
         }
       } else {
-        temp[0][item.values[i].name] =
-          stateFormDataTable[0][item.values[i].name];
+        temp[0][item.values[i].name] = stateFormDataTable[0][item.values[i].name];
       }
     }
 
@@ -238,35 +206,19 @@ class UiMultiFieldAddToTable extends Component {
     // console.log(stateFormDataTable);
     self.props.setLoadingStatus('loading');
     if (this.state.index == -1) {
-      Api.commonApiPost(
-        '/egov-mdms-create/v1/_create',
-        {},
-        { MasterMetaData: MasterMetaData },
-        false,
-        true
-      )
+      Api.commonApiPost('/egov-mdms-create/v1/_create', {}, { MasterMetaData: MasterMetaData }, false, true)
         .then(function(res) {
           // console.log(res);
           if (!myTableInParent) {
             temp[0].id = 1;
-            self.props.handler(
-              { target: { value: temp } },
-              self.props.item.jsonPath
-            );
+            self.props.handler({ target: { value: temp } }, self.props.item.jsonPath);
           } else {
             temp[0].id = myTableInParent.length + 1;
             myTableInParent.push(temp[0]);
-            self.props.handler(
-              { target: { value: myTableInParent } },
-              self.props.item.jsonPath
-            );
+            self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
           }
           self.props.setLoadingStatus('hide');
-          self.props.toggleSnackbarAndSetText(
-            true,
-            'Data Saved Successfully',
-            true
-          );
+          self.props.toggleSnackbarAndSetText(true, 'Data Saved Successfully', true);
           //need to clean this code
           let list = _.get(self.props.formData, self.props.item.jsonPath);
 
@@ -299,25 +251,12 @@ class UiMultiFieldAddToTable extends Component {
           self.props.toggleSnackbarAndSetText(true, err.message);
         });
     } else {
-      Api.commonApiPost(
-        '/egov-mdms-create/v1/_update',
-        {},
-        { MasterMetaData: MasterMetaData },
-        false,
-        true
-      )
+      Api.commonApiPost('/egov-mdms-create/v1/_update', {}, { MasterMetaData: MasterMetaData }, false, true)
         .then(function(res) {
           myTableInParent[self.state.index] = temp[0];
-          self.props.handler(
-            { target: { value: myTableInParent } },
-            self.props.item.jsonPath
-          );
+          self.props.handler({ target: { value: myTableInParent } }, self.props.item.jsonPath);
           self.props.setLoadingStatus('hide');
-          self.props.toggleSnackbarAndSetText(
-            true,
-            'Data Updated Successfully',
-            true
-          );
+          self.props.toggleSnackbarAndSetText(true, 'Data Updated Successfully', true);
           let list = _.get(self.props.formData, self.props.item.jsonPath);
 
           if (typeof ind != 'undefined') {
@@ -399,12 +338,7 @@ class UiMultiFieldAddToTable extends Component {
 
   renderFields = (item, screen) => {
     console.log('item', item);
-    if (
-      screen == 'view' &&
-      ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(
-        item.type
-      ) > -1
-    ) {
+    if (screen == 'view' && ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(item.type) > -1) {
       if (item.type == 'datePicker') {
         item.isDate = true;
       }
@@ -414,25 +348,9 @@ class UiMultiFieldAddToTable extends Component {
     item.label = translate(item.label);
     switch (item.type) {
       case 'text':
-        return (
-          <UiTextField
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiTextField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'textarea':
-        return (
-          <UiTextArea
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiTextArea ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'singleValueListMultiple':
         return (
           <UiSelectFieldMultiple
@@ -460,15 +378,7 @@ class UiMultiFieldAddToTable extends Component {
           />
         );
       case 'multiValueList':
-        return (
-          <UiMultiSelectField
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiMultiSelectField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'autoCompelete':
         return (
           <UiAutoComplete
@@ -481,117 +391,29 @@ class UiMultiFieldAddToTable extends Component {
           />
         );
       case 'number':
-        return (
-          <UiNumberField
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiNumberField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'mobileNumber':
-        return (
-          <UiMobileNumber
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiMobileNumber ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'checkbox':
-        return (
-          <UiCheckBox
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiCheckBox ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'email':
-        return (
-          <UiEmailField
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiEmailField ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'datePicker':
-        return (
-          <UiDatePicker
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiDatePicker ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'singleFileUpload':
-        return (
-          <UiSingleFileUpload
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiSingleFileUpload ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'multiFileUpload':
-        return (
-          <UiMultiFileUpload
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiMultiFileUpload ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'pan':
-        return (
-          <UiPanCard
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiPanCard ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'aadhar':
-        return (
-          <UiAadharCard
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiAadharCard ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'pinCode':
-        return (
-          <UiPinCode
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiPinCode ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'label':
         return <UiLabel getVal={this.getVal} item={item} />;
       case 'radio':
-        return (
-          <UiRadioButton
-            ui={this.props.ui}
-            getVal={this.getVal}
-            item={item}
-            fieldErrors={this.state.fieldErrors}
-            handler={this.handler}
-          />
-        );
+        return <UiRadioButton ui={this.props.ui} getVal={this.getVal} item={item} fieldErrors={this.state.fieldErrors} handler={this.handler} />;
       case 'textSearch':
         return (
           <UiTextSearch
@@ -616,21 +438,13 @@ class UiMultiFieldAddToTable extends Component {
               actions={
                 <div>
                   <FlatButton
-                    label={
-                      this.state.index == -1
-                        ? translate('pt.create.groups.ownerDetails.fields.add')
-                        : translate('pgr.lbl.update')
-                    }
+                    label={this.state.index == -1 ? translate('pt.create.groups.ownerDetails.fields.add') : translate('pgr.lbl.update')}
                     secondary={true}
                     disabled={this.state.isBtnDisabled}
                     style={{ marginTop: 39 }}
                     onClick={this.addToParent}
                   />
-                  <FlatButton
-                    label={translate('pt.create.button.viewdcb.close')}
-                    primary={true}
-                    onClick={this.handleClose}
-                  />
+                  <FlatButton label={translate('pt.create.button.viewdcb.close')} primary={true} onClick={this.handleClose} />
                 </div>
               }
               modal={false}
@@ -669,13 +483,7 @@ class UiMultiFieldAddToTable extends Component {
                   <th>#</th>
                   {this.props.item.header.map((v, i) => {
                     return (
-                      <th
-                        className={
-                          'HideIt_' +
-                          v.label.split('.')[v.label.split('.').length - 1]
-                        }
-                        key={i}
-                      >
+                      <th className={'HideIt_' + v.label.split('.')[v.label.split('.').length - 1]} key={i}>
                         {translate(v.label)}
                       </th>
                     );
@@ -687,10 +495,7 @@ class UiMultiFieldAddToTable extends Component {
               <tbody>
                 {this.state.valueList && this.state.valueList.length ? (
                   this.state.valueList.map((item, index) => {
-                    if (
-                      this.state.indexes.indexOf(index) > -1 ||
-                      typeof item == 'string'
-                    ) {
+                    if (this.state.indexes.indexOf(index) > -1 || typeof item == 'string') {
                       return (
                         <tr key={index}>
                           <td> {index + 1} </td>
@@ -703,13 +508,7 @@ class UiMultiFieldAddToTable extends Component {
                           })}
                           <td>
                             <FlatButton
-                              label={
-                                this.state.index == -1
-                                  ? translate(
-                                      'pt.create.groups.ownerDetails.fields.add'
-                                    )
-                                  : translate('pgr.lbl.update')
-                              }
+                              label={this.state.index == -1 ? translate('pt.create.groups.ownerDetails.fields.add') : translate('pgr.lbl.update')}
                               secondary={true}
                               disabled={this.state.isBtnDisabled}
                               onClick={e => {
@@ -731,15 +530,9 @@ class UiMultiFieldAddToTable extends Component {
                           {Object.keys(item).map(function(key, index) {
                             if (key != 'id') {
                               if (key == 'active') {
-                                return (
-                                  <td>{item[key] ? 'Active' : 'Inactive'}</td>
-                                );
+                                return <td>{item[key] ? 'Active' : 'Inactive'}</td>;
                               } else {
-                                return (
-                                  <td className={'HideIt_' + key}>
-                                    {item[key]}
-                                  </td>
-                                );
+                                return <td className={'HideIt_' + key}>{item[key]}</td>;
                               }
                             }
                           })}
@@ -752,10 +545,7 @@ class UiMultiFieldAddToTable extends Component {
                                 }}
                                 disabled={!this.state.isAddAgain}
                               >
-                                <i
-                                  className="material-icons"
-                                  style={{ color: '#000000' }}
-                                >
+                                <i className="material-icons" style={{ color: '#000000' }}>
                                   border_color
                                 </i>
                               </IconButton>
@@ -766,10 +556,7 @@ class UiMultiFieldAddToTable extends Component {
                                 }}
                                 disabled={!this.state.isAddAgain}
                               >
-                                <i
-                                  className="material-icons"
-                                  style={{ color: '#000000' }}
-                                >
+                                <i className="material-icons" style={{ color: '#000000' }}>
                                   mode_edit
                                 </i>
                               </IconButton>
@@ -789,16 +576,9 @@ class UiMultiFieldAddToTable extends Component {
                   })
                 ) : (
                   <tr>
-                    <td
-                      colSpan={this.props.item.header.length + 2}
-                      className="text-center"
-                    >
+                    <td colSpan={this.props.item.header.length + 2} className="text-center">
                       No data yet! &nbsp;&nbsp;{' '}
-                      <a
-                        href="javascript:void(0)"
-                        className
-                        onClick={this.handleOpen}
-                      >
+                      <a href="javascript:void(0)" className onClick={this.handleOpen}>
                         Click here
                       </a>{' '}
                       to add.
@@ -915,6 +695,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  UiMultiFieldAddToTable
-);
+export default connect(mapStateToProps, mapDispatchToProps)(UiMultiFieldAddToTable);

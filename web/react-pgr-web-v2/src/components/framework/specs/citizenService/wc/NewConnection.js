@@ -26,10 +26,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'wc.group.withProperty', value: true },
-              { label: 'wc.group.withoutProperty', value: false },
-            ],
+            values: [{ label: 'wc.group.withProperty', value: true }, { label: 'wc.group.withoutProperty', value: false }],
             defaultValue: false,
             showHideFields: [
               {
@@ -243,28 +240,18 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/pt-property/properties/_search?upicNumber={value}&tenantId=default',
+              autoCompleteUrl: '/pt-property/properties/_search?upicNumber={value}&tenantId=default',
               autoFillFields: {
-                'Connection.property.mobileNumber':
-                  'properties[0].owners[0].mobileNumber',
-                'Connection.property.nameOfApplicant':
-                  'properties[0].owners[0].name',
+                'Connection.property.mobileNumber': 'properties[0].owners[0].mobileNumber',
+                'Connection.property.nameOfApplicant': 'properties[0].owners[0].name',
                 'Connection.property.email': 'properties[0].owners[0].emailId',
-                'Connection.property.aadhaarNumber':
-                  'properties[0].owners[0].aadhaarNumber',
-                'Connection.property.noOfFloors':
-                  'properties[0].propertyDetail.noOfFloors',
-                'Connection.property.locality':
-                  'properties[0].boundary.locationBoundary.id',
-                'Connection.property.zone':
-                  'properties[0].boundary.revenueBoundary.id',
-                'Connection.property.ward':
-                  'properties[0].boundary.adminBoundary.id',
-                'Connection.property.address':
-                  'properties[0].address.addressLine1',
-                'Connection.property.property':
-                  'properties[0].propertyDetail.propertyType',
+                'Connection.property.aadhaarNumber': 'properties[0].owners[0].aadhaarNumber',
+                'Connection.property.noOfFloors': 'properties[0].propertyDetail.noOfFloors',
+                'Connection.property.locality': 'properties[0].boundary.locationBoundary.id',
+                'Connection.property.zone': 'properties[0].boundary.revenueBoundary.id',
+                'Connection.property.ward': 'properties[0].boundary.adminBoundary.id',
+                'Connection.property.address': 'properties[0].address.addressLine1',
+                'Connection.property.property': 'properties[0].propertyDetail.propertyType',
               },
             },
             requiredErrMsg: '',
@@ -426,8 +413,7 @@ var dat = {
               {
                 jsonPath: 'Connection.subUsageType',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&parent={Connection.usageType}&isSubUsageType=true|$..code|$..name',
               },
             ],
           },
@@ -455,8 +441,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
             defaultValue: [],
-            url:
-              '/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch',
           },
           {
             name: 'applicationType',
@@ -492,8 +477,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -505,8 +489,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -607,8 +590,7 @@ var dat = {
               {
                 jsonPath: 'Connection.numberOfFamily',
                 type: 'textField',
-                pattern:
-                  "getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                pattern: "getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',
@@ -675,8 +657,7 @@ var dat = {
   'wc.view': {
     numCols: 12 / 3,
     version: 'v1',
-    url:
-      '/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}',
+    url: '/wcms-connection/connection/_search?acknowledgementNumber={acknowledgementNumber}',
     useTimestamp: true,
     tenantIdRequired: true, //Instead of boolean value give json path
     objectName: 'Connection',
@@ -698,10 +679,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'wc.group.withProperty', value: true },
-              { label: 'wc.group.withoutProperty', value: false },
-            ],
+            values: [{ label: 'wc.group.withProperty', value: true }, { label: 'wc.group.withoutProperty', value: false }],
             defaultValue: false,
             showHideFields: [
               {
@@ -1064,8 +1042,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            url:
-              '/wcms/masters/usagetypes/_search?&isSubUsageType=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&isSubUsageType=true|$..code|$..name',
           },
           {
             name: 'hscPipeSizeType',
@@ -1077,8 +1054,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            url:
-              '/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch',
           },
           {
             name: 'applicationType',
@@ -1115,8 +1091,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -1128,8 +1103,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -1182,8 +1156,7 @@ var dat = {
               {
                 jsonPath: 'Connection.numberOfFamily',
                 type: 'textField',
-                pattern:
-                  "getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                pattern: "getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',

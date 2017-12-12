@@ -35,15 +35,11 @@ export default class UiEmailField extends Component {
       } else if (dateStr.indexOf('+') > -1) {
         var oneDay = 24 * 60 * 60 * 1000;
         dateStr = dateStr.split('+')[1];
-        return moment(
-          new Date(new Date().getTime() + Number(dateStr) * oneDay)
-        );
+        return moment(new Date(new Date().getTime() + Number(dateStr) * oneDay));
       } else {
         var oneDay = 24 * 60 * 60 * 1000;
         dateStr = dateStr.split('-')[1];
-        return moment(
-          new Date(new Date().getTime() - Number(dateStr) * oneDay)
-        );
+        return moment(new Date(new Date().getTime() - Number(dateStr) * oneDay));
       }
     } else {
       return '';
@@ -52,19 +48,9 @@ export default class UiEmailField extends Component {
 
   getDateFormat = timeLong => {
     if (timeLong) {
-      if (
-        (timeLong.toString().length == 12 ||
-          timeLong.toString().length == 13) &&
-        new Date(Number(timeLong)).getTime() > 0
-      ) {
+      if ((timeLong.toString().length == 12 || timeLong.toString().length == 13) && new Date(Number(timeLong)).getTime() > 0) {
         var _date = new Date(Number(timeLong));
-        return (
-          ('0' + _date.getDate()).slice(-2) +
-          '/' +
-          ('0' + (_date.getMonth() + 1)).slice(-2) +
-          '/' +
-          _date.getFullYear()
-        );
+        return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
       } else {
         return timeLong;
       }
@@ -135,10 +121,7 @@ export default class UiEmailField extends Component {
         let label = !item.isHideLabel && (
           <div>
             <label>
-              {item.label}{' '}
-              <span style={{ color: '#FF0000' }}>
-                {item.isRequired ? ' *' : ''}
-              </span>
+              {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </label>
             <br />
           </div>
@@ -166,14 +149,9 @@ export default class UiEmailField extends Component {
               }}
               isValidDate={currentDate => {
                 if (item.minDate && item.maxDate) {
-                  return (
-                    this.calcMinMaxDate(item.minDate).isBefore(currentDate) &&
-                    this.calcMinMaxDate(item.maxDate).isAfter(currentDate)
-                  );
+                  return this.calcMinMaxDate(item.minDate).isBefore(currentDate) && this.calcMinMaxDate(item.maxDate).isAfter(currentDate);
                 } else if (item.minDate) {
-                  return this.calcMinMaxDate(item.minDate).isBefore(
-                    currentDate
-                  );
+                  return this.calcMinMaxDate(item.minDate).isBefore(currentDate);
                 } else if (item.maxDate) {
                   return this.calcMinMaxDate(item.maxDate).isAfter(currentDate);
                 } else return true;
@@ -187,8 +165,7 @@ export default class UiEmailField extends Component {
                   item.isRequired ? true : false,
                   /\d{12,13}/,
                   item.requiredErrMsg,
-                  item.patternErrMsg ||
-                    translate('framework.date.error.message'),
+                  item.patternErrMsg || translate('framework.date.error.message'),
                   item.expression,
                   item.expressionMsg,
                   true
@@ -198,11 +175,7 @@ export default class UiEmailField extends Component {
             <div
               style={{
                 height: '23px',
-                visibility:
-                  this.props.fieldErrors &&
-                  this.props.fieldErrors[item.jsonPath]
-                    ? 'visible'
-                    : 'hidden',
+                visibility: this.props.fieldErrors && this.props.fieldErrors[item.jsonPath] ? 'visible' : 'hidden',
                 position: 'relative',
                 fontSize: '12px',
                 lineHeight: '23px',
@@ -211,9 +184,7 @@ export default class UiEmailField extends Component {
                 float: 'left',
               }}
             >
-              {this.props.fieldErrors && this.props.fieldErrors[item.jsonPath]
-                ? this.props.fieldErrors[item.jsonPath]
-                : ' '}
+              {this.props.fieldErrors && this.props.fieldErrors[item.jsonPath] ? this.props.fieldErrors[item.jsonPath] : ' '}
             </div>
           </div>
         );

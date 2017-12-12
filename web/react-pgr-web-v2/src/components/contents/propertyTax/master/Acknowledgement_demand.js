@@ -129,9 +129,7 @@ class DemandAcknowledgement extends Component {
                         fontSize: 16,
                       }}
                     >
-                      {translate(
-                        'pt.create.groups.acknowledgement.demandSuccess'
-                      )}
+                      {translate('pt.create.groups.acknowledgement.demandSuccess')}
                     </Col>
                   </Row>
                 </Col>
@@ -150,6 +148,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DemandAcknowledgement
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DemandAcknowledgement);

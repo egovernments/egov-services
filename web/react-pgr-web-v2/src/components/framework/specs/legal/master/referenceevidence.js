@@ -36,8 +36,7 @@ var dat = {
             type: 'text',
             isRequired: true,
             isDisabled: true,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
             patternErrorMsg: '',
           },
           {

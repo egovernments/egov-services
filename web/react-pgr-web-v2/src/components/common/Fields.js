@@ -28,9 +28,7 @@ export default class Fields extends Component {
     //console.log('nextState', nextState, this.state);
     //console.log('nextProps', nextProps, this.props);
     //console.log('ItShouldUpdate', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
   renderFields = obj => {
@@ -40,15 +38,7 @@ export default class Fields extends Component {
     if (obj.variable) {
       switch (obj.dataType) {
         case 'string':
-          if (obj.url)
-            return (
-              <CustomAutoComplete
-                obj={obj}
-                description={description}
-                value={this.props.value}
-                handler={this.props.handler}
-              />
-            );
+          if (obj.url) return <CustomAutoComplete obj={obj} description={description} value={this.props.value} handler={this.props.handler} />;
           return (
             <Col xs={12} sm={4} md={3} lg={3}>
               <TextField
@@ -57,9 +47,7 @@ export default class Fields extends Component {
                 ref={obj.code}
                 floatingLabelText={description}
                 value={this.props.value}
-                onChange={(e, newValue) =>
-                  this.props.handler(newValue, obj.code, obj.required, '')
-                }
+                onChange={(e, newValue) => this.props.handler(newValue, obj.code, obj.required, '')}
                 errorText={this.props.error ? this.props.error : ''}
                 maxLength="50"
               />
@@ -74,17 +62,10 @@ export default class Fields extends Component {
                   label={description}
                   checked={this.props.value ? this.props.value : false}
                   onCheck={(e, isChecked) => {
-                    this.props.handler(
-                      isChecked ? true : '',
-                      obj.code,
-                      obj.required,
-                      ''
-                    );
+                    this.props.handler(isChecked ? true : '', obj.code, obj.required, '');
                   }}
                 />
-                {this.props.error ? (
-                  <span className="errorMsg">{this.props.error}</span>
-                ) : null}
+                {this.props.error ? <span className="errorMsg">{this.props.error}</span> : null}
               </div>
             </Col>
           );
@@ -112,15 +93,7 @@ export default class Fields extends Component {
                 >
                   {obj.attribValues &&
                     obj.attribValues.map(
-                      (dd, index) =>
-                        dd.isActive ? (
-                          <RadioButton
-                            className="col-md-4"
-                            key={index}
-                            value={dd.key}
-                            label={translate(dd.name)}
-                          />
-                        ) : null
+                      (dd, index) => (dd.isActive ? <RadioButton className="col-md-4" key={index} value={dd.key} label={translate(dd.name)} /> : null)
                     )}
                 </RadioButtonGroup>
               </div>
@@ -137,9 +110,7 @@ export default class Fields extends Component {
                 rowsMax={4}
                 floatingLabelText={description}
                 value={this.props.value}
-                onChange={(e, newValue) =>
-                  this.props.handler(newValue, obj.code, obj.required, '')
-                }
+                onChange={(e, newValue) => this.props.handler(newValue, obj.code, obj.required, '')}
                 errorText={this.props.error ? this.props.error : ''}
                 maxLength="500"
               />
@@ -154,14 +125,7 @@ export default class Fields extends Component {
                 ref={obj.code}
                 floatingLabelText={description}
                 value={this.props.value}
-                onChange={(e, newValue) =>
-                  this.props.handler(
-                    newValue,
-                    obj.code,
-                    obj.required,
-                    /^[+-]?\d+$/
-                  )
-                }
+                onChange={(e, newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)}
                 errorText={this.props.error ? this.props.error : ''}
                 maxLength="10"
               />
@@ -176,14 +140,7 @@ export default class Fields extends Component {
                 ref={obj.code}
                 floatingLabelText={description}
                 value={this.props.value}
-                onChange={(e, newValue) =>
-                  this.props.handler(
-                    newValue,
-                    obj.code,
-                    obj.required,
-                    /^[+-]?\d+$/
-                  )
-                }
+                onChange={(e, newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+$/)}
                 errorText={this.props.error ? this.props.error : ''}
                 maxLength="18"
               />
@@ -198,14 +155,7 @@ export default class Fields extends Component {
                 ref={obj.code}
                 floatingLabelText={description}
                 value={this.props.value}
-                onChange={(e, newValue) =>
-                  this.props.handler(
-                    newValue,
-                    obj.code,
-                    obj.required,
-                    /^[+-]?\d+(\.\d+)?$/
-                  )
-                }
+                onChange={(e, newValue) => this.props.handler(newValue, obj.code, obj.required, /^[+-]?\d+(\.\d+)?$/)}
                 errorText={this.props.error ? this.props.error : ''}
               />
             </Col>
@@ -219,13 +169,7 @@ export default class Fields extends Component {
                 ref={obj.code}
                 floatingLabelText={description}
                 value={
-                  this.props.value
-                    ? new Date(
-                        this.props.value.split('-')[2],
-                        this.props.value.split('-')[1] - 1,
-                        this.props.value.split('-')[0]
-                      )
-                    : ''
+                  this.props.value ? new Date(this.props.value.split('-')[2], this.props.value.split('-')[1] - 1, this.props.value.split('-')[0]) : ''
                 }
                 formatDate={date => {
                   let dateObj = new Date(date);
@@ -243,12 +187,7 @@ export default class Fields extends Component {
                   let dt = dateObj.getDate();
                   dt = dt < 10 ? '0' + dt : dt;
                   month = month < 10 ? '0' + month : month;
-                  this.props.handler(
-                    dt + '-' + month + '-' + year,
-                    obj.code,
-                    obj.required,
-                    ''
-                  );
+                  this.props.handler(dt + '-' + month + '-' + year, obj.code, obj.required, '');
                 }}
               />
             </Col>
@@ -290,12 +229,7 @@ export default class Fields extends Component {
                   let dt = dateObj.getDate();
                   dt = dt < 10 ? '0' + dt : dt;
                   month = month < 10 ? '0' + month : month;
-                  this.props.handler(
-                    dt + '-' + month + '-' + year,
-                    obj.code,
-                    obj.required,
-                    ''
-                  );
+                  this.props.handler(dt + '-' + month + '-' + year, obj.code, obj.required, '');
                   this.refs[obj.code + 'timepicker'].openDialog();
                 }}
               />
@@ -305,12 +239,7 @@ export default class Fields extends Component {
                 style={{ display: 'none' }}
                 onChange={(nothing, time) => {
                   this.props.handler(
-                    this.props.value +
-                      ' ' +
-                      this.pad(time.getHours()) +
-                      ':' +
-                      this.pad(time.getMinutes()) +
-                      ':00',
+                    this.props.value + ' ' + this.pad(time.getHours()) + ':' + this.pad(time.getMinutes()) + ':00',
                     obj.code,
                     obj.required,
                     ''
@@ -321,15 +250,7 @@ export default class Fields extends Component {
           );
         case 'singlevaluelist':
           if (obj.url)
-            return (
-              <CustomSelectField
-                obj={obj}
-                description={description}
-                isMultiple={false}
-                value={this.props.value}
-                handler={this.props.handler}
-              />
-            );
+            return <CustomSelectField obj={obj} description={description} isMultiple={false} value={this.props.value} handler={this.props.handler} />;
           return (
             <Col xs={12} sm={4} md={3} lg={3}>
               <SelectField
@@ -347,29 +268,14 @@ export default class Fields extends Component {
               >
                 <MenuItem value="" primaryText="Select" />
                 {obj.attribValues.map(
-                  (dd, index) =>
-                    dd.isActive ? (
-                      <MenuItem
-                        value={translate(dd.key)}
-                        key={index}
-                        primaryText={translate(dd.name)}
-                      />
-                    ) : null
+                  (dd, index) => (dd.isActive ? <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} /> : null)
                 )}
               </SelectField>
             </Col>
           );
         case 'multivaluelist':
           if (obj.url)
-            return (
-              <CustomSelectField
-                obj={obj}
-                description={description}
-                isMultiple={true}
-                value={this.props.value}
-                handler={this.props.handler}
-              />
-            );
+            return <CustomSelectField obj={obj} description={description} isMultiple={true} value={this.props.value} handler={this.props.handler} />;
           return (
             <Col xs={12} sm={4} md={3} lg={3}>
               <SelectField
@@ -393,10 +299,7 @@ export default class Fields extends Component {
                         <MenuItem
                           value={translate(dd.key)}
                           insetChildren={true}
-                          checked={
-                            this.props.value &&
-                            this.props.value.indexOf(dd.key) > -1
-                          }
+                          checked={this.props.value && this.props.value.indexOf(dd.key) > -1}
                           key={index}
                           primaryText={translate(dd.name)}
                         />
@@ -451,9 +354,7 @@ class CustomAutoComplete extends Component {
     //console.log('nextState', nextState, this.state);
     //console.log('nextProps', nextProps, this.props);
     //console.log('ItShouldUpdate', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
   onKeyUpHandler = e => {
@@ -466,12 +367,9 @@ class CustomAutoComplete extends Component {
       var url = '';
       let _this = this;
       if (urlsPart.length === 2) {
-        queryParams = JSON.parse(
-          '{"' + urlsPart[1].replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-          function(key, value) {
-            return key === '' ? value : decodeURIComponent(value);
-          }
-        );
+        queryParams = JSON.parse('{"' + urlsPart[1].replace(/&/g, '","').replace(/=/g, '":"') + '"}', function(key, value) {
+          return key === '' ? value : decodeURIComponent(value);
+        });
         url = urlsPart[0];
       } else url = this.props.obj.url;
 
@@ -485,8 +383,7 @@ class CustomAutoComplete extends Component {
       Api.commonApiGet(url, queryParams).then(
         function(response) {
           if (!response instanceof Array) {
-            var jsonArryKey =
-              Object.keys(response).length > 1 ? Object.keys(response)[1] : '';
+            var jsonArryKey = Object.keys(response).length > 1 ? Object.keys(response)[1] : '';
             if (jsonArryKey) {
               response = response[jsonArryKey];
             } else {
@@ -555,9 +452,7 @@ class CustomSelectField extends Component {
     //console.log('nextState', nextState, this.state);
     //console.log('nextProps', nextProps, this.props);
     //console.log('ItShouldUpdate', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
   renderAttributes = obj => {
@@ -566,18 +461,14 @@ class CustomSelectField extends Component {
     var url = '';
     let _this = this;
     if (urlsPart.length === 2) {
-      queryParams = JSON.parse(
-        '{"' + urlsPart[1].replace(/&/g, '","').replace(/=/g, '":"') + '"}',
-        function(key, value) {
-          return key === '' ? value : decodeURIComponent(value);
-        }
-      );
+      queryParams = JSON.parse('{"' + urlsPart[1].replace(/&/g, '","').replace(/=/g, '":"') + '"}', function(key, value) {
+        return key === '' ? value : decodeURIComponent(value);
+      });
       url = urlsPart[0];
     } else url = obj.url;
     Api.commonApiPost(url, queryParams, {}).then(
       function(response) {
-        var jsonArryKey =
-          Object.keys(response).length > 1 ? Object.keys(response)[1] : '';
+        var jsonArryKey = Object.keys(response).length > 1 ? Object.keys(response)[1] : '';
         if (jsonArryKey) {
           const attribValues = [];
           response[jsonArryKey].map(item => {
@@ -602,14 +493,7 @@ class CustomSelectField extends Component {
             primaryText={translate(dd.name)}
           />
         );
-      else
-        return (
-          <MenuItem
-            value={translate(dd.key)}
-            key={index}
-            primaryText={translate(dd.name)}
-          />
-        );
+      else return <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.name)} />;
     });
   };
 

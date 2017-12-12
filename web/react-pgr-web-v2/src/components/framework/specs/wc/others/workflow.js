@@ -24,10 +24,7 @@ var dat = {
             isDisabled: true,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'wc.group.withProperty', value: true },
-              { label: 'wc.group.withoutProperty', value: false },
-            ],
+            values: [{ label: 'wc.group.withProperty', value: true }, { label: 'wc.group.withoutProperty', value: false }],
             defaultValue: false,
             showHideFields: [
               {
@@ -207,8 +204,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            configUrl:
-              '/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC',
+            configUrl: '/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC',
             url:
               '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name',
           },
@@ -336,8 +332,7 @@ var dat = {
             isDisabled: true,
             requiredErrMsg: '',
             patternErrMsg: '',
-            configUrl:
-              '/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC',
+            configUrl: '/wcms/masters/waterchargesconfig/_search?name=HIERACHYTYPEFORWC',
             url:
               '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName?&boundaryTypeName=ZONE&hierarchyTypeName={WaterConfigurationValue[0].value}|$.Boundary.*.code|$.Boundary.*.name',
           },
@@ -376,8 +371,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -386,8 +380,7 @@ var dat = {
               {
                 jsonPath: 'Connection[0].subUsageType',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Connection[0].usageType}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Connection[0].usageType}|$..code|$..name',
               },
             ],
           },
@@ -413,8 +406,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
             convertToString: true,
-            url:
-              '/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?|$..sizeInMilimeter|$..sizeInInch',
           },
           {
             name: 'applicationType',
@@ -450,8 +442,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getbillingtypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -463,8 +454,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
+            url: '/wcms-connection/connection/_getconnectiontypes?|$..key|$..object',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -618,8 +608,7 @@ var dat = {
               {
                 jsonPath: 'Connection.numberOfFamily',
                 type: 'textField',
-                pattern:
-                  "getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
+                pattern: "getVal('Connection.numberOfPersons')!=''? (Math.ceil(getVal('Connection.numberOfPersons')/4)):0",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',

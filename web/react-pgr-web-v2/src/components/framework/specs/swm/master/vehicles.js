@@ -18,8 +18,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
           },
           {
             name: 'regNumber',
@@ -40,8 +39,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
           },
           {
             name: 'engineSrNumber',
@@ -88,8 +86,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..name|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..name|$..name',
           },
         ],
       },
@@ -187,8 +184,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
           },
           {
             name: 'regNumber',
@@ -211,8 +207,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..name',
           },
           {
             name: 'vehicleCapacity',
@@ -275,8 +270,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
           },
         ],
       },
@@ -372,8 +366,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              'swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
+            url: 'swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
           },
         ],
       },
@@ -403,8 +396,7 @@ var dat = {
           },
           {
             name: 'uploadInsuranceDetails',
-            jsonPath:
-              'vehicles[0].insuranceDetails.insuranceDocument.fileStoreId',
+            jsonPath: 'vehicles[0].insuranceDetails.insuranceDocument.fileStoreId',
             label: 'swm.vehicles.create.insurance.details',
             type: 'singleFileUpload',
             pathToArray: 'documentTypes',
@@ -693,8 +685,7 @@ var dat = {
           },
           {
             name: 'uploadInsuranceDetails',
-            jsonPath:
-              'vehicles[0].insuranceDetails.insuranceDocument.fileStoreId',
+            jsonPath: 'vehicles[0].insuranceDetails.insuranceDocument.fileStoreId',
             label: 'swm.vehicles.create.insurance.details',
             type: 'singleFileUpload',
             pathToArray: 'documentTypes',
@@ -776,8 +767,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=VehicleType|$..code|$..code',
           },
           {
             name: 'regNumber',
@@ -851,8 +841,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..code',
           },
         ],
       },
@@ -948,8 +937,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..vendorNo|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Vendor|$..vendorNo|$..name',
           },
         ],
       },
@@ -979,8 +967,7 @@ var dat = {
           },
           {
             name: 'uploadInsuranceDetails',
-            jsonPath:
-              'vehicles[0].insuranceDetails.insuranceDocument.fileStoreId',
+            jsonPath: 'vehicles[0].insuranceDetails.insuranceDocument.fileStoreId',
             label: 'swm.vehicles.create.insurance.details',
             type: 'singleFileUpload',
             pathToArray: 'documentTypes',

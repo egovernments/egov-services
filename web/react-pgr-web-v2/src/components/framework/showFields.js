@@ -62,15 +62,7 @@ export default class ShowFields extends Component {
     });
   };
 
-  renderCard = (
-    group,
-    groupIndex,
-    noCols,
-    jsonPath,
-    uiFramework,
-    groups,
-    isMultiple
-  ) => {
+  renderCard = (group, groupIndex, noCols, jsonPath, uiFramework, groups, isMultiple) => {
     let self = this;
     let { addNewCard, removeCard } = this.props;
     let { renderField } = this;
@@ -91,11 +83,7 @@ export default class ShowFields extends Component {
         {!isMultiple && (
           <CardHeader
             style={{ paddingTop: 4, paddingBottom: 0 }}
-            title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {group.label}
-              </div>
-            }
+            title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{group.label}</div>}
             actAsExpander={true}
           />
         )}
@@ -113,8 +101,7 @@ export default class ShowFields extends Component {
                         field.type === 'fileTable' ||
                         field.type === 'tableList' ||
                         field.type === 'nestedTableList' ||
-                        (field.type === 'textarea' &&
-                          field.fullWidth === true) ||
+                        (field.type === 'textarea' && field.fullWidth === true) ||
                         field.type === 'workflow' ||
                         field.type === 'multiFieldAddToTable'
                           ? 12
@@ -125,8 +112,7 @@ export default class ShowFields extends Component {
                         field.type === 'fileTable' ||
                         field.type === 'tableList' ||
                         field.type === 'nestedTableList' ||
-                        (field.type === 'textarea' &&
-                          field.fullWidth === true) ||
+                        (field.type === 'textarea' && field.fullWidth === true) ||
                         field.type === 'window' ||
                         field.type === 'workflow' ||
                         field.type === 'multiFieldAddToTable'
@@ -134,12 +120,7 @@ export default class ShowFields extends Component {
                           : noCols
                       }
                     >
-                      {renderField(
-                        field,
-                        self.props.screen,
-                        fieldIndex,
-                        field.screenView
-                      )}
+                      {renderField(field, self.props.screen, fieldIndex, field.screenView)}
                     </Col>
                   );
                 }
@@ -147,17 +128,9 @@ export default class ShowFields extends Component {
             </Row>
             {self.props.screen != 'view' &&
               group.multiple &&
-              (!groups[groupIndex + 1] ||
-                (groups[groupIndex + 1] &&
-                  groups[groupIndex + 1].name != group.name)) && (
+              (!groups[groupIndex + 1] || (groups[groupIndex + 1] && groups[groupIndex + 1].name != group.name)) && (
                 <Row>
-                  <Col
-                    xsOffset={8}
-                    mdOffset={10}
-                    xs={4}
-                    md={2}
-                    style={{ textAlign: 'right' }}
-                  >
+                  <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                     <FloatingActionButton
                       mini={true}
                       onClick={() => {
@@ -171,16 +144,9 @@ export default class ShowFields extends Component {
               )}
             {self.props.screen != 'view' &&
               group.multiple &&
-              (groups[groupIndex + 1] &&
-                groups[groupIndex + 1].name == group.name) && (
+              (groups[groupIndex + 1] && groups[groupIndex + 1].name == group.name) && (
                 <Row>
-                  <Col
-                    xsOffset={8}
-                    mdOffset={10}
-                    xs={4}
-                    md={2}
-                    style={{ textAlign: 'right' }}
-                  >
+                  <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                     <FloatingActionButton
                       mini={true}
                       secondary={true}
@@ -197,12 +163,7 @@ export default class ShowFields extends Component {
           <div style={{ marginLeft: '15px', marginRight: '15px' }}>
             {group.children && group.children.length
               ? group.children.map(function(child) {
-                  return self.renderGroups(
-                    child.groups,
-                    noCols,
-                    uiFramework,
-                    child.jsonPath
-                  );
+                  return self.renderGroups(child.groups, noCols, uiFramework, child.jsonPath);
                 })
               : ''}
           </div>
@@ -251,42 +212,19 @@ export default class ShowFields extends Component {
                       {listArr[key].objects[0].object.label}
                     </div>
                   }
-                  subtitle={
-                    typeof listArr[key].objects[0].object.description
-                      ? listArr[key].objects[0].object.description
-                      : ''
-                  }
+                  subtitle={typeof listArr[key].objects[0].object.description ? listArr[key].objects[0].object.description : ''}
                   showExpandableButton={true}
                   actAsExpander={true}
                 />
-                <CardText
-                  style={{ paddingTop: 0, paddingBottom: 0 }}
-                  style={{ padding: 0 }}
-                  expandable={true}
-                >
+                <CardText style={{ paddingTop: 0, paddingBottom: 0 }} style={{ padding: 0 }} expandable={true}>
                   {listArr[key].objects.map((grp, grpIndex) => {
-                    return self.renderCard(
-                      grp.object,
-                      grp.index,
-                      noCols,
-                      jsonPath,
-                      uiFramework,
-                      groups,
-                      true
-                    );
+                    return self.renderCard(grp.object, grp.index, noCols, jsonPath, uiFramework, groups, true);
                   })}
                 </CardText>
               </Card>
             );
           } else {
-            return self.renderCard(
-              listArr[key].object,
-              listArr[key].index,
-              noCols,
-              jsonPath,
-              uiFramework,
-              groups
-            );
+            return self.renderCard(listArr[key].object, listArr[key].index, noCols, jsonPath, uiFramework, groups);
           }
         });
         break;
@@ -297,15 +235,7 @@ export default class ShowFields extends Component {
     // console.log(item.type, item.jsonPath);
     if (
       screen == 'view' &&
-      [
-        'viewDocuments',
-        'documentList',
-        'fileTable',
-        'arrayText',
-        'arrayNumber',
-        'tableList',
-        'workflow',
-      ].indexOf(item.type) == -1
+      ['viewDocuments', 'documentList', 'fileTable', 'arrayText', 'arrayNumber', 'tableList', 'workflow'].indexOf(item.type) == -1
     ) {
       if (item.type == 'datePicker') {
         item.isDate = true;
@@ -530,9 +460,7 @@ export default class ShowFields extends Component {
           />
         );
       case 'label':
-        return (
-          <UiLabel tabIndex={index} getVal={this.props.getVal} item={item} />
-        );
+        return <UiLabel tabIndex={index} getVal={this.props.getVal} item={item} />;
       case 'radio':
         return (
           <UiRadioButton

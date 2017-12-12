@@ -1,25 +1,7 @@
 import React, { Component } from 'react';
-import {
-  BarChart,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-  PieChart,
-  Pie,
-  Sector,
-  Cell,
-} from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, PieChart, Pie, Sector, Cell } from 'recharts';
 
-import {
-  Card,
-  CardText,
-  CardMedia,
-  CardHeader,
-  CardTitle,
-} from 'material-ui/Card';
+import { Card, CardText, CardMedia, CardHeader, CardTitle } from 'material-ui/Card';
 
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -36,18 +18,15 @@ export default class BarChartCard extends Component {
   }
 
   componentDidMount() {
-    this.formatParsedChartData(
-      this.parseCompareSearchResponse(this.props.data),
-      (data, dataKey) => {
-        if (!data || !dataKey) {
-        } else {
-          this.setState({
-            data: data,
-            dataKey: dataKey,
-          });
-        }
+    this.formatParsedChartData(this.parseCompareSearchResponse(this.props.data), (data, dataKey) => {
+      if (!data || !dataKey) {
+      } else {
+        this.setState({
+          data: data,
+          dataKey: dataKey,
+        });
       }
-    );
+    });
   }
 
   /**
@@ -70,9 +49,7 @@ export default class BarChartCard extends Component {
               ulbName: jp.query(ulbs, '$.ulbName').join(''),
               finYear: jp.query(finYears, '$.finYear').join(''),
               kpiName: jp.query(kpis, '$.kpi.name').join(''),
-              target: parseInt(
-                jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join('')
-              ),
+              target: parseInt(jp.query(kpis, '$.kpi.kpiTargets[*].targetValue').join('')),
               value: parseInt(jp.query(kpis, '$.consolidatedValue').join('')),
             };
           });
@@ -168,14 +145,7 @@ export default class BarChartCard extends Component {
           <br />
           <br />
           <Card className="uiCard">
-            <CardHeader
-              title={
-                <div style={{ fontSize: '16px' }}>
-                  {' '}
-                  insufficient data to draw the chart{' '}
-                </div>
-              }
-            />
+            <CardHeader title={<div style={{ fontSize: '16px' }}> insufficient data to draw the chart </div>} />
           </Card>
         </div>
       );
@@ -200,15 +170,7 @@ export default class BarChartCard extends Component {
             disabled={false}
             onClick={this.processOnClickKPIDataRepresentation}
           />
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={{ fontSize: 16, marginBottom: '20px' }}>
-                {' '}
-                {title}{' '}
-              </div>
-            }
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '20px' }}> {title} </div>} />
           {this.renderChartType()}
         </Card>
       </div>
@@ -233,13 +195,7 @@ export default class BarChartCard extends Component {
   renderBarChart = () => {
     return (
       <div>
-        <BarChart
-          padding={'50%'}
-          width={600}
-          height={500}
-          data={this.state.data}
-          margin={{ top: 20, right: 30, left: 30, bottom: 5 }}
-        >
+        <BarChart padding={'50%'} width={600} height={500} data={this.state.data} margin={{ top: 20, right: 30, left: 30, bottom: 5 }}>
           <XAxis dataKey={this.state.dataKey} />
           <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
           <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
@@ -274,25 +230,9 @@ export default class BarChartCard extends Component {
     const COLORS = ['#0088FE', '#00C49F', '#FFBB28'];
 
     return (
-      <PieChart
-        padding={'50%'}
-        width={800}
-        height={500}
-        margin={{ top: 20, right: 30, left: 300, bottom: 5 }}
-      >
-        <Pie
-          dataKey={'value'}
-          isAnimationActive={true}
-          data={data}
-          cx={200}
-          cy={200}
-          outerRadius={180}
-          fill="#8884d8"
-          labelLine={false}
-        >
-          {data.map((entry, index) => (
-            <Cell key={index} fill={COLORS[index % COLORS.length]} />
-          ))}
+      <PieChart padding={'50%'} width={800} height={500} margin={{ top: 20, right: 30, left: 300, bottom: 5 }}>
+        <Pie dataKey={'value'} isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={180} fill="#8884d8" labelLine={false}>
+          {data.map((entry, index) => <Cell key={index} fill={COLORS[index % COLORS.length]} />)}
         </Pie>
         <Tooltip />
         <Legend />

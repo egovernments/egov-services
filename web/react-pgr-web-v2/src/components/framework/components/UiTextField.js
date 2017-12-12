@@ -23,17 +23,13 @@ export default class UiTextField extends Component {
   }
 
   componentDidMount() {
-    if (this.props.item.url && this.props.makeAjaxCall)
-      console.log('ajaxCall', this.props.makeAjaxCall);
+    if (this.props.item.url && this.props.makeAjaxCall) console.log('ajaxCall', this.props.makeAjaxCall);
     //console.log('result', this.props.makeAjaxCall(this.props.item.url));
   }
 
   renderTextBox = item => {
     var disabledValue = false;
-    if (
-      item.isDisablePath &&
-      typeof this.props.getVal(item.isDisablePath) == 'boolean'
-    ) {
+    if (item.isDisablePath && typeof this.props.getVal(item.isDisablePath) == 'boolean') {
       disabledValue = !this.props.getVal(item.isDisablePath);
     } else {
       disabledValue = item.isDisabled;
@@ -47,9 +43,7 @@ export default class UiTextField extends Component {
               id={item.jsonPath.split('.').join('-')}
               inputStyle={{
                 color: '#5F5C57',
-                textAlign: item.hasOwnProperty('textAlign')
-                  ? item.textAlign
-                  : 'left',
+                textAlign: item.hasOwnProperty('textAlign') ? item.textAlign : 'left',
               }}
               style={{ display: item.hide ? 'none' : 'inline-block' }}
               errorStyle={{ float: 'left' }}
@@ -61,20 +55,9 @@ export default class UiTextField extends Component {
               onChange={e => {
                 if (e.target.value) {
                   e.target.value = e.target.value.replace(/^\s*/, '');
-                  if (
-                    e.target.value[e.target.value.length - 1] == ' ' &&
-                    e.target.value[e.target.value.length - 2] == ' '
-                  )
-                    return;
+                  if (e.target.value[e.target.value.length - 1] == ' ' && e.target.value[e.target.value.length - 2] == ' ') return;
                 }
-                this.props.handler(
-                  e,
-                  item.jsonPath,
-                  item.isRequired ? true : false,
-                  item.pattern,
-                  item.requiredErrMsg,
-                  item.patternErrMsg
-                );
+                this.props.handler(e, item.jsonPath, item.isRequired ? true : false, item.pattern, item.requiredErrMsg, item.patternErrMsg);
               }}
             />
           );
@@ -88,10 +71,7 @@ export default class UiTextField extends Component {
             },
             floatingLabelText: (
               <span>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             ),
           };
@@ -102,9 +82,7 @@ export default class UiTextField extends Component {
               id={item.jsonPath.split('.').join('-')}
               inputStyle={{
                 color: '#5F5C57',
-                textAlign: item.hasOwnProperty('textAlign')
-                  ? item.textAlign
-                  : 'left',
+                textAlign: item.hasOwnProperty('textAlign') ? item.textAlign : 'left',
               }}
               maxLength={item.maxLength || ''}
               style={{ display: item.hide ? 'none' : 'inline-block' }}
@@ -117,11 +95,7 @@ export default class UiTextField extends Component {
               onChange={e => {
                 if (e.target.value) {
                   e.target.value = e.target.value.replace(/^\s*/, '');
-                  if (
-                    e.target.value[e.target.value.length - 1] == ' ' &&
-                    e.target.value[e.target.value.length - 2] == ' '
-                  )
-                    return;
+                  if (e.target.value[e.target.value.length - 1] == ' ' && e.target.value[e.target.value.length - 2] == ' ') return;
                 }
                 this.props.handler(
                   e,

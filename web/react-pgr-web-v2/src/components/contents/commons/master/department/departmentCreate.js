@@ -58,9 +58,7 @@ class CreateDepartment extends Component {
         id: this.props.CreateDepartment.id,
         name: this.props.CreateDepartment.name,
         code: this.props.CreateDepartment.code,
-        active: !this.props.CreateDepartment.active
-          ? false
-          : this.props.CreateDepartment.active,
+        active: !this.props.CreateDepartment.active ? false : this.props.CreateDepartment.active,
         tenantId: 'default',
       },
     };
@@ -115,11 +113,7 @@ class CreateDepartment extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/receivingcenter/v1/_search',
-        { id: this.props.match.params.id },
-        body
-      )
+      Api.commonApiPost('/pgr-master/receivingcenter/v1/_search', { id: this.props.match.params.id }, body)
         .then(function(response) {
           console.log(response);
           current.setState({ data: response.ReceivingCenterType });
@@ -171,12 +165,7 @@ class CreateDepartment extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}> Create/Update Department</div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> Create/Update Department</div>} />
             <CardText style={{ padding: 0 }}>
               <Grid>
                 <Row>
@@ -230,24 +219,14 @@ class CreateDepartment extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
               primary={true}
             />
           </div>
         </form>
         <Dialog
           title="Data Added Successfully"
-          actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={this.handleClose}
-            />
-          }
+          actions={<FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.handleClose} />}
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}

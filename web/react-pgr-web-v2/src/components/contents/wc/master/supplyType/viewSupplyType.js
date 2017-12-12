@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SimpleMap from '../../../../common/GoogleMaps.js';
 import Divider from 'material-ui/Divider';
-import {
-  Grid,
-  Row,
-  Col,
-  DropdownButton,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
@@ -79,13 +72,7 @@ class ViewSupplyType extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/supplytype/_search',
-        { id: this.props.match.params.id },
-        {},
-        false,
-        true
-      )
+      Api.commonApiPost('/wcms/masters/supplytype/_search', { id: this.props.match.params.id }, {}, false, true)
         .then(function(response) {
           console.log(response);
           current.setState({ data: response.supplytypes });
@@ -121,10 +108,7 @@ class ViewSupplyType extends Component {
     return (
       <div className="viewCategoryType">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={<div style={styles.headerStyle}>View Supply Type</div>}
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>View Supply Type</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <br />
@@ -157,9 +141,7 @@ class ViewSupplyType extends Component {
                           {translate('core.lbl.description')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewCategoryType.description
-                            ? viewCategoryType.description
-                            : ''}
+                          {viewCategoryType.description ? viewCategoryType.description : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>

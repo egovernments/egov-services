@@ -9,11 +9,7 @@ import { translate } from '../../../common/common';
 import Api from '../../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../../framework/components/UiButton';
-import {
-  fileUpload,
-  getFullDate,
-  int_to_words,
-} from '../../../framework/utility/utility';
+import { fileUpload, getFullDate, int_to_words } from '../../../framework/utility/utility';
 import UiTable from '../../../framework/components/UiTable';
 import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
@@ -50,15 +46,10 @@ class Report extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -75,31 +66,19 @@ class Report extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -108,37 +87,18 @@ class Report extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -146,36 +106,12 @@ class Report extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -188,37 +124,18 @@ class Report extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -226,36 +143,12 @@ class Report extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -270,24 +163,13 @@ class Report extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -295,90 +177,37 @@ class Report extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
         }
       }
 
-      for (
-        var j = 0;
-        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            var k = 0;
-            k <
-            specs[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
+          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue ==
-              _.get(
-                form,
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
+              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide.length;
-                  a++
-                ) {
-                  this.hideField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].hide[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                  this.hideField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show.length;
-                  a++
-                ) {
-                  this.showField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].show[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                  this.showField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }
@@ -386,14 +215,8 @@ class Report extends Component {
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -401,8 +224,7 @@ class Report extends Component {
   }
 
   initData() {
-    specifications = require('../../../framework/specs/citizenService/tl/TradeLicense')
-      .default;
+    specifications = require('../../../framework/specs/citizenService/tl/TradeLicense').default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let self = this;
@@ -451,9 +273,7 @@ class Report extends Component {
 
     if (self.props.match.params.status == 'pay') {
       let metaData = JSON.parse(localStorage.getItem('metaData')),
-        paymentGateWayRes = JSON.parse(
-          localStorage.getItem('paymentGateWayResponse')
-        );
+        paymentGateWayRes = JSON.parse(localStorage.getItem('paymentGateWayResponse'));
       self.props.setLoadingStatus('loading');
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
       let response = JSON.parse(localStorage.response);
@@ -487,70 +307,30 @@ class Report extends Component {
         true
       ).then(
         function(res2) {
-          Api.commonApiPost(
-            '/tl-masters/category/v1/_search',
-            { type: 'subcategory' },
-            {},
-            null,
-            true
-          ).then(
+          Api.commonApiPost('/tl-masters/category/v1/_search', { type: 'subcategory' }, {}, null, true).then(
             function(res3) {
-              if (
-                res3 &&
-                res3.categories &&
-                res3.categories.length &&
-                res2 &&
-                res2.serviceReq &&
-                res2.serviceReq[0]
-              ) {
+              if (res3 && res3.categories && res3.categories.length && res2 && res2.serviceReq && res2.serviceReq[0]) {
                 for (var i = 0; i < res3.categories.length; i++) {
-                  if (
-                    res3.categories[i].id ==
-                    res2.serviceReq[0].moduleObject.licenses[0].subCategoryId
-                  ) {
-                    res2.serviceReq[0].moduleObject.licenses[0].subCategoryName =
-                      res3.categories[i].name;
+                  if (res3.categories[i].id == res2.serviceReq[0].moduleObject.licenses[0].subCategoryId) {
+                    res2.serviceReq[0].moduleObject.licenses[0].subCategoryName = res3.categories[i].name;
                   }
                 }
               }
 
-              if (
-                res2 &&
-                res2.serviceReq &&
-                res2.serviceReq[0] &&
-                res2.serviceReq[0] &&
-                res2.serviceReq[0].moduleObject
-              ) {
+              if (res2 && res2.serviceReq && res2.serviceReq[0] && res2.serviceReq[0] && res2.serviceReq[0].moduleObject) {
                 res2.serviceReq[0].moduleObject.licenses[0].validityYears =
                   res2.serviceReq[0].moduleObject.licenses[0].validityYears +
-                  (res2.serviceReq[0].moduleObject.licenses[0].validityYears ==
-                  1
-                    ? ' Year'
-                    : ' Years');
-                res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(
-                  self.props.match.params.ackNo
-                );
+                  (res2.serviceReq[0].moduleObject.licenses[0].validityYears == 1 ? ' Year' : ' Years');
+                res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(self.props.match.params.ackNo);
               }
 
               self.setState({
-                ServiceRequest:
-                  res2 && res2.serviceReq && res2.serviceReq[0]
-                    ? res2.serviceReq[0]
-                    : {},
-                status:
-                  res2 && res2.serviceReq && res2.serviceReq[0]
-                    ? res2.serviceReq[0].status
-                    : '',
+                ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
+                status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : '',
               });
-              self.props.setFormData(
-                res2 && res2.serviceReq && res2.serviceReq[0]
-                  ? res2.serviceReq[0].moduleObject
-                  : {}
-              );
+              self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
               self.setInitialUpdateData(
-                res2 && res2.serviceReq && res2.serviceReq[0]
-                  ? res2.serviceReq[0].moduleObject
-                  : {},
+                res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {},
                 JSON.parse(JSON.stringify(specifications)),
                 'tl',
                 'view',
@@ -558,43 +338,20 @@ class Report extends Component {
               );
             },
             function(err) {
-              if (
-                res2 &&
-                res2.serviceReq &&
-                res2.serviceReq[0] &&
-                res2.serviceReq[0] &&
-                res2.serviceReq[0].moduleObject
-              ) {
+              if (res2 && res2.serviceReq && res2.serviceReq[0] && res2.serviceReq[0] && res2.serviceReq[0].moduleObject) {
                 res2.serviceReq[0].moduleObject.licenses[0].validityYears =
                   res2.serviceReq[0].moduleObject.licenses[0].validityYears +
-                  (res2.serviceReq[0].moduleObject.licenses[0].validityYears ==
-                  1
-                    ? ' Year'
-                    : ' Years');
-                res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(
-                  self.props.match.params.ackNo
-                );
+                  (res2.serviceReq[0].moduleObject.licenses[0].validityYears == 1 ? ' Year' : ' Years');
+                res2.serviceReq[0].moduleObject.licenses[0].serviceRequestId = decodeURIComponent(self.props.match.params.ackNo);
               }
 
               self.setState({
-                ServiceRequest:
-                  res2 && res2.serviceReq && res2.serviceReq[0]
-                    ? res2.serviceReq[0]
-                    : {},
-                status:
-                  res2 && res2.serviceReq && res2.serviceReq[0]
-                    ? res2.serviceReq[0].status
-                    : '',
+                ServiceRequest: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0] : {},
+                status: res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].status : '',
               });
-              self.props.setFormData(
-                res2 && res2.serviceReq && res2.serviceReq[0]
-                  ? res2.serviceReq[0].moduleObject
-                  : {}
-              );
+              self.props.setFormData(res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {});
               self.setInitialUpdateData(
-                res2 && res2.serviceReq && res2.serviceReq[0]
-                  ? res2.serviceReq[0].moduleObject
-                  : {},
+                res2 && res2.serviceReq && res2.serviceReq[0] ? res2.serviceReq[0].moduleObject : {},
                 JSON.parse(JSON.stringify(specifications)),
                 'tl',
                 'view',
@@ -618,26 +375,12 @@ class Report extends Component {
   getVal = (path, dateBool) => {
     var val = _.get(this.props.formData, path);
 
-    if (
-      dateBool &&
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (dateBool && val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     }
 
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean')
       ? val === true ? 'Yes' : val === false ? 'NA' : val + ''
       : '';
   };
@@ -660,9 +403,7 @@ class Report extends Component {
 
   generateReceipt(ServiceRequest, Receipt) {
     let self = this;
-    var paymentGateWayRes = JSON.parse(
-      localStorage.getItem('paymentGateWayResponse')
-    );
+    var paymentGateWayRes = JSON.parse(localStorage.getItem('paymentGateWayResponse'));
     Receipt[0]['onlinePayment'] = {
       // "receiptHeader" : "",
       paymentGatewayName: paymentGateWayRes['paymentMethod'],
@@ -679,8 +420,7 @@ class Report extends Component {
     };
     ServiceRequest.backendServiceDetails = [
       {
-        url:
-          'http://collection-services:8080/collection-services/receipts/_create',
+        url: 'http://collection-services:8080/collection-services/receipts/_create',
         request: {
           RequestInfo: self.state.RequestInfo,
           Receipt: Receipt,
@@ -703,10 +443,7 @@ class Report extends Component {
         //self.openPayFeeModal();
         self.setState({
           showReceipt: true,
-          Receipt:
-            res.serviceReq && res.serviceReq.backendServiceDetails
-              ? res.serviceReq.backendServiceDetails[0].response.Receipt
-              : [],
+          Receipt: res.serviceReq && res.serviceReq.backendServiceDetails ? res.serviceReq.backendServiceDetails[0].response.Receipt : [],
         });
 
         localStorage.removeItem('ack');
@@ -726,10 +463,7 @@ class Report extends Component {
     let { formData, metaData } = this.props;
     self.props.setLoadingStatus('loading');
 
-    window.localStorage.setItem(
-      'serviceRequest',
-      JSON.stringify(serviceRequest)
-    );
+    window.localStorage.setItem('serviceRequest', JSON.stringify(serviceRequest));
     window.localStorage.setItem('RequestInfo', JSON.stringify(RequestInfo));
     window.localStorage.setItem('documents', JSON.stringify(documents));
     window.localStorage.setItem('formData', JSON.stringify(formData));
@@ -883,17 +617,12 @@ class Report extends Component {
     //Update service request and generate bill and create receipt
     let self = this;
     var ServiceRequest = { ...this.state.ServiceRequest };
-    var DemandBillQuery =
-      `?businessService=BP&tenantId=${localStorage.getItem(
-        'tenantId'
-      )}&consumerCode=` + ServiceRequest.serviceRequestId;
+    var DemandBillQuery = `?businessService=BP&tenantId=${localStorage.getItem('tenantId')}&consumerCode=` + ServiceRequest.serviceRequestId;
     var fee = ServiceRequest.additionalFee;
     ServiceRequest.additionalFee = 12345;
     ServiceRequest.backendServiceDetails = [
       {
-        url:
-          'http://billing-service:8080/billing-service/bill/_generate' +
-          DemandBillQuery,
+        url: 'http://billing-service:8080/billing-service/bill/_generate' + DemandBillQuery,
         request: {
           RequestInfo: self.state.RequestInfo,
         },
@@ -920,8 +649,7 @@ class Report extends Component {
         ) {
           let Receipt = [];
           Receipt[0] = { Bill: [] };
-          Receipt[0]['Bill'] =
-            res.serviceReq.backendServiceDetails[0].response.Bill;
+          Receipt[0]['Bill'] = res.serviceReq.backendServiceDetails[0].response.Bill;
           Receipt[0]['Bill'][0]['paidBy'] = Receipt[0]['Bill'][0].payeeName;
           Receipt[0]['tenantId'] = window.localStorage.getItem('tenantId');
           Receipt[0]['instrument'] = {
@@ -931,20 +659,12 @@ class Report extends Component {
           };
           Receipt[0]['Bill'][0]['billDetails'][0]['amountPaid'] = fee;
           setTimeout(function() {
-            localStorage.setItem(
-              'response',
-              JSON.stringify({ ServiceRequest, Receipt })
-            );
+            localStorage.setItem('response', JSON.stringify({ ServiceRequest, Receipt }));
             self.makePayment(res, fee);
           }, 3000);
         } else {
           self.props.setLoadingStatus('hide');
-          self.props.toggleSnackbarAndSetText(
-            true,
-            "Oops! Something isn't right. Please try again later. ",
-            false,
-            true
-          );
+          self.props.toggleSnackbarAndSetText(true, "Oops! Something isn't right. Please try again later. ", false, true);
         }
       },
       function(err) {
@@ -965,9 +685,7 @@ class Report extends Component {
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body>');
-    mywindow.document.write(
-      document.getElementById('DownloadReceipt').innerHTML
-    );
+    mywindow.document.write(document.getElementById('DownloadReceipt').innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close(); // necessary for IE >= 10
@@ -999,28 +717,18 @@ class Report extends Component {
     if (self.state.feeAmount) {
       ServiceRequest.additionalFee = self.state.feeAmount;
       let DemandRequest = {};
-      DemandRequest['Demands'] = Object.assign(
-        [],
-        self.props.metaData['tl.create'].feeDetails
-      );
+      DemandRequest['Demands'] = Object.assign([], self.props.metaData['tl.create'].feeDetails);
       DemandRequest['Demands'][0].tenantId = localStorage.getItem('tenantId');
       DemandRequest['Demands'][0].businessService = 'BP';
-      DemandRequest['Demands'][0].consumerCode =
-        self.state.ServiceRequest.serviceRequestId;
-      DemandRequest['Demands'][0].owner.id = JSON.parse(
-        localStorage.userRequest
-      ).id;
+      DemandRequest['Demands'][0].consumerCode = self.state.ServiceRequest.serviceRequestId;
+      DemandRequest['Demands'][0].owner.id = JSON.parse(localStorage.userRequest).id;
       DemandRequest['Demands'][0].taxPeriodFrom = 1491004800000;
       DemandRequest['Demands'][0].taxPeriodTo = 1522540799000;
-      DemandRequest['Demands'][0].demandDetails[0].taxHeadMasterCode =
-        'FIRE_PROV_FIRE_NOC_FEE';
-      DemandRequest['Demands'][0].demandDetails[0].taxAmount =
-        self.state.feeAmount;
+      DemandRequest['Demands'][0].demandDetails[0].taxHeadMasterCode = 'FIRE_PROV_FIRE_NOC_FEE';
+      DemandRequest['Demands'][0].demandDetails[0].taxAmount = self.state.feeAmount;
       ServiceRequest.backendServiceDetails = [
         {
-          url:
-            'http://billing-service:8080/billing-service/demand/_create?tenantId=' +
-            localStorage.tenantId,
+          url: 'http://billing-service:8080/billing-service/demand/_create?tenantId=' + localStorage.tenantId,
           request: {
             RequestInfo: self.state.RequestInfo,
             ...DemandRequest,
@@ -1047,12 +755,7 @@ class Report extends Component {
     ).then(
       function(res) {
         self.props.setLoadingStatus('hide');
-        self.props.toggleSnackbarAndSetText(
-          true,
-          'Updated successfully.',
-          true,
-          false
-        );
+        self.props.toggleSnackbarAndSetText(true, 'Updated successfully.', true, false);
         $('#fileInput').val('');
         self.setState({
           ServiceRequest: res.serviceReq,
@@ -1108,13 +811,7 @@ class Report extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-    } = this.props;
+    let { mockData, moduleName, actionName, formData, fieldErrors } = this.props;
     let { handleChange, getVal, addNewCard, removeCard, printer } = this;
     let self = this;
 
@@ -1129,13 +826,7 @@ class Report extends Component {
             <Card className="uiCard">
               <CardHeader
                 style={{ paddingTop: 4, paddingBottom: 0 }}
-                title={
-                  <div
-                    style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}
-                  >
-                    Process Application
-                  </div>
-                }
+                title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>Process Application</div>}
               />
               <CardText style={{ paddingTop: 0, paddingBottom: 0 }}>
                 <Grid style={{ paddingTop: 0 }}>
@@ -1161,8 +852,7 @@ class Report extends Component {
                           fullWidth={true}
                           floatingLabelText={
                             <span>
-                              Status{' '}
-                              <span style={{ color: '#FF0000' }}>{' *'}</span>
+                              Status <span style={{ color: '#FF0000' }}>{' *'}</span>
                             </span>
                           }
                           value={self.state.status}
@@ -1174,18 +864,9 @@ class Report extends Component {
                           maxHeight={200}
                         >
                           <MenuItem value={'CREATED'} primaryText={'Created'} />
-                          <MenuItem
-                            value={'APPROVED'}
-                            primaryText={'Approved'}
-                          />
-                          <MenuItem
-                            value={'INPROGRESS'}
-                            primaryText={'In Progress'}
-                          />
-                          <MenuItem
-                            value={'REJECTED'}
-                            primaryText={'Rejected'}
-                          />
+                          <MenuItem value={'APPROVED'} primaryText={'Approved'} />
+                          <MenuItem value={'INPROGRESS'} primaryText={'In Progress'} />
+                          <MenuItem value={'REJECTED'} primaryText={'Rejected'} />
                         </SelectField>
                       </Col>
                     ) : (
@@ -1225,8 +906,7 @@ class Report extends Component {
                     </Col>
                     {self.state.role != 'CITIZEN' &&
                     self.state.ServiceRequest &&
-                    (!self.state.ServiceRequest.additionalFee ||
-                      self.state.ServiceRequest.additionalFee == 0) ? (
+                    (!self.state.ServiceRequest.additionalFee || self.state.ServiceRequest.additionalFee == 0) ? (
                       <Col xs={12} md={6}>
                         <TextField
                           floatingLabelStyle={{
@@ -1265,22 +945,13 @@ class Report extends Component {
               />&nbsp;&nbsp;&nbsp;&nbsp;
               {self.state.role == 'CITIZEN' &&
               self.state.ServiceRequest &&
-              (self.state.ServiceRequest.additionalFee > 0 &&
-                self.state.ServiceRequest.additionalFee != 12345) ? (
-                <RaisedButton
-                  primary={true}
-                  label={'Pay Fee'}
-                  onClick={self.openPayFeeModal}
-                />
+              (self.state.ServiceRequest.additionalFee > 0 && self.state.ServiceRequest.additionalFee != 12345) ? (
+                <RaisedButton primary={true} label={'Pay Fee'} onClick={self.openPayFeeModal} />
               ) : (
                 ''
               )}
             </div>
-            <CommentDoc
-              ServiceRequest={self.state.ServiceRequest}
-              getFullDate={getFullDate}
-              showRemarks={true}
-            />
+            <CommentDoc ServiceRequest={self.state.ServiceRequest} getFullDate={getFullDate} showRemarks={true} />
             {!_.isEmpty(mockData) &&
               mockData['tl.view'] && (
                 <ShowFields
@@ -1303,21 +974,11 @@ class Report extends Component {
               <Card id="DownloadReceipt">
                 <CardHeader title={<strong>Receipt for: Fire NOC</strong>} />
                 <CardText>
-                  <Table
-                    responsive
-                    style={{ fontSize: 'bold' }}
-                    id="ReceiptForWcAPartOne1"
-                    bordered
-                    condensed
-                  >
+                  <Table responsive style={{ fontSize: 'bold' }} id="ReceiptForWcAPartOne1" bordered condensed>
                     <tbody>
                       <tr>
                         <td style={{ textAlign: 'left' }}>
-                          <img
-                            src="./temp/images/headerLogo.png"
-                            height="60"
-                            width="60"
-                          />
+                          <img src="./temp/images/headerLogo.png" height="60" width="60" />
                         </td>
                         <td style={{ textAlign: 'center' }}>
                           <b>Roha Municipal Council</b>
@@ -1325,52 +986,28 @@ class Report extends Component {
                           Building Plan Department
                         </td>
                         <td style={{ textAlign: 'right' }}>
-                          <img
-                            src="./temp/images/AS.png"
-                            height="60"
-                            width="60"
-                          />
+                          <img src="./temp/images/AS.png" height="60" width="60" />
                         </td>
                       </tr>
                       <tr>
                         <td style={{ textAlign: 'left' }}>
                           Receipt Number :{' '}
-                          {self.state.Receipt[0].Bill[0].billDetails[0]
-                            .receiptNumber
-                            ? self.state.Receipt[0].Bill[0].billDetails[0]
-                                .receiptNumber
+                          {self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber
+                            ? self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber
                             : 'NA'}
                         </td>
-                        <td style={{ textAlign: 'center' }}>
-                          Receipt For : Fire NOC
-                        </td>
-                        <td style={{ textAlign: 'right' }}>
-                          Receipt Date:{' '}
-                          {getFullDate(
-                            self.state.Receipt[0].Bill[0].billDetails[0]
-                              .receiptDate
-                          )}
-                        </td>
+                        <td style={{ textAlign: 'center' }}>Receipt For : Fire NOC</td>
+                        <td style={{ textAlign: 'right' }}>Receipt Date: {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>
                       </tr>
                       <tr>
                         <td colSpan={3} style={{ textAlign: 'left' }}>
-                          Service Request Number :{' '}
-                          {
-                            self.state.Receipt[0].Bill[0].billDetails[0]
-                              .consumerCode
-                          }
+                          Service Request Number : {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}
                           <br />
-                          Applicant Name :{' '}
-                          {JSON.parse(localStorage.userRequest).name ||
-                            self.state.Receipt[0].Bill[0].payeeName}
+                          Applicant Name : {JSON.parse(localStorage.userRequest).name || self.state.Receipt[0].Bill[0].payeeName}
                           <br />
                           Amount :{' '}
-                          {self.state.Receipt[0].Bill[0].billDetails[0]
-                            .totalAmount
-                            ? 'Rs.' +
-                              self.state.Receipt[0].Bill[0].billDetails[0]
-                                .totalAmount +
-                              '/-'
+                          {self.state.Receipt[0].Bill[0].billDetails[0].totalAmount
+                            ? 'Rs.' + self.state.Receipt[0].Bill[0].billDetails[0].totalAmount + '/-'
                             : 'NA'}
                           <br />
                         </td>
@@ -1378,12 +1015,7 @@ class Report extends Component {
                     </tbody>
                   </Table>
 
-                  <Table
-                    id="ReceiptForWcAPartTwo"
-                    responsive
-                    bordered
-                    condensed
-                  >
+                  <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
                     <tbody>
                       <tr>
                         <td colSpan={2}>Bill Reference No.& Date</td>
@@ -1391,25 +1023,15 @@ class Report extends Component {
                       </tr>
                       <tr>
                         <td colSpan={2}>
-                          {self.state.Receipt[0].Bill[0].billDetails[0]
-                            .billNumber +
+                          {self.state.Receipt[0].Bill[0].billDetails[0].billNumber +
                             '-' +
-                            getFullDate(
-                              self.state.Receipt[0].Bill[0].billDetails[0]
-                                .receiptDate
-                            )}
+                            getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
                         </td>
                         <td colSpan={6}>Application for Fire NOC</td>
                       </tr>
 
                       <tr>
-                        <td colSpan={8}>
-                          Amount in words: Rs.{' '}
-                          {int_to_words(
-                            self.state.Receipt[0].Bill[0].billDetails[0]
-                              .totalAmount
-                          )}
-                        </td>
+                        <td colSpan={8}>Amount in words: Rs. {int_to_words(self.state.Receipt[0].Bill[0].billDetails[0].totalAmount)}</td>
                       </tr>
                       <tr>
                         <td colSpan={8}>Payment Mode</td>
@@ -1423,63 +1045,34 @@ class Report extends Component {
                       </tr>
                       <tr>
                         <td>Online</td>
-                        <td>
-                          {
-                            self.state.Receipt[0].Bill[0].billDetails[0]
-                              .totalAmount
-                          }
-                        </td>
-                        {self.state.Receipt[0].instrument.instrumentType.name ==
-                        'Online' ? (
+                        <td>{self.state.Receipt[0].Bill[0].billDetails[0].totalAmount}</td>
+                        {self.state.Receipt[0].instrument.instrumentType.name == 'Online' ? (
                           <td> {self.state.Receipt[0].transactionId} </td>
                         ) : (
                           <td> {self.state.Receipt[0].transactionId} </td>
                         )}
 
-                        {self.state.Receipt[0].instrument.instrumentType.name ==
-                        'Online' ? (
-                          <td>
-                            {' '}
-                            {getFullDate(
-                              self.state.Receipt[0].Bill[0].billDetails[0]
-                                .receiptDate
-                            )}{' '}
-                          </td>
+                        {self.state.Receipt[0].instrument.instrumentType.name == 'Online' ? (
+                          <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)} </td>
                         ) : (
-                          <td>
-                            {' '}
-                            {getFullDate(
-                              self.state.Receipt[0].Bill[0].billDetails[0]
-                                .receiptDate
-                            )}
-                          </td>
+                          <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>
                         )}
 
                         <td colSpan={4}>
-                          {self.state.Receipt[0].instrument.instrumentType
-                            .name == 'Online' ||
-                          self.state.Receipt[0].instrument.instrumentType
-                            .name == 'Cash'
+                          {self.state.Receipt[0].instrument.instrumentType.name == 'Online' ||
+                          self.state.Receipt[0].instrument.instrumentType.name == 'Cash'
                             ? 'NA'
                             : self.state.Receipt[0].instrument.bank.name}
                         </td>
                       </tr>
                     </tbody>
                   </Table>
-                  <span style={{ textAlign: 'right' }}>
-                    {translate(
-                      'This is computer generated receipt no authorised signature required'
-                    )}
-                  </span>
+                  <span style={{ textAlign: 'right' }}>{translate('This is computer generated receipt no authorised signature required')}</span>
                 </CardText>
               </Card>
               <br />
               <div style={{ textAlign: 'center' }}>
-                <RaisedButton
-                  primary={true}
-                  label="Download"
-                  onClick={self.generatePDF}
-                />
+                <RaisedButton primary={true} label="Download" onClick={self.generatePDF} />
               </div>
               <div className="page-break" />
             </Col>
@@ -1487,13 +1080,7 @@ class Report extends Component {
         ) : (
           ''
         )}
-        <Dialog
-          title="Add Fee Amount"
-          modal={false}
-          open={self.state.openAddFee}
-          onRequestClose={self.openAddFeeModal}
-          autoScrollBodyContent={true}
-        >
+        <Dialog title="Add Fee Amount" modal={false} open={self.state.openAddFee} onRequestClose={self.openAddFeeModal} autoScrollBodyContent={true}>
           <div style={{ textAlign: 'center' }}>
             <Row>
               <Col xs={12} md={12}>
@@ -1525,41 +1112,16 @@ class Report extends Component {
               </Col>
             </Row>
           </div>
-          <UiButton
-            handler={self.openAddFeeModal}
-            item={{ label: 'Cancel', uiType: 'button' }}
-            ui="google"
-          />&nbsp;&nbsp;
-          <UiButton
-            handler={self.addFee}
-            item={{ label: 'Add', uiType: 'button' }}
-            ui="google"
-          />
+          <UiButton handler={self.openAddFeeModal} item={{ label: 'Cancel', uiType: 'button' }} ui="google" />&nbsp;&nbsp;
+          <UiButton handler={self.addFee} item={{ label: 'Add', uiType: 'button' }} ui="google" />
         </Dialog>
-        <Dialog
-          title="Pay Fee Amount"
-          modal={false}
-          open={self.state.openPayFee}
-          onRequestClose={self.openPayFeeModal}
-          autoScrollBodyContent={true}
-        >
+        <Dialog title="Pay Fee Amount" modal={false} open={self.state.openPayFee} onRequestClose={self.openPayFeeModal} autoScrollBodyContent={true}>
           <div style={{ textAlign: 'center' }}>
-            <h4>
-              Amount to be paid: Rs{' '}
-              {self.state.ServiceRequest.additionalFee || 20}
-            </h4>
+            <h4>Amount to be paid: Rs {self.state.ServiceRequest.additionalFee || 20}</h4>
             <br />
           </div>
-          <UiButton
-            handler={self.openPayFeeModal}
-            item={{ label: 'Cancel', uiType: 'button' }}
-            ui="google"
-          />&nbsp;&nbsp;
-          <UiButton
-            handler={self.payFee}
-            item={{ label: 'Pay', uiType: 'button' }}
-            ui="google"
-          />
+          <UiButton handler={self.openPayFeeModal} item={{ label: 'Cancel', uiType: 'button' }} ui="google" />&nbsp;&nbsp;
+          <UiButton handler={self.payFee} item={{ label: 'Pay', uiType: 'button' }} ui="google" />
         </Dialog>
       </div>
     );

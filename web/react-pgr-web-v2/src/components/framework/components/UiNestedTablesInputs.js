@@ -52,19 +52,11 @@ export default class UiNestedTablesInputs extends Component {
     if (!tableDatas || tableDatas.length === 0) {
       setVal(item.jsonPath, [undefined]);
       let list = [...this.state.list];
-      list.push(
-        this.cloneRowObject(item.jsonPath, 0, [
-          ...this.props.item.tableList.values,
-        ])
-      );
+      list.push(this.cloneRowObject(item.jsonPath, 0, [...this.props.item.tableList.values]));
       this.setState({ list });
       this.addMandatoryFields(list);
     } else {
-      this.addMultipleRow(
-        item.jsonPath,
-        tableDatas.length,
-        item.tableList.values
-      );
+      this.addMultipleRow(item.jsonPath, tableDatas.length, item.tableList.values);
       //  for(let idx=0;idx<tableDatas.length;idx++)
       //    this.addRow(item.jsonPath);
     }
@@ -86,9 +78,7 @@ export default class UiNestedTablesInputs extends Component {
 
   removeMandatoryFields = (tableJsonPath, rowIdx) => {
     let deletedRow = this.cloneRowObject(tableJsonPath, rowIdx);
-    let deletedRequiredFields = deletedRow
-      .filter(field => field.isRequired)
-      .map(field => field.jsonPath);
+    let deletedRequiredFields = deletedRow.filter(field => field.isRequired).map(field => field.jsonPath);
     this.props.delRequiredFields(deletedRequiredFields);
   };
 
@@ -97,10 +87,7 @@ export default class UiNestedTablesInputs extends Component {
       let colStyle = (colsWeight[idx] && { flex: colsWeight[idx] }) || {};
       return (
         <div style={colStyle} className="flex-cell flex-table-header">
-          {header.label}{' '}
-          {requiredCols.indexOf(idx) != -1 && (
-            <span style={{ color: 'rgb(255, 0, 0)' }}> *</span>
-          )}
+          {header.label} {requiredCols.indexOf(idx) != -1 && <span style={{ color: 'rgb(255, 0, 0)' }}> *</span>}
         </div>
       );
     });
@@ -110,11 +97,7 @@ export default class UiNestedTablesInputs extends Component {
     return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&');
   };
 
-  replaceIdxWithTableJsonPath = (
-    tableJsonPath,
-    idxToReplace,
-    valueToReplace
-  ) => {
+  replaceIdxWithTableJsonPath = (tableJsonPath, idxToReplace, valueToReplace) => {
     let regexp = new RegExp(`${this.escapeRegExp(tableJsonPath)}\\[\\d+\\]`);
     return valueToReplace.replace(regexp, `${tableJsonPath}[${idxToReplace}]`);
   };
@@ -189,13 +172,9 @@ export default class UiNestedTablesInputs extends Component {
         (fields &&
           fields.map((field, idx) => {
             let colStyle = (colsWeight[idx] && { flex: colsWeight[idx] }) || {};
-            let snoColStyle =
-              (field.isSerialNo && { padding: '15px 7px' }) || {};
+            let snoColStyle = (field.isSerialNo && { padding: '15px 7px' }) || {};
             return (
-              <div
-                style={{ ...colStyle, ...snoColStyle }}
-                className="flex-cell"
-              >
+              <div style={{ ...colStyle, ...snoColStyle }} className="flex-cell">
                 {(field.isSerialNo && rowIdx + 1) || this.renderField(field)}
               </div>
             );
@@ -209,12 +188,7 @@ export default class UiNestedTablesInputs extends Component {
   };
 
   renderField = (item, screen) => {
-    if (
-      screen == 'view' &&
-      ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(
-        item.type
-      ) > -1
-    ) {
+    if (screen == 'view' && ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(item.type) > -1) {
       if (item.type == 'datePicker') {
         item.isDate = true;
       }
@@ -223,23 +197,11 @@ export default class UiNestedTablesInputs extends Component {
     switch (item.type) {
       case 'text':
         return (
-          <UiTextField
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'textarea':
         return (
-          <UiTextArea
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiTextArea ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'singleValueListMultiple':
         return (
@@ -306,33 +268,15 @@ export default class UiNestedTablesInputs extends Component {
         );
       case 'checkbox':
         return (
-          <UiCheckBox
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiCheckBox ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'email':
         return (
-          <UiEmailField
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiEmailField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'datePicker':
         return (
-          <UiDatePicker
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiDatePicker ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'singleFileUpload':
         return (
@@ -356,33 +300,15 @@ export default class UiNestedTablesInputs extends Component {
         );
       case 'pan':
         return (
-          <UiPanCard
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'aadhar':
         return (
-          <UiAadharCard
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'pinCode':
         return (
-          <UiPinCode
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiPinCode ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'label':
         return <UiLabel getVal={this.props.getVal} item={item} />;
@@ -427,8 +353,7 @@ export default class UiNestedTablesInputs extends Component {
     const list = this.state.list;
     const requiredColumns = this.findRequiredColumns(item);
     const tableJsonPath = item.jsonPath;
-    const nestedTables =
-      (item.tableList.tables && [...item.tableList.tables]) || [];
+    const nestedTables = (item.tableList.tables && [...item.tableList.tables]) || [];
 
     const renderNestedTables = (childTables, parentTblIdx) => {
       let nestedTables = [...childTables];
@@ -439,18 +364,10 @@ export default class UiNestedTablesInputs extends Component {
             <div className="childTable">
               {nestedTables.map((table, idx) => {
                 let modifiedTbl = { ...table };
-                modifiedTbl.jsonPath = this.replaceIdxWithTableJsonPath(
-                  tableJsonPath,
-                  parentTblIdx,
-                  modifiedTbl.jsonPath
-                );
+                modifiedTbl.jsonPath = this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, modifiedTbl.jsonPath);
                 //console.log('NESTED TABLE --->', modifiedTbl.jsonPath, modifiedTbl.tableList.values);
                 //console.log("replacing", table.jsonPath, this.replaceIdxWithTableJsonPath(tableJsonPath, parentTblIdx, modifiedTbl.jsonPath));
-                modifiedTbl.tableList['values'] = this.cloneRowObject(
-                  tableJsonPath,
-                  parentTblIdx,
-                  modifiedTbl.tableList.values
-                );
+                modifiedTbl.tableList['values'] = this.cloneRowObject(tableJsonPath, parentTblIdx, modifiedTbl.tableList.values);
                 //console.log("clonning --->", modifiedTbl.jsonPath, modifiedTbl.tableList.values);
                 return (
                   <UiNestedTablesInputs
@@ -481,12 +398,7 @@ export default class UiNestedTablesInputs extends Component {
       <div className="flex-table flex-table-sm">
         <div className="flex-row">
           {this.renderHeader(headerArry, colsWeight, requiredColumns)}
-          {isEditMode && (
-            <div
-              style={{ flex: '0.3' }}
-              className="flex-cell flex-table-header"
-            />
-          )}
+          {isEditMode && <div style={{ flex: '0.3' }} className="flex-cell flex-table-header" />}
         </div>
 
         {list.map((fields, idx) => {
@@ -521,10 +433,7 @@ export default class UiNestedTablesInputs extends Component {
 
         {isEditMode && (
           <div className="flex-row border-top">
-            <div
-              style={{ flexDirection: 'row-reverse', padding: '10px' }}
-              className="flex-cell text-right"
-            >
+            <div style={{ flexDirection: 'row-reverse', padding: '10px' }} className="flex-cell text-right">
               <RaisedButton
                 label="Add"
                 primary={true}

@@ -86,11 +86,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'wc.create.meterCost' },
-        { label: 'wc.group.meterCost' },
-        { label: 'wc.search.result.active' },
-      ],
+      header: [{ label: 'wc.create.meterCost' }, { label: 'wc.group.meterCost' }, { label: 'wc.search.result.active' }],
       values: ['meterMake', 'amount', 'active'],
       resultPath: 'MeterCosts',
       rowClickUrlUpdate: '/update/wc/meterCost/{id}',

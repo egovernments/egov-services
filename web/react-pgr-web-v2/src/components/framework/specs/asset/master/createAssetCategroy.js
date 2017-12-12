@@ -85,8 +85,7 @@ var dat = {
             label: 'ac.create.unit.of.measurement',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Uom&moduleName=common-masters|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&masterName=Uom&moduleName=common-masters|$..code|$..description',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -138,8 +137,7 @@ var dat = {
         fields: [
           {
             name: 'additionalName',
-            jsonPath:
-              'MasterMetaData.masterData[0].assetFieldsDefination[0].name',
+            jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination[0].name',
             label: 'ac.create.additional.field.name',
             pattern: '^[s.]*([^s.][s.]*){0,100}$',
             type: 'text',
@@ -150,8 +148,7 @@ var dat = {
           },
           {
             name: 'additionalDataType',
-            jsonPath:
-              'MasterMetaData.masterData[0].assetFieldsDefination[0].type',
+            jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination[0].type',
             label: 'ac.create.additional.field.data.type',
             pattern: '',
             type: 'singleValueList',
@@ -197,8 +194,7 @@ var dat = {
           },
           {
             name: 'Active',
-            jsonPath:
-              'MasterMetaData.masterData[0].assetFieldsDefination[0].isActive',
+            jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination[0].isActive',
             label: 'wc.create.active',
             pattern: '',
             type: 'checkbox',
@@ -210,8 +206,7 @@ var dat = {
           },
           {
             name: 'Mandatory',
-            jsonPath:
-              'MasterMetaData.masterData[0].assetFieldsDefination[0].isMandatory',
+            jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination[0].isMandatory',
             label: 'wc.create.mandatory',
             pattern: '',
             type: 'checkbox',
@@ -223,8 +218,7 @@ var dat = {
           },
           {
             name: 'additionalOrder',
-            jsonPath:
-              'MasterMetaData.masterData[0].assetFieldsDefination[0].order',
+            jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination[0].order',
             label: 'ac.create.additional.field.order',
             pattern: '^[s.]*([^s.][s.]*){0,100}$',
             type: 'text',
@@ -235,8 +229,7 @@ var dat = {
           },
           {
             name: 'additionalValue',
-            jsonPath:
-              'MasterMetaData.masterData[0].assetFieldsDefination[0].values',
+            jsonPath: 'MasterMetaData.masterData[0].assetFieldsDefination[0].values',
             label: 'ac.create.additional.field.value',
             pattern: '^[s.]*([^s.][s.]*){0,100}$',
             type: 'text',

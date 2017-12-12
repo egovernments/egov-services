@@ -71,23 +71,11 @@ class ChartOfAccontViewDetailedCode extends Component {
   };
 
   render() {
-    let {
-      ChartOfAccontViewDetailedCode,
-      handleChange,
-      isFormValid,
-      fieldErrors,
-      buttonText,
-    } = this.props;
+    let { ChartOfAccontViewDetailedCode, handleChange, isFormValid, fieldErrors, buttonText } = this.props;
     return (
       <div className="ChartOfAccontViewDetailedCode">
         <Card>
-          <CardHeader
-            title={
-              <strong style={{ color: brown500 }}>
-                Add Detailed Chart Of Accounts
-              </strong>
-            }
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Add Detailed Chart Of Accounts</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -107,12 +95,7 @@ class ChartOfAccontViewDetailedCode extends Component {
             </Card>
 
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="submit"
-                label="Search and View"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="submit" label="Search and View" backgroundColor={brown500} labelColor={white} />
               <RaisedButton label="Close" />
             </div>
           </CardText>
@@ -152,6 +135,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ChartOfAccontViewDetailedCode
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ChartOfAccontViewDetailedCode);

@@ -29,8 +29,7 @@ var dat = {
             label: 'wc.create.documenttype',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/documenttypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/documenttypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -93,8 +92,7 @@ var dat = {
             label: 'wc.create.documenttype',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/documenttypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/documenttypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',

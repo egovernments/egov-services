@@ -120,13 +120,7 @@ class AddDemand extends Component {
   componentDidMount() {
     var currentThis = this;
 
-    Api.commonApiPost(
-      '/pt-property/properties/specialnotice/_generate',
-      query,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('/pt-property/properties/specialnotice/_generate', query, {}, false, true)
       .then(res => {
         setLoadingStatus('hide');
         currentThis.setState({
@@ -142,9 +136,7 @@ class AddDemand extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.code} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -173,14 +165,7 @@ class AddDemand extends Component {
     return (
       <div>
         <Card className="uiCard">
-          <CardHeader
-            style={styles.reducePadding}
-            title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                Generate
-              </div>
-            }
-          />
+          <CardHeader style={styles.reducePadding} title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>Generate</div>} />
           <CardText style={styles.reducePadding}>
             <Grid fluid>
               <Row>

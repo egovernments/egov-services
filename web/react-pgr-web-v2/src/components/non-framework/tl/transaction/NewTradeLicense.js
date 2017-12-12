@@ -43,9 +43,7 @@ class NewTradeLicense extends Component {
         for (var i = 0; i < response.Employee.length; i++) {
           for (var j = 0; j < response.Employee[i].assignments.length; j++) {
             if (response.Employee[i].assignments[j].isPrimary) {
-              _this.renderObjToCreate(
-                response.Employee[i].assignments[j].position
-              );
+              _this.renderObjToCreate(response.Employee[i].assignments[j].position);
               return;
             }
           }
@@ -70,25 +68,16 @@ class NewTradeLicense extends Component {
     licenseObj = { ...form };
     //adding optional fields value as undefined
     licenseObj['adhaarNumber'] = licenseObj['adhaarNumber'] || null;
-    licenseObj['propertyAssesmentNo'] =
-      licenseObj['propertyAssesmentNo'] || null;
+    licenseObj['propertyAssesmentNo'] = licenseObj['propertyAssesmentNo'] || null;
 
     licenseObj['tenantId'] = localStorage.getItem('tenantId');
     licenseObj['applicationType'] = 'NEW';
-    licenseObj['tradeCommencementDate'] = dateToEpoch(
-      licenseObj.tradeCommencementDate
-    );
+    licenseObj['tradeCommencementDate'] = dateToEpoch(licenseObj.tradeCommencementDate);
     licenseObj['licenseValidFromDate'] = licenseObj.tradeCommencementDate;
     //isnotpropertyowner
-    licenseObj['isPropertyOwner'] = licenseObj['isPropertyOwner']
-      ? licenseObj['isPropertyOwner']
-      : false;
-    licenseObj['agreementDate'] = licenseObj.agreementDate
-      ? dateToEpoch(licenseObj.agreementDate)
-      : '';
-    licenseObj['agreementNo'] = licenseObj.agreementNo
-      ? licenseObj.agreementNo
-      : '';
+    licenseObj['isPropertyOwner'] = licenseObj['isPropertyOwner'] ? licenseObj['isPropertyOwner'] : false;
+    licenseObj['agreementDate'] = licenseObj.agreementDate ? dateToEpoch(licenseObj.agreementDate) : '';
+    licenseObj['agreementNo'] = licenseObj.agreementNo ? licenseObj.agreementNo : '';
     licenseObj['isLegacy'] = false;
     licenseObj['active'] = true;
     licenseObj['application'] = {};
@@ -105,12 +94,10 @@ class NewTradeLicense extends Component {
     licenseObj['application']['workFlowDetails']['designation'] = null;
     licenseObj['application']['workFlowDetails']['assignee'] = assignee;
     licenseObj['application']['workFlowDetails']['action'] = 'create';
-    licenseObj['application']['workFlowDetails']['status  '] =
-      'Pending For Application processing';
+    licenseObj['application']['workFlowDetails']['status  '] = 'Pending For Application processing';
     licenseObj['application']['workFlowDetails']['comments'] = '';
     let userRequest = JSON.parse(localStorage.getItem('userRequest'));
-    licenseObj['application']['workFlowDetails']['senderName'] =
-      userRequest.name;
+    licenseObj['application']['workFlowDetails']['senderName'] = userRequest.name;
     licenseObj['application']['workFlowDetails']['details'] = '';
     licenseObj['application']['workFlowDetails']['stateId'] = null;
     licenseObj['supportDocuments'] = [];
@@ -118,9 +105,7 @@ class NewTradeLicense extends Component {
     var supportDocuments = [];
 
     //filter which file field has files
-    var supportingDocuments = files
-      ? files.filter(field => field.files.length > 0)
-      : [];
+    var supportingDocuments = files ? files.filter(field => field.files.length > 0) : [];
 
     if (supportingDocuments && supportingDocuments.length > 0) {
       let formData = new FormData();
@@ -163,13 +148,7 @@ class NewTradeLicense extends Component {
   createTL = licenseArray => {
     var _this = this;
     let { setLoadingStatus } = this.props;
-    Api.commonApiPost(
-      'tl-services/license/v1/_create',
-      {},
-      { licenses: licenseArray },
-      false,
-      true
-    ).then(
+    Api.commonApiPost('tl-services/license/v1/_create', {}, { licenses: licenseArray }, false, true).then(
       function(response) {
         _this.getLatestLicense(response.licenses[0].id);
       },
@@ -186,13 +165,7 @@ class NewTradeLicense extends Component {
     let { handleError } = this;
     //set timeout
     setTimeout(function() {
-      Api.commonApiPost(
-        '/tl-services/license/v1/_search',
-        { ids: id },
-        {},
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/tl-services/license/v1/_search', { ids: id }, {}, false, true).then(
         function(response) {
           if (response.licenses.length > 0) {
             self.setState(
@@ -228,14 +201,8 @@ class NewTradeLicense extends Component {
 
     let { isFormValid } = this.props;
 
-    if (
-      constants.TRADE_LICENSE_NEW_ACCESS_ROLES.indexOf(
-        this.getCurrentUserType()
-      ) === -1
-    ) {
-      return (
-        <MsgCard msg={translate('tl.msg.not.employee')} icon={<Block />} />
-      );
+    if (constants.TRADE_LICENSE_NEW_ACCESS_ROLES.indexOf(this.getCurrentUserType()) === -1) {
+      return <MsgCard msg={translate('tl.msg.not.employee')} icon={<Block />} />;
     }
 
     if (this.state.showAck) {
@@ -251,9 +218,7 @@ class NewTradeLicense extends Component {
 
     return (
       <Grid fluid={true}>
-        <h2 className="application-title">
-          {translate('tl.create.trade.title')}
-        </h2>
+        <h2 className="application-title">{translate('tl.create.trade.title')}</h2>
         <NewTradeLicenseForm {...this.props} />
         <br />
         <div style={{ textAlign: 'center' }}>
@@ -353,8 +318,6 @@ const mapDispatchToProps = dispatch => ({
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
 });
 
-const VisibleNewTradeLicense = connect(mapStateToProps, mapDispatchToProps)(
-  NewTradeLicense
-);
+const VisibleNewTradeLicense = connect(mapStateToProps, mapDispatchToProps)(NewTradeLicense);
 
 export default VisibleNewTradeLicense;

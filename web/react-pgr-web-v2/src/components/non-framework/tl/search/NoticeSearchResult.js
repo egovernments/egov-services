@@ -87,13 +87,7 @@ export default class NoticeSearchResult extends Component {
     let { setLoadingStatus, handleError } = this.props;
     setLoadingStatus('loading');
     var self = this;
-    Api.commonApiPost(
-      'tl-services/noticedocument/v1/_search',
-      searchParams,
-      {},
-      false,
-      true
-    ).then(
+    Api.commonApiPost('tl-services/noticedocument/v1/_search', searchParams, {}, false, true).then(
       function(response) {
         self.setState(
           {
@@ -112,11 +106,7 @@ export default class NoticeSearchResult extends Component {
     var self = this;
     let { setLoadingStatus } = this.props;
     setLoadingStatus('loading');
-    var fileURL =
-      '/filestore/v1/files/id?fileStoreId=' +
-      fileStoreId +
-      '&tenantId=' +
-      localStorage.getItem('tenantId');
+    var fileURL = '/filestore/v1/files/id?fileStoreId=' + fileStoreId + '&tenantId=' + localStorage.getItem('tenantId');
     var oReq = new XMLHttpRequest();
     oReq.open('GET', fileURL, true);
     oReq.responseType = 'arraybuffer';
@@ -140,65 +130,28 @@ export default class NoticeSearchResult extends Component {
   viewer = () => {
     let contentType = this.state.contentType;
     if (contentType === 'application/pdf') {
-      return (
-        <iframe
-          title="Document"
-          src={this.state.iframe_src}
-          frameBorder="0"
-          allowFullScreen
-          height="500"
-          width="100%"
-        />
-      );
+      return <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%" />;
     } else if (contentType === 'image/jpeg') {
-      return (
-        <img src={this.state.iframe_src} style={{ width: '100%' }} alt="" />
-      );
+      return <img src={this.state.iframe_src} style={{ width: '100%' }} alt="" />;
     } else {
-      return (
-        <iframe
-          title="Document"
-          src={this.state.iframe_src}
-          frameBorder="0"
-          allowFullScreen
-          height="500"
-          width="100%"
-        />
-      );
+      return <iframe title="Document" src={this.state.iframe_src} frameBorder="0" allowFullScreen height="500" width="100%" />;
     }
   };
   render() {
     const actions = [
-      <FlatButton
-        style={styles.marginStyle}
-        href={this.state.iframe_src}
-        label={translate('tl.download')}
-        download
-        primary={true}
-      />,
-      <FlatButton
-        label={translate('core.lbl.cancel')}
-        primary={true}
-        onClick={this.handleClose}
-      />,
+      <FlatButton style={styles.marginStyle} href={this.state.iframe_src} label={translate('tl.download')} download primary={true} />,
+      <FlatButton label={translate('core.lbl.cancel')} primary={true} onClick={this.handleClose} />,
     ];
     return (
       <Card style={styles.marginStyle}>
-        <CardHeader
-          style={{ paddingBottom: 0 }}
-          title={
-            <div style={styles.headerStyle}> {translate('Search Notice')}</div>
-          }
-        />
+        <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('Search Notice')}</div>} />
         <CardText style={{ paddingTop: 0 }}>
           <Table id="searchTable">
             <thead>
               <tr>
                 <th>{translate('tl.search.groups.applicationNumber')}</th>
                 <th>{translate('tl.search.groups.licenseNumber')}</th>
-                <th>
-                  {translate('tl.view.groups.feematrixtype.applicationtype')}
-                </th>
+                <th>{translate('tl.view.groups.feematrixtype.applicationtype')}</th>
                 <th>{translate('tl.search.documenttype')}</th>
                 <th>{translate('tl.view.workflow.history.date')}</th>
                 <th>{translate('tl.search.result.groups.validityYears')}</th>
@@ -213,10 +166,7 @@ export default class NoticeSearchResult extends Component {
               {this.state.noticeResponse &&
                 this.state.noticeResponse.map((notice, index) => {
                   return (
-                    <tr
-                      key={index}
-                      onClick={e => this.showFile(notice.fileStoreId)}
-                    >
+                    <tr key={index} onClick={e => this.showFile(notice.fileStoreId)}>
                       <td>{notice.applicationNumber}</td>
                       <td>{notice.tradeLicenseNumber}</td>
                       <td>{notice.applicationType}</td>

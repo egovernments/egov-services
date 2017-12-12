@@ -39,18 +39,11 @@ class searchUserRole extends Component {
     initForm();
     let tenantId = localStorage.getItem('tenantId') || 'default';
     _this.props.setLoadingStatus('loading');
-    Api.commonApiPost(
-      '/user/v1/_search',
-      {},
-      { tenantId: tenantId, userType: constants.ROLE_EMPLOYEE, pageSize: 500 }
-    ).then(
+    Api.commonApiPost('/user/v1/_search', {}, { tenantId: tenantId, userType: constants.ROLE_EMPLOYEE, pageSize: 500 }).then(
       function(response) {
         _this.props.setLoadingStatus('loading');
         const newDataSource = response.user.map(item => {
-          return Object.assign(
-            { fullName: item.userName + ' (' + item.name + ')' },
-            item
-          );
+          return Object.assign({ fullName: item.userName + ' (' + item.name + ')' }, item);
         });
         _this.setState({ users: newDataSource });
         _this.props.setLoadingStatus('hide');
@@ -70,9 +63,7 @@ class searchUserRole extends Component {
 
   search = () => {
     let { setRoute } = this.props;
-    setRoute(
-      '/administration/updateUserRole/' + this.props.searchUserRole.userName
-    );
+    setRoute('/administration/updateUserRole/' + this.props.searchUserRole.userName);
   };
 
   render() {
@@ -81,14 +72,7 @@ class searchUserRole extends Component {
     return (
       <div className="userRole">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={styles.headerStyle}>
-                {translate('core.lbl.urmapping')}
-              </div>
-            }
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>{translate('core.lbl.urmapping')}</div>} />
           <CardText style={{ paddingTop: 0 }}>
             <Grid>
               <Row>
@@ -97,9 +81,7 @@ class searchUserRole extends Component {
                     ref="userName"
                     floatingLabelText={translate('core.lbl.username') + ' *'}
                     filter={function filter(searchText, key) {
-                      return key
-                        .toLowerCase()
-                        .includes(searchText.toLowerCase());
+                      return key.toLowerCase().includes(searchText.toLowerCase());
                     }}
                     fullWidth={true}
                     dataSource={this.state.users ? this.state.users : []}

@@ -39,8 +39,7 @@ var dat = {
             label: 'tl.create.groups.feematrixtype.licensecategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -164,12 +163,10 @@ var dat = {
           {
             name: 'Category',
             jsonPath: 'category',
-            label:
-              'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory',
+            label: 'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -187,8 +184,7 @@ var dat = {
           {
             name: 'SubCategory',
             jsonPath: 'subCategory',
-            label:
-              'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
+            label: 'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -204,25 +200,16 @@ var dat = {
       header: [
         { label: 'tl.create.groups.licensedocumenttype.licenseapptype' },
         {
-          label:
-            'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory',
+          label: 'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory',
         },
         {
-          label:
-            'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
+          label: 'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
         },
         { label: 'tl.create.groups.licensedocumenttype.name' },
         { label: 'tl.create.licenses.groups.TradeDetails.mandatory' },
         { label: 'tl.create.licenses.groups.TradeDetails.enabled' },
       ],
-      values: [
-        'applicationType',
-        'categoryName',
-        'subCategoryName',
-        'name',
-        'mandatory',
-        'enabled',
-      ],
+      values: ['applicationType', 'categoryName', 'subCategoryName', 'name', 'mandatory', 'enabled'],
       resultPath: 'documentTypes',
       rowClickUrlUpdate: '/update/tl/LicenseDocumentType/{id}',
       rowClickUrlView: '/view/tl/LicenseDocumentType/{id}',
@@ -264,12 +251,10 @@ var dat = {
           {
             name: 'Category',
             jsonPath: 'documentTypes[0].categoryName',
-            label:
-              'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory',
+            label: 'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory',
             pattern: '',
             type: 'text',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..id|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -283,8 +268,7 @@ var dat = {
           {
             name: 'SubCategory',
             jsonPath: 'documentTypes[0].subCategoryName',
-            label:
-              'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
+            label: 'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
             pattern: '',
             type: 'text',
             url: '',
@@ -377,12 +361,10 @@ var dat = {
           {
             name: 'Category',
             jsonPath: 'documentTypes[0].category',
-            label:
-              'tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory',
+            label: 'tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -399,8 +381,7 @@ var dat = {
           {
             name: 'SubCategory',
             jsonPath: 'documentTypes[0].subCategory',
-            label:
-              'tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
+            label: 'tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory',
             pattern: '',
             type: 'singleValueList',
             url: '',

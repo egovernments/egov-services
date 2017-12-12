@@ -15,8 +15,7 @@ var dat = {
             label: 'inventory.supplierName',
             type: 'singleValueList',
             isDisabled: false,
-            url:
-              'inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name',
+            url: 'inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name',
             patternErrorMsg: 'inventory.create.field.message.supplierName',
           },
           {
@@ -25,8 +24,7 @@ var dat = {
             label: 'inventory.rateContractNumber',
             type: 'text',
             isDisabled: false,
-            patternErrorMsg:
-              'inventory.create.field.message.rateContractNumber',
+            patternErrorMsg: 'inventory.create.field.message.rateContractNumber',
           },
           {
             name: 'agreementNumber',
@@ -58,8 +56,7 @@ var dat = {
             label: 'inventory.agreementStartDate',
             type: 'datePicker',
             isDisabled: false,
-            patternErrorMsg:
-              'inventory.create.field.message.agreementStartDate',
+            patternErrorMsg: 'inventory.create.field.message.agreementStartDate',
           },
           {
             name: 'agreementEndDate',
@@ -168,8 +165,7 @@ var dat = {
             name: 'supplier',
             jsonPath: 'priceLists[0].supplier.code',
             label: 'inventory.supplier',
-            url:
-              'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name',
+            url: 'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name',
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
@@ -338,16 +334,14 @@ var dat = {
                   pattern: '',
                   type: 'autoCompelete',
                   jsonPath: 'priceLists[0].priceListDetails[0].material.code',
-                  displayJsonPath:
-                    'priceLists[0].priceListDetails[0].material.name',
+                  displayJsonPath: 'priceLists[0].priceListDetails[0].material.name',
                   isRequired: true,
                   isDisabled: false,
                   url:
                     '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description',
                   depedants: [
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].material.description',
+                      jsonPath: 'priceLists[0].priceListDetails[0].material.description',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')",
@@ -356,8 +350,7 @@ var dat = {
                 },
                 {
                   name: 'materialDescription',
-                  jsonPath:
-                    'priceLists[0].priceListDetails[0].material.description',
+                  jsonPath: 'priceLists[0].priceListDetails[0].material.description',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -372,8 +365,7 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
                 {
                   name: 'ratePerUnit',
@@ -569,8 +561,7 @@ var dat = {
       },
     ],
     tenantIdRequired: true,
-    url:
-      '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
+    url: '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
   },
   'inventory.update': {
     numCols: 4,
@@ -593,8 +584,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name',
+            url: 'inventory-services/suppliers/_search?|$.supplier[*].code|$.suppliers[*].name',
           },
           {
             name: 'rateType',
@@ -708,8 +698,7 @@ var dat = {
     ],
     url: '/inventory-services/pricelists/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
+    searchUrl: '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
   },
 };
 export default dat;

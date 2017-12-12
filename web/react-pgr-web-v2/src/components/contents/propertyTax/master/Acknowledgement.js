@@ -129,8 +129,7 @@ class Acknowledgement extends Component {
                         fontSize: 16,
                       }}
                     >
-                      {translate('pt.create.groups.acknowledgement.success')} :{' '}
-                      <span style={{ fontWeight: 500 }}>{this.state.ack}</span>
+                      {translate('pt.create.groups.acknowledgement.success')} : <span style={{ fontWeight: 500 }}>{this.state.ack}</span>
                     </Col>
                   </Row>
                 </Col>

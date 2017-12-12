@@ -27,19 +27,10 @@ export default class UiWorkflow extends Component {
   initData = props => {
     let { item, workflowId } = props;
 
-    Api.commonApiPost(
-      'egov-common-masters/departments/_search',
-      {},
-      {},
-      null,
-      false
-    ).then(
+    Api.commonApiPost('egov-common-masters/departments/_search', {}, {}, null, false).then(
       function(res) {
         this.setState({
-          departments:
-            res && res.Department && res.Department.constructor == Array
-              ? res.Department
-              : [],
+          departments: res && res.Department && res.Department.constructor == Array ? res.Department : [],
         });
       },
       function(err) {}
@@ -58,10 +49,7 @@ export default class UiWorkflow extends Component {
       ).then(
         function(res) {
           this.setState({
-            history:
-              res && res.tasks && res.tasks.constructor == Array
-                ? res.tasks
-                : [],
+            history: res && res.tasks && res.tasks.constructor == Array ? res.tasks : [],
           });
         },
         function(err) {}
@@ -87,18 +75,10 @@ export default class UiWorkflow extends Component {
             res.processInstance.attributes.validActions.values.length
           ) {
             var flg = 0;
-            for (
-              var j = 0;
-              j < res.processInstance.attributes.validActions.values.length;
-              j++
-            ) {
+            for (var j = 0; j < res.processInstance.attributes.validActions.values.length; j++) {
               if (
-                res.processInstance.attributes.validActions.values[
-                  j
-                ].key.toLowerCase() == 'forward' ||
-                res.processInstance.attributes.validActions.values[
-                  j
-                ].key.toLowerCase() == 'submit'
+                res.processInstance.attributes.validActions.values[j].key.toLowerCase() == 'forward' ||
+                res.processInstance.attributes.validActions.values[j].key.toLowerCase() == 'submit'
               ) {
                 flg = 1;
               }
@@ -141,10 +121,7 @@ export default class UiWorkflow extends Component {
                       false
                     ).then(
                       function(res2) {
-                        res3[i].id =
-                          res2.Designation && res2.Designation[0]
-                            ? res2.Designation[0].id
-                            : '-';
+                        res3[i].id = res2.Designation && res2.Designation[0] ? res2.Designation[0].id : '-';
                         count--;
                         if (count == 0) {
                           this.setState({
@@ -195,10 +172,7 @@ export default class UiWorkflow extends Component {
                 false
               ).then(
                 function(res2) {
-                  res3[i].id =
-                    res2.Designation && res2.Designation[0]
-                      ? res2.Designation[0].id
-                      : '-';
+                  res3[i].id = res2.Designation && res2.Designation[0] ? res2.Designation[0].id : '-';
                   count--;
                   if (count == 0) {
                     this.setState({
@@ -217,10 +191,7 @@ export default class UiWorkflow extends Component {
   };
 
   getEmployee = item => {
-    if (
-      this.props.getVal(item.jsonPath.departmentPath) &&
-      this.props.getVal(item.jsonPath.designationPath)
-    ) {
+    if (this.props.getVal(item.jsonPath.departmentPath) && this.props.getVal(item.jsonPath.designationPath)) {
       Api.commonApiPost(
         'hr-employee/employees/_search',
         {
@@ -244,10 +215,7 @@ export default class UiWorkflow extends Component {
   getPosition = id => {
     for (var i = 0; i < this.state.employees.length; i++) {
       if (this.state.employees[i].id == id) {
-        if (
-          this.state.employees[i].assignments &&
-          this.state.employees[i].assignments[0]
-        ) {
+        if (this.state.employees[i].assignments && this.state.employees[i].assignments[0]) {
           return this.state.employees[i].assignments[0].position;
         }
         break;
@@ -312,20 +280,12 @@ export default class UiWorkflow extends Component {
                 value={this.props.getVal(item.jsonPath.departmentPath)}
                 onChange={(event, key, value) => {
                   this.getEmployee(item);
-                  this.props.handler(
-                    { target: { value } },
-                    item.jsonPath.departmentPath,
-                    true,
-                    item.requiredErrMsg,
-                    item.patternErrMsg
-                  );
+                  this.props.handler({ target: { value } }, item.jsonPath.departmentPath, true, item.requiredErrMsg, item.patternErrMsg);
                 }}
               >
                 {this.state.departments &&
                   this.state.departments.map(function(v, i) {
-                    return (
-                      <MenuItem value={v.id} key={i} primaryText={v.name} />
-                    );
+                    return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                   })}
               </SelectField>
             </Col>
@@ -347,20 +307,12 @@ export default class UiWorkflow extends Component {
                 value={this.props.getVal(item.jsonPath.designationPath)}
                 onChange={(event, key, value) => {
                   this.getEmployee(item);
-                  this.props.handler(
-                    { target: { value } },
-                    item.jsonPath.designationPath,
-                    true,
-                    item.requiredErrMsg,
-                    item.patternErrMsg
-                  );
+                  this.props.handler({ target: { value } }, item.jsonPath.designationPath, true, item.requiredErrMsg, item.patternErrMsg);
                 }}
               >
                 {this.state.designations &&
                   this.state.designations.map(function(v, i) {
-                    return (
-                      <MenuItem value={v.id} key={i} primaryText={v.name} />
-                    );
+                    return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                   })}
               </SelectField>
             </Col>
@@ -375,9 +327,7 @@ export default class UiWorkflow extends Component {
                 }}
                 floatingLabelText={
                   <span>
-                    {translate(
-                      'wc.create.groups.approvalDetails.fields.approver'
-                    )}
+                    {translate('wc.create.groups.approvalDetails.fields.approver')}
                     <span style={{ color: '#FF0000' }}> *</span>
                   </span>
                 }
@@ -394,9 +344,7 @@ export default class UiWorkflow extends Component {
               >
                 {this.state.employees &&
                   this.state.employees.map(function(v, i) {
-                    return (
-                      <MenuItem value={v.id} key={i} primaryText={v.name} />
-                    );
+                    return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                   })}
               </SelectField>
             </Col>
@@ -412,18 +360,10 @@ export default class UiWorkflow extends Component {
               multiple={true}
               fullWidth={true}
               rows={3}
-              floatingLabelText={translate(
-                'wc.create.groups.approvalDetails.fields.comments'
-              )}
+              floatingLabelText={translate('wc.create.groups.approvalDetails.fields.comments')}
               value={this.props.getVal(item.jsonPath.commentsPath)}
               onChange={e => {
-                this.props.handler(
-                  e,
-                  item.jsonPath.commentsPath,
-                  true,
-                  item.requiredErrMsg,
-                  item.patternErrMsg
-                );
+                this.props.handler(e, item.jsonPath.commentsPath, true, item.requiredErrMsg, item.patternErrMsg);
               }}
             />
           </Col>
@@ -441,12 +381,7 @@ export default class UiWorkflow extends Component {
               <span>
                 <RaisedButton
                   onClick={e => {
-                    this.props.initiateWF(
-                      v,
-                      item,
-                      this.state.hide,
-                      this.state.status
-                    );
+                    this.props.initiateWF(v, item, this.state.hide, this.state.status);
                   }}
                   label={v.name}
                   primary={true}

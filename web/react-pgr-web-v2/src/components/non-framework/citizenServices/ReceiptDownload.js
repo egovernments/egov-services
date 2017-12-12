@@ -26,18 +26,10 @@ import jp from 'jsonpath';
 const getAddress = function(property) {
   if (property && property.address)
     return (
-      (property.address.addressNumber
-        ? property.address.addressNumber + ', '
-        : '') +
-      (property.address.addressLine1
-        ? property.address.addressLine1 + ', '
-        : '') +
-      (property.address.addressLine2
-        ? property.address.addressLine2 + '. '
-        : '') +
-      (property.address.landmark
-        ? 'Landmark: ' + property.address.landmark
-        : '') +
+      (property.address.addressNumber ? property.address.addressNumber + ', ' : '') +
+      (property.address.addressLine1 ? property.address.addressLine1 + ', ' : '') +
+      (property.address.addressLine2 ? property.address.addressLine2 + '. ' : '') +
+      (property.address.landmark ? 'Landmark: ' + property.address.landmark : '') +
       (property.address.city ? 'City: ' + property.address.city : '') +
       (property.address.pincode ? '- ' + property.address.pincode : '')
     );
@@ -68,20 +60,14 @@ class ReceiptDownload extends Component {
     params.append('grant_type', 'password');
     params.append('scope', 'read');
     params.append('tenantId', window.localStorage.getItem('tenantId'));
-    var BS =
-      this.props.match.params.page == 'extract'
-        ? 'PT'
-        : this.props.match.params.page == 'watercharge' ? 'WC' : 'PT';
+    var BS = this.props.match.params.page == 'extract' ? 'PT' : this.props.match.params.page == 'watercharge' ? 'WC' : 'PT';
     var CC = this.props.match.params.cc;
     let self = this;
     self.props.setLoadingStatus('loading');
     instance
       .post('/user/oauth/token', params)
       .then(function(response) {
-        localStorage.setItem(
-          'request-temp',
-          JSON.stringify(response.data.UserRequest)
-        );
+        localStorage.setItem('request-temp', JSON.stringify(response.data.UserRequest));
         localStorage.setItem('auth-token-temp', response.data.access_token);
 
         Api.commonApiPost(
@@ -106,11 +92,7 @@ class ReceiptDownload extends Component {
               function(res2) {
                 let Property = {};
                 self.props.setLoadingStatus('hide');
-                if (
-                  res2 && res2.properties && res2.properties[0]
-                    ? res2.properties[0]
-                    : {}
-                ) {
+                if (res2 && res2.properties && res2.properties[0] ? res2.properties[0] : {}) {
                   Property = res2.properties[0];
                   self.setState({
                     Receipt: res.Receipt,
@@ -153,9 +135,7 @@ class ReceiptDownload extends Component {
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body>');
-    mywindow.document.write(
-      document.getElementById('allCertificates').innerHTML
-    );
+    mywindow.document.write(document.getElementById('allCertificates').innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close(); // necessary for IE >= 10
@@ -194,18 +174,7 @@ class ReceiptDownload extends Component {
       'eighteen',
       'nineteen',
     ];
-    var TENS = [
-      '',
-      '',
-      'twenty',
-      'thirty',
-      'fourty',
-      'fifty',
-      'sixty',
-      'seventy',
-      'eighty',
-      'ninety',
-    ];
+    var TENS = ['', '', 'twenty', 'thirty', 'fourty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
     var SCALE = [
       '',
       'thousand',
@@ -241,23 +210,12 @@ class ReceiptDownload extends Component {
 
     // Add to words, triplet words with scale word
     function add_to_words(words, triplet_words, scale_word) {
-      return triplet_words
-        ? triplet_words + ((scale_word && ' ' + scale_word) || '') + ' ' + words
-        : words;
+      return triplet_words ? triplet_words + ((scale_word && ' ' + scale_word) || '') + ' ' + words : words;
     }
 
     function iter(words, i, first, rest) {
       if (first == '000' && rest.length === 0) return words;
-      return iter(
-        add_to_words(
-          words,
-          triplet_to_words(first[0], first[1], first[2]),
-          SCALE[i]
-        ),
-        ++i,
-        get_first(rest),
-        get_rest(rest)
-      );
+      return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
     }
 
     var words = iter('', 0, get_first(String(int)), get_rest(String(int)));
@@ -298,31 +256,14 @@ class ReceiptDownload extends Component {
               <Col md={12}>
                 <Card>
                   <CardHeader
-                    title={
-                      <strong>
-                        Receipt for:{' '}
-                        {this.props.match.params.page == 'watercharge'
-                          ? 'Water Charge'
-                          : 'Property Tax'}
-                      </strong>
-                    }
+                    title={<strong>Receipt for: {this.props.match.params.page == 'watercharge' ? 'Water Charge' : 'Property Tax'}</strong>}
                   />
                   <CardText>
-                    <Table
-                      responsive
-                      style={{ fontSize: 'bold' }}
-                      id="ReceiptForWcAPartOne"
-                      bordered
-                      condensed
-                    >
+                    <Table responsive style={{ fontSize: 'bold' }} id="ReceiptForWcAPartOne" bordered condensed>
                       <tbody>
                         <tr>
                           <td style={{ textAlign: 'left' }}>
-                            <img
-                              src="./temp/images/headerLogo.png"
-                              height="60"
-                              width="60"
-                            />
+                            <img src="./temp/images/headerLogo.png" height="60" width="60" />
                           </td>
                           <td style={{ textAlign: 'center' }}>
                             <b>Roha Municipal Council</b>
@@ -330,61 +271,35 @@ class ReceiptDownload extends Component {
                             {this.props.match.params.page == 'watercharge' ? (
                               <span>Water Department</span>
                             ) : (
-                              <span>
-                                Assessment Department / करनिर्धारण विभाग
-                              </span>
+                              <span>Assessment Department / करनिर्धारण विभाग</span>
                             )}
                           </td>
                           <td style={{ textAlign: 'right' }}>
-                            <img
-                              src="./temp/images/AS.png"
-                              height="60"
-                              width="60"
-                            />
+                            <img src="./temp/images/AS.png" height="60" width="60" />
                           </td>
                         </tr>
                         <tr>
                           <td style={{ textAlign: 'left' }}>
-                            Receipt Number:{' '}
-                            {Receipt[0].Bill[0].billDetails[0].receiptNumber
-                              ? Receipt[0].Bill[0].billDetails[0].receiptNumber
-                              : 'NA'}
+                            Receipt Number: {Receipt[0].Bill[0].billDetails[0].receiptNumber ? Receipt[0].Bill[0].billDetails[0].receiptNumber : 'NA'}
                           </td>
 
                           <td style={{ textAlign: 'center' }}>
-                            Receipt For:{' '}
-                            {this.props.match.params.page == 'watercharge'
-                              ? 'Water Charges'
-                              : 'Property Tax'}
+                            Receipt For: {this.props.match.params.page == 'watercharge' ? 'Water Charges' : 'Property Tax'}
                           </td>
-                          <td style={{ textAlign: 'right' }}>
-                            Receipt Date:{' '}
-                            {getFullDate(
-                              Receipt[0].Bill[0].billDetails[0].receiptDate
-                            )}
-                          </td>
+                          <td style={{ textAlign: 'right' }}>Receipt Date: {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>
                         </tr>
                         <tr>
                           <td colSpan={3} style={{ textAlign: 'left' }}>
-                            {this.props.match.params.page == 'watercharge'
-                              ? 'Consumer code'
-                              : 'Assessment number'}{' '}
-                            : {Receipt[0].Bill[0].billDetails[0].consumerCode}
+                            {this.props.match.params.page == 'watercharge' ? 'Consumer code' : 'Assessment number'} :{' '}
+                            {Receipt[0].Bill[0].billDetails[0].consumerCode}
                             <br />
                             Owner Name : {Receipt[0].Bill[0].payeeName}
                             <br />
                             Amount :{' '}
-                            {Receipt[0].Bill[0].billDetails[0].totalAmount
-                              ? 'Rs. ' +
-                                Receipt[0].Bill[0].billDetails[0].totalAmount +
-                                '/-'
-                              : 'NA'}
+                            {Receipt[0].Bill[0].billDetails[0].totalAmount ? 'Rs. ' + Receipt[0].Bill[0].billDetails[0].totalAmount + '/-' : 'NA'}
                             <br />
                             <div>
-                              {'Owner Address: ' +
-                                (Receipt[0].Bill[0].payeeAddress
-                                  ? Receipt[0].Bill[0].payeeAddress
-                                  : 'Roha')}
+                              {'Owner Address: ' + (Receipt[0].Bill[0].payeeAddress ? Receipt[0].Bill[0].payeeAddress : 'Roha')}
                               <br />
                               {'Received From: ' + Receipt[0].Bill[0].paidBy}
                               <br />
@@ -394,12 +309,7 @@ class ReceiptDownload extends Component {
                       </tbody>
                     </Table>
 
-                    <Table
-                      id="ReceiptForWcAPartTwo"
-                      responsive
-                      bordered
-                      condensed
-                    >
+                    <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
                       <tbody>
                         <tr>
                           <td rowSpan={2}>Bill Reference No.& Date</td>
@@ -417,27 +327,12 @@ class ReceiptDownload extends Component {
                           <td>Current</td>
                         </tr>
                         <tr>
-                          <td>
-                            {Receipt[0].Bill[0].billDetails[0].billNumber +
-                              '-' +
-                              getFullDate(
-                                Receipt[0].Bill[0].billDetails[0].receiptDate
-                              )}
-                          </td>
-                          <td>
-                            {self.props.match.params.page == 'watercharge'
-                              ? 'Water'
-                              : 'Property'}{' '}
-                            No dues
-                          </td>
+                          <td>{Receipt[0].Bill[0].billDetails[0].billNumber + '-' + getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>
+                          <td>{self.props.match.params.page == 'watercharge' ? 'Water' : 'Property'} No dues</td>
                           <td>00</td>
-                          <td>
-                            {Receipt[0].Bill[0].billDetails[0].amountPaid}
-                          </td>
+                          <td>{Receipt[0].Bill[0].billDetails[0].amountPaid}</td>
                           <td>00</td>
-                          <td>
-                            {Receipt[0].Bill[0].billDetails[0].amountPaid}
-                          </td>
+                          <td>{Receipt[0].Bill[0].billDetails[0].amountPaid}</td>
                           <td>00</td>
                           <td>00</td>
                         </tr>
@@ -446,16 +341,9 @@ class ReceiptDownload extends Component {
                           <td colSpan={4}>
                             Amount Paid (in words): Rupees{' '}
                             {self
-                              .int_to_words(
-                                Receipt[0].Bill[0].billDetails[0].amountPaid
-                              )
+                              .int_to_words(Receipt[0].Bill[0].billDetails[0].amountPaid)
                               .charAt(0)
-                              .toUpperCase() +
-                              self
-                                .int_to_words(
-                                  Receipt[0].Bill[0].billDetails[0].amountPaid
-                                )
-                                .slice(1)}{' '}
+                              .toUpperCase() + self.int_to_words(Receipt[0].Bill[0].billDetails[0].amountPaid).slice(1)}{' '}
                             only
                           </td>
                           <td colSpan={4} />
@@ -472,36 +360,23 @@ class ReceiptDownload extends Component {
                         </tr>
                         <tr>
                           <td>Online</td>
-                          <td>
-                            {Receipt[0].Bill[0].billDetails[0].amountPaid}
-                          </td>
-                          {Receipt[0].instrument.instrumentType.name ==
-                          'Cash' ? (
+                          <td>{Receipt[0].Bill[0].billDetails[0].amountPaid}</td>
+                          {Receipt[0].instrument.instrumentType.name == 'Cash' ? (
                             <td colSpan={2}>NA</td>
                           ) : (
-                            <td colSpan={2}>
-                              {this.state.serviceRequest.serviceRequestId}
-                            </td>
+                            <td colSpan={2}>{this.state.serviceRequest.serviceRequestId}</td>
                           )}
 
-                          {Receipt[0].instrument.instrumentType.name ==
-                          'Cash' ? (
+                          {Receipt[0].instrument.instrumentType.name == 'Cash' ? (
                             <td colSpan={2}>NA</td>
                           ) : (
-                            <td colSpan={2}>
-                              {getFullDate(
-                                Receipt[0].Bill[0].billDetails[0].receiptDate
-                              )}
-                            </td>
+                            <td colSpan={2}>{getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>
                           )}
 
-                          {Receipt[0].instrument.instrumentType.name ==
-                          'Cash' ? (
+                          {Receipt[0].instrument.instrumentType.name == 'Cash' ? (
                             <td colSpan={2}>NA</td>
                           ) : (
-                            <td colSpan={2}>
-                              {Receipt[0].instrument.bank.name}
-                            </td>
+                            <td colSpan={2}>{Receipt[0].instrument.bank.name}</td>
                           )}
                         </tr>
                       </tbody>
@@ -520,41 +395,21 @@ class ReceiptDownload extends Component {
                 <Col md={12}>
                   {self.props.match.params.page == 'extract' ? (
                     <Card>
-                      <CardHeader
-                        title={
-                          <strong>{'Certificate for: Property Extract'}</strong>
-                        }
-                      />
+                      <CardHeader title={<strong>{'Certificate for: Property Extract'}</strong>} />
                       <CardText>
-                        <Table
-                          responsive
-                          style={{ fontSize: 'bold', marginBottom: '20px' }}
-                          id="CertificateForWc"
-                          bordered
-                          condensed
-                        >
+                        <Table responsive style={{ fontSize: 'bold', marginBottom: '20px' }} id="CertificateForWc" bordered condensed>
                           <tbody>
                             <tr>
                               <td style={{ textAlign: 'left' }} colSpan={2}>
-                                <img
-                                  src="./temp/images/headerLogo.png"
-                                  height="60"
-                                  width="60"
-                                />
+                                <img src="./temp/images/headerLogo.png" height="60" width="60" />
                               </td>
                               <td style={{ textAlign: 'center' }} colSpan={4}>
                                 <b>Roha Municipal Council</b>
                                 <br />
-                                <span>
-                                  Property Tax Department / करनिर्धारण विभाग
-                                </span>
+                                <span>Property Tax Department / करनिर्धारण विभाग</span>
                               </td>
                               <td style={{ textAlign: 'right' }} colSpan={2}>
-                                <img
-                                  src="./temp/images/AS.png"
-                                  height="60"
-                                  width="60"
-                                />
+                                <img src="./temp/images/AS.png" height="60" width="60" />
                               </td>
                             </tr>
                             <tr>
@@ -567,8 +422,7 @@ class ReceiptDownload extends Component {
                             <tr>
                               <td colSpan={8}>
                                 <div style={{ whiteSpace: 'pre' }}>
-                                  <b>Ward:</b> Election Ward 1 <b>Zone: -</b>{' '}
-                                  <b>Revenue Circle</b>:
+                                  <b>Ward:</b> Election Ward 1 <b>Zone: -</b> <b>Revenue Circle</b>:
                                   <br />
                                   <b>Apartment Name: Vars Apt</b>
                                 </div>
@@ -577,17 +431,10 @@ class ReceiptDownload extends Component {
                             <tr>
                               <td colSpan={8}>
                                 <div>
-                                  <b>Property No:</b>{' '}
-                                  {
-                                    Receipt[0].Bill[0].billDetails[0]
-                                      .consumerCode
-                                  }
+                                  <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}
                                   <br />
                                   <b>Property Usage / Sub Usage:</b>{' '}
-                                  {this.state.Property &&
-                                  this.state.Property.usage
-                                    ? this.state.Property.usage
-                                    : 'NA'}
+                                  {this.state.Property && this.state.Property.usage ? this.state.Property.usage : 'NA'}
                                 </div>
                               </td>
                             </tr>
@@ -595,27 +442,18 @@ class ReceiptDownload extends Component {
                               <td colSpan={8}>
                                 <div style={{ whiteSpace: 'pre' }}>
                                   <b>Property Owner Name</b>:{' '}
-                                  {this.state.Property &&
-                                  this.state.Property.owners
-                                    ? this.state.Property.owners[0].name
-                                    : 'NA'}
+                                  {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : 'NA'}
                                   <br />
-                                  <b>& Address: </b>{' '}
-                                  {getAddress(this.state.Property)}{' '}
-                                  <b>Age of Property</b>
+                                  <b>& Address: </b> {getAddress(this.state.Property)} <b>Age of Property</b>
                                 </div>
                               </td>
                             </tr>
                             <tr>
                               <td colSpan={8}>
                                 <div>
-                                  <b>Billing Name</b>:{' '}
-                                  {Receipt[0].Bill[0].payeeName}
+                                  <b>Billing Name</b>: {Receipt[0].Bill[0].payeeName}
                                   <br />
-                                  <b>& Address:</b>{' '}
-                                  {Receipt[0].Bill[0].payeeAddress
-                                    ? Receipt[0].Bill[0].payeeAddress
-                                    : 'NA'}
+                                  <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress ? Receipt[0].Bill[0].payeeAddress : 'NA'}
                                 </div>
                               </td>
                             </tr>
@@ -645,12 +483,8 @@ class ReceiptDownload extends Component {
                                 <b>Total Tax</b>
                               </td>
                             </tr>
-                            {this.state.Property &&
-                            this.state.Property.propertyDetail &&
-                            this.state.Property.propertyDetail.floors
-                              ? renderProperty(
-                                  this.state.Property.propertyDetail.floors
-                                )
+                            {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors
+                              ? renderProperty(this.state.Property.propertyDetail.floors)
                               : 'No Data Available'}
                           </tbody>
                         </Table>
@@ -661,125 +495,67 @@ class ReceiptDownload extends Component {
                       <CardHeader
                         title={
                           <strong>
-                            {'Certificate for: ' +
-                              (this.props.match.params.page == 'propertytax'
-                                ? 'Property Tax'
-                                : 'Water Charges') +
-                              ' No due'}
+                            {'Certificate for: ' + (this.props.match.params.page == 'propertytax' ? 'Property Tax' : 'Water Charges') + ' No due'}
                           </strong>
                         }
                       />
                       <CardText>
-                        <Table
-                          id="CertificateForWc"
-                          responsive
-                          style={{ fontSize: 'bold' }}
-                          bordered
-                          condensed
-                        >
+                        <Table id="CertificateForWc" responsive style={{ fontSize: 'bold' }} bordered condensed>
                           <tbody>
                             <tr>
                               <td style={{ textAlign: 'left' }}>
-                                <img
-                                  src="./temp/images/headerLogo.png"
-                                  height="60"
-                                  width="60"
-                                />
+                                <img src="./temp/images/headerLogo.png" height="60" width="60" />
                               </td>
                               <td style={{ textAlign: 'center' }}>
                                 <b>Roha Municipal Council</b>
                                 <br />
-                                {this.props.match.params.page ==
-                                'propertytax' ? (
-                                  <span>
-                                    Property Tax Department / करनिर्धारण विभाग
-                                  </span>
+                                {this.props.match.params.page == 'propertytax' ? (
+                                  <span>Property Tax Department / करनिर्धारण विभाग</span>
                                 ) : (
                                   <span>Water Department</span>
                                 )}
                               </td>
                               <td style={{ textAlign: 'right' }}>
-                                <img
-                                  src="./temp/images/AS.png"
-                                  height="60"
-                                  width="60"
-                                />
+                                <img src="./temp/images/AS.png" height="60" width="60" />
                               </td>
                             </tr>
                             <tr>
                               <td colSpan={3}>
                                 <div style={{ textAlign: 'center' }}>
-                                  No Due Certificate / थकबाकी नसल्याचे
-                                  प्रमाणपत्र<br />
-                                  (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे
-                                  अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46
-                                  अन्वये)
+                                  No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br />
+                                  (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये)
                                 </div>
                                 <br />
                                 <div style={{ textAlign: 'right' }}>
-                                  Date / दिनांक :{Receipt[0].Bill[0]
-                                    .billDetails[0].billDate
-                                    ? getFullDate(
-                                        Receipt[0].Bill[0].billDetails[0]
-                                          .billDate,
-                                        true
-                                      )
-                                    : Receipt[0].Bill[0].billDetails[0]
-                                        .receiptDate
-                                      ? getFullDate(
-                                          Receipt[0].Bill[0].billDetails[0]
-                                            .receiptDate,
-                                          true
-                                        )
+                                  Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate
+                                    ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true)
+                                    : Receipt[0].Bill[0].billDetails[0].receiptDate
+                                      ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate, true)
                                       : '-'}{' '}
                                   <br />
-                                  Certificate No. / प्रमाणपत्र क्रं :{' '}
-                                  {this.props.match.params.sid.replace(
-                                    'SRN',
-                                    'CERT'
-                                  )}
+                                  Certificate No. / प्रमाणपत्र क्रं : {this.props.match.params.sid.replace('SRN', 'CERT')}
                                 </div>
                                 <br />
                                 <div style={{ textAlign: 'left' }}>
                                   प्रती,<br />
                                   {Receipt[0].Bill[0].payeeName}
                                   <br />
-                                  {Receipt[0].Bill[0].payeeAddress
-                                    ? Receipt[0].Bill[0].payeeAddress
-                                    : 'Roha'}
+                                  {Receipt[0].Bill[0].payeeAddress ? Receipt[0].Bill[0].payeeAddress : 'Roha'}
                                 </div>
                                 <br />
                                 <div style={{ textAlign: 'center' }}>
-                                  Subject /विषय : सन 2017 - 18 थकबाकी नसल्याचे
-                                  प्रमाणपत्र मिळणेबाबत.<br />
-                                  Reference / संदर्भ :{' '}
-                                  {this.props.match.params.sid} आपला अर्ज
-                                  क्रमांक{' '}
-                                  {
-                                    Receipt[0].Bill[0].billDetails[0]
-                                      .applicationNo
-                                  }{' '}
-                                  दिनांक{' '}
-                                  {getFullDate(
-                                    Receipt[0].Bill[0].billDetails[0]
-                                      .receiptDate
-                                  )}
+                                  Subject /विषय : सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br />
+                                  Reference / संदर्भ : {this.props.match.params.sid} आपला अर्ज क्रमांक{' '}
+                                  {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक{' '}
+                                  {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
                                 </div>
                                 <br />
-                                <div style={{ textAlign: 'left' }}>
-                                  महोद्य / महोद्या ,
-                                </div>
+                                <div style={{ textAlign: 'left' }}>महोद्य / महोद्या ,</div>
                                 <br />
                                 <div style={{ textAlign: 'center' }}>
                                   संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की,{' '}
-                                  {this.props.match.params.id != 'pt'
-                                    ? 'पाणी क्रमांक'
-                                    : 'मालमत्ता क्रमांक'},
-                                  {
-                                    Receipt[0].Bill[0].billDetails[0]
-                                      .consumerCode
-                                  }{' '}
-                                  यांच्या नावे नोंद असून, सन 2017-18{' '}
+                                  {this.props.match.params.id != 'pt' ? 'पाणी क्रमांक' : 'मालमत्ता क्रमांक'},
+                                  {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18{' '}
                                   {this.props.match.params.page != 'propertytax'
                                     ? 'पर्यंतचा संपुर्ण पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.'
                                     : 'पर्यंतचा संपुर्ण मालमत्ता कराची रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.'}

@@ -15,11 +15,7 @@ import { translate } from '../../../common/common';
 import Api from '../../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../../framework/components/UiButton';
-import {
-  fileUpload,
-  getInitiatorPosition,
-  getFullDate,
-} from '../../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition, getFullDate } from '../../../framework/utility/utility';
 import $ from 'jquery';
 import { Step, Stepper, StepButton, StepLabel } from 'material-ui/Stepper';
 
@@ -111,21 +107,12 @@ class LegacyLicenseCreate extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -143,17 +130,10 @@ class LegacyLicenseCreate extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -170,32 +150,19 @@ class LegacyLicenseCreate extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -206,24 +173,13 @@ class LegacyLicenseCreate extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -231,28 +187,14 @@ class LegacyLicenseCreate extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = j;
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -260,14 +202,7 @@ class LegacyLicenseCreate extends Component {
   }
 
   displayUI(results) {
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
 
@@ -281,8 +216,7 @@ class LegacyLicenseCreate extends Component {
     setModuleName('tl');
     setActionName('create');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      self.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
     var userRequest = JSON.parse(localStorage.userRequest);
     formData.licenses[0].mobileNumber = userRequest.mobileNumber;
     formData.licenses[0].emailId = userRequest.emailId;
@@ -298,14 +232,11 @@ class LegacyLicenseCreate extends Component {
     var hash = window.location.hash.split('/');
     let endPoint = '';
     let self = this;
-    specifications = require(`../../../framework/specs/citizenService/tl/TradeLicense`)
-      .default;
+    specifications = require(`../../../framework/specs/citizenService/tl/TradeLicense`).default;
     self.displayUI(specifications);
     if (self.props.match.params.status == 'pay') {
       let metaData = JSON.parse(localStorage.getItem('metaData')),
-        paymentGateWayRes = JSON.parse(
-          localStorage.getItem('paymentGateWayResponse')
-        );
+        paymentGateWayRes = JSON.parse(localStorage.getItem('paymentGateWayResponse'));
       self.props.setLoadingStatus('loading');
       //DO WHATEVER YOU WANT TO DO AFTER PAYMENT & THEN CALL GENERATERECEIPT() FUNCTION
       let response = JSON.parse(localStorage.response);
@@ -371,15 +302,7 @@ class LegacyLicenseCreate extends Component {
     var query = {
       [autoObject.autoCompleteUrl.split('?')[1].split('=')[0]]: value,
     };
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
       function(res) {
         var formData = { ...self.props.formData };
         for (var key in autoObject.autoFillFields) {
@@ -397,45 +320,24 @@ class LegacyLicenseCreate extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(
-      url ||
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url,
-      '',
-      formData,
-      '',
-      true
-    ).then(
+    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
         self.props.toggleSnackbarAndSetText(
           true,
-          translate(
-            self.props.actionName == 'create'
-              ? response.responseInfo.status
-              : 'wc.update.message.success'
-          ),
+          translate(self.props.actionName == 'create' ? response.responseInfo.status : 'wc.update.message.success'),
           true
         );
         setTimeout(function() {
-          if (
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].idJsonPath
-          ) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
             if (self.props.actionName == 'update') {
               var hash = '/update/tl/CreateLegacyLicense/';
             } else {
               var hash =
                 '/non-framework/tl/transaction/viewLegacyLicense' +
                 '/' +
-                _.get(
-                  response,
-                  self.props.metaData[
-                    `${self.props.moduleName}.${self.props.actionName}`
-                  ].idJsonPath
-                );
+                _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
             }
             self.props.setRoute(hash);
           }
@@ -452,14 +354,10 @@ class LegacyLicenseCreate extends Component {
   checkCustomFields = (formData, cb) => {
     var self = this;
     if (
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields.initiatorPosition
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields &&
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition
     ) {
-      var jPath =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .customFields.initiatorPosition;
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
       getInitiatorPosition(function(err, pos) {
         if (err) {
           self.toggleSnackbarAndSetText(true, err.message);
@@ -483,63 +381,23 @@ class LegacyLicenseCreate extends Component {
   };
 
   hideField = (_mockData, hideObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? false : true;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                delRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              addRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
             }
 
             break;
@@ -548,65 +406,26 @@ class LegacyLicenseCreate extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? false
-            : true;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -615,85 +434,28 @@ class LegacyLicenseCreate extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? false : true;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if (!reset) {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      _.set(
-                        _formData,
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].jsonPath,
-                        ''
-                      );
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      ) {
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
-                        removeFieldErrors(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                       }
                     }
                     delRequiredFields(_rReq);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      )
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                     }
                     addRequiredFields(_rReq);
                   }
@@ -709,62 +471,22 @@ class LegacyLicenseCreate extends Component {
   };
 
   showField = (_mockData, showObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? true : false;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                addRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              delRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
-              removeFieldErrors(
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -772,65 +494,26 @@ class LegacyLicenseCreate extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? true
-            : false;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
 
             addRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
@@ -840,37 +523,12 @@ class LegacyLicenseCreate extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? true : false;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 
                   } else {
@@ -890,30 +548,12 @@ class LegacyLicenseCreate extends Component {
   enField = (_mockData, enableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          enableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? true : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (enableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
           break;
@@ -927,30 +567,12 @@ class LegacyLicenseCreate extends Component {
   disField = (_mockData, disableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          disableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? false : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (disableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
 
@@ -965,91 +587,35 @@ class LegacyLicenseCreate extends Component {
   checkIfHasEnDisFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .enableDisableFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .enableDisableFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
-                _mockData = this.disField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
-                _mockData = this.enField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
                 _mockData = this.disField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y],
                   true
                 );
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
                 _mockData = this.enField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z],
                   true
                 );
               }
@@ -1065,93 +631,29 @@ class LegacyLicenseCreate extends Component {
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y],
-                  true
-                );
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z],
-                  true
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
           }
@@ -1167,15 +669,9 @@ class LegacyLicenseCreate extends Component {
     let self = this;
 
     console.log(self.props.formData.licenses[0].categoryId);
-    if (
-      self.props.formData.licenses[0].categoryId == '' ||
-      self.props.formData.licenses[0].categoryId == null
-    ) {
+    if (self.props.formData.licenses[0].categoryId == '' || self.props.formData.licenses[0].categoryId == null) {
       //console.log(getVal("licenses[0].categoryId"));
-      self.props.handleChange(
-        { target: { value: null } },
-        'licenses[0].subCategoryId'
-      );
+      self.props.handleChange({ target: { value: null } }, 'licenses[0].subCategoryId');
     }
 
     Api.commonApiPost('/tl-masters/category/v1/_search', {
@@ -1183,16 +679,9 @@ class LegacyLicenseCreate extends Component {
       type: 'subcategory',
     }).then(
       function(response) {
-        self.handleChange(
-          { target: { value: null } },
-          'licenses[0].validityYears'
-        );
+        self.handleChange({ target: { value: null } }, 'licenses[0].validityYears');
         self.handleChange({ target: { value: null } }, 'licenses[0].uomName');
-        self.handleChange(
-          { target: { value: null } },
-          'licenses[0].uomId',
-          true
-        );
+        self.handleChange({ target: { value: null } }, 'licenses[0].uomId', true);
       },
       function(err) {
         console.log(err);
@@ -1251,11 +740,7 @@ class LegacyLicenseCreate extends Component {
 
   handlePopUp = (type, jsonPath, value) => {
     if (type == 'tradeCategory') {
-      if (
-        this.getVal('licenses[0].feeDetails') &&
-        flag != 0 &&
-        tradeCatVal != value
-      ) {
+      if (this.getVal('licenses[0].feeDetails') && flag != 0 && tradeCatVal != value) {
         console.log('hello', value);
         this.handleOpen();
       } else {
@@ -1270,11 +755,7 @@ class LegacyLicenseCreate extends Component {
 
   handlePopUpsub = (type, jsonPath, value) => {
     if (type == 'tradeSubCategory') {
-      if (
-        this.getVal('licenses[0].feeDetails') &&
-        flags != 0 &&
-        tradeSubVal != value
-      ) {
+      if (this.getVal('licenses[0].feeDetails') && flags != 0 && tradeSubVal != value) {
         console.log('hello', value);
         this.handleOpenSub();
       } else {
@@ -1306,14 +787,7 @@ class LegacyLicenseCreate extends Component {
     }
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired = false,
-    pattern = '',
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired = false, pattern = '', requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
     let self = this;
     let { handleChange, mockData, setDropDownData, formData } = this.props;
@@ -1323,35 +797,15 @@ class LegacyLicenseCreate extends Component {
 
     console.log(e);
 
-    if (
-      property == 'licenses[0].categoryId' &&
-      getVal('licenses[0].feeDetails') &&
-      flag1 == 0
-    ) {
-      this.handlePopUp(
-        'tradeCategory',
-        'licenses[0].categoryId',
-        e.target.value
-      );
+    if (property == 'licenses[0].categoryId' && getVal('licenses[0].feeDetails') && flag1 == 0) {
+      this.handlePopUp('tradeCategory', 'licenses[0].categoryId', e.target.value);
       this.populateValidtyYear();
     }
     if (property == 'licenses[0].subCategoryId' && flag2 == 0) {
-      this.handlePopUpsub(
-        'tradeSubCategory',
-        'licenses[0].subCategoryId',
-        e.target.value
-      );
+      this.handlePopUpsub('tradeSubCategory', 'licenses[0].subCategoryId', e.target.value);
     }
-    if (
-      property == 'licenses[0].licenseValidFromDate' &&
-      flag3 == 0 &&
-      ((e.target.value + '').length == 12 || (e.target.value + '').length == 13)
-    ) {
-      this.handlePopUpLicense(
-        'tradeLicense',
-        'licenses[0].licenseValidFromDate',
-        e.target.value
-      );
+    if (property == 'licenses[0].licenseValidFromDate' && flag3 == 0 && ((e.target.value + '').length == 12 || (e.target.value + '').length == 13)) {
+      this.handlePopUpLicense('tradeLicense', 'licenses[0].licenseValidFromDate', e.target.value);
     }
 
     flag1 = 0;
@@ -1369,10 +823,7 @@ class LegacyLicenseCreate extends Component {
         type: 'subcategory',
       }).then(
         function(response) {
-          handleChange(
-            { target: { value: response.categories[0].validityYears } },
-            'licenses[0].validityYears'
-          );
+          handleChange({ target: { value: response.categories[0].validityYears } }, 'licenses[0].validityYears');
           self.setState({
             validityYear: response.categories[0].validityYears,
           });
@@ -1405,20 +856,10 @@ class LegacyLicenseCreate extends Component {
       );
     }
 
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     this.checkIfHasShowHideFields(property, e.target.value);
     this.checkIfHasEnDisFields(property, e.target.value);
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -1450,9 +891,7 @@ class LegacyLicenseCreate extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -1491,23 +930,14 @@ class LegacyLicenseCreate extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
 
   incrementIndexValue = (group, jsonPath) => {
     let { formData } = this.props;
-    var length = _.get(formData, jsonPath)
-      ? _.get(formData, jsonPath).length
-      : 0;
+    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
     var _group = JSON.stringify(group);
     var regexp = new RegExp(jsonPath + '\\[\\d{1}\\]', 'g');
     _group = _group.replace(regexp, jsonPath + '[' + (length + 1) + ']');
@@ -1531,15 +961,7 @@ class LegacyLicenseCreate extends Component {
             if (groups[i].children[j].jsonPath == value) {
               return 'groups[' + i + '].children[' + j + '].groups';
             } else {
-              return (
-                'groups[' +
-                i +
-                '].children[' +
-                j +
-                '][' +
-                getFromGroup(groups[i].children[j].groups) +
-                ']'
-              );
+              return 'groups[' + i + '].children[' + j + '][' + getFromGroup(groups[i].children[j].groups) + ']';
             }
           }
         }
@@ -1551,69 +973,33 @@ class LegacyLicenseCreate extends Component {
 
   addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    let {
-      setMockData,
-      metaData,
-      moduleName,
-      actionName,
-      setFormData,
-      formData,
-    } = this.props;
+    let { setMockData, metaData, moduleName, actionName, setFormData, formData } = this.props;
     let mockData = { ...this.props.mockData };
     if (!jsonPath) {
-      for (
-        var i = 0;
-        i < metaData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          groupName == metaData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (var i = 0; i < metaData[moduleName + '.' + actionName].groups.length; i++) {
+        if (groupName == metaData[moduleName + '.' + actionName].groups[i].name) {
           var _groupToBeInserted = {
             ...metaData[moduleName + '.' + actionName].groups[i],
           };
-          for (
-            var j = mockData[moduleName + '.' + actionName].groups.length - 1;
-            j >= 0;
-            j--
-          ) {
-            if (
-              groupName ==
-              mockData[moduleName + '.' + actionName].groups[j].name
-            ) {
+          for (var j = mockData[moduleName + '.' + actionName].groups.length - 1; j >= 0; j--) {
+            if (groupName == mockData[moduleName + '.' + actionName].groups[j].name) {
               var regexp = new RegExp(
-                mockData[moduleName + '.' + actionName].groups[j].jsonPath
-                  .replace(/\[/g, '\\[')
-                  .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+                mockData[moduleName + '.' + actionName].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
                 'g'
               );
               var stringified = JSON.stringify(_groupToBeInserted);
-              var ind =
-                mockData[moduleName + '.' + actionName].groups[j].index || 0;
+              var ind = mockData[moduleName + '.' + actionName].groups[j].index || 0;
               //console.log(ind);
               _groupToBeInserted = JSON.parse(
-                stringified.replace(
-                  regexp,
-                  mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                    '[' +
-                    (ind + 1) +
-                    ']'
-                )
+                stringified.replace(regexp, mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (ind + 1) + ']')
               );
               _groupToBeInserted.index = ind + 1;
-              mockData[moduleName + '.' + actionName].groups.splice(
-                j + 1,
-                0,
-                _groupToBeInserted
-              );
+              mockData[moduleName + '.' + actionName].groups.splice(j + 1, 0, _groupToBeInserted);
               //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = { ...formData };
 
-              self.setDefaultValues(
-                mockData[moduleName + '.' + actionName].groups,
-                temp
-              );
+              self.setDefaultValues(mockData[moduleName + '.' + actionName].groups, temp);
               setFormData(temp);
               break;
             }
@@ -1624,17 +1010,10 @@ class LegacyLicenseCreate extends Component {
     } else {
       group = JSON.parse(JSON.stringify(group));
       //Increment the values of indexes
-      var grp = _.get(
-        metaData[moduleName + '.' + actionName],
-        self.getPath(jsonPath) + '[0]'
-      );
+      var grp = _.get(metaData[moduleName + '.' + actionName], self.getPath(jsonPath) + '[0]');
       group = this.incrementIndexValue(grp, jsonPath);
       //Push to the path
-      var updatedSpecs = this.getNewSpecs(
-        group,
-        JSON.parse(JSON.stringify(mockData)),
-        self.getPath(jsonPath)
-      );
+      var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
       //Create new mock data
       setMockData(updatedSpecs);
     }
@@ -1649,74 +1028,37 @@ class LegacyLicenseCreate extends Component {
 
     if (!jsonPath) {
       var ind = 0;
-      for (
-        let i = 0;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          index == i &&
-          groupName == mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (index == i && groupName == mockData[moduleName + '.' + actionName].groups[i].name) {
           mockData[moduleName + '.' + actionName].groups.splice(i, 1);
           ind = i;
           break;
         }
       }
 
-      for (
-        let i = ind;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          mockData[moduleName + '.' + actionName].groups[i].name == groupName
-        ) {
+      for (let i = ind; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (mockData[moduleName + '.' + actionName].groups[i].name == groupName) {
           var regexp = new RegExp(
-            mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            mockData[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
             'g'
           );
           //console.log(regexp);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-          var stringified = JSON.stringify(
-            mockData[moduleName + '.' + actionName].groups[i]
-          );
+          var stringified = JSON.stringify(mockData[moduleName + '.' + actionName].groups[i]);
           mockData[moduleName + '.' + actionName].groups[i] = JSON.parse(
             stringified.replace(
               regexp,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                '[' +
-                (mockData[moduleName + '.' + actionName].groups[i].index - 1) +
-                ']'
+              mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (mockData[moduleName + '.' + actionName].groups[i].index - 1) + ']'
             )
           );
 
-          if (
-            _.get(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath
-            )
-          ) {
-            var grps = [
-              ..._.get(
-                _formData,
-                mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              ),
-            ];
+          if (_.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)) {
+            var grps = [..._.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)];
             //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
-            grps.splice(
-              mockData[moduleName + '.' + actionName].groups[i].index - 1,
-              1
-            );
+            grps.splice(mockData[moduleName + '.' + actionName].groups[i].index - 1, 1);
             //console.log(grps);
-            _.set(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath,
-              grps
-            );
+            _.set(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath, grps);
             //console.log(_formData);
             setFormData(_formData);
           }
@@ -1725,10 +1067,7 @@ class LegacyLicenseCreate extends Component {
       //console.log(mockData[moduleName + "." + actionName].groups);
       setMockData(mockData);
     } else {
-      var _groups = _.get(
-        mockData[moduleName + '.' + actionName],
-        self.getPath(jsonPath)
-      );
+      var _groups = _.get(mockData[moduleName + '.' + actionName], self.getPath(jsonPath));
       _groups.splice(index, 1);
       var regexp = new RegExp('\\[\\d{1}\\]', 'g');
       for (var i = index; i < _groups.length; i++) {
@@ -1756,10 +1095,7 @@ class LegacyLicenseCreate extends Component {
     let { formData, metaData } = this.props;
     self.props.setLoadingStatus('loading');
 
-    window.localStorage.setItem(
-      'serviceRequest',
-      JSON.stringify(serviceRequest)
-    );
+    window.localStorage.setItem('serviceRequest', JSON.stringify(serviceRequest));
     window.localStorage.setItem('RequestInfo', JSON.stringify(RequestInfo));
     window.localStorage.setItem('documents', JSON.stringify(documents));
     window.localStorage.setItem('formData', JSON.stringify(formData));
@@ -1912,15 +1248,12 @@ class LegacyLicenseCreate extends Component {
     let ServiceRequest = response.serviceReq,
       self = this;
     var AllResponses = [...ServiceRequest.backendServiceDetails];
-    var paymentGateWayRes = JSON.parse(
-      localStorage.getItem('paymentGateWayResponse')
-    );
+    var paymentGateWayRes = JSON.parse(localStorage.getItem('paymentGateWayResponse'));
     ServiceRequest.status = 'CREATED';
     var BillReceiptObject = [];
     BillReceiptObject[0] = { Bill: [] };
     BillReceiptObject[0]['Bill'] = AllResponses[1].response.Bill;
-    BillReceiptObject[0]['Bill'][0]['paidBy'] =
-      BillReceiptObject[0]['Bill'][0].payeeName;
+    BillReceiptObject[0]['Bill'][0]['paidBy'] = BillReceiptObject[0]['Bill'][0].payeeName;
     BillReceiptObject[0]['tenantId'] = localStorage.getItem('tenantId');
     BillReceiptObject[0]['instrument'] = {
       tenantId: localStorage.getItem('tenantId'),
@@ -1934,8 +1267,7 @@ class LegacyLicenseCreate extends Component {
       // "receiptHeader" : "",
       paymentGatewayName: paymentGateWayRes['paymentMethod'],
       transactionDate: new Date().getTime(),
-      transactionAmount:
-        BillReceiptObject[0]['Bill'][0]['billDetails'][0]['amountPaid'],
+      transactionAmount: BillReceiptObject[0]['Bill'][0]['billDetails'][0]['amountPaid'],
       transactionNumber: paymentGateWayRes['transactionId'],
       authorisationStatusCode: '0300',
       status: paymentGateWayRes['status'],
@@ -1948,8 +1280,7 @@ class LegacyLicenseCreate extends Component {
 
     ServiceRequest.backendServiceDetails = [
       {
-        url:
-          'http://collection-services:8080/collection-services/receipts/_create',
+        url: 'http://collection-services:8080/collection-services/receipts/_create',
         request: {
           RequestInfo: self.state.RequestInfo,
           Receipt: BillReceiptObject,
@@ -1994,23 +1325,15 @@ class LegacyLicenseCreate extends Component {
     //Update WC
     let self = this;
     var { formData } = this.props;
-    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem(
-      'tenantId'
-    )}&consumerCode=`;
+    var DemandBillQuery = `?businessService=CS&tenantId=${localStorage.getItem('tenantId')}&consumerCode=`;
     let DemandRequest = {};
-    DemandRequest['Demands'] = Object.assign(
-      [],
-      self.props.metaData['tl.create'].feeDetails
-    );
+    DemandRequest['Demands'] = Object.assign([], self.props.metaData['tl.create'].feeDetails);
     DemandRequest['Demands'][0].tenantId = localStorage.getItem('tenantId');
     DemandRequest['Demands'][0].consumerCode = '';
-    DemandRequest['Demands'][0].owner.id = JSON.parse(
-      localStorage.userRequest
-    ).id;
+    DemandRequest['Demands'][0].owner.id = JSON.parse(localStorage.userRequest).id;
     DemandRequest['Demands'][0].taxPeriodFrom = 1491004800000;
     DemandRequest['Demands'][0].taxPeriodTo = 1522540799000;
-    DemandRequest['Demands'][0].demandDetails[0].taxHeadMasterCode =
-      'TL_ISS_OF_LIC_FEE';
+    DemandRequest['Demands'][0].demandDetails[0].taxHeadMasterCode = 'TL_ISS_OF_LIC_FEE';
     var ServiceRequest = {
       tenantId: localStorage.getItem('tenantId'),
       serviceRequestId: null,
@@ -2038,18 +1361,14 @@ class LegacyLicenseCreate extends Component {
       comments: [],
       backendServiceDetails: [
         {
-          url:
-            'http://billing-service:8080/billing-service/demand/_create?tenantId=' +
-            localStorage.tenantId,
+          url: 'http://billing-service:8080/billing-service/demand/_create?tenantId=' + localStorage.tenantId,
           request: {
             RequestInfo: self.state.RequestInfo,
             ...DemandRequest,
           },
         },
         {
-          url:
-            'http://billing-service:8080/billing-service/bill/_generate' +
-            DemandBillQuery,
+          url: 'http://billing-service:8080/billing-service/bill/_generate' + DemandBillQuery,
           request: {
             RequestInfo: self.state.RequestInfo,
           },
@@ -2067,14 +1386,8 @@ class LegacyLicenseCreate extends Component {
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        if (
-          documents[i].filePath &&
-          documents[i].filePath.constructor == File
-        ) {
-          fileUpload(documents[i].filePath, self.props.moduleName, function(
-            err,
-            res
-          ) {
+        if (documents[i].filePath && documents[i].filePath.constructor == File) {
+          fileUpload(documents[i].filePath, self.props.moduleName, function(err, res) {
             if (breakOut == 1) return;
             if (err) {
               breakOut = 1;
@@ -2089,8 +1402,7 @@ class LegacyLicenseCreate extends Component {
               if (counter == 0 && breakOut == 0) {
                 ServiceRequest.documents = [];
                 for (var k = 0; k < _docs.length; k++) {
-                  if (_docs[k].filePath)
-                    ServiceRequest.documents.push(_docs[k]);
+                  if (_docs[k].filePath) ServiceRequest.documents.push(_docs[k]);
                 }
                 //ServiceRequest.documents=_docs;
                 formData['Documents'] = _docs;
@@ -2112,12 +1424,7 @@ class LegacyLicenseCreate extends Component {
                   },
                   function(err) {
                     self.props.setLoadingStatus('hide');
-                    self.props.toggleSnackbarAndSetText(
-                      true,
-                      err.message,
-                      false,
-                      true
-                    );
+                    self.props.toggleSnackbarAndSetText(true, err.message, false, true);
                   }
                 );
               }
@@ -2150,12 +1457,7 @@ class LegacyLicenseCreate extends Component {
               },
               function(err) {
                 self.props.setLoadingStatus('hide');
-                self.props.toggleSnackbarAndSetText(
-                  true,
-                  err.message,
-                  false,
-                  true
-                );
+                self.props.toggleSnackbarAndSetText(true, err.message, false, true);
               }
             );
           }
@@ -2197,9 +1499,7 @@ class LegacyLicenseCreate extends Component {
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body>');
-    mywindow.document.write(
-      document.getElementById('DownloadReceipt').innerHTML
-    );
+    mywindow.document.write(document.getElementById('DownloadReceipt').innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close(); // necessary for IE >= 10
@@ -2216,51 +1516,22 @@ class LegacyLicenseCreate extends Component {
   render() {
     const actions = [
       <FlatButton label="No" primary={true} onClick={this.noChange} />,
-      <FlatButton
-        label="Yes"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.yesCatChange}
-      />,
+      <FlatButton label="Yes" primary={true} keyboardFocused={true} onClick={this.yesCatChange} />,
     ];
 
     const actionsSub = [
       <FlatButton label="No" primary={true} onClick={this.noSubChange} />,
-      <FlatButton
-        label="Yes"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.yesSubChange}
-      />,
+      <FlatButton label="Yes" primary={true} keyboardFocused={true} onClick={this.yesSubChange} />,
     ];
 
     const actionsLicense = [
       <FlatButton label="No" primary={true} onClick={this.noLicenseChange} />,
-      <FlatButton
-        label="Yes"
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.yesLicenseChange}
-      />,
+      <FlatButton label="Yes" primary={true} keyboardFocused={true} onClick={this.yesLicenseChange} />,
     ];
 
     let { resultList, rowClickHandler, showDataTable, showHeader } = this.props;
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      autoComHandler,
-      handleClose2,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { handleChange, getVal, addNewCard, removeCard, autoComHandler, handleClose2 } = this;
     let { stepIndex, open2 } = this.state;
     let self = this;
 
@@ -2289,12 +1560,7 @@ class LegacyLicenseCreate extends Component {
                   <Card className="uiCard">
                     <CardHeader title="Upload Documents" />
                     <CardText>
-                      <Table
-                        responsive
-                        style={{ fontSize: 'bold' }}
-                        bordered
-                        condensed
-                      >
+                      <Table responsive style={{ fontSize: 'bold' }} bordered condensed>
                         <thead>
                           <tr>
                             <th>Sr.No</th>
@@ -2344,34 +1610,15 @@ class LegacyLicenseCreate extends Component {
                                       multiLine={true}
                                       rows={1}
                                       maxLength={''}
-                                      value={getVal(
-                                        'Documents[' + key + '].remarks'
-                                      )}
+                                      value={getVal('Documents[' + key + '].remarks')}
                                       errorText={fieldErrors['']}
                                       onChange={e => {
                                         if (e.target.value) {
-                                          e.target.value = e.target.value.replace(
-                                            /^\s*/,
-                                            ''
-                                          );
-                                          if (
-                                            e.target.value[
-                                              e.target.value.length - 1
-                                            ] == ' ' &&
-                                            e.target.value[
-                                              e.target.value.length - 2
-                                            ] == ' '
-                                          )
+                                          e.target.value = e.target.value.replace(/^\s*/, '');
+                                          if (e.target.value[e.target.value.length - 1] == ' ' && e.target.value[e.target.value.length - 2] == ' ')
                                             return;
                                         }
-                                        handleChange(
-                                          e,
-                                          'Documents[' + key + '].remarks',
-                                          false,
-                                          '^.{0,200}$',
-                                          '',
-                                          ''
-                                        );
+                                        handleChange(e, 'Documents[' + key + '].remarks', false, '^.{0,200}$', '', '');
                                       }}
                                     />
                                   </td>
@@ -2401,9 +1648,7 @@ class LegacyLicenseCreate extends Component {
                       <Grid>
                         <Row>
                           <Col xs={12} md={4}>
-                            <span style={{ fontSize: '15px' }}>
-                              Fee to be paid(Rs.)
-                            </span>
+                            <span style={{ fontSize: '15px' }}>Fee to be paid(Rs.)</span>
                             <br />
                             20
                           </Col>
@@ -2433,25 +1678,13 @@ class LegacyLicenseCreate extends Component {
               <Col md={6} mdOffset={3}>
                 {self.state.Receipt && self.state.Receipt[0] ? (
                   <Card id="DownloadReceipt">
-                    <CardHeader
-                      title={<strong>Receipt for: Application Fee</strong>}
-                    />
+                    <CardHeader title={<strong>Receipt for: Application Fee</strong>} />
                     <CardText>
-                      <Table
-                        responsive
-                        style={{ fontSize: 'bold' }}
-                        id="ReceiptForWcAPartOne1"
-                        bordered
-                        condensed
-                      >
+                      <Table responsive style={{ fontSize: 'bold' }} id="ReceiptForWcAPartOne1" bordered condensed>
                         <tbody>
                           <tr>
                             <td style={{ textAlign: 'left' }}>
-                              <img
-                                src="./temp/images/headerLogo.png"
-                                height="60"
-                                width="60"
-                              />
+                              <img src="./temp/images/headerLogo.png" height="60" width="60" />
                             </td>
                             <td style={{ textAlign: 'center' }}>
                               <b>Roha Municipal Council</b>
@@ -2459,43 +1692,26 @@ class LegacyLicenseCreate extends Component {
                               Trade License Department
                             </td>
                             <td style={{ textAlign: 'right' }}>
-                              <img
-                                src="./temp/images/AS.png"
-                                height="60"
-                                width="60"
-                              />
+                              <img src="./temp/images/AS.png" height="60" width="60" />
                             </td>
                           </tr>
                           <tr>
                             <td style={{ textAlign: 'left' }}>
                               Receipt Number :{' '}
-                              {self.state.Receipt[0].Bill[0].billDetails[0]
-                                .receiptNumber
-                                ? self.state.Receipt[0].Bill[0].billDetails[0]
-                                    .receiptNumber
+                              {self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber
+                                ? self.state.Receipt[0].Bill[0].billDetails[0].receiptNumber
                                 : 'NA'}
                             </td>
-                            <td style={{ textAlign: 'center' }}>
-                              Receipt For : Application Fee
-                            </td>
+                            <td style={{ textAlign: 'center' }}>Receipt For : Application Fee</td>
                             <td style={{ textAlign: 'right' }}>
-                              Receipt Date:{' '}
-                              {getFullDate(
-                                self.state.Receipt[0].Bill[0].billDetails[0]
-                                  .receiptDate
-                              )}
+                              Receipt Date: {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
                             </td>
                           </tr>
                           <tr>
                             <td colSpan={3} style={{ textAlign: 'left' }}>
-                              Service Request Number:{' '}
-                              {
-                                self.state.Receipt[0].Bill[0].billDetails[0]
-                                  .consumerCode
-                              }
+                              Service Request Number: {self.state.Receipt[0].Bill[0].billDetails[0].consumerCode}
                               <br />
-                              Applicant Name :{' '}
-                              {self.state.ServiceRequest.firstName}
+                              Applicant Name : {self.state.ServiceRequest.firstName}
                               <br />
                               Amount : Rs. 20<br />
                             </td>
@@ -2503,12 +1719,7 @@ class LegacyLicenseCreate extends Component {
                         </tbody>
                       </Table>
 
-                      <Table
-                        id="ReceiptForWcAPartTwo"
-                        responsive
-                        bordered
-                        condensed
-                      >
+                      <Table id="ReceiptForWcAPartTwo" responsive bordered condensed>
                         <tbody>
                           <tr>
                             <td colSpan={2}>Bill Reference No.& Date</td>
@@ -2516,23 +1727,15 @@ class LegacyLicenseCreate extends Component {
                           </tr>
                           <tr>
                             <td colSpan={2}>
-                              {self.state.Receipt[0].Bill[0].billDetails[0]
-                                .billNumber +
+                              {self.state.Receipt[0].Bill[0].billDetails[0].billNumber +
                                 '-' +
-                                getFullDate(
-                                  self.state.Receipt[0].Bill[0].billDetails[0]
-                                    .receiptDate
-                                )}
+                                getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}
                             </td>
-                            <td colSpan={8}>
-                              Application for New Trade License
-                            </td>
+                            <td colSpan={8}>Application for New Trade License</td>
                           </tr>
 
                           <tr>
-                            <td colSpan={10}>
-                              Amount in words: Rs. Twenty only
-                            </td>
+                            <td colSpan={10}>Amount in words: Rs. Twenty only</td>
                           </tr>
                           <tr>
                             <td colSpan={10}>Payment Mode</td>
@@ -2546,54 +1749,29 @@ class LegacyLicenseCreate extends Component {
                           </tr>
                           <tr>
                             <td>Online</td>
-                            <td>
-                              {
-                                self.state.Receipt[0].Bill[0].billDetails[0]
-                                  .totalAmount
-                              }
-                            </td>
-                            {self.state.Receipt[0].instrument.instrumentType
-                              .name == 'Online' ? (
+                            <td>{self.state.Receipt[0].Bill[0].billDetails[0].totalAmount}</td>
+                            {self.state.Receipt[0].instrument.instrumentType.name == 'Online' ? (
                               <td> {self.state.Receipt[0].transactionId} </td>
                             ) : (
                               <td> {self.state.Receipt[0].transactionId} </td>
                             )}
 
-                            {self.state.Receipt[0].instrument.instrumentType
-                              .name == 'Online' ? (
-                              <td>
-                                {' '}
-                                {getFullDate(
-                                  self.state.Receipt[0].Bill[0].billDetails[0]
-                                    .receiptDate
-                                )}{' '}
-                              </td>
+                            {self.state.Receipt[0].instrument.instrumentType.name == 'Online' ? (
+                              <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)} </td>
                             ) : (
-                              <td>
-                                {' '}
-                                {getFullDate(
-                                  self.state.Receipt[0].Bill[0].billDetails[0]
-                                    .receiptDate
-                                )}
-                              </td>
+                              <td> {getFullDate(self.state.Receipt[0].Bill[0].billDetails[0].receiptDate)}</td>
                             )}
 
                             <td colSpan={6}>
-                              {self.state.Receipt[0].instrument.instrumentType
-                                .name == 'Online' ||
-                              self.state.Receipt[0].instrument.instrumentType
-                                .name == 'Cash'
+                              {self.state.Receipt[0].instrument.instrumentType.name == 'Online' ||
+                              self.state.Receipt[0].instrument.instrumentType.name == 'Cash'
                                 ? 'NA'
                                 : self.state.Receipt[0].instrument.bank.name}
                             </td>
                           </tr>
                         </tbody>
                       </Table>
-                      <span style={{ textAlign: 'right' }}>
-                        {translate(
-                          'This is computer generated receipt no authorised signature required'
-                        )}
-                      </span>
+                      <span style={{ textAlign: 'right' }}>{translate('This is computer generated receipt no authorised signature required')}</span>
                     </CardText>
                   </Card>
                 ) : (
@@ -2601,11 +1779,7 @@ class LegacyLicenseCreate extends Component {
                 )}
                 <br />
                 <div style={{ textAlign: 'center' }}>
-                  <RaisedButton
-                    primary={true}
-                    label="Download"
-                    onClick={self.generatePDF}
-                  />
+                  <RaisedButton primary={true} label="Download" onClick={self.generatePDF} />
                 </div>
               </Col>
               <div className="page-break" />
@@ -2632,28 +1806,14 @@ class LegacyLicenseCreate extends Component {
           </Step>
         </Stepper>
         {getStepContent(stepIndex)}
-        <Dialog
-          title="Payment Gateway - Mock"
-          modal={false}
-          open={open2}
-          onRequestClose={handleClose2}
-          autoScrollBodyContent={true}
-        >
+        <Dialog title="Payment Gateway - Mock" modal={false} open={open2} onRequestClose={handleClose2} autoScrollBodyContent={true}>
           <div style={{ textAlign: 'center' }}>
             <h4>Amount to be paid: Rs 20</h4>
             <br />
           </div>
-          <UiButton
-            handler={this.handleClose}
-            item={{ label: 'Cancel', uiType: 'button' }}
-            ui="google"
-          />
+          <UiButton handler={this.handleClose} item={{ label: 'Cancel', uiType: 'button' }} ui="google" />
           {'  '}
-          <UiButton
-            handler={this.pay}
-            item={{ label: 'Pay & Proceed', uiType: 'button' }}
-            ui="google"
-          />
+          <UiButton handler={this.pay} item={{ label: 'Pay & Proceed', uiType: 'button' }} ui="google" />
         </Dialog>
       </div>
     );
@@ -2693,14 +1853,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired = false,
-    pattern = '',
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange: (e, property, isRequired = false, pattern = '', requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,
@@ -2738,6 +1891,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  LegacyLicenseCreate
-);
+export default connect(mapStateToProps, mapDispatchToProps)(LegacyLicenseCreate);

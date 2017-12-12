@@ -16,8 +16,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             patternErrorMsg: 'swm.create.field.message.transactionNo',
-            url:
-              '/swm-services/sanitationstafftargets/_search?|$..targetNo|$..targetNo',
+            url: '/swm-services/sanitationstafftargets/_search?|$..targetNo|$..targetNo',
           },
           {
             name: 'name',
@@ -26,8 +25,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             patternErrorMsg: 'swm.create.field.message.name',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
           },
         ],
       },
@@ -59,8 +57,7 @@ var dat = {
         fields: [
           {
             name: 'targetNo',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
             label: 'swm.create.sanitationstaffschedules.targetNo',
             pattern: '',
             type: 'autoCompelete',
@@ -70,27 +67,20 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/swm-services/sanitationstafftargets/_search?|$..targetNo|$..targetNo',
+            url: '/swm-services/sanitationstafftargets/_search?|$..targetNo|$..targetNo',
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/swm-services/sanitationstafftargets/_search?targetNo={sanitationStaffSchedules[0].sanitationStaffTarget.targetNo}',
+              autoCompleteUrl: '/swm-services/sanitationstafftargets/_search?targetNo={sanitationStaffSchedules[0].sanitationStaffTarget.targetNo}',
               autoFillFields: {
-                'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom':
-                  'sanitationStaffTargets[0].targetFrom',
-                'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo':
-                  'sanitationStaffTargets[0].targetTo',
-                'sanitationStaffSchedules[0].sanitationStaffTarget.route.name':
-                  'sanitationStaffTargets[0].route.name',
-                'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name':
-                  'sanitationStaffTargets[0].dumpingGround.name',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom': 'sanitationStaffTargets[0].targetFrom',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo': 'sanitationStaffTargets[0].targetTo',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.route.name': 'sanitationStaffTargets[0].route.name',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name': 'sanitationStaffTargets[0].dumpingGround.name',
               },
             },
           },
           {
             name: 'targetFrom',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom',
             label: 'swm.create.sanitationstaffschedules.targetfrom',
             pattern: '',
             type: 'datePicker',
@@ -101,8 +91,7 @@ var dat = {
           },
           {
             name: 'targetTo',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo',
             label: 'swm.create.sanitationstaffschedules.targetto',
             pattern: '',
             type: 'datePicker',
@@ -113,8 +102,7 @@ var dat = {
           },
           {
             name: 'name',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.route.name',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.route.name',
             label: 'swm.create.sanitationstaffschedules.route',
             pattern: '',
             type: 'text',
@@ -127,8 +115,7 @@ var dat = {
           },
           {
             name: 'name',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name',
             label: 'swm.create.sanitationstaffschedules.dumpingground',
             pattern: '',
             type: 'text',
@@ -151,8 +138,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
           },
         ],
       },
@@ -172,8 +158,7 @@ var dat = {
         fields: [
           {
             name: 'targetNo',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
             label: 'swm.create.sanitationstaffschedules.targetNo',
             pattern: '',
             type: 'text',
@@ -186,8 +171,7 @@ var dat = {
           },
           {
             name: 'targetFrom',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom',
             label: 'swm.create.sanitationstaffschedules.targetfrom',
             pattern: '',
             type: 'datePicker',
@@ -198,8 +182,7 @@ var dat = {
           },
           {
             name: 'targetTo',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo',
             label: 'swm.create.sanitationstaffschedules.targetto',
             pattern: '',
             type: 'datePicker',
@@ -210,8 +193,7 @@ var dat = {
           },
           {
             name: 'name',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.route.name',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.route.name',
             label: 'swm.create.sanitationstaffschedules.route',
             pattern: '',
             type: 'text',
@@ -224,8 +206,7 @@ var dat = {
           },
           {
             name: 'name',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name',
             label: 'swm.create.sanitationstaffschedules.dumpingground',
             pattern: '',
             type: 'text',
@@ -253,8 +234,7 @@ var dat = {
       },
     ],
     tenantIdRequired: true,
-    url:
-      '/swm-services/sanitationstaffschedules/_search?transactionNo={transactionNo}',
+    url: '/swm-services/sanitationstaffschedules/_search?transactionNo={transactionNo}',
   },
   'swm.update': {
     numCols: 4,
@@ -268,8 +248,7 @@ var dat = {
         fields: [
           {
             name: 'targetNo',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetNo',
             label: 'swm.create.sanitationstaffschedules.targetNo',
             pattern: '',
             type: 'autoCompelete',
@@ -279,27 +258,20 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/swm-services/sanitationstafftargets/_search?|$..targetNo|$..targetNo',
+            url: '/swm-services/sanitationstafftargets/_search?|$..targetNo|$..targetNo',
             autoCompleteDependancy: {
-              autoCompleteUrl:
-                '/swm-services/sanitationstafftargets/_search?targetNo={sanitationStaffSchedules[0].sanitationStaffTarget.targetNo}',
+              autoCompleteUrl: '/swm-services/sanitationstafftargets/_search?targetNo={sanitationStaffSchedules[0].sanitationStaffTarget.targetNo}',
               autoFillFields: {
-                'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom':
-                  'sanitationStaffTargets[0].targetFrom',
-                'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo':
-                  'sanitationStaffTargets[0].targetTo',
-                'sanitationStaffSchedules[0].sanitationStaffTarget.route.name':
-                  'sanitationStaffTargets[0].route.name',
-                'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name':
-                  'sanitationStaffTargets[0].dumpingGround.name',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom': 'sanitationStaffTargets[0].targetFrom',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo': 'sanitationStaffTargets[0].targetTo',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.route.name': 'sanitationStaffTargets[0].route.name',
+                'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name': 'sanitationStaffTargets[0].dumpingGround.name',
               },
             },
           },
           {
             name: 'targetFrom',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetFrom',
             label: 'swm.create.sanitationstaffschedules.targetfrom',
             pattern: '',
             type: 'datePicker',
@@ -310,8 +282,7 @@ var dat = {
           },
           {
             name: 'targetTo',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.targetTo',
             label: 'swm.create.sanitationstaffschedules.targetto',
             pattern: '',
             type: 'datePicker',
@@ -322,8 +293,7 @@ var dat = {
           },
           {
             name: 'name',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.route.name',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.route.name',
             label: 'swm.create.sanitationstaffschedules.route',
             pattern: '',
             type: 'text',
@@ -336,8 +306,7 @@ var dat = {
           },
           {
             name: 'name',
-            jsonPath:
-              'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name',
+            jsonPath: 'sanitationStaffSchedules[0].sanitationStaffTarget.dumpingGround.name',
             label: 'swm.create.sanitationstaffschedules.dumpingground',
             pattern: '',
             type: 'text',
@@ -360,16 +329,14 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=Shift|$..code|$..code',
           },
         ],
       },
     ],
     url: '/swm-services/sanitationstaffschedules/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/swm-services/sanitationstaffschedules/_search?transactionNo={transactionNo}',
+    searchUrl: '/swm-services/sanitationstaffschedules/_search?transactionNo={transactionNo}',
   },
 };
 export default dat;

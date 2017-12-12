@@ -57,11 +57,7 @@ class grievanceView extends Component {
 
     this.props.setLoadingStatus('loading');
 
-    Api.commonApiPost(
-      '/pgr/seva/v1/_search',
-      { serviceRequestId: currentThis.props.match.params.srn },
-      {}
-    ).then(
+    Api.commonApiPost('/pgr/seva/v1/_search', { serviceRequestId: currentThis.props.match.params.srn }, {}).then(
       function(response) {
         if (response.serviceRequests.length === 0) {
           currentThis.props.setLoadingStatus('hide');
@@ -76,9 +72,7 @@ class grievanceView extends Component {
             if (item[k] instanceof Array) {
               item[k].map((attribValues, index) => {
                 currentThis.setState({
-                  [Object.values(attribValues)[0]]: Object.values(
-                    attribValues
-                  )[1],
+                  [Object.values(attribValues)[0]]: Object.values(attribValues)[1],
                 });
               });
             } else {
@@ -87,35 +81,21 @@ class grievanceView extends Component {
           }
           if (
             localStorage.getItem('type') === 'CITIZEN' &&
-            (currentThis.state.systemStatus === 'COMPLETED' ||
-              currentThis.state.systemStatus === 'REJECTED')
+            (currentThis.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED')
           ) {
             currentThis.props.ADD_MANDATORY('systemRating');
             if (currentThis.state.systemRating) {
-              handleChange(
-                currentThis.state.systemRating,
-                'systemRating',
-                true,
-                ''
-              );
+              handleChange(currentThis.state.systemRating, 'systemRating', true, '');
               currentThis.commentsTrigger('', false);
             }
           }
-          if (
-            currentThis.state.systemStatus === 'FORWARDED' &&
-            localStorage.getItem('type') === 'EMPLOYEE'
-          ) {
+          if (currentThis.state.systemStatus === 'FORWARDED' && localStorage.getItem('type') === 'EMPLOYEE') {
             currentThis.props.ADD_MANDATORY('designationId');
             currentThis.props.ADD_MANDATORY('systemPositionId');
             handleChange('', 'designationId', true, '');
             handleChange('', 'systemPositionId', true, '');
           }
-          handleChange(
-            currentThis.state.systemStatus,
-            'systemStatus',
-            false,
-            ''
-          );
+          handleChange(currentThis.state.systemStatus, 'systemStatus', false, '');
         });
 
         Api.commonApiPost('/workflow/history/v1/_search', {
@@ -159,27 +139,15 @@ class grievanceView extends Component {
         currentThis.setState({ SD: response.attributes });
         //ADD MANDATORY & DISPATCH based on SD
         //Required for SD
-        if (
-          response.attributes.length > 0 &&
-          localStorage.getItem('type') === 'EMPLOYEE'
-        ) {
+        if (response.attributes.length > 0 && localStorage.getItem('type') === 'EMPLOYEE') {
           let FormFields = response.attributes.filter(function(el) {
             return el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS';
           });
           if (FormFields.length > 0) {
             //check condition
             FormFields.map((item, index) => {
-              if (
-                item.roles.indexOf(localStorage.getItem('type')) > -1 &&
-                item.actions.indexOf(currentThis.state.systemStatus) > -1
-              ) {
-                if (currentThis.state[item.code])
-                  currentThis.props.handleChange(
-                    currentThis.state[item.code],
-                    item.code,
-                    item.required,
-                    ''
-                  );
+              if (item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf(currentThis.state.systemStatus) > -1) {
+                if (currentThis.state[item.code]) currentThis.props.handleChange(currentThis.state[item.code], item.code, item.required, '');
                 if (item.required) currentThis.props.ADD_MANDATORY(item.code);
               }
             });
@@ -320,10 +288,10 @@ class grievanceView extends Component {
     );
   };
   getWard = () => {
-    Api.commonApiPost(
-      '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'Ward', hierarchyTypeName: 'Administration' }
-    ).then(
+    Api.commonApiPost('/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'Ward',
+      hierarchyTypeName: 'Administration',
+    }).then(
       function(response) {
         currentThis.setState({ ward: response.Boundary });
         currentThis.getLocality();
@@ -374,51 +342,35 @@ class grievanceView extends Component {
     req_obj.serviceRequest['updatedDatetime'] = date + ' ' + time;
 
     //change status, position, ward, location in attribValues
-    for (
-      var i = 0, len = req_obj.serviceRequest.attribValues.length;
-      i < len;
-      i++
-    ) {
+    for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
       if (req_obj.serviceRequest.attribValues[i]['key'] === 'systemStatus') {
-        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props
-          .grievanceView.systemStatus
+        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.systemStatus
           ? currentThis.props.grievanceView.systemStatus
           : currentThis.state.systemStatus;
-      } else if (
-        req_obj.serviceRequest.attribValues[i]['key'] === 'systemPositionId'
-      ) {
-        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props
-          .grievanceView.systemPositionId
+      } else if (req_obj.serviceRequest.attribValues[i]['key'] === 'systemPositionId') {
+        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.systemPositionId
           ? currentThis.props.grievanceView.systemPositionId
           : currentThis.state.systemPositionId;
-      } else if (
-        req_obj.serviceRequest.attribValues[i]['key'] === 'systemLocationId'
-      ) {
-        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props
-          .grievanceView.systemLocationId
+      } else if (req_obj.serviceRequest.attribValues[i]['key'] === 'systemLocationId') {
+        req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView.systemLocationId
           ? currentThis.props.grievanceView.systemLocationId
           : currentThis.state.systemLocationId;
       }
     }
 
     //change serviceCode in serviceRequests
-    req_obj.serviceRequest.serviceCode = currentThis.props.grievanceView
-      .serviceCode
+    req_obj.serviceRequest.serviceCode = currentThis.props.grievanceView.serviceCode
       ? currentThis.props.grievanceView.serviceCode
       : currentThis.state.serviceCode;
 
-    if (currentThis.props.grievanceView['systemChildLocationId'])
-      currentThis.chckkey('systemChildLocationId', req_obj);
+    if (currentThis.props.grievanceView['systemChildLocationId']) currentThis.chckkey('systemChildLocationId', req_obj);
 
-    if (currentThis.props.grievanceView['systemApprovalComments'])
-      currentThis.chckkey('systemApprovalComments', req_obj);
+    if (currentThis.props.grievanceView['systemApprovalComments']) currentThis.chckkey('systemApprovalComments', req_obj);
 
     if (localStorage.getItem('type') === 'EMPLOYEE') {
-      if (currentThis.props.grievanceView['PRIORITY'])
-        currentThis.chckkey('PRIORITY', req_obj);
+      if (currentThis.props.grievanceView['PRIORITY']) currentThis.chckkey('PRIORITY', req_obj);
     } else if (localStorage.getItem('type') === 'CITIZEN') {
-      if (currentThis.props.grievanceView['systemRating'])
-        currentThis.chckkey('systemRating', req_obj);
+      if (currentThis.props.grievanceView['systemRating']) currentThis.chckkey('systemRating', req_obj);
     }
 
     if (currentThis.props.files.length > 0) {
@@ -453,14 +405,9 @@ class grievanceView extends Component {
     });
 
     if (result.length > 0) {
-      for (
-        var i = 0, len = req_obj.serviceRequest.attribValues.length;
-        i < len;
-        i++
-      ) {
+      for (var i = 0, len = req_obj.serviceRequest.attribValues.length; i < len; i++) {
         if (req_obj.serviceRequest.attribValues[i]['key'] === key) {
-          req_obj.serviceRequest.attribValues[i]['name'] =
-            currentThis.props.grievanceView[key];
+          req_obj.serviceRequest.attribValues[i]['name'] = currentThis.props.grievanceView[key];
         }
       }
     } else {
@@ -507,10 +454,7 @@ class grievanceView extends Component {
     //toggleSnackbarAndSetText(true, "Could not able to create complaint. Try again")
   };
   loadServiceDefinition = () => {
-    if (
-      this.state.SD !== undefined &&
-      localStorage.getItem('type') === 'EMPLOYEE'
-    ) {
+    if (this.state.SD !== undefined && localStorage.getItem('type') === 'EMPLOYEE') {
       let FormFields = this.state.SD.filter(function(el) {
         return el.code !== 'CHECKLIST' && el.code !== 'DOCUMENTS';
       });
@@ -518,21 +462,14 @@ class grievanceView extends Component {
         //check condition
         return FormFields.map((item, index) => {
           //console.log(item.roles, item.actions, this.state.systemStatus, this.state.serviceCode);
-          if (
-            item.roles.indexOf(localStorage.getItem('type')) > -1 &&
-            item.actions.indexOf(this.state.systemStatus) > -1
-          ) {
+          if (item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf(this.state.systemStatus) > -1) {
             //item.dataType = 'datetime';
             return (
               <Fields
                 key={index}
                 error={currentThis.props.fieldErrors[item.code]}
                 obj={item}
-                value={
-                  currentThis.props.grievanceView[item.code]
-                    ? currentThis.props.grievanceView[item.code]
-                    : currentThis.state[item.code]
-                }
+                value={currentThis.props.grievanceView[item.code] ? currentThis.props.grievanceView[item.code] : currentThis.state[item.code]}
                 handler={currentThis.props.handleChange}
               />
             );
@@ -543,33 +480,15 @@ class grievanceView extends Component {
   };
   commentsTrigger = (msg = '', boolean) => {
     if (boolean) {
-      this.props.ADD_MANDATORY_LATEST(
-        msg,
-        'systemApprovalComments',
-        boolean,
-        '',
-        ''
-      );
+      this.props.ADD_MANDATORY_LATEST(msg, 'systemApprovalComments', boolean, '', '');
       this.setState({ commentsMandat: true });
     } else {
-      this.props.REMOVE_MANDATORY_LATEST(
-        msg,
-        'systemApprovalComments',
-        boolean,
-        '',
-        ''
-      );
+      this.props.REMOVE_MANDATORY_LATEST(msg, 'systemApprovalComments', boolean, '', '');
       this.setState({ commentsMandat: false });
     }
   };
   render() {
-    let {
-      search,
-      getReceivingCenter,
-      getLocation,
-      loadServiceDefinition,
-      handleUploadValidation,
-    } = this;
+    let { search, getReceivingCenter, getLocation, loadServiceDefinition, handleUploadValidation } = this;
     let {
       handleChange,
       handleWard,
@@ -584,13 +503,7 @@ class grievanceView extends Component {
       handleUpload,
     } = this.props;
     currentThis = this;
-    const actions = [
-      <FlatButton
-        label={translate('core.lbl.ok')}
-        primary={true}
-        onTouchTap={this.handleClose}
-      />,
-    ];
+    const actions = [<FlatButton label={translate('core.lbl.ok')} primary={true} onTouchTap={this.handleClose} />];
     return (
       <div>
         <form autoComplete="off">
@@ -604,18 +517,10 @@ class grievanceView extends Component {
             localStorage.getItem('type') === 'EMPLOYEE' &&
             this.state.systemStatus !== 'REJECTED' &&
             this.state.systemStatus !== 'COMPLETED') ||
-          (localStorage.getItem('type') === 'CITIZEN' &&
-            this.state.systemStatus !== 'WITHDRAWN') ? (
+          (localStorage.getItem('type') === 'CITIZEN' && this.state.systemStatus !== 'WITHDRAWN') ? (
             <div>
               <Card style={styles.cardMargin}>
-                <CardHeader
-                  style={{ paddingBottom: 0 }}
-                  title={
-                    <div style={styles.headerStyle}>
-                      {translate('pgr.lbl.actions')}
-                    </div>
-                  }
-                />
+                <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>{translate('pgr.lbl.actions')}</div>} />
                 <CardText style={{ padding: '8px 16px 0' }}>
                   <Row>
                     <Col xs={12} sm={4} md={3} lg={3}>
@@ -625,15 +530,9 @@ class grievanceView extends Component {
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={
-                          translate('pgr.lbl.change.status') + ' *'
-                        }
+                        floatingLabelText={translate('pgr.lbl.change.status') + ' *'}
                         maxHeight={200}
-                        value={
-                          grievanceView.systemStatus
-                            ? grievanceView.systemStatus
-                            : this.state.systemStatus
-                        }
+                        value={grievanceView.systemStatus ? grievanceView.systemStatus : this.state.systemStatus}
                         dropDownMenuProps={{
                           targetOrigin: {
                             horizontal: 'left',
@@ -642,43 +541,20 @@ class grievanceView extends Component {
                         }}
                         onChange={(event, key, value) => {
                           handleStatusChange(value, 'systemStatus', false, '');
-                          if (
-                            localStorage.getItem('type') ===
-                              constants.ROLE_CITIZEN &&
-                            (value === 'REOPENED' || value === 'WITHDRAWN')
-                          ) {
-                            this.commentsTrigger(
-                              this.props.grievanceView.systemApprovalComments,
-                              true
-                            );
-                          } else if (
-                            localStorage.getItem('type') ===
-                            constants.ROLE_CITIZEN
-                          ) {
-                            this.commentsTrigger(
-                              this.props.grievanceView.systemApprovalComments,
-                              false
-                            );
+                          if (localStorage.getItem('type') === constants.ROLE_CITIZEN && (value === 'REOPENED' || value === 'WITHDRAWN')) {
+                            this.commentsTrigger(this.props.grievanceView.systemApprovalComments, true);
+                          } else if (localStorage.getItem('type') === constants.ROLE_CITIZEN) {
+                            this.commentsTrigger(this.props.grievanceView.systemApprovalComments, false);
                           }
                         }}
                       >
-                        {localStorage.getItem('type') ===
-                        constants.ROLE_CITIZEN ? (
-                          <MenuItem
-                            value={this.state.systemStatus}
-                            primaryText="Select"
-                          />
+                        {localStorage.getItem('type') === constants.ROLE_CITIZEN ? (
+                          <MenuItem value={this.state.systemStatus} primaryText="Select" />
                         ) : (
                           ''
                         )}
                         {this.state.nextStatus !== undefined
-                          ? this.state.nextStatus.map((status, index) => (
-                              <MenuItem
-                                value={status.code}
-                                key={index}
-                                primaryText={status.name}
-                              />
-                            ))
+                          ? this.state.nextStatus.map((status, index) => <MenuItem value={status.code} key={index} primaryText={status.name} />)
                           : ''}
                       </SelectField>
                     </Col>
@@ -690,26 +566,16 @@ class grievanceView extends Component {
                           fullWidth={true}
                           floatingLabelStyle={styles.floatingLabelStyle}
                           floatingLabelFixed={true}
-                          floatingLabelText={
-                            translate('pgr.lbl.change.grievancetype') + ' *'
-                          }
+                          floatingLabelText={translate('pgr.lbl.change.grievancetype') + ' *'}
                           maxHeight={200}
-                          value={
-                            grievanceView.serviceCode
-                              ? grievanceView.serviceCode
-                              : this.state.serviceCode
-                          }
+                          value={grievanceView.serviceCode ? grievanceView.serviceCode : this.state.serviceCode}
                           onChange={(event, key, value) => {
                             handleChange(value, 'serviceCode', false, '');
                           }}
                         >
                           {this.state.complaintTypes !== undefined
                             ? this.state.complaintTypes.map((ctype, index) => (
-                                <MenuItem
-                                  value={ctype.serviceCode}
-                                  key={index}
-                                  primaryText={ctype.serviceName}
-                                />
+                                <MenuItem value={ctype.serviceCode} key={index} primaryText={ctype.serviceName} />
                               ))
                             : ''}
                         </SelectField>
@@ -727,23 +593,13 @@ class grievanceView extends Component {
                           floatingLabelFixed={true}
                           floatingLabelText={translate('Ward') + ' *'}
                           maxHeight={200}
-                          value={
-                            grievanceView.systemLocationId
-                              ? grievanceView.systemLocationId
-                              : this.state.systemLocationId
-                          }
+                          value={grievanceView.systemLocationId ? grievanceView.systemLocationId : this.state.systemLocationId}
                           onChange={(event, key, value) => {
                             handleWard(value, 'systemLocationId', false, '');
                           }}
                         >
                           {this.state.ward !== undefined
-                            ? this.state.ward.map((ward, index) => (
-                                <MenuItem
-                                  value={ward.id}
-                                  key={index}
-                                  primaryText={ward.name}
-                                />
-                              ))
+                            ? this.state.ward.map((ward, index) => <MenuItem value={ward.id} key={index} primaryText={ward.name} />)
                             : ''}
                         </SelectField>
                       </Col>
@@ -758,32 +614,15 @@ class grievanceView extends Component {
                           fullWidth={true}
                           floatingLabelStyle={styles.floatingLabelStyle}
                           floatingLabelFixed={true}
-                          floatingLabelText={
-                            translate('core.lbl.location') + ' *'
-                          }
+                          floatingLabelText={translate('core.lbl.location') + ' *'}
                           maxHeight={200}
-                          value={
-                            grievanceView.systemChildLocationId
-                              ? grievanceView.systemChildLocationId
-                              : this.state.systemChildLocationId
-                          }
+                          value={grievanceView.systemChildLocationId ? grievanceView.systemChildLocationId : this.state.systemChildLocationId}
                           onChange={(event, key, value) => {
-                            handleLocality(
-                              value,
-                              'systemChildLocationId',
-                              true,
-                              ''
-                            );
+                            handleLocality(value, 'systemChildLocationId', true, '');
                           }}
                         >
                           {this.state.locality !== undefined
-                            ? this.state.locality.map((locality, index) => (
-                                <MenuItem
-                                  value={locality.id}
-                                  key={index}
-                                  primaryText={locality.name}
-                                />
-                              ))
+                            ? this.state.locality.map((locality, index) => <MenuItem value={locality.id} key={index} primaryText={locality.name} />)
                             : ''}
                         </SelectField>
                       </Col>
@@ -791,8 +630,7 @@ class grievanceView extends Component {
                       ''
                     )}
                   </Row>
-                  {localStorage.getItem('type') === 'EMPLOYEE' &&
-                  grievanceView.systemStatus === 'FORWARDED' ? (
+                  {localStorage.getItem('type') === 'EMPLOYEE' && grievanceView.systemStatus === 'FORWARDED' ? (
                     <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         <SelectField
@@ -811,11 +649,7 @@ class grievanceView extends Component {
                           <MenuItem value={0} primaryText="Select Department" />
                           {this.state.department !== undefined
                             ? this.state.department.map((department, index) => (
-                                <MenuItem
-                                  value={department.id}
-                                  key={index}
-                                  primaryText={department.name}
-                                />
+                                <MenuItem value={department.id} key={index} primaryText={department.name} />
                               ))
                             : ''}
                         </SelectField>
@@ -831,29 +665,14 @@ class grievanceView extends Component {
                           maxHeight={200}
                           value={grievanceView.designationId}
                           onChange={(event, key, value) => {
-                            handlePosition(
-                              grievanceView.departmentId,
-                              value,
-                              'designationId',
-                              true,
-                              ''
-                            );
+                            handlePosition(grievanceView.departmentId, value, 'designationId', true, '');
                           }}
                         >
-                          <MenuItem
-                            value={0}
-                            primaryText="Select Designation"
-                          />
+                          <MenuItem value={0} primaryText="Select Designation" />
                           {this.state.designation !== undefined
-                            ? this.state.designation.map(
-                                (designation, index) => (
-                                  <MenuItem
-                                    value={designation.id}
-                                    key={index}
-                                    primaryText={designation.name}
-                                  />
-                                )
-                              )
+                            ? this.state.designation.map((designation, index) => (
+                                <MenuItem value={designation.id} key={index} primaryText={designation.name} />
+                              ))
                             : ''}
                         </SelectField>
                       </Col>
@@ -874,11 +693,7 @@ class grievanceView extends Component {
                           <MenuItem value={0} primaryText="Select Position" />
                           {this.state.position !== undefined
                             ? this.state.position.map((position, index) => (
-                                <MenuItem
-                                  value={position.assignments[0].position}
-                                  key={index}
-                                  primaryText={position.name}
-                                />
+                                <MenuItem value={position.assignments[0].position} key={index} primaryText={position.name} />
                               ))
                             : ''}
                         </SelectField>
@@ -887,14 +702,9 @@ class grievanceView extends Component {
                   ) : (
                     ''
                   )}
-                  {localStorage.getItem('type') === 'EMPLOYEE' ? (
-                    <Row>{loadServiceDefinition()}</Row>
-                  ) : (
-                    ''
-                  )}
+                  {localStorage.getItem('type') === 'EMPLOYEE' ? <Row>{loadServiceDefinition()}</Row> : ''}
                   {localStorage.getItem('type') === 'CITIZEN' &&
-                  (this.state.systemStatus === 'COMPLETED' ||
-                    currentThis.state.systemStatus === 'REJECTED') ? (
+                  (this.state.systemStatus === 'COMPLETED' || currentThis.state.systemStatus === 'REJECTED') ? (
                     <Row>
                       <Col xs={12} sm={4} md={3} lg={3}>
                         <h4>Feedback</h4>
@@ -906,19 +716,10 @@ class grievanceView extends Component {
                           onClick={(rate, event) => {
                             let { systemStatus } = this.props.grievanceView;
                             handleChange(rate, 'systemRating', true, '');
-                            if (
-                              systemStatus === 'WITHDRAWN' ||
-                              systemStatus === 'REOPENED'
-                            ) {
-                              this.commentsTrigger(
-                                this.props.grievanceView.systemApprovalComments,
-                                true
-                              );
+                            if (systemStatus === 'WITHDRAWN' || systemStatus === 'REOPENED') {
+                              this.commentsTrigger(this.props.grievanceView.systemApprovalComments, true);
                             } else {
-                              this.commentsTrigger(
-                                this.props.grievanceView.systemApprovalComments,
-                                false
-                              );
+                              this.commentsTrigger(this.props.grievanceView.systemApprovalComments, false);
                             }
                           }}
                         />
@@ -933,32 +734,17 @@ class grievanceView extends Component {
                         className="custom-form-control-for-textarea"
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={
-                          translate('core.lbl.comments') + ' *'
-                        }
+                        floatingLabelText={translate('core.lbl.comments') + ' *'}
                         fullWidth={true}
                         multiLine={true}
                         rows={2}
                         rowsMax={4}
-                        value={
-                          grievanceView.systemApprovalComments
-                            ? grievanceView.systemApprovalComments
-                            : ''
-                        }
+                        value={grievanceView.systemApprovalComments ? grievanceView.systemApprovalComments : ''}
                         maxLength="500"
                         onChange={(event, newValue) => {
-                          handleChange(
-                            newValue,
-                            'systemApprovalComments',
-                            this.state.commentsMandat,
-                            /^.[^]{0,500}$/
-                          );
+                          handleChange(newValue, 'systemApprovalComments', this.state.commentsMandat, /^.[^]{0,500}$/);
                         }}
-                        errorText={
-                          fieldErrors.systemApprovalComments
-                            ? fieldErrors.systemApprovalComments
-                            : ''
-                        }
+                        errorText={fieldErrors.systemApprovalComments ? fieldErrors.systemApprovalComments : ''}
                       />
                     </Col>
                   </Row>
@@ -974,20 +760,7 @@ class grievanceView extends Component {
                             className="form-control"
                             ref="file"
                             onChange={e =>
-                              handleUploadValidation(e, [
-                                'doc',
-                                'docx',
-                                'xls',
-                                'xlsx',
-                                'rtf',
-                                'pdf',
-                                'jpeg',
-                                'jpg',
-                                'png',
-                                'txt',
-                                'zip',
-                                'dxf',
-                              ])
+                              handleUploadValidation(e, ['doc', 'docx', 'xls', 'xlsx', 'rtf', 'pdf', 'jpeg', 'jpg', 'png', 'txt', 'zip', 'dxf'])
                             }
                           />
                           {files.length > 0 ? (
@@ -1011,13 +784,7 @@ class grievanceView extends Component {
                     ''
                   )}
                   <div style={{ textAlign: 'center' }}>
-                    <RaisedButton
-                      style={{ margin: '15px 5px' }}
-                      onTouchTap={e => search(e)}
-                      disabled={!isFormValid}
-                      label="Submit"
-                      primary={true}
-                    />
+                    <RaisedButton style={{ margin: '15px 5px' }} onTouchTap={e => search(e)} disabled={!isFormValid} label="Submit" primary={true} />
                   </div>
                 </CardText>
               </Card>
@@ -1026,12 +793,7 @@ class grievanceView extends Component {
             ''
           )}
         </form>
-        <Dialog
-          actions={actions}
-          modal={true}
-          open={this.state.open}
-          onRequestClose={this.handleClose}
-        >
+        <Dialog actions={actions} modal={true} open={this.state.open} onRequestClose={this.handleClose}>
           {translate('pgr.msg.success.grievanceupdated')}
         </Dialog>
       </div>

@@ -9,21 +9,11 @@ export default class PropertyTaxCertificate extends Component {
         <Card>
           <CardHeader title="Certificate" />
           <CardText>
-            <Table
-              responsive
-              style={{ fontSize: 'bold', marginBottom: '20px' }}
-              striped
-              bordered
-              condensed
-            >
+            <Table responsive style={{ fontSize: 'bold', marginBottom: '20px' }} striped bordered condensed>
               <tbody>
                 <tr>
                   <td style={{ textAlign: 'left' }}>
-                    <img
-                      src="./temp/images/headerLogo.png"
-                      height="30"
-                      width="30"
-                    />
+                    <img src="./temp/images/headerLogo.png" height="30" width="30" />
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <b>Roha Municipal Council</b>
@@ -79,13 +69,7 @@ export default class PropertyTaxCertificate extends Component {
                 </tr>
               </tbody>
             </Table>
-            <Table
-              responsive
-              style={{ fontSize: 'bold' }}
-              striped
-              bordered
-              condensed
-            >
+            <Table responsive style={{ fontSize: 'bold' }} striped bordered condensed>
               <tbody>
                 <tr>
                   <th>Unit No.</th>

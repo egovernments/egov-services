@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SimpleMap from '../../../../common/GoogleMaps.js';
 import Divider from 'material-ui/Divider';
-import {
-  Grid,
-  Row,
-  Col,
-  DropdownButton,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
@@ -79,13 +72,7 @@ class ViewCategoryType extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/pipesize/_search',
-        { id: this.props.match.params.id },
-        {},
-        false,
-        true
-      )
+      Api.commonApiPost('/wcms/masters/pipesize/_search', { id: this.props.match.params.id }, {}, false, true)
         .then(function(response) {
           console.log(response);
           current.setState({ data: response.pipeSize });
@@ -121,10 +108,7 @@ class ViewCategoryType extends Component {
     return (
       <div className="viewPipeSize">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={<div style={styles.headerStyle}>View Pipe Size</div>}
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>View Pipe Size</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <br />
@@ -147,9 +131,7 @@ class ViewCategoryType extends Component {
                           {translate('core.lbl.sizeInMilimeter')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewPipeSize.sizeInMilimeter
-                            ? viewPipeSize.sizeInMilimeter
-                            : ''}
+                          {viewPipeSize.sizeInMilimeter ? viewPipeSize.sizeInMilimeter : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>
@@ -159,9 +141,7 @@ class ViewCategoryType extends Component {
                           {translate('core.lbl.sizeInInch')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewPipeSize.sizeInInch
-                            ? viewPipeSize.sizeInInch
-                            : ''}
+                          {viewPipeSize.sizeInInch ? viewPipeSize.sizeInInch : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>
@@ -171,9 +151,7 @@ class ViewCategoryType extends Component {
                           {translate('core.lbl.description')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewPipeSize.description
-                            ? viewPipeSize.description
-                            : ''}
+                          {viewPipeSize.description ? viewPipeSize.description : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>

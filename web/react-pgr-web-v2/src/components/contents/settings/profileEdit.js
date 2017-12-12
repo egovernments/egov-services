@@ -70,11 +70,7 @@ class ProfileEdit extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/receivingcenter/_search',
-        { id: this.props.match.params.id },
-        body
-      )
+      Api.commonApiPost('/pgr-master/receivingcenter/_search', { id: this.props.match.params.id }, body)
         .then(function(response) {
           console.log(response);
           current.setState({ data: response.ReceivingCenterType });
@@ -102,25 +98,15 @@ class ProfileEdit extends Component {
         name: this.props.profileEdit.name,
         code: this.props.profileEdit.code,
         description: this.props.profileEdit.description,
-        active: !this.props.profileEdit.active
-          ? false
-          : this.props.profileEdit.active,
-        iscrnrequired: !this.props.profileEdit.iscrnrequired
-          ? false
-          : this.props.profileEdit.iscrnrequired,
+        active: !this.props.profileEdit.active ? false : this.props.profileEdit.active,
+        iscrnrequired: !this.props.profileEdit.iscrnrequired ? false : this.props.profileEdit.iscrnrequired,
         orderno: this.props.profileEdit.orderno,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/pgr-master/receivingcenter/' +
-          body.ReceivingCenterType.code +
-          '/_update',
-        {},
-        body
-      )
+      Api.commonApiPost('/pgr-master/receivingcenter/' + body.ReceivingCenterType.code + '/_update', {}, body)
         .then(function(response) {
           console.log(response);
         })
@@ -166,10 +152,7 @@ class ProfileEdit extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={<div style={styles.headerStyle}> Account Details </div>}
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> Account Details </div>} />
             <CardText style={{ padding: 0 }}>
               <Grid>
                 <Row>
@@ -199,9 +182,7 @@ class ProfileEdit extends Component {
                       hintText="Full Name"
                       floatingLabelText="Full Name"
                       value={profileEdit.fullName ? profileEdit.fullName : ''}
-                      errorText={
-                        fieldErrors.fullName ? fieldErrors.fullName : ''
-                      }
+                      errorText={fieldErrors.fullName ? fieldErrors.fullName : ''}
                       onChange={e => handleChange(e, 'fullName', true, '')}
                       id="fullName"
                     />
@@ -216,9 +197,7 @@ class ProfileEdit extends Component {
                   <Col xs={12} md={4} sm={6} mdPull={1}>
                     <RadioButtonGroup
                       name="ownerRadio"
-                      defaultSelected={
-                        profileEdit.gender ? profileEdit.gender : ''
-                      }
+                      defaultSelected={profileEdit.gender ? profileEdit.gender : ''}
                       onChange={(e, v) => {
                         var e = {
                           target: {
@@ -228,24 +207,9 @@ class ProfileEdit extends Component {
                         handleChange(e, 'gender', true, '');
                       }}
                     >
-                      <RadioButton
-                        value="Male"
-                        label="Male"
-                        style={styles.radioButton}
-                        className="col-md-6"
-                      />
-                      <RadioButton
-                        value="Female"
-                        label="Female"
-                        style={styles.radioButton}
-                        className="col-md-6"
-                      />
-                      <RadioButton
-                        value="Others"
-                        label="Others"
-                        style={styles.radioButton}
-                        className="col-md-6"
-                      />
+                      <RadioButton value="Male" label="Male" style={styles.radioButton} className="col-md-6" />
+                      <RadioButton value="Female" label="Female" style={styles.radioButton} className="col-md-6" />
+                      <RadioButton value="Others" label="Others" style={styles.radioButton} className="col-md-6" />
                     </RadioButtonGroup>
                   </Col>
                   <div className="clearfix" />
@@ -277,12 +241,8 @@ class ProfileEdit extends Component {
                       fullWidth={true}
                       floatingLabelText="Alternate Contact No."
                       hintText="8080808080"
-                      value={
-                        profileEdit.altContact ? profileEdit.altContact : ''
-                      }
-                      errorText={
-                        fieldErrors.altContact ? fieldErrors.altContact : ''
-                      }
+                      value={profileEdit.altContact ? profileEdit.altContact : ''}
+                      errorText={fieldErrors.altContact ? fieldErrors.altContact : ''}
                       onChange={e => handleChange(e, 'altContact', false, '')}
                       multiLine={true}
                       id="altContact"
@@ -294,17 +254,7 @@ class ProfileEdit extends Component {
                       floatingLabelText="DOB"
                       hintText="Full Name"
                       errorText={
-                        fieldErrors.dob ? (
-                          fieldErrors.dob ? (
-                            <span style={{ position: 'absolute', bottom: -13 }}>
-                              {fieldErrors.dob}
-                            </span>
-                          ) : (
-                            ''
-                          )
-                        ) : (
-                          ''
-                        )
+                        fieldErrors.dob ? fieldErrors.dob ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.dob}</span> : '' : ''
                       }
                       onChange={(event, date) => {
                         var e = {
@@ -323,12 +273,8 @@ class ProfileEdit extends Component {
                       fullWidth={true}
                       hintText="123456789012"
                       floatingLabelText="Aadhaar Number"
-                      value={
-                        profileEdit.adharNumber ? profileEdit.adharNumber : ''
-                      }
-                      errorText={
-                        fieldErrors.adharNumber ? fieldErrors.adharNumber : ''
-                      }
+                      value={profileEdit.adharNumber ? profileEdit.adharNumber : ''}
+                      errorText={fieldErrors.adharNumber ? fieldErrors.adharNumber : ''}
                       onChange={e => handleChange(e, 'adharNumber', true, '')}
                       id="adharNumber"
                       disabled={this.state.id ? true : false}
@@ -350,16 +296,8 @@ class ProfileEdit extends Component {
                   <Col xs={12} md={3} sm={3}>
                     <SelectField
                       fullWidth={true}
-                      errorText={
-                        fieldErrors.preferredLanguage
-                          ? fieldErrors.preferredLanguage
-                          : ''
-                      }
-                      value={
-                        profileEdit.preferredLanguage
-                          ? profileEdit.preferredLanguage
-                          : ''
-                      }
+                      errorText={fieldErrors.preferredLanguage ? fieldErrors.preferredLanguage : ''}
+                      value={profileEdit.preferredLanguage ? profileEdit.preferredLanguage : ''}
                       onChange={(event, index, value) => {
                         var e = {
                           target: {
@@ -379,13 +317,7 @@ class ProfileEdit extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              disabled={!isFormValid}
-              label={'Save Changes'}
-              labelColor={white}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" disabled={!isFormValid} label={'Save Changes'} labelColor={white} />
             <RaisedButton style={{ margin: '15px 5px' }} label="Close" />
           </div>
         </form>

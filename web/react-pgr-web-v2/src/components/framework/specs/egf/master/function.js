@@ -61,8 +61,7 @@ var dat = {
             label: 'Parent',
             pattern: '',
             type: 'singleValueListMultiple',
-            url:
-              '/egf-masters/functions/_search?sortBy=code|$..id|$..code,$..name,$..active',
+            url: '/egf-masters/functions/_search?sortBy=code|$..id|$..code,$..name,$..active',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -129,13 +128,7 @@ var dat = {
         { label: 'wc.create.description' },
         { label: 'wc.create.active' },
       ],
-      values: [
-        'code',
-        'sizeInInch',
-        'sizeInMilimeter',
-        'description',
-        'active',
-      ],
+      values: ['code', 'sizeInInch', 'sizeInMilimeter', 'description', 'active'],
       resultPath: 'functions',
       rowClickUrlUpdate: '/update/wc/function/{id}',
       rowClickUrlView: '/view/wc/function/{id}',
@@ -228,8 +221,7 @@ var dat = {
               {
                 jsonPath: 'function.sizeInInch',
                 type: 'textField',
-                pattern:
-                  "`${getVal('function.sizeInMilimeter')!=''?getVal('function.sizeInMilimeter'):0} * 0.039370`",
+                pattern: "`${getVal('function.sizeInMilimeter')!=''?getVal('function.sizeInMilimeter'):0} * 0.039370`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',

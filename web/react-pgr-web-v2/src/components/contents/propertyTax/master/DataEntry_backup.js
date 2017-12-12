@@ -180,13 +180,7 @@ class DataEntry extends Component {
 
     var currentThis = this;
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', {}, {}, false, true)
       .then(res => {
         currentThis.setState({ propertytypes: res.propertyTypes });
       })
@@ -196,10 +190,10 @@ class DataEntry extends Component {
         });
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'WARD', hierarchyTypeName: 'ADMINISTRATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'WARD',
+      hierarchyTypeName: 'ADMINISTRATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ election: res.Boundary });
@@ -208,10 +202,10 @@ class DataEntry extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'STREET', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'STREET',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ street: res.Boundary });
@@ -220,10 +214,10 @@ class DataEntry extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'BLOCK', hierarchyTypeName: 'REVENUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'BLOCK',
+      hierarchyTypeName: 'REVENUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ block: res.Boundary });
@@ -232,10 +226,10 @@ class DataEntry extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ locality: res.Boundary });
@@ -247,10 +241,10 @@ class DataEntry extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'ZONE', hierarchyTypeName: 'REVENUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'ZONE',
+      hierarchyTypeName: 'REVENUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ zone: res.Boundary });
@@ -296,11 +290,7 @@ class DataEntry extends Component {
 
     var numberOfFloors = '';
     var builtupArea = 0;
-    if (
-      dataEntry &&
-      dataEntry.hasOwnProperty('floorsArr') &&
-      dataEntry.hasOwnProperty('floors')
-    ) {
+    if (dataEntry && dataEntry.hasOwnProperty('floorsArr') && dataEntry.hasOwnProperty('floors')) {
       numberOfFloors = dataEntry.floorsArr.length;
       for (let i = 0; i < dataEntry.floors.length; i++) {
         builtupArea += dataEntry.floors[i].builtupArea;
@@ -330,24 +320,15 @@ class DataEntry extends Component {
           dataEntry.owners[i].issecondaryowner = true;
         }
 
-        if (
-          !dataEntry.owners[i].hasOwnProperty('ownershippercentage') ||
-          dataEntry.owners[i].ownershippercentage == ''
-        ) {
+        if (!dataEntry.owners[i].hasOwnProperty('ownershippercentage') || dataEntry.owners[i].ownershippercentage == '') {
           dataEntry.owners[i].ownershippercentage = null;
         }
 
-        if (
-          !dataEntry.owners[i].hasOwnProperty('ownerType') ||
-          dataEntry.owners[i].ownerType == ''
-        ) {
+        if (!dataEntry.owners[i].hasOwnProperty('ownerType') || dataEntry.owners[i].ownerType == '') {
           dataEntry.owners[i].ownerType = null;
         }
 
-        if (
-          !dataEntry.owners[i].hasOwnProperty('emailId') ||
-          dataEntry.owners[i].emailId == ''
-        ) {
+        if (!dataEntry.owners[i].hasOwnProperty('emailId') || dataEntry.owners[i].emailId == '') {
           dataEntry.owners[i].emailId = null;
         }
       }
@@ -433,22 +414,10 @@ class DataEntry extends Component {
             noOfFloors: numberOfFloors,
             isSuperStructure: null,
             landOwner: null,
-            floorType:
-              dataEntry.propertyType != 'VACANT_LAND'
-                ? dataEntry.floorType || null
-                : null,
-            woodType:
-              dataEntry.propertyType != 'VACANT_LAND'
-                ? dataEntry.woodType || null
-                : null,
-            roofType:
-              dataEntry.propertyType != 'VACANT_LAND'
-                ? dataEntry.roofType || null
-                : null,
-            wallType:
-              dataEntry.propertyType != 'VACANT_LAND'
-                ? dataEntry.wallType || null
-                : null,
+            floorType: dataEntry.propertyType != 'VACANT_LAND' ? dataEntry.floorType || null : null,
+            woodType: dataEntry.propertyType != 'VACANT_LAND' ? dataEntry.woodType || null : null,
+            roofType: dataEntry.propertyType != 'VACANT_LAND' ? dataEntry.roofType || null : null,
+            wallType: dataEntry.propertyType != 'VACANT_LAND' ? dataEntry.wallType || null : null,
             floors: dataEntry.floorsArr || null,
             documents: [],
             stateId: null,
@@ -473,23 +442,16 @@ class DataEntry extends Component {
           boundary: {
             revenueBoundary: {
               id: dataEntry.zoneNo || null,
-              name:
-                getNameByCode(currentThis.state.zone, dataEntry.zoneNo) || null,
+              name: getNameByCode(currentThis.state.zone, dataEntry.zoneNo) || null,
             },
             locationBoundary: {
               id: dataEntry.street || dataEntry.locality || null,
               name:
-                getNameByCode(currentThis.state.street, dataEntry.street) ||
-                getNameByCode(currentThis.state.locality, dataEntry.locality) ||
-                null,
+                getNameByCode(currentThis.state.street, dataEntry.street) || getNameByCode(currentThis.state.locality, dataEntry.locality) || null,
             },
             adminBoundary: {
               id: dataEntry.electionWard || null,
-              name:
-                getNameByCode(
-                  currentThis.state.election,
-                  dataEntry.electionWard
-                ) || null,
+              name: getNameByCode(currentThis.state.election, dataEntry.electionWard) || null,
             },
             northBoundedBy: dataEntry.north || null,
             eastBoundedBy: dataEntry.east || null,
@@ -519,10 +481,7 @@ class DataEntry extends Component {
       if (currentThis.props.files.length === 0) {
         console.log('No file uploads');
       } else {
-        console.log(
-          'still file upload pending',
-          currentThis.props.files.length
-        );
+        console.log('still file upload pending', currentThis.props.files.length);
 
         for (let i = 0; i < currentThis.props.files.length; i++) {
           console.log(currentThis.props.files);
@@ -555,21 +514,12 @@ class DataEntry extends Component {
               console.log(body);
               if (i === currentThis.props.files.length - 1) {
                 console.log('All files succesfully uploaded');
-                Api.commonApiPost(
-                  'pt-property/properties/_create',
-                  {},
-                  body,
-                  false,
-                  true
-                )
+                Api.commonApiPost('pt-property/properties/_create', {}, body, false, true)
                   .then(res => {
                     currentThis.setState({
                       ack: res.properties.applicationNo,
                     });
-                    localStorage.setItem(
-                      'ack',
-                      res.properties[0].propertyDetail.applicationNo
-                    );
+                    localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
                     this.props.history.push('acknowledgement');
                     setLoadingStatus('hide');
                   })
@@ -592,10 +542,7 @@ class DataEntry extends Component {
           currentThis.setState({
             ack: res.properties.applicationNo,
           });
-          localStorage.setItem(
-            'ack',
-            res.properties[0].propertyDetail.applicationNo
-          );
+          localStorage.setItem('ack', res.properties[0].propertyDetail.applicationNo);
           this.props.history.push('acknowledgement');
           setLoadingStatus('hide');
         })
@@ -614,16 +561,8 @@ class DataEntry extends Component {
 
     let notValidated = true;
 
-    if (
-      dataEntry.hasOwnProperty('propertyType') &&
-      dataEntry.propertyType == 'VACANT_LAND'
-    ) {
-      if (
-        isFormValid &&
-        (dataEntry.owners
-          ? dataEntry.owners.length == 0 ? false : true
-          : false)
-      ) {
+    if (dataEntry.hasOwnProperty('propertyType') && dataEntry.propertyType == 'VACANT_LAND') {
+      if (isFormValid && (dataEntry.owners ? (dataEntry.owners.length == 0 ? false : true) : false)) {
         notValidated = false;
       } else {
         notValidated = true;
@@ -631,12 +570,8 @@ class DataEntry extends Component {
     } else {
       if (
         isFormValid &&
-        (dataEntry.floors
-          ? dataEntry.floors.length == 0 ? false : true
-          : false) &&
-        (dataEntry.owners
-          ? dataEntry.owners.length == 0 ? false : true
-          : false)
+        (dataEntry.floors ? (dataEntry.floors.length == 0 ? false : true) : false) &&
+        (dataEntry.owners ? (dataEntry.owners.length == 0 ? false : true) : false)
       ) {
         notValidated = false;
       } else {
@@ -676,9 +611,7 @@ class DataEntry extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -695,8 +628,7 @@ class DataEntry extends Component {
           <PropertyAddress />
           <AssessmentDetails />
 
-          {getNameByCode(this.state.propertytypes, dataEntry.propertyType) ==
-          'Vacant Land' ? (
+          {getNameByCode(this.state.propertytypes, dataEntry.propertyType) == 'Vacant Land' ? (
             <VacantLand />
           ) : (
             <div>
@@ -766,14 +698,7 @@ const mapDispatchToProps = dispatch => ({
       validatePropertyOwner: {
         required: {
           current: [],
-          required: [
-            'aadhaarNumber',
-            'mobileNumber',
-            'name',
-            'gaurdianRelation',
-            'gaurdian',
-            'gender',
-          ],
+          required: ['aadhaarNumber', 'mobileNumber', 'name', 'gaurdianRelation', 'gaurdian', 'gender'],
         },
         pattern: {
           current: [],

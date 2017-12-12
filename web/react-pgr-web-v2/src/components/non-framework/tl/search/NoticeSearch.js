@@ -40,17 +40,11 @@ class NoticeSearch extends Component {
     this.props.initForm();
     setLoadingStatus('loading');
     Promise.all([
-      Api.commonApiPost(
-        'tl-masters/status/v1/_search',
-        { moduleType: 'NEW LICENSE' },
-        {},
-        false,
-        true
-      ),
-      Api.commonApiPost(
-        '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-        { boundaryTypeName: 'Ward', hierarchyTypeName: 'ADMINISTRATION' }
-      ),
+      Api.commonApiPost('tl-masters/status/v1/_search', { moduleType: 'NEW LICENSE' }, {}, false, true),
+      Api.commonApiPost('/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+        boundaryTypeName: 'Ward',
+        hierarchyTypeName: 'ADMINISTRATION',
+      }),
       Api.commonApiPost('/tl-services/license/v1/_search', {}, {}, false, true),
     ]).then(data => {
       //AutoComplete for Application Number, Trade License number
@@ -74,9 +68,7 @@ class NoticeSearch extends Component {
     });
   }
   shouldComponentUpdate(nextProps, nextState) {
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
   search = () => {
     let { NoticeSearch } = this.props;
@@ -84,12 +76,8 @@ class NoticeSearch extends Component {
     for (var k in finalObj) {
       if (!finalObj[k]) delete finalObj[k];
     }
-    finalObj['dateFrom']
-      ? (finalObj['dateFrom'] = dateToEpoch(finalObj['dateFrom']))
-      : '';
-    finalObj['dateTo']
-      ? (finalObj['dateTo'] = dateToEpoch(finalObj['dateTo']))
-      : '';
+    finalObj['dateFrom'] ? (finalObj['dateFrom'] = dateToEpoch(finalObj['dateFrom'])) : '';
+    finalObj['dateTo'] ? (finalObj['dateTo'] = dateToEpoch(finalObj['dateTo'])) : '';
     this.setState({
       searchParams: finalObj,
       showTable: true,
@@ -104,25 +92,12 @@ class NoticeSearch extends Component {
     toggleDailogAndSetText(true, msg);
   };
   render() {
-    let {
-      handleChange,
-      setLoadingStatus,
-      NoticeSearch,
-      fieldErrors,
-    } = this.props;
+    let { handleChange, setLoadingStatus, NoticeSearch, fieldErrors } = this.props;
     let { handleError } = this;
     return (
       <div>
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={styles.headerStyle}>
-                {' '}
-                {translate('Search Notice')}
-              </div>
-            }
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('Search Notice')}</div>} />
           <CardText style={{ paddingTop: 0 }}>
             <Grid>
               <Row>
@@ -131,20 +106,10 @@ class NoticeSearch extends Component {
                     ref="applicationNumber"
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.search.result.groups.applicationNumber'
-                    )}
-                    errorText={
-                      fieldErrors.applicationNumber
-                        ? fieldErrors.applicationNumber
-                        : ''
-                    }
+                    floatingLabelText={translate('tl.search.result.groups.applicationNumber')}
+                    errorText={fieldErrors.applicationNumber ? fieldErrors.applicationNumber : ''}
                     filter={AutoComplete.caseInsensitiveFilter}
-                    dataSource={
-                      this.state.applicationNumberSource
-                        ? this.state.applicationNumberSource
-                        : []
-                    }
+                    dataSource={this.state.applicationNumberSource ? this.state.applicationNumberSource : []}
                     dataSourceConfig={this.state.appNumberConfig}
                     menuStyle={{ overflow: 'auto', maxHeight: '200px' }}
                     listStyle={{ overflow: 'auto' }}
@@ -156,13 +121,7 @@ class NoticeSearch extends Component {
                         });
                         handleChange('', 'applicationNumber', false, '', '');
                       } else {
-                        handleChange(
-                          chosenRequest.applicationNumber,
-                          'applicationNumber',
-                          false,
-                          '',
-                          'Select application number the list'
-                        );
+                        handleChange(chosenRequest.applicationNumber, 'applicationNumber', false, '', 'Select application number the list');
                       }
                     }}
                     onUpdateInput={(searchText, dataSource, params) => {
@@ -174,21 +133,11 @@ class NoticeSearch extends Component {
                   <TextField
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.search.groups.tradeOwnerName'
-                    )}
+                    floatingLabelText={translate('tl.search.groups.tradeOwnerName')}
                     value={NoticeSearch.ownerName ? NoticeSearch.ownerName : ''}
-                    errorText={
-                      fieldErrors.ownerName ? fieldErrors.ownerName : ''
-                    }
+                    errorText={fieldErrors.ownerName ? fieldErrors.ownerName : ''}
                     onChange={(e, newValue) => {
-                      handleChange(
-                        newValue,
-                        'ownerName',
-                        false,
-                        patterns.ownerName,
-                        'Enter Valid Trade Owner Name(Min:3, Max:100)'
-                      );
+                      handleChange(newValue, 'ownerName', false, patterns.ownerName, 'Enter Valid Trade Owner Name(Min:3, Max:100)');
                     }}
                   />
                 </Col>
@@ -196,24 +145,12 @@ class NoticeSearch extends Component {
                   <TextField
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.search.groups.mobileNumber'
-                    )}
-                    value={
-                      NoticeSearch.mobileNumber ? NoticeSearch.mobileNumber : ''
-                    }
-                    errorText={
-                      fieldErrors.mobileNumber ? fieldErrors.mobileNumber : ''
-                    }
+                    floatingLabelText={translate('tl.search.groups.mobileNumber')}
+                    value={NoticeSearch.mobileNumber ? NoticeSearch.mobileNumber : ''}
+                    errorText={fieldErrors.mobileNumber ? fieldErrors.mobileNumber : ''}
                     maxLength="10"
                     onChange={(e, newValue) => {
-                      handleChange(
-                        newValue,
-                        'mobileNumber',
-                        false,
-                        patterns.mobileNumber,
-                        translate('core.lbl.enter.mobilenumber')
-                      );
+                      handleChange(newValue, 'mobileNumber', false, patterns.mobileNumber, translate('core.lbl.enter.mobilenumber'));
                     }}
                   />
                 </Col>
@@ -222,20 +159,10 @@ class NoticeSearch extends Component {
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
                     floatingLabelText={translate('tl.search.groups.tradeTitle')}
-                    value={
-                      NoticeSearch.tradeTitle ? NoticeSearch.tradeTitle : ''
-                    }
-                    errorText={
-                      fieldErrors.tradeTitle ? fieldErrors.tradeTitle : ''
-                    }
+                    value={NoticeSearch.tradeTitle ? NoticeSearch.tradeTitle : ''}
+                    errorText={fieldErrors.tradeTitle ? fieldErrors.tradeTitle : ''}
                     onChange={(e, newValue) => {
-                      handleChange(
-                        newValue,
-                        'tradeTitle',
-                        false,
-                        patterns.tradeTitle,
-                        'Enter Valid Trade Title (Max: 250)'
-                      );
+                      handleChange(newValue, 'tradeTitle', false, patterns.tradeTitle, 'Enter Valid Trade Title (Max: 250)');
                     }}
                   />
                 </Col>
@@ -244,28 +171,14 @@ class NoticeSearch extends Component {
                     ref="tradeLicenseNumber"
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.search.groups.licenseNumber'
-                    )}
-                    errorText={
-                      fieldErrors.tradeLicenseNumber
-                        ? fieldErrors.tradeLicenseNumber
-                        : ''
-                    }
+                    floatingLabelText={translate('tl.search.groups.licenseNumber')}
+                    errorText={fieldErrors.tradeLicenseNumber ? fieldErrors.tradeLicenseNumber : ''}
                     filter={AutoComplete.caseInsensitiveFilter}
-                    dataSource={
-                      this.state.licenseNumberSource
-                        ? this.state.licenseNumberSource
-                        : []
-                    }
+                    dataSource={this.state.licenseNumberSource ? this.state.licenseNumberSource : []}
                     dataSourceConfig={this.state.licenseNumberConfig}
                     menuStyle={{ overflow: 'auto', maxHeight: '200px' }}
                     listStyle={{ overflow: 'auto' }}
-                    value={
-                      NoticeSearch.tradeLicenseNumber
-                        ? NoticeSearch.tradeLicenseNumber
-                        : ''
-                    }
+                    value={NoticeSearch.tradeLicenseNumber ? NoticeSearch.tradeLicenseNumber : ''}
                     onNewRequest={(chosenRequest, index) => {
                       if (index === -1) {
                         this.refs['tradeLicenseNumber'].setState({
@@ -273,13 +186,7 @@ class NoticeSearch extends Component {
                         });
                         handleChange('', 'tradeLicenseNumber', false, '', '');
                       } else {
-                        handleChange(
-                          chosenRequest.licenseNumber,
-                          'tradeLicenseNumber',
-                          false,
-                          '',
-                          ''
-                        );
+                        handleChange(chosenRequest.licenseNumber, 'tradeLicenseNumber', false, '', '');
                       }
                     }}
                     onUpdateInput={(searchText, dataSource, params) => {
@@ -292,19 +199,9 @@ class NoticeSearch extends Component {
                     maxHeight={200}
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.search.groups.applicationStatus'
-                    )}
-                    value={
-                      NoticeSearch.applicationStatus
-                        ? NoticeSearch.applicationStatus
-                        : ''
-                    }
-                    errorText={
-                      fieldErrors.applicationStatus
-                        ? fieldErrors.applicationStatus
-                        : ''
-                    }
+                    floatingLabelText={translate('tl.search.groups.applicationStatus')}
+                    value={NoticeSearch.applicationStatus ? NoticeSearch.applicationStatus : ''}
+                    errorText={fieldErrors.applicationStatus ? fieldErrors.applicationStatus : ''}
                     onChange={(event, key, payload) => {
                       handleChange(payload, 'applicationStatus', false, '', '');
                     }}
@@ -312,16 +209,7 @@ class NoticeSearch extends Component {
                     <MenuItem value="" primaryText="Select" />
                     {this.state.applicationStatus
                       ? this.state.applicationStatus.map(
-                          (status, index) =>
-                            status.active ? (
-                              <MenuItem
-                                key={index}
-                                value={status.code}
-                                primaryText={status.name}
-                              />
-                            ) : (
-                              ''
-                            )
+                          (status, index) => (status.active ? <MenuItem key={index} value={status.code} primaryText={status.name} /> : '')
                         )
                       : ''}
                   </SelectField>
@@ -331,19 +219,9 @@ class NoticeSearch extends Component {
                     maxHeight={200}
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.create.groups.licensedocumenttype.licenseapptype'
-                    )}
-                    value={
-                      NoticeSearch.applicationType
-                        ? NoticeSearch.applicationType
-                        : ''
-                    }
-                    errorText={
-                      fieldErrors.applicationType
-                        ? fieldErrors.applicationType
-                        : ''
-                    }
+                    floatingLabelText={translate('tl.create.groups.licensedocumenttype.licenseapptype')}
+                    value={NoticeSearch.applicationType ? NoticeSearch.applicationType : ''}
+                    errorText={fieldErrors.applicationType ? fieldErrors.applicationType : ''}
                     onChange={(event, key, payload) => {
                       handleChange(payload, 'applicationType', false, '', '');
                     }}
@@ -351,15 +229,9 @@ class NoticeSearch extends Component {
                     <MenuItem value="" primaryText="Select" />
                     <MenuItem value="NEW" primaryText="New" />
                     <MenuItem value="RENEW" primaryText="Renew" />
-                    <MenuItem
-                      value="TITLE_TRANSFER"
-                      primaryText="Title Transfer"
-                    />
+                    <MenuItem value="TITLE_TRANSFER" primaryText="Title Transfer" />
                     <MenuItem value="CANCELLATION" primaryText="Cancellation" />
-                    <MenuItem
-                      value="BUSINESS_NAME_CHANGE"
-                      primaryText="Business Name Change"
-                    />
+                    <MenuItem value="BUSINESS_NAME_CHANGE" primaryText="Business Name Change" />
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
@@ -367,9 +239,7 @@ class NoticeSearch extends Component {
                     maxHeight={200}
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'tl.create.licenses.groups.TradeLocationDetails.Ward'
-                    )}
+                    floatingLabelText={translate('tl.create.licenses.groups.TradeLocationDetails.Ward')}
                     value={NoticeSearch.ward ? NoticeSearch.ward : ''}
                     errorText={fieldErrors.ward ? fieldErrors.ward : ''}
                     onChange={(event, key, payload) => {
@@ -377,15 +247,7 @@ class NoticeSearch extends Component {
                     }}
                   >
                     <MenuItem value="" primaryText="Select" />
-                    {this.state.ward
-                      ? this.state.ward.map((ward, index) => (
-                          <MenuItem
-                            key={index}
-                            value={ward.code}
-                            primaryText={ward.name}
-                          />
-                        ))
-                      : ''}
+                    {this.state.ward ? this.state.ward.map((ward, index) => <MenuItem key={index} value={ward.code} primaryText={ward.name} />) : ''}
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
@@ -394,29 +256,16 @@ class NoticeSearch extends Component {
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
                     floatingLabelText={translate('tl.search.documenttype')}
-                    value={
-                      NoticeSearch.documentType ? NoticeSearch.documentType : ''
-                    }
-                    errorText={
-                      fieldErrors.documentType ? fieldErrors.documentType : ''
-                    }
+                    value={NoticeSearch.documentType ? NoticeSearch.documentType : ''}
+                    errorText={fieldErrors.documentType ? fieldErrors.documentType : ''}
                     onChange={(event, key, payload) => {
                       handleChange(payload, 'documentType', false, '', '');
                     }}
                   >
                     <MenuItem value="" primaryText="Select" />
-                    <MenuItem
-                      value="ACKNOWLEDGEMENT"
-                      primaryText="Acknowledgement"
-                    />
-                    <MenuItem
-                      value="LICENSE_CERTIFICATE"
-                      primaryText="License Certificate"
-                    />
-                    <MenuItem
-                      value="REJECTION_LETTER"
-                      primaryText="Rejection Letter"
-                    />
+                    <MenuItem value="ACKNOWLEDGEMENT" primaryText="Acknowledgement" />
+                    <MenuItem value="LICENSE_CERTIFICATE" primaryText="License Certificate" />
+                    <MenuItem value="REJECTION_LETTER" primaryText="Rejection Letter" />
                   </SelectField>
                 </Col>
                 <Col xs={12} sm={4} md={3} lg={3}>
@@ -428,8 +277,7 @@ class NoticeSearch extends Component {
                     errorText={fieldErrors.dateFrom ? fieldErrors.dateFrom : ''}
                     onChange={(e, newValue) => {
                       handleChange(
-                        (newValue.length === 2 || newValue.length === 5) &&
-                        newValue.length > NoticeSearch.dateFrom.length
+                        (newValue.length === 2 || newValue.length === 5) && newValue.length > NoticeSearch.dateFrom.length
                           ? newValue + '/'
                           : newValue,
                         'dateFrom',
@@ -449,10 +297,7 @@ class NoticeSearch extends Component {
                     errorText={fieldErrors.dateTo ? fieldErrors.dateTo : ''}
                     onChange={(e, newValue) => {
                       handleChange(
-                        (newValue.length === 2 || newValue.length === 5) &&
-                        newValue.length > NoticeSearch.dateTo.length
-                          ? newValue + '/'
-                          : newValue,
+                        (newValue.length === 2 || newValue.length === 5) && newValue.length > NoticeSearch.dateTo.length ? newValue + '/' : newValue,
                         'dateTo',
                         false,
                         patterns.date,
@@ -468,11 +313,7 @@ class NoticeSearch extends Component {
         <div className="text-center">
           <RaisedButton
             disabled={
-              Object.values(fieldErrors).filter(String).length === 0
-                ? Object.values(NoticeSearch).filter(String).length >= 1
-                  ? false
-                  : true
-                : true
+              Object.values(fieldErrors).filter(String).length === 0 ? (Object.values(NoticeSearch).filter(String).length >= 1 ? false : true) : true
             }
             style={{ margin: '15px 5px' }}
             label={translate('core.lbl.search')}

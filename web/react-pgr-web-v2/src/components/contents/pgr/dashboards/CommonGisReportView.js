@@ -7,9 +7,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 
 export default class CommonGisReportView extends Component {
   shouldComponentUpdate(nextProps, nextState) {
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
   componentWillReceiveProps(nextProps) {
@@ -31,16 +29,8 @@ export default class CommonGisReportView extends Component {
     if (!this.state.kml && !this.props.kml) {
       requestes = [
         ...requestes,
-        Api.commonApiGet(
-          'egov-location/boundarys/getshapefile',
-          { tenantId: getTenantId() },
-          {}
-        ),
-        Api.commonApiPost(
-          'tenant/v1/tenant/_search',
-          { code: getTenantId() },
-          { tenantId: getTenantId() }
-        ),
+        Api.commonApiGet('egov-location/boundarys/getshapefile', { tenantId: getTenantId() }, {}),
+        Api.commonApiPost('tenant/v1/tenant/_search', { code: getTenantId() }, { tenantId: getTenantId() }),
       ];
     }
 
@@ -65,13 +55,7 @@ export default class CommonGisReportView extends Component {
           } else {
             let city = responses[2].tenant[0].city;
             let cityLatLng = { lat: city.latitude, lng: city.longitude };
-            stateData = extractManipulateCityAndWardsPath(
-              responses[0],
-              responses[1],
-              cityLatLng,
-              color,
-              totalComplaints
-            );
+            stateData = extractManipulateCityAndWardsPath(responses[0], responses[1], cityLatLng, color, totalComplaints);
           }
           this.setState({ isFetchingData: false, ...stateData });
         } catch (e) {

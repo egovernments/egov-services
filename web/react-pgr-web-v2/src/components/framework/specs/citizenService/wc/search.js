@@ -25,18 +25,8 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'Service Request Number' },
-        { label: 'Service Name' },
-        { label: 'Status' },
-        { label: 'Applied On' },
-      ],
-      values: [
-        'serviceRequestId',
-        'serviceCode',
-        'status',
-        'auditDetails.createdDate',
-      ],
+      header: [{ label: 'Service Request Number' }, { label: 'Service Name' }, { label: 'Status' }, { label: 'Applied On' }],
+      values: ['serviceRequestId', 'serviceCode', 'status', 'auditDetails.createdDate'],
       resultPath: 'serviceReq',
     },
   },

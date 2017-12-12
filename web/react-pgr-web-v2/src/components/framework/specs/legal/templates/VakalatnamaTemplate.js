@@ -2,15 +2,8 @@ import React, { Component } from 'react';
 import pdfMake from 'pdfmake/build/pdfmake';
 import styles from '../../../../../styles/material-ui';
 import Api from '../../../../../api/api';
-import {
-  translate,
-  dataURItoBlob,
-  epochToDate,
-} from '../../../../common/common';
-import {
-  fonts,
-  getBase64FromImageUrl,
-} from '../../../../common/pdf-generation/PdfConfig';
+import { translate, dataURItoBlob, epochToDate } from '../../../../common/common';
+import { fonts, getBase64FromImageUrl } from '../../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../../common/pdf-generation/PdfViewer';
 import RaisedButton from 'material-ui/RaisedButton';
 
@@ -69,34 +62,15 @@ export default class VakalatnamaTemplate extends Component {
     //assigning fonts
     pdfMake.fonts = fonts;
 
-    var addres = data.summon.courtName.address.addressLine1
-      ? data.summon.courtName.address.addressLine1 + ', '
-      : '';
-    addres += data.summon.courtName.address.city
-      ? data.summon.courtName.address.city + ', '
-      : '';
-    addres += data.summon.courtName.address.addressLine2
-      ? data.summon.courtName.address.addressLine2
-      : '';
+    var addres = data.summon.courtName.address.addressLine1 ? data.summon.courtName.address.addressLine1 + ', ' : '';
+    addres += data.summon.courtName.address.city ? data.summon.courtName.address.city + ', ' : '';
+    addres += data.summon.courtName.address.addressLine2 ? data.summon.courtName.address.addressLine2 : '';
 
     // console.log(data.witness);
     //console.log(data);
 
     var d = new Date(data.vakalatnamaGenerationDate);
-    var monthNames = [
-      'January',
-      'February',
-      'March',
-      'April',
-      'May',
-      'June',
-      'July',
-      'August',
-      'September',
-      'October',
-      'November',
-      'December',
-    ];
+    var monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
     var dayNames = [
       'First',
       'Second',
@@ -204,9 +178,7 @@ export default class VakalatnamaTemplate extends Component {
                 text: [
                   { text: 'IN THE COURT OF ' },
                   {
-                    text: data.summon.courtName.name
-                      ? data.summon.courtName.name
-                      : '           .',
+                    text: data.summon.courtName.name ? data.summon.courtName.name : '           .',
                     alignment: 'left',
                     decoration: 'underline',
                   },
@@ -223,18 +195,14 @@ export default class VakalatnamaTemplate extends Component {
                 margin: [20, 0, 0, 5],
               },
               {
-                text: data.summon.plantiffName
-                  ? data.summon.plantiffName
-                  : '           .',
+                text: data.summon.plantiffName ? data.summon.plantiffName : '           .',
                 alignment: 'left',
                 decoration: 'underline',
                 margin: [20, 0, 0, 0],
               },
               { text: ' Versus ', margin: [20, 10, 10, 10] },
               {
-                text: data.summon.defendant
-                  ? data.summon.defendant
-                  : '           .',
+                text: data.summon.defendant ? data.summon.defendant : '           .',
                 decoration: 'underline',
                 margin: [20, 0, 0, 0],
               },
@@ -248,9 +216,7 @@ export default class VakalatnamaTemplate extends Component {
                   },
                   { text: ' the ', alignment: 'left' },
                   {
-                    text: data.summon.courtName.name
-                      ? data.summon.courtName.name
-                      : '           .',
+                    text: data.summon.courtName.name ? data.summon.courtName.name : '           .',
                     alignment: 'left',
                     decoration: 'underline',
                   },
@@ -264,10 +230,7 @@ export default class VakalatnamaTemplate extends Component {
               {
                 text: [
                   {
-                    text:
-                      data.advocateDetails && data.advocateDetails.length
-                        ? `${getAdvocateNames(data.advocateDetails)}`
-                        : '           .',
+                    text: data.advocateDetails && data.advocateDetails.length ? `${getAdvocateNames(data.advocateDetails)}` : '           .',
                     alignment: 'left',
                     decoration: 'underline',
                   },
@@ -282,8 +245,7 @@ export default class VakalatnamaTemplate extends Component {
                 margin: [20, 5, 0, 0],
               },
               {
-                text:
-                  ' to appear and plead for me /us as my/ our Advocate/s in the matter.',
+                text: ' to appear and plead for me /us as my/ our Advocate/s in the matter.',
                 alignment: 'left',
                 margin: [20, 5, 0, 0],
               },
@@ -318,9 +280,7 @@ export default class VakalatnamaTemplate extends Component {
                 margin: [20, 5, 5, 25],
               },
               {
-                text: [
-                  { text: 'Signature of Advocate/s  ', alignment: 'left' },
-                ],
+                text: [{ text: 'Signature of Advocate/s  ', alignment: 'left' }],
                 margin: [20, 5, 5, 5],
               },
             ],
@@ -351,9 +311,7 @@ export default class VakalatnamaTemplate extends Component {
       formData.append('tenantId', localStorage.getItem('tenantId'));
       formData.append('module', 'LEGAL');
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         var noticeObj = {};
         noticeObj['caseNo'] = data.summon.caseNo;
         noticeObj['caseCode'] = data.code;
@@ -369,13 +327,7 @@ export default class VakalatnamaTemplate extends Component {
         noticeObj['tenantId'] = localStorage.getItem('tenantId');
         noticeObj['noticeType'] = 'CREATE_VAKALATNAMA';
         noticeObj['fileStoreId'] = response.files[0].fileStoreId;
-        Api.commonApiPost(
-          'lcms-services/legalcase/notice/_create',
-          {},
-          { notice: noticeObj },
-          false,
-          true
-        ).then(function(response) {});
+        Api.commonApiPost('lcms-services/legalcase/notice/_create', {}, { notice: noticeObj }, false, true).then(function(response) {});
       });
     });
   };
@@ -384,14 +336,7 @@ export default class VakalatnamaTemplate extends Component {
     return (
       <PdfViewer pdfData={this.state.pdfData}>
         <div className="text-center">
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );

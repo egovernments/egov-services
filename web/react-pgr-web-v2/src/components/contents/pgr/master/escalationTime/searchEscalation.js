@@ -204,13 +204,7 @@ class SearchEscalation extends Component {
   render() {
     var current = this;
 
-    let {
-      isFormValid,
-      searchEscalation,
-      fieldErrors,
-      handleChange,
-      handleAutoCompleteKeyUp,
-    } = this.props;
+    let { isFormValid, searchEscalation, fieldErrors, handleChange, handleAutoCompleteKeyUp } = this.props;
 
     let { submitForm } = this;
 
@@ -221,15 +215,8 @@ class SearchEscalation extends Component {
         return resultList.map(function(val, i) {
           return (
             <tr key={i}>
-              <td>
-                {getNameByServiceCode(
-                  current.state.grievanceTypeSource,
-                  val.grievanceType.id
-                )}
-              </td>
-              <td>
-                {getNameById(current.state.designationSource, val.designation)}
-              </td>
+              <td>{getNameByServiceCode(current.state.grievanceTypeSource, val.grievanceType.id)}</td>
+              <td>{getNameById(current.state.designationSource, val.designation)}</td>
               <td>{val.noOfHours}</td>
             </tr>
           );
@@ -240,19 +227,9 @@ class SearchEscalation extends Component {
       if (isSearchClicked)
         return (
           <Card style={styles.marginStyle}>
-            <CardHeader
-              title={
-                <strong style={{ color: '#5a3e1b' }}> Search Result </strong>
-              }
-            />
+            <CardHeader title={<strong style={{ color: '#5a3e1b' }}> Search Result </strong>} />
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead>
                   <tr>
                     <th>{translate('pgr.lbl.grievance.type')}</th>
@@ -276,14 +253,7 @@ class SearchEscalation extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {translate('pgr.lbl.escalationtime')}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>{translate('pgr.lbl.escalationtime')}</div>} />
             <CardText>
               <Grid>
                 <Row>
@@ -296,20 +266,14 @@ class SearchEscalation extends Component {
                       floatingLabelText={translate('pgr.lbl.grievance.type')}
                       fullWidth={true}
                       filter={function filter(searchText, key) {
-                        return key
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase());
+                        return key.toLowerCase().includes(searchText.toLowerCase());
                       }}
                       dataSource={this.state.grievanceTypeSource}
                       dataSourceConfig={this.state.serviceDataSourceConfig}
                       onKeyUp={e => {
                         handleAutoCompleteKeyUp(e, 'grievanceType');
                       }}
-                      value={
-                        searchEscalation.serviceType
-                          ? searchEscalation.serviceType
-                          : ''
-                      }
+                      value={searchEscalation.serviceType ? searchEscalation.serviceType : ''}
                       ref="serviceType"
                       onNewRequest={(chosenRequest, index) => {
                         if (index === -1) {
@@ -334,20 +298,14 @@ class SearchEscalation extends Component {
                       floatingLabelText={translate('pgr.lbl.designation')}
                       fullWidth={true}
                       filter={function filter(searchText, key) {
-                        return key
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase());
+                        return key.toLowerCase().includes(searchText.toLowerCase());
                       }}
                       dataSource={this.state.designationSource}
                       dataSourceConfig={this.state.designationDataSourceConfig}
                       onKeyUp={e => {
                         handleAutoCompleteKeyUp(e, 'designation');
                       }}
-                      value={
-                        searchEscalation.designation
-                          ? searchEscalation.designation
-                          : ''
-                      }
+                      value={searchEscalation.designation ? searchEscalation.designation : ''}
                       ref="designation"
                       onNewRequest={(chosenRequest, index) => {
                         if (index === -1) {
@@ -368,12 +326,7 @@ class SearchEscalation extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              label={translate('core.lbl.search')}
-              primary={true}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" label={translate('core.lbl.search')} primary={true} />
           </div>
           {viewTable()}
         </form>

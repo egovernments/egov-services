@@ -44,11 +44,7 @@ class receivingModeCreate extends Component {
       let _this = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/receivingmode/v1/_search',
-        { id: this.props.match.params.id },
-        body
-      )
+      Api.commonApiPost('/pgr-master/receivingmode/v1/_search', { id: this.props.match.params.id }, body)
         .then(function(response) {
           _this.setState({ data: response.ReceivingModeType[0] });
           setForm(response.ReceivingModeType[0]);
@@ -84,10 +80,7 @@ class receivingModeCreate extends Component {
         name: receivingmodeSet.name,
         code: receivingmodeSet.code,
         description: receivingmodeSet.description,
-        active:
-          receivingmodeSet.active !== undefined
-            ? receivingmodeSet.active
-            : true,
+        active: receivingmodeSet.active !== undefined ? receivingmodeSet.active : true,
         tenantId: localStorage.getItem('tenantId'),
         channels: receivingmodeSet.channels,
       },
@@ -156,10 +149,7 @@ class receivingModeCreate extends Component {
               title={
                 <div style={styles.headerStyle}>
                   {' '}
-                  {this.props.match.params.id
-                    ? translate('pgr.lbl.update')
-                    : translate('pgr.lbl.create')}{' '}
-                  {translate('pgr.lbl.receivingmode')}
+                  {this.props.match.params.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.receivingmode')}
                 </div>
               }
             />
@@ -178,13 +168,7 @@ class receivingModeCreate extends Component {
                       value={receivingmodeSet.name ? receivingmodeSet.name : ''}
                       maxLength="100"
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'name',
-                          true,
-                          /^[a-zA-Z\s'_.]{0,100}$/,
-                          'Please use only alphabets, space and special characters'
-                        );
+                        handleChange(e, 'name', true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters');
                       }}
                     />
                   </Col>
@@ -200,13 +184,7 @@ class receivingModeCreate extends Component {
                       value={receivingmodeSet.code ? receivingmodeSet.code : ''}
                       maxLength="20"
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'code',
-                          true,
-                          /^[A-Z0-9]{0,20}$/,
-                          'Please use only upper case alphabets and numbers'
-                        );
+                        handleChange(e, 'code', true, /^[A-Z0-9]{0,20}$/, 'Please use only upper case alphabets and numbers');
                       }}
                       disabled={this.state.id ? true : false}
                     />
@@ -220,25 +198,11 @@ class receivingModeCreate extends Component {
                       floatingLabelText={translate('core.lbl.description')}
                       id="description"
                       multiLine={true}
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
-                      value={
-                        receivingmodeSet.description
-                          ? receivingmodeSet.description
-                          : ''
-                      }
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
+                      value={receivingmodeSet.description ? receivingmodeSet.description : ''}
                       maxLength="250"
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^.[^]{0,250}$/,
-                          translate('pgr.lbl.max') +
-                            ' 250 ' +
-                            translate('pgr.lbl.characters')
-                        );
+                        handleChange(e, 'description', false, /^.[^]{0,250}$/, translate('pgr.lbl.max') + ' 250 ' + translate('pgr.lbl.characters'));
                       }}
                     />
                   </Col>
@@ -247,14 +211,8 @@ class receivingModeCreate extends Component {
                       className="custom-form-control-for-select"
                       hintText="Select"
                       multiple="true"
-                      errorText={
-                        fieldErrors.channels ? fieldErrors.channels : ''
-                      }
-                      value={
-                        receivingmodeSet.channels
-                          ? receivingmodeSet.channels
-                          : ''
-                      }
+                      errorText={fieldErrors.channels ? fieldErrors.channels : ''}
+                      value={receivingmodeSet.channels ? receivingmodeSet.channels : ''}
                       onChange={(e, index, value) => {
                         var e = {
                           target: {
@@ -272,19 +230,13 @@ class receivingModeCreate extends Component {
                         value={'WEB'}
                         primaryText="WEB"
                         insetChildren={true}
-                        checked={
-                          receivingmodeSet.channels &&
-                          receivingmodeSet.channels.indexOf('WEB') > -1
-                        }
+                        checked={receivingmodeSet.channels && receivingmodeSet.channels.indexOf('WEB') > -1}
                       />
                       <MenuItem
                         value={'MOBILE'}
                         primaryText="MOBILE"
                         insetChildren={true}
-                        checked={
-                          receivingmodeSet.channels &&
-                          receivingmodeSet.channels.indexOf('MOBILE') > -1
-                        }
+                        checked={receivingmodeSet.channels && receivingmodeSet.channels.indexOf('MOBILE') > -1}
                       />
                     </SelectField>
                   </Col>
@@ -293,11 +245,7 @@ class receivingModeCreate extends Component {
                       label={translate('pgr.lbl.active')}
                       id="active"
                       style={styles.setTopMargin}
-                      checked={
-                        receivingmodeSet.active !== undefined
-                          ? receivingmodeSet.active
-                          : true
-                      }
+                      checked={receivingmodeSet.active !== undefined ? receivingmodeSet.active : true}
                       onCheck={(e, isInputChecked) => {
                         var e = {
                           target: {
@@ -317,32 +265,20 @@ class receivingModeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                !_this.state.id
-                  ? translate('pgr.lbl.create')
-                  : translate('pgr.lbl.update')
-              }
+              label={!_this.state.id ? translate('pgr.lbl.create') : translate('pgr.lbl.update')}
               primary={true}
             />
           </div>
         </form>
         <Dialog
           title={translate('pgr.lbl.success')}
-          actions={[
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={handleOpenNClose}
-            />,
-          ]}
+          actions={[<FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={handleOpenNClose} />]}
           modal={false}
           open={open}
           onRequestClose={handleOpenNClose}
         >
           {translate('pgr.lbl.receivingmode')}{' '}
-          {this.props.match.params.id
-            ? translate('core.lbl.updatedsuccessful')
-            : translate('core.lbl.createdsuccessful')}
+          {this.props.match.params.id ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
         </Dialog>
       </div>
     );
@@ -426,6 +362,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  receivingModeCreate
-);
+export default connect(mapStateToProps, mapDispatchToProps)(receivingModeCreate);

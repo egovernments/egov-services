@@ -29,8 +29,7 @@ var dat = {
             label: 'works.create.groups.fields.department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -42,8 +41,7 @@ var dat = {
             label: 'works.create.groups.fields.referenceType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ReferenceType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ReferenceType|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -95,8 +93,7 @@ var dat = {
             label: 'works.create.groups.fields.natureOfWork',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=NatureOfWork|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=NatureOfWork|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -127,8 +124,7 @@ var dat = {
             label: 'works.create.groups.fields.modeOfAllotment',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ModeOfAllotment|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ModeOfAllotment|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -140,8 +136,7 @@ var dat = {
             label: 'works.create.groups.fields.typeOfWork',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -349,8 +344,7 @@ var dat = {
             label: 'works.create.groups.fields.pmcType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -377,8 +371,7 @@ var dat = {
             label: 'works.create.groups.fields.pmcName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name',
+            url: '/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -404,13 +397,11 @@ var dat = {
           },
           {
             name: 'assetCondition',
-            jsonPath:
-              'abstractEstimates[0].assetDetails[0].assetCondition.name',
+            jsonPath: 'abstractEstimates[0].assetDetails[0].assetCondition.name',
             label: 'works.create.groups.fields.assetCondition',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -527,8 +518,7 @@ var dat = {
                   name: 'natureofownership',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].natureofownership',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].natureofownership',
                   isDisabled: true,
                 },
                 {
@@ -556,10 +546,8 @@ var dat = {
                   name: 'landAssetCondition',
                   pattern: '',
                   type: 'singleValueList',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].landAssetCondition.name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].landAssetCondition.name',
                   isRequired: false,
                   isDisabled: false,
                   maxLength: 1024,
@@ -568,8 +556,7 @@ var dat = {
                   name: 'constructionArea',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].constructionArea',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].constructionArea',
                   isRequired: false,
                   isDisabled: false,
                 },
@@ -610,8 +597,7 @@ var dat = {
                   name: 'nameOfWork',
                   pattern: '',
                   type: 'textarea',
-                  jsonPath:
-                    'abstractEstimates[0].abstractEstimateDetails[0].nameOfWork',
+                  jsonPath: 'abstractEstimates[0].abstractEstimateDetails[0].nameOfWork',
                   isRequired: true,
                   isDisabled: false,
                   maxLength: 1024,
@@ -619,11 +605,9 @@ var dat = {
                 {
                   name: 'estimateAmount',
                   pattern: '^\\d{0,6}(\\.\\d{0,2})?$',
-                  patternErrMsg:
-                    'works.create.pattern.fields.label.estimateAmount',
+                  patternErrMsg: 'works.create.pattern.fields.label.estimateAmount',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].abstractEstimateDetails[0].estimateAmount',
+                  jsonPath: 'abstractEstimates[0].abstractEstimateDetails[0].estimateAmount',
                   isRequired: true,
                   textAlign: 'right',
                   isDisabled: false,
@@ -660,8 +644,7 @@ var dat = {
                   name: 'sanctionType',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'abstractEstimates[0].sanctionDetails[0].sanctionType',
+                  jsonPath: 'abstractEstimates[0].sanctionDetails[0].sanctionType',
                   isRequired: false,
                   isDisabled: true,
                   defaultValue: [
@@ -678,12 +661,10 @@ var dat = {
                   name: 'sanctionAuthority',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name',
+                  jsonPath: 'abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name',
                   isRequired: false,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name',
                 },
               ],
               actionsNotRequired: true,
@@ -711,8 +692,7 @@ var dat = {
     numCols: 4,
     useTimestamp: true,
     objectName: 'abstractEstimates',
-    searchUrl:
-      'works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers={id}',
+    searchUrl: 'works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers={id}',
     url: 'works-estimate/v1/abstractestimates/_update',
     tenantIdRequired: true,
     groups: [
@@ -738,8 +718,7 @@ var dat = {
             label: 'works.create.groups.fields.department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             convertToString: true,
@@ -752,8 +731,7 @@ var dat = {
             label: 'works.create.groups.fields.referenceType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ReferenceType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ReferenceType|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -799,8 +777,7 @@ var dat = {
             label: 'works.create.groups.fields.natureOfWork',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=NatureOfWork|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=NatureOfWork|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -831,8 +808,7 @@ var dat = {
             label: 'works.create.groups.fields.modeOfAllotment',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ModeOfAllotment|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ModeOfAllotment|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -844,8 +820,7 @@ var dat = {
             label: 'works.create.groups.fields.typeOfWork',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -1042,8 +1017,7 @@ var dat = {
             label: 'works.create.groups.fields.pmcType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -1070,8 +1044,7 @@ var dat = {
             label: 'works.create.groups.fields.pmcName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name',
+            url: '/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1108,13 +1081,11 @@ var dat = {
           },
           {
             name: 'assetCondition',
-            jsonPath:
-              'abstractEstimates[0].assetDetails[0].assetCondition.name',
+            jsonPath: 'abstractEstimates[0].assetDetails[0].assetCondition.name',
             label: 'works.create.groups.fields.assetCondition',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -1231,8 +1202,7 @@ var dat = {
                   name: 'natureofownership',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].natureofownership',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].natureofownership',
                   isRequired: false,
                   isDisabled: true,
                 },
@@ -1264,10 +1234,8 @@ var dat = {
                   name: 'landAssetCondition',
                   pattern: '',
                   type: 'singleValueList',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].landAssetCondition.name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].landAssetCondition.name',
                   isRequired: false,
                   isDisabled: true,
                   maxLength: 1024,
@@ -1276,8 +1244,7 @@ var dat = {
                   name: 'constructionArea',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].constructionArea',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].constructionArea',
                   isRequired: false,
                   isDisabled: true,
                 },
@@ -1318,8 +1285,7 @@ var dat = {
                   name: 'nameofthework',
                   pattern: '',
                   type: 'textarea',
-                  jsonPath:
-                    'abstractEstimates[0].abstractEstimateDetails[0].nameOfWork',
+                  jsonPath: 'abstractEstimates[0].abstractEstimateDetails[0].nameOfWork',
                   isRequired: false,
                   isDisabled: true,
                 },
@@ -1327,8 +1293,7 @@ var dat = {
                   name: 'estimateAmount',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].abstractEstimateDetails[0].estimateAmount',
+                  jsonPath: 'abstractEstimates[0].abstractEstimateDetails[0].estimateAmount',
                   isRequired: false,
                   textAlign: 'right',
                   isDisabled: true,
@@ -1366,8 +1331,7 @@ var dat = {
                   name: 'sanctionType',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'abstractEstimates[0].sanctionDetails[0].sanctionType',
+                  jsonPath: 'abstractEstimates[0].sanctionDetails[0].sanctionType',
                   isRequired: false,
                   isDisabled: true,
                   defaultValue: [
@@ -1384,12 +1348,10 @@ var dat = {
                   name: 'sanctionAuthority',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name',
+                  jsonPath: 'abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name',
                 },
               ],
               actionsNotRequired: true,
@@ -1407,8 +1369,7 @@ var dat = {
             label: 'works.create.groups.fields.fundCodes',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1420,8 +1381,7 @@ var dat = {
             label: 'works.create.groups.fields.functionCodes',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=Function|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=Function|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1433,8 +1393,7 @@ var dat = {
             label: 'works.create.groups.fields.objectCode',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1446,8 +1405,7 @@ var dat = {
             label: 'works.create.groups.fields.accountCode',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -1459,8 +1417,7 @@ var dat = {
             label: 'works.create.groups.fields.scheme',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=Scheme|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=Scheme|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1539,8 +1496,7 @@ var dat = {
             jsonPath: 'adminSanctionNumbers',
             label: 'works.create.groups.fields.administrativesanction',
             type: 'autoCompelete',
-            url:
-              'works-estimate/v1/abstractestimates/_search?&|$..adminSanctionNumber|$..adminSanctionNumber',
+            url: 'works-estimate/v1/abstractestimates/_search?&|$..adminSanctionNumber|$..adminSanctionNumber',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
@@ -1551,8 +1507,7 @@ var dat = {
             label: 'works.create.groups.fields.department',
             pattern: '',
             type: 'multiValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1588,8 +1543,7 @@ var dat = {
             label: 'works.create.groups.fields.fundCodes',
             pattern: '',
             type: 'multiValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1601,8 +1555,7 @@ var dat = {
             label: 'works.create.groups.fields.functionCodes',
             pattern: '',
             type: 'multiValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=Function|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=Function|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1614,8 +1567,7 @@ var dat = {
             label: 'works.create.groups.fields.budgetHeadCodes',
             pattern: '',
             type: 'multiValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=BudgetGroup|$..id|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1650,8 +1602,7 @@ var dat = {
             jsonPath: 'abstractEstimateNumbers',
             label: 'works.create.groups.fields.abstractEstimateNumbers',
             type: 'autoCompelete',
-            url:
-              'works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers=&|$..abstractEstimateNumber|$..abstractEstimateNumber',
+            url: 'works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers=&|$..abstractEstimateNumber|$..abstractEstimateNumber',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
@@ -1661,8 +1612,7 @@ var dat = {
             jsonPath: 'workIdentificationNumbers',
             label: 'works.create.groups.fields.workIdentificationNumbers',
             type: 'autoCompelete',
-            url:
-              'works-estimate/v1/abstractestimates/_search?&|$..projectCode.code|$..projectCode.code',
+            url: 'works-estimate/v1/abstractestimates/_search?&|$..projectCode.code|$..projectCode.code',
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
@@ -1727,16 +1677,14 @@ var dat = {
       ],
       resultPath: 'abstractEstimates',
       resultIdKey: 'abstractEstimateNumber',
-      rowClickUrlView:
-        '/non-framework/works/transaction/viewAbstractEstimate/{abstractEstimateNumber}',
+      rowClickUrlView: '/non-framework/works/transaction/viewAbstractEstimate/{abstractEstimateNumber}',
     },
   },
   'works.view': {
     numCols: 4,
     useTimestamp: true,
     objectName: 'abstractEstimates',
-    url:
-      'works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers={id}',
+    url: 'works-estimate/v1/abstractestimates/_search?abstractEstimateNumbers={id}',
     tenantIdRequired: true,
     groups: [
       {
@@ -1773,8 +1721,7 @@ var dat = {
             label: 'works.create.groups.fields.department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1786,8 +1733,7 @@ var dat = {
             label: 'works.create.groups.fields.referenceType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ReferenceType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ReferenceType|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1833,8 +1779,7 @@ var dat = {
             label: 'works.create.groups.fields.natureOfWork',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=NatureOfWork|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=NatureOfWork|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1899,8 +1844,7 @@ var dat = {
             label: 'works.create.groups.fields.modeOfAllotment',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ModeOfAllotment|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ModeOfAllotment|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1912,8 +1856,7 @@ var dat = {
             label: 'works.create.groups.fields.typeOfWork',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=TypeOfWork|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -2107,8 +2050,7 @@ var dat = {
             pattern: '',
             hide: true,
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=PMCType|$..id|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -2134,8 +2076,7 @@ var dat = {
             label: 'works.create.groups.fields.pmcName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name',
+            url: '/works-masters/v1/contractors/_search?&pmc=true|$.contractors[*].code|$.contractors[*].name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -2172,13 +2113,11 @@ var dat = {
           },
           {
             name: 'assetCondition',
-            jsonPath:
-              'abstractEstimates[0].assetDetails[0].assetCondition.name',
+            jsonPath: 'abstractEstimates[0].assetDetails[0].assetCondition.name',
             label: 'works.create.groups.fields.assetCondition',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=AssetPresentCondition|$..id|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -2276,8 +2215,7 @@ var dat = {
                   name: 'natureofownership',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].natureofownership',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].natureofownership',
                   isDisabled: true,
                 },
                 {
@@ -2305,10 +2243,8 @@ var dat = {
                   name: 'landAssetCondition',
                   pattern: '',
                   type: 'singleValueList',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].landAssetCondition.name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=LandAssetPresentCondition|$..id|$..name',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].landAssetCondition.name',
                   isRequired: false,
                   isDisabled: true,
                   maxLength: 1024,
@@ -2317,8 +2253,7 @@ var dat = {
                   name: 'constructionArea',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].assetDetails[0].constructionArea',
+                  jsonPath: 'abstractEstimates[0].assetDetails[0].constructionArea',
                   isRequired: false,
                   isDisabled: true,
                 },
@@ -2359,8 +2294,7 @@ var dat = {
                   name: 'nameofthework',
                   pattern: '',
                   type: 'textarea',
-                  jsonPath:
-                    'abstractEstimates[0].abstractEstimateDetails[0].nameOfWork',
+                  jsonPath: 'abstractEstimates[0].abstractEstimateDetails[0].nameOfWork',
                   isRequired: true,
                   isDisabled: true,
                 },
@@ -2368,8 +2302,7 @@ var dat = {
                   name: 'estimateAmount',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'abstractEstimates[0].abstractEstimateDetails[0].estimateAmount',
+                  jsonPath: 'abstractEstimates[0].abstractEstimateDetails[0].estimateAmount',
                   isRequired: true,
                   textAlign: 'right',
                   isDisabled: true,
@@ -2407,8 +2340,7 @@ var dat = {
                   name: 'sanctionType',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'abstractEstimates[0].sanctionDetails[0].sanctionType',
+                  jsonPath: 'abstractEstimates[0].sanctionDetails[0].sanctionType',
                   isRequired: true,
                   isDisabled: true,
                   defaultValue: [
@@ -2425,12 +2357,10 @@ var dat = {
                   name: 'sanctionAuthority',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name',
+                  jsonPath: 'abstractEstimates[0].sanctionDetails[0].sanctionAuthority.name',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=EstimateSanctionAuthority|$..id|$..name',
                 },
               ],
               actionsNotRequired: true,
@@ -2445,8 +2375,7 @@ var dat = {
           {
             name: 'File',
             type: 'viewDocuments',
-            url:
-              '/works-services/v1/documentdetails/_search?&objectIds={abstractEstimates[0].abstractEstimateNumber}',
+            url: '/works-services/v1/documentdetails/_search?&objectIds={abstractEstimates[0].abstractEstimateNumber}',
             jsonPath: 'abstractEstimates[0].documents',
             maxFile: 5,
             addRequired: false,

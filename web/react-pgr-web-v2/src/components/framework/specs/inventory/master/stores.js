@@ -15,8 +15,7 @@ var dat = {
             jsonPath: 'codes',
             label: 'inventory.store.name',
             type: 'autoCompelete',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
             isDisabled: false,
             isKeyValuePair: true,
             patternErrorMsg: 'inventory.create.field.message.name',
@@ -26,8 +25,7 @@ var dat = {
             jsonPath: 'department',
             label: 'inventory.department.name',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isDisabled: false,
             patternErrorMsg: 'inventory.create.field.message.department',
           },
@@ -122,8 +120,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
           {
             name: 'description',
@@ -145,8 +142,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name',
             defaultValue: '',
             patternErrorMsg: '',
           },
@@ -225,8 +221,7 @@ var dat = {
             name: 'email',
             jsonPath: 'stores[0].email',
             label: 'inventory.store.email',
-            pattern:
-              '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
+            pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -295,8 +290,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
           {
             name: 'description',
@@ -329,8 +323,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name',
             defaultValue: '',
             patternErrorMsg: '',
           },
@@ -398,8 +391,7 @@ var dat = {
             name: 'email',
             jsonPath: 'stores[0].email',
             label: 'inventory.store.email',
-            pattern:
-              '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
+            pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -468,8 +460,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
           {
             name: 'description',
@@ -492,8 +483,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Location|$..code|$..name',
             defaultValue: '',
             patternErrorMsg: '',
           },
@@ -573,8 +563,7 @@ var dat = {
             name: 'email',
             jsonPath: 'stores[0].email',
             label: 'inventory.store.email',
-            pattern:
-              '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
+            pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
             isRequired: false,
             isDisabled: false,

@@ -46,10 +46,7 @@ export default class UiSingleFileUpload extends Component {
               }}
             >
               <label>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </label>
               <br />
               <input

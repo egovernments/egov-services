@@ -125,9 +125,7 @@ class MdmsComponent extends Component {
     };
 
     if (this.masterMapping[this.masterAllLowerCase] !== undefined) {
-      formData.MasterMetaData.masterName = this.masterMapping[
-        this.masterAllLowerCase
-      ].addupdate;
+      formData.MasterMetaData.masterName = this.masterMapping[this.masterAllLowerCase].addupdate;
     }
     props.setLoadingStatus('loading');
 
@@ -145,9 +143,7 @@ class MdmsComponent extends Component {
     };
     Api.commonApiPost('/spec-directory/' + module + '/' + master, {})
       .then(function(res) {
-        master =
-          lcms[res.header[0].label.split('.')[3]] ||
-          res.header[0].label.split('.')[3];
+        master = lcms[res.header[0].label.split('.')[3]] || res.header[0].label.split('.')[3];
 
         data.MdmsCriteria.moduleDetails[0].masterDetails[0].name = master;
         let headers = [];
@@ -155,13 +151,7 @@ class MdmsComponent extends Component {
           headers.push(res.header[i].label.split('.')[4]);
         }
         // headers.push("modify");
-        Api.commonApiPost(
-          '/egov-mdms-service/v1/_search',
-          {},
-          data,
-          false,
-          true
-        )
+        Api.commonApiPost('/egov-mdms-service/v1/_search', {}, data, false, true)
           .then(function(res2) {
             let arr = _.get(res2, 'MdmsRes.' + module + '.' + master) || [];
             let temp = [];
@@ -206,10 +196,7 @@ class MdmsComponent extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    if (
-      this.state.pathname &&
-      this.state.pathname != nextProps.history.location.pathname
-    ) {
+    if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
       this.initData(nextProps);
     }
   }
@@ -230,17 +217,9 @@ class MdmsComponent extends Component {
     let { formData } = this.props;
     let self = this;
     // console.log({...formData.MasterMetaData,formData.MdmsMetadata});
-    formData.MasterMetaData.masterData = formData.hasOwnProperty('MdmsMetadata')
-      ? formData.MdmsMetadata.masterData
-      : [];
+    formData.MasterMetaData.masterData = formData.hasOwnProperty('MdmsMetadata') ? formData.MdmsMetadata.masterData : [];
     self.props.setLoadingStatus('loading');
-    Api.commonApiPost(
-      '/egov-mdms-create/v1/_create',
-      {},
-      { MasterMetaData: formData.MasterMetaData },
-      false,
-      true
-    )
+    Api.commonApiPost('/egov-mdms-create/v1/_create', {}, { MasterMetaData: formData.MasterMetaData }, false, true)
       .then(function(res) {
         console.log(res);
         self.props.setLoadingStatus('hide');
@@ -258,8 +237,7 @@ class MdmsComponent extends Component {
     // console.log(valueList);
     return (
       <div style={{ margin: '20px' }}>
-        {item &&
-        (Object.keys(item).length && item.values && item.values.length) ? (
+        {item && (Object.keys(item).length && item.values && item.values.length) ? (
           <UiMultiFieldAddToTableForMDMS
             ui="google"
             useTimestamp={true}
@@ -302,14 +280,7 @@ const mapDispatchToProps = dispatch => ({
   setLoadingStatus: loadingStatus => {
     dispatch({ type: 'SET_LOADING_STATUS', loadingStatus });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

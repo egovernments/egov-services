@@ -41,9 +41,7 @@ class Footer extends Component {
               <Row>
                 <Col xs={12} sm={5}>
                   <span>
-                    Copyright &#169; 2017 eGovernments Foundation.<sup>
-                      &#174;
-                    </sup>
+                    Copyright &#169; 2017 eGovernments Foundation.<sup>&#174;</sup>
                   </span>{' '}
                 </Col>
                 <Col xs={12} sm={7}>

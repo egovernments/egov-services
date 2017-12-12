@@ -81,13 +81,7 @@ class SupplyTypeCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/supplytype/_search',
-        { id: this.props.match.params.id },
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/supplytype/_search', { id: this.props.match.params.id }, body, false, true).then(
         function(response) {
           console.log('response', response);
           console.log('response object', response.supplytypes[0]);
@@ -125,22 +119,14 @@ class SupplyTypeCreate extends Component {
         id: this.props.createSupplyType.id,
         name: this.props.createSupplyType.name,
         code: this.props.createSupplyType.code,
-        active: !this.props.createSupplyType.active
-          ? false
-          : this.props.createSupplyType.active,
+        active: !this.props.createSupplyType.active ? false : this.props.createSupplyType.active,
         description: this.props.createSupplyType.description,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/wcms/masters/supplytype/' + body.SupplyType.code + '/_update',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/supplytype/' + body.SupplyType.code + '/_update', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -153,13 +139,7 @@ class SupplyTypeCreate extends Component {
         }
       );
     } else {
-      Api.commonApiPost(
-        '/wcms/masters/supplytype/_create',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/supplytype/_create', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -207,14 +187,7 @@ class SupplyTypeCreate extends Component {
           <Card style={styles.marginStyle}>
             <CardHeader
               style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {this.state.id != ''
-                    ? 'Update Supply Type'
-                    : 'Create Supply Type'}{' '}
-                </div>
-              }
+              title={<div style={styles.headerStyle}> {this.state.id != '' ? 'Update Supply Type' : 'Create Supply Type'} </div>}
             />
             <CardText style={{ padding: 0 }}>
               <Grid>
@@ -238,21 +211,10 @@ class SupplyTypeCreate extends Component {
                       fullWidth={true}
                       maxLength={250}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createSupplyType.description
-                          ? createSupplyType.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createSupplyType.description ? createSupplyType.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^[a-zA-Z0-9 ]*$/g
-                        );
+                        handleChange(e, 'description', false, /^[a-zA-Z0-9 ]*$/g);
                       }}
                       multiLine={true}
                       id="description"
@@ -264,11 +226,7 @@ class SupplyTypeCreate extends Component {
                     <Checkbox
                       label={translate('pgr.lbl.active')}
                       style={styles.checkbox}
-                      defaultChecked={
-                        this.state.id != ''
-                          ? createSupplyType.active || false
-                          : createSupplyType.active || true
-                      }
+                      defaultChecked={this.state.id != '' ? createSupplyType.active || false : createSupplyType.active || true}
                       onCheck={(e, i, v) => {
                         console.log(createSupplyType.active, i);
 
@@ -292,11 +250,7 @@ class SupplyTypeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id != ''
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
@@ -308,19 +262,11 @@ class SupplyTypeCreate extends Component {
               : 'Supply Type ' + createSupplyType.name + ' Created Successfully'
           }
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         />
       </div>
     );

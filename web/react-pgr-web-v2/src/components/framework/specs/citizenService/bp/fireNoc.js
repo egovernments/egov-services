@@ -146,10 +146,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'Residential', value: 'Residential' },
-              { key: 'Commercial', value: 'Commercial' },
-            ],
+            defaultValue: [{ key: 'Residential', value: 'Residential' }, { key: 'Commercial', value: 'Commercial' }],
           },
           {
             name: 'Vikas Prastav Number',
@@ -444,10 +441,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'Residential', value: 'Residential' },
-              { key: 'Commercial', value: 'Commercial' },
-            ],
+            defaultValue: [{ key: 'Residential', value: 'Residential' }, { key: 'Commercial', value: 'Commercial' }],
           },
           {
             name: 'Vikas Prastav Number',

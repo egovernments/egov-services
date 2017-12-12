@@ -94,8 +94,7 @@ var dat = {
             label: 'ac.create.Department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -289,8 +288,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '', //Remove required messages
-            patternErrMsg:
-              'Please enter positive number (Decimal upto 2 digits)',
+            patternErrMsg: 'Please enter positive number (Decimal upto 2 digits)',
           },
           {
             name: 'Addition/deductedAmount',

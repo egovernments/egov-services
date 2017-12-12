@@ -10,21 +10,11 @@ export default class WaterCertificate extends Component {
         <Card>
           <CardHeader title="Certificate" />
           <CardText>
-            <Table
-              responsive
-              style={{ fontSize: 'bold' }}
-              striped
-              bordered
-              condensed
-            >
+            <Table responsive style={{ fontSize: 'bold' }} striped bordered condensed>
               <tbody>
                 <tr>
                   <td style={{ textAlign: 'left' }}>
-                    <img
-                      src="./temp/images/headerLogo.png"
-                      height="30"
-                      width="30"
-                    />
+                    <img src="./temp/images/headerLogo.png" height="30" width="30" />
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <b>Roha Municipal Council</b>
@@ -39,8 +29,7 @@ export default class WaterCertificate extends Component {
                   <td colSpan={3}>
                     <div style={{ textAlign: 'center' }}>
                       <b>No Due Certificate</b> / थकबाकी नसल्याचे प्रमाणपत्र<br />
-                      (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील
-                      प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
+                      (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
                     </div>
                     <br />
                     <div style={{ textAlign: 'right' }}>
@@ -56,19 +45,15 @@ export default class WaterCertificate extends Component {
                     </div>
                     <br />
                     <div style={{ textAlign: 'center' }}>
-                      <b>Subject</b> /विषय : सन 2018 थकबाकी नसल्याचे प्रमाणपत्र
-                      मिळणेबाबत.<br />
-                      <b>Reference</b> / संदर्भ : आपला अर्ज क्रमांक
-                      APPLICATION_NO दिनांक DATE
+                      <b>Subject</b> /विषय : सन 2018 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br />
+                      <b>Reference</b> / संदर्भ : आपला अर्ज क्रमांक APPLICATION_NO दिनांक DATE
                     </div>
                     <br />
                     <div style={{ textAlign: 'left' }}>महोद्य / महोद्या ,</div>
                     <br />
                     <div style={{ textAlign: 'left' }}>
-                      संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, मालमत्ता
-                      क्रमांक PROPERTYNO, OWNER यांच्या नावे नोंद असून, सन
-                      FINANCIAL_YEAR पर्यंतचा संपुर्ण मालमत्ता कराची रक्कम
-                      भरलेली असून, कोणतीही थकबाकी येणे नाही.
+                      संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, मालमत्ता क्रमांक PROPERTYNO, OWNER यांच्या नावे नोंद असून, सन FINANCIAL_YEAR
+                      पर्यंतचा संपुर्ण मालमत्ता कराची रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.
                     </div>
                     <br />
                     <div style={{ textAlign: 'right' }}>

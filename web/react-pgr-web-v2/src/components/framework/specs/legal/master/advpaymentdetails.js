@@ -18,15 +18,13 @@ var dat = {
             isKeyOtherPair: 'agencyName',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name',
+            url: '/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name',
             patternErrorMsg: '',
             depedants: [
               {
                 jsonPath: 'advocatePayments[0].advocate.pan',
                 type: 'autoFill',
-                pattern:
-                  '/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan',
+                pattern: '/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..pan|$..pan',
                 autoFillFields: {
                   'advocatePayments[0].advocate.pan': 'advocates[0].pan',
                 },
@@ -37,8 +35,7 @@ var dat = {
                 pattern:
                   '/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankName|$..bankName',
                 autoFillFields: {
-                  'advocatePayments[0].advocate.bankName':
-                    'advocates[0].bankName',
+                  'advocatePayments[0].advocate.bankName': 'advocates[0].bankName',
                 },
               },
               {
@@ -47,8 +44,7 @@ var dat = {
                 pattern:
                   '/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankBranch|$..bankBranch',
                 autoFillFields: {
-                  'advocatePayments[0].advocate.bankBranch':
-                    'advocates[0].bankBranch',
+                  'advocatePayments[0].advocate.bankBranch': 'advocates[0].bankBranch',
                 },
               },
               {
@@ -57,8 +53,7 @@ var dat = {
                 pattern:
                   '/lcms-services/legalcase/advocate/_search?tenantId=default&code={advocatePayments[0].advocate.code}|$..bankAccountNo|$..bankAccountNo',
                 autoFillFields: {
-                  'advocatePayments[0].advocate.bankAccountNo':
-                    'advocates[0].bankAccountNo',
+                  'advocatePayments[0].advocate.bankAccountNo': 'advocates[0].bankAccountNo',
                 },
               },
             ],
@@ -180,12 +175,10 @@ var dat = {
                   name: 'case',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo',
+                  jsonPath: 'advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo',
                   isRequired: false,
                   isDisabled: false,
-                  url:
-                    '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
+                  url: '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
                   // "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                 },
                 {
@@ -334,8 +327,7 @@ var dat = {
             type: 'text',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name',
+            url: '/lcms-services/legalcase/advocate/_search?tenantId=default|$..code|$..name',
             patternErrorMsg: '',
           },
           {
@@ -455,12 +447,10 @@ var dat = {
                   name: 'case',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo',
+                  jsonPath: 'advocatePayments[0].advocateCharges[0].caseDetails.summonReferenceNo',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
+                  url: '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
                   // "/lcms-services/legalcase/case/_search?|$..summon.summonReferenceNo|$..summon.caseNo"
                 },
                 {

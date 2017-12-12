@@ -81,8 +81,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             patternErrorMsg: 'inventory.create.field.message.issueStore',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
         ],
       },
@@ -106,13 +105,7 @@ var dat = {
           label: 'inventory.indent.status',
         },
       ],
-      values: [
-        'indentNumber',
-        'indentDate',
-        'issueStore.name',
-        'indentPurpose',
-        'indentStatus',
-      ],
+      values: ['indentNumber', 'indentDate', 'issueStore.name', 'indentPurpose', 'indentStatus'],
 
       resultIdKey: 'indentNumber',
       resultPath: 'indents',
@@ -139,8 +132,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: 'inventory.create.field.message.store.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'indentDate',
@@ -273,8 +265,7 @@ var dat = {
             isHidden: true,
             defaultValue: '',
             patternErrorMsg: 'inventory.create.field.message.store.name',
-            url:
-              '/hr-masters/designations/_search?&|$.Designation[*].code|$.Designation[*].name',
+            url: '/hr-masters/designations/_search?&|$.Designation[*].code|$.Designation[*].name',
           },
 
           {
@@ -331,16 +322,14 @@ var dat = {
                     '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory',
                   depedants: [
                     {
-                      jsonPath:
-                        'indents[0].indentDetails[0].material.description',
+                      jsonPath: 'indents[0].indentDetails[0].material.description',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[0]')",
                     },
 
                     {
-                      jsonPath:
-                        'indents[0].indentDetails[0].material.baseUom.uomCategory',
+                      jsonPath: 'indents[0].indentDetails[0].material.baseUom.uomCategory',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')",
@@ -371,8 +360,7 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
 
                 {
@@ -384,8 +372,7 @@ var dat = {
                   isDisabled: false,
                   defaultValue: '',
                   patternErrorMsg: '',
-                  url:
-                    '/asset-services-maha/assets/_search?&|$.Assets.*.code|$.Assets.*.name',
+                  url: '/asset-services-maha/assets/_search?&|$.Assets.*.code|$.Assets.*.name',
                 },
                 {
                   name: 'projectcode',
@@ -397,8 +384,7 @@ var dat = {
                   defaultValue: '',
                   maxLength: 100,
                   patternErrorMsg: 'inventory.create.field.message.code',
-                  url:
-                    '/works-estimate/v1/projectcodes/_search?&|$..code|$..name',
+                  url: '/works-estimate/v1/projectcodes/_search?&|$..code|$..name',
                 },
                 {
                   name: 'indentQuantity',
@@ -437,8 +423,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: 'inventory.create.field.message.store.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'indentDate',
@@ -602,16 +587,14 @@ var dat = {
                     '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory',
                   depedants: [
                     {
-                      jsonPath:
-                        'indents[0].indentDetails[0].material.description',
+                      jsonPath: 'indents[0].indentDetails[0].material.description',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[0]')",
                     },
 
                     {
-                      jsonPath:
-                        'indents[0].indentDetails[0].material.baseUom.uomCategory',
+                      jsonPath: 'indents[0].indentDetails[0].material.baseUom.uomCategory',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')",
@@ -642,8 +625,7 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
 
                 {
@@ -704,8 +686,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: 'inventory.create.field.message.store.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'indentDate',
@@ -878,16 +859,14 @@ var dat = {
                     '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description|$.MdmsRes.inventory.Material[*].baseUom.uomCategory',
                   depedants: [
                     {
-                      jsonPath:
-                        'indents[0].indentDetails[0].material.description',
+                      jsonPath: 'indents[0].indentDetails[0].material.description',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[0]')",
                     },
 
                     {
-                      jsonPath:
-                        'indents[0].indentDetails[0].material.baseUom.uomCategory',
+                      jsonPath: 'indents[0].indentDetails[0].material.baseUom.uomCategory',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('indents[0].indentDetails[*].material.code', getVal('indents[0].indentDetails[*].material.code'), 'others[1]')",
@@ -929,8 +908,7 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
 
                 {
@@ -972,8 +950,7 @@ var dat = {
     ],
     url: '/inventory-services/indents/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/indents/_search?indentNumber={indentNumber}',
+    searchUrl: '/inventory-services/indents/_search?indentNumber={indentNumber}',
   },
 };
 export default dat;

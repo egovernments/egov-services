@@ -56,7 +56,7 @@
   },
   "scripts": {
     "fullClean": "npm cache clean --force && rm -rf node_modules && rm package-lock.json && npm install",
-    "prettier": "prettier --single-quote --trailing-comma es5 --write \"src/**/*.js\"",
+    "prettier": "prettier --write \"src/**/*.js\"",
     "postinstall": "cd node_modules/pdfmake && mkdir -p examples/fonts && cp -r ../../src/fonts/reports/* examples/fonts && npm install && gulp buildFonts",
     "start": "react-scripts start",
     "build": "react-scripts build",

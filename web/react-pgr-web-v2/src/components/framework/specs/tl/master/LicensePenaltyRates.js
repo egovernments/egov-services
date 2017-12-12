@@ -89,16 +89,13 @@ var dat = {
       ],
       values: ['applicationType', 'fromRange', 'toRange', 'rate'],
       resultPath: 'penaltyRates',
-      rowClickUrlUpdate:
-        '/non-framework/tl/masters/update/updatePenaltyRates/{id}?applicationType={applicationType}',
-      rowClickUrlView:
-        '/non-framework/tl/masters/view/viewPenaltyRates/{id}?applicationType={applicationType}',
+      rowClickUrlUpdate: '/non-framework/tl/masters/update/updatePenaltyRates/{id}?applicationType={applicationType}',
+      rowClickUrlView: '/non-framework/tl/masters/view/viewPenaltyRates/{id}?applicationType={applicationType}',
     },
   },
   'tl.view': {
     numCols: 12 / 2,
-    url:
-      '/tl-masters/penaltyrate/v1/_search?ids={id}&applicationType={applicationType}',
+    url: '/tl-masters/penaltyrate/v1/_search?ids={id}&applicationType={applicationType}',
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: 'penaltyRates[0]',
@@ -125,8 +122,7 @@ var dat = {
   },
   'tl.update': {
     numCols: 12 / 2,
-    searchUrl:
-      '/tl-masters/penaltyrate/v1/_search?ids={id}&applicationType={applicationType}',
+    searchUrl: '/tl-masters/penaltyrate/v1/_search?ids={id}&applicationType={applicationType}',
     url: '/tl-masters/penaltyrate/v1/_update',
     tenantIdRequired: true,
     useTimestamp: true,

@@ -14,8 +14,7 @@ var dat = {
             name: 'kpiselect',
             jsonPath: 'kpiValues[0].KPI.code',
             label: 'KPI',
-            url:
-              '/perfmanagement/v1/kpimaster/_search?tenantId=|$.KPIs.*.code|$.KPIs.*.name',
+            url: '/perfmanagement/v1/kpimaster/_search?tenantId=|$.KPIs.*.code|$.KPIs.*.name',
             isRequired: true,
             pattern: '',
             type: 'singleValueList',
@@ -32,8 +31,7 @@ var dat = {
               {
                 jsonPath: 'kpiValues[0].documents',
                 type: 'documentList',
-                pattern:
-                  '/perfmanagement/v1/kpimaster/_getDocumentForKpi?tenantId=default&kpiCode={KPIs}',
+                pattern: '/perfmanagement/v1/kpimaster/_getDocumentForKpi?tenantId=default&kpiCode={KPIs}',
                 //"url": "/perfmanagement/v1/kpimaster/_getDocumentForKpi?kpiCode=CODEEGOV"
               },
               {
@@ -212,18 +210,15 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
                 value: 1,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
                 value: 2,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
                 value: 3,
               },
             ],
@@ -271,11 +266,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'Document' },
-        { label: 'Financial Year' },
-        { label: 'KPI Name' },
-      ],
+      header: [{ label: 'Document' }, { label: 'Financial Year' }, { label: 'KPI Name' }],
       values: ['name', 'code', 'targetValue'],
       resultPath: 'KPIs',
       rowClickUrlUpdate: '/update/perfManagement/actualKpiCreate/{code}',

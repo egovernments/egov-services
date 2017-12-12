@@ -20,8 +20,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             isKeyValuePair: true,
-            url:
-              '/inventory-services/materials/_search?|$.materials[*].code|$.materials[*].name',
+            url: '/inventory-services/materials/_search?|$.materials[*].code|$.materials[*].name',
           },
           {
             name: 'code',
@@ -31,8 +30,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
           },
 
           {
@@ -44,8 +42,7 @@ var dat = {
             isKeyValuePair: true,
             isRequired: false,
             isDisabled: false,
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'status',
@@ -148,8 +145,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
           },
           {
             name: 'name',
@@ -179,8 +175,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'inventoryType',
@@ -224,8 +219,7 @@ var dat = {
             isDisabled: false,
             hide: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?tenantId=default&moduleName=ASSET&masterName=AssetCategory|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?tenantId=default&moduleName=ASSET&masterName=AssetCategory|$..code|$..name',
           },
         ],
       },
@@ -241,8 +235,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             hide: true,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
 
           {
@@ -271,8 +264,7 @@ var dat = {
                   jsonPath: 'materials[0].storeMapping[0].store.code',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
+                  url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
                   depedants: [
                     {
                       jsonPath: 'materials[0].storeMapping[0].department.code',
@@ -292,8 +284,7 @@ var dat = {
                   pattern: '',
                   type: 'singleValueList',
                   jsonPath: 'materials[0].storeMapping[0].department.code',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
                   isRequired: true,
                   isDisabled: true,
                 },
@@ -301,12 +292,10 @@ var dat = {
                   name: 'accountcode',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'materials[0].storeMapping[0].chartofAccount.glCode',
+                  jsonPath: 'materials[0].storeMapping[0].chartofAccount.glCode',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+                  url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
                 },
                 {
                   name: 'active',
@@ -335,8 +324,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'accountcode',
@@ -346,8 +334,7 @@ var dat = {
             label: 'inventory.material.expenseacctcode',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+            url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
           },
         ],
       },
@@ -387,8 +374,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'minQuantity',
@@ -553,8 +539,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
           },
           {
             name: 'name',
@@ -584,8 +569,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'inventoryType',
@@ -629,8 +613,7 @@ var dat = {
             isDisabled: false,
             hide: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?tenantId=default&moduleName=ASSET&masterName=AssetCategory|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?tenantId=default&moduleName=ASSET&masterName=AssetCategory|$..code|$..name',
           },
           {
             name: 'status',
@@ -656,8 +639,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             isHidden: true,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
 
           {
@@ -687,8 +669,7 @@ var dat = {
                   jsonPath: 'materials[0].storeMapping[0].store.code',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
+                  url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
                   depedants: [
                     {
                       jsonPath: 'materials[0].storeMapping[0].department.code',
@@ -699,8 +680,7 @@ var dat = {
                     {
                       jsonPath: 'materials[0].storeMapping[0].department.name',
                       type: 'textField',
-                      valExp:
-                        "getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')",
+                      valExp: "getValFromDropdownData('departmentMaster', getVal('materials[0].storeMapping[*].department.code'), 'value')",
                     },
                   ],
                 },
@@ -716,12 +696,10 @@ var dat = {
                   name: 'accountcode',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'materials[0].storeMapping[0].chartofAccount.glCode',
+                  jsonPath: 'materials[0].storeMapping[0].chartofAccount.glCode',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+                  url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
                 },
                 {
                   name: 'active',
@@ -750,8 +728,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'accountcode',
@@ -761,8 +738,7 @@ var dat = {
             label: 'inventory.material.expenseacctcode',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+            url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
           },
         ],
       },
@@ -802,8 +778,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+            url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
           },
           {
             name: 'minQuantity',
@@ -968,8 +943,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=MaterialType|$..code|$..name',
           },
           {
             name: 'name',
@@ -999,8 +973,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'inventoryType',
@@ -1044,8 +1017,7 @@ var dat = {
             isDisabled: false,
             isHidden: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?tenantId=default&moduleName=ASSET&masterName=AssetCategory|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?tenantId=default&moduleName=ASSET&masterName=AssetCategory|$..code|$..name',
           },
           {
             name: 'status',
@@ -1078,8 +1050,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             hide: true,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
           },
 
           {
@@ -1108,8 +1079,7 @@ var dat = {
                   jsonPath: 'materials[0].storeMapping[0].store.code',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
+                  url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$.stores[*].department',
                   depedants: [
                     {
                       jsonPath: 'materials[0].storeMapping[0].department.code',
@@ -1132,19 +1102,16 @@ var dat = {
                   jsonPath: 'materials[0].storeMapping[0].department.code',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Department|$..code|$..name',
                 },
                 {
                   name: 'accountcode',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'materials[0].storeMapping[0].chartofAccount.glCode',
+                  jsonPath: 'materials[0].storeMapping[0].chartofAccount.glCode',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+                  url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
                 },
                 {
                   name: 'active',
@@ -1173,8 +1140,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'accountcode',
@@ -1184,8 +1150,7 @@ var dat = {
             label: 'inventory.material.expenseacctcode',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
+            url: '/egf-master/chartofaccounts/_search?|$.chartOfAccounts[*].glcode|$.chartOfAccounts[*].name',
           },
         ],
       },
@@ -1225,8 +1190,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
           },
           {
             name: 'minQuantity',

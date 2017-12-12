@@ -9,10 +9,7 @@ import { translate } from '../../../../common/common';
 import Api from '../../../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../../../framework/components/UiButton';
-import {
-  fileUpload,
-  getInitiatorPosition,
-} from '../../../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition } from '../../../../framework/utility/utility';
 import UiTable from '../../../../framework/components/UiTable';
 import styles from '../../../../../styles/material-ui';
 
@@ -29,15 +26,10 @@ class viewSpilloverAE extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -54,31 +46,19 @@ class viewSpilloverAE extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -87,37 +67,18 @@ class viewSpilloverAE extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -125,36 +86,12 @@ class viewSpilloverAE extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -167,37 +104,18 @@ class viewSpilloverAE extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -205,36 +123,12 @@ class viewSpilloverAE extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -249,24 +143,13 @@ class viewSpilloverAE extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -274,90 +157,37 @@ class viewSpilloverAE extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
         }
       }
 
-      for (
-        var j = 0;
-        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            var k = 0;
-            k <
-            specs[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
+          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue ==
-              _.get(
-                form,
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
+              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide.length;
-                  a++
-                ) {
-                  this.hideField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].hide[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                  this.hideField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show.length;
-                  a++
-                ) {
-                  this.showField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].show[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                  this.showField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }
@@ -365,14 +195,8 @@ class viewSpilloverAE extends Component {
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -380,8 +204,7 @@ class viewSpilloverAE extends Component {
   }
 
   initData() {
-    specifications = require(`../../../../framework/specs/works/master/spilloverAE`)
-      .default;
+    specifications = require(`../../../../framework/specs/works/master/spilloverAE`).default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let self = this;
@@ -409,24 +232,10 @@ class viewSpilloverAE extends Component {
     }
 
     //  console.log(query);
-    Promise.all([
-      Api.commonApiPost(
-        url,
-        query,
-        {},
-        false,
-        specifications['works.view'].useTimestamp
-      ),
-    ]).then(responses => {
+    Promise.all([Api.commonApiPost(url, query, {}, false, specifications['works.view'].useTimestamp)]).then(responses => {
       try {
         this.props.setFormData(responses[0]);
-        this.setInitialUpdateData(
-          responses[0],
-          JSON.parse(JSON.stringify(specifications)),
-          'works',
-          'view',
-          specifications['works.view'].objectName
-        );
+        this.setInitialUpdateData(responses[0], JSON.parse(JSON.stringify(specifications)), 'works', 'view', specifications['works.view'].objectName);
       } catch (e) {
         console.log('error', e);
       }
@@ -440,25 +249,11 @@ class viewSpilloverAE extends Component {
   getVal = (path, isDate) => {
     var val = _.get(this.props.formData, path);
 
-    if (
-      isDate &&
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (isDate && val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     }
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean')
       ? val === true ? 'Yes' : val === false ? 'No' : val + ''
       : '';
   };
@@ -490,13 +285,7 @@ class viewSpilloverAE extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-    } = this.props;
+    let { mockData, moduleName, actionName, formData, fieldErrors } = this.props;
     let { handleChange, getVal, addNewCard, removeCard, printer } = this;
 
     const renderTable = function() {
@@ -508,49 +297,25 @@ class viewSpilloverAE extends Component {
           resultHeader: ['#', 'Name', 'File'],
           resultValues: [],
         };
-        for (
-          let i = 0;
-          i < mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          for (
-            let j = 0;
-            j < mockData[moduleName + '.' + actionName].groups[i].fields.length;
-            j++
-          ) {
+        for (let i = 0; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+          for (let j = 0; j < mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
             if (
-              mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .type == 'singleFileUpload' &&
-              _.get(
-                formData,
-                mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              mockData[moduleName + '.' + actionName].groups[i].fields[j].type == 'singleFileUpload' &&
+              _.get(formData, mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               flag = 1;
               count++;
-              let fileStoreId = _.get(
-                formData,
-                mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+              let fileStoreId = _.get(formData, mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               dataList.resultValues.push([
                 count,
                 'File',
-                '<a href=/filestore/v1/files/id?tenantId=' +
-                  localStorage.getItem('tenantId') +
-                  '&fileStoreId=' +
-                  fileStoreId +
-                  '>Download</a>',
+                '<a href=/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + fileStoreId + '>Download</a>',
               ]);
             }
           }
         }
 
-        if (
-          formData[objectName].documents &&
-          formData[objectName].documents.length
-        ) {
+        if (formData[objectName].documents && formData[objectName].documents.length) {
           flag = 1;
           for (var i = 0; i < formData[objectName].documents.length; i++) {
             dataList.resultValues.push([
@@ -594,9 +359,7 @@ class viewSpilloverAE extends Component {
                 handler={''}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
                 screen="view"
@@ -605,11 +368,7 @@ class viewSpilloverAE extends Component {
           {renderTable()}
         </form>
         <div style={{ textAlign: 'center' }}>
-          <UiButton
-            item={{ label: 'Print', uiType: 'view' }}
-            ui="google"
-            handler={printer}
-          />
+          <UiButton item={{ label: 'Print', uiType: 'view' }} ui="google" handler={printer} />
         </div>
       </div>
     );

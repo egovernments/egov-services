@@ -32,11 +32,7 @@ class CreateReceivingCenter extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/receivingcenter/v1/_search',
-        { id: this.props.match.params.id },
-        body
-      )
+      Api.commonApiPost('/pgr-master/receivingcenter/v1/_search', { id: this.props.match.params.id }, body)
         .then(function(response) {
           current.setState({ data: response.ReceivingCenterType });
           setForm(response.ReceivingCenterType[0]);
@@ -68,13 +64,8 @@ class CreateReceivingCenter extends Component {
         name: this.props.createReceivingCenter.name,
         code: this.props.createReceivingCenter.code,
         description: this.props.createReceivingCenter.description,
-        active:
-          createReceivingCenter.active !== undefined
-            ? createReceivingCenter.active
-            : true,
-        iscrnrequired: !this.props.createReceivingCenter.iscrnrequired
-          ? false
-          : this.props.createReceivingCenter.iscrnrequired,
+        active: createReceivingCenter.active !== undefined ? createReceivingCenter.active : true,
+        iscrnrequired: !this.props.createReceivingCenter.iscrnrequired ? false : this.props.createReceivingCenter.iscrnrequired,
         orderno: this.props.createReceivingCenter.orderno,
         tenantId: localStorage.getItem('tenantId'),
       },
@@ -143,10 +134,7 @@ class CreateReceivingCenter extends Component {
               title={
                 <div style={styles.headerStyle}>
                   {' '}
-                  {this.props.match.params.id
-                    ? translate('pgr.lbl.update')
-                    : translate('pgr.lbl.create')}{' '}
-                  {translate('pgr.lbl.receivingcenter')}
+                  {this.props.match.params.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create')} {translate('pgr.lbl.receivingcenter')}
                 </div>
               }
             />
@@ -160,21 +148,11 @@ class CreateReceivingCenter extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('core.lbl.add.name') + '*'}
-                      value={
-                        createReceivingCenter.name
-                          ? createReceivingCenter.name
-                          : ''
-                      }
+                      value={createReceivingCenter.name ? createReceivingCenter.name : ''}
                       errorText={fieldErrors.name ? fieldErrors.name : ''}
                       maxLength="100"
                       onChange={e =>
-                        handleChange(
-                          e,
-                          'name',
-                          true,
-                          /^[a-zA-Z\s'_.]{0,100}$/,
-                          'Please use only alphabets, space and special characters'
-                        )
+                        handleChange(e, 'name', true, /^[a-zA-Z\s'_.]{0,100}$/, 'Please use only alphabets, space and special characters')
                       }
                       id="name"
                     />
@@ -186,22 +164,10 @@ class CreateReceivingCenter extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('core.lbl.code') + '*'}
-                      value={
-                        createReceivingCenter.code
-                          ? createReceivingCenter.code
-                          : ''
-                      }
+                      value={createReceivingCenter.code ? createReceivingCenter.code : ''}
                       errorText={fieldErrors.code ? fieldErrors.code : ''}
                       maxLength="20"
-                      onChange={e =>
-                        handleChange(
-                          e,
-                          'code',
-                          true,
-                          /^[A-Z0-9]{0,20}$/,
-                          'Please use only upper case alphabets and numbers'
-                        )
-                      }
+                      onChange={e => handleChange(e, 'code', true, /^[A-Z0-9]{0,20}$/, 'Please use only upper case alphabets and numbers')}
                       id="code"
                       disabled={this.state.id ? true : false}
                     />
@@ -213,25 +179,11 @@ class CreateReceivingCenter extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createReceivingCenter.description
-                          ? createReceivingCenter.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createReceivingCenter.description ? createReceivingCenter.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       maxLength="250"
                       onChange={e =>
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^.[^]{0,250}$/,
-                          translate('pgr.lbl.max') +
-                            ' 250 ' +
-                            translate('pgr.lbl.characters')
-                        )
+                        handleChange(e, 'description', false, /^.[^]{0,250}$/, translate('pgr.lbl.max') + ' 250 ' + translate('pgr.lbl.characters'))
                       }
                       multiLine={true}
                       id="description"
@@ -244,22 +196,10 @@ class CreateReceivingCenter extends Component {
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
                       floatingLabelText={translate('pgr.lbl.order.no') + '*'}
-                      value={
-                        createReceivingCenter.orderno
-                          ? createReceivingCenter.orderno
-                          : ''
-                      }
+                      value={createReceivingCenter.orderno ? createReceivingCenter.orderno : ''}
                       errorText={fieldErrors.orderno ? fieldErrors.orderno : ''}
                       maxLength="10"
-                      onChange={e =>
-                        handleChange(
-                          e,
-                          'orderno',
-                          true,
-                          /^\d{0,10}$/g,
-                          'Please use only numbers'
-                        )
-                      }
+                      onChange={e => handleChange(e, 'orderno', true, /^\d{0,10}$/g, 'Please use only numbers')}
                       id="orderno"
                     />
                   </Col>
@@ -267,11 +207,7 @@ class CreateReceivingCenter extends Component {
                     <Checkbox
                       label={translate('pgr.lbl.active')}
                       style={styles.setTopMargin}
-                      checked={
-                        createReceivingCenter.active !== undefined
-                          ? createReceivingCenter.active
-                          : true
-                      }
+                      checked={createReceivingCenter.active !== undefined ? createReceivingCenter.active : true}
                       onCheck={(e, i, v) => {
                         var e = {
                           target: {
@@ -308,32 +244,20 @@ class CreateReceivingCenter extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
               primary={true}
             />
           </div>
         </form>
         <Dialog
           title={translate('pgr.lbl.success')}
-          actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={this.handleClose}
-            />
-          }
+          actions={<FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.handleClose} />}
           modal={false}
           open={this.state.open}
           onRequestClose={this.handleClose}
         >
           {translate('pgr.lbl.receivingcenter')}{' '}
-          {this.props.match.params.id
-            ? translate('core.lbl.updatedsuccessful')
-            : translate('core.lbl.createdsuccessful')}
+          {this.props.match.params.id ? translate('core.lbl.updatedsuccessful') : translate('core.lbl.createdsuccessful')}
         </Dialog>
       </div>
     );
@@ -414,6 +338,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  CreateReceivingCenter
-);
+export default connect(mapStateToProps, mapDispatchToProps)(CreateReceivingCenter);

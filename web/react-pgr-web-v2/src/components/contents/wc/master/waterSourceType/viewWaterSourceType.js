@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SimpleMap from '../../../../common/GoogleMaps.js';
 import Divider from 'material-ui/Divider';
-import {
-  Grid,
-  Row,
-  Col,
-  DropdownButton,
-  ListGroup,
-  ListGroupItem,
-} from 'react-bootstrap';
+import { Grid, Row, Col, DropdownButton, ListGroup, ListGroupItem } from 'react-bootstrap';
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 import { List, ListItem } from 'material-ui/List';
 import TextField from 'material-ui/TextField';
@@ -79,13 +72,7 @@ class ViewWaterSourceType extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/sourcetype/_search',
-        { id: this.props.match.params.id },
-        {},
-        false,
-        true
-      )
+      Api.commonApiPost('/wcms/masters/sourcetype/_search', { id: this.props.match.params.id }, {}, false, true)
         .then(function(response) {
           console.log(response);
           current.setState({ data: response.waterSourceType });
@@ -121,10 +108,7 @@ class ViewWaterSourceType extends Component {
     return (
       <div className="viewWaterSourceType">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={<div style={styles.headerStyle}>View Water Source Type</div>}
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>View Water Source Type</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <br />
@@ -137,9 +121,7 @@ class ViewWaterSourceType extends Component {
                           {translate('core.lbl.code')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewWaterSourceType.code
-                            ? viewWaterSourceType.code
-                            : ''}
+                          {viewWaterSourceType.code ? viewWaterSourceType.code : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>
@@ -149,9 +131,7 @@ class ViewWaterSourceType extends Component {
                           {translate('core.lbl.add.name')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewWaterSourceType.name
-                            ? viewWaterSourceType.name
-                            : ''}
+                          {viewWaterSourceType.name ? viewWaterSourceType.name : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>
@@ -161,9 +141,7 @@ class ViewWaterSourceType extends Component {
                           {translate('core.lbl.description')}
                         </Col>
                         <Col xs={8} md={10}>
-                          {viewWaterSourceType.description
-                            ? viewWaterSourceType.description
-                            : ''}
+                          {viewWaterSourceType.description ? viewWaterSourceType.description : ''}
                         </Col>
                       </Row>
                     </ListGroupItem>
@@ -218,6 +196,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ViewWaterSourceType
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewWaterSourceType);

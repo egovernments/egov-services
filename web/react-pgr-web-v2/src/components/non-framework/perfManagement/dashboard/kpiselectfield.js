@@ -29,25 +29,14 @@ export default class KPISelectField extends Component {
         disabled={this.props.disabled ? true : false}
         floatingLabelText={
           <span>
-            {this.props.label}{' '}
-            {this.props.mandatory ? (
-              <span style={{ color: '#FF0000' }}> *</span>
-            ) : (
-              ''
-            )}{' '}
+            {this.props.label} {this.props.mandatory ? <span style={{ color: '#FF0000' }}> *</span> : ''}{' '}
           </span>
         }
         value={this.props.value}
         onChange={this.handleChange}
       >
         {this.props.items.map((item, i) => {
-          return (
-            <MenuItem
-              key={i}
-              value={i}
-              primaryText={item[this.props.displayKey]}
-            />
-          );
+          return <MenuItem key={i} value={i} primaryText={item[this.props.displayKey]} />;
         })}
       </SelectField>
     );

@@ -31,8 +31,7 @@ var dat = {
             label: 'inventory.purchaseorder.number',
             type: 'text',
             isDisabled: false,
-            patternErrorMsg:
-              'purchaseorder.create.field.message.purchaseOrderNumber',
+            patternErrorMsg: 'purchaseorder.create.field.message.purchaseOrderNumber',
           },
           {
             name: 'purchaseOrderDate',
@@ -40,8 +39,7 @@ var dat = {
             label: 'inventory.purchaseorder.date',
             type: 'number',
             isDisabled: false,
-            patternErrorMsg:
-              'purchaseorder.create.field.message.purchaseOrderDate',
+            patternErrorMsg: 'purchaseorder.create.field.message.purchaseOrderDate',
           },
           {
             name: 'rateType',
@@ -82,14 +80,9 @@ var dat = {
           label: 'inventory.store.name',
         },
       ],
-      values: [
-        'purchaseOrders[0].purchaseOrderNumber',
-        'purchaseOrders[0].purchaseOrderDate',
-        'purchaseOrders[0].store.code',
-      ],
+      values: ['purchaseOrders[0].purchaseOrderNumber', 'purchaseOrders[0].purchaseOrderDate', 'purchaseOrders[0].store.code'],
       resultPath: 'purchaseOrders',
-      rowClickUrlUpdate:
-        '/update/inventory/purchaseorders/{purchaseOrderNumber}',
+      rowClickUrlUpdate: '/update/inventory/purchaseorders/{purchaseOrderNumber}',
       rowClickUrlView: '/view/inventory/purchaseorders/{purchaseOrderNumber}',
     },
   },
@@ -308,8 +301,7 @@ var dat = {
               values: [
                 {
                   name: 'material',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].material.code',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.code',
                   label: '',
                   pattern: '',
                   type: 'autoCompelete',
@@ -318,19 +310,16 @@ var dat = {
                   defaultValue: '',
                   maxLength: 50,
                   patternErrorMsg: '',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name|$..description|$..purchaseUom.code',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name|$..description|$..purchaseUom.code',
                   depedants: [
                     {
-                      jsonPath:
-                        'purchaseOrders[0].purchaseOrderDetails[0].material.description',
+                      jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.description',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].material.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].material.code'), 'others[0]')",
                     },
                     {
-                      jsonPath:
-                        'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
+                      jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('purchaseOrders[0].purchaseOrderDetails[*].material.code', getVal('purchaseOrders[0].purchaseOrderDetails[*].material.code'), 'others[1]')",
@@ -344,8 +333,7 @@ var dat = {
                 },
                 {
                   name: 'indentNumber',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseIndentDetails[0].purchaseIndentDetails[0].indentDetail[0].indentNumber',
+                  jsonPath: 'purchaseOrders[0].purchaseIndentDetails[0].purchaseIndentDetails[0].indentDetail[0].indentNumber',
                   label: '',
                   pattern: '',
                   type: 'text',
@@ -358,8 +346,7 @@ var dat = {
                 },
                 {
                   name: 'materialDescription',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].material.description',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.description',
                   label: '',
                   pattern: '',
                   type: 'text',
@@ -372,8 +359,7 @@ var dat = {
                 },
                 {
                   name: 'totalIndentQuantity',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].purchaseIndentDetails[0].quantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].purchaseIndentDetails[0].quantity',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -384,8 +370,7 @@ var dat = {
                 },
                 {
                   name: 'uom',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
                   label: '',
                   pattern: '',
                   type: 'singleValueList',
@@ -393,13 +378,11 @@ var dat = {
                   isDisabled: false,
                   defaultValue: '',
                   patternErrorMsg: '',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
                 {
                   name: 'rateContractNumber',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber',
                   label: '',
                   pattern: '',
                   type: 'singleValueList',
@@ -410,8 +393,7 @@ var dat = {
                 },
                 {
                   name: 'orderQuantity',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -422,8 +404,7 @@ var dat = {
                 },
                 {
                   name: 'unitPrice',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].unitPrice',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].unitPrice',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -434,8 +415,7 @@ var dat = {
                 },
                 {
                   name: 'TotalAmount',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].totalAmount',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].totalAmount',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -446,8 +426,7 @@ var dat = {
                 },
                 {
                   name: 'tenderQuantity',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].tenderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].tenderQuantity',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -458,8 +437,7 @@ var dat = {
                 },
                 {
                   name: 'usedQuantity',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].usedQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].usedQuantity',
                   label: '',
                   pattern: '',
                   type: 'number',
@@ -687,8 +665,7 @@ var dat = {
               values: [
                 {
                   name: 'code',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].material.code',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.code',
                   label: 'purchaseorder.create.material.code',
                   pattern: '',
                   type: 'text',
@@ -698,13 +675,11 @@ var dat = {
                   maxLength: 50,
                   minLength: 5,
                   patternErrorMsg: '',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name',
                 },
                 {
                   name: 'name',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].material.name',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.name',
                   label: 'purchaseorder.create.material.name',
                   pattern: '',
                   type: 'text',
@@ -717,8 +692,7 @@ var dat = {
                 },
                 {
                   name: 'code',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
                   label: 'purchaseorder.create.uom.code',
                   pattern: '',
                   type: 'text',
@@ -726,13 +700,11 @@ var dat = {
                   isDisabled: false,
                   defaultValue: '',
                   patternErrorMsg: '',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
                 {
                   name: 'rateContractNumber',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber',
                   label: 'purchaseorder.create.priceList.rateContractNumber',
                   pattern: '',
                   type: 'text',
@@ -743,10 +715,8 @@ var dat = {
                 },
                 {
                   name: 'orderQuantity',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
-                  label:
-                    'purchaseorder.create.purchaseOrderDetails[0].orderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
+                  label: 'purchaseorder.create.purchaseOrderDetails[0].orderQuantity',
                   pattern: '',
                   type: 'number',
                   isRequired: false,
@@ -756,10 +726,8 @@ var dat = {
                 },
                 {
                   name: 'unitPrice',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].unitPrice',
-                  label:
-                    'purchaseorder.create.purchaseOrderDetails[0].unitPrice',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].unitPrice',
+                  label: 'purchaseorder.create.purchaseOrderDetails[0].unitPrice',
                   pattern: '',
                   type: 'number',
                   isRequired: false,
@@ -985,8 +953,7 @@ var dat = {
               values: [
                 {
                   name: 'code',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].material.code',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.code',
                   label: 'purchaseorder.create.material.code',
                   pattern: '',
                   type: 'text',
@@ -996,13 +963,11 @@ var dat = {
                   maxLength: 50,
                   minLength: 5,
                   patternErrorMsg: '',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$..code|$..name',
                 },
                 {
                   name: 'name',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].material.name',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].material.name',
                   label: 'purchaseorder.create.material.name',
                   pattern: '',
                   type: 'text',
@@ -1015,8 +980,7 @@ var dat = {
                 },
                 {
                   name: 'code',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].uom.code',
                   label: 'purchaseorder.create.uom.code',
                   pattern: '',
                   type: 'text',
@@ -1024,13 +988,11 @@ var dat = {
                   isDisabled: false,
                   defaultValue: '',
                   patternErrorMsg: '',
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
                 {
                   name: 'rateContractNumber',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].priceList.rateContractNumber',
                   label: 'purchaseorder.create.priceList.rateContractNumber',
                   pattern: '',
                   type: 'text',
@@ -1041,10 +1003,8 @@ var dat = {
                 },
                 {
                   name: 'orderQuantity',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
-                  label:
-                    'purchaseorder.create.purchaseOrderDetails[0].orderQuantity',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].orderQuantity',
+                  label: 'purchaseorder.create.purchaseOrderDetails[0].orderQuantity',
                   pattern: '',
                   type: 'number',
                   isRequired: false,
@@ -1054,10 +1014,8 @@ var dat = {
                 },
                 {
                   name: 'unitPrice',
-                  jsonPath:
-                    'purchaseOrders[0].purchaseOrderDetails[0].unitPrice',
-                  label:
-                    'purchaseorder.create.purchaseOrderDetails[0].unitPrice',
+                  jsonPath: 'purchaseOrders[0].purchaseOrderDetails[0].unitPrice',
+                  label: 'purchaseorder.create.purchaseOrderDetails[0].unitPrice',
                   pattern: '',
                   type: 'number',
                   isRequired: false,
@@ -1073,8 +1031,7 @@ var dat = {
     ],
     url: '/inventory-services/v110/purchaseorders/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/v110/purchaseorders/_search?tenantId={tenantId}',
+    searchUrl: '/inventory-services/v110/purchaseorders/_search?tenantId={tenantId}',
   },
 };
 export default dat;

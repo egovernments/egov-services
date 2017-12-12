@@ -125,13 +125,7 @@ class Workflow extends Component {
       designation: '',
     };
 
-    Api.commonApiPost(
-      'egov-common-workflows/designations/_search',
-      designationsQuery,
-      {},
-      false,
-      false
-    )
+    Api.commonApiPost('egov-common-workflows/designations/_search', designationsQuery, {}, false, false)
       .then(res => {
         for (var i = 0; i < res.length; i++) {
           Api.commonApiPost('hr-masters/designations/_search', {
@@ -142,10 +136,7 @@ class Workflow extends Component {
               response.Designation.unshift({ id: -1, name: 'None' });
               currentThis.setState({
                 ...currentThis.state,
-                designation: [
-                  ...currentThis.state.designation,
-                  ...response.Designation,
-                ],
+                designation: [...currentThis.state.designation, ...response.Designation],
               });
             })
             .catch(err => {
@@ -169,22 +160,14 @@ class Workflow extends Component {
 
     let hasData = false;
 
-    if (
-      type == 'department' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDesignation
-    ) {
+    if (type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
       console.log(type);
       query = {
         departmentId: e.target.value,
         designationId: this.props.workflow.workflowDesignation,
       };
       hasData = true;
-    } else if (
-      type == 'designation' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDepartment
-    ) {
+    } else if (type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
       console.log(type);
       query = {
         departmentId: this.props.workflow.workflowDepartment,
@@ -226,9 +209,7 @@ class Workflow extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -237,13 +218,7 @@ class Workflow extends Component {
       if (list) {
         return list.map(item => {
           console.log(item);
-          return (
-            <MenuItem
-              key={item.id}
-              value={item.assignments[0].position}
-              primaryText={item.name}
-            />
-          );
+          return <MenuItem key={item.id} value={item.assignments[0].position} primaryText={item.name} />;
         });
       }
     };
@@ -271,11 +246,7 @@ class Workflow extends Component {
       <Card className="uiCard">
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.workflow')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.workflow')}</div>}
         />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
@@ -290,19 +261,9 @@ class Workflow extends Component {
                     </span>
                   }
                   errorText={
-                    fieldErrors.workflowDepartment ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.workflowDepartment}
-                      </span>
-                    ) : (
-                      ''
-                    )
+                    fieldErrors.workflowDepartment ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.workflowDepartment}</span> : ''
                   }
-                  value={
-                    workflow.workflowDepartment
-                      ? workflow.workflowDepartment
-                      : ''
-                  }
+                  value={workflow.workflowDepartment ? workflow.workflowDepartment : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -338,18 +299,12 @@ class Workflow extends Component {
                   }
                   errorText={
                     fieldErrors.workflowDesignation ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.workflowDesignation}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.workflowDesignation}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    workflow.workflowDesignation
-                      ? workflow.workflowDesignation
-                      : ''
-                  }
+                  value={workflow.workflowDesignation ? workflow.workflowDesignation : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -383,15 +338,7 @@ class Workflow extends Component {
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
-                  errorText={
-                    fieldErrors.approver ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.approver}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
+                  errorText={fieldErrors.approver ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.approver}</span> : ''}
                   value={workflow.approver ? workflow.approver : ''}
                   dropDownMenuProps={{
                     animated: false,
@@ -419,18 +366,8 @@ class Workflow extends Component {
               <Col xs={12} md={3} sm={6}>
                 <TextField
                   className="fullWidth"
-                  floatingLabelText={translate(
-                    'pt.create.groups.workflow.comment'
-                  )}
-                  errorText={
-                    fieldErrors.comments ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.comments}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
+                  floatingLabelText={translate('pt.create.groups.workflow.comment')}
+                  errorText={fieldErrors.comments ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.comments}</span> : ''}
                   value={workflow.comments ? workflow.comments : ''}
                   onChange={e => {
                     handleChange(e, 'comments', false, '');

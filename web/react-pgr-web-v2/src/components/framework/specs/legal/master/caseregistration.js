@@ -35,8 +35,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: true,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
             patternErrorMsg: '',
           },
           {
@@ -47,8 +46,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
             name: 'plantiffName',
@@ -108,8 +106,7 @@ var dat = {
               {
                 jsonPath: 'cases[0].departmentPerson',
                 type: 'dropDown',
-                pattern:
-                  '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
+                pattern: '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
               },
             ],
           },
@@ -121,8 +118,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'hearingTime',
@@ -150,8 +146,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
           },
           {
             name: 'ward',
@@ -161,8 +156,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
+            url: '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
           },
           {
             name: 'stamp',
@@ -172,8 +166,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              'lcms-services/legalcase/register/_search?|$..code|$..register',
+            url: 'lcms-services/legalcase/register/_search?|$..code|$..register',
           },
           {
             name: 'bench',
@@ -183,8 +176,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
             name: 'sectionApplied',

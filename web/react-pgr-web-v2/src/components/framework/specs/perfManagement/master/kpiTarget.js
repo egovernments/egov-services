@@ -14,8 +14,7 @@ var dat = {
             name: 'kpiselect',
             jsonPath: 'kpiTargets[0].KPI.code',
             label: 'KPI',
-            url:
-              '/perfmanagement/v1/kpimaster/_search?tenantId=|$.KPIs.*.code|$.KPIs.*.name',
+            url: '/perfmanagement/v1/kpimaster/_search?tenantId=|$.KPIs.*.code|$.KPIs.*.name',
             isRequired: true,
             pattern: '',
             type: 'singleValueList',
@@ -160,8 +159,7 @@ var dat = {
             isRequired: true,
             pattern: '',
             type: 'singleValueList',
-            url:
-              'egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange',
+            url: 'egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
           },
@@ -222,18 +220,15 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
                 value: 1,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
                 value: 2,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
                 value: 3,
               },
             ],
@@ -286,16 +281,13 @@ var dat = {
       ],
       values: ['kpiCode', 'finYear', 'targetDescription'],
       resultPath: 'kpiTargets',
-      rowClickUrlUpdate:
-        '/update/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
-      rowClickUrlView:
-        '/view/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
+      rowClickUrlUpdate: '/update/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
+      rowClickUrlView: '/view/perfManagement/kpiTarget/{kpiCode}?finYear={finYear}',
     },
   },
   'perfManagement.view': {
     numCols: 12 / 2,
-    url:
-      '/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
+    url: '/perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
     useTimestamp: true,
     objectName: 'kpiTargets',
     groups: [
@@ -395,8 +387,7 @@ var dat = {
   },
   'perfManagement.update': {
     numCols: 12 / 2,
-    searchUrl:
-      'perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
+    searchUrl: 'perfmanagement/v1/kpitarget/_search?kpiCodes={kpiCode}&finYear={finYear}',
     url: '/perfmanagement/v1/kpitarget/_update',
     useTimestamp: true,
     objectName: 'kpiTargets',
@@ -461,8 +452,7 @@ var dat = {
                 value: 'VALUE',
               },
               {
-                label:
-                  'perfManagement.update.KPIs.groups.updatekpitype.objective',
+                label: 'perfManagement.update.KPIs.groups.updatekpitype.objective',
                 value: 'OBJECTIVE',
               },
             ],
@@ -593,18 +583,15 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes',
+                label: 'perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes',
                 value: '1',
               },
               {
-                label:
-                  'perfManagement.update.KPIs.groups.updatekpiTargetBlock.no',
+                label: 'perfManagement.update.KPIs.groups.updatekpiTargetBlock.no',
                 value: '2',
               },
               {
-                label:
-                  'perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress',
+                label: 'perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress',
                 value: '3',
               },
             ],

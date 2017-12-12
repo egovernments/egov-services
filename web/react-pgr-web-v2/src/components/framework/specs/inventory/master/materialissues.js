@@ -18,8 +18,7 @@ var dat = {
             jsonPath: 'indents[0].issueStore',
             label: 'inventory.search.issueStore',
             type: 'singleValueList',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
             isDisabled: false,
             patternErrorMsg: 'inventory.create.field.message.issueStore',
           },
@@ -76,8 +75,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             patternErrorMsg: 'inventory.create.field.message.indentCreatedBy',
-            url:
-              '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
+            url: '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
           },
         ],
       },
@@ -103,14 +101,7 @@ var dat = {
           label: 'inventory.search.result.indentStatus',
         },
       ],
-      values: [
-        'indentNumber',
-        'indentDate',
-        'indentStore.name',
-        'indentPurpose',
-        'indentCreatedBy',
-        'indentStatus',
-      ],
+      values: ['indentNumber', 'indentDate', 'indentStore.name', 'indentPurpose', 'indentCreatedBy', 'indentStatus'],
       resultPath: 'indents',
       rowClickUrlUpdate: '/update/materialissues/{indentNumber}',
       rowClickUrlView: '/view/materialissues/{indentNumber}',
@@ -133,8 +124,7 @@ var dat = {
             jsonPath: 'fromStore',
             label: 'inventory.search.issueStore',
             type: 'singleValueList',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
             isDisabled: false,
             patternErrorMsg: 'inventory.create.field.message.issueStore',
           },
@@ -179,13 +169,7 @@ var dat = {
           label: 'inventory.search.issueType',
         },
       ],
-      values: [
-        'issueNumber',
-        'issueDate',
-        'issuePurpose',
-        'materialIssueStatus',
-        'issueType',
-      ],
+      values: ['issueNumber', 'issueDate', 'issuePurpose', 'materialIssueStatus', 'issueType'],
       resultPath: 'materialIssues',
       rowClickUrlUpdate: '/update/inventory/materialissues/{issueNumber}',
       rowClickUrlView: '/view/inventory/materialissues/{issueNumber}',
@@ -251,8 +235,7 @@ var dat = {
             defaultValue: '',
             maxLength: 64,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentNumber',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentNumber',
           },
           {
             name: 'issuedToEmployee',
@@ -263,14 +246,12 @@ var dat = {
             isRequired: false,
             defaultValue: '',
             patternErrorMsg: '',
-            url:
-              '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
+            url: '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
             depedants: [
               {
                 jsonPath: 'materialIssues[0].issuedToDesignation',
                 type: 'textField',
-                valExp:
-                  "getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')",
+                valExp: "getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')",
               },
             ],
             /* "autoCompeleteDependancy": {
@@ -402,30 +383,25 @@ var dat = {
               values: [
                 {
                   name: 'materialName',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.material.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.material.name',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: false,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name',
                 },
                 {
                   name: 'totalIndentQtyRequired',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity',
                 },
                 {
                   name: 'balanceQuantity',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].quantityToBeIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityToBeIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -434,8 +410,7 @@ var dat = {
                 },
                 {
                   name: 'quantityIssued',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].quantityIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: true,
@@ -443,19 +418,16 @@ var dat = {
                 },
                 {
                   name: 'uom',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name',
                 },
                 {
                   name: 'unitRate',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -464,8 +436,7 @@ var dat = {
                 },
                 {
                   name: 'balanceQuantityAfterIssue',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -482,30 +453,25 @@ var dat = {
                 },
                 {
                   name: 'assetCode',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.asset.code',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.asset.code',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code',
                 },
                 {
                   name: 'projectCode',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code',
                 },
                 {
                   name: 'description',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].description',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].description',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -611,8 +577,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
           },
           {
             name: 'issueDate',
@@ -637,8 +602,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentStore.name',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentStore.name',
           },
           {
             name: 'departmentname',
@@ -652,8 +616,7 @@ var dat = {
             maxLength: 64,
             minLength: 8,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].department.name',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].department.name',
           },
           {
             name: 'indentNumber',
@@ -666,8 +629,7 @@ var dat = {
             defaultValue: '',
             maxLength: 64,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentNumber',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentNumber',
           },
           {
             name: 'issuedToEmployee',
@@ -678,14 +640,12 @@ var dat = {
             isRequired: false,
             defaultValue: '',
             patternErrorMsg: '',
-            url:
-              '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
+            url: '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
             depedants: [
               {
                 jsonPath: 'materialIssues[0].issuedToDesignation',
                 type: 'textField',
-                valExp:
-                  "getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')",
+                valExp: "getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')",
               },
             ],
             /* "autoCompeleteDependancy": {
@@ -817,30 +777,25 @@ var dat = {
               values: [
                 {
                   name: 'materialName',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.material.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.material.name',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: false,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name',
                 },
                 {
                   name: 'totalIndentQtyRequired',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity',
                 },
                 {
                   name: 'balanceQuantity',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].quantityToBeIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityToBeIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -849,8 +804,7 @@ var dat = {
                 },
                 {
                   name: 'quantityIssued',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].quantityIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: true,
@@ -858,19 +812,16 @@ var dat = {
                 },
                 {
                   name: 'uom',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name',
                 },
                 {
                   name: 'unitRate',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -879,8 +830,7 @@ var dat = {
                 },
                 {
                   name: 'balanceQuantityAfterIssue',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -897,30 +847,25 @@ var dat = {
                 },
                 {
                   name: 'assetCode',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.asset.code',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.asset.code',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code',
                 },
                 {
                   name: 'projectCode',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code',
                 },
                 {
                   name: 'description',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].description',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].description',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -1025,8 +970,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name|$..name|$..name',
           },
           {
             name: 'issueDate',
@@ -1051,8 +995,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentStore.name',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentStore.name',
           },
           {
             name: 'departmentname',
@@ -1066,8 +1009,7 @@ var dat = {
             maxLength: 64,
             minLength: 8,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].department.name',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].department.name',
           },
           {
             name: 'indentNumber',
@@ -1080,8 +1022,7 @@ var dat = {
             defaultValue: '',
             maxLength: 64,
             patternErrorMsg: '',
-            url:
-              'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentNumber',
+            url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentNumber',
           },
           {
             name: 'issuedToEmployee',
@@ -1092,14 +1033,12 @@ var dat = {
             isRequired: false,
             defaultValue: '',
             patternErrorMsg: '',
-            url:
-              '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
+            url: '/hr-employee/employees/_search?active=true|$.Employee[*].name|$.Employee[*].name|$.Employee[*].assignments.designation',
             depedants: [
               {
                 jsonPath: 'materialIssues[0].issuedToDesignation',
                 type: 'textField',
-                valExp:
-                  "getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')",
+                valExp: "getValFromDropdownData('designations', getVal('materialIssues[0].issuedToEmployee'), 'others[0]')",
               },
             ],
             /* "autoCompeleteDependancy": {
@@ -1231,30 +1170,25 @@ var dat = {
               values: [
                 {
                   name: 'materialName',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.material.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.material.name',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: false,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].material.name',
                 },
                 {
                   name: 'totalIndentQtyRequired',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.indentQuantity',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].indentQuantity',
                 },
                 {
                   name: 'balanceQuantity',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].quantityToBeIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityToBeIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -1263,8 +1197,7 @@ var dat = {
                 },
                 {
                   name: 'quantityIssued',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].quantityIssued',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].quantityIssued',
                   pattern: '',
                   type: 'text',
                   isRequired: true,
@@ -1272,19 +1205,16 @@ var dat = {
                 },
                 {
                   name: 'uom',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].uom.name',
                 },
                 {
                   name: 'unitRate',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -1293,8 +1223,7 @@ var dat = {
                 },
                 {
                   name: 'balanceQuantityAfterIssue',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.uom.name',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -1311,30 +1240,25 @@ var dat = {
                 },
                 {
                   name: 'assetCode',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.asset.code',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.asset.code',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].asset.code',
                 },
                 {
                   name: 'projectCode',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].indentDetail.projectCode.code',
                   pattern: '',
                   type: 'autoCompelete',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code',
+                  url: 'inventory-services/indents/_search/indentNumber={indentNumber}?|$.indents[*].indentDetails[*].projectCode.code',
                 },
                 {
                   name: 'description',
-                  jsonPath:
-                    'materialIssues[0].materialIssueDetails[0].description',
+                  jsonPath: 'materialIssues[0].materialIssueDetails[0].description',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -1416,8 +1340,7 @@ var dat = {
     ],
     url: '/inventory-services/materialissues/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/materialissues/_search?issueNumber={issueNumber}',
+    searchUrl: '/inventory-services/materialissues/_search?issueNumber={issueNumber}',
   },
 };
 export default dat;

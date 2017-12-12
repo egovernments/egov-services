@@ -150,10 +150,7 @@ class UiTable extends Component {
 
   componentDidMount() {
     let self = this;
-    if (
-      this.props.resultList.resultHeader &&
-      this.props.resultList.resultHeader.length
-    ) {
+    if (this.props.resultList.resultHeader && this.props.resultList.resultHeader.length) {
       for (let m = 0; m < this.props.resultList.resultHeader.length; m++) {
         if (this.props.resultList.resultHeader[m].url) {
           let splitArray = this.props.resultList.resultHeader[m].url.split('?');
@@ -170,18 +167,10 @@ class UiTable extends Component {
           let queryStringObject = splitArray[1].split('|')[0].split('&');
           for (var i = 0; i < queryStringObject.length; i++) {
             if (i) {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
-          Api.commonApiPost(
-            context,
-            id,
-            {},
-            '',
-            self.props.useTimestamp || false
-          ).then(
+          Api.commonApiPost(context, id, {}, '', self.props.useTimestamp || false).then(
             function(response) {
               let keys = jp.query(response, splitArray[1].split('|')[1]);
               let values = jp.query(response, splitArray[1].split('|')[2]);
@@ -236,53 +225,41 @@ class UiTable extends Component {
         );
       } else if (resultList.resultHeader[i2].isAction) {
         if (_.isArray(item2)) {
-          return resultList.resultHeader[i2].actionItems.map(
-            (actionitem, index) => {
-              return (
-                <span style={{ 'margin-right': '20px' }}>
-                  <a
-                    onClick={() => {
-                      rowButtonClickHandler(actionitem.url, item2[1]);
-                    }}
-                  >
-                    {item2[0]}
-                  </a>
-                </span>
-              );
+          return resultList.resultHeader[i2].actionItems.map((actionitem, index) => {
+            return (
+              <span style={{ 'margin-right': '20px' }}>
+                <a
+                  onClick={() => {
+                    rowButtonClickHandler(actionitem.url, item2[1]);
+                  }}
+                >
+                  {item2[0]}
+                </a>
+              </span>
+            );
 
-              //		return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": item2[0], "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2[1])}}/></span>)
-            }
-          );
+            //		return 	(<span style={{"margin-right":"20px"}}><Button item={{"label": item2[0], "uiType":"primary"}} ui="google" handler={()=>{rowButtonClickHandler(actionitem.url,item2[1])}}/></span>)
+          });
         } else {
-          return resultList.resultHeader[i2].actionItems.map(
-            (actionitem, index) => {
-              return (
-                <span style={{ 'margin-right': '20px' }}>
-                  <Button
-                    item={{ label: actionitem.label, uiType: 'primary' }}
-                    ui="google"
-                    handler={() => {
-                      rowButtonClickHandler(actionitem.url, item2);
-                    }}
-                  />
-                </span>
-              );
-            }
-          );
+          return resultList.resultHeader[i2].actionItems.map((actionitem, index) => {
+            return (
+              <span style={{ 'margin-right': '20px' }}>
+                <Button
+                  item={{ label: actionitem.label, uiType: 'primary' }}
+                  ui="google"
+                  handler={() => {
+                    rowButtonClickHandler(actionitem.url, item2);
+                  }}
+                />
+              </span>
+            );
+          });
         }
       } else if (resultList.resultHeader[i2].url) {
-        return self.state[resultList.resultHeader[i2].label]
-          ? self.state[resultList.resultHeader[i2].label][item2]
-          : item2 + '';
+        return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : item2 + '';
       } else if (resultList.resultHeader[i2].isDate) {
         var _date = new Date(Number(item2));
-        return (
-          ('0' + _date.getDate()).slice(-2) +
-          '/' +
-          ('0' + (_date.getMonth() + 1)).slice(-2) +
-          '/' +
-          _date.getFullYear()
-        );
+        return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
       } else if (resultList.resultHeader[i2].isComma) {
         let _commaVal = item2.toString();
         var y = _commaVal.split('.')[1];
@@ -290,20 +267,13 @@ class UiTable extends Component {
         var lastThree = _commaVal.substring(_commaVal.length - 3);
         var otherNumbers = _commaVal.substring(0, _commaVal.length - 3);
         if (otherNumbers != '') lastThree = ',' + lastThree;
-        var resCal =
-          otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+        var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
         var res = y == null ? resCal : resCal + '.' + y;
         return res;
       } else {
         return item2 === true
-          ? translate(
-              'employee.createPosition.groups.fields.outsourcepost.value1'
-            )
-          : item2 === false
-            ? translate(
-                'employee.createPosition.groups.fields.outsourcepost.value2'
-              )
-            : item2 === null ? '' : item2 + '';
+          ? translate('employee.createPosition.groups.fields.outsourcepost.value1')
+          : item2 === false ? translate('employee.createPosition.groups.fields.outsourcepost.value2') : item2 === null ? '' : item2 + '';
       }
     };
 
@@ -316,25 +286,14 @@ class UiTable extends Component {
       return (
         <Card className="uiCard">
           <CardHeader
-            title={
-              <strong>
-                {' '}
-                {showHeader == undefined
-                  ? translate('ui.table.title')
-                  : showHeader ? translate('ui.table.title') : ''}{' '}
-              </strong>
-            }
+            title={<strong> {showHeader == undefined ? translate('ui.table.title') : showHeader ? translate('ui.table.title') : ''} </strong>}
           />
           <CardText>
             <Table
               className="table table-striped table-bordered"
               cellspacing="0"
               width="100%"
-              id={
-                showDataTable == undefined
-                  ? 'searchTable'
-                  : showDataTable ? 'searchTable' : ''
-              }
+              id={showDataTable == undefined ? 'searchTable' : showDataTable ? 'searchTable' : ''}
               responsive
             >
               <thead>
@@ -353,18 +312,10 @@ class UiTable extends Component {
                     return (
                       <tr key={i}>
                         {item.map((item2, i2) => {
-                          return (
-                            <td key={i2}>
-                              {typeof item2 != 'undefined'
-                                ? getNameById(item2, i2)
-                                : ''}
-                            </td>
-                          );
+                          return <td key={i2}>{typeof item2 != 'undefined' ? getNameById(item2, i2) : ''}</td>;
                         })}
 
-                        <td
-                          style={{ textAlign: 'center', marginRight: '10px' }}
-                        >
+                        <td style={{ textAlign: 'center', marginRight: '10px' }}>
                           <i
                             style={{ marginRight: '10px' }}
                             onClick={() => {

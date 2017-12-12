@@ -34,9 +34,7 @@ class WorkFlow extends Component {
   }
   shouldComponentUpdate(nextProps, nextState) {
     // console.log(!(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
   initCall = obj => {
     this.setState({
@@ -67,13 +65,7 @@ class WorkFlow extends Component {
       // console.log('try to load workflow process:', self.state.stateId, obj.applications[0].state_id);
       if (this.state.stateId === obj.applications[0].state_id) {
         // console.log('workflow process:');
-        Api.commonApiPost(
-          'egov-common-workflows/process/_search',
-          { id: obj.applications[0].state_id },
-          {},
-          false,
-          true
-        ).then(
+        Api.commonApiPost('egov-common-workflows/process/_search', { id: obj.applications[0].state_id }, {}, false, true).then(
           response => {
             // console.log('process status:',response.processInstance.status);
             self.setState({ process: response.processInstance });
@@ -102,9 +94,7 @@ class WorkFlow extends Component {
     this.props.handleChange('', 'designationId', isRequired, pattern);
     this.props.handleChange('', 'positionId', isRequired, pattern);
 
-    let departmentObj = this.state.workFlowDepartment.find(
-      x => x.id === departmentId
-    );
+    let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId);
     Api.commonApiPost(
       'egov-common-workflows/designations/_search',
       {
@@ -130,10 +120,7 @@ class WorkFlow extends Component {
               // response.Designation.unshift({id:-1, name:'None'});
               self.setState({
                 ...self.state,
-                workFlowDesignation: [
-                  ...self.state.workFlowDesignation,
-                  ...response.Designation,
-                ],
+                workFlowDesignation: [...self.state.workFlowDesignation, ...response.Designation],
               });
             },
             function(err) {
@@ -177,30 +164,25 @@ class WorkFlow extends Component {
     self.props.handleChange(value, property, isRequired, pattern);
   };
   renderActions = () => {
-    var actionValues = this.state.process
-      ? this.state.process.attributes.validActions.values
-      : '';
+    var actionValues = this.state.process ? this.state.process.attributes.validActions.values : '';
     if (actionValues && actionValues.length > 0) {
-      return this.state.process.attributes.validActions.values.map(
-        (item, index) => {
-          //Forward button disable condition for invalid form
-          let isDisable =
-            item.name === 'Forward' ? !this.props.isFormValid : false;
-          return (
-            <RaisedButton
-              key={index}
-              id={item.name}
-              disabled={isDisable}
-              style={{ margin: '15px 5px' }}
-              label={item.name}
-              primary={true}
-              onClick={e => {
-                this.props.updateWorkFlow(item, this.state);
-              }}
-            />
-          );
-        }
-      );
+      return this.state.process.attributes.validActions.values.map((item, index) => {
+        //Forward button disable condition for invalid form
+        let isDisable = item.name === 'Forward' ? !this.props.isFormValid : false;
+        return (
+          <RaisedButton
+            key={index}
+            id={item.name}
+            disabled={isDisable}
+            style={{ margin: '15px 5px' }}
+            label={item.name}
+            primary={true}
+            onClick={e => {
+              this.props.updateWorkFlow(item, this.state);
+            }}
+          />
+        );
+      });
     }
   };
   render() {
@@ -210,8 +192,7 @@ class WorkFlow extends Component {
       <div>
         {this.state.process &&
         this.state.process.attributes.nextAction.code !== 'END' &&
-        this.state.process.attributes.nextAction.code !==
-          'Pending For License Fee Collection' ? (
+        this.state.process.attributes.nextAction.code !== 'Pending For License Fee Collection' ? (
           <Row>
             <Col xs={12} sm={6} md={4} lg={3}>
               <SelectField
@@ -232,11 +213,7 @@ class WorkFlow extends Component {
                 <MenuItem value="" primaryText="Select" />
                 {this.state.workFlowDepartment !== undefined
                   ? this.state.workFlowDepartment.map((department, index) => (
-                      <MenuItem
-                        value={department.id}
-                        key={index}
-                        primaryText={department.name}
-                      />
+                      <MenuItem value={department.id} key={index} primaryText={department.name} />
                     ))
                   : ''}
               </SelectField>
@@ -260,11 +237,7 @@ class WorkFlow extends Component {
                 <MenuItem value="" primaryText="Select" />
                 {this.state.workFlowDesignation !== undefined
                   ? this.state.workFlowDesignation.map((designation, index) => (
-                      <MenuItem
-                        value={designation.id}
-                        key={index}
-                        primaryText={designation.name}
-                      />
+                      <MenuItem value={designation.id} key={index} primaryText={designation.name} />
                     ))
                   : ''}
               </SelectField>
@@ -292,13 +265,7 @@ class WorkFlow extends Component {
                         (assignment, idx) =>
                           assignment.isPrimary ? (
                             <MenuItem
-                              value={
-                                assignment.position +
-                                '~' +
-                                position.name +
-                                '~' +
-                                assignment.designation
-                              }
+                              value={assignment.position + '~' + position.name + '~' + assignment.designation}
                               key={index}
                               primaryText={position.name}
                             />
@@ -328,12 +295,7 @@ class WorkFlow extends Component {
               value={this.state.approvalComments || ''}
               id="comments"
               onChange={(event, newValue) => {
-                this.handleChange(
-                  newValue,
-                  'approvalComments',
-                  false,
-                  /^.[^]{0,500}$/
-                );
+                this.handleChange(newValue, 'approvalComments', false, /^.[^]{0,500}$/);
               }}
             />
           </Col>

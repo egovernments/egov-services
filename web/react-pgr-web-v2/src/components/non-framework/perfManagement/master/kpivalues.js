@@ -8,18 +8,7 @@ import { RadioButton, RadioButtonGroup } from 'material-ui/RadioButton';
 import Menu from 'material-ui/Menu';
 import MenuItem from 'material-ui/MenuItem';
 
-import {
-  Collapse,
-  Grid,
-  Row,
-  Col,
-  Table,
-  DropdownButton,
-  Button,
-  OverlayTrigger,
-  Popover,
-  Glyphicon,
-} from 'react-bootstrap';
+import { Collapse, Grid, Row, Col, Table, DropdownButton, Button, OverlayTrigger, Popover, Glyphicon } from 'react-bootstrap';
 
 import { Card, CardHeader, CardText } from 'material-ui/Card';
 
@@ -104,8 +93,7 @@ class kpivalues extends Component {
   }
 
   componentDidMount() {
-    var url =
-      'egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department';
+    var url = 'egov-mdms-service/v1/_get?moduleName=common-masters&masterName=Department';
     var query = [];
     let self = this;
     Api.commonApiPost(url, query, {}, false, false).then(
@@ -121,8 +109,7 @@ class kpivalues extends Component {
       function(err) {}
     );
 
-    url =
-      'egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master';
+    url = 'egov-mdms-service/v1/_get?masterName=financialYears&moduleName=egf-master';
     query = [];
     Api.commonApiPost(url, query, {}, false, false).then(
       function(res) {
@@ -244,9 +231,7 @@ class kpivalues extends Component {
       var className = this.panelVisiblity(k);
       return (
         <th className={className}>
-          <div suppressContentEditableWarning="true">
-            {headerItem[index[0]]}
-          </div>
+          <div suppressContentEditableWarning="true">{headerItem[index[0]]}</div>
         </th>
       );
     });
@@ -290,9 +275,7 @@ class kpivalues extends Component {
           {this.state.documents[item.valueid] &&
             this.state.documents[item.valueid][item.period] && (
               <span>
-                <label>
-                  {this.state.documents[item.valueid][item.period].name}
-                </label>&nbsp;&nbsp;
+                <label>{this.state.documents[item.valueid][item.period].name}</label>&nbsp;&nbsp;
                 <UiButton
                   item={{ label: 'Upload', uiType: 'button', primary: true }}
                   ui="google"
@@ -302,11 +285,7 @@ class kpivalues extends Component {
               </span>
             )}
 
-          <label
-            class="btn btn-primary"
-            for={'file_' + item.valueid + item.period}
-            style={{ color: 'orange' }}
-          >
+          <label class="btn btn-primary" for={'file_' + item.valueid + item.period} style={{ color: 'orange' }}>
             <input
               id={'file_' + item.valueid + item.period}
               type="file"
@@ -353,18 +332,12 @@ class kpivalues extends Component {
                       }
                       target="_blank"
                     >
-                      {
-                        this.state.filelist[
-                          fileStoreId['fileStoreId']
-                        ] /*translate("wc.craete.file.Download")*/
-                      }
+                      {this.state.filelist[fileStoreId['fileStoreId']] /*translate("wc.craete.file.Download")*/}
                     </a>
                   )}
                   {!this.state.filelist[fileStoreId['fileStoreId']] &&
                     this.state.currentFileList[itemValue.valueid] &&
-                    this.state.currentFileList[itemValue.valueid][
-                      itemValue.period
-                    ] && (
+                    this.state.currentFileList[itemValue.valueid][itemValue.period] && (
                       <span>
                         <a
                           href={
@@ -377,18 +350,14 @@ class kpivalues extends Component {
                           target="_blank"
                         >
                           {
-                            this.state.currentFileList[itemValue.valueid][
-                              itemValue.period
-                            ][
+                            this.state.currentFileList[itemValue.valueid][itemValue.period][
                               fileStoreId['fileStoreId']
                             ] /*translate("wc.craete.file.Download")*/
                           }
                         </a>
                         <br />
                         <div
-                          className={`${
-                            this.state.showingAlert ? '' : 'hidden'
-                          }`}
+                          className={`${this.state.showingAlert ? '' : 'hidden'}`}
                           style={{
                             backgroundColor: '#4CAF50',
                             color: 'white',
@@ -419,11 +388,7 @@ class kpivalues extends Component {
         console.log('file api call');
         let result = new Promise(function(resolve, reject) {
           let { setLoadingStatus } = self.props;
-          let url =
-            '/filestore/v1/files/id?tenantId=' +
-            localStorage.getItem('tenantId') +
-            '&fileStoreId=' +
-            filedetails.fileStoreId;
+          let url = '/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + filedetails.fileStoreId;
 
           var oReq = new XMLHttpRequest();
           oReq.open('GET', url, true);
@@ -496,27 +461,15 @@ class kpivalues extends Component {
             <label>{translate('perfManagement.create.KPIs.groups.type')}</label>:&nbsp;
             <span>{item.kpi.targetType}</span>
             <br />
-            <label>
-              {translate('perfManagement.create.KPIs.groups.kpiTarget')}
-            </label>:&nbsp;
+            <label>{translate('perfManagement.create.KPIs.groups.kpiTarget')}</label>:&nbsp;
             <span>{item.kpi.kpiTargets[0].targetDescription}</span>
             <br />
-            <label>
-              {translate('perfManagement.view.KPIs.groups.viewkpiDate')}
-            </label>:&nbsp;
+            <label>{translate('perfManagement.view.KPIs.groups.viewkpiDate')}</label>:&nbsp;
             <span>{item.kpi.kpiTargets[0].finYear}</span>
             <br />
-            <OverlayTrigger
-              trigger="click"
-              overlay={this.prepareKPIdesc(item.kpi)}
-              placement="right"
-              rootClose
-            >
+            <OverlayTrigger trigger="click" overlay={this.prepareKPIdesc(item.kpi)} placement="right" rootClose>
               <span style={{ color: 'orange' }}>
-                <span
-                  className="glyphicon glyphicon-info-sign"
-                  aria-hidden="true"
-                />&nbsp;
+                <span className="glyphicon glyphicon-info-sign" aria-hidden="true" />&nbsp;
                 <u>{translate('perfManagement.create.KPIs.groups.kpiInfo')}</u>
               </span>
             </OverlayTrigger>
@@ -539,12 +492,7 @@ class kpivalues extends Component {
                     errorStyle={{ float: 'left' }}
                     value={itemValue.value}
                     onChange={e => {
-                      this.handleChange(
-                        itemValue.valueid,
-                        itemValue.period,
-                        e,
-                        'TXT'
-                      );
+                      this.handleChange(itemValue.valueid, itemValue.period, e, 'TXT');
                     }}
                   />
                 )}
@@ -561,12 +509,7 @@ class kpivalues extends Component {
                     errorStyle={{ float: 'left' }}
                     value={itemValue.value}
                     onChange={e => {
-                      this.handleChange(
-                        itemValue.valueid,
-                        itemValue.period,
-                        e,
-                        'VAL'
-                      );
+                      this.handleChange(itemValue.valueid, itemValue.period, e, 'VAL');
                     }}
                   />
                 )}
@@ -583,12 +526,7 @@ class kpivalues extends Component {
                     fullWidth={true}
                     hintText="Please Select"
                     onChange={e => {
-                      this.handleChange(
-                        itemValue.valueid,
-                        itemValue.period,
-                        e,
-                        'DD'
-                      );
+                      this.handleChange(itemValue.valueid, itemValue.period, e, 'DD');
                     }}
                   >
                     <MenuItem value="1" primaryText="YES" />
@@ -598,27 +536,11 @@ class kpivalues extends Component {
                 )}
 
                 <div>
-                  <OverlayTrigger
-                    trigger="click"
-                    overlay={this.prepareUploadPanel(itemValue)}
-                    placement="bottom"
-                    rootClose
-                  >
+                  <OverlayTrigger trigger="click" overlay={this.prepareUploadPanel(itemValue)} placement="bottom" rootClose>
                     <span style={{ color: 'orange' }}>
-                      <span
-                        className="glyphicon glyphicon-upload"
-                        aria-hidden="true"
-                      />{' '}
-                      &nbsp;&nbsp;
-                      <span
-                        id={itemValue.valueid + '' + itemValue.period}
-                        onClick={e => this.setFileName(itemValue, this, e)}
-                      >
-                        <strong>
-                          {translate(
-                            'perfManagement.create.KPIs.groups.Uploads'
-                          )}
-                        </strong>
+                      <span className="glyphicon glyphicon-upload" aria-hidden="true" /> &nbsp;&nbsp;
+                      <span id={itemValue.valueid + '' + itemValue.period} onClick={e => this.setFileName(itemValue, this, e)}>
+                        <strong>{translate('perfManagement.create.KPIs.groups.Uploads')}</strong>
                       </span>
                     </span>
                   </OverlayTrigger>
@@ -699,12 +621,7 @@ class kpivalues extends Component {
                 fileStoreId: res.files[0].fileStoreId,
               });
 
-              self.getFileDetails(
-                res.files[0].fileStoreId,
-                valueid,
-                period,
-                self
-              );
+              self.getFileDetails(res.files[0].fileStoreId, valueid, period, self);
             }
           });
         });
@@ -724,11 +641,7 @@ class kpivalues extends Component {
 
   getFileDetails(filestoreID, valueid, period, self) {
     // let {setLoadingStatus} = self.props;
-    let url =
-      '/filestore/v1/files/id?tenantId=' +
-      localStorage.getItem('tenantId') +
-      '&fileStoreId=' +
-      filestoreID;
+    let url = '/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + filestoreID;
 
     let filelistClone = self.state.currentFileList.slice();
     console.log(filelistClone);
@@ -883,11 +796,7 @@ class kpivalues extends Component {
       function(res) {
         self.props.setLoadingStatus('hide');
         if (res) {
-          self.props.toggleSnackbarAndSetText(
-            true,
-            translate('perfManagement.update.KPIs.groups.updatekpivalue'),
-            true
-          );
+          self.props.toggleSnackbarAndSetText(true, translate('perfManagement.update.KPIs.groups.updatekpivalue'), true);
         }
       },
       function(err) {
@@ -947,23 +856,8 @@ class kpivalues extends Component {
   }
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      create,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      autoComHandler,
-      initiateWF,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { create, handleChange, getVal, addNewCard, removeCard, autoComHandler, initiateWF } = this;
 
     let tableStyle = {
       align: 'center',
@@ -976,9 +870,7 @@ class kpivalues extends Component {
     return (
       <div className="SearchResult">
         <Card className="uiCard">
-          <CardHeader
-            title={<strong>Search Key Performance Indicator </strong>}
-          />
+          <CardHeader title={<strong>Search Key Performance Indicator </strong>} />
           <CardText>
             <Row className="show-grid">
               <Col xs={4} md={4}>
@@ -1008,18 +900,10 @@ class kpivalues extends Component {
                       </span>
                     </span>
                   }
-                  onChange={(event, key, value) =>
-                    this.searchKPIValues(event, key, value, 'DEPT')
-                  }
+                  onChange={(event, key, value) => this.searchKPIValues(event, key, value, 'DEPT')}
                 >
                   {this.state.Department &&
-                    this.state.Department.map((dd, index) => (
-                      <MenuItem
-                        value={dd.id && dd.id.toString()}
-                        key={index}
-                        primaryText={dd.name}
-                      />
-                    ))}
+                    this.state.Department.map((dd, index) => <MenuItem value={dd.id && dd.id.toString()} key={index} primaryText={dd.name} />)}
                 </SelectField>
               </Col>
 
@@ -1043,17 +927,11 @@ class kpivalues extends Component {
                   hintText="Please Select"
                   labelStyle={{ color: '#5F5C57' }}
                   floatingLabelText={<span>Financial Year</span>}
-                  onChange={(event, key, value) =>
-                    this.searchKPIValues(event, key, value, 'FINYEAR')
-                  }
+                  onChange={(event, key, value) => this.searchKPIValues(event, key, value, 'FINYEAR')}
                 >
                   {this.state.FinantialYear &&
                     this.state.FinantialYear.map((dd, index) => (
-                      <MenuItem
-                        value={dd.finYearRange && dd.finYearRange.toString()}
-                        key={index}
-                        primaryText={dd.finYearRange}
-                      />
+                      <MenuItem value={dd.finYearRange && dd.finYearRange.toString()} key={index} primaryText={dd.finYearRange} />
                     ))}
                 </SelectField>
               </Col>
@@ -1078,18 +956,10 @@ class kpivalues extends Component {
                   hintText="Please Select"
                   labelStyle={{ color: '#5F5C57' }}
                   floatingLabelText={<span>KPI Code</span>}
-                  onChange={(event, key, value) =>
-                    this.searchKPIValues(event, key, value, 'KPI')
-                  }
+                  onChange={(event, key, value) => this.searchKPIValues(event, key, value, 'KPI')}
                 >
                   {this.state.KPIs &&
-                    this.state.KPIs.map((dd, index) => (
-                      <MenuItem
-                        value={dd.code && dd.code.toString()}
-                        key={index}
-                        primaryText={dd.code}
-                      />
-                    ))}
+                    this.state.KPIs.map((dd, index) => <MenuItem value={dd.code && dd.code.toString()} key={index} primaryText={dd.code} />)}
                 </SelectField>
               </Col>
             </Row>
@@ -1151,10 +1021,7 @@ class kpivalues extends Component {
 
         {this.state.showResult && (
           <Card className="uiCard">
-            <CardHeader
-              titleStyle={{ marginLeft: 638 }}
-              title={<strong> {translate('ui.table.title')} </strong>}
-            />
+            <CardHeader titleStyle={{ marginLeft: 638 }} title={<strong> {translate('ui.table.title')} </strong>} />
 
             <CardText>
               <div className="cntdatatable">
@@ -1202,11 +1069,7 @@ class kpivalues extends Component {
               <br />
               <Row>
                 <Col xs={2} xsOffset={10}>
-                  <UiButton
-                    item={{ label: 'Save', uiType: 'button', primary: true }}
-                    ui="google"
-                    handler={e => this.handleSubmit(e)}
-                  />&nbsp;&nbsp;
+                  <UiButton item={{ label: 'Save', uiType: 'button', primary: true }} ui="google" handler={e => this.handleSubmit(e)} />&nbsp;&nbsp;
                 </Col>
               </Row>
             </CardText>
@@ -1251,14 +1114,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

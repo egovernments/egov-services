@@ -18,11 +18,7 @@ class UiBackButton extends Component {
       setRoute(customUrl);
     } else {
       if (path.split('/')[1] == 'create') {
-        setRoute(
-          `/search/${params.moduleName}` +
-            (params.master && '/' + params.master) +
-            '/view'
-        );
+        setRoute(`/search/${params.moduleName}` + (params.master && '/' + params.master) + '/view');
       } else {
         setRoute('/' + localStorage.getItem('returnUrl'));
       }
@@ -55,6 +51,4 @@ const mapDispatchToProps = dispatch => ({
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(UiBackButton)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UiBackButton));

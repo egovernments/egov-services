@@ -10,10 +10,7 @@ import ShowFields from '../showFields';
 import { connect } from 'react-redux';
 import jp from 'jsonpath';
 import Api from '../../../api/api';
-import {
-  fileUpload,
-  getInitiatorPosition,
-} from '../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition } from '../../framework/utility/utility';
 //import $ from "jquery";
 
 var specifications = {};
@@ -41,21 +38,12 @@ class UiWindowForm extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -71,14 +59,10 @@ class UiWindowForm extends Component {
     if (self.state.mockData[self.props.item.modulepath].tenantIdRequired) {
     }
     //Check if documents, upload and get fileStoreId
-    let formdocumentData =
-      formData[self.state.mockData[self.props.item.modulepath].objectName];
-    let documentPath =
-      self.state.mockData[self.props.item.modulepath].documentsPath;
+    let formdocumentData = formData[self.state.mockData[self.props.item.modulepath].objectName];
+    let documentPath = self.state.mockData[self.props.item.modulepath].documentsPath;
 
-    formdocumentData =
-      (formdocumentData && formdocumentData.length && formdocumentData[0]) ||
-      formdocumentData;
+    formdocumentData = (formdocumentData && formdocumentData.length && formdocumentData[0]) || formdocumentData;
     if (documentPath) {
       formdocumentData = _.get(formData, documentPath);
     }
@@ -89,10 +73,7 @@ class UiWindowForm extends Component {
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(
-          err,
-          res
-        ) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
@@ -125,11 +106,7 @@ class UiWindowForm extends Component {
     //let { mockData, actionName, moduleName } = this.props;
     let self = this;
     let fileList = {};
-    this.getFileList(
-      self.state.mockData[self.props.item.modulepath],
-      formData,
-      fileList
-    );
+    this.getFileList(self.state.mockData[self.props.item.modulepath], formData, fileList);
     let counter = Object.keys(fileList).length;
     if (!counter) {
       self.makeAjaxCall(formData, _url);
@@ -144,8 +121,7 @@ class UiWindowForm extends Component {
           } else {
             counter--;
             _.set(formData, key, res.files[0].fileStoreId);
-            if (counter == 0 && breakOut == 0)
-              self.makeAjaxCall(formData, _url);
+            if (counter == 0 && breakOut == 0) self.makeAjaxCall(formData, _url);
           }
         });
       }
@@ -155,27 +131,14 @@ class UiWindowForm extends Component {
   getFileList = (mockObject, formData, fileList = {}) => {
     for (let i = 0; i < mockObject.groups.length; i++) {
       for (let j = 0; j < mockObject.groups[i].fields.length; j++) {
-        if (
-          mockObject.groups[i].fields[j].type == 'singleFileUpload' &&
-          _.get(formData, mockObject.groups[i].fields[j].jsonPath)
-        ) {
-          fileList[mockObject.groups[i].fields[j].jsonPath] = _.get(
-            formData,
-            mockObject.groups[i].fields[j].jsonPath
-          );
+        if (mockObject.groups[i].fields[j].type == 'singleFileUpload' && _.get(formData, mockObject.groups[i].fields[j].jsonPath)) {
+          fileList[mockObject.groups[i].fields[j].jsonPath] = _.get(formData, mockObject.groups[i].fields[j].jsonPath);
         }
       }
 
-      if (
-        mockObject.groups[i].children &&
-        mockObject.groups[i].children.length
-      ) {
+      if (mockObject.groups[i].children && mockObject.groups[i].children.length) {
         for (var k = 0; k < mockObject.groups[i].children.length; k++) {
-          this.getFileList(
-            mockObject.groups[i].children[k],
-            formData,
-            fileList
-          );
+          this.getFileList(mockObject.groups[i].children[k], formData, fileList);
         }
       }
     }
@@ -184,13 +147,7 @@ class UiWindowForm extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(
-      url || self.state.mockData[self.props.item.modulepath].url,
-      '',
-      formData,
-      '',
-      true
-    ).then(
+    Api.commonApiPost(url || self.state.mockData[self.props.item.modulepath].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
@@ -210,10 +167,8 @@ class UiWindowForm extends Component {
 
   initData() {
     var self = this;
-    specifications = require(`../../framework/specs/${this.props.item.subPath}`)
-      .default;
-    var result =
-      typeof results == 'string' ? JSON.parse(specifications) : specifications;
+    specifications = require(`../../framework/specs/${this.props.item.subPath}`).default;
+    var result = typeof results == 'string' ? JSON.parse(specifications) : specifications;
     let obj = specifications[this.props.item.modulepath];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
@@ -313,18 +268,11 @@ class UiWindowForm extends Component {
             fullWidth={true}
             floatingLabelText={
               <span>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             }
             //value = {this.state.valueList.join(", ")}
-            value={
-              _internal_val && _internal_val.constructor == Array
-                ? _internal_val.join(', ')
-                : ''
-            }
+            value={_internal_val && _internal_val.constructor == Array ? _internal_val.join(', ') : ''}
             disabled={true}
           />
         </Col>
@@ -345,14 +293,10 @@ class UiWindowForm extends Component {
         <div>
           <Col xs={12}>
             <label>
-              <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                {translate(item.label)}
-              </span>
+              <span style={{ fontWeight: 500, fontSize: '13px' }}>{translate(item.label)}</span>
             </label>
           </Col>
-          <Col xs={12}>
-            {val && val.constructor == Array ? val.join(', ') : ''}
-          </Col>
+          <Col xs={12}>{val && val.constructor == Array ? val.join(', ') : ''}</Col>
         </div>
       );
     } else {
@@ -396,32 +340,20 @@ class UiWindowForm extends Component {
                   secondary={true}
                   style={{ marginTop: 5 }}
                   onClick={e => {
-                    var oldData = self.props.getVal(
-                      self.props.item.jsonPath + '.' + self.props.item.arrayPath
-                    );
+                    var oldData = self.props.getVal(self.props.item.jsonPath + '.' + self.props.item.arrayPath);
                     if (self.state.index >= 0) {
                       oldData[self.state.index] = self.state.valuesObj;
                     } else {
-                      _.isArray(oldData)
-                        ? oldData.push(self.state.valuesObj)
-                        : (oldData = [self.state.valuesObj]);
+                      _.isArray(oldData) ? oldData.push(self.state.valuesObj) : (oldData = [self.state.valuesObj]);
                     }
                     if (self.state.mockData[self.props.item.modulepath].url) {
                       var formData = _.clone(self.props.formData);
-                      _.set(
-                        formData,
-                        self.props.item.jsonPath +
-                          '.' +
-                          self.props.item.arrayPath,
-                        oldData
-                      );
+                      _.set(formData, self.props.item.jsonPath + '.' + self.props.item.arrayPath, oldData);
                       self.create(formData);
                     } else {
                       self.props.handler(
                         { target: { value: oldData } },
-                        self.props.item.jsonPath +
-                          '.' +
-                          self.props.item.arrayPath,
+                        self.props.item.jsonPath + '.' + self.props.item.arrayPath,
                         self.props.item.isRequired ? true : false,
                         '',
                         self.props.item.requiredErrMsg,
@@ -437,11 +369,7 @@ class UiWindowForm extends Component {
                     }
                   }}
                 />,
-                <FlatButton
-                  label={translate('pt.create.button.viewdcb.close')}
-                  primary={true}
-                  onClick={this.handleClose}
-                />,
+                <FlatButton label={translate('pt.create.button.viewdcb.close')} primary={true} onClick={this.handleClose} />,
               ]}
               modal={false}
               open={this.state.open}
@@ -460,10 +388,7 @@ class UiWindowForm extends Component {
                       handler={handleChange}
                       getVal={getValueFn}
                       fieldErrors={this.state.fieldErrors}
-                      useTimestamp={
-                        mockData[this.props.item.modulepath].useTimestamp ||
-                        false
-                      }
+                      useTimestamp={mockData[this.props.item.modulepath].useTimestamp || false}
                       addNewCard={''}
                       removeCard={''}
                       valuesObj={this.state.valuesObj}
@@ -476,42 +401,21 @@ class UiWindowForm extends Component {
     }
   };
 
-  checkValidations = (
-    fieldErrors,
-    property,
-    value,
-    isRequired,
-    form,
-    requiredFields,
-    pattern,
-    patErrMsg
-  ) => {
-    let errorText =
-      isRequired && (typeof value == 'undefined' || value === '')
-        ? translate('ui.framework.required')
-        : '';
+  checkValidations = (fieldErrors, property, value, isRequired, form, requiredFields, pattern, patErrMsg) => {
+    let errorText = isRequired && (typeof value == 'undefined' || value === '') ? translate('ui.framework.required') : '';
     let isFormValid = true;
     // console.log(requiredFields);
     for (var i = 0; i < requiredFields.length; i++) {
-      if (
-        typeof _.get(form, requiredFields[i]) == 'undefined' ||
-        _.get(form, requiredFields[i]) === ''
-      ) {
+      if (typeof _.get(form, requiredFields[i]) == 'undefined' || _.get(form, requiredFields[i]) === '') {
         // console.log(requiredFields[i], _.get(form, requiredFields[i]));
         isFormValid = false;
         break;
       }
     }
 
-    if (
-      pattern &&
-      _.get(form, property) &&
-      !new RegExp(pattern).test(_.get(form, property))
-    ) {
+    if (pattern && _.get(form, property) && !new RegExp(pattern).test(_.get(form, property))) {
       // console.log(property, _.get(form, property));
-      errorText = patErrMsg
-        ? translate(patErrMsg)
-        : translate('ui.framework.patternMessage');
+      errorText = patErrMsg ? translate(patErrMsg) : translate('ui.framework.patternMessage');
       isFormValid = false;
     }
 
@@ -530,12 +434,7 @@ class UiWindowForm extends Component {
     };
   };
   affectDependants = (obj, e, property) => {
-    let {
-      handleChange,
-      setDropDownData,
-      setDropDownOriginalData,
-      dropDownOringalData,
-    } = this.props;
+    let { handleChange, setDropDownData, setDropDownOriginalData, dropDownOringalData } = this.props;
     let { getVal, getValFromDropdownData, returnPathValueFunction } = this;
 
     const findLastIdxOnJsonPath = jsonPath => {
@@ -561,31 +460,18 @@ class UiWindowForm extends Component {
       }
       return str.join('');
     };
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     let dependantIdx;
     if (depedants.length === 0 && property) {
       let currentProperty = property;
       dependantIdx = findLastIdxOnJsonPath(property);
-      if (dependantIdx !== undefined)
-        currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
-      depedants = jp.query(
-        obj,
-        `$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`
-      );
+      if (dependantIdx !== undefined) currentProperty = replaceLastIdxOnJsonPath(property, 0); //RESET INDEX 0 TO FIND DEPENDANT FIELDS FROM TEMPLATE JSON
+      depedants = jp.query(obj, `$.groups..fields[?(@.type=="tableList")].tableList.values[?(@.jsonPath == "${currentProperty}")].depedants.*`);
 
       //Changes to handle table sum
-      var jpathname =
-        property.substr(0, property.lastIndexOf('[') + 1) +
-        '0' +
-        property.substr(property.lastIndexOf('[') + 2);
+      var jpathname = property.substr(0, property.lastIndexOf('[') + 1) + '0' + property.substr(property.lastIndexOf('[') + 2);
 
-      var dependency = jp.query(
-        obj,
-        `$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`
-      );
+      var dependency = jp.query(obj, `$.groups..values[?(@.jsonPath=="${jpathname}")].dependency`);
       if (dependency.length > 0) {
         let _formData = {
           ...this.props.formData,
@@ -649,10 +535,7 @@ class UiWindowForm extends Component {
                   .split('}')[0] == property
               ) {
                 //console.log("replacing!!!", queryStringObject[i].split("=")[1], queryStringObject[i].split("=")[1].replace(/\{(.*?)\}/, e.target.value))
-                id[queryStringObject[i].split('=')[0]] =
-                  queryStringObject[i]
-                    .split('=')[1]
-                    .replace(/\{(.*?)\}/, e.target.value) || '';
+                id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1].replace(/\{(.*?)\}/, e.target.value) || '';
               } else {
                 id[queryStringObject[i].split('=')[0]] =
                   queryStringObject[i].split('=')[1].replace(
@@ -666,24 +549,12 @@ class UiWindowForm extends Component {
                   ) || '';
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
 
-        Api.commonApiPost(
-          context,
-          id,
-          {},
-          false,
-          false,
-          false,
-          '',
-          '',
-          value.isStateLevel
-        ).then(
+        Api.commonApiPost(context, id, {}, false, false, false, '', '', value.isStateLevel).then(
           function(response) {
             if (response) {
               let keys = jp.query(response, splitArray[1].split('|')[1]);
@@ -712,14 +583,7 @@ class UiWindowForm extends Component {
     });
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     let { handleChange, mockData, setDropDownData, formData } = this.props;
     var currentState = this.state;
     let hashLocation = window.location.hash;
@@ -728,10 +592,7 @@ class UiWindowForm extends Component {
     if (hashLocation.indexOf(substring) !== -1) {
       obj = specifications[`${hashLocation.split('/')[2]}.create`];
     } else {
-      obj =
-        specifications[
-          `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-        ];
+      obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     }
 
     var newObj = _.set(currentState.valuesObj, property, e.target.value);
@@ -775,9 +636,7 @@ class UiWindowForm extends Component {
   getValueFn = path => {
     return typeof _.get(this.state.valuesObj, path) != 'undefined'
       ? _.get(this.state.valuesObj, path)
-      : _.get(this.props.formData, path) != 'undefined'
-        ? _.get(this.props.formData, path)
-        : '';
+      : _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
   handleOpen = () => {
     this.setState({
@@ -826,14 +685,7 @@ const mapDispatchToProps = dispatch => ({
   setDropDownOriginalData: (fieldName, dropDownData) => {
     dispatch({ type: 'SET_ORIGINAL_DROPDWON_DATA', fieldName, dropDownData });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

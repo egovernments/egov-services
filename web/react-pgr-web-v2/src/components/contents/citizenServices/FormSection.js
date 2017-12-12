@@ -34,33 +34,21 @@ class FormSection extends Component {
 
   getSectionValidationInformation = condition => {
     if (condition === CONDITION_ALL_REQUIRED) return '*All fields are required';
-    else if (condition === CONDITION_AT_LEAST_ONE_REQUIRED)
-      return '*At least, Please fill any one field';
+    else if (condition === CONDITION_AT_LEAST_ONE_REQUIRED) return '*At least, Please fill any one field';
     else return '';
   };
 
   getTitle = (groupName, constraint) => {
     if (!groupName) return null;
 
-    return (
-      <CardTitle
-        title={groupName}
-        style={styles.cardTitleStyle}
-        subtitle={this.getSectionValidationInformation(constraint)}
-      />
-    );
+    return <CardTitle title={groupName} style={styles.cardTitleStyle} subtitle={this.getSectionValidationInformation(constraint)} />;
   };
 
   renderFiles = fields => {
     return fields.map((field, index) => {
-      if (
-        field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE &&
-        field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE
-      ) {
+      if (field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE && field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE) {
         if (field.dataType == 'file' || field.dataType == 'multifile') {
-          var fileField = this.props.files.find(
-            fileField => fileField.code == field.code
-          );
+          var fileField = this.props.files.find(fileField => fileField.code == field.code);
           var files = fileField ? fileField.files : [];
           return (
             <Col key={index} xs={12} md={4} lg={4}>
@@ -86,10 +74,7 @@ class FormSection extends Component {
   renderFields = fields => {
     const renderSections = [
       fields.map((field, index) => {
-        if (
-          field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE &&
-          field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE
-        ) {
+        if (field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE && field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE) {
           if (field.dataType != 'file' && field.dataType != 'multifile') {
             return (
               <Fields

@@ -129,13 +129,7 @@ class Workflow extends Component {
             id: res.properties[0].propertyDetail.stateId,
           };
 
-          Api.commonApiPost(
-            'egov-common-workflows/process/_search',
-            query,
-            {},
-            false,
-            true
-          )
+          Api.commonApiPost('egov-common-workflows/process/_search', query, {}, false, true)
             .then(res => {
               console.log('dsgdhgdfgfdgdgffdgd', res);
 
@@ -158,10 +152,7 @@ class Workflow extends Component {
                         response.Designation.unshift({ id: -1, name: 'None' });
                         currentThis.setState({
                           ...currentThis.state,
-                          designation: [
-                            ...currentThis.state.designation,
-                            ...response.Designation,
-                          ],
+                          designation: [...currentThis.state.designation, ...response.Designation],
                         });
                       })
                       .catch(err => {
@@ -202,22 +193,14 @@ class Workflow extends Component {
 
     let hasData = false;
 
-    if (
-      type == 'department' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDesignation
-    ) {
+    if (type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
       console.log(type);
       query = {
         departmentId: e.target.value,
         designationId: this.props.workflow.workflowDesignation,
       };
       hasData = true;
-    } else if (
-      type == 'designation' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDepartment
-    ) {
+    } else if (type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
       console.log(type);
       query = {
         departmentId: this.props.workflow.workflowDepartment,
@@ -254,9 +237,7 @@ class Workflow extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -265,13 +246,7 @@ class Workflow extends Component {
       if (list) {
         return list.map(item => {
           console.log(item);
-          return (
-            <MenuItem
-              key={item.id}
-              value={item.assignments[0].position}
-              primaryText={item.name}
-            />
-          );
+          return <MenuItem key={item.id} value={item.assignments[0].position} primaryText={item.name} />;
         });
       }
     };
@@ -297,14 +272,7 @@ class Workflow extends Component {
 
     return (
       <Card className="uiCard">
-        <CardHeader
-          style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              Workflow
-            </div>
-          }
-        />
+        <CardHeader style={styles.reducePadding} title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>Workflow</div>} />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
             <Row>
@@ -313,19 +281,9 @@ class Workflow extends Component {
                   className="fullWidth selectOption"
                   floatingLabelText="Department Name *"
                   errorText={
-                    fieldErrors.workflowDepartment ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.workflowDepartment}
-                      </span>
-                    ) : (
-                      ''
-                    )
+                    fieldErrors.workflowDepartment ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.workflowDepartment}</span> : ''
                   }
-                  value={
-                    workflow.workflowDepartment
-                      ? workflow.workflowDepartment
-                      : ''
-                  }
+                  value={workflow.workflowDepartment ? workflow.workflowDepartment : ''}
                   onChange={(event, index, value) => {
                     value == -1 ? (value = '') : '';
                     var e = {
@@ -350,18 +308,12 @@ class Workflow extends Component {
                   floatingLabelText="Designation Name *"
                   errorText={
                     fieldErrors.workflowDesignation ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.workflowDesignation}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.workflowDesignation}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    workflow.workflowDesignation
-                      ? workflow.workflowDesignation
-                      : ''
-                  }
+                  value={workflow.workflowDesignation ? workflow.workflowDesignation : ''}
                   onChange={(event, index, value) => {
                     value == -1 ? (value = '') : '';
                     var e = {
@@ -384,15 +336,7 @@ class Workflow extends Component {
                 <SelectField
                   className="fullWidth selectOption"
                   floatingLabelText="Approver Name *"
-                  errorText={
-                    fieldErrors.approver ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.approver}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
+                  errorText={fieldErrors.approver ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.approver}</span> : ''}
                   value={workflow.approver ? workflow.approver : ''}
                   onChange={(event, index, value) => {
                     value == -1 ? (value = '') : '';
@@ -415,15 +359,7 @@ class Workflow extends Component {
                 <TextField
                   className="fullWidth"
                   floatingLabelText="Comments"
-                  errorText={
-                    fieldErrors.comments ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.comments}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
+                  errorText={fieldErrors.comments ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.comments}</span> : ''}
                   value={workflow.comments ? workflow.comments : ''}
                   onChange={e => {
                     handleChange(e, 'comments', false, '');

@@ -19,10 +19,7 @@ export default class UiArrayField extends Component {
   componentWillReceiveProps(nextProps) {
     let arrayValue = this.props.getVal(this.props.item.jsonPath);
     let { valueList } = this.state;
-    if (
-      _.isArray(arrayValue) &&
-      JSON.stringify(arrayValue) != JSON.stringify(valueList)
-    ) {
+    if (_.isArray(arrayValue) && JSON.stringify(arrayValue) != JSON.stringify(valueList)) {
       this.setState({
         valueList: arrayValue,
       });
@@ -36,14 +33,10 @@ export default class UiArrayField extends Component {
         <div>
           <Col xs={12}>
             <label>
-              <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                {translate(item.label)}
-              </span>
+              <span style={{ fontWeight: 500, fontSize: '13px' }}>{translate(item.label)}</span>
             </label>
           </Col>
-          <Col xs={12}>
-            {val && val.constructor == Array ? val.join(', ') : ''}
-          </Col>
+          <Col xs={12}>{val && val.constructor == Array ? val.join(', ') : ''}</Col>
         </div>
       );
     } else {
@@ -66,10 +59,7 @@ export default class UiArrayField extends Component {
               fullWidth={true}
               floatingLabelText={
                 <span>
-                  {item.label}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {item.isRequired ? ' *' : ''}
-                  </span>
+                  {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
                 </span>
               }
               //value = {this.state.valueList.join(", ")}
@@ -101,13 +91,7 @@ export default class UiArrayField extends Component {
             {this.renderField(item)}
             <Dialog
               title={this.props.item.label}
-              actions={
-                <FlatButton
-                  label={translate('pt.create.button.viewdcb.close')}
-                  primary={true}
-                  onClick={this.handleClose}
-                />
-              }
+              actions={<FlatButton label={translate('pt.create.button.viewdcb.close')} primary={true} onClick={this.handleClose} />}
               modal={false}
               open={this.state.open}
               onRequestClose={this.handleClose}
@@ -129,46 +113,27 @@ export default class UiArrayField extends Component {
                     fullWidth={true}
                     floatingLabelText={<span>{this.props.item.label}</span>}
                     errorText={
-                      this.state.currentValue &&
-                      this.props.item.pattern &&
-                      !new RegExp(this.props.item.pattern).test(
-                        this.state.currentValue
-                      )
+                      this.state.currentValue && this.props.item.pattern && !new RegExp(this.props.item.pattern).test(this.state.currentValue)
                         ? this.props.item.patternErrMsg || 'Invalid Pattern'
                         : ''
                     }
                     onChange={e => {
                       if (e.target.value) {
                         e.target.value = e.target.value.replace(/^\s*/, '');
-                        if (
-                          e.target.value[e.target.value.length - 1] == ' ' &&
-                          e.target.value[e.target.value.length - 2] == ' '
-                        )
-                          return;
+                        if (e.target.value[e.target.value.length - 1] == ' ' && e.target.value[e.target.value.length - 2] == ' ') return;
                       }
 
-                      if (
-                        this.props.item.type == 'arrayNumber' &&
-                        e.target.value &&
-                        !/^\d.*$/.test(e.target.value)
-                      )
-                        return;
+                      if (this.props.item.type == 'arrayNumber' && e.target.value && !/^\d.*$/.test(e.target.value)) return;
                       this.setState({ currentValue: e.target.value });
                     }}
                   />
                 </Col>
                 <Col xs={12} md={4}>
                   <FlatButton
-                    label={translate(
-                      'pt.create.groups.ownerDetails.fields.add'
-                    )}
+                    label={translate('pt.create.groups.ownerDetails.fields.add')}
                     disabled={
                       !this.state.currentValue ||
-                      (this.state.currentValue &&
-                        this.props.item.pattern &&
-                        !new RegExp(this.props.item.pattern).test(
-                          this.state.currentValue
-                        ))
+                      (this.state.currentValue && this.props.item.pattern && !new RegExp(this.props.item.pattern).test(this.state.currentValue))
                     }
                     secondary={true}
                     style={{ marginTop: 39 }}

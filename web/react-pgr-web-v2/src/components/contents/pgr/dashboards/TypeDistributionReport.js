@@ -3,12 +3,7 @@ import { Grid } from 'react-bootstrap';
 import _ from 'lodash';
 import { PieChart, Pie, Sector, Tooltip, Cell, Legend } from 'recharts';
 import Api from '../.././../../api/api';
-import {
-  getTenantId,
-  CustomizedLegend,
-  RenderActiveShape,
-  extractManipulateCityAndWardsPath,
-} from './ReportUtils';
+import { getTenantId, CustomizedLegend, RenderActiveShape, extractManipulateCityAndWardsPath } from './ReportUtils';
 import GisMapView from './GisMapView';
 import CommonGisReportView from './CommonGisReportView';
 
@@ -23,13 +18,7 @@ export default class TypeDistributionReport extends Component {
 
   componentDidMount() {
     let topTenComplaintData;
-    Promise.all([
-      Api.commonApiPost(
-        'pgr/dashboard/complainttype',
-        { size: 10 },
-        { tenantId: getTenantId() }
-      ),
-    ]).then(
+    Promise.all([Api.commonApiPost('pgr/dashboard/complainttype', { size: 10 }, { tenantId: getTenantId() })]).then(
       responses => {
         try {
           topTenComplaintData = responses[0].map(obj => {
@@ -57,24 +46,11 @@ export default class TypeDistributionReport extends Component {
   };
 
   render() {
-    const COLORS = [
-      '#0088FE',
-      '#00C49F',
-      '#008F7D',
-      '#FFBB28',
-      '#FF8042',
-      '#607D8B',
-      '#9E9E9E',
-      '#9C28B1',
-      '#795547',
-      '#673BB7',
-    ];
+    const COLORS = ['#0088FE', '#00C49F', '#008F7D', '#FFBB28', '#FF8042', '#607D8B', '#9E9E9E', '#9C28B1', '#795547', '#673BB7'];
 
     const data = this.state.topTenComplaintData || [];
     let { isVisible, styles } = this.props;
-    let TypeDistributionStyle = !isVisible
-      ? { ...styles.fullHeightGrid, visibility: 'hidden' }
-      : styles.fullHeightGrid;
+    let TypeDistributionStyle = !isVisible ? { ...styles.fullHeightGrid, visibility: 'hidden' } : styles.fullHeightGrid;
 
     let params, totalComplaints;
     if (data && data.length > 0) {
@@ -87,13 +63,7 @@ export default class TypeDistributionReport extends Component {
 
     return (
       <Grid fluid={true} style={TypeDistributionStyle}>
-        {params && (
-          <CommonGisReportView
-            totalComplaints={totalComplaints}
-            params={params}
-            color={COLORS[this.state.activeIndex]}
-          />
-        )}
+        {params && <CommonGisReportView totalComplaints={totalComplaints} params={params} color={COLORS[this.state.activeIndex]} />}
         <div className="map-pie-chart">
           <PieChart width={300} height={480}>
             <Pie
@@ -109,24 +79,11 @@ export default class TypeDistributionReport extends Component {
               outerRadius={80}
               fill="#8884d8"
             >
-              {data &&
-                data.map((slice, index) => (
-                  <Cell
-                    style={{ cursor: 'pointer' }}
-                    key={slice}
-                    fill={COLORS[index % COLORS.length]}
-                  />
-                ))}
+              {data && data.map((slice, index) => <Cell style={{ cursor: 'pointer' }} key={slice} fill={COLORS[index % COLORS.length]} />)}
             </Pie>
             <Legend
               height={280}
-              content={
-                <CustomizedLegend
-                  external={data}
-                  activeIndex={this.state.activeIndex}
-                  onClickActivePie={this.onPieClick}
-                />
-              }
+              content={<CustomizedLegend external={data} activeIndex={this.state.activeIndex} onClickActivePie={this.onPieClick} />}
             />
           </PieChart>
         </div>

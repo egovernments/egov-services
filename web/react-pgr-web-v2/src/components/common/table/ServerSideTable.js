@@ -37,11 +37,7 @@ class ServerSideTable extends Component {
     let toSearch = event.target.value.toLowerCase();
     for (var i = 0; i < this.state.resultList.reportReponseData.length; i++) {
       for (var key in this.state.resultList.reportReponseData[i]) {
-        if (
-          this.state.resultList.reportReponseData[i][key]
-            .toLowerCase()
-            .indexOf(toSearch) != -1
-        ) {
+        if (this.state.resultList.reportReponseData[i][key].toLowerCase().indexOf(toSearch) != -1) {
           results.push(this.state.resultList.reportReponseData[i]);
         }
       }
@@ -55,24 +51,17 @@ class ServerSideTable extends Component {
   renderHeader = () => {
     let { resultList } = this.state;
     if (resultList) {
-      if (
-        resultList.reportReponseData &&
-        resultList.reportReponseData.length > 0
-      ) {
-        return Object.keys(resultList.reportReponseData[0]).map(
-          (header, index) => {
-            return <th key={index}>{header}</th>;
-          }
-        );
+      if (resultList.reportReponseData && resultList.reportReponseData.length > 0) {
+        return Object.keys(resultList.reportReponseData[0]).map((header, index) => {
+          return <th key={index}>{header}</th>;
+        });
       }
     }
   };
   renderBody = () => {
     let { resultList, userSearchResult, userSearch } = this.state;
     if (resultList) {
-      var searchResponse = userSearch
-        ? userSearchResult
-        : resultList.reportReponseData;
+      var searchResponse = userSearch ? userSearchResult : resultList.reportReponseData;
       if (searchResponse && searchResponse.length > 0) {
         return searchResponse.map((obj, index) => {
           return (
@@ -84,10 +73,7 @@ class ServerSideTable extends Component {
                       <a
                         href="javascript:void(0)"
                         onClick={e => {
-                          this.handleNavigation(
-                            Object.values(resultList.reportActionData[0])[idx] +
-                              encodeURIComponent(data)
-                          );
+                          this.handleNavigation(Object.values(resultList.reportActionData[0])[idx] + encodeURIComponent(data));
                         }}
                       >
                         {data}
@@ -132,15 +118,7 @@ class ServerSideTable extends Component {
   render() {
     return (
       <Card style={styles.marginStyle}>
-        <CardHeader
-          style={{ paddingBottom: 0 }}
-          title={
-            <div style={styles.headerStyle}>
-              {' '}
-              {translate('pgr.searchresult')}{' '}
-            </div>
-          }
-        />
+        <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.searchresult')} </div>} />
         <CardText style={{ paddingTop: 0 }}>
           <Row>
             <Col mdOffset={7} md={3}>
@@ -156,12 +134,7 @@ class ServerSideTable extends Component {
               />
             </Col>
             <Col md={12}>
-              <Table
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead>
                   <tr>{this.renderHeader()}</tr>
                 </thead>

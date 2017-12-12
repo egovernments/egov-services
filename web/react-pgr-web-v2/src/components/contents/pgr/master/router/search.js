@@ -200,9 +200,7 @@ class searchRouter extends Component {
   }
 
   handleNavigation(id) {
-    this.props.history.push(
-      '/pgr/createRouter/' + this.props.match.params.type + '/' + id
-    );
+    this.props.history.push('/pgr/createRouter/' + this.props.match.params.type + '/' + id);
   }
 
   render() {
@@ -233,30 +231,10 @@ class searchRouter extends Component {
               }}
             >
               <td>{i + 1}</td>
-              <td>
-                {val.service
-                  ? getNameById(complaintSource, val.service, 'serviceName')
-                  : ''}
-              </td>
-              <td>
-                {val.boundary
-                  ? getNameById(
-                      boundaryInitialList,
-                      val.boundary,
-                      'boundaryType.name'
-                    )
-                  : ''}
-              </td>
-              <td>
-                {val.boundary
-                  ? getNameById(boundaryInitialList, val.boundary, 'name')
-                  : ''}
-              </td>
-              <td>
-                {val.position
-                  ? getNameById(positionSource, val.position, 'name')
-                  : ''}
-              </td>
+              <td>{val.service ? getNameById(complaintSource, val.service, 'serviceName') : ''}</td>
+              <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'boundaryType.name') : ''}</td>
+              <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'name') : ''}</td>
+              <td>{val.position ? getNameById(positionSource, val.position, 'name') : ''}</td>
             </tr>
           );
         });
@@ -266,22 +244,9 @@ class searchRouter extends Component {
       if (isSearchClicked)
         return (
           <Card style={styles.marginStyle}>
-            <CardHeader
-              title={
-                <strong style={{ color: '#5a3e1b' }}>
-                  {' '}
-                  {translate('pgr.searchresult')}{' '}
-                </strong>
-              }
-            />
+            <CardHeader title={<strong style={{ color: '#5a3e1b' }}> {translate('pgr.searchresult')} </strong>} />
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -367,13 +332,7 @@ class searchRouter extends Component {
                         handleChange(e, 'boundaryTypeId', true, '');
                       }}
                     >
-                      {boundaryTypeList.map((item, index) => (
-                        <MenuItem
-                          value={item.id}
-                          key={index}
-                          primaryText={item.name}
-                        />
-                      ))}
+                      {boundaryTypeList.map((item, index) => <MenuItem value={item.id} key={index} primaryText={item.name} />)}
                     </SelectField>
                   </Col>
                   <Col xs={12} sm={6} md={6} lg={6}>
@@ -413,12 +372,7 @@ class searchRouter extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              label={translate('core.lbl.search')}
-              primary={true}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" label={translate('core.lbl.search')} primary={true} />
           </div>
           {viewTable()}
         </form>

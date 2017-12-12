@@ -115,13 +115,7 @@ class AddDemand extends Component {
       consumerNumber: decodeURIComponent(this.props.match.params.upicNumber),
     };
 
-    Api.commonApiPost(
-      'wcms-connection/connection/_search',
-      getDemands,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('wcms-connection/connection/_search', getDemands, {}, false, true)
       .then(res => {
         currentThis.setState({
           searchData: res,
@@ -131,13 +125,7 @@ class AddDemand extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate',
-      getDemands,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true)
       .then(res => {
         currentThis.setState({
           DemandDetailBeans: res.DemandDetailBeans,
@@ -147,10 +135,10 @@ class AddDemand extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ locality: res.Boundary });
@@ -172,13 +160,10 @@ class AddDemand extends Component {
           res1.WaterConfigurationValue[0].value &&
           res1.WaterConfigurationValue[0].value
         ) {
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'ZONE',
-              hierarchyTypeName: res1.WaterConfigurationValue[0].value,
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'ZONE',
+            hierarchyTypeName: res1.WaterConfigurationValue[0].value,
+          })
             .then(res => {
               console.log(res);
               res.Boundary.unshift({ id: -1, name: 'None' });
@@ -220,12 +205,7 @@ class AddDemand extends Component {
     )
       .then(res => {
         self.props.setLoadingStatus('hide');
-        self.props.toggleSnackbarAndSetText(
-          true,
-          translate('wc.update.message.success'),
-          true,
-          false
-        );
+        self.props.toggleSnackbarAndSetText(true, translate('wc.update.message.success'), true, false);
         self.props.history.push('/searchconnection/wc');
       })
       .catch(err => {
@@ -259,16 +239,8 @@ class AddDemand extends Component {
 
     const handleChangeSrchRslt = function(e, name, ind) {
       var _emps = Object.assign([], DemandDetailBeans);
-      if (
-        name == 'collectionAmount' &&
-        Number(_emps[ind]['taxAmount']) < Number(e.target.value)
-      ) {
-        return cThis.props.toggleSnackbarAndSetText(
-          true,
-          translate('wc.create.error'),
-          false,
-          true
-        );
+      if (name == 'collectionAmount' && Number(_emps[ind]['taxAmount']) < Number(e.target.value)) {
+        return cThis.props.toggleSnackbarAndSetText(true, translate('wc.create.error'), false, true);
       }
 
       _emps[ind][name] = e.target.value;
@@ -325,12 +297,8 @@ class AddDemand extends Component {
         return DemandDetailBeans.map((item, index) => {
           return (
             <tr key={index}>
-              <td data-label={translate('wc.create.demands.taxPeriod')}>
-                {item.taxPeriod}
-              </td>
-              <td data-label={translate('wc.create.demands.taxHeadMasterCode')}>
-                {item.taxHeadMasterCode}
-              </td>
+              <td data-label={translate('wc.create.demands.taxPeriod')}>{item.taxPeriod}</td>
+              <td data-label={translate('wc.create.demands.taxHeadMasterCode')}>{item.taxHeadMasterCode}</td>
               <td data-label={translate('wc.create.demands.taxAmount')}>
                 <TextField
                   type="number"
@@ -372,11 +340,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.consumerNumber'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.consumerNumber')}</span>
                   </label>
                   <br />
                   <label>
@@ -391,11 +355,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.nameOfApplicant'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.nameOfApplicant')}</span>
                   </label>
                   <br />
                   <label>
@@ -403,10 +363,8 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].property &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0] &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0].name}
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0] &&
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0].name}
                   </label>
                 </span>
               </Col>
@@ -414,9 +372,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.address')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.address')}</span>
                   </label>
                   <br />
                   <label>
@@ -431,11 +387,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.mobileNumber'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.mobileNumber')}</span>
                   </label>
                   <br />
                   <label>
@@ -443,10 +395,8 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].property &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0] &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0].mobileNumber}
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0] &&
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0].mobileNumber}
                   </label>
                 </span>
               </Col>
@@ -456,9 +406,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.email')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.email')}</span>
                   </label>
                   <br />
                   <label>
@@ -466,21 +414,15 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].property &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0] &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0].emailId}
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0] &&
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0].emailId}
                   </label>
                 </span>
               </Col>
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.adharNumber'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.adharNumber')}</span>
                   </label>
                   <br />
                   <label>
@@ -488,19 +430,15 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].property &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0] &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyOwner[0].aadhaarNumber}
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0] &&
+                      cThis.state.searchData.Connection[0].property.propertyOwner[0].aadhaarNumber}
                   </label>
                 </span>
               </Col>
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.locality')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.locality')}</span>
                   </label>
                   <br />
                   <label>
@@ -518,9 +456,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.zone')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.zone')}</span>
                   </label>
                   <br />
                   <label>
@@ -541,11 +477,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.noOfFloors'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.noOfFloors')}</span>
                   </label>
                   <br />
                   <label>
@@ -560,11 +492,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.connectionDetails.connectionType'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.connectionDetails.connectionType')}</span>
                   </label>
                   <br />
                   <label>
@@ -578,11 +506,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.connectionDetails.usageType'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.connectionDetails.usageType')}</span>
                   </label>
                   <br />
                   <label>
@@ -597,11 +521,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.connectionDetails.subUsageType'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.connectionDetails.subUsageType')}</span>
                   </label>
                   <br />
                   <label>
@@ -622,11 +542,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.propertyTaxDue'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.propertyTaxDue')}</span>
                   </label>
                   <br />
                   <label>
@@ -634,8 +550,7 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0] &&
-                      cThis.state.searchData.Connection[0].property
-                        .propertyTaxDue}
+                      cThis.state.searchData.Connection[0].property.propertyTaxDue}
                   </label>
                 </span>
               </Col>
@@ -649,11 +564,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.consumerNumber'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.consumerNumber')}</span>
                   </label>
                   <br />
                   <label>
@@ -668,11 +579,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.nameOfApplicant'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.nameOfApplicant')}</span>
                   </label>
                   <br />
                   <label>
@@ -680,8 +587,7 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].connectionOwners &&
-                      cThis.state.searchData.Connection[0].connectionOwners[0]
-                        .name}
+                      cThis.state.searchData.Connection[0].connectionOwners[0].name}
                   </label>
                 </span>
               </Col>
@@ -689,9 +595,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.address')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.address')}</span>
                   </label>
                   <br />
                   <label>
@@ -706,11 +610,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.mobileNumber'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.mobileNumber')}</span>
                   </label>
                   <br />
                   <label>
@@ -718,8 +618,7 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].connectionOwners &&
-                      cThis.state.searchData.Connection[0].connectionOwners[0]
-                        .mobileNumber}
+                      cThis.state.searchData.Connection[0].connectionOwners[0].mobileNumber}
                   </label>
                 </span>
               </Col>
@@ -729,9 +628,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.email')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.email')}</span>
                   </label>
                   <br />
                   <label>
@@ -739,19 +636,14 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].connectionOwners &&
-                      cThis.state.searchData.Connection[0].connectionOwners[0]
-                        .emailId}
+                      cThis.state.searchData.Connection[0].connectionOwners[0].emailId}
                   </label>
                 </span>
               </Col>
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.applicantDetails.adharNumber'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.adharNumber')}</span>
                   </label>
                   <br />
                   <label>
@@ -759,17 +651,14 @@ class AddDemand extends Component {
                       cThis.state.searchData.Connection &&
                       cThis.state.searchData.Connection[0] &&
                       cThis.state.searchData.Connection[0].connectionOwners &&
-                      cThis.state.searchData.Connection[0].connectionOwners[0]
-                        .aadhaarNumber}
+                      cThis.state.searchData.Connection[0].connectionOwners[0].aadhaarNumber}
                   </label>
                 </span>
               </Col>
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.locality')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.locality')}</span>
                   </label>
                   <br />
                   <label>
@@ -778,12 +667,9 @@ class AddDemand extends Component {
                       cThis.state.searchData &&
                         cThis.state.searchData.Connection &&
                         cThis.state.searchData.Connection[0] &&
-                        cThis.state.searchData.Connection[0]
-                          .connectionLocation &&
-                        cThis.state.searchData.Connection[0].connectionLocation
-                          .locationBoundary &&
-                        cThis.state.searchData.Connection[0].connectionLocation
-                          .locationBoundary.id
+                        cThis.state.searchData.Connection[0].connectionLocation &&
+                        cThis.state.searchData.Connection[0].connectionLocation.locationBoundary &&
+                        cThis.state.searchData.Connection[0].connectionLocation.locationBoundary.id
                     )}
                   </label>
                 </span>
@@ -791,9 +677,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate('wc.create.groups.applicantDetails.zone')}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.applicantDetails.zone')}</span>
                   </label>
                   <br />
                   <label>
@@ -802,12 +686,9 @@ class AddDemand extends Component {
                       cThis.state.searchData &&
                         cThis.state.searchData.Connection &&
                         cThis.state.searchData.Connection[0] &&
-                        cThis.state.searchData.Connection[0]
-                          .connectionLocation &&
-                        cThis.state.searchData.Connection[0].connectionLocation
-                          .revenueBoundary &&
-                        cThis.state.searchData.Connection[0].connectionLocation
-                          .revenueBoundary.id
+                        cThis.state.searchData.Connection[0].connectionLocation &&
+                        cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary &&
+                        cThis.state.searchData.Connection[0].connectionLocation.revenueBoundary.id
                     )}
                   </label>
                 </span>
@@ -818,11 +699,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.connectionDetails.connectionType'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.connectionDetails.connectionType')}</span>
                   </label>
                   <br />
                   <label>
@@ -836,11 +713,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.connectionDetails.usageType'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.connectionDetails.usageType')}</span>
                   </label>
                   <br />
                   <label>
@@ -855,11 +728,7 @@ class AddDemand extends Component {
               <Col xs={12} sm={4} md={3} lg={3}>
                 <span>
                   <label>
-                    <span style={{ fontWeight: '500' }}>
-                      {translate(
-                        'wc.create.groups.connectionDetails.subUsageType'
-                      )}
-                    </span>
+                    <span style={{ fontWeight: '500' }}>{translate('wc.create.groups.connectionDetails.subUsageType')}</span>
                   </label>
                   <br />
                   <label>
@@ -885,25 +754,13 @@ class AddDemand extends Component {
         <Card className="uiCard">
           <CardTitle
             style={styles.reducePadding}
-            title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {translate('wc.create.demand.applicantParticular')}
-              </div>
-            }
-            subtitle={
-              <div style={{ color: '#354f57', fontSize: 15, margin: '8px 0' }}>
-                {translate('wc.create.demand.basicDetails')}
-              </div>
-            }
+            title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('wc.create.demand.applicantParticular')}</div>}
+            subtitle={<div style={{ color: '#354f57', fontSize: 15, margin: '8px 0' }}>{translate('wc.create.demand.basicDetails')}</div>}
           />
           <br />
           <CardText style={styles.reducePadding}>
             <Grid fluid>
-              {getValue(
-                cThis.state.searchData &&
-                  cThis.state.searchData.Connection &&
-                  cThis.state.searchData.Connection[0]
-              )}
+              {getValue(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0])}
               <br />
               <br />
               <Table
@@ -919,31 +776,13 @@ class AddDemand extends Component {
               >
                 <thead>
                   <tr>
-                    <th style={{ textAlign: 'center' }}>
-                      {translate(
-                        'pt.create.groups.addDemand.fields.installment'
-                      )}
-                    </th>
-                    <th style={{ textAlign: 'center' }}>
-                      {translate('wc.create.demand.tax')}
-                    </th>
-                    <th style={{ textAlign: 'center' }}>
-                      {translate('wc.create.demands')}
-                    </th>
-                    <th style={{ textAlign: 'center' }}>
-                      {translate(
-                        'pt.create.groups.addDemand.fields.collection'
-                      )}
-                    </th>
+                    <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.installment')}</th>
+                    <th style={{ textAlign: 'center' }}>{translate('wc.create.demand.tax')}</th>
+                    <th style={{ textAlign: 'center' }}>{translate('wc.create.demands')}</th>
+                    <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.collection')}</th>
                   </tr>
                 </thead>
-                <tbody>
-                  {showfields(
-                    cThis.state.searchData &&
-                      cThis.state.searchData.Connection &&
-                      cThis.state.searchData.Connection[0]
-                  )}
-                </tbody>
+                <tbody>{showfields(cThis.state.searchData && cThis.state.searchData.Connection && cThis.state.searchData.Connection[0])}</tbody>
               </Table>
             </Grid>
           </CardText>

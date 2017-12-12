@@ -24,8 +24,7 @@ var dat = {
             label: 'inventory.rateContractNumber',
             type: 'text',
             isDisabled: false,
-            patternErrorMsg:
-              'inventory.create.field.message.rateContractNumber',
+            patternErrorMsg: 'inventory.create.field.message.rateContractNumber',
           },
           {
             name: 'agreementNumber',
@@ -57,8 +56,7 @@ var dat = {
             label: 'inventory.agreementStartDate',
             type: 'datePicker',
             isDisabled: false,
-            patternErrorMsg:
-              'inventory.create.field.message.agreementStartDate',
+            patternErrorMsg: 'inventory.create.field.message.agreementStartDate',
           },
           {
             name: 'agreementEndDate',
@@ -168,8 +166,7 @@ var dat = {
             name: 'supplier',
             jsonPath: 'priceLists[0].supplier.code',
             label: 'inventory.supplier',
-            url:
-              'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name',
+            url: 'inventory-services/suppliers/_search?|$.suppliers[*].code|$.suppliers[*].name',
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
@@ -329,8 +326,7 @@ var dat = {
                   pattern: '',
                   type: 'autoCompelete',
                   jsonPath: 'priceLists[0].priceListDetails[0].material.code',
-                  displayJsonPath:
-                    'priceLists[0].priceListDetails[0].material.name',
+                  displayJsonPath: 'priceLists[0].priceListDetails[0].material.name',
                   isRequired: true,
                   isDisabled: false,
                   url:
@@ -343,8 +339,7 @@ var dat = {
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')",
                     },
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].uom.conversionFactor',
+                      jsonPath: 'priceLists[0].priceListDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')",
@@ -358,12 +353,10 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
                   depedants: [
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].uom.conversionFactor',
+                      jsonPath: 'priceLists[0].priceListDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')",
@@ -569,16 +562,14 @@ var dat = {
                   pattern: '',
                   type: 'autoCompelete',
                   jsonPath: 'priceLists[0].priceListDetails[0].material.code',
-                  displayJsonPath:
-                    'priceLists[0].priceListDetails[0].material.name',
+                  displayJsonPath: 'priceLists[0].priceListDetails[0].material.name',
                   isRequired: true,
                   isDisabled: false,
                   url:
                     '/egov-mdms-service/v1/_get?&moduleName=inventory&masterName=Material|$.MdmsRes.inventory.Material[*].code|$.MdmsRes.inventory.Material[*].name|$.MdmsRes.inventory.Material[*].description',
                   depedants: [
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].material.description',
+                      jsonPath: 'priceLists[0].priceListDetails[0].material.description',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialStoreMappings[*].material.code', getVal('materialStoreMappings[*].material.code'), 'others[0]')",
@@ -592,12 +583,10 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
                   depedants: [
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].uom.conversionFactor',
+                      jsonPath: 'priceLists[0].priceListDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')",
@@ -663,8 +652,7 @@ var dat = {
       },
     ],
     tenantIdRequired: true,
-    url:
-      '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
+    url: '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
   },
   'inventory.update': {
     numCols: 4,
@@ -833,8 +821,7 @@ var dat = {
                   pattern: '',
                   type: 'singleValueList',
                   jsonPath: 'priceLists[0].priceListDetails[0].material.code',
-                  displayJsonPath:
-                    'priceLists[0].priceListDetails[0].material.name',
+                  displayJsonPath: 'priceLists[0].priceListDetails[0].material.name',
                   isRequired: true,
                   isDisabled: false,
                   url:
@@ -847,8 +834,7 @@ var dat = {
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].material.code', getVal('priceLists[0].priceListDetails[*].material.code'), 'others[0]')",
                     },
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].uom.conversionFactor',
+                      jsonPath: 'priceLists[0].priceListDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')",
@@ -862,12 +848,10 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
                   depedants: [
                     {
-                      jsonPath:
-                        'priceLists[0].priceListDetails[0].uom.conversionFactor',
+                      jsonPath: 'priceLists[0].priceListDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('priceLists[0].priceListDetails[*].uom.code', getVal('priceLists[0].priceListDetails[*].uom.code'), 'others[0]')",
@@ -934,8 +918,7 @@ var dat = {
     ],
     url: '/inventory-services/pricelists/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
+    searchUrl: '/inventory-services/pricelists/_search?rateContractNumber={rateContractNumber}',
   },
 };
 export default dat;

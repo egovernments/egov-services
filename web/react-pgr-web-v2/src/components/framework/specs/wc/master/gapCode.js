@@ -57,8 +57,7 @@ var dat = {
             label: 'wc.create.groups.fields.logic',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/gapcodes/logic/_search?&active=true|$..key|$..object',
+            url: '/wcms/masters/gapcodes/logic/_search?&active=true|$..key|$..object',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -70,8 +69,7 @@ var dat = {
             label: 'wc.create.groups.fields.noOfMonths',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/gapcodes/lastmonths/_search?&active=true|$..key|$..object',
+            url: '/wcms/masters/gapcodes/lastmonths/_search?&active=true|$..key|$..object',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -121,11 +119,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'employee.Employee.fields.code' },
-        { label: 'wc.create.Formula' },
-        { label: 'wc.create.description' },
-      ],
+      header: [{ label: 'employee.Employee.fields.code' }, { label: 'wc.create.Formula' }, { label: 'wc.create.description' }],
       values: ['code', 'name', 'description'],
       resultPath: 'Gapcodes',
       rowClickUrlUpdate: '/update/wc/gapCode/{id}',
@@ -189,8 +183,7 @@ var dat = {
             label: 'wc.create.groups.fields.logic',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/gapcodes/logic/_search?&active=true|$..key|$..object',
+            url: '/wcms/masters/gapcodes/logic/_search?&active=true|$..key|$..object',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -202,8 +195,7 @@ var dat = {
             label: 'wc.create.groups.fields.noOfMonths',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/gapcodes/lastmonths/_search?&active=true|$..key|$..object',
+            url: '/wcms/masters/gapcodes/lastmonths/_search?&active=true|$..key|$..object',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -283,8 +275,7 @@ var dat = {
             label: 'wc.create.groups.fields.logic',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/gapcodes/logic/_search?&active=true|$..key|$..object',
+            url: '/wcms/masters/gapcodes/logic/_search?&active=true|$..key|$..object',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -296,8 +287,7 @@ var dat = {
             label: 'wc.create.groups.fields.noOfMonths',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/gapcodes/lastmonths/_search?&active=true|$..key|$..object',
+            url: '/wcms/masters/gapcodes/lastmonths/_search?&active=true|$..key|$..object',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',

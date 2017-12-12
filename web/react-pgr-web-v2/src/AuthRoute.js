@@ -28,11 +28,7 @@ const AuthRoute = ({ component, ...props }) => {
     //User is not Authenticated
     if (isPrivate == undefined) {
       //If the route is private the user is redirected to the app's public root.
-      return (
-        <Redirect
-          to={PUBLIC_ROOT + localStorage.getItem('tenantId') || 'default'}
-        />
-      );
+      return <Redirect to={PUBLIC_ROOT + localStorage.getItem('tenantId') || 'default'} />;
     } else {
       //If the route is public, the user may proceed.
       return <Route {...props} component={component} />;

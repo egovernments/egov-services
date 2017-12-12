@@ -1,11 +1,5 @@
 import React, { Component } from 'react';
-import {
-  withGoogleMap,
-  GoogleMap,
-  Polygon,
-  InfoWindow,
-  Marker,
-} from 'react-google-maps';
+import { withGoogleMap, GoogleMap, Polygon, InfoWindow, Marker } from 'react-google-maps';
 import withScriptjs from 'react-google-maps/lib/async/withScriptjs';
 import _ from 'lodash';
 
@@ -31,18 +25,11 @@ const GisMapView = _.flowRight(withScriptjs, withGoogleMap)(props => {
     });
     if (ward) {
       markerWithInfoWindow = (
-        <Marker
-          position={props.boundaryInfoWindowOpened.latLng}
-          onClick={props.closeInfoWindow}
-        >
+        <Marker position={props.boundaryInfoWindowOpened.latLng} onClick={props.closeInfoWindow}>
           <InfoWindow onCloseClick={props.closeInfoWindow}>
             <div style={{ paddingTop: 5, paddingBottom: 5 }}>
-              <div style={{ padding: 5, fontWeight: 'bold' }}>
-                Ward Name : {ward.name}
-              </div>
-              <div style={{ padding: 5, fontWeight: 'bold' }}>
-                No. Of Complaints : {ward.noOfComplaints}
-              </div>
+              <div style={{ padding: 5, fontWeight: 'bold' }}>Ward Name : {ward.name}</div>
+              <div style={{ padding: 5, fontWeight: 'bold' }}>No. Of Complaints : {ward.noOfComplaints}</div>
             </div>
           </InfoWindow>
         </Marker>
@@ -56,14 +43,7 @@ const GisMapView = _.flowRight(withScriptjs, withGoogleMap)(props => {
       return ward.polygons.map((polygon, idx) => {
         onPolygonClick.bind(this, ward.boundaryCode);
 
-        return (
-          <Polygon
-            key={idx}
-            onClick={e => onPolygonClick(e, ward)}
-            options={ward.style}
-            paths={polygon}
-          />
-        );
+        return <Polygon key={idx} onClick={e => onPolygonClick(e, ward)} options={ward.style} paths={polygon} />;
       });
     });
 
@@ -71,11 +51,7 @@ const GisMapView = _.flowRight(withScriptjs, withGoogleMap)(props => {
   // let center = markerWithInfoWindow ? props.boundaryInfoWindowOpened.latLng : props.center;
 
   return (
-    <GoogleMap
-      ref={props.onMapMounted}
-      defaultZoom={12}
-      center={props.center || null}
-    >
+    <GoogleMap ref={props.onMapMounted} defaultZoom={12} center={props.center || null}>
       {props.wardsPolygons && renderPolygons}
       {markerWithInfoWindow}
     </GoogleMap>

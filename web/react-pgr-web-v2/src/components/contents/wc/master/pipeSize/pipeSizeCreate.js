@@ -81,13 +81,7 @@ class PipeSizeCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/pipesize/_search',
-        { id: this.props.match.params.id },
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/pipesize/_search', { id: this.props.match.params.id }, body, false, true).then(
         function(response) {
           console.log('response', response);
           console.log('response object', response.pipeSizes[0]);
@@ -122,12 +116,7 @@ class PipeSizeCreate extends Component {
     } else {
       this.props.handleChange(e, name, isRequired, pattern);
       var inches = e.target.value * 0.03937;
-      this.props.handleChange(
-        { target: { value: inches } },
-        'sizeInInch',
-        false,
-        ''
-      );
+      this.props.handleChange({ target: { value: inches } }, 'sizeInInch', false, '');
     }
   };
 
@@ -140,22 +129,14 @@ class PipeSizeCreate extends Component {
         id: this.props.createPipeSize.id,
         sizeInMilimeter: this.props.createPipeSize.sizeInMilimeter,
         code: this.props.createPipeSize.code,
-        active: !this.props.createPipeSize.active
-          ? false
-          : this.props.createPipeSize.active,
+        active: !this.props.createPipeSize.active ? false : this.props.createPipeSize.active,
         description: this.props.createPipeSize.description,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/wcms/masters/pipesize/' + body.pipeSize.code + '/_update',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/pipesize/' + body.pipeSize.code + '/_update', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -168,13 +149,7 @@ class PipeSizeCreate extends Component {
         }
       );
     } else {
-      Api.commonApiPost(
-        '/wcms/masters/pipesize/_create',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/pipesize/_create', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -223,14 +198,7 @@ class PipeSizeCreate extends Component {
           <Card style={styles.marginStyle}>
             <CardHeader
               style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {this.state.id != ''
-                    ? 'Update Pipe Size'
-                    : 'Create Pipe Size'}{' '}
-                </div>
-              }
+              title={<div style={styles.headerStyle}> {this.state.id != '' ? 'Update Pipe Size' : 'Create Pipe Size'} </div>}
             />
             <CardText style={{ padding: 0 }}>
               <Grid>
@@ -239,25 +207,12 @@ class PipeSizeCreate extends Component {
                     <TextField
                       fullWidth={true}
                       floatingLabelText={'H.S.C Pipe Size (mm):' + '*'}
-                      value={
-                        createPipeSize.sizeInMilimeter
-                          ? createPipeSize.sizeInMilimeter
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.sizeInMilimeter
-                          ? fieldErrors.sizeInMilimeter
-                          : ''
-                      }
+                      value={createPipeSize.sizeInMilimeter ? createPipeSize.sizeInMilimeter : ''}
+                      errorText={fieldErrors.sizeInMilimeter ? fieldErrors.sizeInMilimeter : ''}
                       maxLength={100}
                       onChange={e => {
                         createPipeSize.active = true;
-                        handleChangeState(
-                          e,
-                          'sizeInMilimeter',
-                          true,
-                          /^\d+(\.\d+)?$/
-                        );
+                        handleChangeState(e, 'sizeInMilimeter', true, /^\d+(\.\d+)?$/);
                       }}
                       id="sizeInMilimeter"
                     />
@@ -266,14 +221,8 @@ class PipeSizeCreate extends Component {
                     <TextField
                       fullWidth={true}
                       floatingLabelText={'H.S.C Pipe Size (Inches):' + '*'}
-                      value={
-                        createPipeSize.sizeInInch
-                          ? createPipeSize.sizeInInch
-                          : '0.0'
-                      }
-                      errorText={
-                        fieldErrors.sizeInInch ? fieldErrors.sizeInInch : ''
-                      }
+                      value={createPipeSize.sizeInInch ? createPipeSize.sizeInInch : '0.0'}
+                      errorText={fieldErrors.sizeInInch ? fieldErrors.sizeInInch : ''}
                       maxLength={100}
                       onChange={e => {
                         createPipeSize.active = true;
@@ -289,21 +238,10 @@ class PipeSizeCreate extends Component {
                       fullWidth={true}
                       maxLength={250}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createPipeSize.description
-                          ? createPipeSize.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createPipeSize.description ? createPipeSize.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^[a-zA-Z0-9 ]*$/g
-                        );
+                        handleChange(e, 'description', false, /^[a-zA-Z0-9 ]*$/g);
                       }}
                       multiLine={true}
                       id="description"
@@ -314,11 +252,7 @@ class PipeSizeCreate extends Component {
                     <Checkbox
                       label={translate('pgr.lbl.active')}
                       style={styles.checkbox}
-                      defaultChecked={
-                        this.state.id != ''
-                          ? createPipeSize.active || false
-                          : createPipeSize.active || true
-                      }
+                      defaultChecked={this.state.id != '' ? createPipeSize.active || false : createPipeSize.active || true}
                       onCheck={(e, i, v) => {
                         console.log(createPipeSize.active, i);
 
@@ -342,11 +276,7 @@ class PipeSizeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id != ''
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
@@ -354,27 +284,15 @@ class PipeSizeCreate extends Component {
         <Dialog
           title={
             this.state.id != ''
-              ? 'Pipe Size ' +
-                createPipeSize.sizeInMilimeter +
-                ' Updated Successfully'
-              : 'Pipe Size ' +
-                createPipeSize.sizeInMilimeter +
-                ' Created Successfully'
+              ? 'Pipe Size ' + createPipeSize.sizeInMilimeter + ' Updated Successfully'
+              : 'Pipe Size ' + createPipeSize.sizeInMilimeter + ' Created Successfully'
           }
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         />
       </div>
     );

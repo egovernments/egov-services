@@ -135,13 +135,7 @@ class AddDemand extends Component {
 
     setLoadingStatus('loading');
 
-    Api.commonApiPost(
-      'pt-property/properties/_preparedcb',
-      getDemands,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/properties/_preparedcb', getDemands, {}, false, true)
       .then(res => {
         console.log('search', res);
 
@@ -156,13 +150,7 @@ class AddDemand extends Component {
             service: 'PT',
           };
 
-          Api.commonApiPost(
-            '/billing-service/taxperiods/_search',
-            periodQuery,
-            {},
-            false,
-            true
-          )
+          Api.commonApiPost('/billing-service/taxperiods/_search', periodQuery, {}, false, true)
             .then(res => {
               setLoadingStatus('hide');
               currentThis.setState({
@@ -183,20 +171,11 @@ class AddDemand extends Component {
             code: item.taxHeadMasterCode,
           };
 
-          Api.commonApiPost(
-            '/billing-service/taxheads/_search',
-            query,
-            {},
-            false,
-            true
-          )
+          Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true)
             .then(res => {
               setLoadingStatus('hide');
               currentThis.setState({
-                taxHeads: [
-                  ...currentThis.state.taxHeads,
-                  res.TaxHeadMasters[0],
-                ],
+                taxHeads: [...currentThis.state.taxHeads, res.TaxHeadMasters[0]],
               });
             })
             .catch(err => {
@@ -224,25 +203,14 @@ class AddDemand extends Component {
 
     for (var key in addDemand) {
       for (var demand in addDemand[key]) {
-        if (
-          key.match('demand') &&
-          (addDemand[key][demand] == null ||
-            addDemand[key][demand] == '' ||
-            addDemand[key][demand] == 0)
-        ) {
+        if (key.match('demand') && (addDemand[key][demand] == null || addDemand[key][demand] == '' || addDemand[key][demand] == 0)) {
           delete addDemand[key][demand];
         }
-        if (
-          key.match('collection') &&
-          (addDemand[key][demand] == null || addDemand[key][demand] == '')
-        ) {
+        if (key.match('collection') && (addDemand[key][demand] == null || addDemand[key][demand] == '')) {
           addDemand[key][demand] = 0;
         }
       }
-      if (
-        Object.keys(addDemand[key]).length === 0 &&
-        addDemand[key].constructor === Object
-      ) {
+      if (Object.keys(addDemand[key]).length === 0 && addDemand[key].constructor === Object) {
         delete addDemand[key];
       }
     }
@@ -253,8 +221,7 @@ class AddDemand extends Component {
         demand.demandDetails.map((item, i) => {
           if (addDemand['demands' + index].hasOwnProperty('demand' + i)) {
             item.taxAmount = addDemand['demands' + index]['demand' + i];
-            item.collectionAmount =
-              addDemand['collections' + index]['collection' + i];
+            item.collectionAmount = addDemand['collections' + index]['collection' + i];
           } else {
             delete data[index].demandDetails[i];
           }
@@ -292,9 +259,7 @@ class AddDemand extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.code} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -331,10 +296,7 @@ class AddDemand extends Component {
                 <div style={{ width: '50px' }}>
                   {this.state.taxPeriod.length != 0 &&
                     this.state.taxPeriod.map((code, index) => {
-                      if (
-                        demand.taxPeriodFrom == code.fromDate &&
-                        demand.taxPeriodTo == code.toDate
-                      ) {
+                      if (demand.taxPeriodFrom == code.fromDate && demand.taxPeriodTo == code.toDate) {
                         return <span>{code.code}</span>;
                       }
                     })}
@@ -347,13 +309,7 @@ class AddDemand extends Component {
                       value: detail.taxAmount,
                     },
                   };
-                  handleChangeNextOne(
-                    e,
-                    'demands' + index,
-                    'demand' + i,
-                    false,
-                    ''
-                  );
+                  handleChangeNextOne(e, 'demands' + index, 'demand' + i, false, '');
                 }
 
                 if (demand.demandDetails.length - 1 == i) {
@@ -362,35 +318,15 @@ class AddDemand extends Component {
                       <div style={{ width: '50px' }}>
                         <TextField
                           className="fullWidth"
-                          floatingLabelText={
-                            <span style={{ fontSize: '14px' }}>
-                              {translate('pt.create.groups.addDemand.demand')}
-                            </span>
-                          }
+                          floatingLabelText={<span style={{ fontSize: '14px' }}>{translate('pt.create.groups.addDemand.demand')}</span>}
                           type="text"
-                          value={
-                            (addDemand['demands' + index]
-                              ? addDemand['demands' + index]['demand' + i]
-                              : detail.taxAmount) || ''
-                          }
+                          value={(addDemand['demands' + index] ? addDemand['demands' + index]['demand' + i] : detail.taxAmount) || ''}
                           onChange={e => {
-                            if (
-                              e.target.value &&
-                              !/^\d*$/g.test(e.target.value)
-                            )
-                              return;
-                            handleChangeNextOne(
-                              e,
-                              'demands' + index,
-                              'demand' + i,
-                              false,
-                              ''
-                            );
+                            if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextOne(e, 'demands' + index, 'demand' + i, false, '');
                             validateCollection();
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           floatingLabelFixed={true}
@@ -405,35 +341,15 @@ class AddDemand extends Component {
                       <div style={{ width: '50px' }}>
                         <TextField
                           className="fullWidth"
-                          floatingLabelText={
-                            <span style={{ fontSize: '14px' }}>
-                              {translate('pt.create.groups.addDemand.demand')}
-                            </span>
-                          }
+                          floatingLabelText={<span style={{ fontSize: '14px' }}>{translate('pt.create.groups.addDemand.demand')}</span>}
                           type="text"
-                          value={
-                            (addDemand['demands' + index]
-                              ? addDemand['demands' + index]['demand' + i]
-                              : detail.taxAmount) || ''
-                          }
+                          value={(addDemand['demands' + index] ? addDemand['demands' + index]['demand' + i] : detail.taxAmount) || ''}
                           onChange={e => {
-                            if (
-                              e.target.value &&
-                              !/^\d*$/g.test(e.target.value)
-                            )
-                              return;
-                            handleChangeNextOne(
-                              e,
-                              'demands' + index,
-                              'demand' + i,
-                              false,
-                              ''
-                            );
+                            if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                            handleChangeNextOne(e, 'demands' + index, 'demand' + i, false, '');
                             validateCollection();
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           floatingLabelFixed={true}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
@@ -451,40 +367,19 @@ class AddDemand extends Component {
                       value: detail.collectionAmount,
                     },
                   };
-                  handleChangeNextOne(
-                    e,
-                    'collections' + index,
-                    'collection' + i,
-                    false,
-                    ''
-                  );
+                  handleChangeNextOne(e, 'collections' + index, 'collection' + i, false, '');
                 }
                 return (
                   <td key={i}>
                     <div style={{ width: '50px' }}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={
-                          <span style={{ fontSize: '14px' }}>
-                            {translate('pt.create.groups.addDemand.collection')}
-                          </span>
-                        }
-                        value={
-                          addDemand['collections' + index]
-                            ? addDemand['collections' + index]['collection' + i]
-                            : ''
-                        }
+                        floatingLabelText={<span style={{ fontSize: '14px' }}>{translate('pt.create.groups.addDemand.collection')}</span>}
+                        value={addDemand['collections' + index] ? addDemand['collections' + index]['collection' + i] : ''}
                         type="text"
                         onChange={e => {
-                          if (e.target.value && !/^\d*$/g.test(e.target.value))
-                            return;
-                          handleChangeNextOne(
-                            e,
-                            'collections' + index,
-                            'collection' + i,
-                            false,
-                            ''
-                          );
+                          if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                          handleChangeNextOne(e, 'collections' + index, 'collection' + i, false, '');
                           validateCollection();
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -550,21 +445,14 @@ class AddDemand extends Component {
         <Card className="uiCard">
           <CardHeader
             style={styles.reducePadding}
-            title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {translate('pt.create.demands.addDemand')}
-              </div>
-            }
+            title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.demands.addDemand')}</div>}
           />
           <CardText style={styles.reducePadding}>
             <Grid fluid>
               <Row>
                 <Col xs={12}>
                   <h5>
-                    Assessment Number :{' '}
-                    <span style={{ fontWeight: 400 }}>
-                      {this.props.match.params.upicNumber}
-                    </span>
+                    Assessment Number : <span style={{ fontWeight: 400 }}>{this.props.match.params.upicNumber}</span>
                   </h5>
                   <br />
                   <Table
@@ -580,15 +468,11 @@ class AddDemand extends Component {
                   >
                     <thead>
                       <tr>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate('pt.create.groups.addDemand.period')}
-                        </th>
+                        <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.period')}</th>
                         <th
                           colSpan={
                             this.state.demands.length != 0 &&
-                            this.state.demands[0].hasOwnProperty(
-                              'demandDetails'
-                            ) &&
+                            this.state.demands[0].hasOwnProperty('demandDetails') &&
                             this.state.demands[0].demandDetails.length
                           }
                           style={{ textAlign: 'center' }}
@@ -598,9 +482,7 @@ class AddDemand extends Component {
                         <th
                           colSpan={
                             this.state.demands.length != 0 &&
-                            this.state.demands[0].hasOwnProperty(
-                              'demandDetails'
-                            ) &&
+                            this.state.demands[0].hasOwnProperty('demandDetails') &&
                             this.state.demands[0].demandDetails.length
                           }
                           style={{ textAlign: 'center' }}

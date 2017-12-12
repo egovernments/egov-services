@@ -133,23 +133,14 @@ class InboxAcknowledgement extends Component {
                         fontSize: 16,
                       }}
                     >
-                      {this.state.status == 'Forwarded' &&
-                        translate('pt.create.groups.acknowledgement.forwarded')}
+                      {this.state.status == 'Forwarded' && translate('pt.create.groups.acknowledgement.forwarded')}
                       {this.state.status == 'Approved' && (
                         <span>
                           {' '}
-                          {translate(
-                            'pt.create.groups.acknowledgement.approved'
-                          )}{' '}
-                          :{' '}
-                          <span style={{ fontWeight: 500 }}>
-                            {this.state.upicNumber}
-                          </span>
+                          {translate('pt.create.groups.acknowledgement.approved')} : <span style={{ fontWeight: 500 }}>{this.state.upicNumber}</span>
                         </span>
                       )}
-                      {this.state.status == 'Rejected' && (
-                        <span>Rejected Successfully</span>
-                      )}
+                      {this.state.status == 'Rejected' && <span>Rejected Successfully</span>}
                     </Col>
                   </Row>
                 </Col>
@@ -168,6 +159,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  InboxAcknowledgement
-);
+export default connect(mapStateToProps, mapDispatchToProps)(InboxAcknowledgement);

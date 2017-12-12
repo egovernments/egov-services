@@ -47,6 +47,4 @@ const mapDispatchToProps = dispatch => ({
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(UiEditButton)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UiEditButton));

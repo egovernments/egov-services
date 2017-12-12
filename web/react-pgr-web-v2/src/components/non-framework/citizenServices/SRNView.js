@@ -31,18 +31,10 @@ let nameMap = {
 const getAddress = function(property) {
   if (property && property.address)
     return (
-      (property.address.addressNumber
-        ? property.address.addressNumber + ', '
-        : '') +
-      (property.address.addressLine1
-        ? property.address.addressLine1 + ', '
-        : '') +
-      (property.address.addressLine2
-        ? property.address.addressLine2 + '. '
-        : '') +
-      (property.address.landmark
-        ? 'Landmark: ' + property.address.landmark
-        : '') +
+      (property.address.addressNumber ? property.address.addressNumber + ', ' : '') +
+      (property.address.addressLine1 ? property.address.addressLine1 + ', ' : '') +
+      (property.address.addressLine2 ? property.address.addressLine2 + '. ' : '') +
+      (property.address.landmark ? 'Landmark: ' + property.address.landmark : '') +
       (property.address.city ? 'City: ' + property.address.city : '') +
       (property.address.pincode ? '- ' + property.address.pincode : '')
     );
@@ -97,13 +89,7 @@ class CertificateView extends Component {
       open: false,
       ServiceRequest: {},
       statuses: ['APPROVED', 'SANCTIONED'],
-      serviceCodes: [
-        'TL_NEWCONN',
-        'WATER_NEWCONN',
-        'BPA_FIRE_NOC',
-        'WC_NODUES',
-        'PT_NODUES',
-      ],
+      serviceCodes: ['TL_NEWCONN', 'WATER_NEWCONN', 'BPA_FIRE_NOC', 'WC_NODUES', 'PT_NODUES'],
       Receipt: [],
       openSecondDialog: false,
     };
@@ -133,27 +119,15 @@ class CertificateView extends Component {
     let srn = decodeURIComponent(this.props.match.params.srn);
     let self = this;
     self.props.setLoadingStatus('loading');
-    Api.commonApiPost(
-      '/citizen-services/v1/requests/anonymous/_search',
-      { serviceRequestId: srn },
-      {},
-      false,
-      true
-    ).then(
+    Api.commonApiPost('/citizen-services/v1/requests/anonymous/_search', { serviceRequestId: srn }, {}, false, true).then(
       function(res) {
         self.props.setLoadingStatus('hide');
-        if (
-          res &&
-          res.serviceReq &&
-          res.serviceReq.length &&
-          self.state.serviceCodes.indexOf(res.serviceReq[0].serviceCode) > -1
-        ) {
+        if (res && res.serviceReq && res.serviceReq.length && self.state.serviceCodes.indexOf(res.serviceReq[0].serviceCode) > -1) {
           self.getProperty(function(property) {
             self.setState({
               ServiceRequest: res.serviceReq[0],
               Receipt: res.receiptDetails.Receipt,
-              openSecondDialog:
-                self.props.match.params.isCertificate == 'true' ? true : false,
+              openSecondDialog: self.props.match.params.isCertificate == 'true' ? true : false,
               Property: property,
             });
             // console.log(res2);
@@ -213,9 +187,7 @@ class CertificateView extends Component {
     mywindow.document.write('<html><head><title> </title>');
     mywindow.document.write(cdn);
     mywindow.document.write('</head><body>');
-    mywindow.document.write(
-      document.getElementById('allCertificates').innerHTML
-    );
+    mywindow.document.write(document.getElementById('allCertificates').innerHTML);
     mywindow.document.write('</body></html>');
 
     mywindow.document.close(); // necessary for IE >= 10
@@ -373,8 +345,7 @@ class CertificateView extends Component {
             title={
               self.props.match.params.isCertificate == 'true'
                 ? 'Certificate '
-                : 'Application Info - ' +
-                  decodeURIComponent(self.props.match.params.srn)
+                : 'Application Info - ' + decodeURIComponent(self.props.match.params.srn)
             }
           />
           <CardText>
@@ -384,16 +355,12 @@ class CertificateView extends Component {
                   <Col style={{ textAlign: 'left' }} xs={12}>
                     <label>
                       <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                        {self.props.match.params.isCertificate == 'true'
-                          ? 'Certificate '
-                          : 'Application '}{' '}
-                        Date
+                        {self.props.match.params.isCertificate == 'true' ? 'Certificate ' : 'Application '} Date
                       </span>
                     </label>
                   </Col>
                   <Col style={{ textAlign: 'left' }} xs={12}>
-                    {ServiceRequest.auditDetails &&
-                    ServiceRequest.auditDetails.createdDate
+                    {ServiceRequest.auditDetails && ServiceRequest.auditDetails.createdDate
                       ? getFullDate(ServiceRequest.auditDetails.createdDate)
                       : '-'}
                   </Col>
@@ -402,25 +369,18 @@ class CertificateView extends Component {
                   <Col style={{ textAlign: 'left' }} xs={12}>
                     <label>
                       <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                        {self.props.match.params.isCertificate == 'true'
-                          ? 'Certificate '
-                          : 'Application '}{' '}
-                        Type
+                        {self.props.match.params.isCertificate == 'true' ? 'Certificate ' : 'Application '} Type
                       </span>
                     </label>
                   </Col>
                   <Col style={{ textAlign: 'left' }} xs={12}>
-                    {nameMap[ServiceRequest.serviceCode] ||
-                      ServiceRequest.serviceCode ||
-                      '-'}
+                    {nameMap[ServiceRequest.serviceCode] || ServiceRequest.serviceCode || '-'}
                   </Col>
                 </Col>
                 <Col xs={12} sm={4} md={3}>
                   <Col style={{ textAlign: 'left' }} xs={12}>
                     <label>
-                      <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                        Applicant Name
-                      </span>
+                      <span style={{ fontWeight: 500, fontSize: '13px' }}>Applicant Name</span>
                     </label>
                   </Col>
                   <Col style={{ textAlign: 'left' }} xs={12}>
@@ -431,17 +391,12 @@ class CertificateView extends Component {
                   <Col style={{ textAlign: 'left' }} xs={12}>
                     <label>
                       <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                        {self.props.match.params.isCertificate == 'true'
-                          ? 'Certificate '
-                          : 'Application '}{' '}
-                        Status
+                        {self.props.match.params.isCertificate == 'true' ? 'Certificate ' : 'Application '} Status
                       </span>
                     </label>
                   </Col>
                   <Col style={{ textAlign: 'left' }} xs={12}>
-                    {nameMap[ServiceRequest.status] ||
-                      ServiceRequest.status ||
-                      '-'}
+                    {nameMap[ServiceRequest.status] || ServiceRequest.status || '-'}
                   </Col>
                 </Col>
               </Row>
@@ -454,8 +409,7 @@ class CertificateView extends Component {
               title={
                 self.props.match.params.isCertificate == 'true'
                   ? 'Certificate '
-                  : 'Application Info - ' +
-                    decodeURIComponent(self.props.match.params.srn)
+                  : 'Application Info - ' + decodeURIComponent(self.props.match.params.srn)
               }
             />
             <CardText>
@@ -469,9 +423,7 @@ class CertificateView extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {ServiceRequest &&
-                  ServiceRequest.documents &&
-                  ServiceRequest.documents.length ? (
+                  {ServiceRequest && ServiceRequest.documents && ServiceRequest.documents.length ? (
                     ServiceRequest.documents.map(function(v, i) {
                       if (v.uploadedbyrole == 'EMPLOYEE' && v.isFinal)
                         return (
@@ -482,12 +434,7 @@ class CertificateView extends Component {
                             <td>
                               <a
                                 target="_blank"
-                                href={
-                                  '/filestore/v1/files/id?tenantId=' +
-                                  localStorage.getItem('tenantId') +
-                                  '&fileStoreId=' +
-                                  v.filePath
-                                }
+                                href={'/filestore/v1/files/id?tenantId=' + localStorage.getItem('tenantId') + '&fileStoreId=' + v.filePath}
                               >
                                 Download
                               </a>
@@ -514,19 +461,11 @@ class CertificateView extends Component {
           title=""
           modal={false}
           open={openSecondDialog}
-          actions={
-            <FlatButton
-              label="View"
-              primary={true}
-              onClick={this.handleCloseTwo}
-            />
-          }
+          actions={<FlatButton label="View" primary={true} onClick={this.handleCloseTwo} />}
           onRequestClose={handleCloseTwo}
         >
           <div>
-            {'The certificate number ' +
-              self.props.match.params.srn +
-              ' was generated from the system. Please click here to view the certificate'}
+            {'The certificate number ' + self.props.match.params.srn + ' was generated from the system. Please click here to view the certificate'}
           </div>
         </Dialog>
 
@@ -534,135 +473,78 @@ class CertificateView extends Component {
           title="Not Found"
           modal={false}
           open={open}
-          actions={
-            <FlatButton label="Ok" primary={true} onClick={this.handleClose} />
-          }
+          actions={<FlatButton label="Ok" primary={true} onClick={this.handleClose} />}
           onRequestClose={handleClose}
         >
-          <div>
-            {self.props.match.params.isCertificate == 'true'
-              ? 'Certificate not found'
-              : 'Application number'}{' '}
-            not found.
-          </div>
+          <div>{self.props.match.params.isCertificate == 'true' ? 'Certificate not found' : 'Application number'} not found.</div>
         </Dialog>
         <div id="allCertificates">
           {self.props.match.params.isCertificate == 'true' &&
-            (ServiceRequest.serviceCode == 'PT_NODUES' ||
-              ServiceRequest.serviceCode == 'WC_NODUES') &&
+            (ServiceRequest.serviceCode == 'PT_NODUES' || ServiceRequest.serviceCode == 'WC_NODUES') &&
             Receipt.length > 0 && (
               <Card className="uiCard">
                 <CardHeader
                   title={
                     self.props.match.params.isCertificate == 'true'
                       ? 'Certificate '
-                      : 'Application Info - ' +
-                        decodeURIComponent(self.props.match.params.srn)
+                      : 'Application Info - ' + decodeURIComponent(self.props.match.params.srn)
                   }
                 />
                 <CardText>
-                  <Table
-                    id="CertificateForWc"
-                    responsive
-                    style={{ fontSize: 'bold' }}
-                    bordered
-                    condensed
-                  >
+                  <Table id="CertificateForWc" responsive style={{ fontSize: 'bold' }} bordered condensed>
                     <tbody>
                       <tr>
                         <td style={{ textAlign: 'left' }}>
-                          <img
-                            src="./temp/images/headerLogo.png"
-                            height="60"
-                            width="60"
-                          />
+                          <img src="./temp/images/headerLogo.png" height="60" width="60" />
                         </td>
                         <td style={{ textAlign: 'center' }}>
                           <b>Roha Municipal Council</b>
                           <br />
                           {ServiceRequest.serviceCode == 'PT_NODUES' ? (
-                            <span>
-                              Property Tax Department / करनिर्धारण विभाग
-                            </span>
+                            <span>Property Tax Department / करनिर्धारण विभाग</span>
                           ) : (
                             <span>Water Department</span>
                           )}
                         </td>
                         <td style={{ textAlign: 'right' }}>
-                          <img
-                            src="./temp/images/AS.png"
-                            height="60"
-                            width="60"
-                          />
+                          <img src="./temp/images/AS.png" height="60" width="60" />
                         </td>
                       </tr>
                       <tr>
                         <td colSpan={3}>
                           <div style={{ textAlign: 'center' }}>
                             No Due Certificate / थकबाकी नसल्याचे प्रमाणपत्र<br />
-                            (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे
-                            अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये)
+                            (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये)
                           </div>
                           <br />
                           <div style={{ textAlign: 'right' }}>
-                            Date / दिनांक :{Receipt[0].Bill[0].billDetails[0]
-                              .billDate
-                              ? getFullDate(
-                                  Receipt[0].Bill[0].billDetails[0].billDate,
-                                  true
-                                )
+                            Date / दिनांक :{Receipt[0].Bill[0].billDetails[0].billDate
+                              ? getFullDate(Receipt[0].Bill[0].billDetails[0].billDate, true)
                               : Receipt[0].Bill[0].billDetails[0].receiptDate
-                                ? getFullDate(
-                                    Receipt[0].Bill[0].billDetails[0]
-                                      .receiptDate,
-                                    true
-                                  )
+                                ? getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate, true)
                                 : '-'}{' '}
                             <br />
-                            Certificate No. / प्रमाणपत्र क्रं :{' '}
-                            {ServiceRequest.serviceRequestId.replace(
-                              'SRN',
-                              'CERT'
-                            )}
+                            Certificate No. / प्रमाणपत्र क्रं : {ServiceRequest.serviceRequestId.replace('SRN', 'CERT')}
                           </div>
                           <br />
                           <div style={{ textAlign: 'left' }}>
                             प्रती,<br />
                             {Receipt[0].Bill[0].payeeName}
                             <br />
-                            {Receipt[0].Bill[0].payeeAddress
-                              ? Receipt[0].Bill[0].payeeAddress
-                              : 'Roha'}
+                            {Receipt[0].Bill[0].payeeAddress ? Receipt[0].Bill[0].payeeAddress : 'Roha'}
                           </div>
                           <br />
                           <div style={{ textAlign: 'center' }}>
-                            Subject /विषय : सन 2017 - 18 थकबाकी नसल्याचे
-                            प्रमाणपत्र मिळणेबाबत.<br />
-                            Reference / संदर्भ :{' '}
-                            {ServiceRequest
-                              ? ServiceRequest.serviceRequestId
-                              : ''}{' '}
-                            आपला अर्ज क्रमांक{' '}
-                            {Receipt[0].Bill[0].billDetails[0].applicationNo}{' '}
-                            दिनांक{' '}
-                            {getFullDate(
-                              Receipt[0].Bill[0].billDetails[0].receiptDate
-                            )}
+                            Subject /विषय : सन 2017 - 18 थकबाकी नसल्याचे प्रमाणपत्र मिळणेबाबत.<br />
+                            Reference / संदर्भ : {ServiceRequest ? ServiceRequest.serviceRequestId : ''} आपला अर्ज क्रमांक{' '}
+                            {Receipt[0].Bill[0].billDetails[0].applicationNo} दिनांक {getFullDate(Receipt[0].Bill[0].billDetails[0].receiptDate)}
                           </div>
                           <br />
-                          <div style={{ textAlign: 'left' }}>
-                            महोद्य / महोद्या ,
-                          </div>
+                          <div style={{ textAlign: 'left' }}>महोद्य / महोद्या ,</div>
                           <br />
                           <div style={{ textAlign: 'center' }}>
-                            संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की,{' '}
-                            {this.props.match.params.id != 'pt'
-                              ? 'पाणी क्रमांक'
-                              : 'मालमत्ता क्रमांक'},
-                            {
-                              Receipt[0].Bill[0].billDetails[0].consumerCode
-                            }{' '}
-                            यांच्या नावे नोंद असून, सन 2017-18{' '}
+                            संदर्भिय विषयांन्वये प्रमाणित करण्यात येते की, {this.props.match.params.id != 'pt' ? 'पाणी क्रमांक' : 'मालमत्ता क्रमांक'},
+                            {Receipt[0].Bill[0].billDetails[0].consumerCode} यांच्या नावे नोंद असून, सन 2017-18{' '}
                             {this.props.match.params.id != 'pt'
                               ? 'पर्यंतचा संपुर्ण पाणी रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.'
                               : 'पर्यंतचा संपुर्ण मालमत्ता कराची रक्कम भरलेली असून, कोणतीही थकबाकी येणे नाही.'}
@@ -677,11 +559,7 @@ class CertificateView extends Component {
                     </tbody>
                   </Table>
 
-                  <span style={{ textAlign: 'right' }}>
-                    {translate(
-                      'This is computer generated receipt no authorised signature required'
-                    )}
-                  </span>
+                  <span style={{ textAlign: 'right' }}>{translate('This is computer generated receipt no authorised signature required')}</span>
                 </CardText>
               </Card>
             )}
@@ -693,48 +571,28 @@ class CertificateView extends Component {
                 <CardHeader
                   title={
                     <strong>
-                      {'Certificate for: ' +
-                        (ServiceRequest.serviceCode == 'PT_EXTRACT'
-                          ? 'Property Tax'
-                          : 'Water Charge') +
-                        ' Extract'}
+                      {'Certificate for: ' + (ServiceRequest.serviceCode == 'PT_EXTRACT' ? 'Property Tax' : 'Water Charge') + ' Extract'}
                     </strong>
                   }
                 />
                 <CardText>
-                  <Table
-                    responsive
-                    style={{ fontSize: 'bold', marginBottom: '20px' }}
-                    id="CertificateForWc"
-                    bordered
-                    condensed
-                  >
+                  <Table responsive style={{ fontSize: 'bold', marginBottom: '20px' }} id="CertificateForWc" bordered condensed>
                     <tbody>
                       <tr>
                         <td style={{ textAlign: 'left' }} colSpan={2}>
-                          <img
-                            src="./temp/images/headerLogo.png"
-                            height="60"
-                            width="60"
-                          />
+                          <img src="./temp/images/headerLogo.png" height="60" width="60" />
                         </td>
                         <td style={{ textAlign: 'center' }} colSpan={4}>
                           <b>Roha Municipal Council</b>
                           <br />
                           {ServiceRequest.serviceCode == 'PT_EXTRACT' ? (
-                            <span>
-                              Property Tax Department / करनिर्धारण विभाग
-                            </span>
+                            <span>Property Tax Department / करनिर्धारण विभाग</span>
                           ) : (
                             <span>Water Department</span>
                           )}
                         </td>
                         <td style={{ textAlign: 'right' }} colSpan={2}>
-                          <img
-                            src="./temp/images/AS.png"
-                            height="60"
-                            width="60"
-                          />
+                          <img src="./temp/images/AS.png" height="60" width="60" />
                         </td>
                       </tr>
                       <tr>
@@ -747,8 +605,7 @@ class CertificateView extends Component {
                       <tr>
                         <td colSpan={8}>
                           <div style={{ whiteSpace: 'pre' }}>
-                            <b>Ward:</b> Election Ward 1 <b>Zone: -</b>{' '}
-                            <b>Revenue Circle</b>:
+                            <b>Ward:</b> Election Ward 1 <b>Zone: -</b> <b>Revenue Circle</b>:
                             <br />
                             <b>Apartment Name: Vars Apt</b>
                           </div>
@@ -757,13 +614,9 @@ class CertificateView extends Component {
                       <tr>
                         <td colSpan={8}>
                           <div>
-                            <b>Property No:</b>{' '}
-                            {Receipt[0].Bill[0].billDetails[0].consumerCode}
+                            <b>Property No:</b> {Receipt[0].Bill[0].billDetails[0].consumerCode}
                             <br />
-                            <b>Property Usage / Sub Usage:</b>{' '}
-                            {this.state.Property && this.state.Property.usage
-                              ? this.state.Property.usage
-                              : 'NA'}
+                            <b>Property Usage / Sub Usage:</b> {this.state.Property && this.state.Property.usage ? this.state.Property.usage : 'NA'}
                           </div>
                         </td>
                       </tr>
@@ -771,12 +624,9 @@ class CertificateView extends Component {
                         <td colSpan={8}>
                           <div style={{ whiteSpace: 'pre' }}>
                             <b>Property Owner Name</b>:{' '}
-                            {this.state.Property && this.state.Property.owners
-                              ? this.state.Property.owners[0].name
-                              : 'NA'}
+                            {this.state.Property && this.state.Property.owners ? this.state.Property.owners[0].name : 'NA'}
                             <br />
-                            <b>& Address: </b> {getAddress(this.state.Property)}{' '}
-                            <b>Age of Property</b>
+                            <b>& Address: </b> {getAddress(this.state.Property)} <b>Age of Property</b>
                           </div>
                         </td>
                       </tr>
@@ -785,10 +635,7 @@ class CertificateView extends Component {
                           <div>
                             <b>Billing Name</b>: {Receipt[0].Bill[0].payeeName}
                             <br />
-                            <b>& Address:</b>{' '}
-                            {Receipt[0].Bill[0].payeeAddress
-                              ? Receipt[0].Bill[0].payeeAddress
-                              : 'NA'}
+                            <b>& Address:</b> {Receipt[0].Bill[0].payeeAddress ? Receipt[0].Bill[0].payeeAddress : 'NA'}
                           </div>
                         </td>
                       </tr>
@@ -818,29 +665,19 @@ class CertificateView extends Component {
                           <b>Total Tax</b>
                         </td>
                       </tr>
-                      {this.state.Property &&
-                      this.state.Property.propertyDetail &&
-                      this.state.Property.propertyDetail.floors
-                        ? renderProperty(
-                            this.state.Property.propertyDetail.floors
-                          )
+                      {this.state.Property && this.state.Property.propertyDetail && this.state.Property.propertyDetail.floors
+                        ? renderProperty(this.state.Property.propertyDetail.floors)
                         : 'No Data Available'}
                     </tbody>
                   </Table>
-                  <span style={{ textAlign: 'right' }}>
-                    {translate(
-                      'This is computer generated receipt no authorised signature required'
-                    )}
-                  </span>
+                  <span style={{ textAlign: 'right' }}>{translate('This is computer generated receipt no authorised signature required')}</span>
                 </CardText>
               </Card>
             )}
         </div>
 
         {self.props.match.params.isCertificate == 'true' &&
-          (ServiceRequest.serviceCode == 'PT_EXTRACT' ||
-            ServiceRequest.serviceCode == 'PT_NODUES' ||
-            ServiceRequest.serviceCode == 'WC_NODUES') && (
+          (ServiceRequest.serviceCode == 'PT_EXTRACT' || ServiceRequest.serviceCode == 'PT_NODUES' || ServiceRequest.serviceCode == 'WC_NODUES') && (
             <div style={{ textAlign: 'center' }}>
               <br />
               <UiButton

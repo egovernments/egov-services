@@ -9,13 +9,7 @@ class MaterialReceiptNote extends Component {
   }
 
   render() {
-    return (
-      <Transaction
-        {...this.props}
-        templateObj={template}
-        actionKey="inventory.create"
-      />
-    );
+    return <Transaction {...this.props} templateObj={template} actionKey="inventory.create" />;
   }
 }
 
@@ -54,14 +48,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,
@@ -102,6 +89,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  MaterialReceiptNote
-);
+export default connect(mapStateToProps, mapDispatchToProps)(MaterialReceiptNote);

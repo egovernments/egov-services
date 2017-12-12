@@ -39,11 +39,7 @@ class VacantLand extends Component {
     return (
       <div className="VacantLand">
         <Card>
-          <CardHeader
-            title={
-              <strong style={{ color: brown500 }}>Create Vacant Land</strong>
-            }
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Create Vacant Land</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -51,32 +47,18 @@ class VacantLand extends Component {
                   <Row>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.surveyNumber
-                            ? fieldErrors.surveyNumber
-                            : ''
-                        }
-                        value={
-                          VacantLand.surveyNumber ? VacantLand.surveyNumber : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'surveyNumber', false, /^\d{1,20}$/g)
-                        }
+                        errorText={fieldErrors.surveyNumber ? fieldErrors.surveyNumber : ''}
+                        value={VacantLand.surveyNumber ? VacantLand.surveyNumber : ''}
+                        onChange={e => handleChange(e, 'surveyNumber', false, /^\d{1,20}$/g)}
                         hintText="Survey Number "
                         floatingLabelText="Survey Number"
                       />
                     </Col>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.pattaNumber ? fieldErrors.pattaNumber : ''
-                        }
-                        value={
-                          VacantLand.pattaNumber ? VacantLand.pattaNumber : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'pattaNumber', false, /^\d{1,20}$/g)
-                        }
+                        errorText={fieldErrors.pattaNumber ? fieldErrors.pattaNumber : ''}
+                        value={VacantLand.pattaNumber ? VacantLand.pattaNumber : ''}
+                        onChange={e => handleChange(e, 'pattaNumber', false, /^\d{1,20}$/g)}
                         hintText="Patta Number "
                         floatingLabelText="Patta Number"
                       />
@@ -85,39 +67,18 @@ class VacantLand extends Component {
                   <Row>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.vacantLandArea
-                            ? fieldErrors.vacantLandArea
-                            : ''
-                        }
-                        value={
-                          VacantLand.vacantLandArea
-                            ? VacantLand.vacantLandArea
-                            : ''
-                        }
-                        onChange={e =>
-                          handleChange(
-                            e,
-                            'vacantLandArea',
-                            false,
-                            /^\d{1,20}$/g
-                          )
-                        }
+                        errorText={fieldErrors.vacantLandArea ? fieldErrors.vacantLandArea : ''}
+                        value={VacantLand.vacantLandArea ? VacantLand.vacantLandArea : ''}
+                        onChange={e => handleChange(e, 'vacantLandArea', false, /^\d{1,20}$/g)}
                         hintText="Vacant Land Area "
                         floatingLabelText="Vacant Land Area (in sqr. Mts.)"
                       />
                     </Col>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.marketValue ? fieldErrors.marketValue : ''
-                        }
-                        value={
-                          VacantLand.marketValue ? VacantLand.marketValue : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'marketValue', false, /^\d{1,20}$/g)
-                        }
+                        errorText={fieldErrors.marketValue ? fieldErrors.marketValue : ''}
+                        value={VacantLand.marketValue ? VacantLand.marketValue : ''}
+                        onChange={e => handleChange(e, 'marketValue', false, /^\d{1,20}$/g)}
                         hintText="Market Value"
                         floatingLabelText=" Market Value"
                       />
@@ -126,31 +87,17 @@ class VacantLand extends Component {
                   <Row>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.vacantLandArea
-                            ? fieldErrors.capitalValue
-                            : ''
-                        }
-                        value={
-                          VacantLand.capitalValue ? VacantLand.capitalValue : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'capitalValue', false, '')
-                        }
+                        errorText={fieldErrors.vacantLandArea ? fieldErrors.capitalValue : ''}
+                        value={VacantLand.capitalValue ? VacantLand.capitalValue : ''}
+                        onChange={e => handleChange(e, 'capitalValue', false, '')}
                         hintText="Capital Value "
                         floatingLabelText="Capital Value"
                       />
                     </Col>
                     <Col xs={12} md={6}>
                       <DatePicker
-                        value={
-                          VacantLand.effectiveDate
-                            ? VacantLand.effectiveDate
-                            : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'effectiveDate', false, '')
-                        }
+                        value={VacantLand.effectiveDate ? VacantLand.effectiveDate : ''}
+                        onChange={e => handleChange(e, 'effectiveDate', false, '')}
                         hintText="Effective Date"
                         container="inline"
                       />
@@ -159,16 +106,8 @@ class VacantLand extends Component {
                   <Row>
                     <Col xs={12} md={6}>
                       <SelectField
-                        errorText={
-                          fieldErrors.vacantLandPlotArea
-                            ? fieldErrors.vacantLandPlotArea
-                            : ''
-                        }
-                        value={
-                          VacantLand.vacantLandPlotArea
-                            ? VacantLand.vacantLandPlotArea
-                            : ''
-                        }
+                        errorText={fieldErrors.vacantLandPlotArea ? fieldErrors.vacantLandPlotArea : ''}
+                        value={VacantLand.vacantLandPlotArea ? VacantLand.vacantLandPlotArea : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -189,16 +128,8 @@ class VacantLand extends Component {
 
                     <Col xs={12} md={6}>
                       <SelectField
-                        errorText={
-                          fieldErrors.layoutApprovalAuthority
-                            ? fieldErrors.layoutApprovalAuthority
-                            : ''
-                        }
-                        value={
-                          VacantLand.layoutApprovalAuthority
-                            ? VacantLand.layoutApprovalAuthority
-                            : ''
-                        }
+                        errorText={fieldErrors.layoutApprovalAuthority ? fieldErrors.layoutApprovalAuthority : ''}
+                        value={VacantLand.layoutApprovalAuthority ? VacantLand.layoutApprovalAuthority : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -220,38 +151,17 @@ class VacantLand extends Component {
                   <Row>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.layoutPermitNumber
-                            ? fieldErrors.layoutPermitNumber
-                            : ''
-                        }
-                        value={
-                          VacantLand.layoutPermitNumber
-                            ? VacantLand.layoutPermitNumber
-                            : ''
-                        }
-                        onChange={e =>
-                          handleChange(
-                            e,
-                            'layoutPermitNumber',
-                            false,
-                            /^\d{20}$/g
-                          )
-                        }
+                        errorText={fieldErrors.layoutPermitNumber ? fieldErrors.layoutPermitNumber : ''}
+                        value={VacantLand.layoutPermitNumber ? VacantLand.layoutPermitNumber : ''}
+                        onChange={e => handleChange(e, 'layoutPermitNumber', false, /^\d{20}$/g)}
                         hintText="Layout Permit Number"
                         floatingLabelText="Layout Permit Number"
                       />
                     </Col>
                     <Col xs={12} md={6}>
                       <DatePicker
-                        value={
-                          VacantLand.layoutPermitDate
-                            ? VacantLand.effectiveDate
-                            : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'layoutPermitDate', false, '')
-                        }
+                        value={VacantLand.layoutPermitDate ? VacantLand.effectiveDate : ''}
+                        onChange={e => handleChange(e, 'layoutPermitDate', false, '')}
                         hintText="Layout Permit Date"
                         container="inline"
                       />
@@ -261,13 +171,7 @@ class VacantLand extends Component {
               </CardText>
             </Card>
             <Card>
-              <CardHeader
-                title={
-                  <strong style={{ color: brown500 }}>
-                    Details Of Surrounding Boundary of The Property
-                  </strong>
-                }
-              />
+              <CardHeader title={<strong style={{ color: brown500 }}>Details Of Surrounding Boundary of The Property</strong>} />
 
               <Card>
                 <CardText>
@@ -277,9 +181,7 @@ class VacantLand extends Component {
                         <TextField
                           errorText={fieldErrors.north ? fieldErrors.north : ''}
                           value={VacantLand.north ? VacantLand.north : ''}
-                          onChange={e =>
-                            handleChange(e, 'north', false, /^\d{1,10}$/g)
-                          }
+                          onChange={e => handleChange(e, 'north', false, /^\d{1,10}$/g)}
                           hintText="North "
                           floatingLabelText="North"
                         />
@@ -288,9 +190,7 @@ class VacantLand extends Component {
                         <TextField
                           errorText={fieldErrors.south ? fieldErrors.south : ''}
                           value={VacantLand.south ? VacantLand.south : ''}
-                          onChange={e =>
-                            handleChange(e, 'south', false, /^\d{1,10}$/g)
-                          }
+                          onChange={e => handleChange(e, 'south', false, /^\d{1,10}$/g)}
                           hintText="South "
                           floatingLabelText="South"
                         />
@@ -301,9 +201,7 @@ class VacantLand extends Component {
                         <TextField
                           errorText={fieldErrors.east ? fieldErrors.east : ''}
                           value={VacantLand.east ? VacantLand.east : ''}
-                          onChange={e =>
-                            handleChange(e, 'east', false, /^\d{1,10}$/g)
-                          }
+                          onChange={e => handleChange(e, 'east', false, /^\d{1,10}$/g)}
                           hintText="East "
                           floatingLabelText="East"
                         />
@@ -312,9 +210,7 @@ class VacantLand extends Component {
                         <TextField
                           errorText={fieldErrors.west ? fieldErrors.west : ''}
                           value={VacantLand.west ? VacantLand.west : ''}
-                          onChange={e =>
-                            handleChange(e, 'west', false, /^\d{1,10}$/g)
-                          }
+                          onChange={e => handleChange(e, 'west', false, /^\d{1,10}$/g)}
                           hintText="West"
                           floatingLabelText="West"
                         />
@@ -326,12 +222,7 @@ class VacantLand extends Component {
             </Card>
 
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="submit"
-                label="Create"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="submit" label="Create" backgroundColor={brown500} labelColor={white} />
               <RaisedButton type="button" label="Close" />
             </div>
           </CardText>

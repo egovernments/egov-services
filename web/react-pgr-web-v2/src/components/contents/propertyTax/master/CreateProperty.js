@@ -185,13 +185,7 @@ class CreateProperty extends Component {
 
     var currentThis = this;
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', {}, {}, false, true)
       .then(res => {
         currentThis.setState({ propertytypes: res.propertyTypes });
       })
@@ -201,10 +195,10 @@ class CreateProperty extends Component {
         });
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'WARD', hierarchyTypeName: 'ADMINISTRATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'WARD',
+      hierarchyTypeName: 'ADMINISTRATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ election: res.Boundary });
@@ -213,10 +207,10 @@ class CreateProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'STREET', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'STREET',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ street: res.Boundary });
@@ -225,10 +219,10 @@ class CreateProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ locality: res.Boundary });
@@ -245,19 +239,11 @@ class CreateProperty extends Component {
       keyName: 'PT_RevenueBoundaryHierarchy',
     })
       .then(res1 => {
-        if (
-          res1.appConfigurations &&
-          res1.appConfigurations[0] &&
-          res1.appConfigurations[0].values &&
-          res1.appConfigurations[0].values[0]
-        ) {
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'BLOCK',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+        if (res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'BLOCK',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               console.log(res);
               currentThis.setState({ block: res.Boundary });
@@ -266,13 +252,10 @@ class CreateProperty extends Component {
               console.log(err);
             });
 
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'ZONE',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'ZONE',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               console.log(res);
               currentThis.setState({ zone: res.Boundary });
@@ -335,11 +318,7 @@ class CreateProperty extends Component {
   search = e => {};
 
   propertyCreateRequest = () => {
-    let {
-      toggleSnackbarAndSetText,
-      createProperty,
-      handleGuidanceBoundries,
-    } = this.props;
+    let { toggleSnackbarAndSetText, createProperty, handleGuidanceBoundries } = this.props;
     let currentThis = this;
     var appConfigQuery = '';
 
@@ -367,19 +346,13 @@ class CreateProperty extends Component {
       }
     }
 
-    Api.commonApiPost(
-      'pt-property/property/guidancevalueboundary/_search',
-      appConfigQuery
-    )
+    Api.commonApiPost('pt-property/property/guidancevalueboundary/_search', appConfigQuery)
       .then(res => {
         handleGuidanceBoundries(true);
         if (res.guidanceValueBoundaries.length > 0) {
           currentThis.createPropertyTax(res.guidanceValueBoundaries[0].id);
         } else {
-          toggleSnackbarAndSetText(
-            true,
-            'There is no guidance value boundry defined'
-          );
+          toggleSnackbarAndSetText(true, 'There is no guidance value boundry defined');
         }
       })
       .catch(err => {
@@ -388,20 +361,12 @@ class CreateProperty extends Component {
   };
 
   createPropertyTax = guidanceValue => {
-    let {
-      createProperty,
-      setLoadingStatus,
-      toggleSnackbarAndSetText,
-    } = this.props;
+    let { createProperty, setLoadingStatus, toggleSnackbarAndSetText } = this.props;
     setLoadingStatus('loading');
     var userRequest = JSON.parse(localStorage.getItem('userRequest'));
     var numberOfFloors = '';
     var builtupArea = 0;
-    if (
-      createProperty &&
-      createProperty.hasOwnProperty('floorsArr') &&
-      createProperty.hasOwnProperty('floors')
-    ) {
+    if (createProperty && createProperty.hasOwnProperty('floorsArr') && createProperty.hasOwnProperty('floors')) {
       numberOfFloors = createProperty.floorsArr.length;
       for (let i = 0; i < createProperty.floors.length; i++) {
         builtupArea += createProperty.floors[i].builtupArea;
@@ -425,49 +390,32 @@ class CreateProperty extends Component {
         if (createProperty.owners[i].isPrimaryOwner == 'PrimaryOwner') {
           createProperty.owners[i].isPrimaryOwner = true;
           createProperty.owners[i].issecondaryowner = false;
-          createProperty.owners[i].correspondencePincode =
-            createProperty.correspondencePincode;
-          createProperty.owners[i].correspondenceAddress =
-            createProperty.correspondenceAddress;
+          createProperty.owners[i].correspondencePincode = createProperty.correspondencePincode;
+          createProperty.owners[i].correspondenceAddress = createProperty.correspondenceAddress;
         } else {
           createProperty.owners[i].isPrimaryOwner = false;
           createProperty.owners[i].issecondaryowner = true;
         }
 
-        if (
-          !createProperty.owners[i].hasOwnProperty('ownershippercentage') ||
-          createProperty.owners[i].ownershippercentage == ''
-        ) {
+        if (!createProperty.owners[i].hasOwnProperty('ownershippercentage') || createProperty.owners[i].ownershippercentage == '') {
           createProperty.owners[i].ownershippercentage = null;
         }
 
-        if (
-          createProperty.owners[i].hasOwnProperty('aadhaarNumber') &&
-          createProperty.owners[i].aadhaarNumber == ''
-        ) {
+        if (createProperty.owners[i].hasOwnProperty('aadhaarNumber') && createProperty.owners[i].aadhaarNumber == '') {
           createProperty.owners[i].aadhaarNumber = null;
         }
 
-        if (
-          !createProperty.owners[i].hasOwnProperty('ownerType') ||
-          createProperty.owners[i].ownerType == ''
-        ) {
+        if (!createProperty.owners[i].hasOwnProperty('ownerType') || createProperty.owners[i].ownerType == '') {
           createProperty.owners[i].ownerType = null;
         }
 
-        if (
-          !createProperty.owners[i].hasOwnProperty('emailId') ||
-          createProperty.owners[i].emailId == ''
-        ) {
+        if (!createProperty.owners[i].hasOwnProperty('emailId') || createProperty.owners[i].emailId == '') {
           createProperty.owners[i].emailId = null;
         }
       }
 
       for (var key in createProperty.owners[i]) {
-        if (
-          createProperty.owners[i].hasOwnProperty(key) &&
-          createProperty.owners[i][key] == ''
-        ) {
+        if (createProperty.owners[i].hasOwnProperty(key) && createProperty.owners[i][key] == '') {
           delete createProperty.owners[i][key];
         }
       }
@@ -558,22 +506,10 @@ class CreateProperty extends Component {
             bpaNo: createProperty.bpaNo || null,
             bpaDate: createProperty.bpaDate || null,
             landOwner: null,
-            floorType:
-              createProperty.propertyType != 'PTYPE_OPEN_LAND'
-                ? createProperty.floorType || null
-                : null,
-            woodType:
-              createProperty.propertyType != 'PTYPE_OPEN_LAND'
-                ? createProperty.woodType || null
-                : null,
-            roofType:
-              createProperty.propertyType != 'PTYPE_OPEN_LAND'
-                ? createProperty.roofType || null
-                : null,
-            wallType:
-              createProperty.propertyType != 'PTYPE_OPEN_LAND'
-                ? createProperty.wallType || null
-                : null,
+            floorType: createProperty.propertyType != 'PTYPE_OPEN_LAND' ? createProperty.floorType || null : null,
+            woodType: createProperty.propertyType != 'PTYPE_OPEN_LAND' ? createProperty.woodType || null : null,
+            roofType: createProperty.propertyType != 'PTYPE_OPEN_LAND' ? createProperty.roofType || null : null,
+            wallType: createProperty.propertyType != 'PTYPE_OPEN_LAND' ? createProperty.wallType || null : null,
             floors: createProperty.floorsArr || null,
             factors: [
               {
@@ -617,30 +553,19 @@ class CreateProperty extends Component {
           boundary: {
             revenueBoundary: {
               code: createProperty.zoneNo || null,
-              name:
-                getNameByCode(currentThis.state.zone, createProperty.zoneNo) ||
-                null,
+              name: getNameByCode(currentThis.state.zone, createProperty.zoneNo) || null,
             },
             locationBoundary: {
               code: createProperty.street || createProperty.locality || null,
               name:
-                getNameByCode(
-                  currentThis.state.street,
-                  createProperty.street
-                ) ||
-                getNameByCode(
-                  currentThis.state.locality,
-                  createProperty.locality
-                ) ||
+                getNameByCode(currentThis.state.street, createProperty.street) ||
+                getNameByCode(currentThis.state.locality, createProperty.locality) ||
                 null,
             },
             adminBoundary: createProperty.electionWard
               ? {
                   code: createProperty.electionWard,
-                  name: getNameByCode(
-                    currentThis.state.election,
-                    createProperty.electionWard
-                  ),
+                  name: getNameByCode(currentThis.state.election, createProperty.electionWard),
                 }
               : null,
             guidanceValueBoundary: guidanceValue + '',
@@ -672,10 +597,7 @@ class CreateProperty extends Component {
       if (currentThis.props.files.length === 0) {
         console.log('No file uploads');
       } else {
-        console.log(
-          'still file upload pending',
-          currentThis.props.files.length
-        );
+        console.log('still file upload pending', currentThis.props.files.length);
 
         for (let i = 0; i < currentThis.props.files.length; i++) {
           console.log(currentThis.props.files);
@@ -708,13 +630,7 @@ class CreateProperty extends Component {
               console.log(body);
               if (i === currentThis.props.files.length - 1) {
                 console.log('All files succesfully uploaded');
-                Api.commonApiPost(
-                  'pt-property/properties/_create',
-                  {},
-                  body,
-                  false,
-                  true
-                )
+                Api.commonApiPost('pt-property/properties/_create', {}, body, false, true)
                   .then(res => {
                     // currentThis.setState({
                     // 	ack: res.properties.applicationNo
@@ -770,16 +686,8 @@ class CreateProperty extends Component {
 
     let notValidated = true;
 
-    if (
-      createProperty.hasOwnProperty('propertyType') &&
-      createProperty.propertyType == 'PTYPE_OPEN_LAND'
-    ) {
-      if (
-        isFormValid &&
-        (createProperty.owners
-          ? createProperty.owners.length == 0 ? false : true
-          : false)
-      ) {
+    if (createProperty.hasOwnProperty('propertyType') && createProperty.propertyType == 'PTYPE_OPEN_LAND') {
+      if (isFormValid && (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false)) {
         notValidated = false;
       } else {
         notValidated = true;
@@ -787,12 +695,8 @@ class CreateProperty extends Component {
     } else {
       if (
         isFormValid &&
-        (createProperty.floors
-          ? createProperty.floors.length == 0 ? false : true
-          : false) &&
-        (createProperty.owners
-          ? createProperty.owners.length == 0 ? false : true
-          : false)
+        (createProperty.floors ? (createProperty.floors.length == 0 ? false : true) : false) &&
+        (createProperty.owners ? (createProperty.owners.length == 0 ? false : true) : false)
       ) {
         notValidated = false;
       } else {
@@ -805,12 +709,7 @@ class CreateProperty extends Component {
 
   render() {
     if (this.state.isShowAck) {
-      return (
-        <ViewNewPropertyAcknowledgement
-          property={this.state.property}
-          localities={this.state.locality}
-        />
-      );
+      return <ViewNewPropertyAcknowledgement property={this.state.property} localities={this.state.locality} />;
     }
 
     let {
@@ -841,18 +740,14 @@ class CreateProperty extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
 
     return (
       <div className="createProperty">
-        <h3 style={{ padding: 15 }}>
-          {translate('pt.create.groups.createNewProperty')}
-        </h3>
+        <h3 style={{ padding: 15 }}>{translate('pt.create.groups.createNewProperty')}</h3>
         <form
           onSubmit={e => {
             search(e);
@@ -862,10 +757,7 @@ class CreateProperty extends Component {
           <PropertyAddress />
           <AssessmentDetails />
           <PropertyFactors />
-          {getNameByCode(
-            this.state.propertytypes,
-            createProperty.propertyType
-          ) == 'Open Land' ? (
+          {getNameByCode(this.state.propertytypes, createProperty.propertyType) == 'Open Land' ? (
             <div>
               <VacantLand />
             </div>
@@ -962,16 +854,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: [
-            'occupierName',
-            'annualRent',
-            'manualArv',
-            'length',
-            'width',
-            'occupancyCertiNumber',
-            'buildingCost',
-            'landCost',
-          ],
+          required: ['occupierName', 'annualRent', 'manualArv', 'length', 'width', 'occupancyCertiNumber', 'buildingCost', 'landCost'],
         },
       },
       isPrimaryOwner: 'PrimaryOwner',

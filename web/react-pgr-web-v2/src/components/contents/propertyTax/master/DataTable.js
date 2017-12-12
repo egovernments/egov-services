@@ -26,9 +26,7 @@ let getCellValue = ({ prop, defaultContent, render }, row) =>
         row[prop];
 
 let getCellClass = ({ prop, className }, row) =>
-  !isEmpty(prop) && isEmpty(row[prop])
-    ? 'empty-cell'
-    : typeof className == 'function' ? className(row[prop], row) : className;
+  !isEmpty(prop) && isEmpty(row[prop]) ? 'empty-cell' : typeof className == 'function' ? className(row[prop], row) : className;
 
 export default class DateTable extends Component {
   constructor(props) {
@@ -43,10 +41,7 @@ export default class DateTable extends Component {
     sortBy: {},
   };
   static propTypes = {
-    keys: PropTypes.oneOfType([
-      PropTypes.arrayOf(PropTypes.string),
-      PropTypes.string,
-    ]).isRequired,
+    keys: PropTypes.oneOfType([PropTypes.arrayOf(PropTypes.string), PropTypes.string]).isRequired,
 
     columns: PropTypes.arrayOf(
       PropTypes.shape({
@@ -60,9 +55,7 @@ export default class DateTable extends Component {
       })
     ).isRequired,
 
-    dataArray: PropTypes.arrayOf(
-      PropTypes.oneOfType([PropTypes.array, PropTypes.object])
-    ).isRequired,
+    dataArray: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.array, PropTypes.object])).isRequired,
 
     buildRowOptions: PropTypes.func,
 

@@ -205,10 +205,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'WARD', hierarchyTypeName: 'REVANUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'WARD',
+      hierarchyTypeName: 'REVANUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ ward: res.Boundary });
@@ -217,10 +217,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ locality: res.Boundary });
@@ -229,10 +229,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'ZONE', hierarchyTypeName: 'REVANUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'ZONE',
+      hierarchyTypeName: 'REVANUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ zone: res.Boundary });
@@ -241,10 +241,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'BLOCK', hierarchyTypeName: 'REVANUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'BLOCK',
+      hierarchyTypeName: 'REVANUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ block: res.Boundary });
@@ -253,10 +253,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'STREET', hierarchyTypeName: 'REVANUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'STREET',
+      hierarchyTypeName: 'REVANUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ street: res.Boundary });
@@ -265,10 +265,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'REVANUE', hierarchyTypeName: 'REVANUE' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'REVANUE',
+      hierarchyTypeName: 'REVANUE',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ street: res.Boundary });
@@ -277,10 +277,10 @@ class CruProperty extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'ELECTION', hierarchyTypeName: 'ADMINISTRATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'ELECTION',
+      hierarchyTypeName: 'ADMINISTRATION',
+    })
       .then(res => {
         console.log(res);
         currentThis.setState({ election: res.Boundary });
@@ -307,8 +307,7 @@ class CruProperty extends Component {
 
   handleCheckBoxChange = prevState => {
     this.setState(prevState => {
-      prevState.cAddressDiffPAddress.checked = !prevState.cAddressDiffPAddress
-        .checked;
+      prevState.cAddressDiffPAddress.checked = !prevState.cAddressDiffPAddress.checked;
     });
   };
 
@@ -338,13 +337,7 @@ class CruProperty extends Component {
     const renderOption = function(list, isCode) {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem
-              key={item.id}
-              value={isCode ? item.code : item.id}
-              primaryText={item.name}
-            />
-          );
+          return <MenuItem key={item.id} value={isCode ? item.code : item.id} primaryText={item.name} />;
         });
       }
     };
@@ -375,9 +368,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.aadhaarNumber ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.aadhaarNumber}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.aadhaarNumber}</span>
                 ) : (
                   ''
                 )
@@ -387,13 +378,7 @@ class CruProperty extends Component {
             }
             value={cruProperty.owner ? cruProperty.owner.aadhaarNumber : ''}
             onChange={e => {
-              handleChangeNextOne(
-                e,
-                'owner',
-                'aadhaarNumber',
-                true,
-                /^\d{12}$/g
-              );
+              handleChangeNextOne(e, 'owner', 'aadhaarNumber', true, /^\d{12}$/g);
             }}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -407,9 +392,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.mobileNumber ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.mobileNumber}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.mobileNumber}</span>
                 ) : (
                   ''
                 )
@@ -419,13 +402,7 @@ class CruProperty extends Component {
             }
             value={cruProperty.owner ? cruProperty.owner.mobileNumber : ''}
             onChange={e => {
-              handleChangeNextOne(
-                e,
-                'owner',
-                'mobileNumber',
-                true,
-                /^\d{10}$/g
-              );
+              handleChangeNextOne(e, 'owner', 'mobileNumber', true, /^\d{10}$/g);
             }}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -439,9 +416,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.name ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.name}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.name}</span>
                 ) : (
                   ''
                 )
@@ -464,9 +439,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.gender ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.gender}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.gender}</span>
                 ) : (
                   ''
                 )
@@ -499,9 +472,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.emailId ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.emailId}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.emailId}</span>
                 ) : (
                   ''
                 )
@@ -511,13 +482,7 @@ class CruProperty extends Component {
             }
             value={cruProperty.owner ? cruProperty.owner.emailId : ''}
             onChange={e => {
-              handleChangeNextOne(
-                e,
-                'owner',
-                'emailId',
-                false,
-                /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/
-              );
+              handleChangeNextOne(e, 'owner', 'emailId', false, /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/);
             }}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -531,9 +496,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.gaurdianRelation ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.gaurdianRelation}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.gaurdianRelation}</span>
                 ) : (
                   ''
                 )
@@ -567,9 +530,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.gaurdian ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.gaurdian}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.gaurdian}</span>
                 ) : (
                   ''
                 )
@@ -578,9 +539,7 @@ class CruProperty extends Component {
               )
             }
             value={cruProperty.owner ? cruProperty.owner.gaurdian : ''}
-            onChange={e =>
-              handleChangeNextOne(e, 'owner', 'gaurdian', false, '')
-            }
+            onChange={e => handleChangeNextOne(e, 'owner', 'gaurdian', false, '')}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
@@ -593,9 +552,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.ownerType ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.ownerType}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.ownerType}</span>
                 ) : (
                   ''
                 )
@@ -629,9 +586,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.owner ? (
                 fieldErrors.owner.ownerShipPercentage ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.owner.ownerShipPercentage}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.owner.ownerShipPercentage}</span>
                 ) : (
                   ''
                 )
@@ -639,18 +594,8 @@ class CruProperty extends Component {
                 ''
               )
             }
-            value={
-              cruProperty.owner ? cruProperty.owner.ownerShipPercentage : ''
-            }
-            onChange={e =>
-              handleChangeNextOne(
-                e,
-                'owner',
-                'ownerShipPercentage',
-                false,
-                /^\d{3}$/g
-              )
-            }
+            value={cruProperty.owner ? cruProperty.owner.ownerShipPercentage : ''}
+            onChange={e => handleChangeNextOne(e, 'owner', 'ownerShipPercentage', false, /^\d{3}$/g)}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
             underlineFocusStyle={styles.underlineFocusStyle}
@@ -662,9 +607,7 @@ class CruProperty extends Component {
           <br />
           <RadioButtonGroup
             name="ownerRadio"
-            defaultSelected={
-              cruProperty.owner ? cruProperty.owner.ownerTypeRadio : ''
-            }
+            defaultSelected={cruProperty.owner ? cruProperty.owner.ownerTypeRadio : ''}
             onChange={(e, v) => {
               var e = {
                 target: {
@@ -674,16 +617,8 @@ class CruProperty extends Component {
               handleChangeNextOne(e, 'owner', 'ownerTypeRadio', true, '');
             }}
           >
-            <RadioButton
-              value="isPrimaryOwner"
-              label="Primary owner"
-              style={styles.radioButton}
-            />
-            <RadioButton
-              value="isSecondaryOwner"
-              label="Secondary owner"
-              style={styles.radioButton}
-            />
+            <RadioButton value="isPrimaryOwner" label="Primary owner" style={styles.radioButton} />
+            <RadioButton value="isSecondaryOwner" label="Secondary owner" style={styles.radioButton} />
           </RadioButtonGroup>
         </Col>
 
@@ -749,12 +684,7 @@ class CruProperty extends Component {
                 backgroundColor={brown500}
                 labelColor={white}
                 onClick={() => {
-                  this.props.updateNestedObject(
-                    'floor',
-                    'units',
-                    'unit',
-                    editIndex
-                  );
+                  this.props.updateNestedObject('floor', 'units', 'unit', editIndex);
                   this.props.resetObject('unit');
                   isEditIndex(-1);
                 }}
@@ -772,9 +702,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.floorNo ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.floorNo}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.floorNo}</span>
                 ) : (
                   ''
                 )
@@ -806,9 +734,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.unitNo ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.unitNo}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.unitNo}</span>
                 ) : (
                   ''
                 )
@@ -831,9 +757,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.constructionType ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.constructionType}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.constructionType}</span>
                 ) : (
                   ''
                 )
@@ -863,9 +787,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.usage ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.usage}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.usage}</span>
                 ) : (
                   ''
                 )
@@ -895,9 +817,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.usageSubType ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.usageSubType}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.usageSubType}</span>
                 ) : (
                   ''
                 )
@@ -927,9 +847,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.firmName ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.firmName}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.firmName}</span>
                 ) : (
                   ''
                 )
@@ -952,9 +870,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.occupancyType ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.occupancyType}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.occupancyType}</span>
                 ) : (
                   ''
                 )
@@ -984,9 +900,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.occupierName ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.occupierName}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.occupierName}</span>
                 ) : (
                   ''
                 )
@@ -1010,9 +924,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.annualRent ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.annualRent}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.annualRent}</span>
                 ) : (
                   ''
                 )
@@ -1035,9 +947,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.manualArv ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.manualArv}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.manualArv}</span>
                 ) : (
                   ''
                 )
@@ -1060,9 +970,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.constructionDate ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.constructionDate}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.constructionDate}</span>
                 ) : (
                   ''
                 )
@@ -1089,9 +997,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.effectiveDate ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.effectiveDate}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.effectiveDate}</span>
                 ) : (
                   ''
                 )
@@ -1118,9 +1024,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.unstructuredLand ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.unstructuredLand}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.unstructuredLand}</span>
                 ) : (
                   ''
                 )
@@ -1151,9 +1055,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.length ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.length}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.length}</span>
                 ) : (
                   ''
                 )
@@ -1176,9 +1078,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.width ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.width}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.width}</span>
                 ) : (
                   ''
                 )
@@ -1201,9 +1101,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.plinthArea ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.plinthArea}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.plinthArea}</span>
                 ) : (
                   ''
                 )
@@ -1227,9 +1125,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.occupancyCertiNumber ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.occupancyCertiNumber}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.occupancyCertiNumber}</span>
                 ) : (
                   ''
                 )
@@ -1237,17 +1133,9 @@ class CruProperty extends Component {
                 ''
               )
             }
-            value={
-              cruProperty.unit ? cruProperty.unit.occupancyCertiNumber : ''
-            }
+            value={cruProperty.unit ? cruProperty.unit.occupancyCertiNumber : ''}
             onChange={e => {
-              handleChangeNextOne(
-                e,
-                'unit',
-                'occupancyCertiNumber',
-                false,
-                /^\d[a-zA-Z0-9]{9}$/g
-              );
+              handleChangeNextOne(e, 'unit', 'occupancyCertiNumber', false, /^\d[a-zA-Z0-9]{9}$/g);
             }}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -1260,9 +1148,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.bpaNo ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.bpaNo}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.bpaNo}</span>
                 ) : (
                   ''
                 )
@@ -1272,13 +1158,7 @@ class CruProperty extends Component {
             }
             value={cruProperty.unit ? cruProperty.unit.bpaNo : ''}
             onChange={e => {
-              handleChangeNextOne(
-                e,
-                'unit',
-                'bpaNo',
-                false,
-                /^\d[a-zA-Z0-9]{14}$/g
-              );
+              handleChangeNextOne(e, 'unit', 'bpaNo', false, /^\d[a-zA-Z0-9]{14}$/g);
             }}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -1291,9 +1171,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.bpaDate ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.bpaDate}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.bpaDate}</span>
                 ) : (
                   ''
                 )
@@ -1320,9 +1198,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.unit ? (
                 fieldErrors.unit.plinthAreaBuildingPlan ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.unit.plinthAreaBuildingPlan}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.plinthAreaBuildingPlan}</span>
                 ) : (
                   ''
                 )
@@ -1330,17 +1206,9 @@ class CruProperty extends Component {
                 ''
               )
             }
-            value={
-              cruProperty.unit ? cruProperty.unit.plinthAreaBuildingPlan : ''
-            }
+            value={cruProperty.unit ? cruProperty.unit.plinthAreaBuildingPlan : ''}
             onChange={e => {
-              handleChangeNextOne(
-                e,
-                'unit',
-                'plinthAreaBuildingPlan',
-                false,
-                /^\d{6}$/g
-              );
+              handleChangeNextOne(e, 'unit', 'plinthAreaBuildingPlan', false, /^\d{6}$/g);
             }}
             floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
             underlineStyle={styles.underlineStyle}
@@ -1372,12 +1240,7 @@ class CruProperty extends Component {
                 backgroundColor={brown500}
                 labelColor={white}
                 onClick={() => {
-                  this.props.updateNestedObject(
-                    'floor',
-                    'units',
-                    'unit',
-                    editIndex
-                  );
+                  this.props.updateNestedObject('floor', 'units', 'unit', editIndex);
                   this.props.resetObject('unit');
                   isEditIndex(-1);
                 }}
@@ -1400,9 +1263,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.floorNo ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.floorNo}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.floorNo}</span>
                   ) : (
                     ''
                   )
@@ -1434,9 +1295,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.unitNo ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.unit.unitNo}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.unit.unitNo}</span>
                   ) : (
                     ''
                   )
@@ -1459,9 +1318,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.constructionType ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.constructionType}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.constructionType}</span>
                   ) : (
                     ''
                   )
@@ -1469,9 +1326,7 @@ class CruProperty extends Component {
                   ''
                 )
               }
-              value={
-                cruProperty.floor ? cruProperty.floor.constructionType : ''
-              }
+              value={cruProperty.floor ? cruProperty.floor.constructionType : ''}
               onChange={(event, index, value) => {
                 var e = {
                   target: {
@@ -1493,9 +1348,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.usage ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.usage}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.usage}</span>
                   ) : (
                     ''
                   )
@@ -1525,9 +1378,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.usageSubType ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.usageSubType}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.usageSubType}</span>
                   ) : (
                     ''
                   )
@@ -1557,9 +1408,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.firmName ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.firmName}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.firmName}</span>
                   ) : (
                     ''
                   )
@@ -1582,9 +1431,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.occupancyType ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.occupancyType}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.occupancyType}</span>
                   ) : (
                     ''
                   )
@@ -1614,9 +1461,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.occupierName ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.occupierName}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.occupierName}</span>
                   ) : (
                     ''
                   )
@@ -1640,9 +1485,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.annualRent ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.annualRent}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.annualRent}</span>
                   ) : (
                     ''
                   )
@@ -1652,13 +1495,7 @@ class CruProperty extends Component {
               }
               value={cruProperty.floor ? cruProperty.floor.annualRent : ''}
               onChange={e => {
-                handleChangeNextOne(
-                  e,
-                  'floor',
-                  'annualRent',
-                  false,
-                  /^\d{9}$/g
-                );
+                handleChangeNextOne(e, 'floor', 'annualRent', false, /^\d{9}$/g);
               }}
               floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
               underlineStyle={styles.underlineStyle}
@@ -1671,9 +1508,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.manualArv ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.manualArv}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.manualArv}</span>
                   ) : (
                     ''
                   )
@@ -1696,9 +1531,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.constructionDate ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.constructionDate}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.constructionDate}</span>
                   ) : (
                     ''
                   )
@@ -1707,11 +1540,7 @@ class CruProperty extends Component {
                 )
               }
               defaultDate={
-                cruProperty.floor
-                  ? cruProperty.floor.constructionDate
-                    ? new Date(cruProperty.floor.constructionDate)
-                    : new Date()
-                  : new Date()
+                cruProperty.floor ? (cruProperty.floor.constructionDate ? new Date(cruProperty.floor.constructionDate) : new Date()) : new Date()
               }
               onChange={(event, date) => {
                 var e = {
@@ -1732,9 +1561,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.effectiveDate ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.effectiveDate}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.effectiveDate}</span>
                   ) : (
                     ''
                   )
@@ -1743,11 +1570,7 @@ class CruProperty extends Component {
                 )
               }
               defaultDate={
-                cruProperty.floor
-                  ? cruProperty.floor.effectiveDate
-                    ? new Date(cruProperty.floor.effectiveDate)
-                    : new Date()
-                  : new Date()
+                cruProperty.floor ? (cruProperty.floor.effectiveDate ? new Date(cruProperty.floor.effectiveDate) : new Date()) : new Date()
               }
               onChange={(event, date) => {
                 var e = {
@@ -1768,9 +1591,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.unstructuredLand ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.unstructuredLand}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.unstructuredLand}</span>
                   ) : (
                     ''
                   )
@@ -1778,9 +1599,7 @@ class CruProperty extends Component {
                   ''
                 )
               }
-              value={
-                cruProperty.floor ? cruProperty.floor.unstructuredLand : ''
-              }
+              value={cruProperty.floor ? cruProperty.floor.unstructuredLand : ''}
               onChange={(event, index, value) => {
                 var e = {
                   target: {
@@ -1803,9 +1622,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.length ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.length}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.length}</span>
                   ) : (
                     ''
                   )
@@ -1828,9 +1645,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.width ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.width}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.width}</span>
                   ) : (
                     ''
                   )
@@ -1853,9 +1668,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.plinthArea ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.plinthArea}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.plinthArea}</span>
                   ) : (
                     ''
                   )
@@ -1879,9 +1692,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.occupancyCertiNumber ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.occupancyCertiNumber}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.occupancyCertiNumber}</span>
                   ) : (
                     ''
                   )
@@ -1889,17 +1700,9 @@ class CruProperty extends Component {
                   ''
                 )
               }
-              value={
-                cruProperty.floor ? cruProperty.floor.occupancyCertiNumber : ''
-              }
+              value={cruProperty.floor ? cruProperty.floor.occupancyCertiNumber : ''}
               onChange={e => {
-                handleChangeNextOne(
-                  e,
-                  'floor',
-                  'occupancyCertiNumber',
-                  false,
-                  /^\d[a-zA-Z0-9]{9}$/g
-                );
+                handleChangeNextOne(e, 'floor', 'occupancyCertiNumber', false, /^\d[a-zA-Z0-9]{9}$/g);
               }}
               floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
               underlineStyle={styles.underlineStyle}
@@ -1912,9 +1715,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.bpaNo ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.bpaNo}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.bpaNo}</span>
                   ) : (
                     ''
                   )
@@ -1924,13 +1725,7 @@ class CruProperty extends Component {
               }
               value={cruProperty.floor ? cruProperty.floor.bpaNo : ''}
               onChange={e => {
-                handleChangeNextOne(
-                  e,
-                  'floor',
-                  'bpaNo',
-                  false,
-                  /^\d[a-zA-Z0-9]{14}$/g
-                );
+                handleChangeNextOne(e, 'floor', 'bpaNo', false, /^\d[a-zA-Z0-9]{14}$/g);
               }}
               floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
               underlineStyle={styles.underlineStyle}
@@ -1943,9 +1738,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.bpaDate ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.bpaDate}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.bpaDate}</span>
                   ) : (
                     ''
                   )
@@ -1953,13 +1746,7 @@ class CruProperty extends Component {
                   ''
                 )
               }
-              defaultDate={
-                cruProperty.floor
-                  ? cruProperty.floor.bpaDate
-                    ? new Date(cruProperty.floor.bpaDate)
-                    : new Date()
-                  : new Date()
-              }
+              defaultDate={cruProperty.floor ? (cruProperty.floor.bpaDate ? new Date(cruProperty.floor.bpaDate) : new Date()) : new Date()}
               onChange={(event, date) => {
                 var e = {
                   target: {
@@ -1979,9 +1766,7 @@ class CruProperty extends Component {
               errorText={
                 fieldErrors.floor ? (
                   fieldErrors.floor.plinthAreaBuildingPlan ? (
-                    <span style={{ position: 'absolute', bottom: -11 }}>
-                      {fieldErrors.floor.plinthAreaBuildingPlan}
-                    </span>
+                    <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.plinthAreaBuildingPlan}</span>
                   ) : (
                     ''
                   )
@@ -1989,19 +1774,9 @@ class CruProperty extends Component {
                   ''
                 )
               }
-              value={
-                cruProperty.floor
-                  ? cruProperty.floor.plinthAreaBuildingPlan
-                  : ''
-              }
+              value={cruProperty.floor ? cruProperty.floor.plinthAreaBuildingPlan : ''}
               onChange={e => {
-                handleChangeNextOne(
-                  e,
-                  'floor',
-                  'plinthAreaBuildingPlan',
-                  false,
-                  /^\d{6}$/g
-                );
+                handleChangeNextOne(e, 'floor', 'plinthAreaBuildingPlan', false, /^\d{6}$/g);
               }}
               floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
               underlineStyle={styles.underlineStyle}
@@ -2020,9 +1795,7 @@ class CruProperty extends Component {
             errorText={
               fieldErrors.floor ? (
                 fieldErrors.floor.unitType ? (
-                  <span style={{ position: 'absolute', bottom: -11 }}>
-                    {fieldErrors.floor.unitType}
-                  </span>
+                  <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floor.unitType}</span>
                 ) : (
                   ''
                 )
@@ -2052,9 +1825,7 @@ class CruProperty extends Component {
             <MenuItem value={2} primaryText="Room" />
           </SelectField>
         </Col>
-        {(cruProperty.floor
-          ? cruProperty.floor.unitType == 1 ? true : false
-          : false) && (
+        {(cruProperty.floor ? (cruProperty.floor.unitType == 1 ? true : false) : false) && (
           <Col xs={12} md={3} sm={6}>
             <RaisedButton
               type="button"
@@ -2115,10 +1886,7 @@ class CruProperty extends Component {
           }}
         >
           <Card>
-            <CardHeader
-              title={<strong style={{ color: brown500 }}>Owner Details</strong>}
-              style={styles.reducePadding}
-            />
+            <CardHeader title={<strong style={{ color: brown500 }}>Owner Details</strong>} style={styles.reducePadding} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.reducePadding}>
@@ -2167,13 +1935,8 @@ class CruProperty extends Component {
                                       isEditIndex(-1);
                                     }}
                                   >
-                                    <i
-                                      className="material-icons"
-                                      style={styles.iconFont}
-                                    >
-                                      {!this.state.addOwner
-                                        ? 'add_box'
-                                        : 'remove_circle'}
+                                    <i className="material-icons" style={styles.iconFont}>
+                                      {!this.state.addOwner ? 'add_box' : 'remove_circle'}
                                     </i>
                                   </FloatingActionButton>
                                 </th>
@@ -2208,10 +1971,7 @@ class CruProperty extends Component {
                                               isEditIndex(index);
                                             }}
                                           >
-                                            <i
-                                              className="material-icons"
-                                              style={styles.iconFont}
-                                            >
+                                            <i className="material-icons" style={styles.iconFont}>
                                               mode_edit
                                             </i>
                                           </FloatingActionButton>
@@ -2223,10 +1983,7 @@ class CruProperty extends Component {
                                               isEditIndex(-1);
                                             }}
                                           >
-                                            <i
-                                              className="material-icons"
-                                              style={styles.iconFont}
-                                            >
+                                            <i className="material-icons" style={styles.iconFont}>
                                               delete
                                             </i>
                                           </FloatingActionButton>
@@ -2247,12 +2004,7 @@ class CruProperty extends Component {
             </CardText>
           </Card>
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={
-                <strong style={{ color: brown500 }}>Create New Property</strong>
-              }
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Create New Property</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.noPadding}>
@@ -2261,20 +2013,8 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Category of ownership"
-                          errorText={
-                            fieldErrors.ownerShip ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.ownerShip}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
-                          value={
-                            cruProperty.ownerShip ? cruProperty.ownerShip : ''
-                          }
+                          errorText={fieldErrors.ownerShip ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.ownerShip}</span> : ''}
+                          value={cruProperty.ownerShip ? cruProperty.ownerShip : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -2283,9 +2023,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'ownerShip', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2297,21 +2035,9 @@ class CruProperty extends Component {
                           <SelectField
                             floatingLabelText="Property type"
                             errorText={
-                              fieldErrors.propertyType ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -11 }}
-                                >
-                                  {fieldErrors.propertyType}
-                                </span>
-                              ) : (
-                                ''
-                              )
+                              fieldErrors.propertyType ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.propertyType}</span> : ''
                             }
-                            value={
-                              cruProperty.propertyType
-                                ? cruProperty.propertyType
-                                : ''
-                            }
+                            value={cruProperty.propertyType ? cruProperty.propertyType : ''}
                             onChange={(event, index, value) => {
                               var e = {
                                 target: {
@@ -2320,9 +2046,7 @@ class CruProperty extends Component {
                               };
                               handleChange(e, 'propertyType', false, '');
                             }}
-                            floatingLabelFocusStyle={
-                              styles.floatingLabelFocusStyle
-                            }
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
                           >
@@ -2333,21 +2057,9 @@ class CruProperty extends Component {
                           <SelectField
                             floatingLabelText="Property type"
                             errorText={
-                              fieldErrors.propertyType ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -11 }}
-                                >
-                                  {fieldErrors.propertyType}
-                                </span>
-                              ) : (
-                                ''
-                              )
+                              fieldErrors.propertyType ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.propertyType}</span> : ''
                             }
-                            value={
-                              cruProperty.propertyType
-                                ? cruProperty.propertyType
-                                : ''
-                            }
+                            value={cruProperty.propertyType ? cruProperty.propertyType : ''}
                             onChange={(event, index, value) => {
                               var e = {
                                 target: {
@@ -2356,9 +2068,7 @@ class CruProperty extends Component {
                               };
                               handleChange(e, 'propertyType', false, '');
                             }}
-                            floatingLabelFocusStyle={
-                              styles.floatingLabelFocusStyle
-                            }
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
                           >
@@ -2370,19 +2080,9 @@ class CruProperty extends Component {
                         <SelectField
                           floatingLabelText="Apartment/ Complex name"
                           errorText={
-                            fieldErrors.appartment ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.appartment}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.appartment ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.appartment}</span> : ''
                           }
-                          value={
-                            cruProperty.appartment ? cruProperty.appartment : ''
-                          }
+                          value={cruProperty.appartment ? cruProperty.appartment : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -2391,9 +2091,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'appartment', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2419,11 +2117,7 @@ class CruProperty extends Component {
                                   ''
                                 )
                               }
-                              value={
-                                cruProperty.department
-                                  ? cruProperty.department
-                                  : ''
-                              }
+                              value={cruProperty.department ? cruProperty.department : ''}
                               onChange={(event, index, value) => {
                                 var e = {
                                   target: {
@@ -2432,9 +2126,7 @@ class CruProperty extends Component {
                                 };
                                 handleChange(e, 'department', false, '');
                               }}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                               underlineStyle={styles.underlineStyle}
                               underlineFocusStyle={styles.underlineFocusStyle}
                             >
@@ -2449,12 +2141,7 @@ class CruProperty extends Component {
             </CardText>
           </Card>
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={
-                <strong style={{ color: brown500 }}>Property Address</strong>
-              }
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Property Address</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.noPadding}>
@@ -2465,31 +2152,14 @@ class CruProperty extends Component {
                           floatingLabelText="Reference property number"
                           errorText={
                             fieldErrors.refPropertyNumber ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.refPropertyNumber}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.refPropertyNumber}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.refPropertyNumber
-                              ? cruProperty.refPropertyNumber
-                              : ''
-                          }
-                          onChange={e =>
-                            handleChange(
-                              e,
-                              'refPropertyNumber',
-                              false,
-                              /^\d{15}$/g
-                            )
-                          }
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          value={cruProperty.refPropertyNumber ? cruProperty.refPropertyNumber : ''}
+                          onChange={e => handleChange(e, 'refPropertyNumber', false, /^\d{15}$/g)}
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         />
@@ -2497,20 +2167,8 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Locality"
-                          errorText={
-                            fieldErrors.locality ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.locality}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
-                          value={
-                            cruProperty.locality ? cruProperty.locality : ''
-                          }
+                          errorText={fieldErrors.locality ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.locality}</span> : ''}
+                          value={cruProperty.locality ? cruProperty.locality : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -2519,9 +2177,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'locality', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2532,21 +2188,9 @@ class CruProperty extends Component {
                         <SelectField
                           floatingLabelText="Appartment/Complex name"
                           errorText={
-                            fieldErrors.locality ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.appComplexName}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.locality ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.appComplexName}</span> : ''
                           }
-                          value={
-                            cruProperty.locality
-                              ? cruProperty.appComplexName
-                              : ''
-                          }
+                          value={cruProperty.locality ? cruProperty.appComplexName : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -2555,9 +2199,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'appComplexName', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2567,17 +2209,7 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Zone No."
-                          errorText={
-                            fieldErrors.zoneNo ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.zoneNo}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.zoneNo ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.zoneNo}</span> : ''}
                           value={cruProperty.zoneNo ? cruProperty.zoneNo : ''}
                           onChange={(event, index, value) => {
                             var e = {
@@ -2587,9 +2219,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'zoneNo', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2599,17 +2229,7 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Ward No."
-                          errorText={
-                            fieldErrors.wardNo ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.wardNo}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.wardNo ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.wardNo}</span> : ''}
                           value={cruProperty.wardNo ? cruProperty.wardNo : ''}
                           onChange={(event, index, value) => {
                             var e = {
@@ -2619,9 +2239,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'wardNo', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2631,17 +2249,7 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Block No."
-                          errorText={
-                            fieldErrors.blockNo ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.blockNo}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.blockNo ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.blockNo}</span> : ''}
                           value={cruProperty.blockNo ? cruProperty.blockNo : ''}
                           onChange={(event, index, value) => {
                             var e = {
@@ -2651,9 +2259,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'blockNo', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2663,17 +2269,7 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Street"
-                          errorText={
-                            fieldErrors.street ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.street}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.street ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.street}</span> : ''}
                           value={cruProperty.street ? cruProperty.street : ''}
                           onChange={(event, index, value) => {
                             var e = {
@@ -2683,9 +2279,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'street', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2696,21 +2290,9 @@ class CruProperty extends Component {
                         <SelectField
                           floatingLabelText="Revenue circle"
                           errorText={
-                            fieldErrors.revenueCircle ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.revenueCircle}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.revenueCircle ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.revenueCircle}</span> : ''
                           }
-                          value={
-                            cruProperty.revenueCircle
-                              ? cruProperty.revenueCircle
-                              : ''
-                          }
+                          value={cruProperty.revenueCircle ? cruProperty.revenueCircle : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -2719,9 +2301,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'revenueCircle', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2732,21 +2312,9 @@ class CruProperty extends Component {
                         <SelectField
                           floatingLabelText="Election ward"
                           errorText={
-                            fieldErrors.electionCard ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.electionCard}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.electionCard ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.electionCard}</span> : ''
                           }
-                          value={
-                            cruProperty.electionCard
-                              ? cruProperty.electionCard
-                              : ''
-                          }
+                          value={cruProperty.electionCard ? cruProperty.electionCard : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -2755,9 +2323,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'electionWard', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -2767,22 +2333,10 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <TextField
                           floatingLabelText="Door No."
-                          errorText={
-                            fieldErrors.doorNo ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.doorNo}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.doorNo ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.doorNo}</span> : ''}
                           value={cruProperty.doorNo ? cruProperty.doorNo : ''}
                           onChange={e => handleChange(e, 'doorNo', true, '')}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         />
@@ -2790,22 +2344,10 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <TextField
                           floatingLabelText="Pin"
-                          errorText={
-                            fieldErrors.pin ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.pin}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.pin ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.pin}</span> : ''}
                           value={cruProperty.pin ? cruProperty.pin : ''}
                           onChange={e => handleChange(e, 'pin', false, '')}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         />
@@ -2844,18 +2386,12 @@ class CruProperty extends Component {
                                   ''
                                 )
                               }
-                              value={
-                                cruProperty.cDoorno ? cruProperty.cDoorno : ''
-                              }
-                              onChange={e =>
-                                handleChange(e, 'cDoorno', true, '')
-                              }
+                              value={cruProperty.cDoorno ? cruProperty.cDoorno : ''}
+                              onChange={e => handleChange(e, 'cDoorno', true, '')}
                               multiLine={true}
                               rows={2}
                               rowsMax={4}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                               underlineStyle={styles.underlineStyle}
                               underlineFocusStyle={styles.underlineFocusStyle}
                             />
@@ -2877,20 +2413,12 @@ class CruProperty extends Component {
                                   ''
                                 )
                               }
-                              value={
-                                cruProperty.addressTwo
-                                  ? cruProperty.addressTwo
-                                  : ''
-                              }
-                              onChange={e =>
-                                handleChange(e, 'addressTwo', true, '')
-                              }
+                              value={cruProperty.addressTwo ? cruProperty.addressTwo : ''}
+                              onChange={e => handleChange(e, 'addressTwo', true, '')}
                               multiLine={true}
                               rows={2}
                               rowsMax={4}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                               underlineStyle={styles.underlineStyle}
                               underlineFocusStyle={styles.underlineFocusStyle}
                             />
@@ -2912,15 +2440,9 @@ class CruProperty extends Component {
                                   ''
                                 )
                               }
-                              value={
-                                cruProperty.pinTwo ? cruProperty.pinTwo : ''
-                              }
-                              onChange={e =>
-                                handleChange(e, 'pinTwo', true, '')
-                              }
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
+                              value={cruProperty.pinTwo ? cruProperty.pinTwo : ''}
+                              onChange={e => handleChange(e, 'pinTwo', true, '')}
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                               underlineStyle={styles.underlineStyle}
                               underlineFocusStyle={styles.underlineFocusStyle}
                             />
@@ -2934,10 +2456,7 @@ class CruProperty extends Component {
             </CardText>
           </Card>
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={<strong style={{ color: brown500 }}>Amenities</strong>}
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Amenities</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.noPadding}>
@@ -3055,12 +2574,7 @@ class CruProperty extends Component {
             </CardText>
           </Card>
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={
-                <strong style={{ color: brown500 }}>Assessment details</strong>
-              }
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Assessment details</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.noPadding}>
@@ -3071,20 +2585,12 @@ class CruProperty extends Component {
                           floatingLabelText="Reason for Creation"
                           errorText={
                             fieldErrors.reasonForCreation ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.reasonForCreation}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.reasonForCreation}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.reasonForCreation
-                              ? cruProperty.reasonForCreation
-                              : ''
-                          }
+                          value={cruProperty.reasonForCreation ? cruProperty.reasonForCreation : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3093,9 +2599,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'reasonForCreation', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           id="creationReason"
@@ -3110,27 +2614,13 @@ class CruProperty extends Component {
                           <TextField
                             floatingLabelText="Parent UPIC No."
                             errorText={
-                              fieldErrors.parentUpicNo ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -11 }}
-                                >
-                                  {fieldErrors.parentUpicNo}
-                                </span>
-                              ) : (
-                                ''
-                              )
+                              fieldErrors.parentUpicNo ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.parentUpicNo}</span> : ''
                             }
-                            value={
-                              cruProperty.parentUpicNo
-                                ? cruProperty.parentUpicNo
-                                : ''
-                            }
+                            value={cruProperty.parentUpicNo ? cruProperty.parentUpicNo : ''}
                             onChange={e => {
                               handleChange(e, 'parentUpicNo', true, '');
                             }}
-                            floatingLabelFocusStyle={
-                              styles.floatingLabelFocusStyle
-                            }
+                            floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                             underlineStyle={styles.underlineStyle}
                             underlineFocusStyle={styles.underlineFocusStyle}
                             id="upicNumber"
@@ -3142,20 +2632,12 @@ class CruProperty extends Component {
                           floatingLabelText="Property Type"
                           errorText={
                             fieldErrors.assessmentPropertyType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.assessmentPropertyType}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.assessmentPropertyType}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.assessmentPropertyType
-                              ? cruProperty.assessmentPropertyType
-                              : ''
-                          }
+                          value={cruProperty.assessmentPropertyType ? cruProperty.assessmentPropertyType : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3164,9 +2646,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'assessmentPropertyType', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3178,36 +2658,21 @@ class CruProperty extends Component {
                           floatingLabelText="Property Sub-type"
                           errorText={
                             fieldErrors.assessmentPropertySubType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.assessmentPropertySubType}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.assessmentPropertySubType}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.assessmentPropertySubType
-                              ? cruProperty.assessmentPropertySubType
-                              : ''
-                          }
+                          value={cruProperty.assessmentPropertySubType ? cruProperty.assessmentPropertySubType : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
                                 value: value,
                               },
                             };
-                            handleChange(
-                              e,
-                              'assessmentPropertySubType',
-                              true,
-                              ''
-                            );
+                            handleChange(e, 'assessmentPropertySubType', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3219,20 +2684,12 @@ class CruProperty extends Component {
                           floatingLabelText="Assessment Department"
                           errorText={
                             fieldErrors.assessmentDepartment ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.assessmentDepartment}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.assessmentDepartment}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.assessmentDepartment
-                              ? cruProperty.assessmentDepartment
-                              : ''
-                          }
+                          value={cruProperty.assessmentDepartment ? cruProperty.assessmentDepartment : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3241,9 +2698,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'assessmentDepartment', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3254,27 +2709,13 @@ class CruProperty extends Component {
                         <TextField
                           floatingLabelText="Extent of Site (Sq. Mtrs)"
                           errorText={
-                            fieldErrors.extentOfSite ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.extentOfSite}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.extentOfSite ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.extentOfSite}</span> : ''
                           }
-                          value={
-                            cruProperty.extentOfSite
-                              ? cruProperty.extentOfSite
-                              : ''
-                          }
+                          value={cruProperty.extentOfSite ? cruProperty.extentOfSite : ''}
                           onChange={e => {
                             handleChange(e, 'extentOfSite', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         />
@@ -3286,12 +2727,7 @@ class CruProperty extends Component {
             </CardText>
           </Card>
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={
-                <strong style={{ color: brown500 }}>Construction Types</strong>
-              }
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Construction Types</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.noPadding}>
@@ -3300,20 +2736,8 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Floor Type"
-                          errorText={
-                            fieldErrors.floorType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.floorType}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
-                          value={
-                            cruProperty.floorType ? cruProperty.floorType : ''
-                          }
+                          errorText={fieldErrors.floorType ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.floorType}</span> : ''}
+                          value={cruProperty.floorType ? cruProperty.floorType : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3322,9 +2746,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'floorType', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3334,20 +2756,8 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Roof Type"
-                          errorText={
-                            fieldErrors.roofType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.roofType}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
-                          value={
-                            cruProperty.roofType ? cruProperty.roofType : ''
-                          }
+                          errorText={fieldErrors.roofType ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.roofType}</span> : ''}
+                          value={cruProperty.roofType ? cruProperty.roofType : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3356,9 +2766,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'roofType', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3368,20 +2776,8 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Wall Type"
-                          errorText={
-                            fieldErrors.wallType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.wallType}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
-                          value={
-                            cruProperty.wallType ? cruProperty.wallType : ''
-                          }
+                          errorText={fieldErrors.wallType ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.wallType}</span> : ''}
+                          value={cruProperty.wallType ? cruProperty.wallType : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3390,9 +2786,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'wallType', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3402,20 +2796,8 @@ class CruProperty extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           floatingLabelText="Wood Type"
-                          errorText={
-                            fieldErrors.woodType ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.woodType}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
-                          value={
-                            cruProperty.woodType ? cruProperty.woodType : ''
-                          }
+                          errorText={fieldErrors.woodType ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.woodType}</span> : ''}
+                          value={cruProperty.woodType ? cruProperty.woodType : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3424,9 +2806,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'woodType', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3440,10 +2820,7 @@ class CruProperty extends Component {
             </CardText>
           </Card>
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={<strong style={{ color: brown500 }}>Floor Details</strong>}
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Floor Details</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.reducePadding}>
@@ -3547,9 +2924,7 @@ class CruProperty extends Component {
                                               isEditIndex(index);
                                             }}
                                           >
-                                            <i className="material-icons">
-                                              mode_edit
-                                            </i>
+                                            <i className="material-icons">mode_edit</i>
                                           </FloatingActionButton>
                                           <FloatingActionButton
                                             mini={true}
@@ -3559,9 +2934,7 @@ class CruProperty extends Component {
                                               isEditIndex(-1);
                                             }}
                                           >
-                                            <i className="material-icons">
-                                              delete
-                                            </i>
+                                            <i className="material-icons">delete</i>
                                           </FloatingActionButton>
                                         </td>
                                       </tr>
@@ -3616,10 +2989,7 @@ class CruProperty extends Component {
                                               isEditIndex(index);
                                             }}
                                           >
-                                            <i
-                                              className="material-icons"
-                                              style={styles.iconFont}
-                                            >
+                                            <i className="material-icons" style={styles.iconFont}>
                                               mode_edit
                                             </i>
                                           </FloatingActionButton>
@@ -3627,17 +2997,11 @@ class CruProperty extends Component {
                                             mini={true}
                                             style={styles.floatButtonMargin}
                                             onClick={() => {
-                                              deleteNestedObject(
-                                                'floor',
-                                                'units',
-                                                index
-                                              );
+                                              deleteNestedObject('floor', 'units', index);
                                               isEditIndex(-1);
                                             }}
                                           >
-                                            <i className="material-icons">
-                                              delete
-                                            </i>
+                                            <i className="material-icons">delete</i>
                                           </FloatingActionButton>
                                         </td>
                                       </tr>
@@ -3657,12 +3021,7 @@ class CruProperty extends Component {
           </Card>
           {false && (
             <Card>
-              <CardHeader
-                style={styles.reducePadding}
-                title={
-                  <strong style={{ color: brown500 }}>Document Upload</strong>
-                }
-              />
+              <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Document Upload</strong>} />
               <CardText style={styles.reducePadding}>
                 <Card>
                   <CardText style={styles.noPadding}>
@@ -3670,16 +3029,8 @@ class CruProperty extends Component {
                       <Row>
                         <Col xs={12} md={12}>
                           <Row>
-                            <FlatButton
-                              label="Choose Document"
-                              labelPosition="before"
-                              style={styles.uploadButton}
-                              containerElement="label"
-                            >
-                              <Upload
-                                onFileLoad={this.onFileLoad}
-                                style={styles.uploadInput}
-                              />
+                            <FlatButton label="Choose Document" labelPosition="before" style={styles.uploadButton} containerElement="label">
+                              <Upload onFileLoad={this.onFileLoad} style={styles.uploadInput} />
                             </FlatButton>
                           </Row>
                         </Col>
@@ -3691,10 +3042,7 @@ class CruProperty extends Component {
             </Card>
           )}
           <Card>
-            <CardHeader
-              style={styles.reducePadding}
-              title={<strong style={{ color: brown500 }}>Workflow</strong>}
-            />
+            <CardHeader style={styles.reducePadding} title={<strong style={{ color: brown500 }}>Workflow</strong>} />
             <CardText style={styles.reducePadding}>
               <Card>
                 <CardText style={styles.noPadding}>
@@ -3705,20 +3053,12 @@ class CruProperty extends Component {
                           floatingLabelText="Department Name"
                           errorText={
                             fieldErrors.workflowDepartment ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.workflowDepartment}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.workflowDepartment}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.workflowDepartment
-                              ? cruProperty.workflowDepartment
-                              : ''
-                          }
+                          value={cruProperty.workflowDepartment ? cruProperty.workflowDepartment : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3727,9 +3067,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'workflowDepartment', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3741,20 +3079,12 @@ class CruProperty extends Component {
                           floatingLabelText="Designation Name"
                           errorText={
                             fieldErrors.workflowDesignation ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.workflowDesignation}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.workflowDesignation}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            cruProperty.workflowDesignation
-                              ? cruProperty.workflowDesignation
-                              : ''
-                          }
+                          value={cruProperty.workflowDesignation ? cruProperty.workflowDesignation : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3763,9 +3093,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'workflowDesignation', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >
@@ -3776,21 +3104,9 @@ class CruProperty extends Component {
                         <SelectField
                           floatingLabelText="Approver Name"
                           errorText={
-                            fieldErrors.approverName ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -11 }}
-                              >
-                                {fieldErrors.approverName}
-                              </span>
-                            ) : (
-                              ''
-                            )
+                            fieldErrors.approverName ? <span style={{ position: 'absolute', bottom: -11 }}>{fieldErrors.approverName}</span> : ''
                           }
-                          value={
-                            cruProperty.approverName
-                              ? cruProperty.approverName
-                              : ''
-                          }
+                          value={cruProperty.approverName ? cruProperty.approverName : ''}
                           onChange={(event, index, value) => {
                             var e = {
                               target: {
@@ -3799,9 +3115,7 @@ class CruProperty extends Component {
                             };
                             handleChange(e, 'approverName', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                         >

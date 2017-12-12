@@ -99,8 +99,7 @@ const tradeOwnerDetailsCardFields = [
 
 var tradeLocationDetails = [
   {
-    label:
-      'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo',
+    label: 'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo',
     id: 'licenses[0]-propertyAssesmentNo',
     type: 'textSearch',
     code: 'propertyAssesmentNo',
@@ -315,12 +314,8 @@ export default class NewTradeLicenseForm extends Component {
   constructor() {
     super();
     this.customHandleChange = this.customHandleChange.bind(this);
-    this.handleDocumentsClearCancel = this.handleDocumentsClearCancel.bind(
-      this
-    );
-    this.handleDocumentsClearConfirm = this.handleDocumentsClearConfirm.bind(
-      this
-    );
+    this.handleDocumentsClearCancel = this.handleDocumentsClearCancel.bind(this);
+    this.handleDocumentsClearConfirm = this.handleDocumentsClearConfirm.bind(this);
 
     this.state = {
       isPropertyOwner: true,
@@ -336,9 +331,7 @@ export default class NewTradeLicenseForm extends Component {
       },
       confirmCategoryField: {}, //category or subcategory field confirm temporary store
       confirmCategoryFieldValue: '',
-      supportDocClearDialogMsg: translate(
-        'tl.create.supportDocuments.clear.basedonCategory'
-      ),
+      supportDocClearDialogMsg: translate('tl.create.supportDocuments.clear.basedonCategory'),
       dropdownDataSource: {
         ownerGender: [
           {
@@ -430,11 +423,7 @@ export default class NewTradeLicenseForm extends Component {
   componentDidMount() {
     let requiredFields = [];
 
-    var allFields = [
-      ...tradeOwnerDetailsCardFields,
-      ...tradeLocationDetails,
-      ...tradeDetails,
-    ];
+    var allFields = [...tradeOwnerDetailsCardFields, ...tradeLocationDetails, ...tradeDetails];
 
     if (this.props.isPropertyOwner) {
       allFields = [...allFields, ...agreementDetailsSection];
@@ -491,13 +480,7 @@ export default class NewTradeLicenseForm extends Component {
         { boundaryTypeName: 'Ward', hierarchyTypeName: 'ADMINISTRATION' },
         { tenantId: tenantId }
       ),
-      Api.commonApiPost(
-        '/tl-masters/category/v1/_search',
-        { type: 'category', active: true },
-        { tenantId: tenantId, pageSize: '500' },
-        false,
-        true
-      ),
+      Api.commonApiPost('/tl-masters/category/v1/_search', { type: 'category', active: true }, { tenantId: tenantId, pageSize: '500' }, false, true),
       Api.commonApiPost(
         '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
         { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' },
@@ -522,11 +505,7 @@ export default class NewTradeLicenseForm extends Component {
     }
 
     let supportDocumentsResponseIdx = -1;
-    if (
-      this.props.form &&
-      this.props.form['category'] &&
-      this.props.form['subCategory']
-    ) {
+    if (this.props.form && this.props.form['category'] && this.props.form['subCategory']) {
       supportDocumentsResponseIdx = initialCalls.length;
       initialCalls[supportDocumentsResponseIdx] = Api.commonApiPost(
         'tl-masters/documenttype/v2/_search',
@@ -552,18 +531,9 @@ export default class NewTradeLicenseForm extends Component {
 
     Promise.all(initialCalls).then(responses => {
       try {
-        let revenueWard = sortArrayByAlphabetically(
-          responses[0].Boundary,
-          'name'
-        );
-        let adminWard = sortArrayByAlphabetically(
-          responses[1].Boundary,
-          'name'
-        );
-        let category = sortArrayByAlphabetically(
-          responses[2].categories,
-          'name'
-        );
+        let revenueWard = sortArrayByAlphabetically(responses[0].Boundary, 'name');
+        let adminWard = sortArrayByAlphabetically(responses[1].Boundary, 'name');
+        let category = sortArrayByAlphabetically(responses[2].categories, 'name');
         let locality = sortArrayByAlphabetically(responses[3].Boundary, 'name');
         let dropdownDataSource = { ...this.state.dropdownDataSource };
         dropdownDataSource = {
@@ -574,31 +544,21 @@ export default class NewTradeLicenseForm extends Component {
           locality,
         };
         if (subcategoryResponseIdx > -1) {
-          dropdownDataSource['subCategory'] = sortArrayByAlphabetically(
-            responses[subcategoryResponseIdx].categories,
-            'name'
-          );
+          dropdownDataSource['subCategory'] = sortArrayByAlphabetically(responses[subcategoryResponseIdx].categories, 'name');
         }
 
         let documentTypes = [];
         if (supportDocumentsResponseIdx > -1) {
-          documentTypes = sortArrayByAlphabetically(
-            responses[supportDocumentsResponseIdx].documentTypes,
-            'name'
-          );
+          documentTypes = sortArrayByAlphabetically(responses[supportDocumentsResponseIdx].documentTypes, 'name');
           this.addMandatoryDocuments(documentTypes);
 
           //assign existing support docs into redux
-          let newApplicationType = this.props.form.applications.find(
-            application => application.applicationType === 'NEW'
-          );
+          let newApplicationType = this.props.form.applications.find(application => application.applicationType === 'NEW');
           let supportDocuments = newApplicationType.supportDocuments || [];
 
           for (var idx = 0; idx < supportDocuments.length; idx++) {
             var supportDocument = supportDocuments[idx];
-            var documentType = documentTypes.find(
-              doc => doc.id === supportDocument.documentTypeId
-            );
+            var documentType = documentTypes.find(doc => doc.id === supportDocument.documentTypeId);
             this.props.addFile({
               isRequired: documentType.mandatory,
               code: supportDocument.documentTypeId,
@@ -620,8 +580,7 @@ export default class NewTradeLicenseForm extends Component {
           dropdownDataSource,
           isPropertyOwner: this.props.form['isPropertyOwner'] || true,
         });
-        if (!this.props.form['propertyAssesmentNo'])
-          this.props.setLoadingStatus('hide');
+        if (!this.props.form['propertyAssesmentNo']) this.props.setLoadingStatus('hide');
         else this.customSearch('propertyAssesmentNo', true);
       } catch (e) {
         console.log('error', e);
@@ -636,11 +595,7 @@ export default class NewTradeLicenseForm extends Component {
       self.props.setLoadingStatus('loading');
       // self.props.handleChange(true, "isPropertySearched", true, "", "");
       //make ajax call to PTIS module and populate locality, ward and address
-      Api.commonApiPost(
-        '/pt-property/properties/_search',
-        { upicNumber: this.props.form[code], searchType: 'BASIC_DETAILS' },
-        {}
-      ).then(
+      Api.commonApiPost('/pt-property/properties/_search', { upicNumber: this.props.form[code], searchType: 'BASIC_DETAILS' }, {}).then(
         function(response) {
           if (response.properties.length > 0) {
             let properties = response.properties[0];
@@ -649,44 +604,24 @@ export default class NewTradeLicenseForm extends Component {
             let isPropertylocalityObj = self.state.dropdownDataSource.locality.find(
               locality =>
                 locality[self.state.dropdownDataSource.localityConfig.value] ==
-                properties.boundary.locationBoundary[
-                  self.state.dropdownDataSource.localityConfig.value
-                ]
+                properties.boundary.locationBoundary[self.state.dropdownDataSource.localityConfig.value]
             );
             let isPropertyadminWardObj = self.state.dropdownDataSource.adminWard.find(
               adminward =>
-                adminward[
-                  self.state.dropdownDataSource.adminWardConfig.value
-                ] ==
-                properties.boundary.adminBoundary[
-                  self.state.dropdownDataSource.adminWardConfig.value
-                ]
+                adminward[self.state.dropdownDataSource.adminWardConfig.value] ==
+                properties.boundary.adminBoundary[self.state.dropdownDataSource.adminWardConfig.value]
             );
             let isPropertyrevenueWardObj = self.state.dropdownDataSource.revenueWard.find(
               revenueward =>
-                revenueward[
-                  self.state.dropdownDataSource.revenueWardConfig.value
-                ] ==
-                properties.boundary.revenueBoundary[
-                  [self.state.dropdownDataSource.revenueWardConfig.value]
-                ]
+                revenueward[self.state.dropdownDataSource.revenueWardConfig.value] ==
+                properties.boundary.revenueBoundary[[self.state.dropdownDataSource.revenueWardConfig.value]]
             );
 
-            let isPropertylocalityId = !isPropertylocalityObj
-              ? ''
-              : isPropertylocalityObj[
-                  self.state.dropdownDataSource.localityConfig.value
-                ];
-            let isPropertyadminWardId = !isPropertyadminWardObj
-              ? ''
-              : isPropertyadminWardObj[
-                  self.state.dropdownDataSource.adminWardConfig.value
-                ];
+            let isPropertylocalityId = !isPropertylocalityObj ? '' : isPropertylocalityObj[self.state.dropdownDataSource.localityConfig.value];
+            let isPropertyadminWardId = !isPropertyadminWardObj ? '' : isPropertyadminWardObj[self.state.dropdownDataSource.adminWardConfig.value];
             let isPropertyrevenueWardId = !isPropertyrevenueWardObj
               ? ''
-              : isPropertyrevenueWardObj[
-                  self.state.dropdownDataSource.revenueWardConfig.value
-                ];
+              : isPropertyrevenueWardObj[self.state.dropdownDataSource.revenueWardConfig.value];
 
             // console.log('isPropertylocalityId->',isPropertylocalityId,'isPropertyadminWardId->', isPropertyadminWardId, 'isPropertyrevenueWardId=>',isPropertyrevenueWardId);
             let address = '';
@@ -698,43 +633,18 @@ export default class NewTradeLicenseForm extends Component {
               }),
             ]).then(responses => {
               if (responses[0].Boundary.length !== 0)
-                address = `${properties.address.addressNumber ||
-                  ''} ${responses[0].Boundary[0].name || ''} ${properties
-                  .address.addressLine2 || ''} ${properties.address.landmark ||
-                  ''} ${properties.address.city || ''} ${properties.address
-                  .pincode || ''}`;
+                address = `${properties.address.addressNumber || ''} ${responses[0].Boundary[0].name || ''} ${properties.address.addressLine2 ||
+                  ''} ${properties.address.landmark || ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
               else
-                address = `${properties.address.addressNumber ||
-                  ''} ${properties.address.addressLine2 || ''} ${properties
-                  .address.landmark || ''} ${properties.address.city ||
-                  ''} ${properties.address.pincode || ''}`;
+                address = `${properties.address.addressNumber || ''} ${properties.address.addressLine2 || ''} ${properties.address.landmark ||
+                  ''} ${properties.address.city || ''} ${properties.address.pincode || ''}`;
 
-              if ((isDefaultLoad && isPropertylocalityId) || !isDefaultLoad)
-                self.props.handleChange(
-                  isPropertylocalityId,
-                  'locality',
-                  false,
-                  '',
-                  ''
-                );
+              if ((isDefaultLoad && isPropertylocalityId) || !isDefaultLoad) self.props.handleChange(isPropertylocalityId, 'locality', false, '', '');
               if ((isDefaultLoad && isPropertyadminWardId) || !isDefaultLoad)
-                self.props.handleChange(
-                  isPropertyadminWardId,
-                  'adminWard',
-                  true,
-                  '',
-                  ''
-                );
+                self.props.handleChange(isPropertyadminWardId, 'adminWard', true, '', '');
               if ((isDefaultLoad && isPropertyrevenueWardId) || !isDefaultLoad)
-                self.props.handleChange(
-                  isPropertyrevenueWardId,
-                  'revenueWard',
-                  true,
-                  '',
-                  ''
-                );
-              if ((isDefaultLoad && address) || !isDefaultLoad)
-                self.props.handleChange(address, 'tradeAddress', true, '', '');
+                self.props.handleChange(isPropertyrevenueWardId, 'revenueWard', true, '', '');
+              if ((isDefaultLoad && address) || !isDefaultLoad) self.props.handleChange(address, 'tradeAddress', true, '', '');
 
               self.setState({
                 isPropertylocalityId: isPropertylocalityId,
@@ -747,10 +657,7 @@ export default class NewTradeLicenseForm extends Component {
             });
           } else {
             self.props.setLoadingStatus('hide');
-            self.props.toggleDailogAndSetText(
-              true,
-              'Not a valid Assessment Number'
-            );
+            self.props.toggleDailogAndSetText(true, 'Not a valid Assessment Number');
           }
         },
         function(err) {
@@ -768,15 +675,9 @@ export default class NewTradeLicenseForm extends Component {
   handleDocumentsClearConfirm() {
     //console.log('confirm clicked', field);
     if (this.state.confirmCategoryField.code === 'category') {
-      this.tradeCategoryChangeAndResetFields(
-        this.state.confirmCategoryField,
-        this.state.confirmCategoryFieldValue
-      );
+      this.tradeCategoryChangeAndResetFields(this.state.confirmCategoryField, this.state.confirmCategoryFieldValue);
     } else if (this.state.confirmCategoryField.code === 'subCategory') {
-      this.tradeSubCategoryChangeAndResetFields(
-        this.state.confirmCategoryField,
-        this.state.confirmCategoryFieldValue
-      );
+      this.tradeSubCategoryChangeAndResetFields(this.state.confirmCategoryField, this.state.confirmCategoryFieldValue);
     }
   }
 
@@ -785,9 +686,7 @@ export default class NewTradeLicenseForm extends Component {
   }
 
   clearSupportDocuments() {
-    var supportDocuments = this.state.documentTypes
-      ? [...this.state.documentTypes]
-      : [];
+    var supportDocuments = this.state.documentTypes ? [...this.state.documentTypes] : [];
     supportDocuments.map(doc => {
       //doc.id
       if (doc.mandatory) {
@@ -795,9 +694,7 @@ export default class NewTradeLicenseForm extends Component {
       }
 
       //remove file
-      var supportDocument = this.props.files
-        ? [...this.props.files].find(file => file.code === doc.id)
-        : [];
+      var supportDocument = this.props.files ? [...this.props.files].find(file => file.code === doc.id) : [];
 
       if (supportDocument) {
         if (supportDocument.files && supportDocument.files.length > 0)
@@ -876,36 +773,12 @@ export default class NewTradeLicenseForm extends Component {
     this.props.handleChange('', 'uomName', field.isMandatory, '', '');
     this.clearSupportDocuments();
 
-    Api.commonApiPost(
-      'tl-masters/category/v1/_search',
-      { type: 'subcategory', codes: id },
-      { tenantId: tenantId },
-      false,
-      true
-    ).then(
+    Api.commonApiPost('tl-masters/category/v1/_search', { type: 'subcategory', codes: id }, { tenantId: tenantId }, false, true).then(
       function(response) {
         var category = response.categories[0];
-        _this.props.handleChange(
-          category.validityYears,
-          'validityYears',
-          field.isMandatory,
-          '',
-          ''
-        );
-        _this.props.handleChange(
-          category.details[0].uom,
-          'uom',
-          field.isMandatory,
-          '',
-          ''
-        );
-        _this.props.handleChange(
-          category.details[0].uomName,
-          'uomName',
-          false,
-          '',
-          ''
-        );
+        _this.props.handleChange(category.validityYears, 'validityYears', field.isMandatory, '', '');
+        _this.props.handleChange(category.details[0].uom, 'uom', field.isMandatory, '', '');
+        _this.props.handleChange(category.details[0].uomName, 'uomName', false, '', '');
         _this.getDocuments();
       },
       function(err) {
@@ -928,9 +801,7 @@ export default class NewTradeLicenseForm extends Component {
         //   obj.mandatory ? _this.props.REMOVE_MANDATORY_LATEST('', obj.id, obj.mandatory, "", "") : '';
         // });
 
-        var files = this.props.files
-          ? this.props.files.filter(field => field.files.length > 0)
-          : undefined;
+        var files = this.props.files ? this.props.files.filter(field => field.files.length > 0) : undefined;
         if (files && files.length > 0) {
           this.setState({
             confirmCategoryField: field,
@@ -938,8 +809,7 @@ export default class NewTradeLicenseForm extends Component {
             openDocClearDialog: true,
           });
         } else {
-          if (field.code === 'category')
-            this.tradeCategoryChangeAndResetFields(field, value);
+          if (field.code === 'category') this.tradeCategoryChangeAndResetFields(field, value);
           else this.tradeSubCategoryChangeAndResetFields(field, value);
         }
       } else {
@@ -956,59 +826,23 @@ export default class NewTradeLicenseForm extends Component {
       //date field slash append functionality
       if (field.type == 'date') {
         var oldValue = this.props.form[field.code] || '';
-        if (
-          (value.length === 2 || value.length === 5) &&
-          value.length > oldValue.length
-        )
-          value = value + '/';
+        if ((value.length === 2 || value.length === 5) && value.length > oldValue.length) value = value + '/';
       }
 
-      this.props.handleChange(
-        value,
-        field.code,
-        field.isMandatory || false,
-        field.pattern || '',
-        field.errorMsg || ''
-      );
+      this.props.handleChange(value, field.code, field.isMandatory || false, field.pattern || '', field.errorMsg || '');
       if (field.code === 'isPropertyOwner') {
         this.setState({ isPropertyOwner: !value });
-        var agreementdate = agreementDetailsSection.find(
-          agreement => agreement.code == 'agreementDate'
-        );
-        var agreementno = agreementDetailsSection.find(
-          agreement => agreement.code == 'agreementNo'
-        );
+        var agreementdate = agreementDetailsSection.find(agreement => agreement.code == 'agreementDate');
+        var agreementno = agreementDetailsSection.find(agreement => agreement.code == 'agreementNo');
         if (value) {
-          _this.props.ADD_MANDATORY_LATEST(
-            '',
-            'agreementDate',
-            agreementdate.isMandatory,
-            agreementdate.pattern,
-            agreementdate.errorMsg
-          );
-          _this.props.ADD_MANDATORY_LATEST(
-            '',
-            'agreementNo',
-            agreementno.isMandatory,
-            agreementno.pattern
-          );
+          _this.props.ADD_MANDATORY_LATEST('', 'agreementDate', agreementdate.isMandatory, agreementdate.pattern, agreementdate.errorMsg);
+          _this.props.ADD_MANDATORY_LATEST('', 'agreementNo', agreementno.isMandatory, agreementno.pattern);
         } else {
           //clear the values
           _this.props.handleChange('', 'agreementDate', false, '', '');
           _this.props.handleChange('', 'agreementNo', false, '', '');
-          _this.props.REMOVE_MANDATORY_LATEST(
-            '',
-            'agreementDate',
-            agreementdate.isMandatory,
-            agreementdate.pattern,
-            agreementdate.errorMsg
-          );
-          _this.props.REMOVE_MANDATORY_LATEST(
-            '',
-            'agreementNo',
-            agreementno.isMandatory,
-            agreementno.pattern
-          );
+          _this.props.REMOVE_MANDATORY_LATEST('', 'agreementDate', agreementdate.isMandatory, agreementdate.pattern, agreementdate.errorMsg);
+          _this.props.REMOVE_MANDATORY_LATEST('', 'agreementNo', agreementno.isMandatory, agreementno.pattern);
         }
       }
 
@@ -1038,10 +872,7 @@ export default class NewTradeLicenseForm extends Component {
       function(response) {
         _this.setState(
           {
-            documentTypes: sortArrayByAlphabetically(
-              response.documentTypes,
-              'name'
-            ),
+            documentTypes: sortArrayByAlphabetically(response.documentTypes, 'name'),
           },
           _this.addMandatoryDocuments(response.documentTypes)
         );
@@ -1055,22 +886,14 @@ export default class NewTradeLicenseForm extends Component {
   addMandatoryDocuments = docTypes => {
     var _this = this;
     docTypes.filter(function(obj) {
-      obj.mandatory
-        ? _this.props.ADD_MANDATORY_LATEST('', obj.id, obj.mandatory, '', '')
-        : '';
+      obj.mandatory ? _this.props.ADD_MANDATORY_LATEST('', obj.id, obj.mandatory, '', '') : '';
     });
   };
 
   customAutoCompleteKeyUpEvent = (e, field) => {
     var _this = this;
     //reset autocomplete value
-    this.props.handleChange(
-      '',
-      field.code,
-      field.isMandatory,
-      field.pattern,
-      field.errorMsg || ''
-    );
+    this.props.handleChange('', field.code, field.isMandatory, field.pattern, field.errorMsg || '');
 
     if (e.target.value && field.code === 'localityId') {
       Api.commonApiGet('/egov-location/boundarys/getLocationByLocationName', {
@@ -1096,18 +919,8 @@ export default class NewTradeLicenseForm extends Component {
   render() {
     let { setLoadingStatus, setRoute } = this.props;
     const supportDocClearActions = [
-      <FlatButton
-        label={translate('tl.confirm.title')}
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.handleDocumentsClearConfirm}
-      />,
-      <FlatButton
-        label={translate('core.lbl.cancel')}
-        primary={true}
-        keyboardFocused={true}
-        onClick={this.handleDocumentsClearCancel}
-      />,
+      <FlatButton label={translate('tl.confirm.title')} primary={true} keyboardFocused={true} onClick={this.handleDocumentsClearConfirm} />,
+      <FlatButton label={translate('core.lbl.cancel')} primary={true} keyboardFocused={true} onClick={this.handleDocumentsClearCancel} />,
     ];
 
     var agreementCard = null;
@@ -1145,14 +958,11 @@ export default class NewTradeLicenseForm extends Component {
       details['isDisabled'] = false;
       if (
         (this.state.isPropertylocalityId && details.code === 'locality') ||
-        (this.state.isPropertyrevenueWardId &&
-          details.code === 'revenueWard') ||
+        (this.state.isPropertyrevenueWardId && details.code === 'revenueWard') ||
         (this.state.isPropertyadminWardId && details.code === 'adminWard') ||
         (this.state.isPropertytradeAddress && details.code === 'tradeAddress')
       )
-        this.state.enableisPropertyDependencies
-          ? (details['isDisabled'] = false)
-          : (details['isDisabled'] = true);
+        this.state.enableisPropertyDependencies ? (details['isDisabled'] = false) : (details['isDisabled'] = true);
     });
 
     modifiedTradeLocationDetails = [...tradeLocationDetails];
@@ -1208,11 +1018,7 @@ export default class NewTradeLicenseForm extends Component {
           ''
         )}
 
-        <Dialog
-          actions={supportDocClearActions}
-          modal={true}
-          open={this.state.openDocClearDialog || false}
-        >
+        <Dialog actions={supportDocClearActions} modal={true} open={this.state.openDocClearDialog || false}>
           {this.state.supportDocClearDialogMsg}
         </Dialog>
       </div>

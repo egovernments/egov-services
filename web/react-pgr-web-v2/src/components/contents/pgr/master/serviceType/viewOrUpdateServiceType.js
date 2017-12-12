@@ -112,11 +112,7 @@ class viewOrUpdateServiceType extends Component {
       }
     };
 
-    Api.commonApiPost(
-      '/pgr-master/service/v1/_search',
-      { keywords: 'complaint' },
-      {}
-    )
+    Api.commonApiPost('/pgr-master/service/v1/_search', { keywords: 'complaint' }, {})
       .then(function(response) {
         checkCountAndSetState('data', response.Service);
       })
@@ -162,24 +158,12 @@ class viewOrUpdateServiceType extends Component {
     return (
       <div className="serviceTypeCreate">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={styles.headerStyle}>
-                {translate('pgr.lbl.grievance.type')}
-              </div>
-            }
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>{translate('pgr.lbl.grievance.type')}</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <Row>
                 <Col xs={12} md={12}>
-                  <Table
-                    id="searchTable"
-                    bordered
-                    responsive
-                    className="table-striped"
-                  >
+                  <Table id="searchTable" bordered responsive className="table-striped">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -200,18 +184,10 @@ class viewOrUpdateServiceType extends Component {
                             <tr
                               key={i}
                               onClick={() => {
-                                if (
-                                  url == '/pgr/viewOrUpdateServiceType/view'
-                                ) {
-                                  handleNavigation(
-                                    '/pgr/viewServiceType/view/',
-                                    e.id
-                                  );
+                                if (url == '/pgr/viewOrUpdateServiceType/view') {
+                                  handleNavigation('/pgr/viewServiceType/view/', e.id);
                                 } else {
-                                  handleNavigation(
-                                    '/pgr/serviceTypeCreate/edit/',
-                                    e.id
-                                  );
+                                  handleNavigation('/pgr/serviceTypeCreate/edit/', e.id);
                                 }
                               }}
                             >
@@ -283,6 +259,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  viewOrUpdateServiceType
-);
+export default connect(mapStateToProps, mapDispatchToProps)(viewOrUpdateServiceType);

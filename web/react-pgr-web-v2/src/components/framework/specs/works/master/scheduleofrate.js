@@ -25,8 +25,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
           },
           {
             name: 'validSORRateDate',
@@ -101,8 +100,7 @@ var dat = {
             maxLength: 100,
             minLength: 1,
             patternErrorMsg: 'works.create.field.message.scheduleCategory',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
           },
           {
             name: 'code',
@@ -142,8 +140,7 @@ var dat = {
             maxLength: 30,
             minLength: 1,
             patternErrorMsg: 'works.create.field.message.uom',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
           },
         ],
       },
@@ -288,8 +285,7 @@ var dat = {
             maxLength: 100,
             minLength: 1,
             patternErrorMsg: 'works.create.field.message.code',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
           },
           {
             name: 'code',
@@ -329,8 +325,7 @@ var dat = {
             maxLength: 30,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
           },
         ],
       },
@@ -485,8 +480,7 @@ var dat = {
             maxLength: 100,
             minLength: 1,
             patternErrorMsg: 'works.create.field.message.code',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=Works&masterName=ScheduleCategory|$..code|$..code',
           },
           {
             name: 'code',
@@ -526,8 +520,7 @@ var dat = {
             maxLength: 30,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..code',
           },
         ],
       },

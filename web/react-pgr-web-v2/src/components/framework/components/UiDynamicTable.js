@@ -70,13 +70,7 @@ class UiDynamicTable extends Component {
     switch (item.type) {
       case 'text':
         return (
-          <UiTextField
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
         break;
       case 'singleValueList':
@@ -115,13 +109,7 @@ class UiDynamicTable extends Component {
         break;
       case 'textarea':
         return (
-          <UiTextArea
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiTextArea ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
         break;
       case 'mobileNumber':
@@ -137,46 +125,22 @@ class UiDynamicTable extends Component {
         break;
       case 'checkbox':
         return (
-          <UiCheckBox
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiCheckBox ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
         break;
       case 'email':
         return (
-          <UiEmailField
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiEmailField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
         break;
       case 'button':
         return (
-          <UiButton
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiButton ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
         break;
       case 'datePicker':
         return (
-          <UiDatePicker
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiDatePicker ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
         break;
       case 'singleFileUpload':
@@ -203,23 +167,11 @@ class UiDynamicTable extends Component {
         );
       case 'pan':
         return (
-          <UiPanCard
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'aadhar':
         return (
-          <UiAadharCard
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'label':
         return <UiLabel getVal={this.props.getVal} item={item} />;
@@ -277,9 +229,7 @@ class UiDynamicTable extends Component {
     const renderTable = function() {
       return (
         <Card className="uiCard">
-          <CardHeader
-            title={<strong> {translate('ui.table.title')} </strong>}
-          />
+          <CardHeader title={<strong> {translate('ui.table.title')} </strong>} />
           <CardText>
             {/*
 								resultList.hasOwnProperty("resultValues") && resultList.resultValues.map((item, i) => {
@@ -299,12 +249,7 @@ class UiDynamicTable extends Component {
 
 							})*/}
 
-            <Table
-              id="dynamicTable"
-              bordered
-              responsive
-              className="table-striped"
-            >
+            <Table id="dynamicTable" bordered responsive className="table-striped">
               <thead>
                 <tr>
                   {resultList.resultHeader &&
@@ -335,11 +280,7 @@ class UiDynamicTable extends Component {
                   })}
               </tbody>
             </Table>
-            <strong>
-              {'Amount paid (Rs)' +
-                ' ' +
-                getVal('Receipt[0].instrument.amount')}
-            </strong>
+            <strong>{'Amount paid (Rs)' + ' ' + getVal('Receipt[0].instrument.amount')}</strong>
           </CardText>
         </Card>
       );

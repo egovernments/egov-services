@@ -28,21 +28,12 @@ class Report extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -60,17 +51,10 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -87,31 +71,19 @@ class Report extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -122,53 +94,25 @@ class Report extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
-        var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace('[', '[')
-            .replace(']', ']') + '\\[\\d{1}\\]',
-          'g'
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
+        var regex = new RegExp(specs[moduleName + '.' + actionName].groups[i].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
         for (var j = 1; j < arr.length; j++) {
           i++;
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -176,22 +120,12 @@ class Report extends Component {
   }
 
   displayUI(results) {
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
 
     specifications = typeof results == 'string' ? JSON.parse(results) : results;
-    let obj =
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ];
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
@@ -201,49 +135,23 @@ class Report extends Component {
     setActionName(hashLocation.split('/')[1]);
 
     if (hashLocation.split('/').indexOf('update') == 1) {
-      var url = specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].searchUrl.split('?')[0];
+      var url = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].searchUrl.split('?')[0];
       var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
-        [specifications[
-          `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-        ].searchUrl
-          .split('?')[1]
-          .split('=')[0]]: id,
+        [specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].searchUrl.split('?')[1].split('=')[0]]: id,
       };
-      Api.commonApiPost(
-        url,
-        query,
-        {},
-        false,
-        specifications[
-          `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-        ].useTimestamp
-      ).then(
+      Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
-          if (
-            specifications[
-              `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-            ].isResponseArray
-          ) {
+          if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
-            _.set(
-              obj,
-              specifications[
-                `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-              ].objectName,
-              jp.query(res, '$..[0]')[0]
-            );
+            _.set(obj, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName, jp.query(res, '$..[0]')[0]);
             self.props.setFormData(obj);
             self.setInitialUpdateData(
               obj,
               JSON.parse(JSON.stringify(specifications)),
               hashLocation.split('/')[2],
               hashLocation.split('/')[1],
-              specifications[
-                `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-              ].objectName
+              specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
             );
           } else {
             self.props.setFormData(res);
@@ -252,9 +160,7 @@ class Report extends Component {
               JSON.parse(JSON.stringify(specifications)),
               hashLocation.split('/')[2],
               hashLocation.split('/')[1],
-              specifications[
-                `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-              ].objectName
+              specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
             );
           }
         },
@@ -262,8 +168,7 @@ class Report extends Component {
       );
     } else {
       var formData = {};
-      if (obj && obj.groups && obj.groups.length)
-        self.setDefaultValues(obj.groups, formData);
+      if (obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
     }
 
@@ -278,14 +183,10 @@ class Report extends Component {
     let self = this;
 
     try {
-      if (
-        hash.length == 3 ||
-        (hash.length == 4 && hash.indexOf('update') > -1)
-      ) {
+      if (hash.length == 3 || (hash.length == 4 && hash.indexOf('update') > -1)) {
         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
       } else {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`)
-          .default;
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
       }
     } catch (e) {}
 
@@ -311,15 +212,7 @@ class Report extends Component {
     var query = {
       [autoObject.autoCompleteUrl.split('?')[1].split('=')[0]]: value,
     };
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
       function(res) {
         var formData = { ...self.props.formData };
         for (var key in autoObject.autoFillFields) {
@@ -337,51 +230,24 @@ class Report extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(
-      url ||
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url,
-      '',
-      formData,
-      '',
-      true
-    ).then(
+    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
         self.props.toggleSnackbarAndSetText(
           true,
-          translate(
-            self.props.actionName == 'create'
-              ? 'wc.create.message.success'
-              : 'wc.update.message.success'
-          ),
+          translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
           true
         );
         setTimeout(function() {
-          if (
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].idJsonPath
-          ) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
             if (self.props.actionName == 'update') {
-              var hash = window.location.hash.replace(
-                /(\#\/create\/|\#\/update\/)/,
-                '/view/'
-              );
+              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/');
             } else {
               var hash =
-                window.location.hash.replace(
-                  /(\#\/create\/|\#\/update\/)/,
-                  '/view/'
-                ) +
+                window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/') +
                 '/' +
-                _.get(
-                  response,
-                  self.props.metaData[
-                    `${self.props.moduleName}.${self.props.actionName}`
-                  ].idJsonPath
-                );
+                _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
             }
             self.props.setRoute(hash);
           }
@@ -398,14 +264,10 @@ class Report extends Component {
   checkCustomFields = (formData, cb) => {
     var self = this;
     if (
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields.initiatorPosition
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields &&
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition
     ) {
-      var jPath =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .customFields.initiatorPosition;
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
       getInitiatorPosition(function(err, pos) {
         if (err) {
           self.toggleSnackbarAndSetText(true, err.message);
@@ -429,64 +291,23 @@ class Report extends Component {
       self.props.moduleName &&
       self.props.actionName &&
       self.props.metaData &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .tenantIdRequired
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired
     ) {
-      if (
-        !formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]
-      )
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ] = {};
+      if (!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
-      if (
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ].constructor == Array
-      ) {
-        for (
-          var i = 0;
-          i <
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ].length;
-          i++
-        ) {
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ][i]['tenantId'] =
+      if (formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for (var i = 0; i < formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]['tenantId'] =
             localStorage.getItem('tenantId') || 'default';
         }
       } else
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['tenantId'] =
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['tenantId'] =
           localStorage.getItem('tenantId') || 'default';
     }
 
-    if (
-      /\{.*\}/.test(
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url
-      )
-    ) {
-      _url =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url;
+    if (/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g, '');
       _url = _url.replace(match, _.get(formData, jPath));
@@ -494,30 +315,15 @@ class Report extends Component {
 
     //Check if documents, upload and get fileStoreId
     if (
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'] &&
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'].length
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] &&
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'].length
     ) {
-      let documents = [
-        ...formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['documents'],
-      ];
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents']];
       let _docs = [];
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(
-          err,
-          res
-        ) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
@@ -530,11 +336,7 @@ class Report extends Component {
             });
             counter--;
             if (counter == 0 && breakOut == 0) {
-              formData[
-                self.props.metaData[
-                  `${self.props.moduleName}.${self.props.actionName}`
-                ].objectName
-              ]['documents'] = _docs;
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] = _docs;
               self.makeAjaxCall(formData, _url);
             }
           }
@@ -556,63 +358,23 @@ class Report extends Component {
   };
 
   hideField = (_mockData, hideObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? false : true;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                delRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              addRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
             }
 
             break;
@@ -621,65 +383,26 @@ class Report extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? false
-            : true;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -688,85 +411,28 @@ class Report extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? false : true;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if (!reset) {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      _.set(
-                        _formData,
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].jsonPath,
-                        ''
-                      );
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      ) {
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
-                        removeFieldErrors(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                       }
                     }
                     delRequiredFields(_rReq);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      )
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                     }
                     addRequiredFields(_rReq);
                   }
@@ -782,62 +448,22 @@ class Report extends Component {
   };
 
   showField = (_mockData, showObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? true : false;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                addRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              delRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
-              removeFieldErrors(
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -845,65 +471,26 @@ class Report extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? true
-            : false;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
 
             addRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
@@ -913,37 +500,12 @@ class Report extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? true : false;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 
                   } else {
@@ -963,30 +525,12 @@ class Report extends Component {
   enField = (_mockData, enableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          enableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? true : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (enableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
           break;
@@ -1000,30 +544,12 @@ class Report extends Component {
   disField = (_mockData, disableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          disableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? false : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (disableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
 
@@ -1038,91 +564,35 @@ class Report extends Component {
   checkIfHasEnDisFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .enableDisableFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .enableDisableFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
-                _mockData = this.disField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
-                _mockData = this.enField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
                 _mockData = this.disField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y],
                   true
                 );
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
                 _mockData = this.enField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z],
                   true
                 );
               }
@@ -1138,93 +608,29 @@ class Report extends Component {
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y],
-                  true
-                );
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z],
-                  true
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
           }
@@ -1235,36 +641,16 @@ class Report extends Component {
     setMockData(_mockData);
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
     let { handleChange, mockData, setDropDownData } = this.props;
     let hashLocation = window.location.hash;
-    let obj =
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ];
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     // console.log(obj);
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     this.checkIfHasShowHideFields(property, e.target.value);
     this.checkIfHasEnDisFields(property, e.target.value);
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -1296,9 +682,7 @@ class Report extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -1328,23 +712,14 @@ class Report extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
 
   incrementIndexValue = (group, jsonPath) => {
     let { formData } = this.props;
-    var length = _.get(formData, jsonPath)
-      ? _.get(formData, jsonPath).length
-      : 0;
+    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
     var _group = JSON.stringify(group);
     var regexp = new RegExp(jsonPath + '\\[\\d{1}\\]', 'g');
     _group = _group.replace(regexp, jsonPath + '[' + (length + 1) + ']');
@@ -1368,15 +743,7 @@ class Report extends Component {
             if (groups[i].children[j].jsonPath == value) {
               return 'groups[' + i + '].children[' + j + '].groups';
             } else {
-              return (
-                'groups[' +
-                i +
-                '].children[' +
-                j +
-                '][' +
-                getFromGroup(groups[i].children[j].groups) +
-                ']'
-              );
+              return 'groups[' + i + '].children[' + j + '][' + getFromGroup(groups[i].children[j].groups) + ']';
             }
           }
         }
@@ -1388,64 +755,29 @@ class Report extends Component {
 
   addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    let {
-      setMockData,
-      metaData,
-      moduleName,
-      actionName,
-      setFormData,
-      formData,
-    } = this.props;
+    let { setMockData, metaData, moduleName, actionName, setFormData, formData } = this.props;
     let mockData = { ...this.props.mockData };
     if (!jsonPath) {
-      for (
-        var i = 0;
-        i < metaData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          groupName == metaData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (var i = 0; i < metaData[moduleName + '.' + actionName].groups.length; i++) {
+        if (groupName == metaData[moduleName + '.' + actionName].groups[i].name) {
           var _groupToBeInserted = {
             ...metaData[moduleName + '.' + actionName].groups[i],
           };
-          for (
-            var j = mockData[moduleName + '.' + actionName].groups.length - 1;
-            j >= 0;
-            j--
-          ) {
-            if (
-              groupName ==
-              mockData[moduleName + '.' + actionName].groups[j].name
-            ) {
+          for (var j = mockData[moduleName + '.' + actionName].groups.length - 1; j >= 0; j--) {
+            if (groupName == mockData[moduleName + '.' + actionName].groups[j].name) {
               var regexp = new RegExp(
-                mockData[moduleName + '.' + actionName].groups[j].jsonPath
-                  .replace(/\[/g, '\\[')
-                  .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+                mockData[moduleName + '.' + actionName].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
                 'g'
               );
               var stringified = JSON.stringify(_groupToBeInserted);
               _groupToBeInserted = JSON.parse(
-                stringified.replace(
-                  regexp,
-                  mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                    '[' +
-                    (j + 1) +
-                    ']'
-                )
+                stringified.replace(regexp, mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (j + 1) + ']')
               );
               _groupToBeInserted.index = j + 1;
-              mockData[moduleName + '.' + actionName].groups.splice(
-                j + 1,
-                0,
-                _groupToBeInserted
-              );
+              mockData[moduleName + '.' + actionName].groups.splice(j + 1, 0, _groupToBeInserted);
               setMockData(mockData);
               var temp = { ...formData };
-              self.setDefaultValues(
-                mockData[moduleName + '.' + actionName].groups,
-                temp
-              );
+              self.setDefaultValues(mockData[moduleName + '.' + actionName].groups, temp);
               setFormData(temp);
               break;
             }
@@ -1456,17 +788,10 @@ class Report extends Component {
     } else {
       group = JSON.parse(JSON.stringify(group));
       //Increment the values of indexes
-      var grp = _.get(
-        metaData[moduleName + '.' + actionName],
-        self.getPath(jsonPath) + '[0]'
-      );
+      var grp = _.get(metaData[moduleName + '.' + actionName], self.getPath(jsonPath) + '[0]');
       group = this.incrementIndexValue(grp, jsonPath);
       //Push to the path
-      var updatedSpecs = this.getNewSpecs(
-        group,
-        JSON.parse(JSON.stringify(mockData)),
-        self.getPath(jsonPath)
-      );
+      var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
       //Create new mock data
       setMockData(updatedSpecs);
     }
@@ -1481,74 +806,37 @@ class Report extends Component {
 
     if (!jsonPath) {
       var ind = 0;
-      for (
-        let i = 0;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          index == i &&
-          groupName == mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (index == i && groupName == mockData[moduleName + '.' + actionName].groups[i].name) {
           mockData[moduleName + '.' + actionName].groups.splice(i, 1);
           ind = i;
           break;
         }
       }
 
-      for (
-        let i = ind;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          mockData[moduleName + '.' + actionName].groups[i].name == groupName
-        ) {
+      for (let i = ind; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (mockData[moduleName + '.' + actionName].groups[i].name == groupName) {
           var regexp = new RegExp(
-            mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            mockData[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
             'g'
           );
           //console.log(regexp);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-          var stringified = JSON.stringify(
-            mockData[moduleName + '.' + actionName].groups[i]
-          );
+          var stringified = JSON.stringify(mockData[moduleName + '.' + actionName].groups[i]);
           mockData[moduleName + '.' + actionName].groups[i] = JSON.parse(
             stringified.replace(
               regexp,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                '[' +
-                (mockData[moduleName + '.' + actionName].groups[i].index - 1) +
-                ']'
+              mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (mockData[moduleName + '.' + actionName].groups[i].index - 1) + ']'
             )
           );
 
-          if (
-            _.get(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath
-            )
-          ) {
-            var grps = [
-              ..._.get(
-                _formData,
-                mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              ),
-            ];
+          if (_.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)) {
+            var grps = [..._.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)];
             //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
-            grps.splice(
-              mockData[moduleName + '.' + actionName].groups[i].index - 1,
-              1
-            );
+            grps.splice(mockData[moduleName + '.' + actionName].groups[i].index - 1, 1);
             //console.log(grps);
-            _.set(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath,
-              grps
-            );
+            _.set(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath, grps);
             //console.log(_formData);
             setFormData(_formData);
           }
@@ -1557,10 +845,7 @@ class Report extends Component {
       //console.log(mockData[moduleName + "." + actionName].groups);
       setMockData(mockData);
     } else {
-      var _groups = _.get(
-        mockData[moduleName + '.' + actionName],
-        self.getPath(jsonPath)
-      );
+      var _groups = _.get(mockData[moduleName + '.' + actionName], self.getPath(jsonPath));
       _groups.splice(index, 1);
       var regexp = new RegExp('\\[\\d{1}\\]', 'g');
       for (var i = index; i < _groups.length; i++) {
@@ -1574,22 +859,8 @@ class Report extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      create,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      autoComHandler,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { create, handleChange, getVal, addNewCard, removeCard, autoComHandler } = this;
     return (
       <div className="Report">
         <form
@@ -1607,9 +878,7 @@ class Report extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={addNewCard}
                 removeCard={removeCard}
                 autoComHandler={autoComHandler}
@@ -1678,14 +947,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

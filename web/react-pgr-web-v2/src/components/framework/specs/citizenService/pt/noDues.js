@@ -24,8 +24,7 @@ var dat = {
               {
                 jsonPath: 'pipeSize[0].sizeInInch',
                 type: 'textField',
-                pattern:
-                  "`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
+                pattern: "`${getVal('pipeSize.sizeInMilimeter')!=''?getVal('pipeSize.sizeInMilimeter'):0} * 0.039370`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',
@@ -124,8 +123,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name',
+            url: '/egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name',
             requiredErrMsg: '',
             patternErrMsg: '',
             hide: true,
@@ -278,8 +276,7 @@ var dat = {
               {
                 jsonPath: 'PipeSize.sizeInInch',
                 type: 'textField',
-                pattern:
-                  "`${getVal('PipeSize.sizeInMilimeter')!=''?getVal('PipeSize.sizeInMilimeter'):0} * 0.039370`",
+                pattern: "`${getVal('PipeSize.sizeInMilimeter')!=''?getVal('PipeSize.sizeInMilimeter'):0} * 0.039370`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',

@@ -159,12 +159,7 @@ class BulkEscalationGeneration extends Component {
   }
 
   updateToPosition = () => {
-    let {
-      setLoadingStatus,
-      toggleSnackbarAndSetText,
-      toggleDailogAndSetText,
-      bulkEscalationGeneration,
-    } = this.props;
+    let { setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, bulkEscalationGeneration } = this.props;
 
     var current = this;
 
@@ -195,11 +190,7 @@ class BulkEscalationGeneration extends Component {
           serviceCode: bulkEscalationGeneration.serviceCode,
         };
 
-        Api.commonApiPost(
-          '/pgr-master/escalation-hierarchy/v1/_search',
-          query,
-          {}
-        )
+        Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_search', query, {})
           .then(function(response) {
             setLoadingStatus('hide');
             if (response.escalationHierarchies[0] != null) {
@@ -243,10 +234,7 @@ class BulkEscalationGeneration extends Component {
       serviceCode: this.props.bulkEscalationGeneration.serviceCode,
     };
 
-    Api.commonApiPost(
-      '/pgr-master/escalation-hierarchy/v1/_search',
-      searchSet
-    ).then(
+    Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_search', searchSet).then(
       function(response) {
         setLoadingStatus('hide');
         flag = 1;
@@ -293,13 +281,8 @@ class BulkEscalationGeneration extends Component {
   renderComplaintTypeChips = () => {
     let { bulkEscalationGeneration } = this.props;
     let { serviceCode } = this.state;
-    let servicearray = bulkEscalationGeneration.serviceCode
-      ? [...bulkEscalationGeneration.serviceCode].splice(0, 2)
-      : [];
-    bulkEscalationGeneration.serviceCode &&
-    [...bulkEscalationGeneration.serviceCode].length > 2
-      ? servicearray.push('More >')
-      : '';
+    let servicearray = bulkEscalationGeneration.serviceCode ? [...bulkEscalationGeneration.serviceCode].splice(0, 2) : [];
+    bulkEscalationGeneration.serviceCode && [...bulkEscalationGeneration.serviceCode].length > 2 ? servicearray.push('More >') : '';
     return servicearray.map(serviceId => {
       let obj = serviceCode.find(service => {
         return service.serviceCode == serviceId;
@@ -311,11 +294,7 @@ class BulkEscalationGeneration extends Component {
           <Chip
             style={style.chip}
             onClick={e => {
-              this.handleOpenChips(
-                bulkEscalationGeneration.serviceCode,
-                translate('pgr.lbl.grievance.type'),
-                'grievanceType'
-              );
+              this.handleOpenChips(bulkEscalationGeneration.serviceCode, translate('pgr.lbl.grievance.type'), 'grievanceType');
             }}
           >
             {serviceId}
@@ -326,13 +305,7 @@ class BulkEscalationGeneration extends Component {
   };
 
   render() {
-    let {
-      isFormValid,
-      bulkEscalationGeneration,
-      fieldErrors,
-      handleChange,
-      handleAutoCompleteKeyUp,
-    } = this.props;
+    let { isFormValid, bulkEscalationGeneration, fieldErrors, handleChange, handleAutoCompleteKeyUp } = this.props;
 
     let self = this;
 
@@ -345,12 +318,8 @@ class BulkEscalationGeneration extends Component {
         return searchResult.map(function(val, i) {
           return (
             <tr key={i}>
-              <td>
-                {getNameByServiceCode(self.state.serviceCode, val.serviceCode)}
-              </td>
-              <td>
-                {getNameById(self.state.positionSource, val.fromPosition)}
-              </td>
+              <td>{getNameByServiceCode(self.state.serviceCode, val.serviceCode)}</td>
+              <td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
               <td>{getNameById(self.state.positionSource, val.toPosition)}</td>
             </tr>
           );
@@ -361,21 +330,9 @@ class BulkEscalationGeneration extends Component {
       if (isSearchClicked)
         return (
           <Card style={styles.marginStyle}>
-            <CardHeader
-              title={
-                <strong style={{ color: '#5a3e1b' }}>
-                  {translate('pgr.lbl.escalation.overwrite')}
-                </strong>
-              }
-            />
+            <CardHeader title={<strong style={{ color: '#5a3e1b' }}>{translate('pgr.lbl.escalation.overwrite')}</strong>} />
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead style={{ backgroundColor: '#f2851f', color: 'white' }}>
                   <tr>
                     <th>{translate('pgr.lbl.grievance.type')}</th>
@@ -410,15 +367,7 @@ class BulkEscalationGeneration extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {translate('pgr.lbl.bueg')}{' '}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.lbl.bueg')} </div>} />
             <CardText>
               <Grid>
                 <Row>
@@ -427,25 +376,17 @@ class BulkEscalationGeneration extends Component {
                       className="custom-form-control-for-textfield"
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.fromposition') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.fromposition') + ' *'}
                       fullWidth={true}
                       filter={function filter(searchText, key) {
-                        return key
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase());
+                        return key.toLowerCase().includes(searchText.toLowerCase());
                       }}
                       dataSource={this.state.positionSource}
                       dataSourceConfig={this.state.dataSourceConfig}
                       onKeyUp={e => {
                         handleAutoCompleteKeyUp(e, 'fromPosition');
                       }}
-                      value={
-                        bulkEscalationGeneration.fromPosition
-                          ? bulkEscalationGeneration.fromPosition
-                          : ''
-                      }
+                      value={bulkEscalationGeneration.fromPosition ? bulkEscalationGeneration.fromPosition : ''}
                       ref="fromPosition"
                       onNewRequest={(chosenRequest, index) => {
                         if (index === -1) {
@@ -470,16 +411,10 @@ class BulkEscalationGeneration extends Component {
                       multiple={true}
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievance.type') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievance.type') + ' *'}
                       fullWidth={true}
                       maxHeight={200}
-                      value={
-                        bulkEscalationGeneration.serviceCode
-                          ? bulkEscalationGeneration.serviceCode
-                          : ''
-                      }
+                      value={bulkEscalationGeneration.serviceCode ? bulkEscalationGeneration.serviceCode : ''}
                       onChange={(e, index, values) => {
                         var e = {
                           target: {
@@ -497,18 +432,11 @@ class BulkEscalationGeneration extends Component {
                             key={index}
                             insetChildren={true}
                             primaryText={item.serviceName}
-                            checked={
-                              bulkEscalationGeneration.serviceCode &&
-                              bulkEscalationGeneration.serviceCode.indexOf(
-                                item.serviceCode
-                              ) > -1
-                            }
+                            checked={bulkEscalationGeneration.serviceCode && bulkEscalationGeneration.serviceCode.indexOf(item.serviceCode) > -1}
                           />
                         ))}
                     </SelectField>
-                    <div style={style.wrapper}>
-                      {this.renderComplaintTypeChips()}
-                    </div>
+                    <div style={style.wrapper}>{this.renderComplaintTypeChips()}</div>
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
                     <AutoComplete
@@ -518,20 +446,14 @@ class BulkEscalationGeneration extends Component {
                       floatingLabelText={translate('core.position.to') + ' *'}
                       fullWidth={true}
                       filter={function filter(searchText, key) {
-                        return key
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase());
+                        return key.toLowerCase().includes(searchText.toLowerCase());
                       }}
                       dataSource={this.state.positionSource}
                       dataSourceConfig={this.state.dataSourceConfig}
                       onKeyUp={e => {
                         handleAutoCompleteKeyUp(e, 'toPosition');
                       }}
-                      value={
-                        bulkEscalationGeneration.toPosition
-                          ? bulkEscalationGeneration.toPosition
-                          : ''
-                      }
+                      value={bulkEscalationGeneration.toPosition ? bulkEscalationGeneration.toPosition : ''}
                       ref="toPosition"
                       onNewRequest={(chosenRequest, index) => {
                         if (index === -1) {
@@ -552,31 +474,17 @@ class BulkEscalationGeneration extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              disabled={!isFormValid}
-              label={translate('core.lbl.submit')}
-              primary={true}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" disabled={!isFormValid} label={translate('core.lbl.submit')} primary={true} />
           </div>
           {viewTable()}
         </form>
         <Dialog
           title={this.state.chipsTitle}
-          actions={[
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={false}
-              onTouchTap={this.handleCloseChips}
-            />,
-          ]}
+          actions={[<FlatButton label={translate('core.lbl.close')} primary={false} onTouchTap={this.handleCloseChips} />]}
           open={this.state.handleOpenChips}
           onRequestClose={this.handleCloseChips}
         >
-          <div style={style.wrapper}>
-            {this.state.handleOpenChips && this.presentChips()}
-          </div>
+          <div style={style.wrapper}>{this.state.handleOpenChips && this.presentChips()}</div>
         </Dialog>
       </div>
     );
@@ -640,6 +548,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  BulkEscalationGeneration
-);
+export default connect(mapStateToProps, mapDispatchToProps)(BulkEscalationGeneration);

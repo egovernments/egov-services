@@ -30,17 +30,11 @@ class Create extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -53,17 +47,10 @@ class Create extends Component {
     for (var i = 0; i < groups.length; i++) {
       for (var j = 0; j < groups[i].fields.length; j++) {
         if (typeof groups[i].fields[j].defaultValue != 'undefined') {
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -73,80 +60,39 @@ class Create extends Component {
   }
 
   initData() {
-    let {
-      setMetaData,
-      setMockData,
-      setModuleName,
-      setActionName,
-      setFormData,
-      initForm,
-    } = this.props;
+    let { setMetaData, setMockData, setModuleName, setActionName, setFormData, initForm } = this.props;
     var hash = window.location.hash.split('/');
     let hashLocation = window.location.hash;
     let endPoint = '';
     let self = this;
 
     try {
-      if (
-        hash.length == 3 ||
-        (hash.length == 4 && hash.indexOf('update') > -1)
-      ) {
+      if (hash.length == 3 || (hash.length == 4 && hash.indexOf('update') > -1)) {
         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
       } else {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`)
-          .default;
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
       }
     } catch (e) {
       console.log(e);
     }
 
-    specifications =
-      typeof specifications == 'string'
-        ? JSON.parse(specifications)
-        : specifications;
-    let obj =
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ];
+    specifications = typeof specifications == 'string' ? JSON.parse(specifications) : specifications;
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     reqRequired = [];
     self.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
 
     if (hashLocation.split('/').indexOf('update') == 1) {
-      var url = specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].searchUrl.split('?')[0];
+      var url = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].searchUrl.split('?')[0];
       var id = self.props.match.params.id || self.props.match.params.master;
       var query = {
-        [specifications[
-          `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-        ].searchUrl
-          .split('?')[1]
-          .split('=')[0]]: id,
+        [specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].searchUrl.split('?')[1].split('=')[0]]: id,
       };
-      Api.commonApiPost(
-        url,
-        query,
-        {},
-        false,
-        specifications[
-          `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-        ].useTimestamp
-      ).then(
+      Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
         function(res) {
-          if (
-            specifications[
-              `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-            ].isResponseArray
-          ) {
+          if (specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].isResponseArray) {
             var obj = {};
-            _.set(
-              obj,
-              specifications[
-                `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-              ].objectName,
-              jp.query(res, '$..[0]')[0]
-            );
+            _.set(obj, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName, jp.query(res, '$..[0]')[0]);
             self.props.setFormData(obj);
           } else {
             self.props.setFormData(res);
@@ -156,8 +102,7 @@ class Create extends Component {
       );
     } else {
       var formData = {};
-      if (obj && obj.groups && obj.groups.length)
-        self.setDefaultValues(obj.groups, formData);
+      if (obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
     }
 
@@ -184,51 +129,24 @@ class Create extends Component {
   makeAjaxCall = (formData, url) => {
     let self = this;
     delete formData.ResponseInfo;
-    Api.commonApiPost(
-      url ||
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url,
-      '',
-      formData,
-      '',
-      true
-    ).then(
+    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
         self.props.toggleSnackbarAndSetText(
           true,
-          translate(
-            self.props.actionName == 'create'
-              ? 'wc.create.message.success'
-              : 'wc.update.message.success'
-          ),
+          translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
           true
         );
         setTimeout(function() {
-          if (
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].idJsonPath
-          ) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
             if (self.props.actionName == 'update') {
-              var hash = window.location.hash.replace(
-                /(\#\/create\/|\#\/update\/)/,
-                '/view/'
-              );
+              var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/');
             } else {
               var hash =
-                window.location.hash.replace(
-                  /(\#\/create\/|\#\/update\/)/,
-                  '/view/'
-                ) +
+                window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/') +
                 '/' +
-                _.get(
-                  response,
-                  self.props.metaData[
-                    `${self.props.moduleName}.${self.props.actionName}`
-                  ].idJsonPath
-                );
+                _.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath);
             }
             self.props.setRoute(hash);
           }
@@ -251,64 +169,23 @@ class Create extends Component {
       self.props.moduleName &&
       self.props.actionName &&
       self.props.metaData &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .tenantIdRequired
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired
     ) {
-      if (
-        !formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]
-      )
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ] = {};
+      if (!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
-      if (
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ].constructor == Array
-      ) {
-        for (
-          var i = 0;
-          i <
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ].length;
-          i++
-        ) {
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ][i]['tenantId'] =
+      if (formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for (var i = 0; i < formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]['tenantId'] =
             localStorage.getItem('tenantId') || 'default';
         }
       } else
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['tenantId'] =
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['tenantId'] =
           localStorage.getItem('tenantId') || 'default';
     }
 
-    if (
-      /\{.*\}/.test(
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url
-      )
-    ) {
-      _url =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url;
+    if (/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g, '');
       _url = _url.replace(match, _.get(formData, jPath));
@@ -316,30 +193,15 @@ class Create extends Component {
 
     //Check if documents, upload and get fileStoreId
     if (
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'] &&
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'].length
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] &&
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'].length
     ) {
-      let documents = [
-        ...formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['documents'],
-      ];
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents']];
       let _docs = [];
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(
-          err,
-          res
-        ) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
@@ -352,11 +214,7 @@ class Create extends Component {
             });
             counter--;
             if (counter == 0 && breakOut == 0) {
-              formData[
-                self.props.metaData[
-                  `${self.props.moduleName}.${self.props.actionName}`
-                ].objectName
-              ]['documents'] = _docs;
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] = _docs;
               self.makeAjaxCall(formData, _url);
             }
           }
@@ -386,9 +244,7 @@ class Create extends Component {
                 groups={mockData[`${moduleName}.${actionName}`].groups}
                 noCols={mockData[`${moduleName}.${actionName}`].numCols}
                 ui="google"
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
               />
             )}
 
@@ -454,14 +310,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

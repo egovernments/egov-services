@@ -25,17 +25,8 @@ const INPUT_STYLE = {
  *
  * Loaded using async loader.
  */
-const AsyncGettingStartedExampleGoogleMap = _.flowRight(
-  withScriptjs,
-  withGoogleMap
-)(props => (
-  <GoogleMap
-    options={{ scrollwheel: false }}
-    ref={props.onMapMounted}
-    defaultZoom={11}
-    center={props.center}
-    onBoundsChanged={props.onBoundsChanged}
-  >
+const AsyncGettingStartedExampleGoogleMap = _.flowRight(withScriptjs, withGoogleMap)(props => (
+  <GoogleMap options={{ scrollwheel: false }} ref={props.onMapMounted} defaultZoom={11} center={props.center} onBoundsChanged={props.onBoundsChanged}>
     <SearchBox
       ref={props.onSearchBoxMounted}
       bounds={props.bounds}
@@ -44,9 +35,7 @@ const AsyncGettingStartedExampleGoogleMap = _.flowRight(
       inputPlaceholder="Customized your placeholder"
       inputStyle={INPUT_STYLE}
     />
-    {props.markers.map((marker, index) => (
-      <Marker position={marker.position} key={index} />
-    ))}
+    {props.markers.map((marker, index) => <Marker position={marker.position} key={index} />)}
   </GoogleMap>
 ));
 
@@ -91,8 +80,7 @@ export default class SimpleMap extends Component {
     }));
 
     // Set markers; set map center to first search result
-    const mapCenter =
-      markers.length > 0 ? markers[0].position : this.state.center;
+    const mapCenter = markers.length > 0 ? markers[0].position : this.state.center;
 
     this.setState({
       center: mapCenter,
@@ -113,8 +101,7 @@ export default class SimpleMap extends Component {
     }));
 
     // Set markers; set map center to first search result
-    const mapCenter =
-      markers.length > 0 ? markers[0].position : this.state.center;
+    const mapCenter = markers.length > 0 ? markers[0].position : this.state.center;
 
     this.setState({
       center: mapCenter,

@@ -15,21 +15,12 @@ const customStyles = {
 };
 
 const FileInput = props => {
-  let fileName = props.file
-    ? props.file.files && props.file.files.length > 0
-      ? props.file.files[0].name
-      : ''
-    : '';
+  let fileName = props.file ? (props.file.files && props.file.files.length > 0 ? props.file.files[0].name : '') : '';
 
   //check uploaded file or not
   if (fileName && props.file.files[0].fileStoreId) {
     fileName = (
-      <a
-        href={`/filestore/v1/files/id?fileStoreId=${
-          props.file.files[0].fileStoreId
-        }&tenantId=${localStorage.getItem('tenantId')}`}
-        download
-      >
+      <a href={`/filestore/v1/files/id?fileStoreId=${props.file.files[0].fileStoreId}&tenantId=${localStorage.getItem('tenantId')}`} download>
         {fileName}
       </a>
     );
@@ -39,11 +30,7 @@ const FileInput = props => {
 
   return (
     <div>
-      <RaisedButton
-        label={props.label || 'Browse'}
-        labelPosition="before"
-        containerElement="label"
-      >
+      <RaisedButton label={props.label || 'Browse'} labelPosition="before" containerElement="label">
         <input
           type="file"
           id={props.id || ''}

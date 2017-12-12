@@ -202,628 +202,134 @@ const Main = () => {
     <main style={{ marginBottom: '50px' }}>
       <Switch>
         <Route exact path={base + '/:tenantId?'} component={Login} />
-        <Route
-          exact
-          path={base + '/service/request/search'}
-          component={ServiceRequests}
-        />
+        <Route exact path={base + '/service/request/search'} component={ServiceRequests} />
         <Route exact path={base + '/coming/soon'} component={ComingSoon} />
-        <Route
-          exact
-          path={base + '/view/:moduleName/:master?/:id'}
-          component={View}
-        />
-        <Route
-          exact
-          path={base + '/search/:moduleName/:master?/:action?'}
-          component={Search}
-        />
-        <Route
-          exact
-          path={base + '/employee/:action/:id?'}
-          component={Employee}
-        />
+        <Route exact path={base + '/view/:moduleName/:master?/:id'} component={View} />
+        <Route exact path={base + '/search/:moduleName/:master?/:action?'} component={Search} />
+        <Route exact path={base + '/employee/:action/:id?'} component={Employee} />
         <Route exact path={base + '/prd/profileEdit'} component={ProfileEdit} />
         <Route exact path={base + '/prd/dashboard'} component={Dashboard} />
-        <Route
-          exact
-          path={base + '/administration/searchUserRole'}
-          component={searchUserRole}
-        />
-        <Route
-          exact
-          path={base + '/administration/updateUserRole/:userId'}
-          component={updateUserRole}
-        />
-        <Route
-          exact
-          path={base + '/services/apply/:serviceCode/:serviceName'}
-          component={VisibleNewServiceRequest}
-        />
+        <Route exact path={base + '/administration/searchUserRole'} component={searchUserRole} />
+        <Route exact path={base + '/administration/updateUserRole/:userId'} component={updateUserRole} />
+        <Route exact path={base + '/services/apply/:serviceCode/:serviceName'} component={VisibleNewServiceRequest} />
         <Route exact path={base + '/pgr/analytics'} component={PgrAnalytics} />
-        <Route
-          exact
-          path={base + '/pgr/createGrievance'}
-          component={grievanceCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewGrievance/:srn'}
-          component={grievanceView}
-        />
-        <Route
-          exact
-          path={base + '/pgr/searchGrievance'}
-          component={grievanceSearch}
-        />
-        <Route
-          exact
-          name="createReceivingCenter"
-          path={base + '/pgr/createReceivingCenter/:id?'}
-          component={ReceivingCenterCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/createReceivingCenter'}
-          component={ReceivingCenterCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/receivingCenter/view'}
-          component={ViewEditReceivingCenter}
-        />
-        <Route
-          exact
-          path={base + '/pgr/receivingCenter/edit'}
-          component={ViewEditReceivingCenter}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewReceivingCenter/:id'}
-          component={ViewReceivingCenter}
-        />
-        <Route
-          exact
-          path={base + '/pgr/createRouter/:type/:id'}
-          component={createRouter}
-        />
-        <Route
-          exact
-          path={base + '/pgr/createRouter'}
-          component={createRouter}
-        />
-        <Route
-          exact
-          path={base + '/pgr/routerGeneration'}
-          component={routerGeneration}
-        />
-        <Route
-          exact
-          path={base + '/pgr/searchRouter/:type'}
-          component={searchRouter}
-        />
-        <Route
-          exact
-          path={base + '/pgr/receivingModeCreate'}
-          component={receivingModeCreate}
-        />
-        <Route
-          exact
-          name="receivingModeCreate"
-          path={base + '/pgr/receivingModeCreate/:type/:id'}
-          component={receivingModeCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewOrUpdateReceivingMode/:type'}
-          component={viewOrUpdateReceivingMode}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewReceivingMode/:type/:id'}
-          component={viewReceivingMode}
-        />
-        <Route
-          exact
-          name="createServiceGroup"
-          path={base + '/pgr/updateServiceGroup/:id?'}
-          component={ServiceGroupCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/createServiceGroup'}
-          component={ServiceGroupCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/serviceGroup/view'}
-          component={ViewEditServiceGroup}
-        />
-        <Route
-          exact
-          path={base + '/pgr/serviceGroup/edit'}
-          component={ViewEditServiceGroup}
-        />
-        <Route
-          exact
-          path={base + '/pgr/bulkEscalationGeneration'}
-          component={BulkEscalationGeneration}
-        />
-        <Route
-          exact
-          path={base + '/pgr/serviceTypeCreate'}
-          component={serviceTypeCreate}
-        />
-        <Route
-          exact
-          name="serviceTypeCreate"
-          path={base + '/pgr/serviceTypeCreate/:type/:id'}
-          component={serviceTypeCreate}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewOrUpdateServiceType/:type'}
-          component={viewOrUpdateServiceType}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewServiceType/:type/:id'}
-          component={viewServiceType}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewServiceGroup/:id'}
-          component={ViewServiceGroup}
-        />
-        <Route
-          exact
-          path={base + '/pgr/viewEscalation'}
-          component={ViewEscalation}
-        />
-        <Route
-          exact
-          path={base + '/pgr/defineEscalation'}
-          component={DefineEscalation}
-        />
-        <Route
-          exact
-          path={base + '/pgr/searchEscalationTime'}
-          component={SearchEscalation}
-        />
-        <Route
-          exact
-          path={base + '/pgr/defineEscalationTime'}
-          component={DefineEscalationTime}
-        />
-        <Route
-          exact
-          path={base + '/pgr/createServiceType'}
-          component={ServiceTypeCreate}
-        />
-        <Route
-          exact
-          path={base + '/report/:moduleName/:reportName'}
-          component={Report}
-        />
+        <Route exact path={base + '/pgr/createGrievance'} component={grievanceCreate} />
+        <Route exact path={base + '/pgr/viewGrievance/:srn'} component={grievanceView} />
+        <Route exact path={base + '/pgr/searchGrievance'} component={grievanceSearch} />
+        <Route exact name="createReceivingCenter" path={base + '/pgr/createReceivingCenter/:id?'} component={ReceivingCenterCreate} />
+        <Route exact path={base + '/pgr/createReceivingCenter'} component={ReceivingCenterCreate} />
+        <Route exact path={base + '/pgr/receivingCenter/view'} component={ViewEditReceivingCenter} />
+        <Route exact path={base + '/pgr/receivingCenter/edit'} component={ViewEditReceivingCenter} />
+        <Route exact path={base + '/pgr/viewReceivingCenter/:id'} component={ViewReceivingCenter} />
+        <Route exact path={base + '/pgr/createRouter/:type/:id'} component={createRouter} />
+        <Route exact path={base + '/pgr/createRouter'} component={createRouter} />
+        <Route exact path={base + '/pgr/routerGeneration'} component={routerGeneration} />
+        <Route exact path={base + '/pgr/searchRouter/:type'} component={searchRouter} />
+        <Route exact path={base + '/pgr/receivingModeCreate'} component={receivingModeCreate} />
+        <Route exact name="receivingModeCreate" path={base + '/pgr/receivingModeCreate/:type/:id'} component={receivingModeCreate} />
+        <Route exact path={base + '/pgr/viewOrUpdateReceivingMode/:type'} component={viewOrUpdateReceivingMode} />
+        <Route exact path={base + '/pgr/viewReceivingMode/:type/:id'} component={viewReceivingMode} />
+        <Route exact name="createServiceGroup" path={base + '/pgr/updateServiceGroup/:id?'} component={ServiceGroupCreate} />
+        <Route exact path={base + '/pgr/createServiceGroup'} component={ServiceGroupCreate} />
+        <Route exact path={base + '/pgr/serviceGroup/view'} component={ViewEditServiceGroup} />
+        <Route exact path={base + '/pgr/serviceGroup/edit'} component={ViewEditServiceGroup} />
+        <Route exact path={base + '/pgr/bulkEscalationGeneration'} component={BulkEscalationGeneration} />
+        <Route exact path={base + '/pgr/serviceTypeCreate'} component={serviceTypeCreate} />
+        <Route exact name="serviceTypeCreate" path={base + '/pgr/serviceTypeCreate/:type/:id'} component={serviceTypeCreate} />
+        <Route exact path={base + '/pgr/viewOrUpdateServiceType/:type'} component={viewOrUpdateServiceType} />
+        <Route exact path={base + '/pgr/viewServiceType/:type/:id'} component={viewServiceType} />
+        <Route exact path={base + '/pgr/viewServiceGroup/:id'} component={ViewServiceGroup} />
+        <Route exact path={base + '/pgr/viewEscalation'} component={ViewEscalation} />
+        <Route exact path={base + '/pgr/defineEscalation'} component={DefineEscalation} />
+        <Route exact path={base + '/pgr/searchEscalationTime'} component={SearchEscalation} />
+        <Route exact path={base + '/pgr/defineEscalationTime'} component={DefineEscalationTime} />
+        <Route exact path={base + '/pgr/createServiceType'} component={ServiceTypeCreate} />
+        <Route exact path={base + '/report/:moduleName/:reportName'} component={Report} />
         <Route exact path={base + '/pgr/dashboard'} component={PGRDashboard} />
-        <Route
-          exact
-          path={base + '/update/:moduleName/:master?/:id?'}
-          component={Create}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/transaction/:moduleName/:page/:businessService?/:consumerCode?'
-          }
-          component={Transaction}
-        />
-        <Route
-          exact
-          path={base + '/views/:moduleName/:master?/:id'}
-          component={Inbox}
-        />
-        <Route
-          exact
-          path={base + '/create/:moduleName/:master?/:id?'}
-          component={Create}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/create/createPenaltyRates'}
-          component={createPenaltyRates}
-        />
-        <Route
-          exact
-          path={
-            base + '/non-framework/tl/masters/update/updatePenaltyRates/:id'
-          }
-          component={updatePenaltyRates}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/view/viewPenaltyRates/:id'}
-          component={viewPenaltyRates}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/search/penaltyRatesSearch'}
-          component={penaltyRatesSearch}
-        />
-        <Route
-          exact
-          path={
-            base + '/non-framework/tl/masters/search/penaltyRatesUpdateSearch'
-          }
-          component={penaltyRatesUpdateSearch}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/createFeeMatrix'}
-          component={createFeeMatrix}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/updateFeeMatrix/:id'}
-          component={updateFeeMatrix}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/viewFeeMatrix/:id'}
-          component={viewFeeMatrix}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/CreateLicenseDocumentType'}
-          component={CreateLicenseDocumentType}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/update/UpdateSubCategory/:id'}
-          component={UpdateSubCategory}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/masters/create/createSubCategory'}
-          component={createSubCategory}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/transaction/LegacyLicenseCreate'}
-          component={LegacyLicenseCreate}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/transaction/ApplyNewTradeLicense'}
-          component={VisibleNewTradeLicense}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/transaction/LegacyLicenseSearch'}
-          component={LegacyLicenseSearch}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'
-          }
-          component={viewLegacyLicense}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/transaction/:inbox/viewLicense/:id'}
-          component={viewLicense}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/transaction/viewLicense/:id'}
-          component={viewLicense}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/tl/search/NoticeSearch'}
-          component={NoticeSearchLicense}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/collection/master/paytax/PayTaxCreate'}
-          component={PayTaxCreate}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/collection/receipt/view/:id'}
-          component={ReceiptView}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework-cs/citizenServices/paytax/:status/:id/:paymentGateWayRes?'
-          }
-          component={PayTax}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'
-          }
-          component={NoDues}
-        />
-        <Route
-          exact
-          path={base + '/empsearch/:actionName'}
-          component={EmployeeSearch}
-        />
+        <Route exact path={base + '/update/:moduleName/:master?/:id?'} component={Create} />
+        <Route exact path={base + '/transaction/:moduleName/:page/:businessService?/:consumerCode?'} component={Transaction} />
+        <Route exact path={base + '/views/:moduleName/:master?/:id'} component={Inbox} />
+        <Route exact path={base + '/create/:moduleName/:master?/:id?'} component={Create} />
+        <Route exact path={base + '/non-framework/tl/masters/create/createPenaltyRates'} component={createPenaltyRates} />
+        <Route exact path={base + '/non-framework/tl/masters/update/updatePenaltyRates/:id'} component={updatePenaltyRates} />
+        <Route exact path={base + '/non-framework/tl/masters/view/viewPenaltyRates/:id'} component={viewPenaltyRates} />
+        <Route exact path={base + '/non-framework/tl/masters/search/penaltyRatesSearch'} component={penaltyRatesSearch} />
+        <Route exact path={base + '/non-framework/tl/masters/search/penaltyRatesUpdateSearch'} component={penaltyRatesUpdateSearch} />
+        <Route exact path={base + '/non-framework/tl/masters/createFeeMatrix'} component={createFeeMatrix} />
+        <Route exact path={base + '/non-framework/tl/masters/updateFeeMatrix/:id'} component={updateFeeMatrix} />
+        <Route exact path={base + '/non-framework/tl/masters/viewFeeMatrix/:id'} component={viewFeeMatrix} />
+        <Route exact path={base + '/non-framework/tl/masters/CreateLicenseDocumentType'} component={CreateLicenseDocumentType} />
+        <Route exact path={base + '/non-framework/tl/masters/update/UpdateSubCategory/:id'} component={UpdateSubCategory} />
+        <Route exact path={base + '/non-framework/tl/masters/create/createSubCategory'} component={createSubCategory} />
+        <Route exact path={base + '/non-framework/tl/transaction/LegacyLicenseCreate'} component={LegacyLicenseCreate} />
+        <Route exact path={base + '/non-framework/tl/transaction/ApplyNewTradeLicense'} component={VisibleNewTradeLicense} />
+        <Route exact path={base + '/non-framework/tl/transaction/LegacyLicenseSearch'} component={LegacyLicenseSearch} />
+        <Route exact path={base + '/non-framework/tl/transaction/viewLegacyLicense/:licenseNumber'} component={viewLegacyLicense} />
+        <Route exact path={base + '/non-framework/tl/transaction/:inbox/viewLicense/:id'} component={viewLicense} />
+        <Route exact path={base + '/non-framework/tl/transaction/viewLicense/:id'} component={viewLicense} />
+        <Route exact path={base + '/non-framework/tl/search/NoticeSearch'} component={NoticeSearchLicense} />
+        <Route exact path={base + '/non-framework/collection/master/paytax/PayTaxCreate'} component={PayTaxCreate} />
+        <Route exact path={base + '/non-framework/collection/receipt/view/:id'} component={ReceiptView} />
+        <Route exact path={base + '/non-framework-cs/citizenServices/paytax/:status/:id/:paymentGateWayRes?'} component={PayTax} />
+        <Route exact path={base + '/non-framework-cs/citizenServices/:moduleName/:status/:id/:paymentGateWayRes?'} component={NoDues} />
+        <Route exact path={base + '/empsearch/:actionName'} component={EmployeeSearch} />
         <Route exact path={base + '/legacy/view/:id'} component={ViewLegacy} />
         {/*<Route exact path= {base+'/wc/addDemand/:upicNumber'} component={EditDemands}/>*/}
-        <Route
-          exact
-          path={base + '/searchconnection/wc'}
-          component={SearchLegacyWc}
-        />
-        <Route
-          exact
-          path={base + '/wc/application/update/:stateId'}
-          component={updateConnection}
-        />
-        <Route
-          exact
-          path={base + '/waterConnection/view/:id'}
-          component={ViewWc}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'
-          }
-          component={CS_WaterConnection}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'
-          }
-          component={CS_VIEW_WaterConnection}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'
-          }
-          component={CS_FireNoc}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/citizenServices/fireNoc/:status/:id/:ackNo/:paymentGateWayRes?'
-          }
-          component={CS_VIEW_FireNoc}
-        />
-        <Route
-          exact
-          path={base + '/payment/response/redirect/:msg'}
-          component={Payment}
-        />
-        <Route
-          exact
-          path={base + '/receipt/:page/:type/:cc/:sid'}
-          component={ReceiptDownload}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'
-          }
-          component={CS_TradeLicense}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'
-          }
-          component={CS_VIEW_TradeLicense}
-        />
-        <Route
-          exact
-          path={base + '/service/request/view/:srn/:isCertificate'}
-          component={CertificateView}
-        />
-        <Route
-          exact
-          path={base + '/createLegacy/wc/legacy'}
-          component={createLegacy}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/wc/masters/serviceCharge/create'}
-          component={createServiceCharge}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/wc/masters/serviceCharge/update/:id'}
-          component={createServiceCharge}
-        />
+        <Route exact path={base + '/searchconnection/wc'} component={SearchLegacyWc} />
+        <Route exact path={base + '/wc/application/update/:stateId'} component={updateConnection} />
+        <Route exact path={base + '/waterConnection/view/:id'} component={ViewWc} />
+        <Route exact path={base + '/non-framework/citizenServices/create/:status/:id/:paymentGateWayRes?'} component={CS_WaterConnection} />
+        <Route exact path={base + '/non-framework/citizenServices/view/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_WaterConnection} />
+        <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:paymentGateWayRes?'} component={CS_FireNoc} />
+        <Route exact path={base + '/non-framework/citizenServices/fireNoc/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_FireNoc} />
+        <Route exact path={base + '/payment/response/redirect/:msg'} component={Payment} />
+        <Route exact path={base + '/receipt/:page/:type/:cc/:sid'} component={ReceiptDownload} />
+        <Route exact path={base + '/non-framework/citizenServices/tl/:status/:id/:paymentGateWayRes?'} component={CS_TradeLicense} />
+        <Route exact path={base + '/non-framework/citizenServices/tl/:status/:id/:ackNo/:paymentGateWayRes?'} component={CS_VIEW_TradeLicense} />
+        <Route exact path={base + '/service/request/view/:srn/:isCertificate'} component={CertificateView} />
+        <Route exact path={base + '/createLegacy/wc/legacy'} component={createLegacy} />
+        <Route exact path={base + '/non-framework/wc/masters/serviceCharge/create'} component={createServiceCharge} />
+        <Route exact path={base + '/non-framework/wc/masters/serviceCharge/update/:id'} component={createServiceCharge} />
         <Route exact path={base + '/createWc/wc'} component={createWc} />
-        <Route
-          exact
-          path={base + '/non-framework/egf/transaction/createVoucher'}
-          component={createVoucher}
-        />
-        <Route
-          exact
-          path={base + '/wc/acknowledgement/:id/:status'}
-          component={acknowledgementWc}
-        />
-        <Route
-          exact
-          path={base + '/transactionRevaluation/asset/revaluationAsset'}
-          component={transactionRevaluation}
-        />
-        <Route
-          exact
-          path={base + '/transactionTransfer/asset/translateAsset'}
-          component={transactionTransfer}
-        />
-        <Route
-          exact
-          path={base + '/transactionTransfer/asset/generalAsset'}
-          component={transactionGeneral}
-        />
-        <Route
-          exact
-          path={base + '/print/report/:templatePath'}
-          component={TemplateParser}
-        />
-        <Route
-          exact
-          path={base + '/print/notice/:legalTemplatePath'}
-          component={LegalTemplateParser}
-        />
+        <Route exact path={base + '/non-framework/egf/transaction/createVoucher'} component={createVoucher} />
+        <Route exact path={base + '/wc/acknowledgement/:id/:status'} component={acknowledgementWc} />
+        <Route exact path={base + '/transactionRevaluation/asset/revaluationAsset'} component={transactionRevaluation} />
+        <Route exact path={base + '/transactionTransfer/asset/translateAsset'} component={transactionTransfer} />
+        <Route exact path={base + '/transactionTransfer/asset/generalAsset'} component={transactionGeneral} />
+        <Route exact path={base + '/print/report/:templatePath'} component={TemplateParser} />
+        <Route exact path={base + '/print/notice/:legalTemplatePath'} component={LegalTemplateParser} />
         //Assets
-        <Route
-          exact
-          path={base + '/non-framework/asset/master/assetImmovableCreate/:id?'}
-          component={assetImmovableCreate}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/asset/master/assetMovableCreate/:id?'}
-          component={assetMovableCreate}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/asset/master/assetImmovableView/:id'}
-          component={assetImmovableView}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/asset/master/assetMovableView/:id'}
-          component={assetMovableView}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/asset/acknowledgeDepreciation/:id'}
-          component={acknowledgeDepreciation}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/asset/master/assetCategoryCreate/:id?'}
-          component={assetCategoryCreate}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/asset/master/assetCategorySearch'}
-          component={assetCategorySearch}
-        />
+        <Route exact path={base + '/non-framework/asset/master/assetImmovableCreate/:id?'} component={assetImmovableCreate} />
+        <Route exact path={base + '/non-framework/asset/master/assetMovableCreate/:id?'} component={assetMovableCreate} />
+        <Route exact path={base + '/non-framework/asset/master/assetImmovableView/:id'} component={assetImmovableView} />
+        <Route exact path={base + '/non-framework/asset/master/assetMovableView/:id'} component={assetMovableView} />
+        <Route exact path={base + '/non-framework/asset/acknowledgeDepreciation/:id'} component={acknowledgeDepreciation} />
+        <Route exact path={base + '/non-framework/asset/master/assetCategoryCreate/:id?'} component={assetCategoryCreate} />
+        <Route exact path={base + '/non-framework/asset/master/assetCategorySearch'} component={assetCategorySearch} />
         {/* inventory */}
+        <Route exact path={base + '/non-framework/inventory/master/supplier'} component={SupplierSearch} />
+        <Route exact path={base + '/non-framework/inventory/master/materialstoremapping'} component={MaterialStoreMappingSearch} />
+        <Route exact path={base + '/non-framework/inventory/master/store'} component={StoreSearch} />
+        <Route exact path={base + '/non-framework/inventory/master/material'} component={MaterialSearch} />
+        <Route exact path={base + '/non-framework/inventory/indent'} component={IndentSearch} />
+        <Route exact path={base + '/non-framework/inventory/transaction/pricelist'} component={PriceListSearch} />
+        <Route exact path={base + '/non-framework/inventory/transaction/materialReceiptNote'} component={MaterialReceiptNote} />
+        <Route exact path={base + '/non-framework/inventory/transaction/po/searchIndent'} component={SearchIndent} />
         <Route
           exact
-          path={base + '/non-framework/inventory/master/supplier'}
-          component={SupplierSearch}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/inventory/master/materialstoremapping'}
-          component={MaterialStoreMappingSearch}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/inventory/master/store'}
-          component={StoreSearch}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/inventory/master/material'}
-          component={MaterialSearch}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/inventory/indent'}
-          component={IndentSearch}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/inventory/transaction/pricelist'}
-          component={PriceListSearch}
-        />
-        <Route
-          exact
-          path={
-            base + '/non-framework/inventory/transaction/materialReceiptNote'
-          }
-          component={MaterialReceiptNote}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/inventory/transaction/po/searchIndent'}
-          component={SearchIndent}
-        />
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/inventory/transaction/materialissue/SearchIndentMaterialIssue'
-          }
+          path={base + '/non-framework/inventory/transaction/materialissue/SearchIndentMaterialIssue'}
           component={SearchIndentMaterialIssue}
         />
         {/* works */}
-        <Route
-          exact
-          path={
-            base +
-            '/non-framework/works/transaction/:action/abstractEstimate/:code?'
-          }
-          component={abstractEstimate}
-        />
-        <Route
-          exact
-          path={
-            base + '/non-framework/works/transaction/viewAbstractEstimate/:id'
-          }
-          component={viewAbstractEstimate}
-        />
-        <Route
-          exact
-          path={
-            base + '/non-framework/works/transaction/:action/spilloverAE/:code?'
-          }
-          component={spilloverAE}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/works/transaction/viewSpilloverAE/:id'}
-          component={viewSpilloverAE}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/works/transaction/detailedEstimate'}
-          component={detailedEstimate}
-        />
+        <Route exact path={base + '/non-framework/works/transaction/:action/abstractEstimate/:code?'} component={abstractEstimate} />
+        <Route exact path={base + '/non-framework/works/transaction/viewAbstractEstimate/:id'} component={viewAbstractEstimate} />
+        <Route exact path={base + '/non-framework/works/transaction/:action/spilloverAE/:code?'} component={spilloverAE} />
+        <Route exact path={base + '/non-framework/works/transaction/viewSpilloverAE/:id'} component={viewSpilloverAE} />
+        <Route exact path={base + '/non-framework/works/transaction/detailedEstimate'} component={detailedEstimate} />
         {/* KPI */}
-        <Route
-          exact
-          path={base + '/non-framework/perfManagement/master/kpivalues'}
-          component={kpivalues}
-        />
-        <Route
-          exact
-          path={base + '/non-framework/perfManagement/dashboard/kpi'}
-          component={KPIDashboard}
-        />
-        <Route
-          exact
-          path={base + '/mdms/:module/:master'}
-          component={MdmsComponent}
-        />
+        <Route exact path={base + '/non-framework/perfManagement/master/kpivalues'} component={kpivalues} />
+        <Route exact path={base + '/non-framework/perfManagement/dashboard/kpi'} component={KPIDashboard} />
+        <Route exact path={base + '/mdms/:module/:master'} component={MdmsComponent} />
         <Route component={NoMatch} />
       </Switch>
     </main>

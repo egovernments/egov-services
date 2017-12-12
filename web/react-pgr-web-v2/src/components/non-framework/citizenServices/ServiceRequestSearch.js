@@ -57,17 +57,11 @@ class Report extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -85,17 +79,10 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -105,23 +92,13 @@ class Report extends Component {
   }
 
   getVal = path => {
-    return typeof _.get(this.props.formData, path) != 'undefined'
-      ? _.get(this.props.formData, path)
-      : '';
+    return typeof _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
 
   initData() {
     let hashLocation = window.location.hash;
-    specifications = require('../../framework/specs/citizenService/wc/search')
-      .default;
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    specifications = require('../../framework/specs/citizenService/wc/search').default;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications['wc.search'];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
@@ -131,8 +108,7 @@ class Report extends Component {
     setModuleName('wc');
     setActionName('search');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
       pathname: this.props.history.location.pathname,
@@ -188,18 +164,15 @@ class Report extends Component {
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
     for (var key in formData) {
-      if (formData[key] !== '' && typeof formData[key] == 'undefined')
-        delete formData[key];
+      if (formData[key] !== '' && typeof formData[key] == 'undefined') delete formData[key];
     }
 
     Api.commonApiPost(
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .url,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url,
       formData,
       {},
       null,
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .useTimestamp
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp
     ).then(
       function(res) {
         self.props.setLoadingStatus('hide');
@@ -207,10 +180,7 @@ class Report extends Component {
         var ServiceRequest = [];
         if (res.serviceReq) {
           for (var i = 0; i < res.serviceReq.length; i++) {
-            if (
-              res.serviceReq[i].serviceCode == 'WATER_NEWCONN' ||
-              res.serviceReq[i].serviceCode == 'BPA_FIRE_NOC'
-            ) {
+            if (res.serviceReq[i].serviceCode == 'WATER_NEWCONN' || res.serviceReq[i].serviceCode == 'BPA_FIRE_NOC') {
               ServiceRequest.push(res.serviceReq[i]);
             }
           }
@@ -234,31 +204,14 @@ class Report extends Component {
     return _.get(this.props.formData, path) || '';
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
     let { handleChange, mockData, setDropDownData, formData } = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications['wc.search'];
     // console.log(obj);
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -290,9 +243,7 @@ class Report extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -337,50 +288,24 @@ class Report extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
 
   rowClickHandler = item => {
     if (item.serviceCode == 'WATER_NEWCONN') {
-      var _url =
-        '/non-framework/citizenServices/view/update/wc/' +
-        encodeURIComponent(item.serviceRequestId);
+      var _url = '/non-framework/citizenServices/view/update/wc/' + encodeURIComponent(item.serviceRequestId);
     } else {
-      var _url =
-        '/non-framework/citizenServices/fireNoc/update/view/' +
-        encodeURIComponent(item.serviceRequestId) +
-        '/success';
+      var _url = '/non-framework/citizenServices/fireNoc/update/view/' + encodeURIComponent(item.serviceRequestId) + '/success';
     }
 
     this.props.setRoute(_url);
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      search,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      rowClickHandler,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { search, handleChange, getVal, addNewCard, removeCard, rowClickHandler } = this;
     let { showResult, resultList } = this.state;
     console.log(formData);
     return (
@@ -417,9 +342,7 @@ class Report extends Component {
             <br />
             {showResult && (
               <Card className="uiCard">
-                <CardHeader
-                  title={<strong> {translate('ui.table.title')} </strong>}
-                />
+                <CardHeader title={<strong> {translate('ui.table.title')} </strong>} />
                 <CardText>
                   <Table id="searchTable">
                     <thead>
@@ -441,16 +364,9 @@ class Report extends Component {
                                 }}
                               >
                                 <td>{item.serviceRequestId}</td>
-                                <td>
-                                  {nameMap[item.serviceCode] ||
-                                    item.serviceCode}
-                                </td>
+                                <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
                                 <td>{nameMap[item.status] || item.status}</td>
-                                <td>
-                                  {item.auditDetails
-                                    ? getFullDate(item.auditDetails.createdDate)
-                                    : '-'}
-                                </td>
+                                <td>{item.auditDetails ? getFullDate(item.auditDetails.createdDate) : '-'}</td>
                               </tr>
                             );
                           })
@@ -497,14 +413,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

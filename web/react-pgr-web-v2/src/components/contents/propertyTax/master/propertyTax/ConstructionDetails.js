@@ -139,13 +139,7 @@ class ConstructionDetails extends Component {
       category: e.target.value,
     };
 
-    Api.commonApiPost(
-      'pt-property/property/departments/_search',
-      query,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/departments/_search', query, {}, false, true)
       .then(res => {
         res.departments.unshift({ id: -1, name: 'None' });
         console.log(res);
@@ -163,10 +157,7 @@ class ConstructionDetails extends Component {
 
   formatDate(date) {
     var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
-    var month =
-      date.getMonth() + 1 < 10
-        ? '0' + (date.getMonth() + 1)
-        : date.getMonth() + 1;
+    var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
 
     return day + '/' + month + '/' + date.getFullYear();
   }
@@ -175,9 +166,7 @@ class ConstructionDetails extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.code} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -207,11 +196,7 @@ class ConstructionDetails extends Component {
       <Card className="uiCard">
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.constructionDetails')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.constructionDetails')}</div>}
         />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
@@ -223,26 +208,18 @@ class ConstructionDetails extends Component {
                   floatingLabelFixed={true}
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.propertyAddress.fields.currentAssessmentDate'
-                      )}
+                      {translate('pt.create.groups.propertyAddress.fields.currentAssessmentDate')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   errorText={
                     fieldErrors.currentAssessmentDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.currentAssessmentDate}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.currentAssessmentDate}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    constructionDetails.currentAssessmentDate
-                      ? constructionDetails.currentAssessmentDate
-                      : ''
-                  }
+                  value={constructionDetails.currentAssessmentDate ? constructionDetails.currentAssessmentDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -283,26 +260,18 @@ class ConstructionDetails extends Component {
                   floatingLabelFixed={true}
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.propertyAddress.fields.firstAssessmentDate'
-                      )}
+                      {translate('pt.create.groups.propertyAddress.fields.firstAssessmentDate')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   errorText={
                     fieldErrors.firstAssessmentDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.firstAssessmentDate}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.firstAssessmentDate}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    constructionDetails.firstAssessmentDate
-                      ? constructionDetails.firstAssessmentDate
-                      : ''
-                  }
+                  value={constructionDetails.firstAssessmentDate ? constructionDetails.firstAssessmentDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -338,23 +307,15 @@ class ConstructionDetails extends Component {
                   className="fullWidth"
                   hintText="dd/mm/yyyy"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.propertyAddress.fields.revisedAssessmentDate'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.propertyAddress.fields.revisedAssessmentDate')}
                   errorText={
                     fieldErrors.revisedAssessmentDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.revisedAssessmentDate}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.revisedAssessmentDate}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    constructionDetails.revisedAssessmentDate
-                      ? constructionDetails.revisedAssessmentDate
-                      : ''
-                  }
+                  value={constructionDetails.revisedAssessmentDate ? constructionDetails.revisedAssessmentDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -392,26 +353,14 @@ class ConstructionDetails extends Component {
                   floatingLabelFixed={true}
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'pt.create.groups.propertyAddress.fields.lastAssessmentDate'
-                      )}
+                      {translate('pt.create.groups.propertyAddress.fields.lastAssessmentDate')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   errorText={
-                    fieldErrors.lastAssessmentDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.lastAssessmentDate}
-                      </span>
-                    ) : (
-                      ''
-                    )
+                    fieldErrors.lastAssessmentDate ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.lastAssessmentDate}</span> : ''
                   }
-                  value={
-                    constructionDetails.lastAssessmentDate
-                      ? constructionDetails.lastAssessmentDate
-                      : ''
-                  }
+                  value={constructionDetails.lastAssessmentDate ? constructionDetails.lastAssessmentDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -447,23 +396,9 @@ class ConstructionDetails extends Component {
                   className="fullWidth"
                   hintText="dd/mm/yyyy"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.orderDate'
-                  )}
-                  errorText={
-                    fieldErrors.orderDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.orderDate}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    constructionDetails.orderDate
-                      ? constructionDetails.orderDate
-                      : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.orderDate')}
+                  errorText={fieldErrors.orderDate ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.orderDate}</span> : ''}
+                  value={constructionDetails.orderDate ? constructionDetails.orderDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -498,23 +433,11 @@ class ConstructionDetails extends Component {
                 <TextField
                   className="fullWidth"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.certificateNumber'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateNumber')}
                   errorText={
-                    fieldErrors.certificateNumber ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.certificateNumber}
-                      </span>
-                    ) : (
-                      ''
-                    )
+                    fieldErrors.certificateNumber ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.certificateNumber}</span> : ''
                   }
-                  value={
-                    constructionDetails.certificateNumber
-                      ? constructionDetails.certificateNumber
-                      : ''
-                  }
+                  value={constructionDetails.certificateNumber ? constructionDetails.certificateNumber : ''}
                   onChange={e => {
                     handleChange(e, 'certificateNumber', false, '');
                   }}
@@ -531,23 +454,15 @@ class ConstructionDetails extends Component {
                   className="fullWidth"
                   hintText="dd/mm/yyyy"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.certificateCompletionDate'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateCompletionDate')}
                   errorText={
                     fieldErrors.certificateCompletionDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.certificateCompletionDate}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.certificateCompletionDate}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    constructionDetails.certificateCompletionDate
-                      ? constructionDetails.certificateCompletionDate
-                      : ''
-                  }
+                  value={constructionDetails.certificateCompletionDate ? constructionDetails.certificateCompletionDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -583,23 +498,15 @@ class ConstructionDetails extends Component {
                   className="fullWidth"
                   hintText="dd/mm/yyyy"
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.certificateReceivedDate'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.certificateReceivedDate')}
                   errorText={
                     fieldErrors.certificateReceivedDate ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.certificateReceivedDate}
-                      </span>
+                      <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.certificateReceivedDate}</span>
                     ) : (
                       ''
                     )
                   }
-                  value={
-                    constructionDetails.certificateReceivedDate
-                      ? constructionDetails.certificateReceivedDate
-                      : ''
-                  }
+                  value={constructionDetails.certificateReceivedDate ? constructionDetails.certificateReceivedDate : ''}
                   onChange={(e, value) => {
                     var val = value;
                     if (value.length == 2 && !value.match('/')) {
@@ -633,24 +540,10 @@ class ConstructionDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <TextField
                   className="fullWidth"
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.agencyName'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.agencyName')}
                   floatingLabelFixed={true}
-                  errorText={
-                    fieldErrors.agencyName ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.agencyName}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    constructionDetails.agencyName
-                      ? constructionDetails.agencyName
-                      : ''
-                  }
+                  errorText={fieldErrors.agencyName ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.agencyName}</span> : ''}
+                  value={constructionDetails.agencyName ? constructionDetails.agencyName : ''}
                   onChange={e => {
                     handleChange(e, 'agencyName', false, '');
                   }}
@@ -665,24 +558,10 @@ class ConstructionDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <TextField
                   className="fullWidth"
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.licenseType'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.licenseType')}
                   floatingLabelFixed={true}
-                  errorText={
-                    fieldErrors.licenseType ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.licenseType}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    constructionDetails.licenseType
-                      ? constructionDetails.licenseType
-                      : ''
-                  }
+                  errorText={fieldErrors.licenseType ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.licenseType}</span> : ''}
+                  value={constructionDetails.licenseType ? constructionDetails.licenseType : ''}
                   onChange={e => {
                     handleChange(e, 'licenseType', false, '');
                   }}
@@ -697,31 +576,12 @@ class ConstructionDetails extends Component {
               <Col xs={12} md={3} sm={6}>
                 <TextField
                   className="fullWidth"
-                  floatingLabelText={translate(
-                    'pt.create.groups.constructionDetails.fields.licenseNumber'
-                  )}
+                  floatingLabelText={translate('pt.create.groups.constructionDetails.fields.licenseNumber')}
                   floatingLabelFixed={true}
-                  errorText={
-                    fieldErrors.licenseNumber ? (
-                      <span style={{ position: 'absolute', bottom: -13 }}>
-                        {fieldErrors.licenseNumber}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    constructionDetails.licenseNumber
-                      ? constructionDetails.licenseNumber
-                      : ''
-                  }
+                  errorText={fieldErrors.licenseNumber ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.licenseNumber}</span> : ''}
+                  value={constructionDetails.licenseNumber ? constructionDetails.licenseNumber : ''}
                   onChange={e => {
-                    handleChange(
-                      e,
-                      'licenseNumber',
-                      false,
-                      /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g
-                    );
+                    handleChange(e, 'licenseNumber', false, /^[0-9,<>!@#\$%\^\&*\)\(+=._-]+$/g);
                   }}
                   floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                   underlineStyle={styles.underlineStyle}
@@ -885,6 +745,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ConstructionDetails
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ConstructionDetails);

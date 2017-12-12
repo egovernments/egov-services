@@ -63,8 +63,7 @@ var rooms = {
         },
         {
           name: 'UnitType1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].unitType',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].unitType',
           label: 'pt.create.groups.floorDetails.fields.unitType',
           pattern: '',
           type: 'singleValueList',
@@ -73,16 +72,12 @@ var rooms = {
           requiredErrMsg: '',
           url: '',
           patternErrMsg: '',
-          defaultValue: [
-            { key: 'FLAT', value: 'Flat' },
-            { key: 'ROOM', value: 'Room' },
-          ],
+          defaultValue: [{ key: 'FLAT', value: 'Flat' }, { key: 'ROOM', value: 'Room' }],
         },
 
         {
           name: 'UnitNumber1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].unitNo',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].unitNo',
           label: 'pt.create.groups.floorDetails.fields.unitNumber',
           pattern: '^\\d{0,3}$',
           type: 'number',
@@ -93,8 +88,7 @@ var rooms = {
         },
         {
           name: 'ConstructionType1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].structure',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].structure',
           label: 'pt.create.groups.floorDetails.fields.constructionClass',
           pattern: '',
           type: 'singleValueList',
@@ -107,8 +101,7 @@ var rooms = {
         },
         {
           name: 'UsageType1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].usage',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].usage',
           label: 'pt.create.groups.floorDetails.fields.usageType',
           pattern: '',
           type: 'singleValueList',
@@ -121,8 +114,7 @@ var rooms = {
         },
         {
           name: 'UsageSubType1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].usageSubType',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].usageSubType',
           label: 'pt.create.groups.floorDetails.fields.usageSubType',
           pattern: '',
           type: 'singleValueList',
@@ -135,8 +127,7 @@ var rooms = {
         },
         {
           name: 'FirmName1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].firmName',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].firmName',
           label: 'pt.create.groups.floorDetails.fields.firmName',
           pattern: '',
           type: 'text',
@@ -147,8 +138,7 @@ var rooms = {
         },
         {
           name: 'Occupancy1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].occupancyType',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].occupancyType',
           label: 'pt.create.groups.floorDetails.fields.occupancy',
           pattern: '',
           type: 'singleValueList',
@@ -174,8 +164,7 @@ var rooms = {
         },
         {
           name: 'OccupantName1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].occupierName',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].occupierName',
           label: 'pt.create.groups.floorDetails.fields.occupantName',
           pattern: '',
           type: 'text',
@@ -186,8 +175,7 @@ var rooms = {
         },
         {
           name: 'AnnualRent1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].annualRent',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].annualRent',
           label: 'pt.create.groups.floorDetails.fields.AnnualRent',
           pattern: '^\\d{9}$',
           type: 'text',
@@ -198,8 +186,7 @@ var rooms = {
         },
         {
           name: 'ManualArv1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].manualArv',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].manualArv',
           label: 'pt.create.groups.floorDetails.fields.manualArv',
           pattern: '^\\d{9}$',
           type: 'text',
@@ -210,8 +197,7 @@ var rooms = {
         },
         {
           name: 'ConstructionStartDate1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].constructionStartDate',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].constructionStartDate',
           label: 'pt.create.groups.floorDetails.fields.constructionStartDate',
           pattern: '',
           type: 'datePicker',
@@ -222,8 +208,7 @@ var rooms = {
         },
         {
           name: 'ConstructionEndDate1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].constCompletionDate',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].constCompletionDate',
           label: 'pt.create.groups.floorDetails.fields.constructionDate',
           pattern: '',
           type: 'datePicker',
@@ -234,8 +219,7 @@ var rooms = {
         },
         {
           name: 'EffectiveFromDate1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].occupancyDate',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].occupancyDate',
           label: 'pt.create.groups.floorDetails.fields.effectiveFromDate',
           pattern: '',
           type: 'datePicker',
@@ -246,8 +230,7 @@ var rooms = {
         },
         {
           name: 'UnstructuredLand1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].isStructured',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].isStructured',
           label: 'pt.create.groups.floorDetails.fields.unstructuredLand',
           pattern: '',
           type: 'singleValueList',
@@ -256,10 +239,7 @@ var rooms = {
           isDisabled: false,
           requiredErrMsg: '',
           patternErrMsg: '',
-          defaultValue: [
-            { key: 'true', value: 'Yes' },
-            { key: 'false', value: 'No' },
-          ],
+          defaultValue: [{ key: 'true', value: 'Yes' }, { key: 'false', value: 'No' }],
           enableDisableFields: [
             {
               ifValue: 'true',
@@ -270,8 +250,7 @@ var rooms = {
         },
         {
           name: 'Length1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].length',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].length',
           label: 'pt.create.groups.floorDetails.fields.length',
           pattern: '^[0-9.]+$',
           type: 'number',
@@ -281,8 +260,7 @@ var rooms = {
           patternErrMsg: '',
           depedants: [
             {
-              jsonPath:
-                'properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea',
+              jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea',
               type: 'textField',
               pattern:
                 "`${getVal('properties[0].propertyDetail.floors[0].units[0].length')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].width')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].length'):0} * getVal('properties[0].propertyDetail.floors[0].units[0].width')`",
@@ -295,8 +273,7 @@ var rooms = {
         },
         {
           name: 'Breadth1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].width',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].width',
           label: 'pt.create.groups.floorDetails.fields.breadth',
           pattern: '^[0-9.]+$',
           type: 'number',
@@ -306,8 +283,7 @@ var rooms = {
           patternErrMsg: '',
           depedants: [
             {
-              jsonPath:
-                'properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea',
+              jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea',
               type: 'textField',
               pattern:
                 "`${getVal('properties[0].propertyDetail.floors[0].units[0].length')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].width')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].width'):0} * getVal('properties[0].propertyDetail.floors[0].units[0].length')`",
@@ -320,8 +296,7 @@ var rooms = {
         },
         {
           name: 'PlinthArea1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].builtupArea',
           label: 'pt.create.groups.floorDetails.fields.plinthArea',
           pattern: '',
           type: 'number',
@@ -332,8 +307,7 @@ var rooms = {
         },
         {
           name: 'CarpetArea1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].carpetArea',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].carpetArea',
           label: 'pt.create.groups.propertyAddress.fields.carpetArea',
           pattern: '',
           type: 'number',
@@ -343,8 +317,7 @@ var rooms = {
           patternErrMsg: '',
           depedants: [
             {
-              jsonPath:
-                'properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea',
+              jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea',
               type: 'textField',
               pattern:
                 "`${getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')!='' ? -parseInt(getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')):0} + getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')`",
@@ -357,8 +330,7 @@ var rooms = {
         },
         {
           name: 'ExemptedArea1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].exemptedArea',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].exemptedArea',
           label: 'pt.create.groups.propertyAddress.fields.exemptedArea',
           pattern: '',
           type: 'number',
@@ -368,8 +340,7 @@ var rooms = {
           patternErrMsg: '',
           depedants: [
             {
-              jsonPath:
-                'properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea',
+              jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea',
               type: 'textField',
               pattern:
                 "`${getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea):0} - getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')')`",
@@ -382,8 +353,7 @@ var rooms = {
         },
         {
           name: 'BuildingCost1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].buildingCost',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].buildingCost',
           label: 'pt.create.groups.propertyAddress.fields.buildingCost',
           pattern: '',
           type: 'number',
@@ -394,8 +364,7 @@ var rooms = {
         },
         {
           name: 'LandCost1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].landCost',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].landCost',
           label: 'pt.create.groups.propertyAddress.fields.landCost',
           pattern: '',
           type: 'number',
@@ -406,8 +375,7 @@ var rooms = {
         },
         {
           name: 'AssessableArea1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].assessableArea',
           label: 'pt.create.groups.floorDetails.fields.assessableArea',
           pattern: '',
           type: 'number',
@@ -419,10 +387,8 @@ var rooms = {
         },
         {
           name: 'OccupancyCertificateNumber1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].occupancyCertiNumber',
-          label:
-            'pt.create.groups.floorDetails.fields.occupancyCertificateNumber',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].occupancyCertiNumber',
+          label: 'pt.create.groups.floorDetails.fields.occupancyCertificateNumber',
           pattern: '^[a-z0-9]+$',
           type: 'number',
           isRequired: false,
@@ -432,10 +398,8 @@ var rooms = {
         },
         {
           name: 'BuildingPermissionNumber1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].bpaNo',
-          label:
-            'pt.create.groups.floorDetails.fields.buildingPermissionNumber',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].bpaNo',
+          label: 'pt.create.groups.floorDetails.fields.buildingPermissionNumber',
           pattern: '^[a-z0-9]+$',
           type: 'number',
           isRequired: false,
@@ -445,8 +409,7 @@ var rooms = {
         },
         {
           name: 'BuildingPermissionDate1',
-          jsonPath:
-            'properties[0].propertyDetail.floors[0].units[0].units[0].bpaDate',
+          jsonPath: 'properties[0].propertyDetail.floors[0].units[0].units[0].bpaDate',
           label: 'pt.create.groups.floorDetails.fields.buildingPermissionDate',
           pattern: '',
           type: 'datePicker',
@@ -538,11 +501,7 @@ var dat = {
             url: '',
             requiredErrMsg: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'MALE', value: 'Male' },
-              { key: 'FEMALE', value: 'Female' },
-              { key: 'OTHERS', value: 'Others' },
-            ],
+            defaultValue: [{ key: 'MALE', value: 'Male' }, { key: 'FEMALE', value: 'Female' }, { key: 'OTHERS', value: 'Others' }],
           },
           {
             name: 'Email',
@@ -654,8 +613,7 @@ var dat = {
           {
             name: 'ReferancePropertyNumber',
             jsonPath: 'ReferancePropertyNumber',
-            label:
-              'pt.create.groups.propertyAddress.fields.referancePropertyNumber',
+            label: 'pt.create.groups.propertyAddress.fields.referancePropertyNumber',
             pattern: '^\\d{15}$',
             type: 'number',
             isRequired: false,
@@ -814,8 +772,7 @@ var dat = {
           {
             name: 'IsCorrespondanceAddressDifferentFromAddress',
             jsonPath: 'IsCorrespondanceAddressDifferentFromAddress',
-            label:
-              'pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress',
+            label: 'pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress',
             pattern: '',
             type: 'checkbox',
             isRequired: false,
@@ -900,10 +857,7 @@ var dat = {
             url: '',
             requiredErrMsg: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'NEWPROPERTY', value: 'New Property' },
-              { key: 'SUBDIVISION', value: 'Bifurcation' },
-            ],
+            defaultValue: [{ key: 'NEWPROPERTY', value: 'New Property' }, { key: 'SUBDIVISION', value: 'Bifurcation' }],
           },
           {
             name: 'PropertyType',
@@ -945,8 +899,7 @@ var dat = {
               {
                 jsonPath: 'properties[0].propertyDetail.department',
                 type: 'dropDown',
-                pattern:
-                  'pt-property/property/departments/_search?category={properties[0].propertyDetail.propertyType}|$..code|$..name',
+                pattern: 'pt-property/property/departments/_search?category={properties[0].propertyDetail.propertyType}|$..code|$..name',
               },
             ],
           },
@@ -1225,8 +1178,7 @@ var dat = {
           {
             name: 'LayoutApprovalAuthority',
             jsonPath: 'properties[0].vacantLand.layoutApprovedAuth',
-            label:
-              'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority',
+            label: 'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority',
             pattern: '',
             type: 'singleValueList',
             isRequired: true,
@@ -1369,8 +1321,7 @@ var dat = {
           },
           {
             name: 'UnitType',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].unitType',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].unitType',
             label: 'pt.create.groups.floorDetails.fields.unitType',
             pattern: '',
             type: 'singleValueList',
@@ -1379,10 +1330,7 @@ var dat = {
             requiredErrMsg: '',
             url: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'FLAT', value: 'Flat' },
-              { key: 'ROOM', value: 'Room' },
-            ],
+            defaultValue: [{ key: 'FLAT', value: 'Flat' }, { key: 'ROOM', value: 'Room' }],
           },
           {
             name: 'UnitNumber',
@@ -1397,8 +1345,7 @@ var dat = {
           },
           {
             name: 'ConstructionType',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].structure',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].structure',
             label: 'pt.create.groups.floorDetails.fields.constructionClass',
             pattern: '',
             type: 'singleValueList',
@@ -1424,8 +1371,7 @@ var dat = {
           },
           {
             name: 'UsageSubType',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].usageSubType',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].usageSubType',
             label: 'pt.create.groups.floorDetails.fields.usageSubType',
             pattern: '',
             type: 'singleValueList',
@@ -1438,8 +1384,7 @@ var dat = {
           },
           {
             name: 'FirmName',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].firmName',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].firmName',
             label: 'pt.create.groups.floorDetails.fields.firmName',
             pattern: '',
             type: 'text',
@@ -1450,8 +1395,7 @@ var dat = {
           },
           {
             name: 'Occupancy',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].occupancyType',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].occupancyType',
             label: 'pt.create.groups.floorDetails.fields.occupancy',
             pattern: '',
             type: 'singleValueList',
@@ -1477,8 +1421,7 @@ var dat = {
           },
           {
             name: 'OccupantName',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].occupierName',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].occupierName',
             label: 'pt.create.groups.floorDetails.fields.occupantName',
             pattern: '',
             type: 'text',
@@ -1489,8 +1432,7 @@ var dat = {
           },
           {
             name: 'AnnualRent',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].annualRent',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].annualRent',
             label: 'pt.create.groups.floorDetails.fields.annualRent',
             pattern: '^\\d{9}$',
             type: 'text',
@@ -1501,8 +1443,7 @@ var dat = {
           },
           {
             name: 'ManualArv',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].manualArv',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].manualArv',
             label: 'pt.create.groups.floorDetails.fields.manualArv',
             pattern: '^\\d{9}$',
             type: 'text',
@@ -1513,8 +1454,7 @@ var dat = {
           },
           {
             name: 'ConstructionStartDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].constructionStartDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].constructionStartDate',
             label: 'pt.create.groups.floorDetails.fields.constructionStartDate',
             pattern: '',
             type: 'datePicker',
@@ -1525,8 +1465,7 @@ var dat = {
           },
           {
             name: 'ConstructionEndDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].constCompletionDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].constCompletionDate',
             label: 'pt.create.groups.floorDetails.fields.constructionEndDate',
             pattern: '',
             type: 'datePicker',
@@ -1537,8 +1476,7 @@ var dat = {
           },
           {
             name: 'EffectiveFromDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].occupancyDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].occupancyDate',
             label: 'pt.create.groups.floorDetails.fields.effectiveFromDate',
             pattern: '',
             type: 'datePicker',
@@ -1549,8 +1487,7 @@ var dat = {
           },
           {
             name: 'UnstructuredLand',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].isStructured',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].isStructured',
             label: 'pt.create.groups.floorDetails.fields.unstructuredLand',
             pattern: '',
             type: 'singleValueList',
@@ -1559,10 +1496,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            defaultValue: [
-              { key: 'true', value: 'Yes' },
-              { key: 'false', value: 'No' },
-            ],
+            defaultValue: [{ key: 'true', value: 'Yes' }, { key: 'false', value: 'No' }],
             enableDisableFields: [
               {
                 ifValue: 'true',
@@ -1583,8 +1517,7 @@ var dat = {
             patternErrMsg: '',
             depedants: [
               {
-                jsonPath:
-                  'properties[0].propertyDetail.floors[0].units[0].builtupArea',
+                jsonPath: 'properties[0].propertyDetail.floors[0].units[0].builtupArea',
                 type: 'textField',
                 pattern:
                   "`${getVal('properties[0].propertyDetail.floors[0].units[0].length')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].width')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].length'):0} * getVal('properties[0].propertyDetail.floors[0].units[0].width')`",
@@ -1607,8 +1540,7 @@ var dat = {
             patternErrMsg: '',
             depedants: [
               {
-                jsonPath:
-                  'properties[0].propertyDetail.floors[0].units[0].builtupArea',
+                jsonPath: 'properties[0].propertyDetail.floors[0].units[0].builtupArea',
                 type: 'textField',
                 pattern:
                   "`${getVal('properties[0].propertyDetail.floors[0].units[0].length')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].width')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].width'):0} * getVal('properties[0].propertyDetail.floors[0].units[0].length')`",
@@ -1621,8 +1553,7 @@ var dat = {
           },
           {
             name: 'PlinthArea',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].builtupArea',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].builtupArea',
             label: 'pt.create.groups.floorDetails.fields.plinthArea',
             pattern: '',
             type: 'number',
@@ -1633,8 +1564,7 @@ var dat = {
           },
           {
             name: 'CarpetArea',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].carpetArea',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].carpetArea',
             label: 'pt.create.groups.propertyAddress.fields.carpetArea',
             pattern: '',
             type: 'number',
@@ -1644,8 +1574,7 @@ var dat = {
             patternErrMsg: '',
             depedants: [
               {
-                jsonPath:
-                  'properties[0].propertyDetail.floors[0].units[0].assessableArea',
+                jsonPath: 'properties[0].propertyDetail.floors[0].units[0].assessableArea',
                 type: 'textField',
                 pattern:
                   "`${getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')!='' ? -parseInt(getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')):0} + getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')`",
@@ -1658,8 +1587,7 @@ var dat = {
           },
           {
             name: 'ExemptedArea',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].exemptedArea',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].exemptedArea',
             label: 'pt.create.groups.propertyAddress.fields.exemptedArea',
             pattern: '',
             type: 'number',
@@ -1669,8 +1597,7 @@ var dat = {
             patternErrMsg: '',
             depedants: [
               {
-                jsonPath:
-                  'properties[0].propertyDetail.floors[0].units[0].assessableArea',
+                jsonPath: 'properties[0].propertyDetail.floors[0].units[0].assessableArea',
                 type: 'textField',
                 pattern:
                   "`${getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea')!='' && getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')!='' ? getVal('properties[0].propertyDetail.floors[0].units[0].carpetArea):0} - getVal('properties[0].propertyDetail.floors[0].units[0].exemptedArea')')`",
@@ -1683,8 +1610,7 @@ var dat = {
           },
           {
             name: 'BuildingCost',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].buildingCost',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].buildingCost',
             label: 'pt.create.groups.propertyAddress.fields.buildingCost',
             pattern: '',
             type: 'number',
@@ -1695,8 +1621,7 @@ var dat = {
           },
           {
             name: 'LandCost',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].landCost',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].landCost',
             label: 'pt.create.groups.propertyAddress.fields.landCost',
             pattern: '',
             type: 'number',
@@ -1707,8 +1632,7 @@ var dat = {
           },
           {
             name: 'AssessableArea',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].assessableArea',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].assessableArea',
             label: 'pt.create.groups.floorDetails.fields.assessableArea',
             pattern: '',
             type: 'number',
@@ -1720,10 +1644,8 @@ var dat = {
           },
           {
             name: 'OccupancyCertificateNumber',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].occupancyCertiNumber',
-            label:
-              'pt.create.groups.floorDetails.fields.occupancyCertificateNumber',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].occupancyCertiNumber',
+            label: 'pt.create.groups.floorDetails.fields.occupancyCertificateNumber',
             pattern: '^[a-z0-9]+$',
             type: 'number',
             isRequired: false,
@@ -1734,8 +1656,7 @@ var dat = {
           {
             name: 'BuildingPermissionNumber',
             jsonPath: 'properties[0].propertyDetail.floors[0].units[0].bpaNo',
-            label:
-              'pt.create.groups.floorDetails.fields.buildingPermissionNumber',
+            label: 'pt.create.groups.floorDetails.fields.buildingPermissionNumber',
             pattern: '^[a-z0-9]+$',
             type: 'number',
             isRequired: false,
@@ -1746,8 +1667,7 @@ var dat = {
           {
             name: 'BuildingPermissionDate',
             jsonPath: 'properties[0].propertyDetail.floors[0].units[0].bpaDate',
-            label:
-              'pt.create.groups.floorDetails.fields.buildingPermissionDate',
+            label: 'pt.create.groups.floorDetails.fields.buildingPermissionDate',
             pattern: '',
             type: 'datePicker',
             isRequired: false,
@@ -1757,8 +1677,7 @@ var dat = {
           },
           {
             name: 'PropertyAge',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].PropertyAge',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].PropertyAge',
             label: 'pt.create.groups.propertyAddress.fields.propertyAge',
             pattern: '^[a-z0-9]+$',
             type: 'number',
@@ -1769,10 +1688,8 @@ var dat = {
           },
           {
             name: 'CurrentAssessmentDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].currentAssessmentDate',
-            label:
-              'pt.create.groups.propertyAddress.fields.currentAssessmentDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].currentAssessmentDate',
+            label: 'pt.create.groups.propertyAddress.fields.currentAssessmentDate',
             pattern: '',
             type: 'datePicker',
             isRequired: true,
@@ -1782,10 +1699,8 @@ var dat = {
           },
           {
             name: 'FirstAssessmentDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].FirstAssessmentDate',
-            label:
-              'pt.create.groups.propertyAddress.fields.firstAssessmentDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].FirstAssessmentDate',
+            label: 'pt.create.groups.propertyAddress.fields.firstAssessmentDate',
             pattern: '',
             type: 'datePicker',
             isRequired: true,
@@ -1795,10 +1710,8 @@ var dat = {
           },
           {
             name: 'RevisedAssessmentDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].revisedAssessmentDate',
-            label:
-              'pt.create.groups.propertyAddress.fields.revisedAssessmentDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].revisedAssessmentDate',
+            label: 'pt.create.groups.propertyAddress.fields.revisedAssessmentDate',
             pattern: '',
             type: 'datePicker',
             isRequired: true,
@@ -1808,8 +1721,7 @@ var dat = {
           },
           {
             name: 'LastAssessmentDate',
-            jsonPath:
-              'properties[0].propertyDetail.floors[0].units[0].lastAssessmentDate',
+            jsonPath: 'properties[0].propertyDetail.floors[0].units[0].lastAssessmentDate',
             label: 'pt.create.groups.propertyAddress.fields.lastAssessmentDate',
             pattern: '',
             type: 'datePicker',

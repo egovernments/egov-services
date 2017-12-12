@@ -17,8 +17,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -27,8 +26,7 @@ var dat = {
               {
                 jsonPath: 'MeterWaterRates[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={MeterWaterRates[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={MeterWaterRates[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -49,8 +47,7 @@ var dat = {
             label: 'wc.create.groups.fields.sourceTypeName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -62,8 +59,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -79,8 +75,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            expression:
-              '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
+            expression: '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
             expressionMsg: 'From Date should be less than To Date',
           },
           {
@@ -93,8 +88,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            expression:
-              '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
+            expression: '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
             expressionMsg: 'From Date should be less than To Date',
           },
           {
@@ -186,8 +180,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -199,8 +192,7 @@ var dat = {
             label: 'wc.create.groups.fields.sourceTypeName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -212,8 +204,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -240,12 +231,7 @@ var dat = {
         { label: 'wc.create.groups.fields.sourceTypeName' },
         { label: 'wc.create.pipeSize' },
       ],
-      values: [
-        'usageTypeName',
-        'subUsageTypeName',
-        'sourceTypeName',
-        'pipeSizeInInch',
-      ],
+      values: ['usageTypeName', 'subUsageTypeName', 'sourceTypeName', 'pipeSizeInInch'],
       resultPath: 'MeterWaterRates',
       rowClickUrlUpdate: '/update/wc/meterWaterRates/{id}',
       rowClickUrlView: '/view/wc/meterWaterRates/{id}',
@@ -268,8 +254,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -278,8 +263,7 @@ var dat = {
               {
                 jsonPath: 'MeterWaterRates[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={MeterWaterRates[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={MeterWaterRates[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -312,8 +296,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -430,8 +413,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -440,8 +422,7 @@ var dat = {
               {
                 jsonPath: 'MeterWaterRates[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={MeterWaterRates[0].subUsageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={MeterWaterRates[0].subUsageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -462,8 +443,7 @@ var dat = {
             label: 'wc.create.groups.fields.sourceTypeName',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/sourcetypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -475,8 +455,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -492,8 +471,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            expression:
-              '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
+            expression: '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
             expressionMsg: 'From Date should be less than To Date',
           },
           {
@@ -506,8 +484,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            expression:
-              '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
+            expression: '$MeterWaterRates[0].fromDate < $MeterWaterRates[0].toDate',
             expressionMsg: 'From Date should be less than To Date',
           },
           {

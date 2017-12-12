@@ -27,10 +27,7 @@ export default class UiMobileField extends Component {
             maxLength="10"
             floatingLabelText={
               <span>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             }
             value={this.props.getVal(item.jsonPath)}
@@ -38,14 +35,7 @@ export default class UiMobileField extends Component {
             errorText={this.props.fieldErrors[item.jsonPath]}
             onChange={e => {
               if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
-              this.props.handler(
-                e,
-                item.jsonPath,
-                item.isRequired ? true : false,
-                '^\\d{10}$',
-                item.requiredErrMsg,
-                item.patternErrMsg
-              );
+              this.props.handler(e, item.jsonPath, item.isRequired ? true : false, '^\\d{10}$', item.requiredErrMsg, item.patternErrMsg);
             }}
           />
         );

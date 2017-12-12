@@ -101,12 +101,7 @@ class OwnerDetails extends Component {
         { code: 'MOTHER', name: 'Mother' },
         { code: 'OTHERS', name: 'Others' },
       ],
-      gender: [
-        { code: -1, name: 'None' },
-        { code: 'MALE', name: 'Male' },
-        { code: 'FEMALE', name: 'Female' },
-        { code: 'OTHERS', name: 'Others' },
-      ],
+      gender: [{ code: -1, name: 'None' }, { code: 'MALE', name: 'Male' }, { code: 'FEMALE', name: 'Female' }, { code: 'OTHERS', name: 'Others' }],
       ownerType: [
         { code: -1, name: 'None' },
         { code: 'PRIVATE', name: 'Private' },
@@ -127,13 +122,7 @@ class OwnerDetails extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem
-              key={item.code}
-              value={item.code}
-              primaryText={item.name}
-            />
-          );
+          return <MenuItem key={item.code} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -164,11 +153,7 @@ class OwnerDetails extends Component {
     return (
       <Card className="uiCard">
         <CardHeader
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.ownerDetails')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.ownerDetails')}</div>}
           style={styles.reducePadding}
         />
         <CardText>
@@ -180,17 +165,11 @@ class OwnerDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         hintText="434345456545"
-                        floatingLabelText={translate(
-                          'pt.create.groups.ownerDetails.fields.aadhaarNumber'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.aadhaarNumber ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.aadhaarNumber}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.aadhaarNumber}</span>
                             ) : (
                               ''
                             )
@@ -198,19 +177,9 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner
-                            ? ownerDetails.owner.aadhaarNumber
-                            : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.aadhaarNumber : ''}
                         onChange={e => {
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'aadhaarNumber',
-                            false,
-                            /^\d{12}$/g
-                          );
+                          handleChangeOwner(e, 'owner', 'aadhaarNumber', false, /^\d{12}$/g);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -228,14 +197,10 @@ class OwnerDetails extends Component {
                         hintText="9999888877"
                         floatingLabelText={
                           window.location.href.match('dataEntry') ? (
-                            translate(
-                              'pt.create.groups.ownerDetails.fields.phoneNumber'
-                            )
+                            translate('pt.create.groups.ownerDetails.fields.phoneNumber')
                           ) : (
                             <span>
-                              {translate(
-                                'pt.create.groups.ownerDetails.fields.phoneNumber'
-                              )}
+                              {translate('pt.create.groups.ownerDetails.fields.phoneNumber')}
                               <span style={{ color: '#FF0000' }}> *</span>
                             </span>
                           )
@@ -243,11 +208,7 @@ class OwnerDetails extends Component {
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.mobileNumber ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.mobileNumber}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.mobileNumber}</span>
                             ) : (
                               ''
                             )
@@ -255,28 +216,12 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner
-                            ? ownerDetails.owner.mobileNumber
-                            : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.mobileNumber : ''}
                         onChange={e => {
                           if (window.location.href.match('dataEntry')) {
-                            handleChangeOwner(
-                              e,
-                              'owner',
-                              'mobileNumber',
-                              false,
-                              /^\d{10}$/g
-                            );
+                            handleChangeOwner(e, 'owner', 'mobileNumber', false, /^\d{10}$/g);
                           } else {
-                            handleChangeOwner(
-                              e,
-                              'owner',
-                              'mobileNumber',
-                              true,
-                              /^\d{10}$/g
-                            );
+                            handleChangeOwner(e, 'owner', 'mobileNumber', true, /^\d{10}$/g);
                           }
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
@@ -294,20 +239,14 @@ class OwnerDetails extends Component {
                         hintText="Joe Doe"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.ownerName'
-                            )}
+                            {translate('pt.create.groups.ownerDetails.fields.ownerName')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.name ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.name}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.name}</span>
                             ) : (
                               ''
                             )
@@ -315,17 +254,9 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner ? ownerDetails.owner.name : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.name : ''}
                         onChange={e => {
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'name',
-                            true,
-                            /^[^-\s][a-zA-Z_\s-]+$/g
-                          );
+                          handleChangeOwner(e, 'owner', 'name', true, /^[^-\s][a-zA-Z_\s-]+$/g);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -341,20 +272,14 @@ class OwnerDetails extends Component {
                         className="fullWidth selectOption"
                         floatingLabelText={
                           <span>
-                            {translate(
-                              'pt.create.groups.ownerDetails.fields.gender'
-                            )}
+                            {translate('pt.create.groups.ownerDetails.fields.gender')}
                             <span style={{ color: '#FF0000' }}> *</span>
                           </span>
                         }
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.gender ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.owner.gender}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.owner.gender}</span>
                             ) : (
                               ''
                             )
@@ -362,9 +287,7 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner ? ownerDetails.owner.gender : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.gender : ''}
                         onChange={(event, index, value) => {
                           value == -1 ? (value = '') : '';
                           var e = {
@@ -394,20 +317,12 @@ class OwnerDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        hintText={translate(
-                          'pt.create.groups.propertyAddress.emailExample'
-                        )}
-                        floatingLabelText={translate(
-                          'pt.create.groups.ownerDetails.fields.email'
-                        )}
+                        hintText={translate('pt.create.groups.propertyAddress.emailExample')}
+                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.email')}
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.emailId ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.emailId}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.emailId}</span>
                             ) : (
                               ''
                             )
@@ -415,9 +330,7 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner ? ownerDetails.owner.emailId : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.emailId : ''}
                         onChange={e => {
                           handleChangeOwner(
                             e,
@@ -440,17 +353,11 @@ class OwnerDetails extends Component {
                       <TextField
                         className="fullWidth panUppercase"
                         hintText="BTKPM5492G"
-                        floatingLabelText={translate(
-                          'pt.create.groups.ownerDetails.fields.pan'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.pan')}
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.pan ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.pan}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.pan}</span>
                             ) : (
                               ''
                             )
@@ -460,13 +367,7 @@ class OwnerDetails extends Component {
                         }
                         value={ownerDetails.owner ? ownerDetails.owner.pan : ''}
                         onChange={e => {
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'pan',
-                            false,
-                            /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/
-                          );
+                          handleChangeOwner(e, 'owner', 'pan', false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -480,17 +381,11 @@ class OwnerDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <SelectField
                         className="fullWidth selectOption"
-                        floatingLabelText={translate(
-                          'pt.create.groups.ownerDetails.fields.guardianRelation'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardianRelation')}
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.gaurdianRelation ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.owner.gaurdianRelation}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.owner.gaurdianRelation}</span>
                             ) : (
                               ''
                             )
@@ -498,11 +393,7 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner
-                            ? ownerDetails.owner.gaurdianRelation
-                            : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.gaurdianRelation : ''}
                         onChange={(event, index, value) => {
                           value == -1 ? (value = '') : '';
                           var e = {
@@ -510,13 +401,7 @@ class OwnerDetails extends Component {
                               value: value,
                             },
                           };
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'gaurdianRelation',
-                            false,
-                            ''
-                          );
+                          handleChangeOwner(e, 'owner', 'gaurdianRelation', false, '');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -538,20 +423,12 @@ class OwnerDetails extends Component {
                     <Col xs={12} md={3} sm={6}>
                       <TextField
                         className="fullWidth"
-                        hintText={translate(
-                          'pt.create.groups.propertyAddress.guardianName'
-                        )}
-                        floatingLabelText={translate(
-                          'pt.create.groups.ownerDetails.fields.guardian'
-                        )}
+                        hintText={translate('pt.create.groups.propertyAddress.guardianName')}
+                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.guardian')}
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.fatherOrHusbandName ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.fatherOrHusbandName}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.fatherOrHusbandName}</span>
                             ) : (
                               ''
                             )
@@ -559,19 +436,9 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner
-                            ? ownerDetails.owner.fatherOrHusbandName
-                            : ''
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.fatherOrHusbandName : ''}
                         onChange={e => {
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'fatherOrHusbandName',
-                            false,
-                            ''
-                          );
+                          handleChangeOwner(e, 'owner', 'fatherOrHusbandName', false, '');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -586,17 +453,11 @@ class OwnerDetails extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <SelectField
                           className="fullWidth selectOption"
-                          floatingLabelText={translate(
-                            'pt.create.groups.ownerDetails.fields.ownerType'
-                          )}
+                          floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerType')}
                           errorText={
                             fieldErrors.owner ? (
                               fieldErrors.owner.ownerType ? (
-                                <span
-                                  style={{ position: 'absolute', bottom: -41 }}
-                                >
-                                  {fieldErrors.owner.ownerType}
-                                </span>
+                                <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.owner.ownerType}</span>
                               ) : (
                                 ''
                               )
@@ -604,11 +465,7 @@ class OwnerDetails extends Component {
                               ''
                             )
                           }
-                          value={
-                            ownerDetails.owner
-                              ? ownerDetails.owner.ownerType
-                              : ''
-                          }
+                          value={ownerDetails.owner ? ownerDetails.owner.ownerType : ''}
                           onChange={(event, index, value) => {
                             value == -1 ? (value = '') : '';
                             var e = {
@@ -616,17 +473,9 @@ class OwnerDetails extends Component {
                                 value: value,
                               },
                             };
-                            handleChangeOwner(
-                              e,
-                              'owner',
-                              'ownerType',
-                              false,
-                              ''
-                            );
+                            handleChangeOwner(e, 'owner', 'ownerType', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           floatingLabelFixed={true}
                           underlineFocusStyle={styles.underlineFocusStyle}
@@ -641,17 +490,11 @@ class OwnerDetails extends Component {
                       <TextField
                         className="fullWidth"
                         hintText="100"
-                        floatingLabelText={translate(
-                          'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip'
-                        )}
+                        floatingLabelText={translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}
                         errorText={
                           fieldErrors.owner ? (
                             fieldErrors.owner.ownerShipPercentage ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.owner.ownerShipPercentage}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.owner.ownerShipPercentage}</span>
                             ) : (
                               ''
                             )
@@ -659,20 +502,8 @@ class OwnerDetails extends Component {
                             ''
                           )
                         }
-                        value={
-                          ownerDetails.owner
-                            ? ownerDetails.owner.ownerShipPercentage
-                            : ''
-                        }
-                        onChange={e =>
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'ownerShipPercentage',
-                            false,
-                            /^[1-9][0-9]?$|^100$/g
-                          )
-                        }
+                        value={ownerDetails.owner ? ownerDetails.owner.ownerShipPercentage : ''}
+                        onChange={e => handleChangeOwner(e, 'owner', 'ownerShipPercentage', false, /^[1-9][0-9]?$|^100$/g)}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
                         floatingLabelFixed={true}
@@ -694,30 +525,20 @@ class OwnerDetails extends Component {
                               value: this.state.hasType,
                             },
                           };
-                          handleChangeOwner(
-                            e,
-                            'owner',
-                            'isPrimaryOwner',
-                            false,
-                            ''
-                          );
+                          handleChangeOwner(e, 'owner', 'isPrimaryOwner', false, '');
                         }}
                         id="isPrimaryOwner"
                       >
                         <RadioButton
                           value="PrimaryOwner"
-                          label={translate(
-                            'pt.create.groups.ownerDetails.fields.primaryOwner'
-                          )}
+                          label={translate('pt.create.groups.ownerDetails.fields.primaryOwner')}
                           style={styles.radioButton}
                           className="col-md-6 row"
                           disabled={hasPrimary}
                         />
                         <RadioButton
                           value="SecondaryOwner"
-                          label={translate(
-                            'pt.create.groups.ownerDetails.fields.secondaryOwner'
-                          )}
+                          label={translate('pt.create.groups.ownerDetails.fields.secondaryOwner')}
                           style={styles.radioButton}
                           className="col-md-6"
                           disabled={!hasPrimary && !isEditable}
@@ -726,32 +547,18 @@ class OwnerDetails extends Component {
                       </RadioButtonGroup>
                     </Col>
                     <div className="clearfix" />
-                    <Col
-                      xs={12}
-                      md={3}
-                      sm={3}
-                      style={styles.textRight}
-                      className="pull-right"
-                    >
+                    <Col xs={12} md={3} sm={3} style={styles.textRight} className="pull-right">
                       <br />
                       {(editIndex == -1 || editIndex == undefined) && (
                         <RaisedButton
                           type="button"
                           id="addOwner"
-                          label={translate(
-                            'pt.create.groups.ownerDetails.fields.add'
-                          )}
+                          label={translate('pt.create.groups.ownerDetails.fields.add')}
                           disabled={!isOwnerValid}
                           primary={true}
                           onClick={() => {
-                            if (
-                              ownerDetails.hasOwnProperty('owner') &&
-                              !ownerDetails.owner.hasOwnProperty(
-                                'isPrimaryOwner'
-                              )
-                            ) {
-                              ownerDetails.owner.isPrimaryOwner =
-                                cThis.state.hasType;
+                            if (ownerDetails.hasOwnProperty('owner') && !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
+                              ownerDetails.owner.isPrimaryOwner = cThis.state.hasType;
                             }
                             hasPrimary = true;
                             this.props.addNestedFormData('owners', 'owner');
@@ -767,27 +574,15 @@ class OwnerDetails extends Component {
                         <RaisedButton
                           type="button"
                           id="updateOwner"
-                          label={translate(
-                            'pt.create.groups.ownerDetails.fields.save'
-                          )}
+                          label={translate('pt.create.groups.ownerDetails.fields.save')}
                           disabled={!isOwnerValid}
                           primary={true}
                           onClick={() => {
-                            if (
-                              ownerDetails.hasOwnProperty('owner') &&
-                              !ownerDetails.owner.hasOwnProperty(
-                                'isPrimaryOwner'
-                              )
-                            ) {
-                              ownerDetails.owner.isPrimaryOwner =
-                                cThis.state.hasType;
+                            if (ownerDetails.hasOwnProperty('owner') && !ownerDetails.owner.hasOwnProperty('isPrimaryOwner')) {
+                              ownerDetails.owner.isPrimaryOwner = cThis.state.hasType;
                             }
                             hasPrimary = true;
-                            this.props.updateObject(
-                              'owners',
-                              'owner',
-                              editIndex
-                            );
+                            this.props.updateObject('owners', 'owner', editIndex);
                             this.props.resetObject('owner', false);
                             this.props.resetObject('floor', false);
                             cThis.setState({
@@ -823,56 +618,16 @@ class OwnerDetails extends Component {
                           >
                             <tr>
                               <th>#</th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.aadhaarNumber'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.phoneNumber'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.ownerName'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.gender'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.email'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.pan'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.guardianRelation'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.isPrimaryOwner'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.guardian'
-                                )}
-                              </th>
-                              <th>
-                                {translate(
-                                  'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip'
-                                )}
-                              </th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.phoneNumber')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.gender')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.email')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.pan')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.guardianRelation')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.isPrimaryOwner')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.guardian')}</th>
+                              <th>{translate('pt.create.groups.ownerDetails.fields.percentageOfOwnerShip')}</th>
                               <th />
                             </tr>
                           </thead>
@@ -884,68 +639,18 @@ class OwnerDetails extends Component {
                                   return (
                                     <tr key={index}>
                                       <td>{index + 1}</td>
+                                      <td>{i.aadhaarNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.mobileNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.name || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.gender || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.emailId || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.pan || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.gaurdianRelation || translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>
-                                        {i.aadhaarNumber ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
+                                        {(i.isPrimaryOwner == 'PrimaryOwner' ? 'Yes' : 'No') || translate('pt.search.searchProperty.fields.na')}
                                       </td>
-                                      <td>
-                                        {i.mobileNumber ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.name ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.gender ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.emailId ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.pan ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.gaurdianRelation ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {(i.isPrimaryOwner == 'PrimaryOwner'
-                                          ? 'Yes'
-                                          : 'No') ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.fatherOrHusbandName ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
-                                      <td>
-                                        {i.ownerShipPercentage ||
-                                          translate(
-                                            'pt.search.searchProperty.fields.na'
-                                          )}
-                                      </td>
+                                      <td>{i.fatherOrHusbandName || translate('pt.search.searchProperty.fields.na')}</td>
+                                      <td>{i.ownerShipPercentage || translate('pt.search.searchProperty.fields.na')}</td>
                                       <td>
                                         <i
                                           className="material-icons"
@@ -954,16 +659,12 @@ class OwnerDetails extends Component {
                                           onClick={() => {
                                             editObject('owner', i, true);
                                             cThis.props.setForm();
-                                            handlePrimaryOwner(
-                                              i.isPrimaryOwner
-                                            );
+                                            handlePrimaryOwner(i.isPrimaryOwner);
                                             touched = false;
                                             cThis.setState({
                                               hasType: i.isPrimaryOwner,
                                             });
-                                            if (
-                                              i.isPrimaryOwner == 'PrimaryOwner'
-                                            ) {
+                                            if (i.isPrimaryOwner == 'PrimaryOwner') {
                                               hasPrimary = false;
                                               isEditable = true;
                                             }

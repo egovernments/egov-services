@@ -117,9 +117,7 @@ class PropertyFactors extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -147,11 +145,7 @@ class PropertyFactors extends Component {
       <Card className="uiCard">
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('pt.create.groups.propertyFactors')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.propertyFactors')}</div>}
         />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
@@ -159,23 +153,9 @@ class PropertyFactors extends Component {
               <Col xs={12} md={3} sm={6}>
                 <SelectField
                   className="fullWidth selectOption"
-                  floatingLabelText={translate(
-                    'pt.create.groups.propertyFactors.fields.toiletFactor'
-                  )}
-                  errorText={
-                    fieldErrors.toiletFactor ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.toiletFactor}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    propertyFactors.toiletFactor
-                      ? propertyFactors.toiletFactor
-                      : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.propertyFactors.fields.toiletFactor')}
+                  errorText={fieldErrors.toiletFactor ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.toiletFactor}</span> : ''}
+                  value={propertyFactors.toiletFactor ? propertyFactors.toiletFactor : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -202,21 +182,9 @@ class PropertyFactors extends Component {
               <Col xs={12} md={3} sm={6}>
                 <SelectField
                   className="fullWidth selectOption"
-                  floatingLabelText={translate(
-                    'pt.create.groups.propertyFactors.fields.roadFactor'
-                  )}
-                  errorText={
-                    fieldErrors.roadFactor ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.roadFactor}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    propertyFactors.roadFactor ? propertyFactors.roadFactor : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.propertyFactors.fields.roadFactor')}
+                  errorText={fieldErrors.roadFactor ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.roadFactor}</span> : ''}
+                  value={propertyFactors.roadFactor ? propertyFactors.roadFactor : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -243,21 +211,9 @@ class PropertyFactors extends Component {
               <Col xs={12} md={3} sm={6}>
                 <SelectField
                   className="fullWidth selectOption"
-                  floatingLabelText={translate(
-                    'pt.create.groups.propertyFactors.fields.liftFactor'
-                  )}
-                  errorText={
-                    fieldErrors.liftFactor ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.liftFactor}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    propertyFactors.liftFactor ? propertyFactors.liftFactor : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.propertyFactors.fields.liftFactor')}
+                  errorText={fieldErrors.liftFactor ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.liftFactor}</span> : ''}
+                  value={propertyFactors.liftFactor ? propertyFactors.liftFactor : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -284,23 +240,9 @@ class PropertyFactors extends Component {
               <Col xs={12} md={3} sm={6}>
                 <SelectField
                   className="fullWidth selectOption"
-                  floatingLabelText={translate(
-                    'pt.create.groups.propertyFactors.fields.parkingFactor'
-                  )}
-                  errorText={
-                    fieldErrors.parkingFactor ? (
-                      <span style={{ position: 'absolute', bottom: -41 }}>
-                        {fieldErrors.parkingFactor}
-                      </span>
-                    ) : (
-                      ''
-                    )
-                  }
-                  value={
-                    propertyFactors.parkingFactor
-                      ? propertyFactors.parkingFactor
-                      : ''
-                  }
+                  floatingLabelText={translate('pt.create.groups.propertyFactors.fields.parkingFactor')}
+                  errorText={fieldErrors.parkingFactor ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.parkingFactor}</span> : ''}
+                  value={propertyFactors.parkingFactor ? propertyFactors.parkingFactor : ''}
                   dropDownMenuProps={{
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },

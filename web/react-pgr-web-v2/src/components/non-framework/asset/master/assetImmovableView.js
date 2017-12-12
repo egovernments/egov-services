@@ -14,10 +14,7 @@ import { translate } from '../../../common/common';
 import Api from '../../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../../framework/components/UiButton';
-import {
-  fileUpload,
-  getInitiatorPosition,
-} from '../../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition } from '../../../framework/utility/utility';
 import $ from 'jquery';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -106,15 +103,10 @@ class assetImmovableView extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -131,31 +123,19 @@ class assetImmovableView extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -164,37 +144,18 @@ class assetImmovableView extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -202,36 +163,12 @@ class assetImmovableView extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -244,37 +181,18 @@ class assetImmovableView extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -282,36 +200,12 @@ class assetImmovableView extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -326,25 +220,14 @@ class assetImmovableView extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
         if (_form.Assets[0].landDetails != null) {
-          var arr = _.get(
-            _form,
-            specs[moduleName + '.' + actionName].groups[i].jsonPath
-          );
+          var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
           ind = i;
-          var _stringifiedGroup = JSON.stringify(
-            specs[moduleName + '.' + actionName].groups[i]
-          );
+          var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
           var regex = new RegExp(
-            specs[moduleName + '.' + actionName].groups[i].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
             'g'
           );
           for (var j = 1; j < arr.length; j++) {
@@ -352,92 +235,38 @@ class assetImmovableView extends Component {
             specs[moduleName + '.' + actionName].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                    '[' +
-                    j +
-                    ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
             );
-            specs[moduleName + '.' + actionName].groups[ind + 1].index =
-              ind + 1;
+            specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
           }
         }
       }
 
-      for (
-        var j = 0;
-        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            var k = 0;
-            k <
-            specs[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
+          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue ==
-              _.get(
-                form,
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
+              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide.length;
-                  a++
-                ) {
-                  this.hideField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].hide[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                  this.hideField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show.length;
-                  a++
-                ) {
-                  this.showField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].show[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                  this.showField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }
@@ -445,14 +274,8 @@ class assetImmovableView extends Component {
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -471,8 +294,7 @@ class assetImmovableView extends Component {
     //
     // }
 
-    specifications = require(`../../../framework/specs/asset/master/assetImmovable`)
-      .default;
+    specifications = require(`../../../framework/specs/asset/master/assetImmovable`).default;
 
     let { setMetaData, setModuleName, setActionName, setMockData } = this.props;
     let hashLocation = window.location.hash;
@@ -501,22 +323,10 @@ class assetImmovableView extends Component {
       }
     }
 
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications['asset.view'].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications['asset.view'].useTimestamp).then(
       function(res) {
         console.log(res);
-        self.setInitialUpdateData(
-          res,
-          JSON.parse(JSON.stringify(specifications)),
-          'asset',
-          'view',
-          specifications['asset.view'].objectName
-        );
+        self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'asset', 'view', specifications['asset.view'].objectName);
         self.props.setFormData(res);
       },
       function(err) {}
@@ -534,10 +344,7 @@ class assetImmovableView extends Component {
     if (this.props.mockData) {
       for (var q = 0; q < spec[`asset.view`].groups.length; q++) {
         for (var l = 0; l < spec[`asset.view`].groups[q].fields.length; l++) {
-          if (
-            spec[`asset.view`].groups[q].fields[l].jsonPath == path &&
-            spec[`asset.view`].groups[q].fields[l].isComma
-          ) {
+          if (spec[`asset.view`].groups[q].fields[l].jsonPath == path && spec[`asset.view`].groups[q].fields[l].isComma) {
             // var stringVal = val;
             if (val != null || val != undefined) {
               let _commaVal = val.toString();
@@ -546,8 +353,7 @@ class assetImmovableView extends Component {
               var lastThree = _commaVal.substring(_commaVal.length - 3);
               var otherNumbers = _commaVal.substring(0, _commaVal.length - 3);
               if (otherNumbers != '') lastThree = ',' + lastThree;
-              var resCal =
-                otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+              var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
               var res = y == null ? resCal : resCal + '.' + y;
               return res;
             }
@@ -556,29 +362,13 @@ class assetImmovableView extends Component {
       }
     }
 
-    if (
-      isDate &&
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (isDate && val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     }
 
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
-      ? (val === true || val === 'true'
-          ? 'Yes'
-          : val === 'false' || val === false ? 'No' : val) + ''
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean')
+      ? (val === true || val === 'true' ? 'Yes' : val === 'false' || val === false ? 'No' : val) + ''
       : '';
   };
 
@@ -609,76 +399,45 @@ class assetImmovableView extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      date,
-      match,
-    } = this.props;
-    let {
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      printer,
-      feeMatrices,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, date, match } = this.props;
+    let { handleChange, getVal, addNewCard, removeCard, printer, feeMatrices } = this;
     // console.log(match);
     let self = this;
     var mappingObject;
 
     const renderOpeningValues = function() {
       let self = this;
-      if (
-        formData &&
-        formData.hasOwnProperty('Assets') &&
-        formData.Assets[0].hasOwnProperty('openingDate')
-      ) {
+      if (formData && formData.hasOwnProperty('Assets') && formData.Assets[0].hasOwnProperty('openingDate')) {
         console.log(formData.Assets[0].openingDate);
         var varopeningDate = new Date(formData.Assets[0].openingDate);
         var vargrossValue = formData.Assets[0].grossValue;
         console.log(varopeningDate);
         let finOpeningDate =
-          ('0' + varopeningDate.getDate()).slice(-2) +
-          '/' +
-          ('0' + (varopeningDate.getMonth() + 1)).slice(-2) +
-          '/' +
-          varopeningDate.getFullYear();
+          ('0' + varopeningDate.getDate()).slice(-2) + '/' + ('0' + (varopeningDate.getMonth() + 1)).slice(-2) + '/' + varopeningDate.getFullYear();
         console.log(finOpeningDate);
         return (
           <CardText>
             <Col xs={12} md={3}>
               <Col style={{ textAlign: 'left' }}>
                 <label>
-                  <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                    {translate('ac.create.Opening.date')}
-                  </span>
+                  <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate('ac.create.Opening.date')}</span>
                 </label>
               </Col>
               <Col style={{ textAlign: 'left' }}>
                 <label>
-                  <span style={{ fontWeight: 400, fontSize: '13px' }}>
-                    {finOpeningDate}
-                  </span>
+                  <span style={{ fontWeight: 400, fontSize: '13px' }}>{finOpeningDate}</span>
                 </label>
               </Col>
             </Col>
             <Col xs={12} md={3}>
               <Col style={{ textAlign: 'left' }}>
                 <label>
-                  <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                    {translate('ac.create.Opening.Written.down.Value')}
-                  </span>
+                  <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate('ac.create.Opening.Written.down.Value')}</span>
                 </label>
               </Col>
               <Col style={{ textAlign: 'left' }}>
                 <label>
-                  <span style={{ fontWeight: 400, fontSize: '13px' }}>
-                    {vargrossValue}
-                  </span>
+                  <span style={{ fontWeight: 400, fontSize: '13px' }}>{vargrossValue}</span>
                 </label>
               </Col>
             </Col>
@@ -688,11 +447,7 @@ class assetImmovableView extends Component {
     };
 
     const renderGrid = function() {
-      if (
-        formData &&
-        formData.hasOwnProperty('Assets') &&
-        formData.Assets[0].hasOwnProperty('transactionHistory')
-      ) {
+      if (formData && formData.hasOwnProperty('Assets') && formData.Assets[0].hasOwnProperty('transactionHistory')) {
         if (!self.state.responseHolder)
           Api.commonApiPost('/asset-services-maha/assets/_search', {
             id: formData.Assets[0].id,
@@ -736,12 +491,7 @@ class assetImmovableView extends Component {
                     {mappingObject &&
                       mappingObject.map(function(item, index) {
                         let date = new Date(item.transactionDate);
-                        let finDate =
-                          ('0' + date.getDate()).slice(-2) +
-                          '/' +
-                          ('0' + (date.getMonth() + 1)).slice(-2) +
-                          '/' +
-                          date.getFullYear();
+                        let finDate = ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
                         return (
                           <tr key={index}>
                             <td>{index + 1}</td>
@@ -762,11 +512,7 @@ class assetImmovableView extends Component {
       }
     };
     const renderBody = function() {
-      if (
-        formData &&
-        formData.hasOwnProperty('Assets') &&
-        formData.Assets[0].hasOwnProperty('assetAttributes')
-      ) {
+      if (formData && formData.hasOwnProperty('Assets') && formData.Assets[0].hasOwnProperty('assetAttributes')) {
         // console.log(formData.Assets[0].assetAttributes);
         var createCustomObject = formData.Assets[0].assetAttributes;
         var disArray = [];
@@ -781,15 +527,7 @@ class assetImmovableView extends Component {
         return (
           <div>
             <Card className="uiCard">
-              <CardHeader
-                title={
-                  <div
-                    style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}
-                  >
-                    {translate('as.assetAttributes')}
-                  </div>
-                }
-              />
+              <CardHeader title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('as.assetAttributes')}</div>} />
               <CardText>
                 <Row>
                   {disArray.map(function(item, index) {
@@ -797,19 +535,13 @@ class assetImmovableView extends Component {
                       <Col xs={12} md={3}>
                         <Col style={{ textAlign: 'left' }}>
                           <label>
-                            <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                              {item.label}
-                            </span>
+                            <span style={{ fontWeight: 600, fontSize: '13px' }}>{item.label}</span>
                           </label>
                         </Col>
                         <Col style={{ textAlign: 'left' }}>
                           <label>
                             <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                              {item.value
-                                ? typeof item.value == 'object'
-                                  ? item.value[Object.keys(item.value)[0]]
-                                  : item.value
-                                : 'NA'}
+                              {item.value ? (typeof item.value == 'object' ? item.value[Object.keys(item.value)[0]] : item.value) : 'NA'}
                             </span>
                           </label>
                         </Col>
@@ -863,12 +595,7 @@ class assetImmovableView extends Component {
                 handler={printer}
               />{' '}
               &nbsp;&nbsp;
-              <UiEditButton
-                customUrl={
-                  '/non-framework/asset/master/assetImmovableCreate/' +
-                  (!_.isEmpty(match) ? match.params.id : '')
-                }
-              />
+              <UiEditButton customUrl={'/non-framework/asset/master/assetImmovableCreate/' + (!_.isEmpty(match) ? match.params.id : '')} />
             </div>
           </Col>
         </Row>
@@ -892,42 +619,26 @@ class assetImmovableView extends Component {
           <div>{renderBody()}</div>
 
           <Card className="uiCard">
-            <CardHeader
-              title={
-                <div
-                  style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}
-                />
-              }
-            />
+            <CardHeader title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }} />} />
             <CardText>
               <label>
-                <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                  {translate('ac.create.Asset.account.code')}
-                </span>
+                <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate('ac.create.Asset.account.code')}</span>
               </label>
               <br />
               <label>
                 <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                  {formData.Assets &&
-                  formData.Assets[0] &&
-                  formData.Assets[0].assetAccount
-                    ? formData.Assets[0].assetAccount
-                    : ''}
+                  {formData.Assets && formData.Assets[0] && formData.Assets[0].assetAccount ? formData.Assets[0].assetAccount : ''}
                 </span>
               </label>
               <br />
               <br />
               <label>
-                <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                  {translate('ac.create.Accumulated.Depreciation.Account')}
-                </span>
+                <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate('ac.create.Accumulated.Depreciation.Account')}</span>
               </label>
               <br />
               <label>
                 <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                  {formData.Assets &&
-                  formData.Assets[0] &&
-                  formData.Assets[0].accumulatedDepreciationAccount
+                  {formData.Assets && formData.Assets[0] && formData.Assets[0].accumulatedDepreciationAccount
                     ? formData.Assets[0].accumulatedDepreciationAccount
                     : ''}
                 </span>
@@ -935,16 +646,12 @@ class assetImmovableView extends Component {
               <br />
               <br />
               <label>
-                <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                  {translate('ac.create.Revaluation.Reserve.Account')}
-                </span>
+                <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate('ac.create.Revaluation.Reserve.Account')}</span>
               </label>
               <br />
               <label>
                 <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                  {formData.Assets &&
-                  formData.Assets[0] &&
-                  formData.Assets[0].revaluationReserveAccount
+                  {formData.Assets && formData.Assets[0] && formData.Assets[0].revaluationReserveAccount
                     ? formData.Assets[0].revaluationReserveAccount
                     : ''}
                 </span>
@@ -952,16 +659,12 @@ class assetImmovableView extends Component {
               <br />
               <br />
               <label>
-                <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                  {translate('ac.create.Depreciation.Expenses.Account')}
-                </span>
+                <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate('ac.create.Depreciation.Expenses.Account')}</span>
               </label>
               <br />
               <label>
                 <span style={{ fontWeight: 500, fontSize: '13px' }}>
-                  {formData.Assets &&
-                  formData.Assets[0] &&
-                  formData.Assets[0].depreciationExpenseAccount
+                  {formData.Assets && formData.Assets[0] && formData.Assets[0].depreciationExpenseAccount
                     ? formData.Assets[0].depreciationExpenseAccount
                     : ''}
                 </span>

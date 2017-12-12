@@ -19,8 +19,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              'swm-services/refillingpumpstations/_search?|$..refillingPumpStations.*.name|$..refillingPumpStations.*.name',
+            url: 'swm-services/refillingpumpstations/_search?|$..refillingPumpStations.*.name|$..refillingPumpStations.*.name',
           },
           {
             name: 'code',
@@ -32,8 +31,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=OilCompany|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=OilCompany|$..code|$..name',
           },
           {
             name: 'name',
@@ -45,8 +43,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
           },
         ],
       },
@@ -69,13 +66,7 @@ var dat = {
           label: 'swm.collectionpoints.create.colony',
         },
       ],
-      values: [
-        'name',
-        'typeOfPump.name',
-        'typeOfFuel.name',
-        'quantity',
-        'location.name',
-      ],
+      values: ['name', 'typeOfPump.name', 'typeOfFuel.name', 'quantity', 'location.name'],
       resultPath: 'refillingPumpStations',
       rowClickUrlUpdate: '/update/swm/refillingpumpstations/{code}',
       rowClickUrlView: '/view/swm/refillingpumpstations/{code}',
@@ -189,8 +180,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=OilCompany|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=OilCompany|$..code|$..name',
           },
           {
             name: 'name',
@@ -219,8 +209,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
           },
           {
             name: 'name',
@@ -440,8 +429,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=OilCompany|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=OilCompany|$..code|$..name',
           },
           {
             name: 'name',
@@ -470,8 +458,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=FuelType|$..code|$..name',
           },
           {
             name: 'name',

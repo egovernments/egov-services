@@ -32,16 +32,9 @@ const checkIfNoDup = function(employee, subObject) {
 const validateDates = function(employee, subObject, editIndex) {
   if (subObject.isPrimary == 'true' || subObject.isPrimary == true) {
     for (let i = 0; i < employee['assignments'].length; i++) {
-      if (
-        employee['assignments'][i].isPrimary &&
-        (editIndex === '' || (editIndex > -1 && i != editIndex))
-      ) {
+      if (employee['assignments'][i].isPrimary && (editIndex === '' || (editIndex > -1 && i != editIndex))) {
         var subFromDate = new Date(
-          subObject.fromDate.split('/')[1] +
-            '/' +
-            subObject.fromDate.split('/')[0] +
-            '/' +
-            subObject.fromDate.split('/')[2]
+          subObject.fromDate.split('/')[1] + '/' + subObject.fromDate.split('/')[0] + '/' + subObject.fromDate.split('/')[2]
         ).getTime();
         var fromDate = new Date(
           employee['assignments'][i].fromDate.split('/')[1] +
@@ -51,11 +44,7 @@ const validateDates = function(employee, subObject, editIndex) {
             employee['assignments'][i].fromDate.split('/')[2]
         ).getTime();
         var subToDate = new Date(
-          subObject.toDate.split('/')[1] +
-            '/' +
-            subObject.toDate.split('/')[0] +
-            '/' +
-            subObject.toDate.split('/')[2]
+          subObject.toDate.split('/')[1] + '/' + subObject.toDate.split('/')[0] + '/' + subObject.toDate.split('/')[2]
         ).getTime();
         var toDate = new Date(
           employee['assignments'][i].toDate.split('/')[1] +
@@ -96,45 +85,30 @@ const checkRequiredFields = function(type, object) {
       } else if (!object.toDate) {
         errorText['assignments.toDate'] = translate('ui.framework.required');
       } else if (!object.department) {
-        errorText['assignments.department'] = translate(
-          'ui.framework.required'
-        );
+        errorText['assignments.department'] = translate('ui.framework.required');
       } else if (!object.designation) {
-        errorText['assignments.designation'] = translate(
-          'ui.framework.required'
-        );
+        errorText['assignments.designation'] = translate('ui.framework.required');
       } else if (!object.position) {
         errorText['assignments.position'] = translate('ui.framework.required');
       } else if (
         (object.hod == true || object.hod == 'true') &&
-        (!object.mainDepartments ||
-          (object.mainDepartments && object.mainDepartments.length == 0))
+        (!object.mainDepartments || (object.mainDepartments && object.mainDepartments.length == 0))
       ) {
-        errorText['assignments.mainDepartments'] = translate(
-          'ui.framework.required'
-        );
+        errorText['assignments.mainDepartments'] = translate('ui.framework.required');
       }
       break;
     case 'jurisdiction':
       if (!object.jurisdictionsType) {
-        errorText['jurisdictions.jurisdictionsType'] = translate(
-          'ui.framework.required'
-        );
+        errorText['jurisdictions.jurisdictionsType'] = translate('ui.framework.required');
       } else if (!object.boundary) {
-        errorText['jurisdictions.boundary'] = translate(
-          'ui.framework.required'
-        );
+        errorText['jurisdictions.boundary'] = translate('ui.framework.required');
       }
       break;
     case 'serviceDet':
       if (!object.serviceInfo) {
-        errorText['serviceHistory.serviceInfo'] = translate(
-          'ui.framework.required'
-        );
+        errorText['serviceHistory.serviceInfo'] = translate('ui.framework.required');
       } else if (!object.serviceFrom) {
-        errorText['serviceHistory.serviceFrom'] = translate(
-          'ui.framework.required'
-        );
+        errorText['serviceHistory.serviceFrom'] = translate('ui.framework.required');
       }
       break;
     case 'probation':
@@ -148,28 +122,18 @@ const checkRequiredFields = function(type, object) {
       break;
     case 'regular':
       if (!object.designation) {
-        errorText['regularisation.designation'] = translate(
-          'ui.framework.required'
-        );
+        errorText['regularisation.designation'] = translate('ui.framework.required');
       } else if (!object.declaredOn) {
-        errorText['regularisation.declaredOn'] = translate(
-          'ui.framework.required'
-        );
+        errorText['regularisation.declaredOn'] = translate('ui.framework.required');
       } else if (!object.orderDate) {
-        errorText['regularisation.orderDate'] = translate(
-          'ui.framework.required'
-        );
+        errorText['regularisation.orderDate'] = translate('ui.framework.required');
       }
       break;
     case 'edu':
       if (!object.qualification) {
-        errorText['education.qualification'] = translate(
-          'ui.framework.required'
-        );
+        errorText['education.qualification'] = translate('ui.framework.required');
       } else if (!object.yearOfPassing) {
-        errorText['education.yearOfPassing'] = translate(
-          'ui.framework.required'
-        );
+        errorText['education.yearOfPassing'] = translate('ui.framework.required');
       }
       break;
     case 'tech':
@@ -193,8 +157,7 @@ const hasFile = function(elements) {
   if (elements && elements.constructor == Array) {
     for (var i = 0; i < elements.length; i++) {
       if (elements[i].documents && elements[i].documents.constructor == Array)
-        for (var j = 0; j < elements[i].documents.length; j++)
-          if (elements[i].documents[j].constructor == File) return true;
+        for (var j = 0; j < elements[i].documents.length; j++) if (elements[i].documents[j].constructor == File) return true;
     }
   }
   return false;
@@ -202,10 +165,7 @@ const hasFile = function(elements) {
 
 const isHavingPrimary = function(employee) {
   for (var i = 0; i < employee.assignments.length; i++) {
-    if (
-      employee.assignments[i].isPrimary == 'true' ||
-      employee.assignments[i].isPrimary == true
-    ) {
+    if (employee.assignments[i].isPrimary == 'true' || employee.assignments[i].isPrimary == true) {
       return true;
     }
   }
@@ -249,10 +209,7 @@ const uploadFiles = function(employee, cb) {
         uploadFiles(employee, cb);
       }
     });
-  } else if (
-    employee.user.signature &&
-    typeof employee.user.signature == 'object'
-  ) {
+  } else if (employee.user.signature && typeof employee.user.signature == 'object') {
     makeAjaxUpload(employee.user.signature[0], function(err, res) {
       if (err) {
         cb(err);
@@ -261,11 +218,7 @@ const uploadFiles = function(employee, cb) {
         uploadFiles(employee, cb);
       }
     });
-  } else if (
-    employee.documents &&
-    employee.documents.length &&
-    employee.documents[0].constructor == File
-  ) {
+  } else if (employee.documents && employee.documents.length && employee.documents[0].constructor == File) {
     let counter = employee.documents.length,
       breakout = 0;
     for (let i = 0, len = employee.documents.length; i < len; i++) {
@@ -286,24 +239,15 @@ const uploadFiles = function(employee, cb) {
       breakout = 0;
     for (let i = 0; (len = employee.assignments.length), i < len; i++) {
       let counter = employee.assignments[i].documents.length;
-      for (
-        let j = 0, len1 = employee.assignments[i].documents.length;
-        j < len1;
-        j++
-      ) {
-        makeAjaxUpload(employee.assignments[i].documents[j], function(
-          err,
-          res
-        ) {
+      for (let j = 0, len1 = employee.assignments[i].documents.length; j < len1; j++) {
+        makeAjaxUpload(employee.assignments[i].documents[j], function(err, res) {
           if (breakout == 1) return;
           else if (err) {
             cb(err);
             breakout = 1;
           } else {
             counter--;
-            employee.assignments[i].documents[j] = `${
-              res.files[0].fileStoreId
-            }`;
+            employee.assignments[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0) uploadFiles(employee, cb);
@@ -312,32 +256,20 @@ const uploadFiles = function(employee, cb) {
         });
       }
     }
-  } else if (
-    employee.serviceHistory.length &&
-    hasFile(employee.serviceHistory)
-  ) {
+  } else if (employee.serviceHistory.length && hasFile(employee.serviceHistory)) {
     let counter1 = employee.serviceHistory.length,
       breakout = 0;
     for (let i = 0; (len = employee.serviceHistory.length), i < len; i++) {
       let counter = employee.serviceHistory[i].documents.length;
-      for (
-        let j = 0, len1 = employee.serviceHistory[i].documents.length;
-        j < len1;
-        j++
-      ) {
-        makeAjaxUpload(employee.serviceHistory[i].documents[j], function(
-          err,
-          res
-        ) {
+      for (let j = 0, len1 = employee.serviceHistory[i].documents.length; j < len1; j++) {
+        makeAjaxUpload(employee.serviceHistory[i].documents[j], function(err, res) {
           if (breakout == 1) return;
           else if (err) {
             cb(err);
             breakout = 1;
           } else {
             counter--;
-            employee.serviceHistory[i].documents[j] = `${
-              res.files[0].fileStoreId
-            }`;
+            employee.serviceHistory[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0) uploadFiles(employee, cb);
@@ -351,11 +283,7 @@ const uploadFiles = function(employee, cb) {
       breakout = 0;
     for (let i = 0; (len = employee.probation.length), i < len; i++) {
       let counter = employee.probation[i].documents.length;
-      for (
-        let j = 0, len1 = employee.probation[i].documents.length;
-        j < len1;
-        j++
-      ) {
+      for (let j = 0, len1 = employee.probation[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.probation[i].documents[j], function(err, res) {
           if (breakout == 1) return;
           else if (err) {
@@ -372,32 +300,20 @@ const uploadFiles = function(employee, cb) {
         });
       }
     }
-  } else if (
-    employee.regularisation.length &&
-    hasFile(employee.regularisation)
-  ) {
+  } else if (employee.regularisation.length && hasFile(employee.regularisation)) {
     let counter1 = employee.regularisation.length,
       breakout = 0;
     for (let i = 0; (len = employee.regularisation.length), i < len; i++) {
       let counter = employee.regularisation[i].documents.length;
-      for (
-        let j = 0, len1 = employee.regularisation[i].documents.length;
-        j < len1;
-        j++
-      ) {
-        makeAjaxUpload(employee.regularisation[i].documents[j], function(
-          err,
-          res
-        ) {
+      for (let j = 0, len1 = employee.regularisation[i].documents.length; j < len1; j++) {
+        makeAjaxUpload(employee.regularisation[i].documents[j], function(err, res) {
           if (breakout == 1) return;
           else if (err) {
             cb(err);
             breakout = 1;
           } else {
             counter--;
-            employee.regularisation[i].documents[j] = `${
-              res.files[0].fileStoreId
-            }`;
+            employee.regularisation[i].documents[j] = `${res.files[0].fileStoreId}`;
             if (counter == 0 && breakout == 0) {
               counter1--;
               if (counter1 == 0 && breakout == 0) uploadFiles(employee, cb);
@@ -411,11 +327,7 @@ const uploadFiles = function(employee, cb) {
       breakout = 0;
     for (let i = 0; (len = employee.technical.length), i < len; i++) {
       let counter = employee.technical[i].documents.length;
-      for (
-        let j = 0, len1 = employee.technical[i].documents.length;
-        j < len1;
-        j++
-      ) {
+      for (let j = 0, len1 = employee.technical[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.technical[i].documents[j], function(err, res) {
           if (breakout == 1) return;
           else if (err) {
@@ -437,11 +349,7 @@ const uploadFiles = function(employee, cb) {
       breakout = 0;
     for (let i = 0; (len = employee.education.length), i < len; i++) {
       let counter = employee.education[i].documents.length;
-      for (
-        let j = 0, len1 = employee.education[i].documents.length;
-        j < len1;
-        j++
-      ) {
+      for (let j = 0, len1 = employee.education[i].documents.length; j < len1; j++) {
         makeAjaxUpload(employee.education[i].documents[j], function(err, res) {
           if (breakout == 1) return;
           else if (err) {
@@ -708,9 +616,7 @@ class Employee extends Component {
       errorTxt =
         isRequired && (typeof val === 'undefined' || val === '')
           ? translate('ui.framework.required')
-          : pattern && val && !pattern.test(val)
-            ? translate('ui.framework.patternMessage')
-            : '';
+          : pattern && val && !pattern.test(val) ? translate('ui.framework.patternMessage') : '';
     let hasAllReqFields = true;
     let allFields = Object.assign({}, self.state.subObject[parent]);
     allFields[key] = val;
@@ -727,32 +633,23 @@ class Employee extends Component {
           hasAllReqFields = false;
         break;
       case 'jurisdiction':
-        if (!allFields['jurisdictionsType'] || !allFields['boundary'])
-          hasAllReqFields = false;
+        if (!allFields['jurisdictionsType'] || !allFields['boundary']) hasAllReqFields = false;
         break;
       case 'serviceDet':
-        if (!allFields['serviceInfo'] || !allFields['serviceFrom'])
-          hasAllReqFields = false;
+        if (!allFields['serviceInfo'] || !allFields['serviceFrom']) hasAllReqFields = false;
         break;
       case 'probation':
       case 'regular':
-        if (
-          !allFields['designation'] ||
-          !allFields['declaredOn'] ||
-          !allFields['orderDate']
-        )
-          hasAllReqFields = false;
+        if (!allFields['designation'] || !allFields['declaredOn'] || !allFields['orderDate']) hasAllReqFields = false;
         break;
       case 'edu':
-        if (!allFields['qualification'] || !allFields['yearOfPassing'])
-          hasAllReqFields = false;
+        if (!allFields['qualification'] || !allFields['yearOfPassing']) hasAllReqFields = false;
         break;
       case 'tech':
         if (!allFields['skill']) hasAllReqFields = false;
         break;
       case 'dept':
-        if (!allFields['test'] || !allFields['yearOfPassing'])
-          hasAllReqFields = false;
+        if (!allFields['test'] || !allFields['yearOfPassing']) hasAllReqFields = false;
         break;
     }
     self.setState(
@@ -777,15 +674,8 @@ class Employee extends Component {
 
   vacantposition = parent => {
     let self = this;
-    if (
-      parent == 'assignments' &&
-      self.state.subObject[parent].designation &&
-      self.state.subObject[parent].department
-    ) {
-      if (
-        self.state.subObject[parent].isPrimary == 'true' ||
-        self.state.subObject[parent].isPrimary == true
-      ) {
+    if (parent == 'assignments' && self.state.subObject[parent].designation && self.state.subObject[parent].department) {
+      if (self.state.subObject[parent].isPrimary == 'true' || self.state.subObject[parent].isPrimary == true) {
         if (self.state.subObject[parent].fromDate) {
           Api.commonApiPost('hr-masters/vacantpositions/_search', {
             departmentId: self.state.subObject[parent].department,
@@ -850,12 +740,8 @@ class Employee extends Component {
       case 'jurisdictions':
         dat = {};
         for (var i = 0; i < this.state.allBoundariesList.length; i++) {
-          if (
-            this.props.Employee.jurisdictions[ind] ==
-            this.state.allBoundariesList[i].id
-          ) {
-            dat['jurisdictionsType'] =
-              this.state.allBoundariesList[i].boundaryType.id + '';
+          if (this.props.Employee.jurisdictions[ind] == this.state.allBoundariesList[i].id) {
+            dat['jurisdictionsType'] = this.state.allBoundariesList[i].boundaryType.id + '';
             this.loadBoundaries(dat['jurisdictionsType']);
             dat['boundary'] = this.state.allBoundariesList[i].id;
             break;
@@ -951,81 +837,37 @@ class Employee extends Component {
       case 'assignments':
         let assignments = Object.assign([], this.props.Employee.assignments);
         assignments.splice(ind);
-        this.props.handleChange(
-          { target: { value: assignments } },
-          'assignments',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: assignments } }, 'assignments', false, '');
         break;
       case 'jurisdictions':
-        let jurisdictions = Object.assign(
-          [],
-          this.props.Employee.jurisdictions
-        );
+        let jurisdictions = Object.assign([], this.props.Employee.jurisdictions);
         assignments.splice(ind);
-        this.props.handleChange(
-          { target: { value: jurisdictions } },
-          'jurisdictions',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: jurisdictions } }, 'jurisdictions', false, '');
         break;
       case 'serviceDet':
-        let serviceHistory = Object.assign(
-          [],
-          this.props.Employee.serviceHistory
-        );
+        let serviceHistory = Object.assign([], this.props.Employee.serviceHistory);
         serviceHistory.splice(ind);
-        this.props.handleChange(
-          { target: { value: serviceHistory } },
-          'serviceHistory',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: serviceHistory } }, 'serviceHistory', false, '');
         break;
       case 'probation':
         let probation = Object.assign([], this.props.Employee.probation);
         probation.splice(ind);
-        this.props.handleChange(
-          { target: { value: probation } },
-          'probation',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: probation } }, 'probation', false, '');
         break;
       case 'regular':
-        let regularisation = Object.assign(
-          [],
-          this.props.Employee.regularisation
-        );
+        let regularisation = Object.assign([], this.props.Employee.regularisation);
         regularisation.splice(ind);
-        this.props.handleChange(
-          { target: { value: regularisation } },
-          'regularisation',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: regularisation } }, 'regularisation', false, '');
         break;
       case 'edu':
         let education = Object.assign([], this.props.Employee.education);
         education.splice(ind);
-        this.props.handleChange(
-          { target: { value: education } },
-          'education',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: education } }, 'education', false, '');
         break;
       case 'tech':
         let techDefState = Object.assign([], this.props.Employee.techDefState);
         techDefState.splice(ind);
-        this.props.handleChange(
-          { target: { value: techDefState } },
-          'techDefState',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: techDefState } }, 'techDefState', false, '');
         break;
       case 'dept':
         let test = Object.assign([], this.props.Employee.test);
@@ -1041,31 +883,17 @@ class Employee extends Component {
     let errorText = {};
     switch (this.state.modal) {
       case 'assignment':
-        errorText = checkRequiredFields(
-          'assignment',
-          this.state.subObject.assignments
-        );
+        errorText = checkRequiredFields('assignment', this.state.subObject.assignments);
 
         if (Object.keys(errorText).length > 0) {
           return self.setState({ errorText });
         }
 
-        if (
-          self.getDate(this.state.subObject.assignments.fromDate).getTime() >
-          self.getDate(this.state.subObject.assignments.toDate).getTime()
-        ) {
-          return self.props.toggleSnackbarAndSetText(
-            true,
-            translate('employee.error.message.date'),
-            false,
-            true
-          );
+        if (self.getDate(this.state.subObject.assignments.fromDate).getTime() > self.getDate(this.state.subObject.assignments.toDate).getTime()) {
+          return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.date'), false, true);
         }
 
-        let assignments = Object.assign(
-          [],
-          this.props.Employee.assignments || []
-        );
+        let assignments = Object.assign([], this.props.Employee.assignments || []);
         var asst = { ...this.state.subObject.assignments };
         if (asst.hod == 'true' || asst.hod == true) {
           asst.hod = [];
@@ -1076,22 +904,12 @@ class Employee extends Component {
 
         delete asst.mainDepartments;
         if (!validateDates(this.props.Employee, asst, editIndex)) {
-          return this.props.toggleSnackbarAndSetText(
-            true,
-            translate('employee.error.message.assignmentDate'),
-            false,
-            true
-          );
+          return this.props.toggleSnackbarAndSetText(true, translate('employee.error.message.assignmentDate'), false, true);
         }
 
         if (this.state.editIndex === '') assignments.push(asst);
         else assignments[editIndex] = Object.assign({}, asst);
-        this.props.handleChange(
-          { target: { value: assignments } },
-          'assignments',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: assignments } }, 'assignments', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1100,36 +918,20 @@ class Employee extends Component {
         });
         break;
       case 'jurisdiction':
-        errorText = checkRequiredFields(
-          'jurisdiction',
-          this.state.subObject.jurisdictions
-        );
+        errorText = checkRequiredFields('jurisdiction', this.state.subObject.jurisdictions);
         if (Object.keys(errorText).length > 0) {
           return self.setState({ errorText });
         }
 
-        let jurisdictions = Object.assign(
-          [],
-          this.props.Employee.jurisdictions || []
-        );
+        let jurisdictions = Object.assign([], this.props.Employee.jurisdictions || []);
         var jst = this.state.subObject.jurisdictions.boundary;
         if (!checkIfNoDup(this.props.Employee, jst)) {
-          return this.props.toggleSnackbarAndSetText(
-            true,
-            translate('employee.error.message.dupAssignment'),
-            false,
-            true
-          );
+          return this.props.toggleSnackbarAndSetText(true, translate('employee.error.message.dupAssignment'), false, true);
         }
 
         if (this.state.editIndex === '') jurisdictions.push(jst);
         else jurisdictions[editIndex] = jst;
-        this.props.handleChange(
-          { target: { value: jurisdictions } },
-          'jurisdictions',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: jurisdictions } }, 'jurisdictions', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1138,33 +940,19 @@ class Employee extends Component {
         });
         break;
       case 'serviceDet':
-        errorText = checkRequiredFields(
-          'serviceDet',
-          this.state.subObject.serviceHistory
-        );
+        errorText = checkRequiredFields('serviceDet', this.state.subObject.serviceHistory);
         if (Object.keys(errorText).length > 0) {
           return self.setState({ errorText });
         }
 
-        let serviceHistory = Object.assign(
-          [],
-          this.props.Employee.serviceHistory || []
-        );
+        let serviceHistory = Object.assign([], this.props.Employee.serviceHistory || []);
         if (this.state.editIndex === '') {
           serviceHistory.push(this.state.subObject.serviceHistory);
         } else {
-          serviceHistory[editIndex] = Object.assign(
-            {},
-            this.state.subObject.serviceHistory
-          );
+          serviceHistory[editIndex] = Object.assign({}, this.state.subObject.serviceHistory);
         }
 
-        this.props.handleChange(
-          { target: { value: serviceHistory } },
-          'serviceHistory',
-          false,
-          ''
-        );
+        this.props.handleChange({ target: { value: serviceHistory } }, 'serviceHistory', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1173,28 +961,15 @@ class Employee extends Component {
         });
         break;
       case 'probation':
-        errorText = checkRequiredFields(
-          'probation',
-          this.state.subObject.probation
-        );
+        errorText = checkRequiredFields('probation', this.state.subObject.probation);
         if (Object.keys(errorText).length > 0) {
           return self.setState({ errorText });
         }
 
         let probation = Object.assign([], this.props.Employee.probation || []);
-        if (this.state.editIndex === '')
-          probation.push(this.state.subObject.probation);
-        else
-          probation[editIndex] = Object.assign(
-            {},
-            this.state.subObject.probation
-          );
-        this.props.handleChange(
-          { target: { value: probation } },
-          'probation',
-          false,
-          ''
-        );
+        if (this.state.editIndex === '') probation.push(this.state.subObject.probation);
+        else probation[editIndex] = Object.assign({}, this.state.subObject.probation);
+        this.props.handleChange({ target: { value: probation } }, 'probation', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1203,31 +978,15 @@ class Employee extends Component {
         });
         break;
       case 'regular':
-        errorText = checkRequiredFields(
-          'regular',
-          this.state.subObject.regularisation
-        );
+        errorText = checkRequiredFields('regular', this.state.subObject.regularisation);
         if (Object.keys(errorText).length > 0) {
           return self.setState({ errorText });
         }
 
-        let regularisation = Object.assign(
-          [],
-          this.props.Employee.regularisation || []
-        );
-        if (this.state.editIndex === '')
-          regularisation.push(this.state.subObject.regularisation);
-        else
-          regularisation[editIndex] = Object.assign(
-            {},
-            this.state.subObject.regularisation
-          );
-        this.props.handleChange(
-          { target: { value: regularisation } },
-          'regularisation',
-          false,
-          ''
-        );
+        let regularisation = Object.assign([], this.props.Employee.regularisation || []);
+        if (this.state.editIndex === '') regularisation.push(this.state.subObject.regularisation);
+        else regularisation[editIndex] = Object.assign({}, this.state.subObject.regularisation);
+        this.props.handleChange({ target: { value: regularisation } }, 'regularisation', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1242,19 +1001,9 @@ class Employee extends Component {
         }
 
         let education = Object.assign([], this.props.Employee.education || []);
-        if (this.state.editIndex === '')
-          education.push(this.state.subObject.education);
-        else
-          education[editIndex] = Object.assign(
-            {},
-            this.state.subObject.education
-          );
-        this.props.handleChange(
-          { target: { value: education } },
-          'education',
-          false,
-          ''
-        );
+        if (this.state.editIndex === '') education.push(this.state.subObject.education);
+        else education[editIndex] = Object.assign({}, this.state.subObject.education);
+        this.props.handleChange({ target: { value: education } }, 'education', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1269,19 +1018,9 @@ class Employee extends Component {
         }
 
         let technical = Object.assign([], this.props.Employee.technical || []);
-        if (this.state.editIndex === '')
-          technical.push(this.state.subObject.technical);
-        else
-          technical[editIndex] = Object.assign(
-            {},
-            this.state.subObject.technical
-          );
-        this.props.handleChange(
-          { target: { value: technical } },
-          'technical',
-          false,
-          ''
-        );
+        if (this.state.editIndex === '') technical.push(this.state.subObject.technical);
+        else technical[editIndex] = Object.assign({}, this.state.subObject.technical);
+        this.props.handleChange({ target: { value: technical } }, 'technical', false, '');
         this.setState({
           subObject: {
             ...this.state.subObject,
@@ -1312,13 +1051,7 @@ class Employee extends Component {
   };
 
   renderContent = () => {
-    let {
-      isFormValid,
-      Employee,
-      fieldErrors,
-      handleChange,
-      handleChangeNextLevel,
-    } = this.props;
+    let { isFormValid, Employee, fieldErrors, handleChange, handleChangeNextLevel } = this.props;
     let self = this;
     let { subObject, modal } = self.state;
 
@@ -1340,25 +1073,11 @@ class Employee extends Component {
                   name={translate('employee.Assignment.fields.primary')}
                   valueSelected={subObject.assignments.isPrimary}
                   onChange={(e, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'isPrimary'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'isPrimary');
                   }}
                 >
-                  <RadioButton
-                    value={true}
-                    label={translate(
-                      'employee.createPosition.groups.fields.outsourcepost.value1'
-                    )}
-                  />
-                  <RadioButton
-                    value={false}
-                    label={translate(
-                      'employee.createPosition.groups.fields.outsourcepost.value2'
-                    )}
-                  />
+                  <RadioButton value={true} label={translate('employee.createPosition.groups.fields.outsourcepost.value1')} />
+                  <RadioButton value={false} label={translate('employee.createPosition.groups.fields.outsourcepost.value2')} />
                 </RadioButtonGroup>
               </div>
               <div className="col-md-6 col-xs-12">
@@ -1379,13 +1098,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['assignments.fromDate']}
                   value={subObject.assignments.fromDate}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'assignments',
-                      'fromDate',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'assignments', 'fromDate', true, datePat);
                   }}
                 />
               </div>
@@ -1409,13 +1122,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['assignments.toDate']}
                   value={subObject.assignments.toDate}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'assignments',
-                      'toDate',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'assignments', 'toDate', true, datePat);
                   }}
                 />
               </div>
@@ -1440,18 +1147,12 @@ class Employee extends Component {
                   }
                   value={subObject.assignments.department}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'department'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'department');
                   }}
                 >
                   {self.state.departments &&
                     self.state.departments.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1478,18 +1179,12 @@ class Employee extends Component {
                   }
                   value={subObject.assignments.designation}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'designation'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'designation');
                   }}
                 >
                   {self.state.designations &&
                     self.state.designations.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1517,12 +1212,7 @@ class Employee extends Component {
                   dataSourceConfig={this.state.positionListConfig}
                   value={subObject.assignments.position}
                   onKeyUp={e => {
-                    handleChange(
-                      { target: { value: '' } },
-                      'position',
-                      true,
-                      ''
-                    );
+                    handleChange({ target: { value: '' } }, 'position', true, '');
                   }}
                   onNewRequest={(chosenRequest, index) => {
                     var e = {
@@ -1548,23 +1238,15 @@ class Employee extends Component {
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                   }}
-                  floatingLabelText={translate(
-                    'employee.Assignment.fields.grade'
-                  )}
+                  floatingLabelText={translate('employee.Assignment.fields.grade')}
                   value={subObject.assignments.grade}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'grade'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'grade');
                   }}
                 >
                   {self.state.grades &&
                     self.state.grades.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1580,23 +1262,15 @@ class Employee extends Component {
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                   }}
-                  floatingLabelText={translate(
-                    'wc.create.groups.fields.Funtion'
-                  )}
+                  floatingLabelText={translate('wc.create.groups.fields.Funtion')}
                   value={subObject.assignments.function}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'function'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'function');
                   }}
                 >
                   {self.state.functions &&
                     self.state.functions.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1614,23 +1288,15 @@ class Employee extends Component {
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                   }}
-                  floatingLabelText={translate(
-                    'employee.Assignment.fields.functionary'
-                  )}
+                  floatingLabelText={translate('employee.Assignment.fields.functionary')}
                   value={subObject.assignments.functionary}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'functionary'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'functionary');
                   }}
                 >
                   {self.state.functionaries &&
                     self.state.functionaries.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1646,23 +1312,15 @@ class Employee extends Component {
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                   }}
-                  floatingLabelText={translate(
-                    'employee.Assignment.fields.fund'
-                  )}
+                  floatingLabelText={translate('employee.Assignment.fields.fund')}
                   value={subObject.assignments.fund}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'fund'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'fund');
                   }}
                 >
                   {self.state.funds &&
                     self.state.funds.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1677,25 +1335,11 @@ class Employee extends Component {
                   name={translate('employee.Assignment.fields.hod')}
                   valueSelected={subObject.assignments.hod}
                   onChange={(e, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'assignments',
-                      'hod'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'assignments', 'hod');
                   }}
                 >
-                  <RadioButton
-                    value={true}
-                    label={translate(
-                      'employee.createPosition.groups.fields.outsourcepost.value1'
-                    )}
-                  />
-                  <RadioButton
-                    value={false}
-                    label={translate(
-                      'employee.createPosition.groups.fields.outsourcepost.value2'
-                    )}
-                  />
+                  <RadioButton value={true} label={translate('employee.createPosition.groups.fields.outsourcepost.value1')} />
+                  <RadioButton value={false} label={translate('employee.createPosition.groups.fields.outsourcepost.value2')} />
                 </RadioButtonGroup>
               </div>
               <div className="col-md-6 col-xs-12">
@@ -1711,9 +1355,7 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    errorText={
-                      self.state.errorText['assignments.mainDepartments']
-                    }
+                    errorText={self.state.errorText['assignments.mainDepartments']}
                     floatingLabelText={
                       <span>
                         {translate('employee.Assignment.fields.department')}
@@ -1723,18 +1365,12 @@ class Employee extends Component {
                     multiple={true}
                     value={subObject.assignments.mainDepartments}
                     onChange={(event, key, value) => {
-                      self.handleStateChange(
-                        { target: { value: value } },
-                        'assignments',
-                        'mainDepartments'
-                      );
+                      self.handleStateChange({ target: { value: value } }, 'assignments', 'mainDepartments');
                     }}
                   >
                     {self.state.departments &&
                       self.state.departments.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -1749,9 +1385,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.Assignment.fields.govtOrderNumber'
-                  )}
+                  floatingLabelText={translate('employee.Assignment.fields.govtOrderNumber')}
                   value={subObject.assignments.govtOrderNumber}
                   onChange={e => {
                     self.handleStateChange(e, 'assignments', 'govtOrderNumber');
@@ -1759,9 +1393,7 @@ class Employee extends Component {
                 />
               </div>
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate('employee.Assignment.fields.documents')}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.Assignment.fields.documents')}</label>
                 <input type="file" />
               </div>
             </div>
@@ -1783,9 +1415,7 @@ class Employee extends Component {
                     animated: false,
                     targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                   }}
-                  errorText={
-                    self.state.errorText['jurisdictions.jurisdictionsType']
-                  }
+                  errorText={self.state.errorText['jurisdictions.jurisdictionsType']}
                   floatingLabelText={
                     <span>
                       {translate('employee.Employee.fields.jurisdictionsType')}
@@ -1795,18 +1425,12 @@ class Employee extends Component {
                   value={subObject.jurisdictions.jurisdictionsType}
                   onChange={(event, key, value) => {
                     self.loadBoundaries(value);
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'jurisdictions',
-                      'jurisdictionsType'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'jurisdictions', 'jurisdictionsType');
                   }}
                 >
                   {self.state.boundarytypes &&
                     self.state.boundarytypes.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1831,18 +1455,12 @@ class Employee extends Component {
                   }
                   value={subObject.jurisdictions.boundary}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'jurisdictions',
-                      'boundary'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'jurisdictions', 'boundary');
                   }}
                 >
                   {self.state.boundaries &&
                     self.state.boundaries.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -1864,9 +1482,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['serviceHistory.serviceInfo']}
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'employee.ServiceHistory.fields.ServiceEntryDescription'
-                      )}
+                      {translate('employee.ServiceHistory.fields.ServiceEntryDescription')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
@@ -1894,13 +1510,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['serviceHistory.serviceFrom']}
                   value={subObject.serviceHistory.serviceFrom}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'serviceHistory',
-                      'serviceFrom',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'serviceHistory', 'serviceFrom', true, datePat);
                   }}
                 />
               </div>
@@ -1914,9 +1524,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.ServiceHistory.fields.remarks'
-                  )}
+                  floatingLabelText={translate('employee.ServiceHistory.fields.remarks')}
                   value={subObject.serviceHistory.remarks}
                   onChange={e => {
                     self.handleStateChange(e, 'serviceHistory', 'remarks');
@@ -1931,9 +1539,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.ServiceHistory.fields.orderNo'
-                  )}
+                  floatingLabelText={translate('employee.ServiceHistory.fields.orderNo')}
                   value={subObject.serviceHistory.orderNo}
                   onChange={e => {
                     self.handleStateChange(e, 'serviceHistory', 'orderNo');
@@ -1943,9 +1549,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate('employee.ServiceHistory.fields.documents')}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.ServiceHistory.fields.documents')}</label>
                 <input type="file" />
               </div>
             </div>
@@ -1976,18 +1580,12 @@ class Employee extends Component {
                   }
                   value={subObject.probation.designation}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'probation',
-                      'designation'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'probation', 'designation');
                   }}
                 >
                   {self.state.designations &&
                     self.state.designations.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -2009,13 +1607,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['probation.declaredOn']}
                   value={subObject.probation.declaredOn}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'probation',
-                      'declaredOn',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'probation', 'declaredOn', true, datePat);
                   }}
                 />
               </div>
@@ -2029,9 +1621,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.ServiceHistory.fields.orderNo'
-                  )}
+                  floatingLabelText={translate('employee.ServiceHistory.fields.orderNo')}
                   value={subObject.probation.orderNo}
                   onChange={e => {
                     self.handleStateChange(e, 'probation', 'orderNo');
@@ -2056,13 +1646,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['probation.orderDate']}
                   value={subObject.probation.orderDate}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'probation',
-                      'orderDate',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'probation', 'orderDate', true, datePat);
                   }}
                 />
               </div>
@@ -2076,9 +1660,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.Probation.fields.remarks'
-                  )}
+                  floatingLabelText={translate('employee.Probation.fields.remarks')}
                   value={subObject.probation.remarks}
                   onChange={e => {
                     self.handleStateChange(e, 'probation', 'remarks');
@@ -2086,9 +1668,7 @@ class Employee extends Component {
                 />
               </div>
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate('employee.Probation.fields.documents')}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.Probation.fields.documents')}</label>
                 <input type="file" multiple />
               </div>
             </div>
@@ -2119,18 +1699,12 @@ class Employee extends Component {
                   }
                   value={subObject.regularisation.designation}
                   onChange={(event, key, value) => {
-                    self.handleStateChange(
-                      { target: { value: value } },
-                      'regularisation',
-                      'designation'
-                    );
+                    self.handleStateChange({ target: { value: value } }, 'regularisation', 'designation');
                   }}
                 >
                   {self.state.designations &&
                     self.state.designations.map(function(v, i) {
-                      return (
-                        <MenuItem value={v.id} key={i} primaryText={v.name} />
-                      );
+                      return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                     })}
                 </SelectField>
               </div>
@@ -2152,13 +1726,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['regularisation.declaredOn']}
                   value={subObject.regularisation.declaredOn}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'regularisation',
-                      'declaredOn',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'regularisation', 'declaredOn', true, datePat);
                   }}
                 />
               </div>
@@ -2172,9 +1740,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.Regularisation.fields.orderNo'
-                  )}
+                  floatingLabelText={translate('employee.Regularisation.fields.orderNo')}
                   value={subObject.regularisation.orderNo}
                   onChange={e => {
                     self.handleStateChange(e, 'regularisation', 'orderNo');
@@ -2199,13 +1765,7 @@ class Employee extends Component {
                   errorText={self.state.errorText['regularisation.orderDate']}
                   value={subObject.regularisation.orderDate}
                   onChange={e => {
-                    self.handleStateChange(
-                      e,
-                      'regularisation',
-                      'orderDate',
-                      true,
-                      datePat
-                    );
+                    self.handleStateChange(e, 'regularisation', 'orderDate', true, datePat);
                   }}
                 />
               </div>
@@ -2219,9 +1779,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.Regularisation.fields.remarks'
-                  )}
+                  floatingLabelText={translate('employee.Regularisation.fields.remarks')}
                   value={subObject.regularisation.remarks}
                   onChange={e => {
                     self.handleStateChange(e, 'regularisation', 'remarks');
@@ -2229,9 +1787,7 @@ class Employee extends Component {
                 />
               </div>
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate('employee.Regularisation.fields.documents')}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.Regularisation.fields.documents')}</label>
                 <input type="file" multiple />
               </div>
             </div>
@@ -2252,9 +1808,7 @@ class Employee extends Component {
                   floatingLabelFixed={true}
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'employee.EducationalQualification.fields.qualification'
-                      )}
+                      {translate('employee.EducationalQualification.fields.qualification')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
@@ -2272,9 +1826,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.EducationalQualification.fields.majorSubject'
-                  )}
+                  floatingLabelText={translate('employee.EducationalQualification.fields.majorSubject')}
                   value={subObject.education.majorSubject}
                   onChange={e => {
                     self.handleStateChange(e, 'education', 'majorSubject');
@@ -2295,16 +1847,13 @@ class Employee extends Component {
                   maxLength="4"
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'employee.EducationalQualification.fields.yearOfPassing'
-                      )}
+                      {translate('employee.EducationalQualification.fields.yearOfPassing')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   value={subObject.education.yearOfPassing}
                   onChange={e => {
-                    if (e.target.value && !/^\d*$/g.test(e.target.value))
-                      return;
+                    if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, 'education', 'yearOfPassing');
                   }}
                 />
@@ -2317,9 +1866,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.EducationalQualification.fields.university'
-                  )}
+                  floatingLabelText={translate('employee.EducationalQualification.fields.university')}
                   value={subObject.education.university}
                   onChange={e => {
                     self.handleStateChange(e, 'education', 'university');
@@ -2329,11 +1876,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate(
-                    'employee.TechnicalQualification.fields.documents'
-                  )}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.TechnicalQualification.fields.documents')}</label>
                 <input type="file" multiple />
               </div>
             </div>
@@ -2354,9 +1897,7 @@ class Employee extends Component {
                   floatingLabelFixed={true}
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'employee.TechnicalQualification.fields.skill'
-                      )}
+                      {translate('employee.TechnicalQualification.fields.skill')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
@@ -2374,9 +1915,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.TechnicalQualification.fields.grade'
-                  )}
+                  floatingLabelText={translate('employee.TechnicalQualification.fields.grade')}
                   value={subObject.technical.grade}
                   onChange={e => {
                     self.handleStateChange(e, 'technical', 'grade');
@@ -2394,13 +1933,10 @@ class Employee extends Component {
                   }}
                   floatingLabelFixed={true}
                   maxLength="4"
-                  floatingLabelText={translate(
-                    'employee.TechnicalQualification.fields.yearOfPassing'
-                  )}
+                  floatingLabelText={translate('employee.TechnicalQualification.fields.yearOfPassing')}
                   value={subObject.technical.yearOfPassing}
                   onChange={e => {
-                    if (e.target.value && !/^\d*$/g.test(e.target.value))
-                      return;
+                    if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, 'technical', 'yearOfPassing');
                   }}
                 />
@@ -2413,9 +1949,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.TechnicalQualification.fields.remarks'
-                  )}
+                  floatingLabelText={translate('employee.TechnicalQualification.fields.remarks')}
                   value={subObject.technical.remarks}
                   onChange={e => {
                     self.handleStateChange(e, 'technical', 'remarks');
@@ -2425,11 +1959,7 @@ class Employee extends Component {
             </div>
             <div className="row">
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate(
-                    'employee.TechnicalQualification.fields.documents'
-                  )}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.TechnicalQualification.fields.documents')}</label>
                 <input type="file" multiple />
               </div>
             </div>
@@ -2472,16 +2002,13 @@ class Employee extends Component {
                   maxLength="4"
                   floatingLabelText={
                     <span>
-                      {translate(
-                        'employee.TechnicalQualification.fields.yearOfPassing'
-                      )}
+                      {translate('employee.TechnicalQualification.fields.yearOfPassing')}
                       <span style={{ color: '#FF0000' }}> *</span>
                     </span>
                   }
                   value={subObject.test.yearOfPassing}
                   onChange={e => {
-                    if (e.target.value && !/^\d*$/g.test(e.target.value))
-                      return;
+                    if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
                     self.handleStateChange(e, 'test', 'yearOfPassing');
                   }}
                 />
@@ -2496,9 +2023,7 @@ class Employee extends Component {
                     'white-space': 'nowrap',
                   }}
                   floatingLabelFixed={true}
-                  floatingLabelText={translate(
-                    'employee.TechnicalQualification.fields.remarks'
-                  )}
+                  floatingLabelText={translate('employee.TechnicalQualification.fields.remarks')}
                   value={subObject.test.remarks}
                   onChange={e => {
                     self.handleStateChange(e, 'test', 'remarks');
@@ -2506,11 +2031,7 @@ class Employee extends Component {
                 />
               </div>
               <div className="col-md-6 col-xs-12">
-                <label style={{ marginTop: '20px' }}>
-                  {translate(
-                    'employee.TechnicalQualification.fields.documents'
-                  )}
-                </label>
+                <label style={{ marginTop: '20px' }}>{translate('employee.TechnicalQualification.fields.documents')}</label>
                 <input type="file" multiple />
               </div>
             </div>
@@ -2571,9 +2092,7 @@ class Employee extends Component {
         if (
           res &&
           res['HRConfiguration'] &&
-          (res['HRConfiguration']['Autogenerate_employeecode'][0] == 'N' ||
-            typeof res['HRConfiguration']['Autogenerate_employeecode'] ==
-              'undefined')
+          (res['HRConfiguration']['Autogenerate_employeecode'][0] == 'N' || typeof res['HRConfiguration']['Autogenerate_employeecode'] == 'undefined')
         ) {
         } else {
           autoCode = true;
@@ -2582,9 +2101,7 @@ class Employee extends Component {
         if (
           res &&
           res['HRConfiguration'] &&
-          (res['HRConfiguration']['Autogenerate_username'][0] == 'N' ||
-            typeof res['HRConfiguration']['Autogenerate_username'] ==
-              'undefined')
+          (res['HRConfiguration']['Autogenerate_username'][0] == 'N' || typeof res['HRConfiguration']['Autogenerate_username'] == 'undefined')
         ) {
         } else {
           autoUName = true;
@@ -2615,45 +2132,24 @@ class Employee extends Component {
     self.setState(
       {
         pathname: self.props.history.location.pathname,
-        screenType:
-          window.location.hash.indexOf('update') > -1
-            ? 'update'
-            : window.location.hash.indexOf('view') > -1 ? 'view' : 'create',
+        screenType: window.location.hash.indexOf('update') > -1 ? 'update' : window.location.hash.indexOf('view') > -1 ? 'view' : 'create',
       },
       function() {
-        if (
-          self.state.screenType == 'update' ||
-          self.state.screenType == 'view'
-        ) {
-          Api.commonApiPost(
-            '/hr-employee/employees/' + self.props.match.params.id + '/_search',
-            {}
-          ).then(
+        if (self.state.screenType == 'update' || self.state.screenType == 'view') {
+          Api.commonApiPost('/hr-employee/employees/' + self.props.match.params.id + '/_search', {}).then(
             function(res) {
               for (var i = 0; i < res.Employee.assignments.length; i++) {
                 res.Employee.assignments[i].fromServer = true;
               }
 
-              if (
-                res.Employee &&
-                res.Employee.user &&
-                res.Employee.user.dob &&
-                res.Employee.user.dob.indexOf('-') > -1
-              ) {
+              if (res.Employee && res.Employee.user && res.Employee.user.dob && res.Employee.user.dob.indexOf('-') > -1) {
                 var dobArr = res.Employee.user.dob.split('-');
-                res.Employee.user.dob =
-                  dobArr[2] + '/' + dobArr[1] + '/' + dobArr[0];
+                res.Employee.user.dob = dobArr[2] + '/' + dobArr[1] + '/' + dobArr[0];
               }
 
-              self.setInitDat(
-                res.Employee,
-                self.state.screenType != 'view' ? true : false
-              );
+              self.setInitDat(res.Employee, self.state.screenType != 'view' ? true : false);
 
-              if (
-                ['view', 'update'].indexOf(self.state.screenType) > -1 &&
-                res.Employee.bank
-              ) {
+              if (['view', 'update'].indexOf(self.state.screenType) > -1 && res.Employee.bank) {
                 self.loadBranches(res.Employee.bank);
               }
             },
@@ -2752,70 +2248,40 @@ class Employee extends Component {
     };
 
     self.props.setLoadingStatus('loading');
-    self.fetchURLData('/hr-masters/employeetypes/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('/hr-masters/employeetypes/_search', {}, [], function(res) {
       checkCountAndSetState('employeetypes', res['EmployeeType']);
     });
     self.fetchURLData('hr-masters/positions/_search', {}, [], function(res) {
       checkCountAndSetState('allPosition', res['Position']);
     });
-    self.fetchURLData(
-      '/hr-masters/hrstatuses/_search',
-      { objectName: 'Employee Master' },
-      [],
-      function(res) {
-        checkCountAndSetState('statuses', res['HRStatus']);
-      }
-    );
+    self.fetchURLData('/hr-masters/hrstatuses/_search', { objectName: 'Employee Master' }, [], function(res) {
+      checkCountAndSetState('statuses', res['HRStatus']);
+    });
     self.fetchURLData('/hr-masters/groups/_search', {}, [], function(res) {
       checkCountAndSetState('groups', res['Group']);
     });
     self.fetchURLData('/egf-masters/banks/_search', {}, [], function(res) {
       checkCountAndSetState('banks', res['banks']);
     });
-    self.fetchURLData(
-      '/egov-common-masters/categories/_search',
-      {},
-      [],
-      function(res) {
-        checkCountAndSetState('categories', res['Category']);
-      }
-    );
-    self.fetchURLData('/hr-employee/maritalstatuses/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('/egov-common-masters/categories/_search', {}, [], function(res) {
+      checkCountAndSetState('categories', res['Category']);
+    });
+    self.fetchURLData('/hr-employee/maritalstatuses/_search', {}, [], function(res) {
       checkCountAndSetState('maritalstatuses', res['MaritalStatus']);
     });
-    self.fetchURLData('/hr-employee/bloodgroups/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('/hr-employee/bloodgroups/_search', {}, [], function(res) {
       checkCountAndSetState('bloodgroups', res['BloodGroup']);
     });
-    self.fetchURLData(
-      '/egov-common-masters/languages/_search',
-      {},
-      [],
-      function(res) {
-        checkCountAndSetState('languages', res['Language']);
-      }
-    );
-    self.fetchURLData(
-      '/egov-common-masters/religions/_search',
-      {},
-      [],
-      function(res) {
-        checkCountAndSetState('religions', res['Religion']);
-      }
-    );
-    self.fetchURLData('/hr-masters/recruitmentmodes/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('/egov-common-masters/languages/_search', {}, [], function(res) {
+      checkCountAndSetState('languages', res['Language']);
+    });
+    self.fetchURLData('/egov-common-masters/religions/_search', {}, [], function(res) {
+      checkCountAndSetState('religions', res['Religion']);
+    });
+    self.fetchURLData('/hr-masters/recruitmentmodes/_search', {}, [], function(res) {
       checkCountAndSetState('recruitmentmodes', res['RecruitmentMode']);
     });
-    self.fetchURLData('/hr-masters/recruitmenttypes/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('/hr-masters/recruitmenttypes/_search', {}, [], function(res) {
       checkCountAndSetState('recruitmenttypes', res['RecruitmentType']);
     });
     self.fetchURLData('/hr-masters/grades/_search', {}, [], function(res) {
@@ -2824,51 +2290,30 @@ class Employee extends Component {
     self.fetchURLData('/egf-masters/funds/_search', {}, [], function(res) {
       checkCountAndSetState('funds', res['funds']);
     });
-    self.fetchURLData('/egf-masters/functionaries/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('/egf-masters/functionaries/_search', {}, [], function(res) {
       checkCountAndSetState('functionaries', res['functionaries']);
     });
     self.fetchURLData('/egf-masters/functions/_search', {}, [], function(res) {
       checkCountAndSetState('functions', res['functions']);
     });
-    self.fetchURLData(
-      '/egov-location/boundarytypes/getByHierarchyType',
-      { hierarchyTypeName: 'ADMINISTRATION' },
-      [],
-      function(res) {
-        checkCountAndSetState('boundarytypes', res['BoundaryType']);
-      }
-    );
+    self.fetchURLData('/egov-location/boundarytypes/getByHierarchyType', { hierarchyTypeName: 'ADMINISTRATION' }, [], function(res) {
+      checkCountAndSetState('boundarytypes', res['BoundaryType']);
+    });
     self.fetchURLData('hr-masters/designations/_search', {}, [], function(res) {
       checkCountAndSetState('designations', res['Designation']);
     });
-    self.fetchURLData(
-      'egov-common-masters/departments/_search',
-      {},
-      [],
-      function(res) {
-        checkCountAndSetState('departments', res['Department']);
-      }
-    );
-    self.fetchURLData('hr-masters/recruitmentquotas/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('egov-common-masters/departments/_search', {}, [], function(res) {
+      checkCountAndSetState('departments', res['Department']);
+    });
+    self.fetchURLData('hr-masters/recruitmentquotas/_search', {}, [], function(res) {
       checkCountAndSetState('recruitmentquotas', res['RecruitmentQuota']);
     });
-    self.fetchURLData('egov-common-masters/genders/_search', {}, [], function(
-      res
-    ) {
+    self.fetchURLData('egov-common-masters/genders/_search', {}, [], function(res) {
       checkCountAndSetState('genders', res['Gender']);
     });
-    self.fetchURLData(
-      'egov-common-masters/communities/_search',
-      {},
-      [],
-      function(res) {
-        checkCountAndSetState('communities', res['Community']);
-      }
-    );
+    self.fetchURLData('egov-common-masters/communities/_search', {}, [], function(res) {
+      checkCountAndSetState('communities', res['Community']);
+    });
 
     Api.commonApiGet('egov-location/boundarys', {
       'Boundary.tenantId': localStorage.getItem('tenantId'),
@@ -2898,205 +2343,107 @@ class Employee extends Component {
         name = 'dateOfAppointment';
         if (self.props.Employee.dateOfRetirement) {
           var dateParts1 = self.props.Employee.dateOfRetirement.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.retDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.retDate'), false, true);
         }
 
         if (self.props.Employee.dateOfTermination) {
           var dateParts1 = self.props.Employee.dateOfTermination.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.terDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.terDate'), false, true);
         }
 
         if (self.props.Employee.dateOfResignation) {
           var dateParts1 = self.props.Employee.dateOfResignation.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.regDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.regDate'), false, true);
         }
 
         if (self.props.Employee.dateOfJoining) {
           var dateParts1 = self.props.Employee.dateOfResignation.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.joinDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.joinDate'), false, true);
         }
         break;
       case 'joiningDate':
         name = 'dateOfJoining';
         if (self.props.Employee.dateOfAppointment) {
           var dateParts1 = self.props.Employee.dateOfAppointment.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.joinDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.joinDate'), false, true);
         }
 
         if (self.props.Employee.dateOfRetirement) {
           var dateParts1 = self.props.Employee.dateOfRetirement.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.retDate.joinDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.retDate.joinDate'), false, true);
         }
 
         if (self.props.Employee.dateOfTermination) {
           var dateParts1 = self.props.Employee.dateOfTermination.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.joinDate.terDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.joinDate.terDate'), false, true);
         }
 
         if (self.props.Employee.dateOfResignation) {
           var dateParts1 = self.props.Employee.dateOfTermination.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date > date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.joinDate.regDate'),
-              false,
-              true
-            );
+          if (date > date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.joinDate.regDate'), false, true);
         }
         break;
       case 'retirementDate':
         name = 'dateOfRetirement';
         if (self.props.Employee.dateOfAppointment) {
           var dateParts1 = self.props.Employee.dateOfAppointment.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.retDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.retDate'), false, true);
         }
         if (self.props.Employee.dateOfJoining) {
           var dateParts1 = self.props.Employee.dateOfAppointment.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.retDate.joinDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.retDate.joinDate'), false, true);
         }
         break;
       case 'terminationDate':
         name = 'dateOfTermination';
         if (self.props.Employee.dateOfAppointment) {
           var dateParts1 = self.props.Employee.dateOfAppointment.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.terDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.terDate'), false, true);
         }
 
         if (self.props.Employee.dateOfJoining) {
           var dateParts1 = self.props.Employee.dateOfJoining.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.joinDate.terDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.joinDate.terDate'), false, true);
         }
         break;
       case 'resignationDate':
         name = 'dateOfResignation';
         if (self.props.Employee.dateOfAppointment) {
           var dateParts1 = self.props.Employee.dateOfAppointment.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.appDate.regDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.appDate.regDate'), false, true);
         }
 
         if (self.props.Employee.dateOfJoining) {
           var dateParts1 = self.props.Employee.dateOfJoining.split('/');
-          var newDateStr =
-            dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
+          var newDateStr = dateParts1[1] + '/' + dateParts1[0] + '/ ' + dateParts1[2];
           var date1 = new Date(newDateStr).getTime();
-          if (date < date1)
-            return self.props.toggleSnackbarAndSetText(
-              true,
-              translate('employee.error.message.joinDate.regDate'),
-              false,
-              true
-            );
+          if (date < date1) return self.props.toggleSnackbarAndSetText(true, translate('employee.error.message.joinDate.regDate'), false, true);
         }
         break;
     }
@@ -3105,12 +2452,7 @@ class Employee extends Component {
       self.props.handleChange(
         {
           target: {
-            value:
-              ('0' + _date.getDate()).slice(-2) +
-              '/' +
-              ('0' + (_date.getMonth() + 1)).slice(-2) +
-              '/' +
-              _date.getFullYear(),
+            value: ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear(),
           },
         },
         name,
@@ -3122,12 +2464,7 @@ class Employee extends Component {
       self.props.handleChangeNextLevel(
         {
           target: {
-            value:
-              ('0' + _date.getDate()).slice(-2) +
-              '/' +
-              ('0' + (_date.getMonth() + 1)).slice(-2) +
-              '/' +
-              _date.getFullYear(),
+            value: ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear(),
           },
         },
         _split[0],
@@ -3139,13 +2476,7 @@ class Employee extends Component {
   };
 
   renderEmployee() {
-    let {
-      isFormValid,
-      Employee,
-      fieldErrors,
-      handleChange,
-      handleChangeNextLevel,
-    } = this.props;
+    let { isFormValid, Employee, fieldErrors, handleChange, handleChangeNextLevel } = this.props;
     let { handleDateChange } = this;
     let self = this;
     return (
@@ -3157,9 +2488,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.User.name')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.name')}</span>
                     </label>
                     <br />
                     <label>{Employee.user ? Employee.user.name : '-'}</label>
@@ -3178,9 +2507,7 @@ class Employee extends Component {
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['name']
-                    }
+                    errorText={fieldErrors['user'] && fieldErrors['user']['name']}
                     value={Employee.user ? Employee.user.name : ''}
                     onChange={e => {
                       handleChangeNextLevel(e, 'user', 'name', true, '');
@@ -3194,18 +2521,13 @@ class Employee extends Component {
                 md={3}
                 lg={3}
                 style={{
-                  display:
-                    self.state.screenType == 'create' && self.state.autoCode
-                      ? 'none'
-                      : 'block',
+                  display: self.state.screenType == 'create' && self.state.autoCode ? 'none' : 'block',
                 }}
               >
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.code')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.code')}</span>
                     </label>
                     <br />
                     <label>{Employee.code || '-'}</label>
@@ -3214,10 +2536,7 @@ class Employee extends Component {
                   <TextField
                     inputStyle={{ color: '#5F5C57' }}
                     floatingLabelStyle={{
-                      color:
-                        self.state.screenType == 'update' || self.state.autoCode
-                          ? '#A9A9A9'
-                          : '#696969',
+                      color: self.state.screenType == 'update' || self.state.autoCode ? '#A9A9A9' : '#696969',
                       fontSize: '20px',
                     }}
                     floatingLabelFixed={true}
@@ -3232,9 +2551,7 @@ class Employee extends Component {
                     onChange={e => {
                       handleChange(e, 'code', true, '');
                     }}
-                    disabled={
-                      self.state.screenType == 'update' || self.state.autoCode
-                    }
+                    disabled={self.state.screenType == 'update' || self.state.autoCode}
                   />
                 )}
               </Col>
@@ -3242,17 +2559,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.employeeType')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.employeeType')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(
-                        self.state.employeetypes,
-                        Employee.employeeType
-                      ) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.employeetypes, Employee.employeeType) || '-'}</label>
                   </span>
                 ) : (
                   <div ref="myField">
@@ -3279,23 +2589,12 @@ class Employee extends Component {
                       errorText={fieldErrors['employeeType']}
                       value={Employee.employeeType}
                       onChange={(event, key, value) => {
-                        handleChange(
-                          { target: { value: value } },
-                          'employeeType',
-                          true,
-                          ''
-                        );
+                        handleChange({ target: { value: value } }, 'employeeType', true, '');
                       }}
                     >
                       {self.state.employeetypes &&
                         self.state.employeetypes.map(function(v, i) {
-                          return (
-                            <MenuItem
-                              value={v.id}
-                              key={i}
-                              primaryText={v.name}
-                            />
-                          );
+                          return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                         })}
                     </SelectField>
                   </div>
@@ -3305,17 +2604,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.employeeStatus')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.employeeStatus')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(
-                        self.state.statuses,
-                        Employee.employeeStatus
-                      ) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.statuses, Employee.employeeStatus) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -3338,19 +2630,12 @@ class Employee extends Component {
                     errorText={fieldErrors['employeeStatus']}
                     value={Employee.employeeStatus}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'employeeStatus',
-                        true,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'employeeStatus', true, '');
                     }}
                   >
                     {self.state.statuses &&
                       self.state.statuses.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.code} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.code} />;
                       })}
                   </SelectField>
                 )}
@@ -3362,14 +2647,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.group')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.group')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(self.state.groups, Employee.group) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.groups, Employee.group) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -3383,25 +2664,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.group'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.group')}
                     errorText={fieldErrors['group']}
                     value={Employee.group}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'group',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'group', false, '');
                     }}
                   >
                     {self.state.groups &&
                       self.state.groups.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -3410,9 +2682,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.dateOfBirth')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.dateOfBirth')}</span>
                     </label>
                     <br />
                     <label>{Employee.user ? Employee.user.dob : '-'}</label>
@@ -3432,9 +2702,7 @@ class Employee extends Component {
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['dob']
-                    }
+                    errorText={fieldErrors['user'] && fieldErrors['user']['dob']}
                     value={Employee.user ? Employee.user.dob : ''}
                     onChange={e => {
                       handleChangeNextLevel(e, 'user', 'dob', true, datePat);
@@ -3446,9 +2714,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.User.gender')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.gender')}</span>
                     </label>
                     <br />
                     <label>{Employee.user ? Employee.user.gender : '-'}</label>
@@ -3471,18 +2737,10 @@ class Employee extends Component {
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['gender']
-                    }
+                    errorText={fieldErrors['user'] && fieldErrors['user']['gender']}
                     value={Employee.user ? Employee.user.gender : ''}
                     onChange={(event, key, value) => {
-                      handleChangeNextLevel(
-                        { target: { value: value } },
-                        'user',
-                        'gender',
-                        true,
-                        ''
-                      );
+                      handleChangeNextLevel({ target: { value: value } }, 'user', 'gender', true, '');
                     }}
                   >
                     {self.state.genders &&
@@ -3496,9 +2754,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.maritalStatus')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.maritalStatus')}</span>
                     </label>
                     <br />
                     <label>{Employee.maritalStatus || '-'}</label>
@@ -3524,12 +2780,7 @@ class Employee extends Component {
                     errorText={fieldErrors['maritalStatus']}
                     value={Employee.maritalStatus}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'maritalStatus',
-                        true,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'maritalStatus', true, '');
                     }}
                   >
                     {self.state.maritalstatuses &&
@@ -3548,33 +2799,22 @@ class Employee extends Component {
                 md={3}
                 lg={3}
                 style={{
-                  display:
-                    self.state.screenType == 'create' && self.state.autoUName
-                      ? 'none'
-                      : 'block',
+                  display: self.state.screenType == 'create' && self.state.autoUName ? 'none' : 'block',
                 }}
               >
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.User.userName')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.userName')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.userName : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.userName : '-'}</label>
                   </span>
                 ) : (
                   <TextField
                     inputStyle={{ color: '#5F5C57' }}
                     floatingLabelStyle={{
-                      color:
-                        self.state.screenType == 'update' ||
-                        self.state.autoUName
-                          ? '#A9A9A9'
-                          : '#696969',
+                      color: self.state.screenType == 'update' || self.state.autoUName ? '#A9A9A9' : '#696969',
                       fontSize: '20px',
                     }}
                     floatingLabelFixed={true}
@@ -3584,17 +2824,13 @@ class Employee extends Component {
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['userName']
-                    }
+                    errorText={fieldErrors['user'] && fieldErrors['user']['userName']}
                     errorText={fieldErrors['user.userName']}
                     value={Employee.user ? Employee.user.userName : ''}
                     onChange={e => {
                       handleChangeNextLevel(e, 'user', 'userName', true, '');
                     }}
-                    disabled={
-                      self.state.screenType == 'update' || self.state.autoUName
-                    }
+                    disabled={self.state.screenType == 'update' || self.state.autoUName}
                   />
                 )}
               </Col>
@@ -3602,53 +2838,29 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.fields.isUserActive')}?
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.fields.isUserActive')}?</span>
                     </label>
                     <br />
                     <label>
-                      {Employee.user &&
-                      [true, 'true'].indexOf(Employee.user.active) > -1
-                        ? translate(
-                            'employee.createPosition.groups.fields.outsourcepost.value1'
-                          )
-                        : translate(
-                            'employee.createPosition.groups.fields.outsourcepost.value2'
-                          )}
+                      {Employee.user && [true, 'true'].indexOf(Employee.user.active) > -1
+                        ? translate('employee.createPosition.groups.fields.outsourcepost.value1')
+                        : translate('employee.createPosition.groups.fields.outsourcepost.value2')}
                     </label>
                   </span>
                 ) : (
                   <span>
                     <label style={{ fontSize: '15px' }}>
-                      {translate('employee.fields.isUserActive')}?{' '}
-                      <span style={{ color: '#FF0000' }}> *</span>
+                      {translate('employee.fields.isUserActive')}? <span style={{ color: '#FF0000' }}> *</span>
                     </label>
                     <RadioButtonGroup
                       name="isActive"
                       valueSelected={Employee.user ? Employee.user.active : ''}
                       onChange={(e, value) => {
-                        handleChangeNextLevel(
-                          { target: { value: value } },
-                          'user',
-                          'active',
-                          true,
-                          ''
-                        );
+                        handleChangeNextLevel({ target: { value: value } }, 'user', 'active', true, '');
                       }}
                     >
-                      <RadioButton
-                        value={true}
-                        label={translate(
-                          'employee.createPosition.groups.fields.outsourcepost.value1'
-                        )}
-                      />
-                      <RadioButton
-                        value={false}
-                        label={translate(
-                          'employee.createPosition.groups.fields.outsourcepost.value2'
-                        )}
-                      />
+                      <RadioButton value={true} label={translate('employee.createPosition.groups.fields.outsourcepost.value1')} />
+                      <RadioButton value={false} label={translate('employee.createPosition.groups.fields.outsourcepost.value2')} />
                     </RadioButtonGroup>
                   </span>
                 )}
@@ -3657,16 +2869,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.User.mobileNumber'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.mobileNumber')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.mobileNumber : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.mobileNumber : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -3679,26 +2885,15 @@ class Employee extends Component {
                     maxLength="10"
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'employee.Employee.fields.User.mobileNumber'
-                        )}
+                        {translate('employee.Employee.fields.User.mobileNumber')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['mobileNumber']
-                    }
+                    errorText={fieldErrors['user'] && fieldErrors['user']['mobileNumber']}
                     value={Employee.user ? Employee.user.mobileNumber : ''}
                     onChange={e => {
-                      if (e.target.value && !/^\d*$/g.test(e.target.value))
-                        return;
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'mobileNumber',
-                        true,
-                        /^\d{10}$/
-                      );
+                      if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                      handleChangeNextLevel(e, 'user', 'mobileNumber', true, /^\d{10}$/);
                     }}
                   />
                 )}
@@ -3707,9 +2902,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.email')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.email')}</span>
                     </label>
                     <br />
                     <label>{Employee.user ? Employee.user.emailId : '-'}</label>
@@ -3722,12 +2915,8 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.email'
-                    )}
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['emailId']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.email')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['emailId']}
                     type="email"
                     value={Employee.user ? Employee.user.emailId : ''}
                     onChange={e => {
@@ -3749,14 +2938,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.fatherSpouseName')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.fatherSpouseName')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.fatherOrHusbandName : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.fatherOrHusbandName : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -3766,24 +2951,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.fatherSpouseName'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['fatherOrHusbandName']
-                    }
-                    value={
-                      Employee.user ? Employee.user.fatherOrHusbandName : ''
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.fatherSpouseName')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['fatherOrHusbandName']}
+                    value={Employee.user ? Employee.user.fatherOrHusbandName : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'fatherOrHusbandName',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel(e, 'user', 'fatherOrHusbandName', false, '');
                     }}
                   />
                 )}
@@ -3792,9 +2964,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.User.birth')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.birth')}</span>
                     </label>
                     <br />
                     <label>{Employee.placeOfBirth || '-'}</label>
@@ -3807,9 +2977,7 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.User.birth'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.User.birth')}
                     errorText={fieldErrors['placeOfBirth']}
                     value={Employee.placeOfBirth}
                     onChange={e => {
@@ -3822,14 +2990,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.User.bloodGroup')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.bloodGroup')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.bloodGroup : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.bloodGroup : '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -3843,28 +3007,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.User.bloodGroup'
-                    )}
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['bloodGroup']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.User.bloodGroup')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['bloodGroup']}
                     value={Employee.user ? Employee.user.bloodGroup : ''}
                     onChange={(event, key, value) => {
-                      handleChangeNextLevel(
-                        { target: { value: value } },
-                        'user',
-                        'bloodGroup',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel({ target: { value: value } }, 'user', 'bloodGroup', false, '');
                     }}
                   >
                     {self.state.bloodgroups &&
                       self.state.bloodgroups.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -3873,17 +3025,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.motherTongue')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.motherTongue')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(
-                        self.state.languages,
-                        Employee.motherTongue
-                      ) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.languages, Employee.motherTongue) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -3897,25 +3042,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.motherTongue'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.motherTongue')}
                     errorText={fieldErrors['motherTongue']}
                     value={Employee.motherTongue}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'motherTongue',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'motherTongue', false, '');
                     }}
                   >
                     {self.state.languages &&
                       self.state.languages.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -3927,15 +3063,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.religion')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.religion')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(self.state.religions, Employee.religion) ||
-                        '-'}
-                    </label>
+                    <label>{getNameById(self.state.religions, Employee.religion) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -3949,25 +3080,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.religion'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.religion')}
                     errorText={fieldErrors['religion']}
                     value={Employee.religion}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'religion',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'religion', false, '');
                     }}
                   >
                     {self.state.religions &&
                       self.state.religions.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -3976,17 +3098,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.community')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.community')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(
-                        self.state.communities,
-                        Employee.community
-                      ) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.communities, Employee.community) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -4000,25 +3115,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.community'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.community')}
                     errorText={fieldErrors['community']}
                     value={Employee.community}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'community',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'community', false, '');
                     }}
                   >
                     {self.state.communities &&
                       self.state.communities.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4027,15 +3133,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.category')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.category')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(self.state.categories, Employee.category) ||
-                        '-'}
-                    </label>
+                    <label>{getNameById(self.state.categories, Employee.category) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -4049,25 +3150,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.category'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.category')}
                     errorText={fieldErrors['category']}
                     value={Employee.category}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'category',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'category', false, '');
                     }}
                   >
                     {self.state.categories &&
                       self.state.categories.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4076,56 +3168,27 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.physicallyDisabled'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.physicallyDisabled')}</span>
                     </label>
                     <br />
                     <label>
                       {translate('employee.Employee.fields.physicallyDisabled')
-                        ? translate(
-                            'employee.createPosition.groups.fields.outsourcepost.value1'
-                          )
-                        : translate(
-                            'employee.createPosition.groups.fields.outsourcepost.value2'
-                          )}
+                        ? translate('employee.createPosition.groups.fields.outsourcepost.value1')
+                        : translate('employee.createPosition.groups.fields.outsourcepost.value2')}
                     </label>
                   </span>
                 ) : (
                   <span>
-                    <label style={{ fontSize: '15px' }}>
-                      {translate(
-                        'employee.Employee.fields.physicallyDisabled'
-                      ) + '?'}
-                    </label>
+                    <label style={{ fontSize: '15px' }}>{translate('employee.Employee.fields.physicallyDisabled') + '?'}</label>
                     <RadioButtonGroup
-                      name={translate(
-                        'employee.Employee.fields.physicallyDisabled'
-                      )}
+                      name={translate('employee.Employee.fields.physicallyDisabled')}
                       valueSelected={Employee.physicallyDisabled}
                       onChange={(e, value) => {
-                        handleChange(
-                          { target: { value: value } },
-                          'physicallyDisabled',
-                          false,
-                          ''
-                        );
+                        handleChange({ target: { value: value } }, 'physicallyDisabled', false, '');
                       }}
                     >
-                      <RadioButton
-                        value={true}
-                        label={translate(
-                          'employee.createPosition.groups.fields.outsourcepost.value1'
-                        )}
-                      />
-                      <RadioButton
-                        value={false}
-                        label={translate(
-                          'employee.createPosition.groups.fields.outsourcepost.value2'
-                        )}
-                      />
+                      <RadioButton value={true} label={translate('employee.createPosition.groups.fields.outsourcepost.value1')} />
+                      <RadioButton value={false} label={translate('employee.createPosition.groups.fields.outsourcepost.value2')} />
                     </RadioButtonGroup>
                   </span>
                 )}
@@ -4137,56 +3200,27 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.medicalReportProduced'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.medicalReportProduced')}</span>
                     </label>
                     <br />
                     <label>
                       {Employee.medicalReportProduced
-                        ? translate(
-                            'employee.createPosition.groups.fields.outsourcepost.value1'
-                          )
-                        : translate(
-                            'employee.createPosition.groups.fields.outsourcepost.value2'
-                          )}
+                        ? translate('employee.createPosition.groups.fields.outsourcepost.value1')
+                        : translate('employee.createPosition.groups.fields.outsourcepost.value2')}
                     </label>
                   </span>
                 ) : (
                   <span>
-                    <label style={{ fontSize: '15px' }}>
-                      {translate(
-                        'employee.Employee.fields.medicalReportProduced'
-                      ) + '?'}
-                    </label>
+                    <label style={{ fontSize: '15px' }}>{translate('employee.Employee.fields.medicalReportProduced') + '?'}</label>
                     <RadioButtonGroup
-                      name={translate(
-                        'employee.Employee.fields.medicalReportProduced'
-                      )}
+                      name={translate('employee.Employee.fields.medicalReportProduced')}
                       valueSelected={Employee.medicalReportProduced}
                       onChange={(e, value) => {
-                        handleChange(
-                          { target: { value: value } },
-                          'medicalReportProduced',
-                          false,
-                          ''
-                        );
+                        handleChange({ target: { value: value } }, 'medicalReportProduced', false, '');
                       }}
                     >
-                      <RadioButton
-                        value={true}
-                        label={translate(
-                          'employee.createPosition.groups.fields.outsourcepost.value1'
-                        )}
-                      />
-                      <RadioButton
-                        value={false}
-                        label={translate(
-                          'employee.createPosition.groups.fields.outsourcepost.value2'
-                        )}
-                      />
+                      <RadioButton value={true} label={translate('employee.createPosition.groups.fields.outsourcepost.value1')} />
+                      <RadioButton value={false} label={translate('employee.createPosition.groups.fields.outsourcepost.value2')} />
                     </RadioButtonGroup>
                   </span>
                 )}
@@ -4195,14 +3229,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.identification')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.identification')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.identificationMark : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.identificationMark : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4212,24 +3242,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.identification'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['identificationMark']
-                    }
-                    value={
-                      Employee.user ? Employee.user.identificationMark : ''
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.identification')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['identificationMark']}
+                    value={Employee.user ? Employee.user.identificationMark : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'identificationMark',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel(e, 'user', 'identificationMark', false, '');
                     }}
                   />
                 )}
@@ -4238,9 +3255,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.pan')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.pan')}</span>
                     </label>
                     <br />
                     <label>{Employee.user ? Employee.user.pan : '-'}</label>
@@ -4253,22 +3268,12 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.pan'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.pan')}
                     hintText="DACPZ2154D"
-                    errorText={
-                      fieldErrors['user'] && fieldErrors['user']['pan']
-                    }
+                    errorText={fieldErrors['user'] && fieldErrors['user']['pan']}
                     value={Employee.user ? Employee.user.pan : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'pan',
-                        false,
-                        /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/
-                      );
+                      handleChangeNextLevel(e, 'user', 'pan', false, /^([a-zA-Z]){5}([0-9]){4}([a-zA-Z]){1}?$/);
                     }}
                   />
                 )}
@@ -4277,9 +3282,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.passportNo')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.passportNo')}</span>
                     </label>
                     <br />
                     <label>{Employee.passportNo || '-'}</label>
@@ -4292,9 +3295,7 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.passportNo'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.passportNo')}
                     errorText={fieldErrors['passportNo']}
                     value={Employee.passportNo}
                     onChange={e => {
@@ -4310,9 +3311,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.gpfNo')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.gpfNo')}</span>
                     </label>
                     <br />
                     <label>{Employee.gpfNo || '-'}</label>
@@ -4325,9 +3324,7 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.gpfNo'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.gpfNo')}
                     errorText={fieldErrors['gpfNo']}
                     value={Employee.gpfNo}
                     onChange={e => {
@@ -4340,16 +3337,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.User.aadhaarNumber'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.aadhaarNumber')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.aadhaarNumber : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.aadhaarNumber : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4360,24 +3351,12 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     maxLength="12"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.User.aadhaarNumber'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['aadhaarNumber']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.User.aadhaarNumber')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['aadhaarNumber']}
                     value={Employee.user ? Employee.user.aadhaarNumber : ''}
                     onChange={e => {
-                      if (e.target.value && !/^\d*$/g.test(e.target.value))
-                        return;
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'aadhaarNumber',
-                        false,
-                        /^\d{12}$/
-                      );
+                      if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                      handleChangeNextLevel(e, 'user', 'aadhaarNumber', false, /^\d{12}$/);
                     }}
                   />
                 )}
@@ -4386,14 +3365,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.bank')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.bank')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(self.state.banks, Employee.bank) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.banks, Employee.bank) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -4407,26 +3382,17 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.bank'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.bank')}
                     errorText={fieldErrors['bank']}
                     value={Employee.bank}
                     onChange={(event, key, value) => {
                       self.loadBranches(value);
-                      handleChange(
-                        { target: { value: value } },
-                        'bank',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'bank', false, '');
                     }}
                   >
                     {self.state.banks &&
                       self.state.banks.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4435,17 +3401,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.bankBranch')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.bankBranch')}</span>
                     </label>
                     <br />
-                    <label>
-                      {getNameById(
-                        self.state.bankBranches,
-                        Employee.bankBranch
-                      ) || '-'}
-                    </label>
+                    <label>{getNameById(self.state.bankBranches, Employee.bankBranch) || '-'}</label>
                   </span>
                 ) : (
                   <SelectField
@@ -4459,25 +3418,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.bankBranch'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.bankBranch')}
                     errorText={fieldErrors['bankBranch']}
                     value={Employee.bankBranch}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'bankBranch',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'bankBranch', false, '');
                     }}
                   >
                     {self.state.bankBranches &&
                       self.state.bankBranches.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4489,9 +3439,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.bankAccount')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.bankAccount')}</span>
                     </label>
                     <br />
                     <label>{Employee.bankAccount}</label>
@@ -4504,14 +3452,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.bankAccount'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.bankAccount')}
                     errorText={fieldErrors['bankAccount']}
                     value={Employee.bankAccount}
                     onChange={e => {
-                      if (e.target.value && !/^\d*$/g.test(e.target.value))
-                        return;
+                      if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
                       handleChange(e, 'bankAccount', false, '');
                     }}
                   />
@@ -4521,16 +3466,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.User.mobileNumber'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.User.mobileNumber')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.altContactNumber : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.altContactNumber : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4541,24 +3480,12 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     maxLength="10"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.User.mobileNumber'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['altContactNumber']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.User.mobileNumber')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['altContactNumber']}
                     value={Employee.user ? Employee.user.altContactNumber : ''}
                     onChange={e => {
-                      if (e.target.value && !/^\d*$/g.test(e.target.value))
-                        return;
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'altContactNumber',
-                        false,
-                        /^\d{10}$/
-                      );
+                      if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                      handleChangeNextLevel(e, 'user', 'altContactNumber', false, /^\d{10}$/);
                     }}
                   />
                 )}
@@ -4572,14 +3499,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.permanentAddress')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.permanentAddress')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.permanentAddress : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.permanentAddress : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4589,22 +3512,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.permanentAddress'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['permanentAddress']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.permanentAddress')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['permanentAddress']}
                     value={Employee.user ? Employee.user.permanentAddress : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'permanentAddress',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel(e, 'user', 'permanentAddress', false, '');
                     }}
                   />
                 )}
@@ -4613,14 +3525,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.city')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.city')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.permanentCity : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.permanentCity : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4630,22 +3538,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.city'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['permanentCity']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.city')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['permanentCity']}
                     value={Employee.user ? Employee.user.permanentCity : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'permanentCity',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel(e, 'user', 'permanentCity', false, '');
                     }}
                   />
                 )}
@@ -4654,16 +3551,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.parmanentPinNumber'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.parmanentPinNumber')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.permanentPinCode : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.permanentPinCode : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4673,24 +3564,12 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.parmanentPinNumber'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['permanentPinCode']
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.parmanentPinNumber')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['permanentPinCode']}
                     value={Employee.user ? Employee.user.permanentPinCode : ''}
                     onChange={e => {
-                      if (e.target.value && !/^\d*$/g.test(e.target.value))
-                        return;
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'permanentPinCode',
-                        false,
-                        ''
-                      );
+                      if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                      handleChangeNextLevel(e, 'user', 'permanentPinCode', false, '');
                     }}
                   />
                 )}
@@ -4703,18 +3582,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.correspondenceAddress'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.correspondenceAddress')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user
-                        ? Employee.user.correspondenceAddress
-                        : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.correspondenceAddress : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4724,24 +3595,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.correspondenceAddress'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['correspondenceAddress']
-                    }
-                    value={
-                      Employee.user ? Employee.user.correspondenceAddress : ''
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.correspondenceAddress')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['correspondenceAddress']}
+                    value={Employee.user ? Employee.user.correspondenceAddress : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'correspondenceAddress',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel(e, 'user', 'correspondenceAddress', false, '');
                     }}
                   />
                 )}
@@ -4750,14 +3608,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.city')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.city')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user ? Employee.user.correspondenceCity : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.correspondenceCity : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4767,21 +3621,11 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.city'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.city')}
                     errorText={fieldErrors['user.correspondenceCity']}
-                    value={
-                      Employee.user ? Employee.user.correspondenceCity : ''
-                    }
+                    value={Employee.user ? Employee.user.correspondenceCity : ''}
                     onChange={e => {
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'correspondenceCity',
-                        false,
-                        ''
-                      );
+                      handleChangeNextLevel(e, 'user', 'correspondenceCity', false, '');
                     }}
                   />
                 )}
@@ -4790,18 +3634,10 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.correspondencePinNumber'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.correspondencePinNumber')}</span>
                     </label>
                     <br />
-                    <label>
-                      {Employee.user
-                        ? Employee.user.correspondencePinCode
-                        : '-'}
-                    </label>
+                    <label>{Employee.user ? Employee.user.correspondencePinCode : '-'}</label>
                   </span>
                 ) : (
                   <TextField
@@ -4811,26 +3647,12 @@ class Employee extends Component {
                       'white-space': 'nowrap',
                     }}
                     floatingLabelFixed={true}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.correspondencePinNumber'
-                    )}
-                    errorText={
-                      fieldErrors['user'] &&
-                      fieldErrors['user']['correspondencePinCode']
-                    }
-                    value={
-                      Employee.user ? Employee.user.correspondencePinCode : ''
-                    }
+                    floatingLabelText={translate('employee.Employee.fields.correspondencePinNumber')}
+                    errorText={fieldErrors['user'] && fieldErrors['user']['correspondencePinCode']}
+                    value={Employee.user ? Employee.user.correspondencePinCode : ''}
                     onChange={e => {
-                      if (e.target.value && !/^\d*$/g.test(e.target.value))
-                        return;
-                      handleChangeNextLevel(
-                        e,
-                        'user',
-                        'correspondencePinCode',
-                        false,
-                        ''
-                      );
+                      if (e.target.value && !/^\d*$/g.test(e.target.value)) return;
+                      handleChangeNextLevel(e, 'user', 'correspondencePinCode', false, '');
                     }}
                   />
                 )}
@@ -4843,9 +3665,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.languagesKnown')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.languagesKnown')}</span>
                     </label>
                     <br />
                     <label>{Employee.languagesKnown || '-'}</label>
@@ -4862,26 +3682,17 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.languagesKnown'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.languagesKnown')}
                     errorText={fieldErrors['languagesKnown']}
                     multiple={true}
                     value={Employee.languagesKnown}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'languagesKnown',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'languagesKnown', false, '');
                     }}
                   >
                     {self.state.languages &&
                       self.state.languages.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4890,9 +3701,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.recruitmentMode')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.recruitmentMode')}</span>
                     </label>
                     <br />
                     <label>{Employee.recruitmentMode || '-'}</label>
@@ -4909,25 +3718,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.recruitmentMode'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.recruitmentMode')}
                     errorText={fieldErrors['recruitmentMode']}
                     value={Employee.recruitmentMode}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'recruitmentMode',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'recruitmentMode', false, '');
                     }}
                   >
                     {self.state.recruitmentmodes &&
                       self.state.recruitmentmodes.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4936,9 +3736,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.recruitmentType')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.recruitmentType')}</span>
                     </label>
                     <br />
                     <label>{Employee.recruitmentType || '-'}</label>
@@ -4955,25 +3753,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.recruitmentType'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.recruitmentType')}
                     errorText={fieldErrors['recruitmentType']}
                     value={Employee.recruitmentType}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'recruitmentType',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'recruitmentType', false, '');
                     }}
                   >
                     {self.state.recruitmenttypes &&
                       self.state.recruitmenttypes.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -4982,9 +3771,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.recruitmentQuota')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.recruitmentQuota')}</span>
                     </label>
                     <br />
                     <label>{Employee.recruitmentQuota || '-'}</label>
@@ -5001,25 +3788,16 @@ class Employee extends Component {
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                     }}
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.recruitmentQuota'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.recruitmentQuota')}
                     errorText={fieldErrors['recruitmentQuota']}
                     value={Employee.recruitmentQuota}
                     onChange={(event, key, value) => {
-                      handleChange(
-                        { target: { value: value } },
-                        'recruitmentQuota',
-                        false,
-                        ''
-                      );
+                      handleChange({ target: { value: value } }, 'recruitmentQuota', false, '');
                     }}
                   >
                     {self.state.recruitmentquotas &&
                       self.state.recruitmentquotas.map(function(v, i) {
-                        return (
-                          <MenuItem value={v.id} key={i} primaryText={v.name} />
-                        );
+                        return <MenuItem value={v.id} key={i} primaryText={v.name} />;
                       })}
                   </SelectField>
                 )}
@@ -5031,11 +3809,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.dateOfAppointment'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.dateOfAppointment')}</span>
                     </label>
                     <br />
                     <label>{Employee.dateOfAppointment}</label>
@@ -5051,9 +3825,7 @@ class Employee extends Component {
                     hintText="21/12/1993"
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'employee.Employee.fields.dateOfAppointment'
-                        )}
+                        {translate('employee.Employee.fields.dateOfAppointment')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
@@ -5069,9 +3841,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.dateOfJoining')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.dateOfJoining')}</span>
                     </label>
                     <br />
                     <label>{Employee.dateOfJoining || '-'}</label>
@@ -5085,9 +3855,7 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     hintText="21/12/1993"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.dateOfJoining'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.dateOfJoining')}
                     errorText={fieldErrors['dateOfJoining']}
                     value={Employee.dateOfJoining}
                     onChange={e => {
@@ -5100,9 +3868,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.retirementAge')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.retirementAge')}</span>
                     </label>
                     <br />
                     <label>{Employee.retirementAge || '-'}</label>
@@ -5116,9 +3882,7 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     type="number"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.retirementAge'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.retirementAge')}
                     errorText={fieldErrors['retirementAge']}
                     value={Employee.retirementAge}
                     onChange={e => {
@@ -5131,9 +3895,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate('employee.Employee.fields.dateOfRetirement')}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.dateOfRetirement')}</span>
                     </label>
                     <br />
                     <label>{Employee.dateOfRetirement || '-'}</label>
@@ -5147,9 +3909,7 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     hintText="21/12/1993"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.dateOfRetirement'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.dateOfRetirement')}
                     errorText={fieldErrors['dateOfRetirement']}
                     value={Employee.dateOfRetirement}
                     onChange={e => {
@@ -5165,11 +3925,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.dateOfTermination'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.dateOfTermination')}</span>
                     </label>
                     <br />
                     <label>{Employee.dateOfTermination || '-'}</label>
@@ -5183,9 +3939,7 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     hintText="21/12/1993"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.dateOfTermination'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.dateOfTermination')}
                     errorText={fieldErrors['dateOfTermination']}
                     value={Employee.dateOfTermination}
                     onChange={e => {
@@ -5198,11 +3952,7 @@ class Employee extends Component {
                 {self.state.screenType == 'view' ? (
                   <span>
                     <label>
-                      <span style={{ fontWeight: '500' }}>
-                        {translate(
-                          'employee.Employee.fields.dateOfResignation'
-                        )}
-                      </span>
+                      <span style={{ fontWeight: '500' }}>{translate('employee.Employee.fields.dateOfResignation')}</span>
                     </label>
                     <br />
                     <label>{Employee.dateOfResignation || '-'}</label>
@@ -5216,9 +3966,7 @@ class Employee extends Component {
                     }}
                     floatingLabelFixed={true}
                     hintText="21/12/1993"
-                    floatingLabelText={translate(
-                      'employee.Employee.fields.dateOfResignation'
-                    )}
+                    floatingLabelText={translate('employee.Employee.fields.dateOfResignation')}
                     errorText={fieldErrors['dateOfResignation']}
                     value={Employee.dateOfResignation}
                     onChange={e => {
@@ -5229,9 +3977,7 @@ class Employee extends Component {
               </Col>
               {self.state.screenType != 'view' ? (
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <label style={{ marginTop: '20px' }}>
-                    {translate('employee.Employee.fields.EmployeePhoto')}
-                  </label>
+                  <label style={{ marginTop: '20px' }}>{translate('employee.Employee.fields.EmployeePhoto')}</label>
                   <input type="file" />
                 </Col>
               ) : (
@@ -5239,9 +3985,7 @@ class Employee extends Component {
               )}
               {self.state.screenType != 'view' ? (
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <label style={{ marginTop: '20px' }}>
-                    {translate('employee.Employee.fields.EmployeeSignature')}
-                  </label>
+                  <label style={{ marginTop: '20px' }}>{translate('employee.Employee.fields.EmployeeSignature')}</label>
                   <input type="file" />
                 </Col>
               ) : (
@@ -5252,9 +3996,7 @@ class Employee extends Component {
             <Row>
               {self.state.screenType != 'view' ? (
                 <Col xs={12} sm={4} md={3} lg={3}>
-                  <label style={{ marginTop: '20px' }}>
-                    {translate('employee.Employee.fields.OtherAttachments')}
-                  </label>
+                  <label style={{ marginTop: '20px' }}>{translate('employee.Employee.fields.OtherAttachments')}</label>
                   <input type="file" multiple />
                 </Col>
               ) : (
@@ -5268,17 +4010,10 @@ class Employee extends Component {
   }
 
   renderAssignment() {
-    let {
-      isFormValid,
-      Employee,
-      fieldErrors,
-      handleChange,
-      handleChangeNextLevel,
-    } = this.props;
+    let { isFormValid, Employee, fieldErrors, handleChange, handleChangeNextLevel } = this.props;
     let self = this;
     const renderAssignmentBody = function() {
-      return self.props.Employee.assignments &&
-        self.props.Employee.assignments.length
+      return self.props.Employee.assignments && self.props.Employee.assignments.length
         ? self.props.Employee.assignments.map(function(val, i) {
             return (
               <tr key={i}>
@@ -5289,31 +4024,18 @@ class Employee extends Component {
                 <td>{getNameById(self.state.allPosition, val.position)}</td>
                 <td>
                   {val.isPrimary
-                    ? translate(
-                        'employee.createPosition.groups.fields.outsourcepost.value1'
-                      )
-                    : translate(
-                        'employee.createPosition.groups.fields.outsourcepost.value2'
-                      )}
+                    ? translate('employee.createPosition.groups.fields.outsourcepost.value1')
+                    : translate('employee.createPosition.groups.fields.outsourcepost.value2')}
                 </td>
                 <td>{getNameById(self.state.funds, val.fund)}</td>
                 <td>{getNameById(self.state.functions, val.function)}</td>
-                <td>
-                  {getNameById(self.state.functionaries, val.functionary)}
-                </td>
+                <td>{getNameById(self.state.functionaries, val.functionary)}</td>
                 <td>{getNameById(self.state.grades, val.grade)}</td>
                 <td>
                   <ol>
                     {val.hod && val.hod.length
                       ? val.hod.map(function(v, i) {
-                          return (
-                            <li>
-                              {getNameById(
-                                self.state.departments,
-                                v.department
-                              )}
-                            </li>
-                          );
+                          return <li>{getNameById(self.state.departments, v.department)}</li>;
                         })
                       : ''}
                   </ol>
@@ -5367,13 +4089,7 @@ class Employee extends Component {
             <tbody>{renderAssignmentBody()}</tbody>
           </Table>
           <Row>
-            <Col
-              xsOffset={8}
-              mdOffset={10}
-              xs={4}
-              md={2}
-              style={{ textAlign: 'right' }}
-            >
+            <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
               {self.state.screenType != 'view' ? (
                 <FloatingActionButton
                   style={{ marginRight: 0 }}
@@ -5396,24 +4112,12 @@ class Employee extends Component {
   }
 
   renderJurisdiction() {
-    let {
-      isFormValid,
-      Employee,
-      fieldErrors,
-      handleChange,
-      handleChangeNextLevel,
-    } = this.props;
+    let { isFormValid, Employee, fieldErrors, handleChange, handleChangeNextLevel } = this.props;
     let self = this;
     const renderJurisdictionBody = function() {
-      return self.props.Employee.jurisdictions &&
-        self.props.Employee.jurisdictions.length
+      return self.props.Employee.jurisdictions && self.props.Employee.jurisdictions.length
         ? self.props.Employee.jurisdictions.map(function(val, i) {
-            return getBoundaryValues(
-              self.state.allBoundariesList,
-              val,
-              self,
-              i
-            );
+            return getBoundaryValues(self.state.allBoundariesList, val, self, i);
           })
         : '';
     };
@@ -5429,13 +4133,7 @@ class Employee extends Component {
             <tbody>{renderJurisdictionBody()}</tbody>
           </Table>
           <Row>
-            <Col
-              xsOffset={8}
-              mdOffset={10}
-              xs={4}
-              md={2}
-              style={{ textAlign: 'right' }}
-            >
+            <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
               {self.state.screenType != 'view' ? (
                 <FloatingActionButton
                   style={{ marginRight: 0 }}
@@ -5458,19 +4156,12 @@ class Employee extends Component {
   }
 
   renderService() {
-    let {
-      isFormValid,
-      Employee,
-      fieldErrors,
-      handleChange,
-      handleChangeNextLevel,
-    } = this.props;
+    let { isFormValid, Employee, fieldErrors, handleChange, handleChangeNextLevel } = this.props;
     let self = this;
     const renderServiceBody = function(type) {
       switch (type) {
         case 'service':
-          return self.props.Employee.serviceHistory &&
-            self.props.Employee.serviceHistory.length
+          return self.props.Employee.serviceHistory && self.props.Employee.serviceHistory.length
             ? self.props.Employee.serviceHistory.map(function(val, i) {
                 return (
                   <tr key={i}>
@@ -5503,14 +4194,11 @@ class Employee extends Component {
             : '';
           break;
         case 'probation':
-          return self.props.Employee.probation &&
-            self.props.Employee.probation.length
+          return self.props.Employee.probation && self.props.Employee.probation.length
             ? self.props.Employee.probation.map(function(val, i) {
                 return (
                   <tr key={i}>
-                    <td>
-                      {getNameById(self.state.designations, val.designation)}
-                    </td>
+                    <td>{getNameById(self.state.designations, val.designation)}</td>
                     <td>{val.declaredOn}</td>
                     <td>{val.orderNo}</td>
                     <td>{val.orderDate}</td>
@@ -5540,8 +4228,7 @@ class Employee extends Component {
             : '';
           break;
         case 'regularization':
-          return self.props.Employee.regularisation &&
-            self.props.Employee.regularisation.length
+          return self.props.Employee.regularisation && self.props.Employee.regularisation.length
             ? self.props.Employee.regularisation.map(function(val, i) {
                 return (
                   <tr key={i}>
@@ -5584,11 +4271,7 @@ class Employee extends Component {
           <CardText>
             <Table bordered responsive className="table-striped">
               <thead>
-                <th>
-                  {translate(
-                    'employee.ServiceHistory.fields.ServiceEntryDescription'
-                  )}
-                </th>
+                <th>{translate('employee.ServiceHistory.fields.ServiceEntryDescription')}</th>
                 <th>{translate('employee.ServiceHistory.fields.date')}</th>
                 <th>{translate('employee.ServiceHistory.fields.remarks')}</th>
                 <th>{translate('employee.ServiceHistory.fields.orderNo')}</th>
@@ -5598,13 +4281,7 @@ class Employee extends Component {
               <tbody>{renderServiceBody('service')}</tbody>
             </Table>
             <Row>
-              <Col
-                xsOffset={8}
-                mdOffset={10}
-                xs={4}
-                md={2}
-                style={{ textAlign: 'right' }}
-              >
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                 {self.state.screenType != 'view' ? (
                   <FloatingActionButton
                     style={{ marginRight: 0 }}
@@ -5639,13 +4316,7 @@ class Employee extends Component {
               <tbody>{renderServiceBody('probation')}</tbody>
             </Table>
             <Row>
-              <Col
-                xsOffset={8}
-                mdOffset={10}
-                xs={4}
-                md={2}
-                style={{ textAlign: 'right' }}
-              >
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                 {self.state.screenType != 'view' ? (
                   <FloatingActionButton
                     style={{ marginRight: 0 }}
@@ -5665,16 +4336,12 @@ class Employee extends Component {
           </CardText>
         </Card>
         <Card className="uiCard">
-          <CardTitle
-            title={translate('employee.Employee.fields.regularisation')}
-          />
+          <CardTitle title={translate('employee.Employee.fields.regularisation')} />
           <CardText>
             <Table bordered responsive className="table-striped">
               <thead>
                 <th>{translate('employee.Assignment.fields.designation')}</th>
-                <th>
-                  {translate('employee.Regularisation.fields.declaredOn')}
-                </th>
+                <th>{translate('employee.Regularisation.fields.declaredOn')}</th>
                 <th>{translate('employee.Probation.fields.orderNo')}</th>
                 <th>{translate('employee.Probation.fields.orderDate')}</th>
                 <th>{translate('employee.Probation.fields.remarks')}</th>
@@ -5684,13 +4351,7 @@ class Employee extends Component {
               <tbody>{renderServiceBody('regularization')}</tbody>
             </Table>
             <Row>
-              <Col
-                xsOffset={8}
-                mdOffset={10}
-                xs={4}
-                md={2}
-                style={{ textAlign: 'right' }}
-              >
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                 {self.state.screenType != 'view' ? (
                   <FloatingActionButton
                     style={{ marginRight: 0 }}
@@ -5714,19 +4375,12 @@ class Employee extends Component {
   }
 
   renderOtherDetails() {
-    let {
-      isFormValid,
-      Employee,
-      fieldErrors,
-      handleChange,
-      handleChangeNextLevel,
-    } = this.props;
+    let { isFormValid, Employee, fieldErrors, handleChange, handleChangeNextLevel } = this.props;
     let self = this;
     const renderOtherDetailsBody = function(type) {
       switch (type) {
         case 'edu':
-          return self.props.Employee.education &&
-            self.props.Employee.education.length
+          return self.props.Employee.education && self.props.Employee.education.length
             ? self.props.Employee.education.map(function(val, i) {
                 return (
                   <tr key={i}>
@@ -5759,8 +4413,7 @@ class Employee extends Component {
             : '';
           break;
         case 'tech':
-          return self.props.Employee.technical &&
-            self.props.Employee.technical.length
+          return self.props.Employee.technical && self.props.Employee.technical.length
             ? self.props.Employee.technical.map(function(val, i) {
                 return (
                   <tr key={i}>
@@ -5830,49 +4483,21 @@ class Employee extends Component {
     return (
       <div>
         <Card className="uiCard">
-          <CardTitle
-            title={translate('employee.EducationalQualification.title')}
-          />
+          <CardTitle title={translate('employee.EducationalQualification.title')} />
           <CardText>
             <Table bordered responsive className="table-striped">
               <thead>
-                <th>
-                  {translate(
-                    'employee.EducationalQualification.fields.qualification'
-                  )}
-                </th>
-                <th>
-                  {translate(
-                    'employee.EducationalQualification.fields.majorSubject'
-                  )}
-                </th>
-                <th>
-                  {translate(
-                    'employee.TechnicalQualification.fields.yearOfPassing'
-                  )}
-                </th>
-                <th>
-                  {translate(
-                    'employee.EducationalQualification.fields.university'
-                  )}
-                </th>
-                <th>
-                  {translate(
-                    'employee.EducationalQualification.fields.documents'
-                  )}
-                </th>
+                <th>{translate('employee.EducationalQualification.fields.qualification')}</th>
+                <th>{translate('employee.EducationalQualification.fields.majorSubject')}</th>
+                <th>{translate('employee.TechnicalQualification.fields.yearOfPassing')}</th>
+                <th>{translate('employee.EducationalQualification.fields.university')}</th>
+                <th>{translate('employee.EducationalQualification.fields.documents')}</th>
                 <th>{translate('reports.common.action')}</th>
               </thead>
               <tbody>{renderOtherDetailsBody('edu')}</tbody>
             </Table>
             <Row>
-              <Col
-                xsOffset={8}
-                mdOffset={10}
-                xs={4}
-                md={2}
-                style={{ textAlign: 'right' }}
-              >
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                 {self.state.screenType != 'view' ? (
                   <FloatingActionButton
                     style={{ marginRight: 0 }}
@@ -5892,43 +4517,21 @@ class Employee extends Component {
           </CardText>
         </Card>
         <Card className="uiCard">
-          <CardTitle
-            title={translate('employee.TechnicalQualification.title')}
-          />
+          <CardTitle title={translate('employee.TechnicalQualification.title')} />
           <CardText>
             <Table bordered responsive className="table-striped">
               <thead>
-                <th>
-                  {translate('employee.TechnicalQualification.fields.skill')}
-                </th>
-                <th>
-                  {translate('employee.TechnicalQualification.fields.grade')}
-                </th>
-                <th>
-                  {translate(
-                    'employee.TechnicalQualification.fields.yearOfPassing'
-                  )}
-                </th>
-                <th>
-                  {translate('employee.TechnicalQualification.fields.remarks')}
-                </th>
-                <th>
-                  {translate(
-                    'employee.EducationalQualification.fields.documents'
-                  )}
-                </th>
+                <th>{translate('employee.TechnicalQualification.fields.skill')}</th>
+                <th>{translate('employee.TechnicalQualification.fields.grade')}</th>
+                <th>{translate('employee.TechnicalQualification.fields.yearOfPassing')}</th>
+                <th>{translate('employee.TechnicalQualification.fields.remarks')}</th>
+                <th>{translate('employee.EducationalQualification.fields.documents')}</th>
                 <th>{translate('reports.common.action')}</th>
               </thead>
               <tbody>{renderOtherDetailsBody('tech')}</tbody>
             </Table>
             <Row>
-              <Col
-                xsOffset={8}
-                mdOffset={10}
-                xs={4}
-                md={2}
-                style={{ textAlign: 'right' }}
-              >
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                 {self.state.screenType != 'view' ? (
                   <FloatingActionButton
                     style={{ marginRight: 0 }}
@@ -5953,31 +4556,15 @@ class Employee extends Component {
             <Table bordered responsive className="table-striped">
               <thead>
                 <th>{translate('employee.DepartmentalTest.fields.test')}</th>
-                <th>
-                  {translate(
-                    'employee.TechnicalQualification.fields.yearOfPassing'
-                  )}n
-                </th>
-                <th>
-                  {translate('employee.TechnicalQualification.fields.remarks')}
-                </th>
-                <th>
-                  {translate(
-                    'employee.EducationalQualification.fields.documents'
-                  )}
-                </th>
+                <th>{translate('employee.TechnicalQualification.fields.yearOfPassing')}n</th>
+                <th>{translate('employee.TechnicalQualification.fields.remarks')}</th>
+                <th>{translate('employee.EducationalQualification.fields.documents')}</th>
                 <th>{translate('reports.common.action')}</th>
               </thead>
               <tbody>{renderOtherDetailsBody('dept')}</tbody>
             </Table>
             <Row>
-              <Col
-                xsOffset={8}
-                mdOffset={10}
-                xs={4}
-                md={2}
-                style={{ textAlign: 'right' }}
-              >
+              <Col xsOffset={8} mdOffset={10} xs={4} md={2} style={{ textAlign: 'right' }}>
                 {self.state.screenType != 'view' ? (
                   <FloatingActionButton
                     style={{ marginRight: 0 }}
@@ -6004,19 +4591,10 @@ class Employee extends Component {
     e.preventDefault();
     let employee = Object.assign({}, this.props.Employee);
     let self = this;
-    if (
-      employee.assignments.length == 0 ||
-      employee.jurisdictions.length == 0
-    ) {
-      self.props.toggleSnackbarAndSetText(
-        true,
-        'Please enter atleast one assignment and jurisdiction.'
-      );
+    if (employee.assignments.length == 0 || employee.jurisdictions.length == 0) {
+      self.props.toggleSnackbarAndSetText(true, 'Please enter atleast one assignment and jurisdiction.');
     } else if (!isHavingPrimary(employee)) {
-      self.props.toggleSnackbarAndSetText(
-        true,
-        'Atleast one primary assignment is required.'
-      );
+      self.props.toggleSnackbarAndSetText(true, 'Atleast one primary assignment is required.');
     } else {
       var __emp = Object.assign({}, employee);
 
@@ -6024,8 +4602,7 @@ class Employee extends Component {
         var empJuridictions = employee['jurisdictions'];
         employee['jurisdictions'] = [];
         for (var i = 0; i < empJuridictions.length; i++) {
-          if (typeof empJuridictions[i] == 'object')
-            employee['jurisdictions'].push(empJuridictions[i].boundary);
+          if (typeof empJuridictions[i] == 'object') employee['jurisdictions'].push(empJuridictions[i].boundary);
           else employee['jurisdictions'].push(empJuridictions[i]);
         }
       }
@@ -6038,12 +4615,7 @@ class Employee extends Component {
         }
       }
 
-      if (
-        employee.user &&
-        employee.user.dob &&
-        self.state.screenType == 'update' &&
-        employee.user.dob.indexOf('-') > -1
-      ) {
+      if (employee.user && employee.user.dob && self.state.screenType == 'update' && employee.user.dob.indexOf('-') > -1) {
         var _date = employee.user.dob.split('-');
         employee.user.dob = _date[2] + '/' + _date[1] + '/' + _date[0];
       }
@@ -6054,19 +4626,12 @@ class Employee extends Component {
           //Handle error
           self.props.setLoadingStatus('hide');
         } else {
-          Api.commonApiPost(
-            '/hr-employee/employees/' +
-              (self.state.screenType == 'update' ? '_update' : '_create'),
-            {},
-            { Employee: employee }
-          ).then(
+          Api.commonApiPost('/hr-employee/employees/' + (self.state.screenType == 'update' ? '_update' : '_create'), {}, { Employee: employee }).then(
             function(res) {
               self.props.setLoadingStatus('hide');
               self.props.toggleSnackbarAndSetText(
                 true,
-                self.state.screenType == 'update'
-                  ? 'Employee updated successfully.'
-                  : 'Employee created successfully.'
+                self.state.screenType == 'update' ? 'Employee updated successfully.' : 'Employee created successfully.'
               );
               setTimeout(function() {
                 self.props.setRoute('/employee/view/' + res.Employee.id);
@@ -6112,12 +4677,7 @@ class Employee extends Component {
           <br />
           <div style={{ textAlign: 'center' }}>
             {self.state.screenType != 'view' ? (
-              <RaisedButton
-                type="submit"
-                label={translate('ui.framework.submit')}
-                primary={true}
-                disabled={!self.props.isFormValid}
-              />
+              <RaisedButton type="submit" label={translate('ui.framework.submit')} primary={true} disabled={!self.props.isFormValid} />
             ) : (
               ''
             )}
@@ -6126,11 +4686,7 @@ class Employee extends Component {
         <Dialog
           title={self.getModalTitle()}
           actions={[
-            <FlatButton
-              label={translate('employee.Cancel.Button')}
-              primary={true}
-              onTouchTap={self.handleClose}
-            />,
+            <FlatButton label={translate('employee.Cancel.Button')} primary={true} onTouchTap={self.handleClose} />,
             <FlatButton
               label={translate('employee.addedit.Button')}
               primary={true}

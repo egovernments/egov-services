@@ -60,8 +60,7 @@ class FileInput extends Component {
     //validate file input
     let validationResult = validate_fileupload(files, this.props.fileFormats);
     if (typeof validationResult === 'string' || !validationResult) {
-      if (this.props.dialogOpener)
-        this.props.dialogOpener(true, validationResult);
+      if (this.props.dialogOpener) this.props.dialogOpener(true, validationResult);
       return;
     }
 
@@ -139,11 +138,7 @@ class FileInput extends Component {
                 className="list-remove-button"
                 onTouchTap={e => {
                   this.refs[this.props.code].value = null;
-                  this.removeFile(
-                    this.props.code,
-                    file.name,
-                    this.props.isRequired
-                  );
+                  this.removeFile(this.props.code, file.name, this.props.isRequired);
                 }}
               >
                 <ActionDelete />
@@ -159,24 +154,9 @@ class FileInput extends Component {
 
   renderInputFile = () => {
     if (this.props.isMultipleFile) {
-      return (
-        <input
-          type="file"
-          multiple
-          ref={this.props.code}
-          style={styles.inputFileStyle}
-          onChange={this.handleFileChange}
-        />
-      );
+      return <input type="file" multiple ref={this.props.code} style={styles.inputFileStyle} onChange={this.handleFileChange} />;
     } else {
-      return (
-        <input
-          type="file"
-          ref={this.props.code}
-          style={styles.inputFileStyle}
-          onChange={this.handleFileChange}
-        />
-      );
+      return <input type="file" ref={this.props.code} style={styles.inputFileStyle} onChange={this.handleFileChange} />;
     }
   };
 
@@ -184,9 +164,7 @@ class FileInput extends Component {
     const files = this.showFiles();
     const inputFile = this.renderInputFile();
     return (
-      <div
-        className={'file-input-container ' + (this.props.error ? 'error' : '')}
-      >
+      <div className={'file-input-container ' + (this.props.error ? 'error' : '')}>
         <List>
           <div>
             <div className="file-header">
@@ -206,19 +184,12 @@ class FileInput extends Component {
                 </div>
               ) : null}
             </div>
-            {this.props.files && this.props.files.length > 0 ? (
-              <div>{files}</div>
-            ) : null}
+            {this.props.files && this.props.files.length > 0 ? <div>{files}</div> : null}
           </div>
 
-          {!this.props.files ||
-          this.props.files.length == 0 ||
-          this.props.isMultipleFile ? (
+          {!this.props.files || this.props.files.length == 0 || this.props.isMultipleFile ? (
             <div className="file-browser">
-              <RaisedButton
-                label="Browse Files"
-                onTouchTap={this.openFileBrowser}
-              />
+              <RaisedButton label="Browse Files" onTouchTap={this.openFileBrowser} />
             </div>
           ) : null}
           {inputFile}

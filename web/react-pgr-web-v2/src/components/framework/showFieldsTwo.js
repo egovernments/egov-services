@@ -49,15 +49,7 @@ const getFromGroup = function(groups, value) {
         if (groups[i].children[j].jsonPath == value) {
           return 'groups[' + i + '].children[' + j + '].groups';
         } else {
-          return (
-            'groups[' +
-            i +
-            '].children[' +
-            j +
-            '][' +
-            getFromGroup(groups[i].children[j].groups) +
-            ']'
-          );
+          return 'groups[' + i + '].children[' + j + '][' + getFromGroup(groups[i].children[j].groups) + ']';
         }
       }
     }
@@ -82,99 +74,49 @@ const getNewSpecs = (moduleName, actionName, group, updatedSpecs, path) => {
 const checkIfHasShowHideFields = (jsonPath, val) => {
   let _mockData = { ...this.props.mockData };
   let { moduleName, actionName, setMockData } = this.props;
-  for (
-    let i = 0;
-    i < _mockData[moduleName + '.' + actionName].groups.length;
-    i++
-  ) {
-    for (
-      let j = 0;
-      j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-      j++
-    ) {
+  for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+    for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
       if (
-        jsonPath ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .jsonPath &&
-        _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-          .showHideFields &&
-        _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-          .showHideFields.length
+        jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+        _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+        _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
       ) {
-        for (
-          let k = 0;
-          k <
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length;
-          k++
-        ) {
-          if (
-            val ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields[k].ifValue
-          ) {
-            for (
-              let y = 0;
-              y <
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].hide.length;
-              y++
-            ) {
+        for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+          if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+            for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
               _mockData = this.hideField(
                 moduleName,
                 actionName,
                 _mockData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide[y]
+                _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]
               );
             }
 
-            for (
-              let z = 0;
-              z <
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].show.length;
-              z++
-            ) {
+            for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
               _mockData = this.showField(
                 moduleName,
                 actionName,
                 _mockData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show[z]
+                _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]
               );
             }
           } else {
-            for (
-              let y = 0;
-              y <
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].hide.length;
-              y++
-            ) {
+            for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
               _mockData = this.hideField(
                 moduleName,
                 actionName,
                 _mockData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide[y],
+                _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y],
                 true
               );
             }
 
-            for (
-              let z = 0;
-              z <
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].show.length;
-              z++
-            ) {
+            for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
               _mockData = this.showField(
                 moduleName,
                 actionName,
                 _mockData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show[z],
+                _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z],
                 true
               );
             }
@@ -189,39 +131,17 @@ const checkIfHasShowHideFields = (jsonPath, val) => {
 
 const hideField = (moduleName, actionName, _mockData, hideObject, reset) => {
   if (hideObject.isField) {
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].hide = reset ? false : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
         }
       }
     }
   } else {
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      if (
-        hideObject.name ==
-        _mockData[moduleName + '.' + actionName].groups[i].name
-      ) {
-        _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-          ? false
-          : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
+        _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
       }
     }
   }
@@ -231,39 +151,17 @@ const hideField = (moduleName, actionName, _mockData, hideObject, reset) => {
 
 const showField = (moduleName, actionName, _mockData, showObject, reset) => {
   if (showObject.isField) {
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].hide = reset ? true : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
         }
       }
     }
   } else {
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      if (
-        showObject.name ==
-        _mockData[moduleName + '.' + actionName].groups[i].name
-      ) {
-        _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-          ? true
-          : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
+        _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
       }
     }
   }
@@ -273,206 +171,59 @@ const showField = (moduleName, actionName, _mockData, showObject, reset) => {
 
 //components
 const RenderField = props => {
-  let {
-    item,
-    screen,
-    fieldErrors,
-    handler,
-    ui,
-    useTimestamp,
-    getVal,
-    autoComHandler,
-  } = props;
+  let { item, screen, fieldErrors, handler, ui, useTimestamp, getVal, autoComHandler } = props;
   if (screen == 'view') {
     item.type = 'label';
   }
   switch (item.type) {
     case 'text':
-      return (
-        <UiTextField
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiTextField ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'singleValueList':
-      return (
-        <UiSelectField
-          ui={ui}
-          useTimestamp={useTimestamp}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiSelectField ui={ui} useTimestamp={useTimestamp} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'multiValueList':
-      return (
-        <UiSingleFileUpload
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiSingleFileUpload ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'number':
-      return (
-        <UiNumberField
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiNumberField ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'textarea':
-      return (
-        <UiTextArea
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiTextArea ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'mobileNumber':
-      return (
-        <UiMobileNumber
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiMobileNumber ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'checkbox':
-      return (
-        <UiCheckBox
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiCheckBox ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'email':
-      return (
-        <UiEmailField
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiEmailField ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'button':
-      return (
-        <UiButton
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiButton ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'datePicker':
-      return (
-        <UiDatePicker
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiDatePicker ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
     case 'singleFileUpload':
-      return (
-        <UiSingleFileUpload
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiSingleFileUpload ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
       break;
 
     case 'multiFileUpload':
-      return (
-        <UiMultiSelectField
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiMultiSelectField ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
     case 'pan':
-      return (
-        <UiPanCard
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiPanCard ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
     case 'aadhar':
-      return (
-        <UiAadharCard
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiAadharCard ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
     case 'label':
       return <UiLabel getVal={getVal} item={item} />;
     case 'radio':
-      return (
-        <UiRadioButton
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiRadioButton ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
     case 'textSearch':
-      return (
-        <UiTextSearch
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-          autoComHandler={autoComHandler}
-        />
-      );
+      return <UiTextSearch ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} autoComHandler={autoComHandler} />;
     case 'documentList':
-      return (
-        <UiDocumentList
-          ui={ui}
-          getVal={getVal}
-          item={item}
-          fieldErrors={fieldErrors}
-          handler={handler}
-        />
-      );
+      return <UiDocumentList ui={ui} getVal={getVal} item={item} fieldErrors={fieldErrors} handler={handler} />;
   }
 };
 
@@ -518,11 +269,7 @@ const RenderGroups = props => {
               changeExpanded(group.name);
             }}
           >
-            <CardHeader
-              title={group.label}
-              showExpandableButton={true}
-              actAsExpander={true}
-            />
+            <CardHeader title={group.label} showExpandableButton={true} actAsExpander={true} />
             <CardText style={{ padding: 0 }} expandable={true}>
               <Grid>
                 <Row>
@@ -549,8 +296,7 @@ const RenderGroups = props => {
                 {group.multiple && (
                   <Row
                     style={{
-                      visibility:
-                        groupIndex == groups.length - 1 ? 'initial' : 'hidden',
+                      visibility: groupIndex == groups.length - 1 ? 'initial' : 'hidden',
                     }}
                   >
                     <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
@@ -568,8 +314,7 @@ const RenderGroups = props => {
                 {group.multiple && (
                   <Row
                     style={{
-                      visibility:
-                        groupIndex < groups.length - 1 ? 'initial' : 'hidden',
+                      visibility: groupIndex < groups.length - 1 ? 'initial' : 'hidden',
                     }}
                   >
                     <Col xsOffset={8} mdOffset={10} xs={4} md={2}>
@@ -632,14 +377,7 @@ class ShowFields extends Component {
       [autoObject.autoCompleteUrl.split('?')[1].split('=')[0]]: value,
     };
     let { mockData } = this.props;
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      mockData[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`]
-        .useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, mockData[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
       function(res) {
         var formData = { ...self.props.formData };
         for (var key in autoObject.autoFillFields) {
@@ -656,14 +394,10 @@ class ShowFields extends Component {
   checkCustomFields = (formData, cb) => {
     var self = this;
     if (
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields.initiatorPosition
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields &&
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition
     ) {
-      var jPath =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .customFields.initiatorPosition;
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
       getInitiatorPosition(function(err, pos) {
         if (err) {
           self.toggleSnackbarAndSetText(true, err.message);
@@ -682,33 +416,15 @@ class ShowFields extends Component {
     return _.get(formData, path) || '';
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
     let { handleChange, mockData, setDropDownData, setMockData } = this.props;
     let hashLocation = window.location.hash;
-    let obj =
-      mockData[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
+    let obj = mockData[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     // console.log(obj);
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     setMockData(checkIfHasShowHideFields(property, e.target.value));
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -740,9 +456,7 @@ class ShowFields extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -772,33 +486,16 @@ class ShowFields extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
 
   addNewCard = (group, jsonPath) => {
-    let {
-      setMockData,
-      mockData,
-      metaData,
-      moduleName,
-      actionName,
-      formData,
-    } = this.props;
+    let { setMockData, mockData, metaData, moduleName, actionName, formData } = this.props;
     group = JSON.parse(JSON.stringify(group));
     //Increment the values of indexes
-    var grp = _.get(
-      metaData[moduleName + '.' + actionName],
-      getPath(mockData, moduleName, actionName, jsonPath) + '[0]'
-    );
+    var grp = _.get(metaData[moduleName + '.' + actionName], getPath(mockData, moduleName, actionName, jsonPath) + '[0]');
     group = incrementIndexValue(formData, grp, jsonPath);
     //Push to the path
     var updatedSpecs = getNewSpecs(
@@ -826,22 +523,8 @@ class ShowFields extends Component {
   };
 
   render() {
-    let {
-      groups,
-      noCols,
-      uiFramework,
-      useTimestamp,
-      fieldErrors,
-      jsonPath,
-    } = this.props;
-    let {
-      handleChange,
-      getVal,
-      changeExpanded,
-      addNewCard,
-      removeCard,
-      autoComHandler,
-    } = this;
+    let { groups, noCols, uiFramework, useTimestamp, fieldErrors, jsonPath } = this.props;
+    let { handleChange, getVal, changeExpanded, addNewCard, removeCard, autoComHandler } = this;
     return;
     <RenderGroups
       groups={groups}
@@ -892,14 +575,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

@@ -25,8 +25,7 @@ var dat = {
             type: 'autoCompelete',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg:
-              'works.create.field.message.detailedEstimateNumbers',
+            patternErrorMsg: 'works.create.field.message.detailedEstimateNumbers',
           },
           {
             name: 'ids',
@@ -98,8 +97,7 @@ var dat = {
             type: 'autoCompelete',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg:
-              'works.create.field.message.workIdentificationNumbers',
+            patternErrorMsg: 'works.create.field.message.workIdentificationNumbers',
           },
           {
             name: 'abstractEstimateNumbers',
@@ -108,8 +106,7 @@ var dat = {
             type: 'autoCompelete',
             isRequired: false,
             isDisabled: false,
-            patternErrorMsg:
-              'works.create.field.message.abstractEstimateNumbers',
+            patternErrorMsg: 'works.create.field.message.abstractEstimateNumbers',
           },
           {
             name: 'fromAmount',
@@ -225,8 +222,7 @@ var dat = {
             label: 'works.create.projectCode.name',
             pattern: '',
             type: 'autoCompelete',
-            url:
-              'works-estimate/v1/abstractestimates/_search?&|$..projectCode.code|$..projectCode.code',
+            url: 'works-estimate/v1/abstractestimates/_search?&|$..projectCode.code|$..projectCode.code',
             isRequired: false,
             isDisabled: true,
             defaultValue: '',
@@ -257,8 +253,7 @@ var dat = {
             label: 'works.create.department.name',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',
@@ -281,8 +276,7 @@ var dat = {
             jsonPath: 'detailedEstimates[0].natureOfWork.code',
             label: 'works.create.natureOfWork',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=NatureOfWork&moduleName=Works|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=NatureOfWork&moduleName=Works|$..code|$..name',
             isRequired: false,
             isDisabled: true,
             requiredErrMsg: '',

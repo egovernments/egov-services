@@ -114,11 +114,7 @@ export default class Dashboard extends Component {
    * show/hide UI busy
    */
   renderUIBusy = () => {
-    return this.state.apiLoading ? (
-      <LoadingIndicator status={'loading'} />
-    ) : (
-      <LoadingIndicator status={'hide'} />
-    );
+    return this.state.apiLoading ? <LoadingIndicator status={'loading'} /> : <LoadingIndicator status={'hide'} />;
   };
 
   /**
@@ -133,13 +129,7 @@ export default class Dashboard extends Component {
     let departments = parseDepartmentResponse(this.departments);
     if (departments.length > 0) {
       return departments.map((item, index) => (
-        <DashboardCard
-          key={index}
-          index={index}
-          onClick={this.processOnClickOnCard}
-          name={item.name}
-          logo={this.getDepartmentLogo(item.name)}
-        />
+        <DashboardCard key={index} index={index} onClick={this.processOnClickOnCard} name={item.name} logo={this.getDepartmentLogo(item.name)} />
       ));
     }
   };
@@ -152,12 +142,7 @@ export default class Dashboard extends Component {
     if (!this.state.showQueryView) {
       return <div />;
     }
-    return (
-      <KPIQueryDashboard
-        department={this.state.department}
-        onBackClicked={this.processOnClickBackButton}
-      />
-    );
+    return <KPIQueryDashboard department={this.state.department} onBackClicked={this.processOnClickBackButton} />;
   };
 
   /**

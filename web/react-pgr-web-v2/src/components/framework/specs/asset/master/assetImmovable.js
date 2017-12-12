@@ -90,8 +90,7 @@ var dat = {
             label: 'ac.create.Department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -116,8 +115,7 @@ var dat = {
             label: 'ac.create.Mode.of.Acquisition',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -189,8 +187,7 @@ var dat = {
             label: 'ac.create.Land.Asset.ID',
             pattern: '',
             type: 'autoCompelete',
-            url:
-              'asset-services-maha/assets/_search?&assetCategoryType=LAND|$.Assets.*.name|$.Assets.*.name',
+            url: 'asset-services-maha/assets/_search?&assetCategoryType=LAND|$.Assets.*.name|$.Assets.*.name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -288,8 +285,7 @@ var dat = {
             label: 'ac.create.Election.Ward',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
+            url: '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
             //"url": "",
             isRequired: false,
             isDisabled: false,
@@ -492,8 +488,7 @@ var dat = {
             label: 'ac.create.Source.of.funds',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -571,10 +566,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'Yes', value: true },
-              { label: 'No', value: false },
-            ],
+            values: [{ label: 'Yes', value: true }, { label: 'No', value: false }],
             defaultValue: true,
           },
           {
@@ -857,8 +849,7 @@ var dat = {
             label: 'ac.create.Department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -946,17 +937,9 @@ var dat = {
         { label: 'ac.create.Original.Value.of.Asset', isComma: true },
         { label: 'ac.create.Opening.Written.down.Value', isComma: true },
       ],
-      values: [
-        'code',
-        'name',
-        'assetCategory.name',
-        'department.name',
-        'originalValue',
-        'grossValue',
-      ],
+      values: ['code', 'name', 'assetCategory.name', 'department.name', 'originalValue', 'grossValue'],
       resultPath: 'Assets',
-      rowClickUrlUpdate:
-        '/non-framework/asset/master/assetImmovableCreate/{id}',
+      rowClickUrlUpdate: '/non-framework/asset/master/assetImmovableCreate/{id}',
       rowClickUrlView: '/non-framework/asset/master/assetImmovableView/{id}',
     },
   },
@@ -1065,8 +1048,7 @@ var dat = {
             label: 'ac.create.Department',
             pattern: '',
             type: 'text',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1089,8 +1071,7 @@ var dat = {
             label: 'ac.create.Mode.of.Acquisition',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1268,8 +1249,7 @@ var dat = {
             label: 'ac.create.Election.Ward',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
+            url: '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1357,10 +1337,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'Yes', value: true },
-              { label: 'No', value: false },
-            ],
+            values: [{ label: 'Yes', value: true }, { label: 'No', value: false }],
             defaultValue: true,
           },
           {
@@ -1393,8 +1370,7 @@ var dat = {
             label: 'ac.create.Source.of.funds',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1677,8 +1653,7 @@ var dat = {
             label: 'ac.create.Department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1703,8 +1678,7 @@ var dat = {
             label: 'ac.create.Mode.of.Acquisition',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=ASSET&masterName=ModeOfAcquisition|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1776,8 +1750,7 @@ var dat = {
             label: 'ac.create.Land.Asset.ID',
             pattern: '',
             type: 'autoCompelete',
-            url:
-              'asset-services-maha/assets/_search?&assetCategoryType=LAND|$..name|$..name',
+            url: 'asset-services-maha/assets/_search?&assetCategoryType=LAND|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -1875,8 +1848,7 @@ var dat = {
             label: 'ac.create.Election.Ward',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
+            url: '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
             //"url": "",
             isRequired: false,
             isDisabled: false,
@@ -2079,8 +2051,7 @@ var dat = {
             label: 'ac.create.Source.of.funds',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=egf-master&masterName=funds|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -2158,10 +2129,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            values: [
-              { label: 'Yes', value: true },
-              { label: 'No', value: false },
-            ],
+            values: [{ label: 'Yes', value: true }, { label: 'No', value: false }],
             defaultValue: true,
           },
           {

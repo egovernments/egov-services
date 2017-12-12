@@ -77,11 +77,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'tl.create.groups.UOMType.code' },
-        { label: 'tl.create.groups.UOMType.name' },
-        { label: 'tl.create.groups.UOMType.active' },
-      ],
+      header: [{ label: 'tl.create.groups.UOMType.code' }, { label: 'tl.create.groups.UOMType.name' }, { label: 'tl.create.groups.UOMType.active' }],
       values: ['code', 'name', 'active'],
       resultPath: 'uoms',
       rowClickUrlUpdate: '/update/tl/UnitOfMeasurement/{id}',

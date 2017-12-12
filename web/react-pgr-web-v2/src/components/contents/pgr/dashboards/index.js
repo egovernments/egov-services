@@ -51,13 +51,7 @@ const COLORS = ['#0088FE', '#00C49F', '#008F7D', '#FFBB28', '#FF8042'];
 const CustomizedAxisTick = props => {
   const { x, y, stroke, payload } = props;
   return (
-    <text
-      style={{ fontSize: 12 }}
-      x={x}
-      y={y + 15}
-      textAnchor="middle"
-      fill="#666"
-    >
+    <text style={{ fontSize: 12 }} x={x} y={y + 15} textAnchor="middle" fill="#666">
       {payload.value}
     </text>
   );
@@ -65,19 +59,7 @@ const CustomizedAxisTick = props => {
 
 const renderActiveShape = props => {
   const RADIAN = Math.PI / 180;
-  const {
-    cx,
-    cy,
-    midAngle,
-    innerRadius,
-    outerRadius,
-    startAngle,
-    endAngle,
-    fill,
-    percent,
-    ComplaintType,
-    value,
-  } = props;
+  const { cx, cy, midAngle, innerRadius, outerRadius, startAngle, endAngle, fill, percent, ComplaintType, value } = props;
 
   const sin = Math.sin(-RADIAN * midAngle);
   const cos = Math.cos(-RADIAN * midAngle);
@@ -91,37 +73,13 @@ const renderActiveShape = props => {
 
   return (
     <g>
-      <Sector
-        cx={cx}
-        cy={cy}
-        innerRadius={innerRadius}
-        outerRadius={outerRadius}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        fill={fill}
-      />
-      <Sector
-        cx={cx}
-        cy={cy}
-        startAngle={startAngle}
-        endAngle={endAngle}
-        innerRadius={outerRadius + 6}
-        outerRadius={outerRadius + 10}
-        fill={fill}
-      />
-      <path
-        d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`}
-        stroke={fill}
-        fill="none"
-      />
+      <Sector cx={cx} cy={cy} innerRadius={innerRadius} outerRadius={outerRadius} startAngle={startAngle} endAngle={endAngle} fill={fill} />
+      <Sector cx={cx} cy={cy} startAngle={startAngle} endAngle={endAngle} innerRadius={outerRadius + 6} outerRadius={outerRadius + 10} fill={fill} />
+      <path d={`M${sx},${sy}L${mx},${my}L${ex},${ey}`} stroke={fill} fill="none" />
       <circle cx={ex} cy={ey} r={2} fill={fill} stroke="none" />
-      <text
-        x={ex + (cos >= 0 ? 1 : -1) * 12}
-        y={ey}
-        dy={18}
-        textAnchor={textAnchor}
-        fill="#333"
-      >{`${ComplaintType} : ${value} (${(percent * 100).toFixed(2)}%)`}</text>
+      <text x={ex + (cos >= 0 ? 1 : -1) * 12} y={ey} dy={18} textAnchor={textAnchor} fill="#333">{`${ComplaintType} : ${value} (${(
+        percent * 100
+      ).toFixed(2)}%)`}</text>
     </g>
   );
 };
@@ -211,12 +169,8 @@ class charts extends Component {
           let weeklyReportResponse = response[1];
 
           last7days = last7days.map(day => {
-            let resolvedObj = weeklyReportResponse.find(
-              d => day.name === d.name && d.RESOLVED > 0
-            );
-            let registeredObj = weeklyReportResponse.find(
-              d => day.name === d.name && d.REGISTERED > 0
-            );
+            let resolvedObj = weeklyReportResponse.find(d => day.name === d.name && d.RESOLVED > 0);
+            let registeredObj = weeklyReportResponse.find(d => day.name === d.name && d.REGISTERED > 0);
             let RESOLVED = (resolvedObj && resolvedObj.RESOLVED) || 0;
             let REGISTERED = (registeredObj && registeredObj.REGISTERED) || 0;
             console.log(day.name, { name: day.name, RESOLVED, REGISTERED });
@@ -266,38 +220,21 @@ class charts extends Component {
           onClick={e => {
             this.props.setRoute('/pgr/analytics');
           }}
-          style={Object.assign(
-            style.positioned,
-            buttonFixed ? style.fixedPosition : style.absolutePosition
-          )}
+          style={Object.assign(style.positioned, buttonFixed ? style.fixedPosition : style.absolutePosition)}
         />
         <Row>
           <Col xs={12} sm={12} md={6} lg={6}>
             <Card style={styles.cardMargin}>
               <CardHeader title={translate('pgr.dashboard.7daystitle')} />
               <ResponsiveContainer width="100%" aspect={4.0 / 2.0}>
-                <AreaChart
-                  margin={{ top: 10, right: 30, left: 30, bottom: 0 }}
-                  data={last7Days}
-                  margin={{ top: 10, right: 30, left: 0, bottom: 0 }}
-                >
+                <AreaChart margin={{ top: 10, right: 30, left: 30, bottom: 0 }} data={last7Days} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
                   <XAxis tick={<CustomizedAxisTick />} dataKey="name" />
                   <YAxis />
                   <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
                   <Legend verticalAlign="top" height={36} />
-                  <Area
-                    type="monotone"
-                    dataKey="REGISTERED"
-                    stroke="#8884d8"
-                    fill="#8884d8"
-                  />
-                  <Area
-                    type="monotone"
-                    dataKey="RESOLVED"
-                    stroke="#82ca9d"
-                    fill="#82ca9d"
-                  />
+                  <Area type="monotone" dataKey="REGISTERED" stroke="#8884d8" fill="#8884d8" />
+                  <Area type="monotone" dataKey="RESOLVED" stroke="#82ca9d" fill="#82ca9d" />
                 </AreaChart>
               </ResponsiveContainer>
               <br />
@@ -307,21 +244,13 @@ class charts extends Component {
             <Card style={styles.cardMargin}>
               <CardHeader title={translate('pgr.dashboard.7monthstitle')} />7
               <ResponsiveContainer width="100%" aspect={4.0 / 2.0}>
-                <LineChart
-                  margin={{ top: 10, right: 30, left: 5, bottom: 0 }}
-                  data={this.state.last7months}
-                >
+                <LineChart margin={{ top: 10, right: 30, left: 5, bottom: 0 }} data={this.state.last7months}>
                   <XAxis tick={<CustomizedAxisTick />} dataKey="name" />
                   <YAxis allowDecimals={false} />
                   <CartesianGrid strokeDasharray="3 3" />
                   <Tooltip />
                   <Legend verticalAlign="top" height={36} />
-                  <Line
-                    type="monotone"
-                    dataKey="REGISTERED"
-                    stroke="#8884d8"
-                    activeDot={{ r: 8 }}
-                  />
+                  <Line type="monotone" dataKey="REGISTERED" stroke="#8884d8" activeDot={{ r: 8 }} />
                 </LineChart>
               </ResponsiveContainer>
               <br />
@@ -329,10 +258,7 @@ class charts extends Component {
           </Col>
           <Col xs={12} sm={12} md={12} lg={12}>
             <Card style={styles.cardMargin}>
-              <CardHeader
-                style={styles.cardHeaderPadding}
-                title={translate('pgr.dashboard.complaintshare')}
-              />
+              <CardHeader style={styles.cardHeaderPadding} title={translate('pgr.dashboard.complaintshare')} />
               <CardText>
                 <ResponsiveContainer width="100%" aspect={4.0 / 1.0}>
                   <PieChart margin={{ bottom: 30 }}>
@@ -345,12 +271,7 @@ class charts extends Component {
                       fill="#8884d8"
                     >
                       {this.state.topComplaintType &&
-                        this.state.topComplaintType.map((data, index) => (
-                          <Cell
-                            key={data}
-                            fill={COLORS[index % COLORS.length]}
-                          />
-                        ))}
+                        this.state.topComplaintType.map((data, index) => <Cell key={data} fill={COLORS[index % COLORS.length]} />)}
                     </Pie>
                   </PieChart>
                 </ResponsiveContainer>

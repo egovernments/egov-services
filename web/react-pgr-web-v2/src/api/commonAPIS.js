@@ -26,17 +26,10 @@ var requestInfo = {
   authToken: authToken,
 };
 
-var tenantId = localStorage.getItem('tenantId')
-  ? localStorage.getItem('tenantId')
-  : 'default';
+var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
 
 module.exports = {
-  commonApiPost: (
-    context,
-    queryObject = {},
-    body = {},
-    doNotOverride = false
-  ) => {
+  commonApiPost: (context, queryObject = {}, body = {}, doNotOverride = false) => {
     var url = context;
     if (!doNotOverride) url += '?tenantId=' + tenantId;
     else url += '?';

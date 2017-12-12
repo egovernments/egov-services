@@ -57,13 +57,11 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'employee.createPosition.groups.fields.outsourcepost.value1',
+                label: 'employee.createPosition.groups.fields.outsourcepost.value1',
                 value: true,
               },
               {
-                label:
-                  'employee.createPosition.groups.fields.outsourcepost.value2',
+                label: 'employee.createPosition.groups.fields.outsourcepost.value2',
                 value: false,
               },
             ],
@@ -126,12 +124,7 @@ var dat = {
         },
         { label: 'employee.createPosition.groups.fields.outsourcepost' },
       ],
-      values: [
-        'name',
-        'deptdesig.department',
-        'deptdesig.designation.id',
-        'isPostOutsourced',
-      ],
+      values: ['name', 'deptdesig.department', 'deptdesig.designation.id', 'isPostOutsourced'],
       resultPath: 'Position',
       rowClickUrlUpdate: '/update/employee/createPosition/{id}',
       rowClickUrlView: '/view/employee/createPosition/{id}',
@@ -195,13 +188,11 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'employee.createPosition.groups.fields.outsourcepost.value1',
+                label: 'employee.createPosition.groups.fields.outsourcepost.value1',
                 value: true,
               },
               {
-                label:
-                  'employee.createPosition.groups.fields.outsourcepost.value2',
+                label: 'employee.createPosition.groups.fields.outsourcepost.value2',
                 value: false,
               },
             ],
@@ -280,13 +271,11 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'employee.createPosition.groups.fields.outsourcepost.value1',
+                label: 'employee.createPosition.groups.fields.outsourcepost.value1',
                 value: true,
               },
               {
-                label:
-                  'employee.createPosition.groups.fields.outsourcepost.value2',
+                label: 'employee.createPosition.groups.fields.outsourcepost.value2',
                 value: false,
               },
             ],

@@ -17,15 +17,10 @@ class UiAddButton extends Component {
     // debugger;
     if (customUrl) {
       // debugger;
-      localStorage.setItem(
-        'returnUrl',
-        'search/' + params.moduleName + '/' + params.master + '/view'
-      );
+      localStorage.setItem('returnUrl', 'search/' + params.moduleName + '/' + params.master + '/view');
       setRoute(customUrl);
     } else {
-      setRoute(
-        `/create/${params.moduleName}` + (params.master && '/' + params.master)
-      );
+      setRoute(`/create/${params.moduleName}` + (params.master && '/' + params.master));
     }
   };
 
@@ -55,6 +50,4 @@ const mapDispatchToProps = dispatch => ({
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
 });
 
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(UiAddButton)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UiAddButton));

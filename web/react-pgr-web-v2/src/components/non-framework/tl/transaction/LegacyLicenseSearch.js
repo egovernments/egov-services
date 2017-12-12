@@ -38,17 +38,11 @@ class LegacyLicenseSearch extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -66,17 +60,10 @@ class LegacyLicenseSearch extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -86,9 +73,7 @@ class LegacyLicenseSearch extends Component {
   }
 
   getVal = path => {
-    return typeof _.get(this.props.formData, path) != 'undefined'
-      ? _.get(this.props.formData, path)
-      : '';
+    return typeof _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
 
   initData() {
@@ -104,17 +89,9 @@ class LegacyLicenseSearch extends Component {
     //   }
     // } catch(e) {}
 
-    specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense`)
-      .default;
+    specifications = require(`../../../framework/specs/tl/master/CreateLegacyLicense`).default;
 
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications[`tl.search`];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
@@ -124,8 +101,7 @@ class LegacyLicenseSearch extends Component {
     setModuleName('tl');
     setActionName('search');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
       pathname: this.props.history.location.pathname,
@@ -147,40 +123,24 @@ class LegacyLicenseSearch extends Component {
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
     for (var key in formData) {
-      if (formData[key] !== '' && typeof formData[key] == 'undefined')
-        delete formData[key];
+      if (formData[key] !== '' && typeof formData[key] == 'undefined') delete formData[key];
     }
 
     Api.commonApiPost(
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .url,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url,
       formData,
       {},
       null,
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .useTimestamp
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp
     ).then(
       function(res) {
         self.props.setLoadingStatus('hide');
         var resultList = {
-          resultHeader: [
-            { label: '#' },
-            ...self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].result.header,
-          ],
+          resultHeader: [{ label: '#' }, ...self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header],
           resultValues: [],
         };
-        var specsValuesList =
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.values;
-        var values = _.get(
-          res,
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.resultPath
-        );
+        var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
+        var values = _.get(res, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath);
         if (values && values.length) {
           for (var i = 0; i < values.length; i++) {
             var tmp = [i + 1];
@@ -213,31 +173,14 @@ class LegacyLicenseSearch extends Component {
     return _.get(this.props.formData, path) || '';
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
     let { handleChange, mockData, setDropDownData, formData } = this.props;
     let hashLocation = window.location.hash;
     let obj = specifications[`tl.search`];
     // console.log(obj);
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -270,9 +213,7 @@ class LegacyLicenseSearch extends Component {
                   );
                 }
               } else {
-                id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                  i
-                ].split('=')[1];
+                id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
               }
             }
           }
@@ -315,14 +256,7 @@ class LegacyLicenseSearch extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
@@ -331,12 +265,8 @@ class LegacyLicenseSearch extends Component {
     var value = this.state.values[index];
     var _url =
       window.location.hash.split('/').indexOf('update') > -1
-        ? this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlUpdate
-        : this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlView;
+        ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate
+        : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
     var key = _url.split('{')[1].split('}')[0];
     _url = _url.replace('{' + key + '}', encodeURIComponent(_.get(value, key)));
     this.props.setRoute(_url);
@@ -346,8 +276,7 @@ class LegacyLicenseSearch extends Component {
     let { moduleName, actionName, metaData, setFormData } = this.props;
     let obj = metaData[`${moduleName}.${actionName}`];
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
       pathname: this.props.history.location.pathname,
@@ -356,22 +285,8 @@ class LegacyLicenseSearch extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      search,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      rowClickHandler,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { search, handleChange, getVal, addNewCard, removeCard, rowClickHandler } = this;
     let { showResult, resultList } = this.state;
     console.log(formData);
     return (
@@ -392,9 +307,7 @@ class LegacyLicenseSearch extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
               />
@@ -409,18 +322,9 @@ class LegacyLicenseSearch extends Component {
               }}
               ui="google"
             />&nbsp;&nbsp;
-            <UiButton
-              item={{ label: 'Reset', uiType: 'button', primary: false }}
-              ui="google"
-              handler={this.resetForm}
-            />
+            <UiButton item={{ label: 'Reset', uiType: 'button', primary: false }} ui="google" handler={this.resetForm} />
             <br />
-            {showResult && (
-              <UiTable
-                resultList={resultList}
-                rowClickHandler={rowClickHandler}
-              />
-            )}
+            {showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler} />}
           </div>
         </form>
       </div>
@@ -458,14 +362,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,
@@ -500,6 +397,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: 'SET_DROPDWON_DATA', fieldName, dropDownData });
   },
 });
-export default connect(mapStateToProps, mapDispatchToProps)(
-  LegacyLicenseSearch
-);
+export default connect(mapStateToProps, mapDispatchToProps)(LegacyLicenseSearch);

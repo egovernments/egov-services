@@ -73,8 +73,7 @@ var dat = {
               {
                 jsonPath: 'cases[0].departmentPerson',
                 type: 'dropDown',
-                pattern:
-                  '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
+                pattern: '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
               },
             ],
           },
@@ -108,8 +107,7 @@ var dat = {
             isRequired: false,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'addWitness',
@@ -187,8 +185,7 @@ var dat = {
                   jsonPath: 'cases[0].advocateDetails[1].advocate.code',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
+                  url: '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
                 },
                 {
                   name: 'advocateAssignDate',

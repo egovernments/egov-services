@@ -19,12 +19,7 @@ export default class UiNumberField extends Component {
           ? '0' + new Date(this.props.getVal(item.jsonPath)).getDate()
           : new Date(this.props.getVal(item.jsonPath)).getDate();
       // date=y+"-"+("0"+(m-1).toString())+"-"+d;
-      date =
-        y +
-        '-' +
-        (parseInt(m) + 1 > 10 ? parseInt(m) + 1 : '0' + (parseInt(m) + 1)) +
-        '-' +
-        d;
+      date = y + '-' + (parseInt(m) + 1 > 10 ? parseInt(m) + 1 : '0' + (parseInt(m) + 1)) + '-' + d;
     }
     switch (this.props.ui) {
       case 'google':
@@ -44,10 +39,7 @@ export default class UiNumberField extends Component {
             type="date"
             floatingLabelText={
               <span>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             }
             floatingLabelFixed={true}
@@ -59,11 +51,7 @@ export default class UiNumberField extends Component {
                 this.props.handler(
                   {
                     target: {
-                      value: new Date(
-                        e.target.value.split('-')[0],
-                        e.target.value.split('-')[1] - 1,
-                        e.target.value.split('-')[2]
-                      ).getTime(),
+                      value: new Date(e.target.value.split('-')[0], e.target.value.split('-')[1] - 1, e.target.value.split('-')[2]).getTime(),
                     },
                   },
                   item.jsonPath,

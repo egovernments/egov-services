@@ -325,8 +325,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-common-masters/departments/_search?tenantId=default|$..id|$..name',
+            url: '/egov-common-masters/departments/_search?tenantId=default|$..id|$..name',
             requiredErrMsg: '',
             patternErrMsg: '',
           },

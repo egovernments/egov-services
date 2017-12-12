@@ -129,14 +129,9 @@ class App extends Component {
     // console.log("hit");
 
     if (localStorage.getItem('token') && localStorage.getItem('userRequest')) {
-      this.props.onLoad(
-        { UserRequest: JSON.parse(localStorage.getItem('userRequest')) },
-        localStorage.getItem('token')
-      );
+      this.props.onLoad({ UserRequest: JSON.parse(localStorage.getItem('userRequest')) }, localStorage.getItem('token'));
       Api.commonApiPost('tenant/v1/tenant/_search', {
-        code: localStorage.getItem('tenantId')
-          ? localStorage.getItem('tenantId')
-          : 'default',
+        code: localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default',
       }).then(
         function(res) {
           // console.log(res);
@@ -193,18 +188,14 @@ class App extends Component {
       actionList,
     } = this.props;
 
-    const actions = [
-      <FlatButton label="Ok" primary={true} onTouchTap={this.handleClose} />,
-    ];
+    const actions = [<FlatButton label="Ok" primary={true} onTouchTap={this.handleClose} />];
     return (
       <div className="App">
         {/*<Drawer className="drawer-backGround" docked={true} open={showMenu ||false} >
            {actionList && actionList.length>0 && <CustomMenu menuItems={[]} actionList={actionList} />}
           </Drawer>*/}
 
-        <div
-          className={classnames('app-content', { expanded: showMenu || false })}
-        >
+        <div className={classnames('app-content', { expanded: showMenu || false })}>
           <Header />
           {router}
           <Footer />
@@ -229,15 +220,11 @@ class App extends Component {
             bodyStyle={{
               pointerEvents: 'initial',
               maxWidth: 'none',
-              backgroundColor: isSuccess
-                ? '#3ca23c'
-                : isError ? '#e83e36' : 'rgb(95, 92, 98)',
+              backgroundColor: isSuccess ? '#3ca23c' : isError ? '#e83e36' : 'rgb(95, 92, 98)',
               textAlign: 'center',
             }}
             autoHideDuration={6000}
-            onRequestClose={() =>
-              toggleSnackbarAndSetText(false, '', false, false)
-            }
+            onRequestClose={() => toggleSnackbarAndSetText(false, '', false, false)}
           />
         )}
         <LoadingIndicator status={loadingStatus || 'hide'} />
@@ -270,8 +257,7 @@ const mapStateToProps = state => ({
 // this.props.appLoaded
 
 const mapDispatchToProps = dispatch => ({
-  onLoad: (payload, token) =>
-    dispatch({ type: 'APP_LOAD', payload, token, skipTracking: true }),
+  onLoad: (payload, token) => dispatch({ type: 'APP_LOAD', payload, token, skipTracking: true }),
   onRedirect: () => dispatch({ type: 'REDIRECT' }),
   setRoute: route => dispatch({ type: 'SET_ROUTE', route }),
   // setLabels: payload => dispatch({type: 'LABELS', payload}),

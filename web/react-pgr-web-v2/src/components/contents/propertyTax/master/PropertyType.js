@@ -39,11 +39,7 @@ class PropertyType extends Component {
     return (
       <div className="propertyType">
         <Card>
-          <CardHeader
-            title={
-              <strong style={{ color: brown500 }}>Search Property Type</strong>
-            }
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Search Property Type</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -71,24 +67,9 @@ class PropertyType extends Component {
               </CardText>
             </Card>
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="submit"
-                label="Create"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
-              <RaisedButton
-                type="submit"
-                label="Update"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
-              <RaisedButton
-                type="submit"
-                label="View"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="submit" label="Create" backgroundColor={brown500} labelColor={white} />
+              <RaisedButton type="submit" label="Update" backgroundColor={brown500} labelColor={white} />
+              <RaisedButton type="submit" label="View" backgroundColor={brown500} labelColor={white} />
               <RaisedButton type="button" label="Close" />
             </div>
           </CardText>

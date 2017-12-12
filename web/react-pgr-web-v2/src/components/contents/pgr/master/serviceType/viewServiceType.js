@@ -48,11 +48,7 @@ class ViewServiceType extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/pgr-master/service/v1/_search',
-        { id: this.props.match.params.id, keywords: 'complaint' },
-        {}
-      )
+      Api.commonApiPost('/pgr-master/service/v1/_search', { id: this.props.match.params.id, keywords: 'complaint' }, {})
         .then(function(response) {
           console.log(response);
           current.setState({ data: response.Service });
@@ -107,69 +103,38 @@ class ViewServiceType extends Component {
       <div className="viewServiceType">
         <Grid style={{ width: '100%' }}>
           <Card style={{ margin: '15px 0' }}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={<div style={styles.headerStyle}>View Grievance Type</div>}
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>View Grievance Type</div>} />
             <CardText style={{ padding: '8px 16px 0' }}>
               <List>
                 <Row>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.add.name')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.serviceName
-                            ? viewServiceType.serviceName
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.serviceName ? viewServiceType.serviceName : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.code')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.serviceCode
-                            ? viewServiceType.serviceCode
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.serviceCode ? viewServiceType.serviceCode : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.service.localName')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.localName
-                            ? viewServiceType.localName
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.localName ? viewServiceType.localName : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.description')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.description
-                            ? viewServiceType.description
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.description ? viewServiceType.description : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.lbl.active')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.active ? 'Yes' : 'No'}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.active ? 'Yes' : 'No'}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
@@ -177,12 +142,7 @@ class ViewServiceType extends Component {
                       primaryText={translate('core.category')}
                       secondaryText={
                         <p style={styles.customColumnStyle}>
-                          {getNameById(categorySource, viewServiceType.category)
-                            ? getNameById(
-                                categorySource,
-                                viewServiceType.category
-                              )
-                            : ''}
+                          {getNameById(categorySource, viewServiceType.category) ? getNameById(categorySource, viewServiceType.category) : ''}
                         </p>
                       }
                     />
@@ -190,23 +150,13 @@ class ViewServiceType extends Component {
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.lbl.slahour')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.slaHours
-                            ? viewServiceType.slaHours
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.slaHours ? viewServiceType.slaHours : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.lbl.finimpact')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewServiceType.hasFinancialImpact ? 'Yes' : 'No'}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewServiceType.hasFinancialImpact ? 'Yes' : 'No'}</p>}
                     />
                   </Col>
                 </Row>

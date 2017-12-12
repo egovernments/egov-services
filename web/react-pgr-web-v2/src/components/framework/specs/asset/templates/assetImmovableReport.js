@@ -17,9 +17,7 @@ export default class assetImmovableReport extends Component {
   componentDidMount() {
     var self = this;
     Api.commonApiPost('tenant/v1/tenant/_search', {
-      code: localStorage.getItem('tenantId')
-        ? localStorage.getItem('tenantId')
-        : 'default',
+      code: localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default',
     }).then(
       function(res) {
         self.setState({
@@ -37,13 +35,7 @@ export default class assetImmovableReport extends Component {
   convertToDate = time => {
     if (time) {
       let date = new Date(time);
-      return (
-        ('0' + date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (date.getMonth() + 1)).slice(-2) +
-        '/' +
-        date.getFullYear()
-      );
+      return ('0' + date.getDate()).slice(-2) + '/' + ('0' + (date.getMonth() + 1)).slice(-2) + '/' + date.getFullYear();
     }
   };
 
@@ -55,8 +47,7 @@ export default class assetImmovableReport extends Component {
       var lastThree = x.substring(x.length - 3);
       var otherNumbers = x.substring(0, x.length - 3);
       if (otherNumbers != '') lastThree = ',' + lastThree;
-      var resCal =
-        otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
+      var resCal = otherNumbers.replace(/\B(?=(\d{2})+(?!\d))/g, ',') + lastThree;
       var res = y == null ? resCal : resCal + '.' + y;
       return res;
     }
@@ -132,18 +123,13 @@ export default class assetImmovableReport extends Component {
               <tr>
                 <td colSpan={4} rowSpan={2} style={{ textAlign: 'left' }}>
                   <b>
-                    मालमत्ता ज्या अन्वये संपादित केली होती, <br /> खरेदी केली
-                    होती किंवा बांधली होती,<br />
+                    मालमत्ता ज्या अन्वये संपादित केली होती, <br /> खरेदी केली होती किंवा बांधली होती,<br />
                     त्या आदेशाचा क्रमांक व दिनांक
                   </b>
                 </td>
                 <td colSpan={4} rowSpan={2} style={{ textAlign: 'left' }}>
                   <b>{this.props.data[34] ? this.props.data[34] : ''},</b>&nbsp;&nbsp;
-                  <b>
-                    {convertToDate(
-                      this.props.data[19] ? this.props.data[19] : ''
-                    )}
-                  </b>
+                  <b>{convertToDate(this.props.data[19] ? this.props.data[19] : '')}</b>
                 </td>
                 <td colSpan={5} style={{ textAlign: 'left' }}>
                   <b>अधिपत्र ( होय / नाही )</b>
@@ -157,11 +143,7 @@ export default class assetImmovableReport extends Component {
                   <b>असल्यास , समाप्ती दिनांक</b>
                 </td>
                 <td colSpan={4} style={{ textAlign: 'left' }}>
-                  <b>
-                    {convertToDate(
-                      this.props.data[12] ? this.props.data[12] : ''
-                    )}
-                  </b>
+                  <b>{convertToDate(this.props.data[12] ? this.props.data[12] : '')}</b>
                 </td>
               </tr>
             </tbody>
@@ -177,12 +159,8 @@ export default class assetImmovableReport extends Component {
                 <b>दोषी दायित्व</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'left' }}>
-                <b>
-                  {this.props.data[13] ? this.props.data[13] + 'Y,' : ''}&nbsp;&nbsp;
-                </b>
-                <b>
-                  {this.props.data[14] ? this.props.data[14] + 'M,' : ''}&nbsp;&nbsp;
-                </b>
+                <b>{this.props.data[13] ? this.props.data[13] + 'Y,' : ''}&nbsp;&nbsp;</b>
+                <b>{this.props.data[14] ? this.props.data[14] + 'M,' : ''}&nbsp;&nbsp;</b>
                 <b>{this.props.data[15] ? this.props.data[15] + 'D' : ''}</b>
               </td>
             </tbody>
@@ -198,11 +176,7 @@ export default class assetImmovableReport extends Component {
                 <b>राखून ठेवलेली प्रतिभूती ठेव</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'right' }}>
-                <b>
-                  {numberWithCommas(
-                    this.props.data[16] ? this.props.data[16] : ''
-                  )}
-                </b>
+                <b>{numberWithCommas(this.props.data[16] ? this.props.data[16] : '')}</b>
               </td>
             </tbody>
 
@@ -217,11 +191,7 @@ export default class assetImmovableReport extends Component {
                 <b>वसूल केलेली प्रतिभूति ठेव</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'right' }}>
-                <b>
-                  {numberWithCommas(
-                    this.props.data[17] ? this.props.data[17] : ''
-                  )}
-                </b>
+                <b>{numberWithCommas(this.props.data[17] ? this.props.data[17] : '')}</b>
               </td>
             </tbody>
 
@@ -236,11 +206,7 @@ export default class assetImmovableReport extends Component {
                 <b>दिनांक</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'left' }}>
-                <b>
-                  {convertToDate(
-                    this.props.data[18] ? this.props.data[18] : ''
-                  )}
-                </b>
+                <b>{convertToDate(this.props.data[18] ? this.props.data[18] : '')}</b>
               </td>
             </tbody>
 
@@ -255,11 +221,7 @@ export default class assetImmovableReport extends Component {
                 <b> रक्कम रु.</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'right' }}>
-                <b>
-                  {numberWithCommas(
-                    this.props.data[21] ? this.props.data[21] : ''
-                  )}
-                </b>
+                <b>{numberWithCommas(this.props.data[21] ? this.props.data[21] : '')}</b>
               </td>
             </tbody>
 
@@ -280,12 +242,8 @@ export default class assetImmovableReport extends Component {
                 <b> संरचनेचा आकार</b>
               </td>
               <td colSpan={4} style={{ textAlign: 'left' }}>
-                <b>
-                  L-{this.props.data[5] ? this.props.data[5] : ''},&nbsp;&nbsp;
-                </b>
-                <b>
-                  W-{this.props.data[6] ? this.props.data[6] : ''},&nbsp;&nbsp;
-                </b>
+                <b>L-{this.props.data[5] ? this.props.data[5] : ''},&nbsp;&nbsp;</b>
+                <b>W-{this.props.data[6] ? this.props.data[6] : ''},&nbsp;&nbsp;</b>
                 <b>H-{this.props.data[7] ? this.props.data[7] : ''}</b>
               </td>
               <td colSpan={9} style={{ textAlign: 'left' }}>
@@ -310,11 +268,7 @@ export default class assetImmovableReport extends Component {
                   <b> उपलब्ध शीर्ष दस्तऐवज</b>
                 </td>
                 <td colSpan={4} style={{ textAlign: 'left' }}>
-                  <b>
-                    {this.props.data[38]
-                      ? JSON.parse(this.props.data[38]).join(',')
-                      : ''}
-                  </b>
+                  <b>{this.props.data[38] ? JSON.parse(this.props.data[38]).join(',') : ''}</b>
                 </td>
               </tr>
               <tr>
@@ -467,104 +421,52 @@ export default class assetImmovableReport extends Component {
             <tbody>
               <tr>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {convertToDate(
-                      this.props.data[19] ? this.props.data[19] : ''
-                    )}
-                  </b>
+                  <b>{convertToDate(this.props.data[19] ? this.props.data[19] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[20] ? this.props.data[20] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[20] ? this.props.data[20] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[21] ? this.props.data[21] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[21] ? this.props.data[21] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b>N/A</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {convertToDate(
-                      this.props.data[26] ? this.props.data[26] : ''
-                    )}
-                  </b>
+                  <b>{convertToDate(this.props.data[26] ? this.props.data[26] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b>{this.props.data[1] ? this.props.data[1] : ''}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[24] ? this.props.data[24] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[24] ? this.props.data[24] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b>{this.props.data[25] ? this.props.data[25] : ''}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {convertToDate(
-                      this.props.data[27] ? this.props.data[27] : ''
-                    )}
-                  </b>
+                  <b>{convertToDate(this.props.data[27] ? this.props.data[27] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[28] ? this.props.data[28] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[28] ? this.props.data[28] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[29] ? this.props.data[29] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[29] ? this.props.data[29] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[49] ? this.props.data[49] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[49] ? this.props.data[49] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[50] ? this.props.data[50] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[50] ? this.props.data[50] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[51] ? this.props.data[51] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[51] ? this.props.data[51] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[31] ? this.props.data[31] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[31] ? this.props.data[31] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
-                  <b>
-                    {numberWithCommas(
-                      this.props.data[23] ? this.props.data[23] : ''
-                    )}
-                  </b>
+                  <b>{numberWithCommas(this.props.data[23] ? this.props.data[23] : '')}</b>
                 </td>
                 <td style={{ textAlign: 'center' }}>
                   <b />

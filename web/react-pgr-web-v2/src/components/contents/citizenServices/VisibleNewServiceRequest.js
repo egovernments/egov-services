@@ -57,8 +57,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const VisibleNewServiceRequest = connect(mapStateToProps, mapDispatchToProps)(
-  NewServiceRequest
-);
+const VisibleNewServiceRequest = connect(mapStateToProps, mapDispatchToProps)(NewServiceRequest);
 
 export default VisibleNewServiceRequest;

@@ -16,8 +16,7 @@ var dat = {
             type: 'autoCompelete',
             isDisabled: false,
             patternErrorMsg: 'vendorcontracts.create.field.message.contractNo',
-            url:
-              'swm-services/vendorcontracts/_search?|$.vendorContracts.*.contractNo|$.vendorContracts.*.contractNo',
+            url: 'swm-services/vendorcontracts/_search?|$.vendorContracts.*.contractNo|$.vendorContracts.*.contractNo',
           },
           {
             name: 'vendor',
@@ -26,8 +25,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             patternErrorMsg: 'vendorcontracts.create.field.message.vendorNo',
-            url:
-              '/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
+            url: '/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
           },
           {
             name: 'contractPeriodFrom',
@@ -35,8 +33,7 @@ var dat = {
             label: 'vendorcontracts.create.contractPeriodFrom',
             type: 'datePicker',
             isDisabled: false,
-            patternErrorMsg:
-              'vendorcontracts.create.field.message.contractPeriodFrom',
+            patternErrorMsg: 'vendorcontracts.create.field.message.contractPeriodFrom',
           },
           {
             name: 'contractPeriodto',
@@ -44,8 +41,7 @@ var dat = {
             label: 'vendorcontracts.create.contractPeriodto',
             type: 'datePicker',
             isDisabled: false,
-            patternErrorMsg:
-              'vendorcontracts.create.field.message.contractPeriodto',
+            patternErrorMsg: 'vendorcontracts.create.field.message.contractPeriodto',
           },
           {
             name: 'contractDate',
@@ -53,8 +49,7 @@ var dat = {
             label: 'vendorcontracts.create.contractDate',
             type: 'datePicker',
             isDisabled: false,
-            patternErrorMsg:
-              'vendorcontracts.create.field.message.contractDate',
+            patternErrorMsg: 'vendorcontracts.create.field.message.contractDate',
           },
         ],
       },
@@ -124,8 +119,7 @@ var dat = {
             maxLength: 265,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
+            url: '/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
           },
           {
             name: 'contractDate',
@@ -371,8 +365,7 @@ var dat = {
             maxLength: 265,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
+            url: '/swm-services/vendors/_search?|$.vendors.*.vendorNo|$.vendors.*.name',
           },
           {
             name: 'contractDate',

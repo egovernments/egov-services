@@ -17,8 +17,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -30,8 +29,7 @@ var dat = {
             label: 'wc.create.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/usages/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/usages/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -70,8 +68,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -83,8 +80,7 @@ var dat = {
             label: 'wc.create.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/usages/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/usages/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -105,11 +101,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'wc.create.propertyType' },
-        { label: 'wc.create.usageType' },
-        { label: 'wc.create.active' },
-      ],
+      header: [{ label: 'wc.create.propertyType' }, { label: 'wc.create.usageType' }, { label: 'wc.create.active' }],
       values: ['propertyType', 'usageType', 'active'],
       resultPath: 'PropertyTypeUsageTypes',
       rowClickUrlUpdate: '/update/wc/propertyUsage/{id}',
@@ -182,8 +174,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -195,8 +186,7 @@ var dat = {
             label: 'wc.create.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/usages/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/usages/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',

@@ -83,17 +83,12 @@ class UiMultiFieldTable extends Component {
     var listValues = _.cloneDeep(props.item.tableList.values);
     // console.log(listValues);
     if (numberOfRowsArray && numberOfRowsArray.length > 0 && !isintialLoad) {
-      var regexp = new RegExp(
-        `${this.escapeRegExp(props.item.jsonPath)}\\[\\d+\\]`
-      );
+      var regexp = new RegExp(`${this.escapeRegExp(props.item.jsonPath)}\\[\\d+\\]`);
       for (var i = 0; i < numberOfRowsArray.length; i++) {
         var listValuesArray = _.cloneDeep(listValues);
         for (var j = 0; j < listValuesArray.length; j++) {
           //  console.log(listValuesArray[j].jsonPath);
-          listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(
-            regexp,
-            `${props.item.jsonPath}[${i}]`
-          );
+          listValuesArray[j].jsonPath = listValuesArray[j].jsonPath.replace(regexp, `${props.item.jsonPath}[${i}]`);
         }
         valuesArray.push(listValuesArray);
       }
@@ -108,10 +103,7 @@ class UiMultiFieldTable extends Component {
         isintialLoad: true,
       });
     }
-    this.addMandatoryOnLoad(
-      props.item.tableList.values,
-      numberOfRowsArray ? numberOfRowsArray.length : 1
-    );
+    this.addMandatoryOnLoad(props.item.tableList.values, numberOfRowsArray ? numberOfRowsArray.length : 1);
   };
 
   // shouldComponentUpdate(nextProps, nextState){
@@ -124,17 +116,12 @@ class UiMultiFieldTable extends Component {
     let { addRequiredFields, delRequiredFields, formData } = this.props;
     let addReq = [];
     let delReq = [];
-    var regexp = new RegExp(
-      `${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`
-    );
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
     for (let i = 0; i < length; i++) {
       values &&
         values.map((row, rowIdx) => {
           if (row.isRequired && !row.isHidden) {
-            row.jsonPath = row.jsonPath.replace(
-              regexp,
-              `${this.props.item.jsonPath}[${i}]`
-            );
+            row.jsonPath = row.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
             // console.log(row.jsonPath);
             addReq.push(row.jsonPath);
           } else if (row.isHidden) {
@@ -173,14 +160,9 @@ class UiMultiFieldTable extends Component {
     // console.log('remove mandatory');
     let { delRequiredFields } = this.props;
     let req = [];
-    var regexp = new RegExp(
-      `${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`
-    );
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
     this.props.item.tableList.values.map(item => {
-      item.jsonPath = item.jsonPath.replace(
-        regexp,
-        `${this.props.item.jsonPath}[${idx}]`
-      );
+      item.jsonPath = item.jsonPath.replace(regexp, `${this.props.item.jsonPath}[${idx}]`);
       req.push(item.jsonPath);
     });
     delRequiredFields(req);
@@ -188,19 +170,14 @@ class UiMultiFieldTable extends Component {
 
   addNewRow() {
     var val = JSON.parse(JSON.stringify(this.state.list));
-    var regexp = new RegExp(
-      `${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`
-    );
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
     this.setState(
       {
         index: this.state.index + 1,
       },
       () => {
         for (var i = 0; i < val.length; i++) {
-          val[i].jsonPath = val[i].jsonPath.replace(
-            regexp,
-            `${this.props.item.jsonPath}[${this.state.index}]`
-          );
+          val[i].jsonPath = val[i].jsonPath.replace(regexp, `${this.props.item.jsonPath}[${this.state.index}]`);
         }
         this.addMandatoryforAdd(val);
         let values = [...this.state.values];
@@ -226,15 +203,10 @@ class UiMultiFieldTable extends Component {
     let values = Object.assign([], this.state.values);
     this.removeMandatoryForDelete(values.length - 1);
     values.splice(ind, 1);
-    var regexp = new RegExp(
-      `${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`
-    );
+    var regexp = new RegExp(`${this.escapeRegExp(this.props.item.jsonPath)}\\[\\d+\\]`);
     for (var i = 0; i < values.length; i++) {
       for (var j = 0; j < values[i].length; j++) {
-        values[i][j].jsonPath = values[i][j].jsonPath.replace(
-          regexp,
-          `${this.props.item.jsonPath}[${i}]`
-        );
+        values[i][j].jsonPath = values[i][j].jsonPath.replace(regexp, `${this.props.item.jsonPath}[${i}]`);
         if (values[i][j].dependency) {
           //Changes to handle dependency sum
           dependencyFlag = 1;
@@ -255,11 +227,7 @@ class UiMultiFieldTable extends Component {
         if (formDataArray && formDataArray.length) {
           formDataArray.splice(ind, 1);
           var newArray = _.cloneDeep(formDataArray);
-          var newFormData = _.set(
-            formData,
-            this.props.item.jsonPath,
-            formDataArray
-          );
+          var newFormData = _.set(formData, this.props.item.jsonPath, formDataArray);
           this.props.setFormData(newFormData);
         }
       }
@@ -287,25 +255,14 @@ class UiMultiFieldTable extends Component {
               amtsum += parseInt(svalue);
             }
           }
-          this.props.handler(
-            { target: { value: amtsum } },
-            depField,
-            false,
-            '',
-            ''
-          );
+          this.props.handler({ target: { value: amtsum } }, depField, false, '', '');
         }
       }
     }
   };
 
   renderFields = (item, screen) => {
-    if (
-      screen == 'view' &&
-      ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(
-        item.type
-      ) == -1
-    ) {
+    if (screen == 'view' && ['documentList', 'fileTable', 'arrayText', 'arrayNumber'].indexOf(item.type) == -1) {
       if (item.type == 'datePicker') {
         item.isDate = true;
       }
@@ -314,23 +271,11 @@ class UiMultiFieldTable extends Component {
     switch (item.type) {
       case 'text':
         return (
-          <UiTextField
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiTextField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'textarea':
         return (
-          <UiTextArea
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiTextArea ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'singleValueListMultiple':
         return (
@@ -397,33 +342,15 @@ class UiMultiFieldTable extends Component {
         );
       case 'checkbox':
         return (
-          <UiCheckBox
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiCheckBox ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'email':
         return (
-          <UiEmailField
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiEmailField ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'datePicker':
         return (
-          <UiDatePicker
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiDatePicker ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'singleFileUpload':
         return (
@@ -447,33 +374,15 @@ class UiMultiFieldTable extends Component {
         );
       case 'pan':
         return (
-          <UiPanCard
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiPanCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'aadhar':
         return (
-          <UiAadharCard
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiAadharCard ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'pinCode':
         return (
-          <UiPinCode
-            ui={this.props.ui}
-            getVal={this.props.getVal}
-            item={item}
-            fieldErrors={this.props.fieldErrors}
-            handler={this.props.handler}
-          />
+          <UiPinCode ui={this.props.ui} getVal={this.props.getVal} item={item} fieldErrors={this.props.fieldErrors} handler={this.props.handler} />
         );
       case 'label':
         return <UiLabel getVal={this.props.getVal} item={item} />;
@@ -508,8 +417,7 @@ class UiMultiFieldTable extends Component {
 
     item.tableList.values.map(val => {
       if (val.isHidden) {
-        if (val.checkjPath && _.get(formData, val.checkjPath))
-          footerArray.push(undefined);
+        if (val.checkjPath && _.get(formData, val.checkjPath)) footerArray.push(undefined);
       } else {
         footerArray.push(undefined);
       }
@@ -523,11 +431,7 @@ class UiMultiFieldTable extends Component {
         for (var key in item.tableList.footer[i]) {
           let array = jp.query(formData, `$..${item.tableList.footer[i][key]}`);
           // console.log(key, array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0));
-          footerArray[key] = array.reduce(
-            (previousValue, currentValue) =>
-              Number(previousValue) + Number(currentValue),
-            0
-          );
+          footerArray[key] = array.reduce((previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0);
           // footerArray.splice(key+1,0,array.reduce( (previousValue, currentValue) => Number(previousValue) + Number(currentValue), 0))
         }
       }
@@ -568,11 +472,7 @@ class UiMultiFieldTable extends Component {
                   );
                 }
               })}
-              {!item.tableList.actionsNotRequired ? (
-                <th>{translate('reports.common.action')}</th>
-              ) : (
-                ''
-              )}
+              {!item.tableList.actionsNotRequired ? <th>{translate('reports.common.action')}</th> : ''}
             </tr>
           </thead>
           <tbody>
@@ -585,20 +485,12 @@ class UiMultiFieldTable extends Component {
                     {v.map((v2, i2) => {
                       if (v2.isHidden) {
                         if (v2.checkjPath && _.get(formData, v2.checkjPath)) {
-                          return (
-                            <td key={i2}>
-                              {this.renderFields(v2, this.props.screen)}
-                            </td>
-                          );
+                          return <td key={i2}>{this.renderFields(v2, this.props.screen)}</td>;
                         } else {
                           return null;
                         }
                       } else {
-                        return (
-                          <td key={i2}>
-                            {this.renderFields(v2, this.props.screen)}
-                          </td>
-                        );
+                        return <td key={i2}>{this.renderFields(v2, this.props.screen)}</td>;
                       }
                     })}
                     {!item.tableList.actionsNotRequired ? (
@@ -626,11 +518,7 @@ class UiMultiFieldTable extends Component {
                 {footerArray.map((val, index) => {
                   let value = val !== undefined ? val.toFixed(2) : '';
                   return (
-                    <td
-                      key={index}
-                      className="text-right"
-                      style={{ fontWeight: 'bold' }}
-                    >
+                    <td key={index} className="text-right" style={{ fontWeight: 'bold' }}>
                       {value ? `Total: ${value}` : ''}
                     </td>
                   );

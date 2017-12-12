@@ -18,10 +18,7 @@ export default class UiNumberField extends Component {
           },
           floatingLabelText: (
             <span>
-              {item.label}{' '}
-              <span style={{ color: '#FF0000' }}>
-                {item.isRequired ? ' *' : ''}
-              </span>
+              {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </span>
           ),
         };

@@ -78,13 +78,7 @@ var dat = {
           label: 'inventory.issueStore.name',
         },
       ],
-      values: [
-        'indentNumber',
-        'indentDate',
-        'indentPurpose',
-        'inventoryType',
-        'issueStore.name',
-      ],
+      values: ['indentNumber', 'indentDate', 'indentPurpose', 'inventoryType', 'issueStore.name'],
       isMultipleSelection: false,
       resultIdKey: 'indentNumber',
       resultPath: 'indents',
@@ -111,8 +105,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: 'inventory.create.field.message.store.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'indentDate',
@@ -320,8 +313,7 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
 
                 {
@@ -547,8 +539,7 @@ var dat = {
             isDisabled: false,
             defaultValue: '',
             patternErrorMsg: 'inventory.create.field.message.store.name',
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'indentDate',
@@ -756,8 +747,7 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description',
                 },
 
                 {
@@ -799,8 +789,7 @@ var dat = {
     ],
     url: '/inventory-services/indents/_update',
     tenantIdRequired: true,
-    searchUrl:
-      '/inventory-services/indents/_search?indentNumber={indentNumber}',
+    searchUrl: '/inventory-services/indents/_search?indentNumber={indentNumber}',
   },
 };
 export default dat;

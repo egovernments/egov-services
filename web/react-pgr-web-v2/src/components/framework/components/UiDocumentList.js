@@ -90,12 +90,7 @@ export default class UiDocumentList extends Component {
 					)
 				})*/
         return (
-          <Table
-            className="table table-striped table-bordered"
-            cellspacing="0"
-            width="100%"
-            responsive
-          >
+          <Table className="table table-striped table-bordered" cellspacing="0" width="100%" responsive>
             <thead>
               <th>#</th>
               <th>{translate('reports.common.businesskey')}</th>
@@ -113,20 +108,9 @@ export default class UiDocumentList extends Component {
                         fullWidth={true}
                         disabled={self.props.readonly}
                         type="text"
-                        value={self.props.getVal(
-                          item.jsonPath + '[' + i + '].name'
-                        )}
+                        value={self.props.getVal(item.jsonPath + '[' + i + '].name')}
                         errorText={self.props.fieldErrors[item.jsonPath]}
-                        onChange={e =>
-                          self.props.handler(
-                            e,
-                            item.jsonPath + '[' + i + '].name',
-                            true,
-                            '',
-                            '',
-                            ''
-                          )
-                        }
+                        onChange={e => self.props.handler(e, item.jsonPath + '[' + i + '].name', true, '', '', '')}
                       />
                     </td>
                     <td>{self.renderFileObject(item, i)}</td>
@@ -152,16 +136,7 @@ export default class UiDocumentList extends Component {
         }
       }
 
-      Api.commonApiPost(
-        context,
-        query,
-        {},
-        '',
-        useTimestamp,
-        false,
-        null,
-        item.appendUserInfo ? JSON.parse(localStorage.userRequest) : null
-      ).then(
+      Api.commonApiPost(context, query, {}, '', useTimestamp, false, null, item.appendUserInfo ? JSON.parse(localStorage.userRequest) : null).then(
         function(res) {
           var documents = [];
           var arr = _.get(res, item.pathToArray);
@@ -173,20 +148,14 @@ export default class UiDocumentList extends Component {
                 name: '',
               };
               for (var i = 0; i < item.autoFillFields.length; i++) {
-                temp[item.autoFillFields[i].name] =
-                  arr[k][item.autoFillFields[i].jsonPath];
+                temp[item.autoFillFields[i].name] = arr[k][item.autoFillFields[i].jsonPath];
               }
 
               documents.push(temp);
             }
 
             self.setState({ documents }, function() {
-              self.props.handler(
-                { target: { value: documents } },
-                item.jsonPath,
-                false,
-                ''
-              );
+              self.props.handler({ target: { value: documents } }, item.jsonPath, false, '');
             });
           }
         },

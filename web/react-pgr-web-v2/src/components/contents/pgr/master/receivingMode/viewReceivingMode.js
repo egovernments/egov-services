@@ -23,11 +23,7 @@ class viewReceivingSet extends Component {
       this.setState({ id: this.props.match.params.id });
       let current = this;
       let { setForm } = this.props;
-      Api.commonApiPost(
-        '/pgr-master/receivingmode/v1/_search',
-        { id: this.props.match.params.id },
-        {}
-      )
+      Api.commonApiPost('/pgr-master/receivingmode/v1/_search', { id: this.props.match.params.id }, {})
         .then(function(response) {
           current.setState({ data: response.ReceivingModeType });
           setForm(response.ReceivingModeType[0]);
@@ -61,8 +57,7 @@ class viewReceivingSet extends Component {
               style={{ paddingBottom: 0 }}
               title={
                 <div style={styles.headerStyle}>
-                  {translate('pgr.lbl.view')}{' '}
-                  {translate('pgr.lbl.receivingmode')}
+                  {translate('pgr.lbl.view')} {translate('pgr.lbl.receivingmode')}
                 </div>
               }
             />
@@ -72,55 +67,31 @@ class viewReceivingSet extends Component {
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.add.name')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewReceivingSet.name ? viewReceivingSet.name : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.name ? viewReceivingSet.name : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.code')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewReceivingSet.code ? viewReceivingSet.code : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.code ? viewReceivingSet.code : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('core.lbl.description')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewReceivingSet.description
-                            ? viewReceivingSet.description
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.description ? viewReceivingSet.description : ''}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.lbl.active')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewReceivingSet.active ? 'Yes' : 'No'}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.active ? 'Yes' : 'No'}</p>}
                     />
                   </Col>
                   <Col xs={12} sm={6} md={4} lg={3}>
                     <ListItem
                       primaryText={translate('pgr.lbl.channel')}
-                      secondaryText={
-                        <p style={styles.customColumnStyle}>
-                          {viewReceivingSet.channels
-                            ? viewReceivingSet.channels.join(', ')
-                            : ''}
-                        </p>
-                      }
+                      secondaryText={<p style={styles.customColumnStyle}>{viewReceivingSet.channels ? viewReceivingSet.channels.join(', ') : ''}</p>}
                     />
                   </Col>
                 </Row>

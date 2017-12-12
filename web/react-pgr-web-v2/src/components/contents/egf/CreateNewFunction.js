@@ -75,20 +75,12 @@ class NewFunction extends Component {
   };
 
   render() {
-    let {
-      NewFunction,
-      handleChange,
-      isFormValid,
-      fieldErrors,
-      buttonText,
-    } = this.props;
+    let { NewFunction, handleChange, isFormValid, fieldErrors, buttonText } = this.props;
     return (
       <div className="NewFunction">
         <Card>
           //header style should be defined and reused
-          <CardHeader
-            title={<strong style={{ color: brown500 }}>Function</strong>}
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Function</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -125,22 +117,14 @@ class NewFunction extends Component {
                       />
                     </Col>
                     <Col xs={12} md={6}>
-                      <Checkbox
-                        label="Active"
-                        style={styles.checkbox}
-                        onCheck={this.handleCheckBoxChange}
-                      />
+                      <Checkbox label="Active" style={styles.checkbox} onCheck={this.handleCheckBoxChange} />
                     </Col>
                   </Row>
                   <Row>
                     <Col xs={12} md={6}>
                       <SelectField
-                        errorText={
-                          fieldErrors.parentType ? fieldErrors.parentType : ''
-                        }
-                        value={
-                          NewFunction.parentType ? NewFunction.parentType : ''
-                        }
+                        errorText={fieldErrors.parentType ? fieldErrors.parentType : ''}
+                        value={NewFunction.parentType ? NewFunction.parentType : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -155,20 +139,13 @@ class NewFunction extends Component {
                         <MenuItem value={2} primaryText="Welfare of Children" />
                         <MenuItem value={3} primaryText="Welfare of Aged" />
                         <MenuItem value={4} primaryText="Slum Improvements" />
-                        <MenuItem
-                          value={5}
-                          primaryText="Urban Poverty Alleviation"
-                        />
+                        <MenuItem value={5} primaryText="Urban Poverty Alleviation" />
                       </SelectField>
                     </Col>
                   </Row>
                   <Row>
                     <Col xs={12} md={6}>
-                      <Checkbox
-                        label="Isnotleaf"
-                        style={styles.checkbox}
-                        onCheck={this.handleCheckBoxChange}
-                      />
+                      <Checkbox label="Isnotleaf" style={styles.checkbox} onCheck={this.handleCheckBoxChange} />
                     </Col>
                   </Row>
                 </Grid>
@@ -176,12 +153,7 @@ class NewFunction extends Component {
             </Card>
 
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="submit"
-                label="Create"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="submit" label="Create" backgroundColor={brown500} labelColor={white} />
               <RaisedButton label="Close" />
             </div>
           </CardText>

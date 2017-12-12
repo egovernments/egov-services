@@ -6,18 +6,7 @@ import Api from '../../../../api/api';
 import { Tabs, Tab } from 'material-ui/Tabs';
 import ActionFlightTakeoff from 'material-ui/svg-icons/action/flight-takeoff';
 import { translate } from '../../../common/common';
-import {
-  BarChart,
-  AreaChart,
-  Area,
-  ResponsiveContainer,
-  Bar,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  Legend,
-} from 'recharts';
+import { BarChart, AreaChart, Area, ResponsiveContainer, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import PendencyReport from './PendencyReport';
 import Top5ComplaintTypes from './Top5ComplaintTypes';
 import GisAnalysisReport from './GisAnalysisReport';
@@ -57,13 +46,7 @@ const CustomizedYAxisLabel = props => {
   const { viewBox, title } = props;
   return (
     <g transform={`translate(${viewBox.x},${viewBox.y})`}>
-      <text
-        x={-(viewBox.height / 2)}
-        y={viewBox.y + 13}
-        textAnchor="middle"
-        fill="#666"
-        transform="rotate(-90)"
-      >
+      <text x={-(viewBox.height / 2)} y={viewBox.y + 13} textAnchor="middle" fill="#666" transform="rotate(-90)">
         {title}
       </text>
     </g>

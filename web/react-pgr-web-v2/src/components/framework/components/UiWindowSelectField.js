@@ -16,18 +16,8 @@ class UiWindowSelectField extends Component {
   }
 
   initData(props) {
-    let {
-      item,
-      setDropDownData,
-      setDropDownOriginalData,
-      useTimestamp,
-    } = props;
-    if (
-      item.hasOwnProperty('url') &&
-      item.url &&
-      item.url.search('\\|') > -1 &&
-      item.url.search('{') == -1
-    ) {
+    let { item, setDropDownData, setDropDownOriginalData, useTimestamp } = props;
+    if (item.hasOwnProperty('url') && item.url && item.url.search('\\|') > -1 && item.url.search('{') == -1) {
       let splitArray = item.url.split('?');
       let context = '';
       let id = {};
@@ -43,23 +33,11 @@ class UiWindowSelectField extends Component {
       let queryStringObject = splitArray[1].split('|')[0].split('&');
       for (var i = 0; i < queryStringObject.length; i++) {
         if (i) {
-          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split(
-            '='
-          )[1];
+          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
         }
       }
 
-      var response = Api.commonApiPost(
-        context,
-        id,
-        {},
-        '',
-        useTimestamp || false,
-        false,
-        '',
-        '',
-        item.isStateLevel
-      ).then(
+      var response = Api.commonApiPost(context, id, {}, '', useTimestamp || false, false, '', '', item.isStateLevel).then(
         function(response) {
           if (response) {
             let queries = splitArray[1].split('|');
@@ -90,14 +68,9 @@ class UiWindowSelectField extends Component {
             let dropDownData = [];
             for (var k = 0; k < keys.length; k++) {
               let obj = {};
-              obj['key'] = item.convertToString
-                ? keys[k].toString()
-                : item.convertToNumber ? Number(keys[k]) : keys[k];
+              obj['key'] = item.convertToString ? keys[k].toString() : item.convertToNumber ? Number(keys[k]) : keys[k];
               obj['value'] = values[k];
-              if (
-                item.hasOwnProperty('isKeyOtherPair') &&
-                item.isKeyOtherPair
-              ) {
+              if (item.hasOwnProperty('isKeyOtherPair') && item.isKeyOtherPair) {
                 otherPair[k] = otherPair[k] ? '-' + otherPair[k] : '';
 
                 obj['value'] = values[k] + '' + otherPair[k];
@@ -110,10 +83,7 @@ class UiWindowSelectField extends Component {
                 obj['others'] = otherItemDatas;
               }
 
-              if (
-                item.hasOwnProperty('isKeyValuePair') &&
-                item.isKeyValuePair
-              ) {
+              if (item.hasOwnProperty('isKeyValuePair') && item.isKeyValuePair) {
                 obj['value'] = keys[k] + '-' + values[k];
               }
               dropDownData.push(obj);
@@ -132,10 +102,7 @@ class UiWindowSelectField extends Component {
           console.log(err);
         }
       );
-    } else if (
-      item.hasOwnProperty('defaultValue') &&
-      typeof item.defaultValue == 'object'
-    ) {
+    } else if (item.hasOwnProperty('defaultValue') && typeof item.defaultValue == 'object') {
       setDropDownData(item.jsonPath, item.defaultValue);
     }
   }
@@ -168,10 +135,7 @@ class UiWindowSelectField extends Component {
         );
     }
 
-    if (
-      this.props.location.pathname != nextProps.history.location.pathname ||
-      dropDownData === undefined
-    ) {
+    if (this.props.location.pathname != nextProps.history.location.pathname || dropDownData === undefined) {
       this.initData(nextProps);
     }
   }
@@ -191,10 +155,7 @@ class UiWindowSelectField extends Component {
           floatingLabelFixed: true,
           floatingLabelText: (
             <span>
-              {item.label}{' '}
-              <span style={{ color: '#FF0000' }}>
-                {item.isRequired ? ' *' : ''}
-              </span>
+              {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </span>
           ),
           hintText: 'Please Select',
@@ -235,10 +196,7 @@ class UiWindowSelectField extends Component {
               errorText={this.props.fieldErrors[item.jsonPath]}
               maxHeight={200}
             >
-              {dropDownData &&
-                dropDownData.map((dd, index) => (
-                  <MenuItem value={dd.key} key={index} primaryText={dd.value} />
-                ))}
+              {dropDownData && dropDownData.map((dd, index) => <MenuItem value={dd.key} key={index} primaryText={dd.value} />)}
             </SelectField>
           </div>
         );
@@ -274,6 +232,4 @@ const mapDispatchToProps = dispatch => ({
     dispatch({ type: 'SET_ORIGINAL_DROPDWON_DATA', fieldName, dropDownData });
   },
 });
-export default withRouter(
-  connect(mapStateToProps, mapDispatchToProps)(UiWindowSelectField)
-);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(UiWindowSelectField));

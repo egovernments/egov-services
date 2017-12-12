@@ -36,9 +36,7 @@ const getTenantId = () => {
 
 const getThemefile = function(tenantId, cb) {
   $.ajax({
-    url:
-      'https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json?timestamp=' +
-      new Date().getTime(),
+    url: 'https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json?timestamp=' + new Date().getTime(),
     success: function(res) {
       var tenantContext = JSON.parse(res)['details'][tenantId];
       cb(tenantContext);
@@ -86,10 +84,7 @@ const getTitle = (tenantInfo, tenantContext) => {
   if (tenantContext) {
     return tenantContext.name;
   } else
-    return tenantInfo &&
-      tenantInfo[0] &&
-      tenantInfo[0].city &&
-      tenantInfo[0].city.name
+    return tenantInfo && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.name
       ? getTitleCase(tenantInfo[0].city.name)
       : tenantName[getTenantId()] || 'My City';
 };
@@ -98,22 +93,13 @@ const RightIcon = props => {
   if (props.token) {
     return (
       <div>
-        <span style={{ color: '#555', verticalAlign: 'super' }}>{'मराठी'}</span>{' '}
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <span style={{ color: '#555', verticalAlign: 'super' }}>
-          {'English'}
-        </span>{' '}
-        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <i
-          style={{ color: '#555', verticalAlign: 'sub' }}
-          className="material-icons"
-        >
+        <span style={{ color: '#555', verticalAlign: 'super' }}>{'मराठी'}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <span style={{ color: '#555', verticalAlign: 'super' }}>{'English'}</span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <i style={{ color: '#555', verticalAlign: 'sub' }} className="material-icons">
           account_circle
         </i>&nbsp;
         <span style={{ color: '#555', verticalAlign: 'super' }}>
-          {window.localStorage.getItem('userRequest')
-            ? JSON.parse(window.localStorage.getItem('userRequest')).name
-            : ''}
+          {window.localStorage.getItem('userRequest') ? JSON.parse(window.localStorage.getItem('userRequest')).name : ''}
         </span>
         <IconMenu
           iconButtonElement={
@@ -144,9 +130,7 @@ const RightIcon = props => {
             if (localStorage.getItem('token')) {
               props.setRoute('/prd/dashboard');
             } else {
-              props.setRoute(
-                '/' + (localStorage.getItem('tenantId') || 'default')
-              );
+              props.setRoute('/' + (localStorage.getItem('tenantId') || 'default'));
             }
           }}
           className="material-icons"
@@ -170,9 +154,7 @@ const RightIcon = props => {
               if (localStorage.getItem('token')) {
                 props.setRoute('/prd/dashboard');
               } else {
-                props.setRoute(
-                  '/' + (localStorage.getItem('tenantId') || 'default')
-                );
+                props.setRoute('/' + (localStorage.getItem('tenantId') || 'default'));
               }
             }}
             className="material-icons"
@@ -267,10 +249,7 @@ class Header extends Component {
           className="app-bar-bg"
           title={
             <div>
-              <Logo
-                tenantInfo={this.props.tenantInfo}
-                tenantContext={tenantContext}
-              />{' '}
+              <Logo tenantInfo={this.props.tenantInfo} tenantContext={tenantContext} />{' '}
             </div>
           }
           iconElementRight={
@@ -286,15 +265,8 @@ class Header extends Component {
           }
         />
 
-        <Drawer
-          width={256}
-          containerClassName="drawer-backGround"
-          open={showMenu}
-        >
-          {actionList &&
-            actionList.length > 0 && (
-              <CustomMenu menuItems={[]} actionList={actionList} />
-            )}
+        <Drawer width={256} containerClassName="drawer-backGround" open={showMenu}>
+          {actionList && actionList.length > 0 && <CustomMenu menuItems={[]} actionList={actionList} />}
         </Drawer>
       </div>
     );

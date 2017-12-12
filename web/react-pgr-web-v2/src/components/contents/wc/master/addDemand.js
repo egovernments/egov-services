@@ -139,13 +139,7 @@ class AddDemand extends Component {
       executionDate: 1301616000,
     };
 
-    Api.commonApiPost(
-      '/wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate',
-      getDemands,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('/wcms-connection/connection/getLegacyDemandDetailBeanListByExecutionDate', getDemands, {}, false, true)
       .then(res => {
         console.log('search', res);
 
@@ -189,14 +183,9 @@ class AddDemand extends Component {
     data.map((demand, index) => {
       demand.businessService = 'PT';
       demand.demandDetails.map((item, i) => {
-        item.taxAmount =
-          (addDemand['demands' + index]
-            ? addDemand['demands' + index]['demand' + i]
-            : item.taxAmount) || item.taxAmount;
+        item.taxAmount = (addDemand['demands' + index] ? addDemand['demands' + index]['demand' + i] : item.taxAmount) || item.taxAmount;
         item.collectionAmount =
-          (addDemand['collections' + index]
-            ? addDemand['collections' + index]['collection' + i]
-            : item.collectionAmount) || item.collectionAmount;
+          (addDemand['collections' + index] ? addDemand['collections' + index]['collection' + i] : item.collectionAmount) || item.collectionAmount;
       });
     });
 
@@ -217,9 +206,7 @@ class AddDemand extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.code} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.code} primaryText={item.name} />;
         });
       }
     };
@@ -254,8 +241,7 @@ class AddDemand extends Component {
           return (
             <tr key={index}>
               <td style={{ width: 100 }} className="lastTdBorder">
-                {new Date(demand.taxPeriodFrom).getFullYear()} -{' '}
-                {new Date(demand.taxPeriodTo).getFullYear()}
+                {new Date(demand.taxPeriodFrom).getFullYear()} - {new Date(demand.taxPeriodTo).getFullYear()}
               </td>
               {demand.demandDetails.map((detail, i) => {
                 if (demand.demandDetails.length - 1 == i) {
@@ -263,23 +249,13 @@ class AddDemand extends Component {
                     <td key={i} className="lastTdBorder">
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={
-                          <span style={{ fontSize: '14px' }}>Demand</span>
-                        }
+                        floatingLabelText={<span style={{ fontSize: '14px' }}>Demand</span>}
                         value={
-                          (addDemand['demands' + index]
-                            ? addDemand['demands' + index]['demand' + i]
-                            : detail.taxAmount) ||
+                          (addDemand['demands' + index] ? addDemand['demands' + index]['demand' + i] : detail.taxAmount) ||
                           (detail.taxAmount ? detail.taxAmount : '')
                         }
                         onChange={e => {
-                          handleChangeNextOne(
-                            e,
-                            'demands' + index,
-                            'demand' + i,
-                            false,
-                            ''
-                          );
+                          handleChangeNextOne(e, 'demands' + index, 'demand' + i, false, '');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -293,23 +269,13 @@ class AddDemand extends Component {
                     <td key={i}>
                       <TextField
                         className="fullWidth"
-                        floatingLabelText={
-                          <span style={{ fontSize: '14px' }}>Demand</span>
-                        }
+                        floatingLabelText={<span style={{ fontSize: '14px' }}>Demand</span>}
                         value={
-                          (addDemand['demands' + index]
-                            ? addDemand['demands' + index]['demand' + i]
-                            : detail.taxAmount) ||
+                          (addDemand['demands' + index] ? addDemand['demands' + index]['demand' + i] : detail.taxAmount) ||
                           (detail.taxAmount ? detail.taxAmount : '')
                         }
                         onChange={e => {
-                          handleChangeNextOne(
-                            e,
-                            'demands' + index,
-                            'demand' + i,
-                            false,
-                            ''
-                          );
+                          handleChangeNextOne(e, 'demands' + index, 'demand' + i, false, '');
                         }}
                         floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                         underlineStyle={styles.underlineStyle}
@@ -325,22 +291,10 @@ class AddDemand extends Component {
                   <td key={i}>
                     <TextField
                       className="fullWidth"
-                      floatingLabelText={
-                        <span style={{ fontSize: '14px' }}>Collection</span>
-                      }
-                      value={
-                        addDemand['collections' + index]
-                          ? addDemand['collections' + index]['collection' + i]
-                          : ''
-                      }
+                      floatingLabelText={<span style={{ fontSize: '14px' }}>Collection</span>}
+                      value={addDemand['collections' + index] ? addDemand['collections' + index]['collection' + i] : ''}
                       onChange={e => {
-                        handleChangeNextOne(
-                          e,
-                          'collections' + index,
-                          'collection' + i,
-                          false,
-                          ''
-                        );
+                        handleChangeNextOne(e, 'collections' + index, 'collection' + i, false, '');
                       }}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       underlineStyle={styles.underlineStyle}
@@ -394,11 +348,7 @@ class AddDemand extends Component {
         <Card className="uiCard">
           <CardHeader
             style={styles.reducePadding}
-            title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {translate('pt.create.demands.addDemand')}
-              </div>
-            }
+            title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.demands.addDemand')}</div>}
           />
           <CardText style={styles.reducePadding}>
             <Grid fluid>
@@ -418,22 +368,10 @@ class AddDemand extends Component {
                     <thead>
                       <tr>
                         <th>Period</th>
-                        <th
-                          colSpan={
-                            this.state.demands.length != 0 &&
-                            this.state.demands[0].demandDetails.length
-                          }
-                          style={{ textAlign: 'center' }}
-                        >
+                        <th colSpan={this.state.demands.length != 0 && this.state.demands[0].demandDetails.length} style={{ textAlign: 'center' }}>
                           Demand
                         </th>
-                        <th
-                          colSpan={
-                            this.state.demands.length != 0 &&
-                            this.state.demands[0].demandDetails.length
-                          }
-                          style={{ textAlign: 'center' }}
-                        >
+                        <th colSpan={this.state.demands.length != 0 && this.state.demands[0].demandDetails.length} style={{ textAlign: 'center' }}>
                           Collection
                         </th>
                       </tr>

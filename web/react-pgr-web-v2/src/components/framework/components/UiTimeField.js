@@ -45,10 +45,7 @@ export default class UiTimeField extends Component {
             className="custom-form-control-for-datepicker"
           >
             <label>
-              {item.label}{' '}
-              <span style={{ color: '#FF0000' }}>
-                {item.isRequired ? ' *' : ''}
-              </span>
+              {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </label>
             <br />
             <DateTimeField
@@ -70,8 +67,7 @@ export default class UiTimeField extends Component {
                   item.isRequired ? true : false,
                   /\d{12,13}/,
                   item.requiredErrMsg,
-                  item.patternErrMsg ||
-                    translate('framework.time.error.message'),
+                  item.patternErrMsg || translate('framework.time.error.message'),
                   item.expression,
                   item.expressionMsg,
                   true
@@ -81,11 +77,7 @@ export default class UiTimeField extends Component {
             <div
               style={{
                 height: '23px',
-                visibility:
-                  this.props.fieldErrors &&
-                  this.props.fieldErrors[item.jsonPath]
-                    ? 'visible'
-                    : 'hidden',
+                visibility: this.props.fieldErrors && this.props.fieldErrors[item.jsonPath] ? 'visible' : 'hidden',
                 position: 'relative',
                 fontSize: '12px',
                 lineHeight: '23px',
@@ -94,9 +86,7 @@ export default class UiTimeField extends Component {
                 float: 'left',
               }}
             >
-              {this.props.fieldErrors && this.props.fieldErrors[item.jsonPath]
-                ? this.props.fieldErrors[item.jsonPath]
-                : ' '}
+              {this.props.fieldErrors && this.props.fieldErrors[item.jsonPath] ? this.props.fieldErrors[item.jsonPath] : ' '}
             </div>
           </div>
         );

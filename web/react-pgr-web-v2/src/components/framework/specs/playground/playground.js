@@ -68,8 +68,7 @@ var chequeOrDD = {
           isRequired: true,
           isDisabled: false,
           requiredErrMsg: '',
-          patternErrMsg:
-            'Cheque/DD date should accept up-to previous 90 days or current date',
+          patternErrMsg: 'Cheque/DD date should accept up-to previous 90 days or current date',
         },
         {
           name: 'chequeOrDDBankName',
@@ -213,8 +212,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name',
+            url: '/egov-common-masters/businessDetails/_search?tenantId=default|$..code|$..name',
             requiredErrMsg: '',
             patternErrMsg: '',
           },

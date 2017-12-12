@@ -58,20 +58,10 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
-              onChange={e =>
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                )
-              }
+              onChange={e => this.props.handler(e, obj.name, obj.isMandatory ? true : false, '')}
             />
           </Col>
         );
@@ -85,20 +75,10 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
-              onChange={e =>
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  /^[+-]?\d+(\.\d+)?$/
-                )
-              }
+              onChange={e => this.props.handler(e, obj.name, obj.isMandatory ? true : false, /^[+-]?\d+(\.\d+)?$/)}
             />
           </Col>
         );
@@ -112,10 +92,7 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
               value={typeof obj.value == 'object' ? obj.value : {}}
@@ -125,12 +102,7 @@ export default class ShowField extends Component {
                     value: object,
                   },
                 };
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                );
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, '');
               }}
             />
             {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}  />*/}
@@ -147,20 +119,11 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
               value={obj.value ? obj.value : ''}
-              errorText={
-                this.props.dateField
-                  ? obj.name === this.props.dateField
-                    ? this.props.dateError
-                    : ''
-                  : ''
-              }
+              errorText={this.props.dateField ? (obj.name === this.props.dateField ? this.props.dateError : '') : ''}
               formatDate={date => {
                 let dateObj = new Date(date);
                 let year = dateObj.getFullYear();
@@ -176,12 +139,7 @@ export default class ShowField extends Component {
                     value: object,
                   },
                 };
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                );
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, '');
               }}
             />
             {/*<DatePicker fullWidth={true} DateTimeFormat={DateTimeFormat} locale="fr" floatingLabelText={<span>{description} <span style={{"color": "#FF0000"}}>{obj.isMandatory ? " *" : ""}</span></span>}  />*/}
@@ -202,10 +160,7 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
               value={typeof obj.value == 'undefined' ? '' : obj.value}
@@ -218,23 +173,12 @@ export default class ShowField extends Component {
                     value,
                   },
                 };
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                );
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, '');
               }}
               maxHeight={200}
             >
               <MenuItem value="" primaryText="Select" />
-              {dropDownData.map((dd, index) => (
-                <MenuItem
-                  value={translate(dd.key)}
-                  key={index}
-                  primaryText={translate(dd.value)}
-                />
-              ))}
+              {dropDownData.map((dd, index) => <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />)}
             </SelectField>
           </Col>
         );
@@ -254,10 +198,7 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
               value={typeof obj.value == 'undefined' ? '' : obj.value}
@@ -270,23 +211,12 @@ export default class ShowField extends Component {
                     value,
                   },
                 };
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                );
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, '');
               }}
               maxHeight={200}
             >
               <MenuItem value="" primaryText="Select" />
-              {dropDownData.map((dd, index) => (
-                <MenuItem
-                  value={translate(dd.key)}
-                  key={index}
-                  primaryText={translate(dd.value)}
-                />
-              ))}
+              {dropDownData.map((dd, index) => <MenuItem value={translate(dd.key)} key={index} primaryText={translate(dd.value)} />)}
             </SelectField>
           </Col>
         );
@@ -307,10 +237,7 @@ export default class ShowField extends Component {
               floatingLabelFixed={true}
               floatingLabelText={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
               value={typeof obj.value == 'undefined' ? '' : obj.value}
@@ -323,12 +250,7 @@ export default class ShowField extends Component {
                     value,
                   },
                 };
-                this.props.handler(
-                  e,
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                );
+                this.props.handler(e, obj.name, obj.isMandatory ? true : false, '');
               }}
               maxHeight={200}
             >
@@ -336,9 +258,7 @@ export default class ShowField extends Component {
               {dropDownData.map((dd, index) => (
                 <MenuItem
                   insetChildren={true}
-                  checked={
-                    obj.value && obj.value.indexOf(dd.key) > -1 ? true : false
-                  }
+                  checked={obj.value && obj.value.indexOf(dd.key) > -1 ? true : false}
                   value={translate(dd.key)}
                   key={index}
                   primaryText={translate(dd.value)}
@@ -355,21 +275,11 @@ export default class ShowField extends Component {
               id={obj.label.split('.').join('-')}
               label={
                 <span>
-                  {description}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {obj.isMandatory ? ' *' : ''}
-                  </span>
+                  {description} <span style={{ color: '#FF0000' }}>{obj.isMandatory ? ' *' : ''}</span>
                 </span>
               }
               checked={obj.value ? obj.value : false}
-              onCheck={e =>
-                this.props.handler(
-                  { target: { value: e.target.checked } },
-                  obj.name,
-                  obj.isMandatory ? true : false,
-                  ''
-                )
-              }
+              onCheck={e => this.props.handler({ target: { value: e.target.checked } }, obj.name, obj.isMandatory ? true : false, '')}
             />
           </Col>
         );

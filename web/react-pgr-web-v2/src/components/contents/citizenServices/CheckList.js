@@ -47,22 +47,12 @@ class CheckBoxItem extends Component {
           ref={this.props.obj.key}
           checked={this.props.value ? this.props.value : false}
           onCheck={(e, isChecked) => {
-            this.props.handler(
-              isChecked ? true : '',
-              this.props.obj.key,
-              this.props.obj.required || false,
-              ''
-            );
+            this.props.handler(isChecked ? true : '', this.props.obj.key, this.props.obj.required || false, '');
           }}
-          label={
-            translate(this.props.obj.name) +
-            (this.props.obj.required ? ' *' : '')
-          }
+          label={translate(this.props.obj.name) + (this.props.obj.required ? ' *' : '')}
           style={styles.checkbox}
         />
-        {this.props.error ? (
-          <span className="errorMsg">{this.props.error}</span>
-        ) : null}
+        {this.props.error ? <span className="errorMsg">{this.props.error}</span> : null}
       </div>
     );
   }

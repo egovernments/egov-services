@@ -87,10 +87,7 @@ export default class KPIDashboardQuery extends Component {
                 this.fyRes = res;
                 this.busyUI(false);
 
-                let departmentKPIs = parseDepartmentKPIsAsPerKPIType(
-                  this.kpiRes,
-                  kpiTypes[this.state.kpiTypeIndex].name
-                );
+                let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name);
                 if (departmentKPIs.length === 0) {
                   this.setState({
                     disableViewButton: true,
@@ -118,10 +115,7 @@ export default class KPIDashboardQuery extends Component {
         showTableView: false,
       });
 
-      let departmentKPIs = parseDepartmentKPIsAsPerKPIType(
-        this.kpiRes,
-        kpiTypes[this.state.kpiTypeIndex].name
-      );
+      let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name);
       if (departmentKPIs.length === 0) {
         this.setState({
           disableViewButton: true,
@@ -131,13 +125,8 @@ export default class KPIDashboardQuery extends Component {
 
     if (label === this.kpiLabel) {
       if (values.length > 1) {
-        if (
-          this.state.ulbIndices.length > 1 ||
-          this.state.fyIndices.length > 1
-        ) {
-          this.toast(
-            'You have already selected multiple ULBs or Financial Years values'
-          );
+        if (this.state.ulbIndices.length > 1 || this.state.fyIndices.length > 1) {
+          this.toast('You have already selected multiple ULBs or Financial Years values');
         } else {
           this.setState({
             kpiIndices: values,
@@ -151,13 +140,8 @@ export default class KPIDashboardQuery extends Component {
     }
     if (label === this.ulbLabel) {
       if (values.length > 1) {
-        if (
-          this.state.kpiIndices.length > 1 ||
-          this.state.fyIndices.length > 1
-        ) {
-          this.toast(
-            'You have already selected multiple KPIs or Financial Years values'
-          );
+        if (this.state.kpiIndices.length > 1 || this.state.fyIndices.length > 1) {
+          this.toast('You have already selected multiple KPIs or Financial Years values');
         } else {
           this.setState({
             ulbIndices: values,
@@ -171,10 +155,7 @@ export default class KPIDashboardQuery extends Component {
     }
     if (label === this.fyLabel) {
       if (values.length > 1) {
-        if (
-          this.state.kpiIndices.length > 1 ||
-          this.state.ulbIndices.length > 1
-        ) {
+        if (this.state.kpiIndices.length > 1 || this.state.ulbIndices.length > 1) {
           this.toast('You have already selected multiple KPIs or ULBs values');
         } else {
           this.setState({
@@ -200,19 +181,9 @@ export default class KPIDashboardQuery extends Component {
   };
 
   processOnClickViewButton = () => {
-    let finYears = this.state.fyIndices
-      .map((item, index) =>
-        jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)
-      )
-      .join(',');
-    let ulbs = this.state.ulbIndices
-      .map((item, index) =>
-        jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)
-      )
-      .join(',');
-    let kpis = this.state.kpiIndices
-      .map((item, index) => jp.query(this.kpiRes, `$.KPIs[${item}].code`))
-      .join(',');
+    let finYears = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',');
+    let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].code`)).join(',');
+    let kpis = this.state.kpiIndices.map((item, index) => jp.query(this.kpiRes, `$.KPIs[${item}].code`)).join(',');
 
     this.setState({
       showChartView: false,
@@ -266,10 +237,7 @@ export default class KPIDashboardQuery extends Component {
         marginTop: '20%',
       },
     };
-    let departmentKPIs = parseDepartmentKPIsAsPerKPIType(
-      this.kpiRes,
-      kpiTypes[this.state.kpiTypeIndex].name
-    );
+    let departmentKPIs = parseDepartmentKPIsAsPerKPIType(this.kpiRes, kpiTypes[this.state.kpiTypeIndex].name);
 
     return (
       <div>
@@ -289,13 +257,7 @@ export default class KPIDashboardQuery extends Component {
         <br />
         <br />
         <Card className="uiCard">
-          <CardHeader
-            title={
-              <strong style={{ fontSize: '18px' }}>
-                {'Key Performance Indicator Dashboard'}
-              </strong>
-            }
-          />
+          <CardHeader title={<strong style={{ fontSize: '18px' }}>{'Key Performance Indicator Dashboard'}</strong>} />
           <Grid fluid>
             <Row>
               <Col xs={12} sm={3} md={3}>
@@ -392,19 +354,9 @@ export default class KPIDashboardQuery extends Component {
       return <div />;
     }
 
-    let finYears = this.state.fyIndices
-      .map((item, index) =>
-        jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)
-      )
-      .join(',');
-    let ulbs = this.state.ulbIndices
-      .map((item, index) =>
-        jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].name`)
-      )
-      .join(',');
-    let kpis = this.state.kpiIndices
-      .map((item, index) => jp.query(this.kpiRes, `$.KPIs[${item}].name`))
-      .join(',');
+    let finYears = this.state.fyIndices.map((item, index) => jp.query(this.fyRes, `$.financialYears[${item}].finYearRange`)).join(',');
+    let ulbs = this.state.ulbIndices.map((item, index) => jp.query(this.ulbRes, `$.MdmsRes.tenant.tenants[${item}].name`)).join(',');
+    let kpis = this.state.kpiIndices.map((item, index) => jp.query(this.kpiRes, `$.KPIs[${item}].name`)).join(',');
 
     if (this.state.showChartView) {
       return (
@@ -421,13 +373,7 @@ export default class KPIDashboardQuery extends Component {
 
     if (this.state.showTableView) {
       return (
-        <TableCard
-          data={this.chartRes}
-          finYears={finYears}
-          ulbs={ulbs}
-          kpis={kpis}
-          toggleDataViewFormat={this.processOnClickKPIDataRepresentation}
-        />
+        <TableCard data={this.chartRes} finYears={finYears} ulbs={ulbs} kpis={kpis} toggleDataViewFormat={this.processOnClickKPIDataRepresentation} />
       );
     }
 
@@ -439,11 +385,7 @@ export default class KPIDashboardQuery extends Component {
    * show/hide UI busy
    */
   renderUIBusy = () => {
-    return this.state.apiLoading ? (
-      <LoadingIndicator status={'loading'} />
-    ) : (
-      <LoadingIndicator status={'hide'} />
-    );
+    return this.state.apiLoading ? <LoadingIndicator status={'loading'} /> : <LoadingIndicator status={'hide'} />;
   };
   /**
    * render

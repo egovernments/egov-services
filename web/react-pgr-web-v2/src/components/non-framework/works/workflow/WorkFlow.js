@@ -36,18 +36,9 @@ class WorkFlow extends Component {
 
     initCall.push(Api.commonApiPost('egov-common-masters/departments/_search'));
 
-    if (
-      this.props.status &&
-      _.get(this.props.formData, `${this.props.stateId}`)
-    )
+    if (this.props.status && _.get(this.props.formData, `${this.props.stateId}`))
       initCall.push(
-        Api.commonApiPost(
-          'egov-common-workflows/process/_search',
-          { id: _.get(this.props.formData, `${this.props.stateId}`) },
-          {},
-          false,
-          true
-        )
+        Api.commonApiPost('egov-common-workflows/process/_search', { id: _.get(this.props.formData, `${this.props.stateId}`) }, {}, false, true)
       );
 
     Promise.all(initCall).then(responses => {
@@ -66,26 +57,14 @@ class WorkFlow extends Component {
   loadDesignation = departmentId => {
     //clear designation and position
     if (_.get(this.props.formData, `${this.props.path}.designation`))
-      this.props.handler(
-        { target: { value: '' } },
-        `${this.props.path}.designation`,
-        false,
-        ''
-      );
+      this.props.handler({ target: { value: '' } }, `${this.props.path}.designation`, false, '');
 
     if (_.get(this.props.formData, `${this.props.path}.assignee`))
-      this.props.handler(
-        { target: { value: '' } },
-        `${this.props.path}.assignee`,
-        false,
-        ''
-      );
+      this.props.handler({ target: { value: '' } }, `${this.props.path}.assignee`, false, '');
 
     this.setState({ workFlowDesignation: [] });
 
-    let departmentObj = this.state.workFlowDepartment.find(
-      x => x.id === departmentId
-    );
+    let departmentObj = this.state.workFlowDepartment.find(x => x.id === departmentId);
 
     if (!departmentObj.name) {
       return;
@@ -118,10 +97,7 @@ class WorkFlow extends Component {
               // response.Designation.unshift({id:-1, name:'None'});
               self.setState({
                 ...self.state,
-                workFlowDesignation: [
-                  ...self.state.workFlowDesignation,
-                  ...response.Designation,
-                ],
+                workFlowDesignation: [...self.state.workFlowDesignation, ...response.Designation],
               });
             },
             function(err) {
@@ -138,19 +114,11 @@ class WorkFlow extends Component {
   loadPosition = designationId => {
     //clear position
     if (_.get(this.props.formData, `${this.props.path}.assignee`))
-      this.props.handler(
-        { target: { value: '' } },
-        `${this.props.path}.assignee`,
-        false,
-        ''
-      );
+      this.props.handler({ target: { value: '' } }, `${this.props.path}.assignee`, false, '');
 
     this.setState({ workFlowPosition: [] });
 
-    let departmentId = _.get(
-      this.props.formData,
-      `${this.props.path}.department`
-    );
+    let departmentId = _.get(this.props.formData, `${this.props.path}.department`);
     Api.commonApiPost('/hr-employee/employees/_search', {
       departmentId: departmentId,
       designationId: designationId,
@@ -187,11 +155,7 @@ class WorkFlow extends Component {
       <Card style={styles.marginStyle}>
         <CardHeader
           style={{ paddingTop: 4, paddingBottom: 0 }}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('works.create.groups.label.workflowDetails')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('works.create.groups.label.workflowDetails')}</div>}
         />
         <CardText>
           {/*this.state.process && this.state.process.attributes.nextAction.code !== 'END' && this.state.process.attributes.nextAction.code !== 'Pending For License Fee Collection' ?*/}
@@ -204,37 +168,24 @@ class WorkFlow extends Component {
                 maxHeight={200}
                 floatingLabelText={
                   <span>
-                    {translate('tl.view.workflow.department')}{' '}
-                    <span style={{ color: '#FF0000' }}> *</span>
+                    {translate('tl.view.workflow.department')} <span style={{ color: '#FF0000' }}> *</span>
                   </span>
                 }
                 className="custom-form-control-for-select"
                 dropDownMenuProps={{
                   targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                 }}
-                value={
-                  _.get(this.props.formData, `${this.props.path}.department`) ||
-                  ''
-                }
+                value={_.get(this.props.formData, `${this.props.path}.department`) || ''}
                 id="department"
                 onChange={(event, key, value) => {
-                  this.props.handler(
-                    { target: { value } },
-                    `${this.props.path}.department`,
-                    true,
-                    ''
-                  );
+                  this.props.handler({ target: { value } }, `${this.props.path}.department`, true, '');
                   this.loadDesignation(value);
                 }}
               >
                 <MenuItem value="" primaryText="Select" />
                 {this.state.workFlowDepartment &&
                   this.state.workFlowDepartment.map((department, index) => (
-                    <MenuItem
-                      value={department.id}
-                      key={index}
-                      primaryText={department.name}
-                    />
+                    <MenuItem value={department.id} key={index} primaryText={department.name} />
                   ))}
               </SelectField>
             </Col>
@@ -246,39 +197,24 @@ class WorkFlow extends Component {
                 maxHeight={200}
                 floatingLabelText={
                   <span>
-                    {translate('tl.view.workflow.designation')}{' '}
-                    <span style={{ color: '#FF0000' }}> *</span>
+                    {translate('tl.view.workflow.designation')} <span style={{ color: '#FF0000' }}> *</span>
                   </span>
                 }
                 className="custom-form-control-for-select"
                 dropDownMenuProps={{
                   targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                 }}
-                value={
-                  _.get(
-                    this.props.formData,
-                    `${this.props.path}.designation`
-                  ) || ''
-                }
+                value={_.get(this.props.formData, `${this.props.path}.designation`) || ''}
                 id="designation"
                 onChange={(event, key, value) => {
-                  this.props.handler(
-                    { target: { value } },
-                    `${this.props.path}.designation`,
-                    true,
-                    ''
-                  );
+                  this.props.handler({ target: { value } }, `${this.props.path}.designation`, true, '');
                   this.loadPosition(value);
                 }}
               >
                 <MenuItem value="" primaryText="Select" />
                 {this.state.workFlowDesignation &&
                   this.state.workFlowDesignation.map((designation, index) => (
-                    <MenuItem
-                      value={designation.id}
-                      key={index}
-                      primaryText={designation.name}
-                    />
+                    <MenuItem value={designation.id} key={index} primaryText={designation.name} />
                   ))}
               </SelectField>
             </Col>
@@ -290,26 +226,17 @@ class WorkFlow extends Component {
                 maxHeight={200}
                 floatingLabelText={
                   <span>
-                    {translate('tl.view.workflow.approver')}{' '}
-                    <span style={{ color: '#FF0000' }}> *</span>
+                    {translate('tl.view.workflow.approver')} <span style={{ color: '#FF0000' }}> *</span>
                   </span>
                 }
                 className="custom-form-control-for-select"
                 dropDownMenuProps={{
                   targetOrigin: { horizontal: 'left', vertical: 'bottom' },
                 }}
-                value={
-                  _.get(this.props.formData, `${this.props.path}.assignee`) ||
-                  ''
-                }
+                value={_.get(this.props.formData, `${this.props.path}.assignee`) || ''}
                 id="assignee"
                 onChange={(event, key, value) => {
-                  this.props.handler(
-                    { target: { value } },
-                    `${this.props.path}.assignee`,
-                    true,
-                    ''
-                  );
+                  this.props.handler({ target: { value } }, `${this.props.path}.assignee`, true, '');
                 }}
               >
                 <MenuItem value="" primaryText="Select" />
@@ -317,15 +244,7 @@ class WorkFlow extends Component {
                   this.state.workFlowPosition.map((position, index) =>
                     position.assignments.map(
                       (assignment, idx) =>
-                        assignment.isPrimary ? (
-                          <MenuItem
-                            value={assignment.position}
-                            key={index}
-                            primaryText={position.name}
-                          />
-                        ) : (
-                          ''
-                        )
+                        assignment.isPrimary ? <MenuItem value={assignment.position} key={index} primaryText={position.name} /> : ''
                     )
                   )}
               </SelectField>
@@ -345,16 +264,9 @@ class WorkFlow extends Component {
                 maxLength="500"
                 className="custom-form-control-for-textarea"
                 id="comments"
-                value={
-                  _.get(this.props.formData, `${this.props.path}.comments`) ||
-                  ''
-                }
+                value={_.get(this.props.formData, `${this.props.path}.comments`) || ''}
                 onChange={(event, newValue) => {
-                  this.props.handler(
-                    { target: { value: newValue } },
-                    `${this.props.path}.comments`,
-                    false
-                  );
+                  this.props.handler({ target: { value: newValue } }, `${this.props.path}.comments`, false);
                 }}
               />
             </Col>

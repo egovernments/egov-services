@@ -167,23 +167,13 @@ class ConstructionTypes extends Component {
       <Card className="uiCard">
         <CardHeader
           style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              {translate('employee.Employee.fields.documents')}
-            </div>
-          }
+          title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('employee.Employee.fields.documents')}</div>}
         />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
             <Row style={{ paddingTop: 8, paddingBottom: 4 }}>
               <Col xs={12} md={6}>
-                {this.state.documentType.length == 0 && (
-                  <div>
-                    {translate(
-                      'pt.create.groups.documentUpload.noFilesToUpload'
-                    )}
-                  </div>
-                )}
+                {this.state.documentType.length == 0 && <div>{translate('pt.create.groups.documentUpload.noFilesToUpload')}</div>}
                 {this.state.documentType.length != 0 &&
                   this.state.documentType.map((item, index) => (
                     <Row style={{ margin: '10px 0' }}>
@@ -195,14 +185,7 @@ class ConstructionTypes extends Component {
                           type="file"
                           accept="image/*"
                           name={item.name}
-                          onChange={e =>
-                            handleUploadValidation(
-                              e,
-                              item.name,
-                              ['jpg', 'jpeg', 'png'],
-                              3
-                            )
-                          }
+                          onChange={e => handleUploadValidation(e, item.name, ['jpg', 'jpeg', 'png'], 3)}
                         />
                       </Col>
                     </Row>

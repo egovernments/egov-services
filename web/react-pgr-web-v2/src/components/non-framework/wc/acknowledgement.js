@@ -163,11 +163,7 @@ class InboxAcknowledgement extends Component {
                     >
                       <center>
                         <font color="ass">
-                          <b style={{ 'font-weight': 'bold' }}>
-                            {' '}
-                            {titleCase(this.props.match.params.status)}{' '}
-                            Successfully!{' '}
-                          </b>{' '}
+                          <b style={{ 'font-weight': 'bold' }}> {titleCase(this.props.match.params.status)} Successfully! </b>{' '}
                         </font>{' '}
                       </center>
                     </Col>
@@ -188,6 +184,4 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = dispatch => ({});
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  InboxAcknowledgement
-);
+export default connect(mapStateToProps, mapDispatchToProps)(InboxAcknowledgement);

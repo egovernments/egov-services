@@ -46,17 +46,11 @@ class Report extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -74,17 +68,10 @@ class Report extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -94,9 +81,7 @@ class Report extends Component {
   }
 
   getVal = path => {
-    return typeof _.get(this.props.formData, path) != 'undefined'
-      ? _.get(this.props.formData, path)
-      : '';
+    return typeof _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
 
   componentWillMount() {
@@ -135,16 +120,8 @@ class Report extends Component {
   }
 
   initData() {
-    specifications = require(`../../framework/specs/wc/master/searchConnection`)
-      .default;
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    specifications = require(`../../framework/specs/wc/master/searchConnection`).default;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let obj = specifications['wc.searchconnection'];
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
@@ -154,8 +131,7 @@ class Report extends Component {
     setModuleName('wc');
     setActionName('searchconnection');
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     setFormData(formData);
     this.setState({
       pathname: this.props.history.location.pathname,
@@ -176,20 +152,17 @@ class Report extends Component {
     self.props.setLoadingStatus('loading');
     var formData = { ...this.props.formData };
     for (var key in formData) {
-      if (formData[key] == '' || typeof formData[key] == 'undefined')
-        delete formData[key];
+      if (formData[key] == '' || typeof formData[key] == 'undefined') delete formData[key];
     }
 
     formData.pageSize = 5;
     formData.pageNumber = pageNumber ? pageNumber : 1;
     Api.commonApiPost(
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .url,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url,
       formData,
       {},
       null,
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .useTimestamp,
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].useTimestamp,
       true
     ).then(
       function(res) {
@@ -215,36 +188,16 @@ class Report extends Component {
     return _.get(this.props.formData, path) || '';
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { handleChange } = this.props;
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
   };
 
   handleNavigation = row => {
     if (row.isLegacy) {
-      this.props.setRoute(
-        '/legacy/view' + '/' + encodeURIComponent(row.consumerNumber)
-      );
+      this.props.setRoute('/legacy/view' + '/' + encodeURIComponent(row.consumerNumber));
     } else {
-      this.props.setRoute(
-        '/waterConnection/view' +
-          '/' +
-          encodeURIComponent(row.acknowledgementNumber)
-      );
+      this.props.setRoute('/waterConnection/view' + '/' + encodeURIComponent(row.acknowledgementNumber));
     }
   };
   resetAndSearch = e => {
@@ -287,24 +240,8 @@ class Report extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      search,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      rowClickHandler,
-      handleNavigation,
-      resetAndSearch,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { search, handleChange, getVal, addNewCard, removeCard, rowClickHandler, handleNavigation, resetAndSearch } = this;
     let { showResult, resultList, isSearchClicked, pageCount } = this.state;
     let self = this;
     console.log(formData);
@@ -361,25 +298,16 @@ class Report extends Component {
     const displayTableCard = function() {
       return (
         <Card className="uiCard">
-          <CardHeader
-            title={<strong> {translate('ui.table.title')} </strong>}
-          />
+          <CardHeader title={<strong> {translate('ui.table.title')} </strong>} />
           <CardText>
-            <Table
-              id="searchTable"
-              bordered
-              responsive
-              className="table-striped"
-            >
+            <Table id="searchTable" bordered responsive className="table-striped">
               <thead>
                 <tr>
                   <th>#</th>
                   <th>{translate('wc.search.result.acknowledgementNumber')}</th>
                   <th>{translate('fn.ApplicationDetails.applicantName')}</th>
                   <th>{translate('reports.property.address')}</th>
-                  <th>
-                    {translate('wc.create.groups.applicantDetails.consumerNo')}
-                  </th>
+                  <th>{translate('wc.create.groups.applicantDetails.consumerNo')}</th>
                   <th>{translate('wc.search.result.usageType')}</th>
                   <th>{translate('wc.search.result.connectionStatus')}</th>
                   <th>{translate('wc.search.result.propertyidentifier')}</th>
@@ -412,9 +340,7 @@ class Report extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData['wc.searchconnection'].useTimestamp || false
-                }
+                useTimestamp={mockData['wc.searchconnection'].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
               />
@@ -468,14 +394,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

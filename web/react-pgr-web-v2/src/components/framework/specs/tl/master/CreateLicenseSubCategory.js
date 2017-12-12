@@ -16,8 +16,7 @@ var dat = {
             label: 'tl.create.groups.subcategorytype.category',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true&type=category|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -83,8 +82,7 @@ var dat = {
           {
             name: 'createFeeType',
             jsonPath: 'categories[0].details[0].feeType',
-            label:
-              'tl.create.groups.subcategorytype.categories.details.feeType',
+            label: 'tl.create.groups.subcategorytype.categories.details.feeType',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -130,8 +128,7 @@ var dat = {
           {
             name: 'createRateType',
             jsonPath: 'categories[0].details[0].rateType',
-            label:
-              'tl.create.groups.subcategorytype.categories.details.rateType',
+            label: 'tl.create.groups.subcategorytype.categories.details.rateType',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -164,8 +161,7 @@ var dat = {
             label: 'tl.create.groups.subcategorytype.categories.details.uomId',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name',
+            url: '/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -206,8 +202,7 @@ var dat = {
             label: 'tl.search.groups.subcategorytype.category',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/category/v1/_search?tenantId=default&active=true|$..code|$..name',
+            url: '/tl-masters/category/v1/_search?tenantId=default&active=true|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -264,18 +259,9 @@ var dat = {
         },
         { label: 'tl.create.groups.subcategorytype.categories.details.uomId' },
       ],
-      values: [
-        'code',
-        'name',
-        'parentName',
-        'active',
-        'details[0].feeType',
-        'details[0].rateType',
-        'details[0].uomName',
-      ],
+      values: ['code', 'name', 'parentName', 'active', 'details[0].feeType', 'details[0].rateType', 'details[0].uomName'],
       resultPath: 'categories',
-      rowClickUrlUpdate:
-        '/non-framework/tl/masters/update/UpdateSubCategory/{id}',
+      rowClickUrlUpdate: '/non-framework/tl/masters/update/UpdateSubCategory/{id}',
       rowClickUrlView: '/view/tl/CreateLicenseSubCategory/{id}',
     },
   },
@@ -359,8 +345,7 @@ var dat = {
           {
             name: 'createFeeType',
             jsonPath: 'categories[0].details[0].feeType',
-            label:
-              'tl.create.groups.subcategorytype.categories.details.feeType',
+            label: 'tl.create.groups.subcategorytype.categories.details.feeType',
             pattern: '',
             type: 'text',
             url: '',
@@ -390,8 +375,7 @@ var dat = {
           {
             name: 'createRateType',
             jsonPath: 'categories[0].details[0].rateType',
-            label:
-              'tl.create.groups.subcategorytype.categories.details.rateType',
+            label: 'tl.create.groups.subcategorytype.categories.details.rateType',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -424,8 +408,7 @@ var dat = {
             label: 'tl.create.groups.subcategorytype.categories.details.uomId',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name',
+            url: '/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -519,8 +502,7 @@ var dat = {
           {
             name: 'updateFeeType',
             jsonPath: 'categories[0].details[0].feeType',
-            label:
-              'tl.update.groups.subcategorytype.categories.details.feeType',
+            label: 'tl.update.groups.subcategorytype.categories.details.feeType',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -550,8 +532,7 @@ var dat = {
           {
             name: 'updateRateType',
             jsonPath: 'categories[0].details[0].rateType',
-            label:
-              'tl.create.groups.subcategorytype.categories.details.rateType',
+            label: 'tl.create.groups.subcategorytype.categories.details.rateType',
             pattern: '',
             type: 'singleValueList',
             url: '',
@@ -584,8 +565,7 @@ var dat = {
             label: 'tl.create.groups.subcategorytype.categories.details.uomId',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name',
+            url: '/tl-masters/uom/v1/_search?tenantId=default&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',

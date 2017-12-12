@@ -237,25 +237,15 @@ class grievanceSearch extends Component {
         reportObj[`${translate('pgr.lbl.grievance.type')}`] = val.serviceName;
         reportObj[`${translate('core.lbl.add.name')}`] = val.firstName;
         reportObj[`${translate('core.lbl.location')}`] =
-          getNameById(
-            self.state.boundaryList,
-            getNameByProperty(val.attribValues, 'systemLocationId')
-          ) +
+          getNameById(self.state.boundaryList, getNameByProperty(val.attribValues, 'systemLocationId')) +
           ' - ' +
-          getNameById(
-            self.state.boundaryList,
-            getNameByProperty(val.attribValues, 'systemChildLocationId')
-          );
-        reportObj[`${translate('core.lbl.status')}`] = getNameByProperty(
-          val.attribValues,
-          'systemStatus'
-        );
+          getNameById(self.state.boundaryList, getNameByProperty(val.attribValues, 'systemChildLocationId'));
+        reportObj[`${translate('core.lbl.status')}`] = getNameByProperty(val.attribValues, 'systemStatus');
         reportObj[`${translate('core.lbl.department')}`] = getNameById(
           self.state.departmentList,
           getNameByProperty(val.attribValues, 'systemDepartmentId')
         );
-        reportObj[`${translate('pgr.lbl.registered.date')}`] =
-          val.requestedDatetime;
+        reportObj[`${translate('pgr.lbl.registered.date')}`] = val.requestedDatetime;
         reportReponseData.push(reportObj);
       });
       reportData['reportReponseData'] = reportReponseData;
@@ -287,10 +277,10 @@ class grievanceSearch extends Component {
     };
 
     this.props.changeButtonText(translate('core.lbl.more'));
-    Api.commonApiPost(
-      '/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'Ward', hierarchyTypeName: 'Administration' }
-    ).then(
+    Api.commonApiPost('/egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'Ward',
+      hierarchyTypeName: 'Administration',
+    }).then(
       function(response) {
         checkCountAndCall('locationList', response.Boundary);
       },
@@ -390,10 +380,7 @@ class grievanceSearch extends Component {
         this.props.handleChange('', field, false, '');
         this.setState({ datefield: field });
         this.setState({
-          dateError:
-            field === 'endDate'
-              ? translate('pgr.lbl.dategreater')
-              : translate('pgr.lbl.datelesser'),
+          dateError: field === 'endDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser'),
         });
       }
     }
@@ -412,14 +399,7 @@ class grievanceSearch extends Component {
       resultList,
       pageCount,
     } = this.state;
-    let {
-      handleChange,
-      buttonText,
-      grievanceSearchSet,
-      changeButtonText,
-      isFormValid,
-      fieldErrors,
-    } = this.props;
+    let { handleChange, buttonText, grievanceSearchSet, changeButtonText, isFormValid, fieldErrors } = this.props;
 
     const showOtherFields = function() {
       if (buttonText == translate('core.lbl.less')) {
@@ -486,13 +466,7 @@ class grievanceSearch extends Component {
                 }}
               >
                 <MenuItem value="" primaryText="Select" />
-                {complaintTypeList.map((com, index) => (
-                  <MenuItem
-                    value={com.serviceCode}
-                    key={index}
-                    primaryText={com.serviceName}
-                  />
-                ))}
+                {complaintTypeList.map((com, index) => <MenuItem value={com.serviceCode} key={index} primaryText={com.serviceName} />)}
               </SelectField>
             </Col>
             <Col xs={12} sm={4} md={3} lg={3}>
@@ -516,10 +490,7 @@ class grievanceSearch extends Component {
                     insetChildren={true}
                     key={index}
                     primaryText={stat.name}
-                    checked={
-                      grievanceSearchSet.status &&
-                      grievanceSearchSet.status.indexOf(stat.code) > -1
-                    }
+                    checked={grievanceSearchSet.status && grievanceSearchSet.status.indexOf(stat.code) > -1}
                   />
                 ))}
               </SelectField>
@@ -539,13 +510,7 @@ class grievanceSearch extends Component {
                 }}
               >
                 <MenuItem value="" primaryText="Select" />
-                {receiveingModeList.map((mod, index) => (
-                  <MenuItem
-                    value={mod.code}
-                    key={index}
-                    primaryText={mod.name}
-                  />
-                ))}
+                {receiveingModeList.map((mod, index) => <MenuItem value={mod.code} key={index} primaryText={mod.name} />)}
               </SelectField>
             </Col>
           </Row>
@@ -562,10 +527,7 @@ class grievanceSearch extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={<div style={styles.headerStyle}> Search Grievance </div>}
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> Search Grievance </div>} />
             <CardText style={{ padding: 0 }}>
               <Grid>
                 <Row>
@@ -597,13 +559,7 @@ class grievanceSearch extends Component {
                       }}
                     >
                       <MenuItem value="" primaryText="Select" />
-                      {locationList.map((loc, index) => (
-                        <MenuItem
-                          value={loc.id}
-                          key={index}
-                          primaryText={loc.name}
-                        />
-                      ))}
+                      {locationList.map((loc, index) => <MenuItem value={loc.id} key={index} primaryText={loc.name} />)}
                     </SelectField>
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
@@ -628,11 +584,7 @@ class grievanceSearch extends Component {
                       onChange={(e, value) => {
                         this.checkDate(value, 'startDate', false, '');
                       }}
-                      errorText={
-                        this.state.datefield === 'startDate'
-                          ? this.state.dateError
-                          : ''
-                      }
+                      errorText={this.state.datefield === 'startDate' ? this.state.dateError : ''}
                     />
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
@@ -657,11 +609,7 @@ class grievanceSearch extends Component {
                       onChange={(e, value) => {
                         this.checkDate(value, 'endDate', false, '');
                       }}
-                      errorText={
-                        this.state.datefield === 'endDate'
-                          ? this.state.dateError
-                          : ''
-                      }
+                      errorText={this.state.datefield === 'endDate' ? this.state.dateError : ''}
                     />
                   </Col>
                 </Row>
@@ -683,12 +631,7 @@ class grievanceSearch extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              primary={true}
-              label={translate('core.lbl.search')}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" primary={true} label={translate('core.lbl.search')} />
             <RaisedButton
               style={{ margin: '15px 5px' }}
               type="button"
@@ -699,26 +642,12 @@ class grievanceSearch extends Component {
             />
           </div>
         </form>
-        {isSearchClicked ? (
-          <ServerSideTable
-            resultSet={this.state.resultList}
-            pageCount={this.state.pageCount}
-            search={this.search}
-          />
-        ) : (
-          ''
-        )}
+        {isSearchClicked ? <ServerSideTable resultSet={this.state.resultList} pageCount={this.state.pageCount} search={this.search} /> : ''}
         <Dialog
           title={translate('core.msg.criteria.required')}
           open={this.state.open}
           onRequestClose={this.handleOpenNClose}
-          actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={this.handleOpenNClose}
-            />
-          }
+          actions={<FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.handleOpenNClose} />}
         />
         <Snackbar
           open={this.state.open1}

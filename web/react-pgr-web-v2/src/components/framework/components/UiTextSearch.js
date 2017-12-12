@@ -20,22 +20,14 @@ export default class UiTextSearch extends Component {
               }}
               inputStyle={{ color: '#5F5C57' }}
               floatingLabelFixed={true}
-              onBlur={ev =>
-                this.props.autoComHandler(
-                  item.autoCompleteDependancy,
-                  item.jsonPath
-                )
-              }
+              onBlur={ev => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}
               style={{ display: item.hide ? 'none' : 'inline-block' }}
               errorStyle={{ float: 'left' }}
               fullWidth={true}
               maxLength={item.maxLength || ''}
               floatingLabelText={
                 <span>
-                  {item.label}{' '}
-                  <span style={{ color: '#FF0000' }}>
-                    {item.isRequired ? ' *' : ''}
-                  </span>
+                  {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
                 </span>
               }
               value={this.props.getVal(item.jsonPath)}
@@ -44,11 +36,7 @@ export default class UiTextSearch extends Component {
               onChange={e => {
                 if (e.target.value) {
                   e.target.value = e.target.value.replace(/^\s*/, '');
-                  if (
-                    e.target.value[e.target.value.length - 1] == ' ' &&
-                    e.target.value[e.target.value.length - 2] == ' '
-                  )
-                    return;
+                  if (e.target.value[e.target.value.length - 1] == ' ' && e.target.value[e.target.value.length - 2] == ' ') return;
                 }
                 this.props.handler(
                   e,
@@ -69,12 +57,7 @@ export default class UiTextSearch extends Component {
                 right: '10px',
                 display: item.display ? 'none' : '',
               }}
-              onClick={() =>
-                this.props.autoComHandler(
-                  item.autoCompleteDependancy,
-                  item.jsonPath
-                )
-              }
+              onClick={() => this.props.autoComHandler(item.autoCompleteDependancy, item.jsonPath)}
             />
           </div>
         );

@@ -156,15 +156,7 @@ var dat = {
           label: 'legacylegal.search.result.caseDetails',
         },
       ],
-      values: [
-        'id',
-        'referenceNo',
-        'summonDate',
-        'year',
-        'caseType',
-        'caseNo',
-        'caseDetails',
-      ],
+      values: ['id', 'referenceNo', 'summonDate', 'year', 'caseType', 'caseNo', 'caseDetails'],
       resultPath: 'summons',
       rowClickUrlUpdate: '/update/legalcase/{id}',
       rowClickUrlView: '/view/legalcase/{id}',
@@ -199,8 +191,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
           },
           {
             name: 'caseType',
@@ -210,8 +201,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
             name: 'caseCategory',
@@ -221,8 +211,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',
           },
           {
             name: 'caseNo',
@@ -241,8 +230,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'ward',
@@ -261,8 +249,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
             name: 'stamp',
@@ -272,8 +259,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
           },
           {
             name: 'plantiffName',
@@ -411,8 +397,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
             patternErrorMsg: '',
           },
           {
@@ -630,8 +615,7 @@ var dat = {
                   jsonPath: 'cases[0].advocateDetails[index].advocate.name',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
+                  url: '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
                 },
                 {
                   name: 'advocateAssignDate-index',
@@ -728,8 +712,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
             name: 'plantiffName',
@@ -795,8 +778,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'hearingDate',
@@ -833,8 +815,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
             name: 'side',
@@ -844,8 +825,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
           },
           {
             name: 'stamp',
@@ -855,8 +835,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
           },
           {
             name: 'sectionApplied',
@@ -944,8 +923,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
             name: 'plantiffName',
@@ -1011,8 +989,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'hearingDate',
@@ -1049,8 +1026,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
             name: 'side',
@@ -1060,8 +1036,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
           },
           {
             name: 'stamp',
@@ -1071,8 +1046,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=stamp|$..code|$..name',
           },
           {
             name: 'sectionApplied',

@@ -192,10 +192,7 @@ class routerGeneration extends Component {
       hierarchyTypeName: 'ADMINISTRATION',
     }).then(
       function(response) {
-        checkCountAndCall(
-          'boundaryTypeList',
-          response ? response.BoundaryType : []
-        );
+        checkCountAndCall('boundaryTypeList', response ? response.BoundaryType : []);
       },
       function(err) {
         checkCountAndCall('boundaryTypeList', []);
@@ -215,10 +212,7 @@ class routerGeneration extends Component {
       'Boundary.tenantId': localStorage.getItem('tenantId'),
     }).then(
       function(response) {
-        checkCountAndCall(
-          'boundaryInitialList',
-          response ? response.Boundary : []
-        );
+        checkCountAndCall('boundaryInitialList', response ? response.Boundary : []);
       },
       function(err) {
         checkCountAndCall('boundaryInitialList', []);
@@ -269,31 +263,17 @@ class routerGeneration extends Component {
             tenantId: localStorage.getItem('tenantId'),
           };
 
-          for (
-            var i = 0;
-            i < self.props.routerCreateSet.serviceId.length;
-            i++
-          ) {
+          for (var i = 0; i < self.props.routerCreateSet.serviceId.length; i++) {
             routerType.services.push(self.props.routerCreateSet.serviceId[i]);
           }
 
           console.log(self.props.routerCreateSet);
-          for (
-            var i = 0;
-            i < self.props.routerCreateSet.boundaryId.length;
-            i++
-          ) {
-            routerType.boundaries.push(
-              self.props.routerCreateSet.boundaryId[i]
-            );
+          for (var i = 0; i < self.props.routerCreateSet.boundaryId.length; i++) {
+            routerType.boundaries.push(self.props.routerCreateSet.boundaryId[i]);
           }
 
           self.props.setLoadingStatus('loading');
-          Api.commonApiPost(
-            '/workflow/router/v1/_create',
-            {},
-            { router: routerType }
-          ).then(
+          Api.commonApiPost('/workflow/router/v1/_create', {}, { router: routerType }).then(
             function(response) {
               self.props.initForm();
               searchTextPos = '';
@@ -357,12 +337,8 @@ class routerGeneration extends Component {
   renderComplaintTypeChips = () => {
     let { routerCreateSet } = this.props;
     let { typeList } = this.state;
-    let servicearray = routerCreateSet.serviceId
-      ? [...routerCreateSet.serviceId].splice(0, 2)
-      : [];
-    routerCreateSet.serviceId && [...routerCreateSet.serviceId].length > 2
-      ? servicearray.push('More >')
-      : '';
+    let servicearray = routerCreateSet.serviceId ? [...routerCreateSet.serviceId].splice(0, 2) : [];
+    routerCreateSet.serviceId && [...routerCreateSet.serviceId].length > 2 ? servicearray.push('More >') : '';
     return servicearray.map(serviceId => {
       let obj = typeList.find(service => {
         return service.id == serviceId;
@@ -374,11 +350,7 @@ class routerGeneration extends Component {
           <Chip
             style={style.chip}
             onClick={e => {
-              this.handleOpenChips(
-                routerCreateSet.serviceId,
-                translate('pgr.lbl.grievance.type'),
-                'grievanceType'
-              );
+              this.handleOpenChips(routerCreateSet.serviceId, translate('pgr.lbl.grievance.type'), 'grievanceType');
             }}
           >
             {serviceId}
@@ -391,12 +363,8 @@ class routerGeneration extends Component {
   renderBoundaryChips = () => {
     let { routerCreateSet } = this.props;
     let { boundariesList } = this.state;
-    let boundaryarray = routerCreateSet.boundaryId
-      ? [...routerCreateSet.boundaryId].splice(0, 2)
-      : [];
-    routerCreateSet.boundaryId && [...routerCreateSet.boundaryId].length > 2
-      ? boundaryarray.push('More >')
-      : '';
+    let boundaryarray = routerCreateSet.boundaryId ? [...routerCreateSet.boundaryId].splice(0, 2) : [];
+    routerCreateSet.boundaryId && [...routerCreateSet.boundaryId].length > 2 ? boundaryarray.push('More >') : '';
     return boundaryarray.map(boundaryId => {
       let obj = boundariesList.find(boundary => {
         return boundary.code == boundaryId;
@@ -408,11 +376,7 @@ class routerGeneration extends Component {
           <Chip
             style={style.chip}
             onClick={e => {
-              this.handleOpenChips(
-                routerCreateSet.boundaryId,
-                translate('pgr.lbl.boundary'),
-                'boundaryType'
-              );
+              this.handleOpenChips(routerCreateSet.boundaryId, translate('pgr.lbl.boundary'), 'boundaryType');
             }}
           >
             {boundaryId}
@@ -424,21 +388,8 @@ class routerGeneration extends Component {
 
   render() {
     _this = this;
-    let {
-      fieldErrors,
-      routerCreateSet,
-      handleChange,
-      handleAutoCompleteKeyUp,
-      isFormValid,
-    } = this.props;
-    let {
-      search,
-      loadGrievanceType,
-      loadBoundaries,
-      save,
-      handleOpenNClose,
-      handleOpenNClose2,
-    } = this;
+    let { fieldErrors, routerCreateSet, handleChange, handleAutoCompleteKeyUp, isFormValid } = this.props;
+    let { search, loadGrievanceType, loadBoundaries, save, handleOpenNClose, handleOpenNClose2 } = this;
     let {
       boundariesList,
       boundaryTypeList,
@@ -476,30 +427,10 @@ class routerGeneration extends Component {
           return (
             <tr key={i}>
               <td>{i + 1}</td>
-              <td>
-                {val.service
-                  ? getNameById(typeList, val.service, 'serviceName')
-                  : ''}
-              </td>
-              <td>
-                {val.boundary
-                  ? getNameById(
-                      boundaryInitialList,
-                      val.boundary,
-                      'boundaryType.name'
-                    )
-                  : ''}
-              </td>
-              <td>
-                {val.boundary
-                  ? getNameById(boundaryInitialList, val.boundary, 'name')
-                  : ''}
-              </td>
-              <td>
-                {val.position
-                  ? getNameById(positionSource, val.position, 'name')
-                  : ''}
-              </td>
+              <td>{val.service ? getNameById(typeList, val.service, 'serviceName') : ''}</td>
+              <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'boundaryType.name') : ''}</td>
+              <td>{val.boundary ? getNameById(boundaryInitialList, val.boundary, 'name') : ''}</td>
+              <td>{val.position ? getNameById(positionSource, val.position, 'name') : ''}</td>
             </tr>
           );
         });
@@ -509,22 +440,9 @@ class routerGeneration extends Component {
       if (isSearchClicked)
         return (
           <Card style={styles.marginStyle}>
-            <CardHeader
-              title={
-                <strong style={{ color: '#5a3e1b' }}>
-                  {' '}
-                  {translate('pgr.lbl.router.overwrite')}{' '}
-                </strong>
-              }
-            />
+            <CardHeader title={<strong style={{ color: '#5a3e1b' }}> {translate('pgr.lbl.router.overwrite')} </strong>} />
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead>
                   <tr>
                     <th>#</th>
@@ -549,15 +467,7 @@ class routerGeneration extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {translate('pgr.lbl.create.router')}{' '}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.lbl.create.router')} </div>} />
             <CardText style={{ padding: 0 }}>
               <Grid>
                 <Row>
@@ -568,9 +478,7 @@ class routerGeneration extends Component {
                       hintText="Select"
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievance.category') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievance.category') + ' *'}
                       errorText={fieldErrors.complaintTypeCategory}
                       value={routerCreateSet.complaintTypeCategory}
                       onChange={(e, i, val) => {
@@ -580,13 +488,7 @@ class routerGeneration extends Component {
                       }}
                     >
                       <MenuItem value="" primaryText="Select" />
-                      {categoryList.map((item, index) => (
-                        <MenuItem
-                          value={item.id}
-                          key={index}
-                          primaryText={item.name}
-                        />
-                      ))}
+                      {categoryList.map((item, index) => <MenuItem value={item.id} key={index} primaryText={item.name} />)}
                     </SelectField>
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
@@ -596,9 +498,7 @@ class routerGeneration extends Component {
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievance.type') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievance.type') + ' *'}
                       errorText={fieldErrors.serviceId}
                       value={routerCreateSet.serviceId}
                       onChange={(e, i, val) => {
@@ -614,16 +514,11 @@ class routerGeneration extends Component {
                           key={index}
                           insetChildren={true}
                           primaryText={item.serviceName}
-                          checked={
-                            routerCreateSet.serviceId &&
-                            routerCreateSet.serviceId.indexOf(item.id) > -1
-                          }
+                          checked={routerCreateSet.serviceId && routerCreateSet.serviceId.indexOf(item.id) > -1}
                         />
                       ))}
                     </SelectField>
-                    <div style={style.wrapper}>
-                      {this.renderComplaintTypeChips()}
-                    </div>
+                    <div style={style.wrapper}>{this.renderComplaintTypeChips()}</div>
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
                     <SelectField
@@ -632,9 +527,7 @@ class routerGeneration extends Component {
                       hintText="Select"
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.boundarytype') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.boundarytype') + ' *'}
                       errorText={fieldErrors.boundaryTypeId || ''}
                       value={routerCreateSet.boundaryTypeId}
                       onChange={(e, i, val) => {
@@ -644,13 +537,7 @@ class routerGeneration extends Component {
                       }}
                     >
                       <MenuItem value="" primaryText="Select" />
-                      {boundaryTypeList.map((item, index) => (
-                        <MenuItem
-                          value={item.id}
-                          key={index}
-                          primaryText={item.name}
-                        />
-                      ))}
+                      {boundaryTypeList.map((item, index) => <MenuItem value={item.id} key={index} primaryText={item.name} />)}
                     </SelectField>
                   </Col>
                   <Col xs={12} sm={4} md={3} lg={3}>
@@ -676,16 +563,11 @@ class routerGeneration extends Component {
                           key={index}
                           primaryText={item.name}
                           insetChildren={true}
-                          checked={
-                            routerCreateSet.boundaries &&
-                            routerCreateSet.boundaries.indexOf(item.id) > -1
-                          }
+                          checked={routerCreateSet.boundaries && routerCreateSet.boundaries.indexOf(item.id) > -1}
                         />
                       ))}
                     </SelectField>
-                    <div style={style.wrapper}>
-                      {this.renderBoundaryChips()}
-                    </div>
+                    <div style={style.wrapper}>{this.renderBoundaryChips()}</div>
                   </Col>
                 </Row>
                 <Row>
@@ -727,13 +609,7 @@ class routerGeneration extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              label={translate('core.lbl.submit')}
-              disabled={!isFormValid}
-              primary={true}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" label={translate('core.lbl.submit')} disabled={!isFormValid} primary={true} />
           </div>
           {viewTable()}
           {showSaveButton()}
@@ -741,11 +617,7 @@ class routerGeneration extends Component {
         <Dialog
           title="Confirm"
           actions={[
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={false}
-              onTouchTap={handleOpenNClose}
-            />,
+            <FlatButton label={translate('core.lbl.close')} primary={false} onTouchTap={handleOpenNClose} />,
             <FlatButton
               label="Yes"
               primary={true}
@@ -762,13 +634,7 @@ class routerGeneration extends Component {
         </Dialog>
         <Dialog
           title={translate('pgr.lbl.success')}
-          actions={[
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={handleOpenNClose2}
-            />,
-          ]}
+          actions={[<FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={handleOpenNClose2} />]}
           modal={false}
           open={open2}
           onRequestClose={handleOpenNClose2}
@@ -777,19 +643,11 @@ class routerGeneration extends Component {
         </Dialog>
         <Dialog
           title={this.state.chipsTitle}
-          actions={[
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={false}
-              onTouchTap={this.handleCloseChips}
-            />,
-          ]}
+          actions={[<FlatButton label={translate('core.lbl.close')} primary={false} onTouchTap={this.handleCloseChips} />]}
           open={this.state.handleOpenChips}
           onRequestClose={this.handleCloseChips}
         >
-          <div style={style.wrapper}>
-            {this.state.handleOpenChips && this.presentChips()}
-          </div>
+          <div style={style.wrapper}>{this.state.handleOpenChips && this.presentChips()}</div>
         </Dialog>
       </div>
     );
@@ -811,13 +669,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: [
-            'complaintTypeCategory',
-            'serviceId',
-            'boundaryTypeId',
-            'boundaryId',
-            'position',
-          ],
+          required: ['complaintTypeCategory', 'serviceId', 'boundaryTypeId', 'boundaryId', 'position'],
         },
         pattern: {
           current: [],

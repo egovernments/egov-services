@@ -34,14 +34,11 @@ var requestInfo = {
   authToken: authToken,
 };
 
-var tenantId = localStorage.getItem('tenantId')
-  ? localStorage.getItem('tenantId')
-  : 'default';
+var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
 
 function extractErrorMsg(errorObj, localeCode, descriptionCode) {
   var translatedErrorMsg = common.translate(errorObj[localeCode]);
-  if (errorObj[localeCode] === translatedErrorMsg)
-    return errorObj[descriptionCode] || translatedErrorMsg;
+  if (errorObj[localeCode] === translatedErrorMsg) return errorObj[descriptionCode] || translatedErrorMsg;
   else return translatedErrorMsg;
 }
 
@@ -58,24 +55,19 @@ module.exports = {
     isStateLevel = false
   ) => {
     var url = context;
-    if (url && url[url.length - 1] === '/')
-      url = url.substring(0, url.length - 1);
+    if (url && url[url.length - 1] === '/') url = url.substring(0, url.length - 1);
     if (!doNotOverride) {
       if (url.split('?').length > 1) {
         url +=
           '&tenantId=' +
           (localStorage.getItem('tenantId')
-            ? isStateLevel
-              ? localStorage.getItem('tenantId').split('.')[0]
-              : localStorage.getItem('tenantId')
+            ? isStateLevel ? localStorage.getItem('tenantId').split('.')[0] : localStorage.getItem('tenantId')
             : 'default');
       } else {
         url +=
           '?tenantId=' +
           (localStorage.getItem('tenantId')
-            ? isStateLevel
-              ? localStorage.getItem('tenantId').split('.')[0]
-              : localStorage.getItem('tenantId')
+            ? isStateLevel ? localStorage.getItem('tenantId').split('.')[0] : localStorage.getItem('tenantId')
             : 'default');
       }
     } else {
@@ -113,96 +105,43 @@ module.exports = {
       })
       .catch(function(response) {
         try {
-          if (
-            response &&
-            response.response &&
-            response.response.data &&
-            response.response.data[0] &&
-            response.response.data[0].error
-          ) {
+          if (response && response.response && response.response.data && response.response.data[0] && response.response.data[0].error) {
             var _err = response.response.data[0].error.message || '';
-            if (
-              response.response.data[0].error.errorFields &&
-              Object.keys(response.response.data[0].error.errorFields).length
-            ) {
-              for (
-                var i = 0;
-                i < response.response.data[0].error.errorFields.length;
-                i++
-              ) {
-                _err +=
-                  '\n ' +
-                  response.response.data[0].error.errorFields[i].message +
-                  ' ';
+            if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
+              for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
+                _err += '\n ' + response.response.data[0].error.errorFields[i].message + ' ';
               }
               throw new Error(_err);
             }
-          } else if (
-            response &&
-            response.response &&
-            response.response.data &&
-            response.response.data.error
-          ) {
+          } else if (response && response.response && response.response.data && response.response.data.error) {
             // let _err = common.translate(response.response.data.error.fields[0].code);
             let _err = '';
 
             _err = response.response.data.error.message
               ? response.response.data.error.fields
-                ? 'a) ' +
-                  extractErrorMsg(
-                    response.response.data.error,
-                    'message',
-                    'description'
-                  ) +
-                  ' : '
-                : extractErrorMsg(
-                    response.response.data.error,
-                    'message',
-                    'description'
-                  )
+                ? 'a) ' + extractErrorMsg(response.response.data.error, 'message', 'description') + ' : '
+                : extractErrorMsg(response.response.data.error, 'message', 'description')
               : '';
             let fields = response.response.data.error.fields || [];
             for (var i = 0; i < fields.length; i++) {
-              _err +=
-                i +
-                1 +
-                ') ' +
-                extractErrorMsg(fields[i], 'code', 'message') +
-                '.';
+              _err += i + 1 + ') ' + extractErrorMsg(fields[i], 'code', 'message') + '.';
             }
             throw new Error(_err);
-          } else if (
-            response &&
-            response.response &&
-            response.response.data &&
-            response.response.data.Errors
-          ) {
+          } else if (response && response.response && response.response.data && response.response.data.Errors) {
             // let _err = common.translate(response.response.data.error.fields[0].code);
             let _err = '';
             // _err=response.response.data.error.message?"a) "+extractErrorMsg(response.response.data.error, "message", "description")+" : ":"";
             // let fields=response.response.data.error.fields;
             if (response.response.data.Errors.length == 1) {
-              _err +=
-                common.translate(response.response.data.Errors[0].message) +
-                '.';
+              _err += common.translate(response.response.data.Errors[0].message) + '.';
             } else {
               for (var i = 0; i < response.response.data.Errors.length; i++) {
-                _err +=
-                  i +
-                  1 +
-                  ') ' +
-                  common.translate(response.response.data.Errors[i].message) +
-                  '.';
+                _err += i + 1 + ') ' + common.translate(response.response.data.Errors[i].message) + '.';
               }
             }
 
             throw new Error(_err);
-          } else if (
-            response &&
-            response.response &&
-            !response.response.data &&
-            response.response.status === 400
-          ) {
+          } else if (response && response.response && !response.response.data && response.response.status === 400) {
             if (counter == 0) {
               document.title = 'eGovernments';
               var locale = localStorage.getItem('locale');
@@ -215,19 +154,14 @@ module.exports = {
               alert('Session expired. Please login again.');
               //localStorage.reload = true;
               throw new Error('');
-              window.location.href =
-                window.location.href.split('#/')[0] + '#/' + _tntId;
+              window.location.href = window.location.href.split('#/')[0] + '#/' + _tntId;
 
               counter++;
             }
           } else if (response) {
-            throw new Error(
-              "Oops! Something isn't right. Please try again later."
-            );
+            throw new Error("Oops! Something isn't right. Please try again later.");
           } else {
-            throw new Error(
-              'Server returned unexpected error. Please contact system administrator.'
-            );
+            throw new Error('Server returned unexpected error. Please contact system administrator.');
           }
         } catch (e) {
           if (e.message) {
@@ -236,15 +170,9 @@ module.exports = {
         }
       });
   },
-  commonApiGet: (
-    context,
-    queryObject = {},
-    doNotOverride = false,
-    noPageSize = false
-  ) => {
+  commonApiGet: (context, queryObject = {}, doNotOverride = false, noPageSize = false) => {
     var url = context;
-    if (!doNotOverride)
-      url += '?tenantId=' + (localStorage.getItem('tenantId') || 'default');
+    if (!doNotOverride) url += '?tenantId=' + (localStorage.getItem('tenantId') || 'default');
     else url += '?';
     for (var variable in queryObject) {
       if (typeof queryObject[variable] !== 'undefined') {
@@ -266,23 +194,12 @@ module.exports = {
           response.response &&
           response.response.data &&
           response.response.data[0] &&
-          (response.response.data[0].error ||
-            response.response.data[0].Errors[0])
+          (response.response.data[0].error || response.response.data[0].Errors[0])
         ) {
           var _err = response.response.data[0].error.message || '';
-          if (
-            response.response.data[0].error.errorFields &&
-            Object.keys(response.response.data[0].error.errorFields).length
-          ) {
-            for (
-              var i = 0;
-              i < response.response.data[0].error.errorFields.length;
-              i++
-            ) {
-              _err +=
-                '\n ' +
-                response.response.data[0].error.errorFields[i].message +
-                ' ';
+          if (response.response.data[0].error.errorFields && Object.keys(response.response.data[0].error.errorFields).length) {
+            for (var i = 0; i < response.response.data[0].error.errorFields.length; i++) {
+              _err += '\n ' + response.response.data[0].error.errorFields[i].message + ' ';
             }
             throw new Error(_err);
           }

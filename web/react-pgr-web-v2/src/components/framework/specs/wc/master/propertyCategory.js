@@ -17,8 +17,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -30,8 +29,7 @@ var dat = {
             label: 'wc.create.categoryType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/categorytype/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/categorytype/_search?&active=true|$..name|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -70,8 +68,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -83,8 +80,7 @@ var dat = {
             label: 'wc.create.categoryType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/categorytype/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/categorytype/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -106,11 +102,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'wc.create.propertyType' },
-        { label: 'wc.create.categoryType' },
-        { label: 'wc.create.active' },
-      ],
+      header: [{ label: 'wc.create.propertyType' }, { label: 'wc.create.categoryType' }, { label: 'wc.create.active' }],
       values: ['propertyTypeName', 'categoryTypeName', 'active'],
       resultPath: 'PropertyTypeCategoryTypes',
       rowClickUrlUpdate: '/update/wc/propertyCategory/{id}',
@@ -183,8 +175,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -196,8 +187,7 @@ var dat = {
             label: 'wc.create.categoryType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/categorytype/_search?&active=true|$..name|$..name',
+            url: '/wcms/masters/categorytype/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',

@@ -28,14 +28,9 @@ class UiDocuments extends Component {
       let fIndex = item.url.indexOf('{');
       let lIndex = item.url.indexOf('}');
       let regexp = new RegExp(/{(.*?)}/);
-      let url = item.url.replace(
-        regexp,
-        _.get(this.props.formData, item.url.substring(fIndex + 1, lIndex))
-      );
+      let url = item.url.replace(regexp, _.get(this.props.formData, item.url.substring(fIndex + 1, lIndex)));
       if (_.get(this.props.formData, item.url.substring(fIndex + 1, lIndex))) {
-        Promise.all([
-          Api.commonApiPost(url, {}, {}, '', useTimestamp, false),
-        ]).then(responses => {
+        Promise.all([Api.commonApiPost(url, {}, {}, '', useTimestamp, false)]).then(responses => {
           try {
             let allowedMax = item.maxFile - responses[0].documentDetails.length;
             this.setState({
@@ -49,10 +44,7 @@ class UiDocuments extends Component {
         });
       }
     } else {
-      let fileCount =
-        (_.get(this.props.formData, item.jsonPath) &&
-          _.get(this.props.formData, item.jsonPath).length) ||
-        1;
+      let fileCount = (_.get(this.props.formData, item.jsonPath) && _.get(this.props.formData, item.jsonPath).length) || 1;
       this.setState({
         docs: [],
         allowedMax: item.maxFile,
@@ -73,12 +65,7 @@ class UiDocuments extends Component {
           return (
             <Col xs={12} sm={3} md={4} lg={3}>
               <RaisedButton
-                href={
-                  '/filestore/v1/files/id?fileStoreId=' +
-                  doc.fileStore +
-                  '&tenantId=' +
-                  localStorage.getItem('tenantId')
-                }
+                href={'/filestore/v1/files/id?fileStoreId=' + doc.fileStore + '&tenantId=' + localStorage.getItem('tenantId')}
                 download
                 label={`file ${index + 1}`}
                 style={{ marginBottom: 15 }}
@@ -99,14 +86,7 @@ class UiDocuments extends Component {
   uploadDocs = () => {
     return _.times(this.state.allowedMax, idx => {
       return (
-        <Col
-          xs={12}
-          sm={4}
-          md={3}
-          lg={3}
-          key={idx}
-          className={idx < this.state.fileCount ? '' : 'hide'}
-        >
+        <Col xs={12} sm={4} md={3} lg={3} key={idx} className={idx < this.state.fileCount ? '' : 'hide'}>
           <div className="input-group">
             <input
               type="file"
@@ -114,11 +94,7 @@ class UiDocuments extends Component {
               ref={`file${idx}`}
               className="form-control"
               onChange={e => {
-                this.props.handler(
-                  { target: { value: e.target.files[0] } },
-                  `${this.props.item.jsonPath}[${idx}]`,
-                  false
-                );
+                this.props.handler({ target: { value: e.target.files[0] } }, `${this.props.item.jsonPath}[${idx}]`, false);
               }}
             />
             <span
@@ -126,11 +102,7 @@ class UiDocuments extends Component {
               style={{ cursor: 'pointer' }}
               onClick={() => {
                 document.getElementById(`file${idx}`).value = null;
-                this.props.handler(
-                  { target: { value: '' } },
-                  `${this.props.item.jsonPath}[${idx}]`,
-                  false
-                );
+                this.props.handler({ target: { value: '' } }, `${this.props.item.jsonPath}[${idx}]`, false);
               }}
             >
               <i className="glyphicon glyphicon-trash specific" />

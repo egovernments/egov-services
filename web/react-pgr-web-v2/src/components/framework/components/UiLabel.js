@@ -54,14 +54,8 @@ export default class UiLabel extends Component {
           Api.commonApiPost(_url, qString, {}, '', useTimestamp || false).then(
             function(response) {
               if (response) {
-                let keys = jp.query(
-                  response,
-                  item.url.split('?')[1].split('|')[1]
-                );
-                let values = jp.query(
-                  response,
-                  item.url.split('?')[1].split('|')[2]
-                );
+                let keys = jp.query(response, item.url.split('?')[1].split('|')[1]);
+                let values = jp.query(response, item.url.split('?')[1].split('|')[2]);
                 let dropDownData = [];
                 for (var k = 0; k < keys.length; k++) {
                   if (val == keys[k]) {
@@ -80,11 +74,7 @@ export default class UiLabel extends Component {
         .catch(err => {
           console.log(err);
         });
-    } else if (
-      val &&
-      item.hasOwnProperty('url') &&
-      item.url.search('\\|') > -1
-    ) {
+    } else if (val && item.hasOwnProperty('url') && item.url.search('\\|') > -1) {
       /*if (item.isConfig) {
 	    //=======================BASED ON APP CONFIG==========================//
 	    Api.commonApiPost('/wcms/masters/waterchargesconfig/_search', {
@@ -126,9 +116,7 @@ export default class UiLabel extends Component {
       let queryStringObject = splitArray[1].split('|')[0].split('&');
       for (var i = 0; i < queryStringObject.length; i++) {
         if (i) {
-          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split(
-            '='
-          )[1];
+          id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
         }
       }
 
@@ -179,11 +167,7 @@ export default class UiLabel extends Component {
 
   openLink(item) {
     window.open(
-      item.hyperLink +
-        '/' +
-        encodeURIComponent(
-          this.state.value || this.props.getVal(item.jsonPath, item.isDate)
-        ),
+      item.hyperLink + '/' + encodeURIComponent(this.state.value || this.props.getVal(item.jsonPath, item.isDate)),
       'mywin',
       'left=20,top=20,width=500,height=500,toolbar=1,resizable=0'
     );
@@ -197,47 +181,27 @@ export default class UiLabel extends Component {
           {!item.hasOwnProperty('isLabel') ? (
             <Col
               id={item.jsonPath.split('.').join('-')}
-              style={
-                item.hasOwnProperty('textAlign')
-                  ? { textAlign: item.textAlign }
-                  : { textAlign: 'left' }
-              }
+              style={item.hasOwnProperty('textAlign') ? { textAlign: item.textAlign } : { textAlign: 'left' }}
               xs={12}
             >
               <label>
-                <span style={{ fontWeight: 600, fontSize: '13px' }}>
-                  {translate(item.label)}
-                </span>
+                <span style={{ fontWeight: 600, fontSize: '13px' }}>{translate(item.label)}</span>
               </label>
             </Col>
           ) : (
             ''
           )}
-          {item.hyperLink &&
-          (this.state.value ||
-            this.props.getVal(item.jsonPath, item.isDate)) ? (
+          {item.hyperLink && (this.state.value || this.props.getVal(item.jsonPath, item.isDate)) ? (
             <Col style={{ textAlign: 'left' }} xs={12}>
-              <FlatButton
-                label={
-                  this.state.value ||
-                  this.props.getVal(item.jsonPath, item.isDate)
-                }
-                primary={true}
-              />
+              <FlatButton label={this.state.value || this.props.getVal(item.jsonPath, item.isDate)} primary={true} />
             </Col>
           ) : (
             <Col
               id={item.jsonPath.split('.').join('-')}
-              style={
-                item.hasOwnProperty('textAlign')
-                  ? { textAlign: item.textAlign }
-                  : { textAlign: 'left' }
-              }
+              style={item.hasOwnProperty('textAlign') ? { textAlign: item.textAlign } : { textAlign: 'left' }}
               xs={12}
             >
-              {this.state.value ||
-                this.props.getVal(item.jsonPath, item.isDate) ||
-                'NA'}
+              {this.state.value || this.props.getVal(item.jsonPath, item.isDate) || 'NA'}
             </Col>
           )}
         </Row>

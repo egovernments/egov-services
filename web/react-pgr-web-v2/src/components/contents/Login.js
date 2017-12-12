@@ -93,9 +93,7 @@ class Login extends Component {
         checked: false,
       },
       localeready: false,
-      locale: localStorage.getItem('locale')
-        ? localStorage.getItem('locale')
-        : 'en_IN',
+      locale: localStorage.getItem('locale') ? localStorage.getItem('locale') : 'en_IN',
       dataSource: [],
       errorMsg: '',
       open: false,
@@ -151,10 +149,7 @@ class Login extends Component {
     this.props.forceLogout();
     //}
 
-    if (
-      window.location.href.indexOf('?') > -1 &&
-      window.location.href.indexOf('signup') > -1
-    ) {
+    if (window.location.href.indexOf('?') > -1 && window.location.href.indexOf('signup') > -1) {
       this.handleSignUpModalOpen();
     }
   }
@@ -165,20 +160,12 @@ class Login extends Component {
     var self = this;
     var tenantId = this.props.match.params.tenantId || 'default';
     localStorage.setItem('tenantId', tenantId);
-    Api.commonApiGet(
-      '/localization/messages',
-      { locale: value, tenantId: tenantId },
-      {},
-      true
-    ).then(
+    Api.commonApiGet('/localization/messages', { locale: value, tenantId: tenantId }, {}, true).then(
       function(response) {
         self.setState({ locale: value });
         self.setState({ localeready: true });
         localStorage.setItem('locale', value);
-        localStorage.setItem(
-          'lang_response',
-          JSON.stringify(response.messages)
-        );
+        localStorage.setItem('lang_response', JSON.stringify(response.messages));
         setLoadingStatus('hide');
       },
       function(err) {
@@ -212,22 +199,14 @@ class Login extends Component {
     params.append('password', props.credential.password);
     params.append('grant_type', 'password');
     params.append('scope', 'read');
-    params.append(
-      'tenantId',
-      typeof props.match.params.tenantId != 'undefined'
-        ? props.match.params.tenantId
-        : 'default'
-    );
+    params.append('tenantId', typeof props.match.params.tenantId != 'undefined' ? props.match.params.tenantId : 'default');
 
     instance
       .post('/user/oauth/token', params)
       .then(function(response) {
         localStorage.setItem('auth-token', response.data.access_token);
         localStorage.setItem('token', response.data.access_token);
-        localStorage.setItem(
-          'userRequest',
-          JSON.stringify(response.data.UserRequest)
-        );
+        localStorage.setItem('userRequest', JSON.stringify(response.data.UserRequest));
         localStorage.setItem('auth', response.data.access_token);
         localStorage.setItem('type', response.data.UserRequest.type);
         localStorage.setItem('id', response.data.UserRequest.id);
@@ -238,84 +217,49 @@ class Login extends Component {
         window.timeObject = setInterval(function() {
           // console.log(window.counter);
           window.counter++;
-          if (
-            window.counter ==
-            parseInt(localStorage.getItem('expires-in')) - 300
-          ) {
+          if (window.counter == parseInt(localStorage.getItem('expires-in')) - 300) {
             var instanceTwo = axios.create({
               baseURL: window.location.origin,
               headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                Authorization:
-                  'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0',
+                Authorization: 'Basic ZWdvdi11c2VyLWNsaWVudDplZ292LXVzZXItc2VjcmV0',
               },
             });
 
             var paramsTwo = new URLSearchParams();
             paramsTwo.append('grant_type', 'refresh_token');
             paramsTwo.append('tenantId', localStorage.getItem('tenantId'));
-            paramsTwo.append(
-              'refresh_token',
-              localStorage.getItem('refresh-token')
-            );
+            paramsTwo.append('refresh_token', localStorage.getItem('refresh-token'));
 
-            instanceTwo
-              .post('/user/oauth/token', paramsTwo)
-              .then(function(responseTwo) {
-                localStorage.setItem(
-                  'auth-token',
-                  responseTwo.data.access_token
-                );
-                localStorage.setItem('token', responseTwo.data.access_token);
-                localStorage.setItem(
-                  'userRequest',
-                  JSON.stringify(responseTwo.data.UserRequest)
-                );
-                localStorage.setItem('auth', responseTwo.data.access_token);
-                localStorage.setItem('type', responseTwo.data.UserRequest.type);
-                localStorage.setItem('id', responseTwo.data.UserRequest.id);
-                localStorage.setItem(
-                  'tenantId',
-                  responseTwo.data.UserRequest.tenantId
-                );
-                localStorage.setItem(
-                  'refresh-token',
-                  responseTwo.data.refresh_token
-                );
-                localStorage.setItem('expires-in', responseTwo.data.expires_in);
-                window.counter = 0;
-              });
+            instanceTwo.post('/user/oauth/token', paramsTwo).then(function(responseTwo) {
+              localStorage.setItem('auth-token', responseTwo.data.access_token);
+              localStorage.setItem('token', responseTwo.data.access_token);
+              localStorage.setItem('userRequest', JSON.stringify(responseTwo.data.UserRequest));
+              localStorage.setItem('auth', responseTwo.data.access_token);
+              localStorage.setItem('type', responseTwo.data.UserRequest.type);
+              localStorage.setItem('id', responseTwo.data.UserRequest.id);
+              localStorage.setItem('tenantId', responseTwo.data.UserRequest.tenantId);
+              localStorage.setItem('refresh-token', responseTwo.data.refresh_token);
+              localStorage.setItem('expires-in', responseTwo.data.expires_in);
+              window.counter = 0;
+            });
           }
         }, 1000);
 
-        if (
-          window.location.href.indexOf('?') > -1 &&
-          window.location.href.indexOf('link') > -1
-        ) {
+        if (window.location.href.indexOf('?') > -1 && window.location.href.indexOf('link') > -1) {
           var query = window.location.href.split('?')[1].split('&');
-          props.login(
-            false,
-            response.data.access_token,
-            response.data.UserRequest,
-            true
-          );
+          props.login(false, response.data.access_token, response.data.UserRequest, true);
           for (var i = 0; i < query.length; i++) {
             if (query[i].indexOf('link') > -1) {
               switch (query[i].split('=')[1]) {
                 case 'waternodue':
-                  self.props.setRoute(
-                    '/non-framework/citizenServices/no-dues/search/wc'
-                  );
+                  self.props.setRoute('/non-framework/citizenServices/no-dues/search/wc');
                   break;
                 case 'propertytaxextract':
-                  self.props.setRoute(
-                    '/non-framework/citizenServices/no-dues/extract/pt'
-                  );
+                  self.props.setRoute('/non-framework/citizenServices/no-dues/extract/pt');
                   break;
                 case 'propertytaxdue':
-                  self.props.setRoute(
-                    '/non-framework/citizenServices/no-dues/search/pt'
-                  );
+                  self.props.setRoute('/non-framework/citizenServices/no-dues/search/pt');
                   break;
               }
             }
@@ -549,18 +493,10 @@ class Login extends Component {
     let { setRoute, setHome } = this.props;
     if (this.state.srn.trim() || this.state.crtNo.trim()) {
       if (isCertificate) {
-        setRoute(
-          '/service/request/view/' +
-            encodeURIComponent(this.state.crtNo.trim()) +
-            '/true'
-        );
+        setRoute('/service/request/view/' + encodeURIComponent(this.state.crtNo.trim()) + '/true');
         setHome(true);
       } else {
-        setRoute(
-          '/service/request/view/' +
-            encodeURIComponent(this.state.srn.trim()) +
-            '/false'
-        );
+        setRoute('/service/request/view/' + encodeURIComponent(this.state.srn.trim()) + '/false');
         setHome(true);
       }
     }
@@ -628,12 +564,7 @@ class Login extends Component {
         otpReference: self.state.uuid,
       };
 
-      Api.commonApiPost(
-        'user/password/nologin/_update',
-        {},
-        { ...rqst },
-        true
-      ).then(
+      Api.commonApiPost('user/password/nologin/_update', {}, { ...rqst }, true).then(
         function(response) {
           self.setState({
             open1: false,
@@ -656,10 +587,7 @@ class Login extends Component {
       self.setState({
         signUpErrorMsg: translate('core.lbl.enter.mobilenumber'),
       });
-    } else if (
-      self.state.signUpObject.password !=
-      self.state.signUpObject.confirmPassword
-    ) {
+    } else if (self.state.signUpObject.password != self.state.signUpObject.confirmPassword) {
       self.setState({
         signUpErrorMsg: translate('core.error.password.confirmpassword.same'),
       });
@@ -734,10 +662,7 @@ class Login extends Component {
                 signUpErrorMsg: '',
                 optSent: false,
               });
-              self.props.toggleDailogAndSetText(
-                true,
-                translate('core.account.created.successfully')
-              );
+              self.props.toggleDailogAndSetText(true, translate('core.account.created.successfully'));
             },
             function(err) {
               self.props.setLoadingStatus('hide');
@@ -765,13 +690,7 @@ class Login extends Component {
 
   isAllFields = () => {
     let { signUpObject } = this.state;
-    if (
-      signUpObject.mobileNumber &&
-      signUpObject.name &&
-      signUpObject.password &&
-      signUpObject.confirmPassword &&
-      signUpObject.otp
-    ) {
+    if (signUpObject.mobileNumber && signUpObject.name && signUpObject.password && signUpObject.confirmPassword && signUpObject.otp) {
       if (this.passwordValidation() === '') {
         return true;
       } else {
@@ -804,15 +723,8 @@ class Login extends Component {
 
   passwordValidation = () => {
     let pattern = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{8,20}$/;
-    if (
-      this.state.signUpObject.password.trim().length > 0 &&
-      this.state.signUpObject.confirmPassword.trim().length > 0
-    ) {
-      if (
-        pattern.test(this.state.signUpObject.password) &&
-        this.state.signUpObject.password ===
-          this.state.signUpObject.confirmPassword
-      ) {
+    if (this.state.signUpObject.password.trim().length > 0 && this.state.signUpObject.confirmPassword.trim().length > 0) {
+      if (pattern.test(this.state.signUpObject.password) && this.state.signUpObject.password === this.state.signUpObject.confirmPassword) {
         return '';
       } else {
         return translate('pgr.lbl.pswdmatch');
@@ -837,25 +749,14 @@ class Login extends Component {
   searchGrievanceSRN = () => {
     let { setRoute, setHome } = this.props;
     if (this.state.searchGrievanceSRN && this.state.searchGrievanceSRN.trim()) {
-      setRoute(
-        '/pgr/viewGrievance/' +
-          encodeURIComponent(this.state.searchGrievanceSRN.trim())
-      );
+      setRoute('/pgr/viewGrievance/' + encodeURIComponent(this.state.searchGrievanceSRN.trim()));
       setHome(true);
     }
   };
 
   render() {
     //console.log("IN LOGIN");
-    let {
-      login,
-      credential,
-      handleChange,
-      isFormValid,
-      fieldErrors,
-      history,
-      tenantInfo,
-    } = this.props;
+    let { login, credential, handleChange, isFormValid, fieldErrors, history, tenantInfo } = this.props;
     let {
       loginRequest,
       showPasswordModal,
@@ -978,50 +879,26 @@ class Login extends Component {
                             <Row>
                               <Col xs={12} sm={12} md={12} lg={12}>
                                 <TextField
-                                  floatingLabelText={translate(
-                                    'core.lbl.addmobilenumber/login'
-                                  )}
-                                  errorText={
-                                    fieldErrors.username
-                                      ? fieldErrors.username
-                                      : ''
-                                  }
+                                  floatingLabelText={translate('core.lbl.addmobilenumber/login')}
+                                  errorText={fieldErrors.username ? fieldErrors.username : ''}
                                   id="username"
                                   fullWidth={true}
                                   autoComplete="off"
-                                  value={
-                                    credential.username
-                                      ? credential.username
-                                      : ''
-                                  }
-                                  onChange={e =>
-                                    handleChange(e, 'username', true, '')
-                                  }
+                                  value={credential.username ? credential.username : ''}
+                                  onChange={e => handleChange(e, 'username', true, '')}
                                 />
                               </Col>
                               <Col xs={12} sm={12} md={12} lg={12}>
                                 <TextField
                                   tabIndex="0"
-                                  floatingLabelText={translate(
-                                    'core.lbl.password'
-                                  )}
+                                  floatingLabelText={translate('core.lbl.password')}
                                   type="password"
                                   fullWidth={true}
                                   autoComplete="new-password"
-                                  errorText={
-                                    fieldErrors.password
-                                      ? fieldErrors.password
-                                      : ''
-                                  }
+                                  errorText={fieldErrors.password ? fieldErrors.password : ''}
                                   id="password"
-                                  value={
-                                    credential.password
-                                      ? credential.password
-                                      : ''
-                                  }
-                                  onChange={e =>
-                                    handleChange(e, 'password', true, '')
-                                  }
+                                  value={credential.password ? credential.password : ''}
+                                  onChange={e => handleChange(e, 'password', true, '')}
                                 />
                               </Col>
                               <Col xs={12} sm={12} md={12} lg={12}>
@@ -1053,28 +930,16 @@ class Login extends Component {
                 <Col xs={12} md={6} mdPull={6}>
                   <Row>
                     <Col xs={12} md={12} onClick={handleSignUpModalOpen}>
-                      <IconButton
-                        style={styles.floatingIconButton}
-                        primary={true}
-                      >
+                      <IconButton style={styles.floatingIconButton} primary={true}>
                         <i className="material-icons">person</i>
                       </IconButton>
                       <div style={{ float: 'left', cursor: 'pointer' }}>
                         <h4>{translate('pgr.title.create.account')}</h4>
-                        <p>
-                          {translate(
-                            'pgr.msg.createaccount.avail.onlineservices'
-                          )}
-                        </p>
+                        <p>{translate('pgr.msg.createaccount.avail.onlineservices')}</p>
                       </div>
                     </Col>
 
-                    <Col
-                      xs={12}
-                      md={12}
-                      style={styles.buttonTopMargin}
-                      onClick={this.openServices}
-                    >
+                    <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openServices}>
                       <IconButton style={styles.floatingIconButton}>
                         <i className="material-icons">mode_edit</i>
                       </IconButton>
@@ -1083,12 +948,7 @@ class Login extends Component {
                         <p>{translate('pgr.lbl.apply.servicetag')}</p>
                       </div>
                     </Col>
-                    <Col
-                      xs={12}
-                      md={12}
-                      style={styles.buttonTopMargin}
-                      onClick={this.openAnonymousComplaint}
-                    >
+                    <Col xs={12} md={12} style={styles.buttonTopMargin} onClick={this.openAnonymousComplaint}>
                       <IconButton style={styles.floatingIconButton}>
                         <i className="material-icons">mode_edit</i>
                       </IconButton>
@@ -1098,10 +958,7 @@ class Login extends Component {
                       </div>
                     </Col>
                     <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                      <IconButton
-                        style={styles.floatingIconButton}
-                        primary={true}
-                      >
+                      <IconButton style={styles.floatingIconButton} primary={true}>
                         <i className="material-icons">search</i>
                       </IconButton>
                       <div style={styles.floatLeft}>
@@ -1124,16 +981,11 @@ class Login extends Component {
                       </div>
                     </Col>
                     <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                      <IconButton
-                        style={styles.floatingIconButton}
-                        primary={true}
-                      >
+                      <IconButton style={styles.floatingIconButton} primary={true}>
                         <i className="material-icons">search</i>
                       </IconButton>
                       <div style={styles.floatLeft}>
-                        <h4>
-                          {translate('pgr.msg.complaintstatus.application')}
-                        </h4>
+                        <h4>{translate('pgr.msg.complaintstatus.application')}</h4>
                         <TextField
                           hintText={translate('pgr.lbl.applicationnumber')}
                           value={srn}
@@ -1152,16 +1004,11 @@ class Login extends Component {
                       </div>
                     </Col>
                     <Col xs={12} md={12} style={styles.buttonTopMargin}>
-                      <IconButton
-                        style={styles.floatingIconButton}
-                        primary={true}
-                      >
+                      <IconButton style={styles.floatingIconButton} primary={true}>
                         <i className="material-icons">search</i>
                       </IconButton>
                       <div style={styles.floatLeft}>
-                        <h4>
-                          {translate('pgr.msg.complaintstatus.certificate')}
-                        </h4>
+                        <h4>{translate('pgr.msg.complaintstatus.certificate')}</h4>
                         <TextField
                           hintText={translate('pgr.lbl.certificateNumber')}
                           value={crtNo}
@@ -1199,24 +1046,14 @@ class Login extends Component {
                   <FontIcon style={styles.iconSize}>
                     <i className="material-icons">location_on</i>
                   </FontIcon>
-                  <p>
-                    {tenantInfo && tenantInfo.length && tenantInfo[0].address}
-                  </p>
+                  <p>{tenantInfo && tenantInfo.length && tenantInfo[0].address}</p>
                   <a
                     target="_blank"
                     href={
                       'https://www.google.com/maps/preview/@-' +
-                      (tenantInfo &&
-                        tenantInfo.length &&
-                        tenantInfo[0] &&
-                        tenantInfo[0].city &&
-                        tenantInfo[0].city.latitude) +
+                      (tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.latitude) +
                       ',' +
-                      (tenantInfo &&
-                        tenantInfo.length &&
-                        tenantInfo[0] &&
-                        tenantInfo[0].city &&
-                        tenantInfo[0].city.longitude) +
+                      (tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].city && tenantInfo[0].city.longitude) +
                       ',8z'
                     }
                   >
@@ -1227,24 +1064,9 @@ class Login extends Component {
                   <FontIcon style={styles.iconSize}>
                     <i className="material-icons">phone</i>
                   </FontIcon>
-                  <p>
-                    {tenantInfo &&
-                      tenantInfo.length &&
-                      tenantInfo[0].contactNumber}
-                  </p>
-                  <a
-                    href={
-                      'mailto:' +
-                      (tenantInfo &&
-                        tenantInfo.length &&
-                        tenantInfo[0] &&
-                        tenantInfo[0].emailId)
-                    }
-                  >
-                    {tenantInfo &&
-                      tenantInfo.length &&
-                      tenantInfo[0] &&
-                      tenantInfo[0].emailId}
+                  <p>{tenantInfo && tenantInfo.length && tenantInfo[0].contactNumber}</p>
+                  <a href={'mailto:' + (tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId)}>
+                    {tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].emailId}
                   </a>
                 </Col>
                 <Col xs={12} md={4} style={styles.buttonTopMargin}>
@@ -1252,26 +1074,10 @@ class Login extends Component {
                     <i className="material-icons">share</i>
                   </FontIcon>
                   <p>Share us on</p>
-                  <a
-                    target="_blank"
-                    href={
-                      tenantInfo &&
-                      tenantInfo.length &&
-                      tenantInfo[0] &&
-                      tenantInfo[0].twitterUrl
-                    }
-                  >
+                  <a target="_blank" href={tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].twitterUrl}>
                     <i className="fa fa-twitter" style={styles.iconSize} />
                   </a>
-                  <a
-                    target="_blank"
-                    href={
-                      tenantInfo &&
-                      tenantInfo.length &&
-                      tenantInfo[0] &&
-                      tenantInfo[0].facebookUrl
-                    }
-                  >
+                  <a target="_blank" href={tenantInfo && tenantInfo.length && tenantInfo[0] && tenantInfo[0].facebookUrl}>
                     <i className="fa fa-facebook" style={styles.iconSize} />
                   </a>
                 </Col>
@@ -1309,16 +1115,10 @@ class Login extends Component {
                 value={mobNo}
                 onChange={e => handleStateChange(e, 'mobNo')}
               />
-              <div style={{ textAlign: 'right', fontSize: '12px' }}>
-                {translate('pgr.lbl.recoverylink')}
-              </div>
+              <div style={{ textAlign: 'right', fontSize: '12px' }}>{translate('pgr.lbl.recoverylink')}</div>
             </Dialog>
             <Dialog
-              title={
-                !hideOtp
-                  ? translate('pgr.lbl.otpnumber')
-                  : translate('core.lbl.new.password')
-              }
+              title={!hideOtp ? translate('pgr.lbl.otpnumber') : translate('core.lbl.new.password')}
               actions={[
                 <FlatButton
                   label={translate('core.lbl.cancel')}
@@ -1328,11 +1128,7 @@ class Login extends Component {
                   }}
                 />,
                 <FlatButton
-                  label={
-                    !hideOtp
-                      ? translate('pgr.lbl.verify')
-                      : translate('core.lbl.submit')
-                  }
+                  label={!hideOtp ? translate('pgr.lbl.verify') : translate('core.lbl.submit')}
                   secondary={true}
                   onTouchTap={e => {
                     !hideOtp ? validateOTP() : generatePassword();
@@ -1370,19 +1166,12 @@ class Login extends Component {
                   }}
                 />,
                 <FlatButton
-                  label={
-                    optSent
-                      ? translate('core.lbl.signup')
-                      : translate('pgr.lbl.generate.otp')
-                  }
+                  label={optSent ? translate('core.lbl.signup') : translate('pgr.lbl.generate.otp')}
                   secondary={true}
                   disabled={
-                    signUpObject.mobileNumberMsg === undefined ||
-                    !this.hasAllFields()
+                    signUpObject.mobileNumberMsg === undefined || !this.hasAllFields()
                       ? true
-                      : signUpObject.mobileNumberMsg
-                        ? true
-                        : optSent ? !this.isAllFields() : false
+                      : signUpObject.mobileNumberMsg ? true : optSent ? !this.isAllFields() : false
                   }
                   onTouchTap={e => {
                     !optSent ? generateSignUpOTP() : signUp();
@@ -1404,19 +1193,8 @@ class Login extends Component {
                     autoComplete="off"
                     value={signUpObject.mobileNumber}
                     disabled={optSent}
-                    errorText={
-                      signUpObject.mobileNumberMsg
-                        ? signUpObject.mobileNumberMsg
-                        : ''
-                    }
-                    onChange={e =>
-                      handleStateChange(
-                        e,
-                        'signUpObject.mobileNumber',
-                        /^\d{10}$/g,
-                        translate('pgr.lbl.mobnum')
-                      )
-                    }
+                    errorText={signUpObject.mobileNumberMsg ? signUpObject.mobileNumberMsg : ''}
+                    onChange={e => handleStateChange(e, 'signUpObject.mobileNumber', /^\d{10}$/g, translate('pgr.lbl.mobnum'))}
                   />
                 </Col>
                 <Col xs={12} md={12}>
@@ -1426,9 +1204,7 @@ class Login extends Component {
                     value={signUpObject.password}
                     autoComplete="off"
                     type="password"
-                    errorText={
-                      signUpObject.passwordMsg ? signUpObject.passwordMsg : ''
-                    }
+                    errorText={signUpObject.passwordMsg ? signUpObject.passwordMsg : ''}
                     onChange={e =>
                       handleStateChange(
                         e,
@@ -1446,12 +1222,8 @@ class Login extends Component {
                     value={signUpObject.confirmPassword}
                     autoComplete="off"
                     type="password"
-                    errorText={
-                      !signUpObject.passwordMsg ? this.passwordValidation() : ''
-                    }
-                    onChange={e =>
-                      handleStateChange(e, 'signUpObject.confirmPassword')
-                    }
+                    errorText={!signUpObject.passwordMsg ? this.passwordValidation() : ''}
+                    onChange={e => handleStateChange(e, 'signUpObject.confirmPassword')}
                   />
                 </Col>
                 <Col xs={12} md={12}>
@@ -1461,12 +1233,7 @@ class Login extends Component {
                     value={signUpObject.name}
                     errorText={signUpObject.nameMsg ? signUpObject.nameMsg : ''}
                     onChange={e =>
-                      handleStateChange(
-                        e,
-                        'signUpObject.name',
-                        /^[a-zA-Z ]{1,50}$/,
-                        'Should contain only alphabets and space. Max: 50 Characters'
-                      )
+                      handleStateChange(e, 'signUpObject.name', /^[a-zA-Z ]{1,50}$/, 'Should contain only alphabets and space. Max: 50 Characters')
                     }
                   />
                 </Col>
@@ -1475,11 +1242,7 @@ class Login extends Component {
                     floatingLabelText={translate('core.lbl.email')}
                     fullWidth={true}
                     value={signUpObject.emailId}
-                    errorText={
-                      signUpObject.emailId
-                        ? signUpObject.emailIdMsg ? signUpObject.emailIdMsg : ''
-                        : ''
-                    }
+                    errorText={signUpObject.emailId ? (signUpObject.emailIdMsg ? signUpObject.emailIdMsg : '') : ''}
                     onChange={e =>
                       handleStateChange(
                         e,

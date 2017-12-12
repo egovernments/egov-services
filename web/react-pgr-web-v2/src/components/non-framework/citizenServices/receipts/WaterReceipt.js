@@ -11,22 +11,11 @@ export default class WaterReceipt extends Component {
         <Card id="receipt">
           <CardHeader title="Receipt" />
           <CardText>
-            <Table
-              responsive
-              style={{ fontSize: 'bold' }}
-              id="ReceiptForWcAPartOne"
-              striped
-              bordered
-              condensed
-            >
+            <Table responsive style={{ fontSize: 'bold' }} id="ReceiptForWcAPartOne" striped bordered condensed>
               <tbody>
                 <tr>
                   <td style={{ textAlign: 'left' }}>
-                    <img
-                      src="./temp/images/headerLogo.png"
-                      height="30"
-                      width="30"
-                    />
+                    <img src="./temp/images/headerLogo.png" height="30" width="30" />
                   </td>
                   <td style={{ textAlign: 'center' }}>
                     <b>Roha Municipal Council</b>
@@ -54,13 +43,7 @@ export default class WaterReceipt extends Component {
               </tbody>
             </Table>
 
-            <Table
-              id="ReceiptForWcAPartTwo"
-              responsive
-              striped
-              bordered
-              condensed
-            >
+            <Table id="ReceiptForWcAPartTwo" responsive striped bordered condensed>
               <tbody>
                 <tr>
                   <td rowSpan={2}>Bill Reference No.& Date</td>

@@ -68,8 +68,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'Enter Valid Transaction Id between 10 and 16 Characters',
+            patternErrMsg: 'Enter Valid Transaction Id between 10 and 16 Characters',
           },
           {
             name: 'receiptNumber',
@@ -80,8 +79,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'Enter Valid Receipt Number (ex: 08/2017-18/000418) between 4 and 18 Characters',
+            patternErrMsg: 'Enter Valid Receipt Number (ex: 08/2017-18/000418) between 4 and 18 Characters',
           },
           {
             name: 'manualReceiptNumber',
@@ -92,8 +90,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
-            patternErrMsg:
-              'Enter valid Manual Receipt Number between 4 and 18 Characters',
+            patternErrMsg: 'Enter valid Manual Receipt Number between 4 and 18 Characters',
           },
           {
             name: 'serviceType',
@@ -105,8 +102,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            url:
-              'collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name',
+            url: 'collection-services/receipts/_getDistinctBusinessDetails?tenantId=default|$..code|$..name',
           },
           {
             name: 'fromDate',
@@ -140,8 +136,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            url:
-              'collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$.user.*.id|$.user.*.name',
+            url: 'collection-services/receipts/_getDistinctCollectedBy?tenantId=default|$.user.*.id|$.user.*.name',
           },
           {
             name: 'status',
@@ -153,8 +148,7 @@ var dat = {
             isDisabled: false,
             requiredErrMsg: '',
             patternErrMsg: '',
-            url:
-              'collection-services/receipts/_status?tenantId=default|$..key|$..object',
+            url: 'collection-services/receipts/_status?tenantId=default|$..key|$..object',
             defaultValue: [],
           },
           {
@@ -298,17 +292,7 @@ var dat = {
         { label: 'collection.create.checkLatePayment' },
         { label: 'collection.create.total' },
       ],
-      values: [
-        'businessService',
-        'receiptDate',
-        'consumerCode',
-        'period',
-        'billDescription',
-        'status',
-        'amountPaid',
-        'collectionType',
-        'status',
-      ],
+      values: ['businessService', 'receiptDate', 'consumerCode', 'period', 'billDescription', 'status', 'amountPaid', 'collectionType', 'status'],
       resultPath: 'Receipt[0].Bill[0].billDetails',
       rowClickUrlUpdate: '/update/collection/categoryType/{id}',
       rowClickUrlView: '/view/collection/receipt/{id}',

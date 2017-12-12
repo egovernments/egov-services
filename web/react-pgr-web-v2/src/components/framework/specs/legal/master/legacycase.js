@@ -42,8 +42,7 @@ var dat = {
             isCurrentYear: true,
             isRequired: true,
             isDisabled: false,
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=year|$..code|$..name',
             patternErrorMsg: '',
           },
           {
@@ -54,8 +53,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=side|$..code|$..name',
             depedants: [
               {
                 jsonPath: 'cases[0].summon.caseType.code',
@@ -134,8 +132,7 @@ var dat = {
               {
                 jsonPath: 'cases[0].departmentPerson',
                 type: 'dropDown',
-                pattern:
-                  '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
+                pattern: '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
               },
             ],
           },
@@ -148,8 +145,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'hearingTime',
@@ -177,8 +173,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
+            url: '/egov-location/boundarys/getByBoundaryType?tenantId=default&boundaryTypeId=10|$.Boundary.*.id|$.Boundary.*.name',
           },
           {
             name: 'stamp',
@@ -188,8 +183,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/lcms-services/legalcase/register/_search?|$..code|$..register',
+            url: '/lcms-services/legalcase/register/_search?|$..code|$..register',
           },
           {
             name: 'bench',
@@ -199,8 +193,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=bench|$..code|$..name',
           },
           {
             name: 'sectionApplied',
@@ -261,8 +254,7 @@ var dat = {
                   jsonPath: 'cases[0].advocateDetails[0].advocate.code',
                   isRequired: true,
                   isDisabled: false,
-                  url:
-                    '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
+                  url: '/lcms-services/legalcase/advocate/_search?|$..code|$..name',
                   depedants: [
                     {
                       jsonPath: 'cases[0].advocateDetails[0].advocatestaus',
@@ -272,8 +264,7 @@ var dat = {
                       pattern:
                         '/lcms-services/legalcase/advocate/_search?tenantId=default&code={cases[0].advocateDetails[0].advocate.code}|$..status|$..status',
                       autoFillFields: {
-                        'cases[0].advocateDetails[0].advocatestaus':
-                          'advocates[0].status',
+                        'cases[0].advocateDetails[0].advocatestaus': 'advocates[0].status',
                       },
                     },
                   ],

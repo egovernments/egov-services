@@ -6,11 +6,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Api from '../../../../api/api';
 import { translate, epochToDate, dataURItoBlob } from '../../../common/common';
-import {
-  fonts,
-  writeMultiLanguageText,
-  getBase64FromImageUrl,
-} from '../../../common/pdf-generation/PdfConfig';
+import { fonts, writeMultiLanguageText, getBase64FromImageUrl } from '../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../common/pdf-generation/PdfViewer';
 import styles from '../../../../styles/material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -48,13 +44,7 @@ class PrintCertificate extends Component {
     Promise.all([
       ulbLogoPromise,
       stateLogoPromise,
-      Api.commonApiPost(
-        '/tl-services/configurations/v1/_search',
-        {},
-        { tenantId: this.getTenantId(), pageSize: '500' },
-        false,
-        true
-      ),
+      Api.commonApiPost('/tl-services/configurations/v1/_search', {}, { tenantId: this.getTenantId(), pageSize: '500' }, false, true),
       Api.commonApiGet(
         'https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json',
         { timestamp: new Date().getTime() },
@@ -72,13 +62,7 @@ class PrintCertificate extends Component {
     ])
       .then(response => {
         var cityName = response[3]['details'][this.getTenantId()]['name'];
-        _this.generatePdf(
-          response[0].image,
-          response[1].image,
-          response[2].TLConfiguration,
-          cityName,
-          response[4].Receipt[0]
-        );
+        _this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, cityName, response[4].Receipt[0]);
       })
       .catch(function(err) {
         _this.props.errorCallback(err.message);
@@ -90,28 +74,17 @@ class PrintCertificate extends Component {
   };
 
   getApplicationFee = (license, applicationType) => {
-    var applicationFee = license.applications.find(
-      application => application.applicationType === applicationType
-    );
-    return applicationFee && applicationFee.licenseFee
-      ? applicationFee.licenseFee.toFixed(2)
-      : '0.00';
+    var applicationFee = license.applications.find(application => application.applicationType === applicationType);
+    return applicationFee && applicationFee.licenseFee ? applicationFee.licenseFee.toFixed(2) : '0.00';
   };
 
-  generatePdf = (
-    ulbLogo,
-    stateLogo,
-    certificateConfigDetails,
-    ulbName,
-    receiptDetails
-  ) => {
+  generatePdf = (ulbLogo, stateLogo, certificateConfigDetails, ulbName, receiptDetails) => {
     let license = this.props.license;
 
     var _this = this;
 
     var departmentName = certificateConfigDetails[CONFIG_DEPT_KEY];
-    var municipalActDetails =
-      certificateConfigDetails[CONFIG_MUNICIPAL_ACT_KEY];
+    var municipalActDetails = certificateConfigDetails[CONFIG_MUNICIPAL_ACT_KEY];
     var receiptNumber = receiptDetails.Bill[0].billDetails[0].receiptNumber;
     var receiptDate = receiptDetails.Bill[0].billDetails[0].receiptDate;
 
@@ -174,10 +147,7 @@ class PrintCertificate extends Component {
         },
 
         {
-          text:
-            municipalActDetails && municipalActDetails.length > 0
-              ? municipalActDetails[0]
-              : 'As per the Municipal act',
+          text: municipalActDetails && municipalActDetails.length > 0 ? municipalActDetails[0] : 'As per the Municipal act',
           margin: [0, 0, 0, 10],
         },
 
@@ -204,14 +174,7 @@ class PrintCertificate extends Component {
                   alignment: 'left',
                 },
               ],
-              [
-                { text: 'Business Address' },
-                { text: ':', alignment: 'left' },
-                { text: `${license.tradeAddress}`, alignment: 'left' },
-                '',
-                '',
-                '',
-              ],
+              [{ text: 'Business Address' }, { text: ':', alignment: 'left' }, { text: `${license.tradeAddress}`, alignment: 'left' }, '', '', ''],
             ],
           },
           layout: 'noBorders',
@@ -388,11 +351,7 @@ class PrintCertificate extends Component {
 
       let formData = new FormData();
       var blob = dataURItoBlob(dataUrl);
-      formData.append(
-        'file',
-        blob,
-        `TL_${license.licenseNumber || '0'} + .pdf`
-      );
+      formData.append('file', blob, `TL_${license.licenseNumber || '0'} + .pdf`);
       formData.append('tenantId', localStorage.getItem('tenantId'));
       formData.append('module', constants.TRADE_LICENSE_FILE_TAG);
 
@@ -403,9 +362,7 @@ class PrintCertificate extends Component {
         _this.props.errorCallback(err.message);
       };
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         if (response.files && response.files.length > 0) {
           //response.files[0].fileStoreId
           var noticeDocument = [
@@ -429,8 +386,7 @@ class PrintCertificate extends Component {
             setLoadingStatus('hide');
           }, errorFunction);
         } else setLoadingStatus('hide');
-      },
-      errorFunction);
+      }, errorFunction);
     });
   };
 
@@ -439,19 +395,9 @@ class PrintCertificate extends Component {
     let { viewLicense } = this.props;
     console.log(viewLicense);
     return (
-      <PdfViewer
-        pdfData={this.state.pdfData}
-        title="tl.license.certificate.title"
-      >
+      <PdfViewer pdfData={this.state.pdfData} title="tl.license.certificate.title">
         <div className="text-center">
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );
@@ -468,8 +414,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const ViewPrintCertificate = connect(mapStateToProps, mapDispatchToProps)(
-  PrintCertificate
-);
+const ViewPrintCertificate = connect(mapStateToProps, mapDispatchToProps)(PrintCertificate);
 
 export default ViewPrintCertificate;

@@ -1,21 +1,9 @@
 import React, { Component } from 'react';
 import { Grid, Row, Col } from 'react-bootstrap';
 import { Card, CardHeader } from 'material-ui/Card';
-import {
-  BarChart,
-  Bar,
-  ResponsiveContainer,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from 'recharts';
+import { BarChart, Bar, ResponsiveContainer, XAxis, YAxis, Tooltip } from 'recharts';
 import { translate } from '../../../common/common';
-import {
-  PageLoadingIndicator,
-  CustomizedAxisTick,
-  CustomizedYAxisLabel,
-  getTenantId,
-} from './ReportUtils';
+import { PageLoadingIndicator, CustomizedAxisTick, CustomizedYAxisLabel, getTenantId } from './ReportUtils';
 import Api from '../../../../api/api';
 
 export default class PendencyReport extends Component {
@@ -37,13 +25,7 @@ export default class PendencyReport extends Component {
 
     let ageWiseData;
 
-    Promise.all([
-      Api.commonApiPost(
-        'pgr/dashboard/ageing',
-        { range: '2,5,10,30' },
-        { tenantId: getTenantId() }
-      ),
-    ]).then(
+    Promise.all([Api.commonApiPost('pgr/dashboard/ageing', { range: '2,5,10,30' }, { tenantId: getTenantId() })]).then(
       responses => {
         try {
           let responseData = responses[0][0];
@@ -81,23 +63,11 @@ export default class PendencyReport extends Component {
               <Card style={styles.cardStyle}>
                 <CardHeader title={translate('pgr.dashboar.chart.agewise')} />
                 <ResponsiveContainer width="100%" aspect={4.0 / 1.0}>
-                  <BarChart
-                    data={data}
-                    margin={{ top: 5, right: 30, left: 15, bottom: 15 }}
-                  >
+                  <BarChart data={data} margin={{ top: 5, right: 30, left: 15, bottom: 15 }}>
                     <XAxis tick={<CustomizedAxisTick />} dataKey="name" />
-                    <YAxis
-                      name="Number of complaints"
-                      label={
-                        <CustomizedYAxisLabel title="Number of complaints" />
-                      }
-                    />
+                    <YAxis name="Number of complaints" label={<CustomizedYAxisLabel title="Number of complaints" />} />
                     <Tooltip cursor={{ fillOpacity: 0 }} />
-                    <Bar
-                      name="Number of complaints"
-                      dataKey="noOfComplaints"
-                      fill="#8884d8"
-                    />
+                    <Bar name="Number of complaints" dataKey="noOfComplaints" fill="#8884d8" />
                   </BarChart>
                 </ResponsiveContainer>
               </Card>

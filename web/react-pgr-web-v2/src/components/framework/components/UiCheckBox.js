@@ -33,15 +33,9 @@ class UiCheckBox extends Component {
               marginLeft: '-5px',
             }}
             label={item.label + (item.isRequired ? ' *' : '')}
-            checked={
-              this.props.getVal ? this.props.getVal(item.jsonPath) : isSelected
-            }
+            checked={this.props.getVal ? this.props.getVal(item.jsonPath) : isSelected}
             disabled={tempDisabled}
-            errorText={
-              this.props.fieldErrors
-                ? this.props.fieldErrors[item.jsonPath]
-                : 'Empty'
-            }
+            errorText={this.props.fieldErrors ? this.props.fieldErrors[item.jsonPath] : 'Empty'}
             onCheck={e =>
               this.props.handler(
                 { target: { value: e.target.checked } },
@@ -60,9 +54,7 @@ class UiCheckBox extends Component {
   };
 
   render() {
-    return (
-      <div>{this.renderCheckBox(this.props.item, this.props.isSelected)}</div>
-    );
+    return <div>{this.renderCheckBox(this.props.item, this.props.isSelected)}</div>;
   }
 }
 

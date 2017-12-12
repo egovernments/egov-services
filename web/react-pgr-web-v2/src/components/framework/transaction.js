@@ -42,17 +42,11 @@ class Transaction extends Component {
       for (var i = 0; i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (configObject.groups[i].fields[j].isRequired)
-            reqRequired.push(configObject.groups[i].fields[j].jsonPath);
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired) reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -62,9 +56,7 @@ class Transaction extends Component {
   }
 
   getVal = path => {
-    return typeof _.get(this.props.formData, path) != 'undefined'
-      ? _.get(this.props.formData, path)
-      : '';
+    return typeof _.get(this.props.formData, path) != 'undefined' ? _.get(this.props.formData, path) : '';
   };
 
   setDefaultValues(groups, dat) {
@@ -76,17 +68,10 @@ class Transaction extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -102,40 +87,21 @@ class Transaction extends Component {
       if (hash.length == 4 && hashLocation.split('/')[1] != 'transaction') {
         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
       } else if (hashLocation.split('/')[1] != 'transaction') {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`)
-          .default;
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
       } else {
-        specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`)
-          .default;
+        specifications = require(`./specs/${hash[2]}/transaction/${hash[3]}`).default;
       }
     } catch (e) {}
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
-    let obj =
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ];
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     var formData = {};
-    if (obj && obj.groups && obj.groups.length)
-      this.setDefaultValues(obj.groups, formData);
+    if (obj && obj.groups && obj.groups.length) this.setDefaultValues(obj.groups, formData);
     reqRequired = [];
     this.setLabelAndReturnRequired(obj);
     initForm(reqRequired);
     setMetaData(specifications);
-    for (
-      var i = 0;
-      i < specifications['collection.transaction'].groups[0].fields.length;
-      i++
-    ) {
-      specifications['collection.transaction'].groups[0].fields[
-        i
-      ].isDisabled = false;
+    for (var i = 0; i < specifications['collection.transaction'].groups[0].fields.length; i++) {
+      specifications['collection.transaction'].groups[0].fields[i].isDisabled = false;
     }
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split('/')[2]);
@@ -171,31 +137,17 @@ class Transaction extends Component {
   componentDidMount() {
     this.initData();
 
-    if (
-      this.props.match.params.businessService &&
-      decodeURIComponent(this.props.match.params.consumerCode)
-    ) {
+    if (this.props.match.params.businessService && decodeURIComponent(this.props.match.params.consumerCode)) {
       // count++;
       // if (count==1) {
       // alert("hai")
 
-      for (
-        var i = 0;
-        i < specifications['collection.transaction'].groups[0].fields.length;
-        i++
-      ) {
-        specifications['collection.transaction'].groups[0].fields[
-          i
-        ].isDisabled = true;
+      for (var i = 0; i < specifications['collection.transaction'].groups[0].fields.length; i++) {
+        specifications['collection.transaction'].groups[0].fields[i].isDisabled = true;
       }
       this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
 
-      this.props.handleChange(
-        { target: { value: this.props.match.params.businessService } },
-        'businessService',
-        true,
-        false
-      );
+      this.props.handleChange({ target: { value: this.props.match.params.businessService } }, 'businessService', true, false);
       this.props.handleChange(
         {
           target: {
@@ -206,11 +158,7 @@ class Transaction extends Component {
         true,
         false
       );
-      this.search(
-        null,
-        this.props.match.params.businessService,
-        decodeURIComponent(this.props.match.params.consumerCode)
-      );
+      this.search(null, this.props.match.params.businessService, decodeURIComponent(this.props.match.params.consumerCode));
       // console.log($("#payTax").length);
       // $("#payTax").submit();
 
@@ -219,36 +167,19 @@ class Transaction extends Component {
     }
   }
   componentWillReceiveProps(nextProps) {
-    if (
-      this.state.pathname &&
-      this.state.pathname != nextProps.history.location.pathname
-    ) {
+    if (this.state.pathname && this.state.pathname != nextProps.history.location.pathname) {
       this.initData();
-      if (
-        nextProps.match.params.businessService &&
-        decodeURIComponent(nextProps.match.params.consumerCode)
-      ) {
+      if (nextProps.match.params.businessService && decodeURIComponent(nextProps.match.params.consumerCode)) {
         // count++;
         // if (count==1) {
         // alert("hai")
 
-        for (
-          var i = 0;
-          i < specifications['collection.transaction'].groups[0].fields.length;
-          i++
-        ) {
-          specifications['collection.transaction'].groups[0].fields[
-            i
-          ].isDisabled = true;
+        for (var i = 0; i < specifications['collection.transaction'].groups[0].fields.length; i++) {
+          specifications['collection.transaction'].groups[0].fields[i].isDisabled = true;
         }
         this.props.setMockData(JSON.parse(JSON.stringify(specifications)));
 
-        this.props.handleChange(
-          { target: { value: nextProps.match.params.businessService } },
-          'businessService',
-          true,
-          false
-        );
+        this.props.handleChange({ target: { value: nextProps.match.params.businessService } }, 'businessService', true, false);
         this.props.handleChange(
           {
             target: {
@@ -259,11 +190,7 @@ class Transaction extends Component {
           true,
           false
         );
-        this.search(
-          null,
-          nextProps.match.params.businessService,
-          decodeURIComponent(nextProps.match.params.consumerCode)
-        );
+        this.search(null, nextProps.match.params.businessService, decodeURIComponent(nextProps.match.params.consumerCode));
         // console.log($("#payTax").length);
         // $("#payTax").submit();
 
@@ -280,17 +207,11 @@ class Transaction extends Component {
     var formData = { ...this.props.formData };
     if (formData.consumerCode && !formData.businessService) {
       self.props.setLoadingStatus('hide');
-      self.props.addFieldErrors(
-        'businessService',
-        translate('ui.framework.required')
-      );
+      self.props.addFieldErrors('businessService', translate('ui.framework.required'));
       return;
     } else if (!formData.consumerCode && formData.businessService) {
       self.props.setLoadingStatus('hide');
-      self.props.addFieldErrors(
-        'consumerCode',
-        translate('ui.framework.required')
-      );
+      self.props.addFieldErrors('consumerCode', translate('ui.framework.required'));
       return;
     } else {
       self.props.removeFieldErrors('businessService');
@@ -309,27 +230,11 @@ class Transaction extends Component {
       };
     }
 
-    Api.commonApiPost(
-      '/billing-service/bill/_generate',
-      formData,
-      {},
-      null,
-      true
-    ).then(
+    Api.commonApiPost('/billing-service/bill/_generate', formData, {}, null, true).then(
       function(res) {
         self.props.setLoadingStatus('hide');
-        self.props.handleChange(
-          { target: { value: res.Bill } },
-          'Receipt[0].Bill',
-          false,
-          false
-        );
-        self.props.handleChange(
-          { target: { value: localStorage.getItem('tenantId') } },
-          'Receipt[0].tenantId',
-          false,
-          false
-        );
+        self.props.handleChange({ target: { value: res.Bill } }, 'Receipt[0].Bill', false, false);
+        self.props.handleChange({ target: { value: localStorage.getItem('tenantId') } }, 'Receipt[0].tenantId', false, false);
         self.props.handleChange(
           { target: { value: localStorage.getItem('tenantId') } },
           'Receipt[0].instrument.instrumentType.tenantId',
@@ -338,42 +243,23 @@ class Transaction extends Component {
         );
         // self.props.handleChange({target:{value:new Date().getTime()}},"Receipt[0].instrument.transactionDate",false,false);
         // self.props.handleChange({target:{value:"1232356543"}},"Receipt[0].instrument.transactionNumber",false,false);
-        self.props.handleChange(
-          { target: { value: localStorage.getItem('tenantId') } },
-          'Receipt[0].instrument.bank.tenantId',
-          false,
-          false
-        );
+        self.props.handleChange({ target: { value: localStorage.getItem('tenantId') } }, 'Receipt[0].instrument.bank.tenantId', false, false);
         // self.props.handleChange({target:{value:100}},"Receipt[0].instrument.amount",false,false);
         // if (res.Bill[0].billDetails[0].businessService=="TRADELICENSE") {
         //   self.props.handleChange({target:{value:""}},"Receipt[0].Bill[0].paidBy",false,false);
         //
         // } else {
-        self.props.handleChange(
-          { target: { value: res.Bill[0].payeeName } },
-          'Receipt[0].Bill[0].paidBy',
-          false,
-          false
-        );
+        self.props.handleChange({ target: { value: res.Bill[0].payeeName } }, 'Receipt[0].Bill[0].paidBy', false, false);
 
         // }
 
         var resultList = {
-          resultHeader:
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].result.header,
+          resultHeader: self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.header,
           resultValues: [],
         };
 
-        let objectPath =
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.resultPath;
-        let tableObjectPath =
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].result.tableResultPath;
+        let objectPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.resultPath;
+        let tableObjectPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.tableResultPath;
         var values = _.get(res, objectPath);
         // var specsValuesList = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].result.values;
         let headers = Object.assign([], resultList.resultHeader);
@@ -394,8 +280,7 @@ class Transaction extends Component {
 
               tmp.push(
                 Object.assign({}, headers[j], {
-                  jsonPath:
-                    tableObjectPath + '[' + i + '].' + headers[j].jsonPath,
+                  jsonPath: tableObjectPath + '[' + i + '].' + headers[j].jsonPath,
                 })
               );
 
@@ -421,12 +306,7 @@ class Transaction extends Component {
         //   values,
         //   showResult: true
         // });
-        self.props.handleChange(
-          { target: { value: 'Cash' } },
-          'Receipt[0].instrument.instrumentType.name',
-          false,
-          ''
-        );
+        self.props.handleChange({ target: { value: 'Cash' } }, 'Receipt[0].instrument.instrumentType.name', false, '');
         self.setState({
           resultList,
           showResult: true,
@@ -451,63 +331,23 @@ class Transaction extends Component {
   };
 
   hideField = (_mockData, hideObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? false : true;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                delRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              addRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
             }
 
             break;
@@ -516,65 +356,26 @@ class Transaction extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? false
-            : true;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -583,85 +384,28 @@ class Transaction extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? false : true;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if (!reset) {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      _.set(
-                        _formData,
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].jsonPath,
-                        ''
-                      );
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      ) {
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
-                        removeFieldErrors(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                       }
                     }
                     delRequiredFields(_rReq);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      )
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                     }
                     addRequiredFields(_rReq);
                   }
@@ -677,62 +421,22 @@ class Transaction extends Component {
   };
 
   showField = (_mockData, showObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? true : false;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                addRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              delRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
-              removeFieldErrors(
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -740,65 +444,26 @@ class Transaction extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? true
-            : false;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
 
             addRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
@@ -808,37 +473,12 @@ class Transaction extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? true : false;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 
                   } else {
@@ -858,30 +498,12 @@ class Transaction extends Component {
   enField = (_mockData, enableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          enableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? true : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (enableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
           break;
@@ -895,30 +517,12 @@ class Transaction extends Component {
   disField = (_mockData, disableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          disableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? false : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (disableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
 
@@ -933,91 +537,35 @@ class Transaction extends Component {
   checkIfHasEnDisFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .enableDisableFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .enableDisableFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
-                _mockData = this.disField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
-                _mockData = this.enField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
                 _mockData = this.disField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y],
                   true
                 );
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
                 _mockData = this.enField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z],
                   true
                 );
               }
@@ -1033,93 +581,29 @@ class Transaction extends Component {
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y],
-                  true
-                );
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z],
-                  true
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
           }
@@ -1130,63 +614,26 @@ class Transaction extends Component {
     setMockData(_mockData);
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
-    let {
-      handleChange,
-      mockData,
-      setDropDownData,
-      addRequiredFields,
-      delRequiredFields,
-    } = this.props;
+    let { handleChange, mockData, setDropDownData, addRequiredFields, delRequiredFields } = this.props;
     let hashLocation = window.location.hash;
-    let obj =
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ];
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     this.checkIfHasShowHideFields(property, e.target.value);
     this.checkIfHasEnDisFields(property, e.target.value);
 
     if (property == 'Receipt[0].instrument.instrumentType.name') {
       if (e.target.value != 'Cash')
-        addRequiredFields([
-          'Receipt[0].instrument.transactionNumber',
-          'Receipt[0].instrument.transactionDateInput',
-          'Receipt[0].instrument.bank.id',
-        ]);
+        addRequiredFields(['Receipt[0].instrument.transactionNumber', 'Receipt[0].instrument.transactionDateInput', 'Receipt[0].instrument.bank.id']);
       else {
-        delRequiredFields([
-          'Receipt[0].instrument.transactionNumber',
-          'Receipt[0].instrument.transactionDateInput',
-          'Receipt[0].instrument.bank.id',
-        ]);
+        delRequiredFields(['Receipt[0].instrument.transactionNumber', 'Receipt[0].instrument.transactionDateInput', 'Receipt[0].instrument.bank.id']);
       }
     }
 
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
-    if (
-      property == 'Receipt[0].instrument.transactionDateInput' &&
-      e.target.value.length == 10
-    ) {
+    if (property == 'Receipt[0].instrument.transactionDateInput' && e.target.value.length == 10) {
       console.log(e.target.value);
       // handleChange(e,property, isRequired, pattern, requiredErrMsg, patternErrMsg);
     }
@@ -1199,12 +646,7 @@ class Transaction extends Component {
           sum += parseInt(bill[i].amountPaid);
         }
       }
-      handleChange(
-        { target: { value: sum } },
-        'Receipt[0].instrument.amount',
-        false,
-        false
-      );
+      handleChange({ target: { value: sum } }, 'Receipt[0].instrument.amount', false, false);
     }
 
     if (property.indexOf('Receipt[0].instrument.instrumentType.name') > -1) {
@@ -1245,9 +687,7 @@ class Transaction extends Component {
                 );
               }
             } else {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
         }
@@ -1277,14 +717,7 @@ class Transaction extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
@@ -1293,12 +726,8 @@ class Transaction extends Component {
     var value = this.state.values[index];
     var _url =
       window.location.hash.split('/').indexOf('update') > -1
-        ? this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlUpdate
-        : this.props.metaData[
-            `${this.props.moduleName}.${this.props.actionName}`
-          ].result.rowClickUrlView;
+        ? this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlUpdate
+        : this.props.metaData[`${this.props.moduleName}.${this.props.actionName}`].result.rowClickUrlView;
     var key = _url.split('{')[1].split('}')[0];
     _url = _url.replace('{' + key + '}', _.get(value, key));
     this.props.setRoute(_url);
@@ -1313,14 +742,10 @@ class Transaction extends Component {
     var amountValidationMsg = '';
 
     for (var i = 0; i < formData.Receipt[0].Bill[0].billDetails.length; i++) {
-      if (
-        formData.Receipt[0].Bill[0].billDetails[i].hasOwnProperty('amountPaid')
-      ) {
+      if (formData.Receipt[0].Bill[0].billDetails[i].hasOwnProperty('amountPaid')) {
         if (
-          formData.Receipt[0].Bill[0].billDetails[i].amountPaid >
-            formData.Receipt[0].Bill[0].billDetails[i].totalAmount ||
-          formData.Receipt[0].Bill[0].billDetails[i].amountPaid <
-            formData.Receipt[0].Bill[0].billDetails[i].minimumAmount
+          formData.Receipt[0].Bill[0].billDetails[i].amountPaid > formData.Receipt[0].Bill[0].billDetails[i].totalAmount ||
+          formData.Receipt[0].Bill[0].billDetails[i].amountPaid < formData.Receipt[0].Bill[0].billDetails[i].minimumAmount
         ) {
           amountValidationMsg +=
             'Consumer code - ' +
@@ -1333,10 +758,7 @@ class Transaction extends Component {
           amountValidation = false;
         }
       } else {
-        amountValidationMsg +=
-          'Consumer code - ' +
-          formData.Receipt[0].Bill[0].billDetails[i].consumerCode +
-          ' please enter the amount \n';
+        amountValidationMsg += 'Consumer code - ' + formData.Receipt[0].Bill[0].billDetails[i].consumerCode + ' please enter the amount \n';
         amountValidation = false;
         // delete formData.Receipt[0].Bill[0].billDetails[i];
         // --i;
@@ -1345,30 +767,17 @@ class Transaction extends Component {
 
     // if () {
     if (amountValidation && formData.Receipt[0].Bill[0].paidBy) {
-      Api.commonApiPost(
-        '/collection-services/receipts/_create',
-        '',
-        formData,
-        '',
-        true
-      ).then(
+      Api.commonApiPost('/collection-services/receipts/_create', '', formData, '', true).then(
         function(response) {
           self.props.setLoadingStatus('hide');
           self.initData();
           self.props.toggleSnackbarAndSetText(
             true,
-            translate(
-              self.props.actionName == 'transaction'
-                ? 'wc.create.message.success'
-                : 'wc.update.message.success'
-            ),
+            translate(self.props.actionName == 'transaction' ? 'wc.create.message.success' : 'wc.update.message.success'),
             true
           );
           setTimeout(function() {
-            self.props.setRoute(
-              '/non-framework/collection/receipt/view/' +
-                response.Receipt[0].transactionId
-            );
+            self.props.setRoute('/non-framework/collection/receipt/view/' + response.Receipt[0].transactionId);
           }, 1500);
         },
         function(err) {
@@ -1378,23 +787,11 @@ class Transaction extends Component {
       );
     } else {
       if (formData.Receipt[0].Bill[0].paidBy) {
-        self.props.toggleSnackbarAndSetText(
-          true,
-          amountValidationMsg,
-          false,
-          true
-        );
+        self.props.toggleSnackbarAndSetText(true, amountValidationMsg, false, true);
         self.props.setLoadingStatus('hide');
       } else {
-        amountValidationMsg += amountValidationMsg
-          ? ' - Paid by is mandatory'
-          : 'Paid by is mandatory';
-        self.props.toggleSnackbarAndSetText(
-          true,
-          amountValidationMsg,
-          false,
-          true
-        );
+        amountValidationMsg += amountValidationMsg ? ' - Paid by is mandatory' : 'Paid by is mandatory';
+        self.props.toggleSnackbarAndSetText(true, amountValidationMsg, false, true);
         self.props.setLoadingStatus('hide');
       }
     }
@@ -1406,24 +803,8 @@ class Transaction extends Component {
   };
 
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-      match,
-    } = this.props;
-    let {
-      search,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      rowClickHandler,
-      create,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid, match } = this.props;
+    let { search, handleChange, getVal, addNewCard, removeCard, rowClickHandler, create } = this;
     let { showResult, resultList } = this.state;
 
     return (
@@ -1445,9 +826,7 @@ class Transaction extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
               />
@@ -1458,11 +837,7 @@ class Transaction extends Component {
               item={{
                 label: 'Search',
                 uiType: 'submit',
-                isDisabled: isFormValid
-                  ? match.params.businessService && match.params.consumerCode
-                    ? true
-                    : false
-                  : true,
+                isDisabled: isFormValid ? (match.params.businessService && match.params.consumerCode ? true : false) : true,
               }}
               ui="google"
             />
@@ -1471,15 +846,7 @@ class Transaction extends Component {
           {/*showResult && <UiTable resultList={resultList} rowClickHandler={rowClickHandler}/>*/}
         </form>
 
-        {showResult && (
-          <UiDynamicTable
-            resultList={resultList}
-            ui="google"
-            handler={handleChange}
-            getVal={getVal}
-            fieldErrors={fieldErrors}
-          />
-        )}
+        {showResult && <UiDynamicTable resultList={resultList} ui="google" handler={handleChange} getVal={getVal} fieldErrors={fieldErrors} />}
 
         <br />
         {showResult &&
@@ -1491,9 +858,7 @@ class Transaction extends Component {
               handler={handleChange}
               getVal={getVal}
               fieldErrors={fieldErrors}
-              useTimestamp={
-                mockData[`${moduleName}.${actionName}`].useTimestamp || false
-              }
+              useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
               addNewCard={''}
               removeCard={''}
             />
@@ -1557,14 +922,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

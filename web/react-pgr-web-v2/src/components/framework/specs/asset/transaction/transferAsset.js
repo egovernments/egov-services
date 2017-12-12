@@ -72,8 +72,7 @@ var dat = {
             label: 'ac.create.Department',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&masterName=Department&moduleName=common-masters|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -254,10 +253,7 @@ var dat = {
             requiredErrMsg: '',
             patternErrMsg: '',
             //"values": [{"label":"ac.transaction.TA.TransferAsset", "value":true},{"label":"ac.transaction.TA.DisposalAsset", "value":false}],
-            values: [
-              { label: 'Transfer of Asset', value: 'SALE' },
-              { label: 'Disposal of Asset', value: 'DISPOSAL' },
-            ],
+            values: [{ label: 'Transfer of Asset', value: 'SALE' }, { label: 'Disposal of Asset', value: 'DISPOSAL' }],
             defaultValue: true,
           },
           {

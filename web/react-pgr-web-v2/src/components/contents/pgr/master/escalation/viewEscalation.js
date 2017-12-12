@@ -154,10 +154,7 @@ class ViewEscalation extends Component {
       serviceCode: this.props.viewEscalation.grievanceType,
     };
 
-    Api.commonApiPost(
-      '/pgr-master/escalation-hierarchy/v1/_search',
-      searchSetFrom
-    ).then(
+    Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_search', searchSetFrom).then(
       function(response) {
         setLoadingStatus('hide');
         flag = 1;
@@ -176,13 +173,7 @@ class ViewEscalation extends Component {
   render() {
     let self = this;
 
-    let {
-      isFormValid,
-      viewEscalation,
-      fieldErrors,
-      handleChange,
-      handleAutoCompleteKeyUp,
-    } = this.props;
+    let { isFormValid, viewEscalation, fieldErrors, handleChange, handleAutoCompleteKeyUp } = this.props;
 
     let { submitForm } = this;
 
@@ -193,15 +184,8 @@ class ViewEscalation extends Component {
         return searchResult.map(function(val, i) {
           return (
             <tr key={i}>
-              <td>
-                {getNameByServiceCode(
-                  self.state.grievanceTypeSource,
-                  val.serviceCode
-                )}
-              </td>
-              <td>
-                {getNameById(self.state.positionSource, val.fromPosition)}
-              </td>
+              <td>{getNameByServiceCode(self.state.grievanceTypeSource, val.serviceCode)}</td>
+              <td>{getNameById(self.state.positionSource, val.fromPosition)}</td>
               <td>{getNameById(self.state.positionSource, val.toPosition)}</td>
             </tr>
           );
@@ -212,22 +196,9 @@ class ViewEscalation extends Component {
       if (isSearchClicked)
         return (
           <Card>
-            <CardHeader
-              title={
-                <strong style={{ color: '#5a3e1b' }}>
-                  {' '}
-                  {translate('pgr.searchresult')}{' '}
-                </strong>
-              }
-            />
+            <CardHeader title={<strong style={{ color: '#5a3e1b' }}> {translate('pgr.searchresult')} </strong>} />
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead style={{ backgroundColor: '#f2851f', color: 'white' }}>
                   <tr>
                     <th>{translate('pgr.lbl.grievance.type')}</th>
@@ -251,15 +222,7 @@ class ViewEscalation extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {translate('pgr.lbl.searchesc')}{' '}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.lbl.searchesc')} </div>} />
             <CardText>
               <Card>
                 <CardText>
@@ -271,20 +234,14 @@ class ViewEscalation extends Component {
                           hintText={translate('pgr.lbl.grievance.type')}
                           fullWidth={true}
                           filter={function filter(searchText, key) {
-                            return key
-                              .toLowerCase()
-                              .includes(searchText.toLowerCase());
+                            return key.toLowerCase().includes(searchText.toLowerCase());
                           }}
                           dataSource={this.state.grievanceTypeSource}
                           dataSourceConfig={this.state.serviceDataSourceConfig}
                           onKeyUp={e => {
                             handleAutoCompleteKeyUp(e, 'grievanceType');
                           }}
-                          value={
-                            viewEscalation.grievanceType
-                              ? viewEscalation.grievanceType
-                              : ''
-                          }
+                          value={viewEscalation.grievanceType ? viewEscalation.grievanceType : ''}
                           onNewRequest={(chosenRequest, index) => {
                             var e = {
                               target: {
@@ -301,20 +258,14 @@ class ViewEscalation extends Component {
                           hintText={translate('pgr.lbl.position')}
                           fullWidth={true}
                           filter={function filter(searchText, key) {
-                            return key
-                              .toLowerCase()
-                              .includes(searchText.toLowerCase());
+                            return key.toLowerCase().includes(searchText.toLowerCase());
                           }}
                           dataSource={this.state.positionSource}
                           dataSourceConfig={this.state.positionDataSourceConfig}
                           onKeyUp={e => {
                             handleAutoCompleteKeyUp(e, 'position');
                           }}
-                          value={
-                            viewEscalation.position
-                              ? viewEscalation.position
-                              : ''
-                          }
+                          value={viewEscalation.position ? viewEscalation.position : ''}
                           onNewRequest={(chosenRequest, index) => {
                             var e = {
                               target: {
@@ -330,12 +281,7 @@ class ViewEscalation extends Component {
                 </CardText>
               </Card>
               <div style={{ textAlign: 'center' }}>
-                <RaisedButton
-                  style={{ margin: '15px 5px' }}
-                  type="submit"
-                  label={translate('core.lbl.search')}
-                  primary={true}
-                />
+                <RaisedButton style={{ margin: '15px 5px' }} type="submit" label={translate('core.lbl.search')} primary={true} />
               </div>
               {viewTable()}
             </CardText>

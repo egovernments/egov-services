@@ -20,16 +20,13 @@ export const fonts = {
 export function writeMultiLanguageText(text, style) {
   var otherLangTexts = text.match(DEVANAGIRI_UNICODE_RANGE_REGEX);
 
-  if (!otherLangTexts || otherLangTexts.length === 0)
-    return [{ text: text, style: style }];
+  if (!otherLangTexts || otherLangTexts.length === 0) return [{ text: text, style: style }];
 
   var langArry = [];
   for (var i = 0; i < otherLangTexts.length; i++) {
     langArry[i] = {
       text: otherLangTexts[i],
-      style: style
-        ? { ...style, font: DEVANAGARI_FONT_NAME }
-        : { font: DEVANAGARI_FONT_NAME },
+      style: style ? { ...style, font: DEVANAGARI_FONT_NAME } : { font: DEVANAGARI_FONT_NAME },
     };
     text = text.replace(otherLangTexts[i], '~~{{' + i + '}}~~');
   }

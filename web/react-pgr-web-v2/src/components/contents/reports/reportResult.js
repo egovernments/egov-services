@@ -162,9 +162,7 @@ class ShowField extends Component {
             if (columnObj.total) {
               // Remove the formatting to get integer data for summation
               var intVal = function(i) {
-                return typeof i === 'string'
-                  ? i.replace(/[\$,]/g, '') * 1
-                  : typeof i === 'number' ? i : 0;
+                return typeof i === 'string' ? i.replace(/[\$,]/g, '') * 1 : typeof i === 'number' ? i : 0;
               };
 
               // Total over all pages
@@ -184,12 +182,7 @@ class ShowField extends Component {
                 }, 0);
 
               // Update footer
-              $(api.column(index).footer()).html(
-                pageTotal.toLocaleString('en-IN') +
-                  ' (' +
-                  total.toLocaleString('en-IN') +
-                  ')'
-              );
+              $(api.column(index).footer()).html(pageTotal.toLocaleString('en-IN') + ' (' + total.toLocaleString('en-IN') + ')');
             }
           });
         }
@@ -236,9 +229,7 @@ class ShowField extends Component {
         searchParams.push({ name: key, input: value });
       }
 
-      var tenantId = localStorage.getItem('tenantId')
-        ? localStorage.getItem('tenantId')
-        : '';
+      var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : '';
 
       let response = Api.commonApiPost(
         '/report/' + match.params.moduleName + '/_get',
@@ -250,16 +241,9 @@ class ShowField extends Component {
         }
       ).then(
         function(response) {
-          if (
-            response.viewPath &&
-            response.reportData &&
-            response.reportData[0]
-          ) {
+          if (response.viewPath && response.reportData && response.reportData[0]) {
             localStorage.reportData = JSON.stringify(response.reportData);
-            localStorage.setItem(
-              'returnUrl',
-              window.location.hash.split('#/')[1]
-            );
+            localStorage.setItem('returnUrl', window.location.hash.split('#/')[1]);
             setRoute('/print/report/' + response.viewPath);
           } else {
             pushReportHistory({
@@ -298,13 +282,7 @@ class ShowField extends Component {
       reportResult.reportHeader[i].type == 'epoch'
     ) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     } else {
       return val;
     }
@@ -316,11 +294,7 @@ class ShowField extends Component {
     let rows = { ...this.state.rows };
     let showPrintBtn = true;
 
-    if (
-      reportResult &&
-      reportResult.reportData &&
-      reportResult.reportData.length
-    ) {
+    if (reportResult && reportResult.reportData && reportResult.reportData.length) {
       if (e.target.checked)
         for (let i = 0; i < reportResult.reportData.length; i++) {
           ck[i] = true;
@@ -346,9 +320,7 @@ class ShowField extends Component {
     return (
       <thead style={{ backgroundColor: '#f2851f', color: 'white' }}>
         <tr>
-          {metaData &&
-          metaData.reportDetails &&
-          metaData.reportDetails.selectiveDownload ? (
+          {metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? (
             <th key={'testKey'}>
               <input type="checkbox" onChange={checkAllRows} />
             </th>
@@ -374,24 +346,11 @@ class ShowField extends Component {
 
   printSelectedDetails() {
     let rows = { ...this.state.rows };
-    let {
-      reportResult,
-      searchForm,
-      setReportResult,
-      setFlag,
-      toggleSnackbarAndSetText,
-      searchParams,
-      setRoute,
-      match,
-      metaData,
-    } = this.props;
+    let { reportResult, searchForm, setReportResult, setFlag, toggleSnackbarAndSetText, searchParams, setRoute, match, metaData } = this.props;
     let header = this.props.reportResult.reportHeader;
     let defaultValue = '';
     for (let key in header) {
-      if (
-        header[key].defaultValue &&
-        header[key].defaultValue.search('_parent') > -1
-      ) {
+      if (header[key].defaultValue && header[key].defaultValue.search('_parent') > -1) {
         defaultValue = header[key].defaultValue;
       }
     }
@@ -424,9 +383,7 @@ class ShowField extends Component {
       }
 
       searchParams.push({ name: key, input: values });
-      var tenantId = localStorage.getItem('tenantId')
-        ? localStorage.getItem('tenantId')
-        : '';
+      var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : '';
       let response = Api.commonApiPost(
         '/report/' + match.params.moduleName + '/_get',
         {},
@@ -439,10 +396,7 @@ class ShowField extends Component {
         function(response) {
           if (response.viewPath && response.reportData) {
             localStorage.reportData = JSON.stringify(response.reportData);
-            localStorage.setItem(
-              'returnUrl',
-              window.location.hash.split('#/')[1]
-            );
+            localStorage.setItem('returnUrl', window.location.hash.split('#/')[1]);
             setRoute('/print/report/' + response.viewPath);
           }
         },
@@ -464,13 +418,8 @@ class ShowField extends Component {
             //array of array
             let reportHeaderObj = reportResult.reportHeader;
             return (
-              <tr
-                key={dataIndex}
-                className={this.state.ck[dataIndex] ? 'selected' : ''}
-              >
-                {metaData &&
-                metaData.reportDetails &&
-                metaData.reportDetails.selectiveDownload ? (
+              <tr key={dataIndex} className={this.state.ck[dataIndex] ? 'selected' : ''}>
+                {metaData && metaData.reportDetails && metaData.reportDetails.selectiveDownload ? (
                   <td>
                     <input
                       type="checkbox"
@@ -512,13 +461,7 @@ class ShowField extends Component {
                           drillDown(e, dataIndex, itemIndex, dataItem, item);
                         }}
                       >
-                        {respHeader.defaultValue ? (
-                          <a href="javascript:void(0)">
-                            {checkIfDate(item, itemIndex)}
-                          </a>
-                        ) : (
-                          checkIfDate(item, itemIndex)
-                        )}
+                        {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item, itemIndex)}</a> : checkIfDate(item, itemIndex)}
                       </td>
                     );
                   } else {
@@ -530,13 +473,7 @@ class ShowField extends Component {
                           drillDown(e, dataIndex, itemIndex, dataItem, item);
                         }}
                       >
-                        {respHeader.defaultValue ? (
-                          <a href="javascript:void(0)">
-                            {checkIfDate(item, itemIndex)}
-                          </a>
-                        ) : (
-                          checkIfDate(item, itemIndex)
-                        )}
+                        {respHeader.defaultValue ? <a href="javascript:void(0)">{checkIfDate(item, itemIndex)}</a> : checkIfDate(item, itemIndex)}
                       </td>
                     );
                   }
@@ -573,9 +510,7 @@ class ShowField extends Component {
         <tfoot>
           <tr>
             {sumColumn.map((columnObj, index) => {
-              return (
-                <th key={index}>{index === 0 ? 'Total (Grand Total)' : ''}</th>
-              );
+              return <th key={index}>{index === 0 ? 'Total (Grand Total)' : ''}</th>;
             })}
           </tr>
         </tfoot>
@@ -590,10 +525,7 @@ class ShowField extends Component {
       return;
     }
     // let responseSearchParams = metaData.reportDetails.searchParams;
-    let result =
-      metaData && metaData.reportDetails && metaData.reportDetails.summary
-        ? metaData.reportDetails.summary
-        : '';
+    let result = metaData && metaData.reportDetails && metaData.reportDetails.summary ? metaData.reportDetails.summary : '';
     // searchParams.map((search, index) => {
     //   let idx = index+1;
     //   let lastText = (idx == paramsLength);
@@ -659,10 +591,7 @@ class ShowField extends Component {
                 {self.renderBody()}
                 {self.renderFooter()}
               </Table>
-              {metaData.reportDetails &&
-              metaData.reportDetails.viewPath &&
-              metaData.reportDetails.selectiveDownload &&
-              self.state.showPrintBtn ? (
+              {metaData.reportDetails && metaData.reportDetails.viewPath && metaData.reportDetails.selectiveDownload && self.state.showPrintBtn ? (
                 <div style={{ textAlign: 'center' }}>
                   <RaisedButton
                     style={{ marginTop: '10px' }}
@@ -685,11 +614,7 @@ class ShowField extends Component {
               <Row>
                 <Col xs={12} md={8} mdOffset={2}>
                   <Card>
-                    <CardHeader
-                      title={
-                        <strong>{translate('Denomination Report')} </strong>
-                      }
-                    />
+                    <CardHeader title={<strong>{translate('Denomination Report')} </strong>} />
                     <CardText>
                       <Table
                         style={{
@@ -765,9 +690,7 @@ class ShowField extends Component {
                           </tr>
                           <tr>
                             <td colSpan={3} style={{ textAlign: 'center' }}>
-                              <strong>
-                                {translate('Total Amount Collected')}
-                              </strong>
+                              <strong>{translate('Total Amount Collected')}</strong>
                             </td>
                             <td style={{ textAlign: 'right' }} />
                           </tr>
@@ -783,12 +706,7 @@ class ShowField extends Component {
       );
     };
     return (
-      <div className="PropertyTaxSearch">
-        {isTableShow &&
-          !_.isEmpty(reportResult) &&
-          reportResult.hasOwnProperty('reportData') &&
-          viewTabel()}
-      </div>
+      <div className="PropertyTaxSearch">{isTableShow && !_.isEmpty(reportResult) && reportResult.hasOwnProperty('reportData') && viewTabel()}</div>
     );
   }
 }

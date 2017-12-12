@@ -13,9 +13,7 @@ import { translate } from '../../../common/common';
 export default class RenderField extends Component {
   shouldComponentUpdate(nextProps, nextState) {
     //console.log('customField should update', !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)));
-    return !(
-      _.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState)
-    );
+    return !(_.isEqual(this.props, nextProps) && _.isEqual(this.state, nextState));
   }
 
   renderCustomField = ({
@@ -34,10 +32,7 @@ export default class RenderField extends Component {
   }) => {
     var floatingLabelText = (
       <span>
-        {translate(field.label)}{' '}
-        <span style={{ color: '#FF0000' }}>
-          {field.isMandatory ? ' *' : ''}
-        </span>
+        {translate(field.label)} <span style={{ color: '#FF0000' }}>{field.isMandatory ? ' *' : ''}</span>
       </span>
     );
     switch (field.type) {
@@ -165,13 +160,9 @@ export default class RenderField extends Component {
                   if (field.codeName) {
                     return (
                       <MenuItem
-                        value={`${
-                          item[dropdownDataSourceConfig.value]
-                        }~${translate(item[dropdownDataSourceConfig.text])}`}
+                        value={`${item[dropdownDataSourceConfig.value]}~${translate(item[dropdownDataSourceConfig.text])}`}
                         key={index}
-                        primaryText={translate(
-                          item[dropdownDataSourceConfig.text]
-                        )}
+                        primaryText={translate(item[dropdownDataSourceConfig.text])}
                       />
                     );
                   } else {
@@ -179,9 +170,7 @@ export default class RenderField extends Component {
                       <MenuItem
                         value={`${item[dropdownDataSourceConfig.value]}`}
                         key={index}
-                        primaryText={translate(
-                          item[dropdownDataSourceConfig.text]
-                        )}
+                        primaryText={translate(item[dropdownDataSourceConfig.text])}
                       />
                     );
                   }

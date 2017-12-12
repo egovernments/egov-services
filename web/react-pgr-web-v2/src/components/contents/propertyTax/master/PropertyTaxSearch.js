@@ -118,10 +118,10 @@ class PropertyTaxSearch extends Component {
 
     var currentThis = this;
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         currentThis.setState({ location: res.Boundary });
       })
@@ -141,13 +141,7 @@ class PropertyTaxSearch extends Component {
         console.log(err);
       });
 
-    Api.commonApiPost(
-      'pt-property/property/propertytypes/_search',
-      {},
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('pt-property/property/propertytypes/_search', {}, {}, false, true)
       .then(res => {
         currentThis.setState({ propertytypes: res.propertyTypes });
       })
@@ -162,19 +156,11 @@ class PropertyTaxSearch extends Component {
       keyName: 'PT_RevenueBoundaryHierarchy',
     })
       .then(res1 => {
-        if (
-          res1.appConfigurations &&
-          res1.appConfigurations[0] &&
-          res1.appConfigurations[0].values &&
-          res1.appConfigurations[0].values[0]
-        ) {
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'ZONE',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+        if (res1.appConfigurations && res1.appConfigurations[0] && res1.appConfigurations[0].values && res1.appConfigurations[0].values[0]) {
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'ZONE',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               console.log(res);
               currentThis.setState({ zone: res.Boundary });
@@ -186,13 +172,10 @@ class PropertyTaxSearch extends Component {
               console.log(err);
             });
 
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'WARD',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'WARD',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               currentThis.setState({ ward: res.Boundary });
             })
@@ -202,13 +185,10 @@ class PropertyTaxSearch extends Component {
               });
             });
 
-          Api.commonApiPost(
-            'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-            {
-              boundaryTypeName: 'REVENUE',
-              hierarchyTypeName: res1.appConfigurations[0].values[0],
-            }
-          )
+          Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+            boundaryTypeName: 'REVENUE',
+            hierarchyTypeName: res1.appConfigurations[0].values[0],
+          })
             .then(res => {
               currentThis.setState({ revenueCircle: res.Boundary });
             })
@@ -243,10 +223,7 @@ class PropertyTaxSearch extends Component {
   hasOwnerName = () => {
     let { propertyTaxSearch } = this.props;
 
-    if (
-      propertyTaxSearch.hasOwnProperty('ownerName') &&
-      propertyTaxSearch.ownerName.length < 4
-    ) {
+    if (propertyTaxSearch.hasOwnProperty('ownerName') && propertyTaxSearch.ownerName.length < 4) {
       return true;
     } else {
       return false;
@@ -254,13 +231,7 @@ class PropertyTaxSearch extends Component {
   };
 
   search(e) {
-    let {
-      showTable,
-      changeButtonText,
-      propertyTaxSearch,
-      setLoadingStatus,
-      toggleSnackbarAndSetText,
-    } = this.props;
+    let { showTable, changeButtonText, propertyTaxSearch, setLoadingStatus, toggleSnackbarAndSetText } = this.props;
     e.preventDefault();
 
     setLoadingStatus('loading');
@@ -279,19 +250,12 @@ class PropertyTaxSearch extends Component {
       .then(res => {
         setLoadingStatus('hide');
         if (res.hasOwnProperty('Errors')) {
-          toggleSnackbarAndSetText(
-            true,
-            'Something went wrong. Please try again.'
-          );
+          toggleSnackbarAndSetText(true, 'Something went wrong. Please try again.');
           current.setState({
             resultList: [],
           });
         } else {
-          if (
-            res.hasOwnProperty('properties') &&
-            res.properties.length != 0 &&
-            res.properties[0].channel == 'DATA_ENTRY'
-          ) {
+          if (res.hasOwnProperty('properties') && res.properties.length != 0 && res.properties[0].channel == 'DATA_ENTRY') {
             current.setState({
               showDcb: true,
             });
@@ -305,13 +269,7 @@ class PropertyTaxSearch extends Component {
             parent: res.properties[0].propertyDetail.propertyType,
           };
 
-          Api.commonApiPost(
-            'pt-property/property/propertytypes/_search',
-            subQuery,
-            {},
-            false,
-            true
-          )
+          Api.commonApiPost('pt-property/property/propertytypes/_search', subQuery, {}, false, true)
             .then(res => {
               current.setState({ propertysubtypes: res.propertyTypes });
             })
@@ -331,9 +289,7 @@ class PropertyTaxSearch extends Component {
           if (res.hasOwnProperty('properties') && res.properties.length != 0) {
             var tQuery = {
               businessService: 'PT',
-              consumerCode:
-                res.properties[0].upicNumber ||
-                res.properties[0].propertyDetail.applicationNo,
+              consumerCode: res.properties[0].upicNumber || res.properties[0].propertyDetail.applicationNo,
             };
 
             Api.commonApiPost('billing-service/demand/_dues', tQuery, {})
@@ -380,27 +336,12 @@ class PropertyTaxSearch extends Component {
     const renderOption = function(list, isCode) {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem
-              key={item.id}
-              value={isCode ? item.code : item.id}
-              primaryText={item.name}
-            />
-          );
+          return <MenuItem key={item.id} value={isCode ? item.code : item.id} primaryText={item.name} />;
         });
       }
     };
 
-    let {
-      propertyTaxSearch,
-      fieldErrors,
-      isFormValid,
-      isTableShow,
-      handleChange,
-      handleChangeNextOne,
-      handleChangeNextTwo,
-      buttonText,
-    } = this.props;
+    let { propertyTaxSearch, fieldErrors, isFormValid, isTableShow, handleChange, handleChangeNextOne, handleChangeNextTwo, buttonText } = this.props;
 
     let { search } = this;
     let currentThis = this;
@@ -424,58 +365,19 @@ class PropertyTaxSearch extends Component {
             }
           />
           <CardText>
-            <Table
-              id="propertyTaxTable"
-              style={{ color: 'black', fontWeight: 'normal' }}
-              bordered
-              responsive
-            >
+            <Table id="propertyTaxTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive>
               <thead>
                 <tr>
                   <th>#</th>
-                  <th>
-                    {' '}
-                    {translate(
-                      'pt.create.groups.propertyDetails.assessmentNumber'
-                    )}
-                  </th>
-                  <th>
-                    {' '}
-                    {translate(
-                      'pt.create.groups.ownerDetails.fields.ownerName'
-                    )}
-                  </th>
-                  <th>
-                    {' '}
-                    {translate(
-                      'pt.create.groups.propertyAddress.fields.doorNo'
-                    )}
-                  </th>
-                  <th>
-                    {' '}
-                    {translate(
-                      'pt.create.groups.propertyAddress.fields.locality'
-                    )}
-                  </th>
-                  <th>
-                    {' '}
-                    {translate(
-                      'pt.create.groups.propertyAddress.fields.addressDetails'
-                    )}
-                  </th>
+                  <th> {translate('pt.create.groups.propertyDetails.assessmentNumber')}</th>
+                  <th> {translate('pt.create.groups.ownerDetails.fields.ownerName')}</th>
+                  <th> {translate('pt.create.groups.propertyAddress.fields.doorNo')}</th>
+                  <th> {translate('pt.create.groups.propertyAddress.fields.locality')}</th>
+                  <th> {translate('pt.create.groups.propertyAddress.fields.addressDetails')}</th>
                   <th> {translate('reports.wcms.currentdemand')}</th>
                   <th> {translate('reports.wcms.arreardemand')}</th>
-                  <th>
-                    {' '}
-                    {translate(
-                      'pt.create.groups.assessmentDetails.fields.propertyType'
-                    )}
-                  </th>
-                  <th>
-                    {translate(
-                      'pt.create.groups.assessmentDetails.fields.propertySubType'
-                    )}
-                  </th>
+                  <th> {translate('pt.create.groups.assessmentDetails.fields.propertyType')}</th>
+                  <th>{translate('pt.create.groups.assessmentDetails.fields.propertySubType')}</th>
                   <th> {translate('reports.common.action')}</th>
                 </tr>
               </thead>
@@ -491,11 +393,7 @@ class PropertyTaxSearch extends Component {
                               <span
                                 style={{ color: 'rgb(81, 186, 217)' }}
                                 onClick={() => {
-                                  history.push(
-                                    `/propertyTax/view-property/${
-                                      item.upicNumber
-                                    }`
-                                  );
+                                  history.push(`/propertyTax/view-property/${item.upicNumber}`);
                                 }}
                               >
                                 {item.upicNumber}
@@ -511,103 +409,56 @@ class PropertyTaxSearch extends Component {
                                 return <span>{item.name}</span>;
                               })}
                           </td>
+                          <td>{item.address.addressNumber || translate('pt.search.searchProperty.fields.na')}</td>
+                          <td>{getNameByCode(this.state.location, item.address.addressLine1) || translate('pt.search.searchProperty.fields.na')}</td>
                           <td>
-                            {item.address.addressNumber ||
-                              translate('pt.search.searchProperty.fields.na')}
-                          </td>
-                          <td>
-                            {getNameByCode(
-                              this.state.location,
-                              item.address.addressLine1
-                            ) ||
-                              translate('pt.search.searchProperty.fields.na')}
-                          </td>
-                          <td>
-                            {item.address.addressNumber
-                              ? item.address.addressNumber + ', '
-                              : ''}{' '}
-                            {item.address.addressLine1
-                              ? item.address.addressLine1 + ', '
-                              : ''}
-                            {item.address.addressLine2
-                              ? item.address.addressLine2 + ', '
-                              : ''}
-                            {item.address.landmark
-                              ? item.address.landmark + ','
-                              : ''}
+                            {item.address.addressNumber ? item.address.addressNumber + ', ' : ''}{' '}
+                            {item.address.addressLine1 ? item.address.addressLine1 + ', ' : ''}
+                            {item.address.addressLine2 ? item.address.addressLine2 + ', ' : ''}
+                            {item.address.landmark ? item.address.landmark + ',' : ''}
                             {item.address.city ? item.address.city : ''}
                           </td>
                           <td>
-                            {this.state.demands.hasOwnProperty(
-                              'consolidatedTax'
-                            )
+                            {this.state.demands.hasOwnProperty('consolidatedTax')
                               ? this.state.demands.consolidatedTax.currentDemand
                               : translate('pt.search.searchProperty.fields.na')}
                           </td>
                           <td>
-                            {this.state.demands.hasOwnProperty(
-                              'consolidatedTax'
-                            )
+                            {this.state.demands.hasOwnProperty('consolidatedTax')
                               ? this.state.demands.consolidatedTax.arrearsDemand
                               : translate('pt.search.searchProperty.fields.na')}
                           </td>
                           <td>
-                            {getNameByCode(
-                              this.state.propertytypes,
-                              item.propertyDetail.propertyType
-                            ) ||
+                            {getNameByCode(this.state.propertytypes, item.propertyDetail.propertyType) ||
                               translate('pt.search.searchProperty.fields.na')}
                           </td>
                           <td>
-                            {getNameByCode(
-                              this.state.propertysubtypes,
-                              item.propertyDetail.category
-                            ) ||
+                            {getNameByCode(this.state.propertysubtypes, item.propertyDetail.category) ||
                               translate('pt.search.searchProperty.fields.na')}
                           </td>
                           <td>
-                            <DropdownButton
-                              title="Action"
-                              id="dropdown-3"
-                              pullRight
-                            >
+                            <DropdownButton title="Action" id="dropdown-3" pullRight>
                               {this.state.showDcb ? (
                                 <span>
                                   <MenuItem
                                     onClick={() => {
-                                      history.push(
-                                        `/propertyTax/view-property/${
-                                          item.id
-                                        }/view`
-                                      );
+                                      history.push(`/propertyTax/view-property/${item.id}/view`);
                                     }}
                                   >
-                                    {translate(
-                                      'pt.search.groups.dropdown.view'
-                                    )}
+                                    {translate('pt.search.groups.dropdown.view')}
                                   </MenuItem>
                                   <MenuItem
                                     onClick={() => {
-                                      history.push(
-                                        `/propertyTax/addDemand/${
-                                          item.upicNumber
-                                        }`
-                                      );
+                                      history.push(`/propertyTax/addDemand/${item.upicNumber}`);
                                     }}
                                   >
-                                    {translate(
-                                      'pt.search.groups.dropdown.addEditDcb'
-                                    )}
+                                    {translate('pt.search.groups.dropdown.addEditDcb')}
                                   </MenuItem>
                                 </span>
                               ) : (
                                 <MenuItem
                                   onClick={() => {
-                                    history.push(
-                                      `/propertyTax/view-property/${
-                                        item.id
-                                      }/view`
-                                    );
+                                    history.push(`/propertyTax/view-property/${item.id}/view`);
                                   }}
                                 >
                                   {translate('pt.search.groups.dropdown.view')}
@@ -652,26 +503,14 @@ class PropertyTaxSearch extends Component {
                 <Row>
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.applicationNo
-                          ? fieldErrors.applicationNo
-                          : ''
-                      }
+                      errorText={fieldErrors.applicationNo ? fieldErrors.applicationNo : ''}
                       id="applicationNo"
                       floatingLabelFixed={true}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                      value={
-                        propertyTaxSearch.applicationNo
-                          ? propertyTaxSearch.applicationNo
-                          : ''
-                      }
-                      onChange={e =>
-                        handleChange(e, 'applicationNo', false, '')
-                      }
+                      value={propertyTaxSearch.applicationNo ? propertyTaxSearch.applicationNo : ''}
+                      onChange={e => handleChange(e, 'applicationNo', false, '')}
                       hintText="AP-PT-2017/07/29-004679-17"
-                      floatingLabelText={translate(
-                        'pt.search.searchProperty.fields.applicationNumber'
-                      )}
+                      floatingLabelText={translate('pt.search.searchProperty.fields.applicationNumber')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
@@ -679,56 +518,29 @@ class PropertyTaxSearch extends Component {
                 <Row>
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.houseNoBldgApt
-                          ? fieldErrors.houseNoBldgApt
-                          : ''
-                      }
+                      errorText={fieldErrors.houseNoBldgApt ? fieldErrors.houseNoBldgApt : ''}
                       id="houseNoBldgApt"
                       maxLength={12}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       floatingLabelFixed={true}
-                      value={
-                        propertyTaxSearch.houseNoBldgApt
-                          ? propertyTaxSearch.houseNoBldgApt
-                          : ''
-                      }
-                      onChange={e =>
-                        handleChange(e, 'houseNoBldgApt', false, '')
-                      }
+                      value={propertyTaxSearch.houseNoBldgApt ? propertyTaxSearch.houseNoBldgApt : ''}
+                      onChange={e => handleChange(e, 'houseNoBldgApt', false, '')}
                       hintText="654654"
-                      floatingLabelText={translate(
-                        'pt.create.groups.propertyAddress.fields.doorNo'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.propertyAddress.fields.doorNo')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
 
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.upicNumber ? fieldErrors.upicNumber : ''
-                      }
+                      errorText={fieldErrors.upicNumber ? fieldErrors.upicNumber : ''}
                       maxLength={12}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       floatingLabelFixed={true}
-                      value={
-                        propertyTaxSearch.upicNumber
-                          ? propertyTaxSearch.upicNumber
-                          : ''
-                      }
-                      onChange={e =>
-                        handleChange(
-                          e,
-                          'upicNumber',
-                          false,
-                          /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g
-                        )
-                      }
+                      value={propertyTaxSearch.upicNumber ? propertyTaxSearch.upicNumber : ''}
+                      onChange={e => handleChange(e, 'upicNumber', false, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}
                       hintText="1000120015"
-                      floatingLabelText={translate(
-                        'pt.create.groups.propertyDetails.assessmentNumber'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.propertyDetails.assessmentNumber')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
@@ -737,78 +549,41 @@ class PropertyTaxSearch extends Component {
                 <Row>
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.mobileNumber ? fieldErrors.mobileNumber : ''
-                      }
+                      errorText={fieldErrors.mobileNumber ? fieldErrors.mobileNumber : ''}
                       floatingLabelFixed={true}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       maxLength={10}
-                      value={
-                        propertyTaxSearch.mobileNumber
-                          ? propertyTaxSearch.mobileNumber
-                          : ''
-                      }
-                      onChange={e =>
-                        handleChange(e, 'mobileNumber', false, /^\d{10}$/g)
-                      }
+                      value={propertyTaxSearch.mobileNumber ? propertyTaxSearch.mobileNumber : ''}
+                      onChange={e => handleChange(e, 'mobileNumber', false, /^\d{10}$/g)}
                       hintText="9584323454"
-                      floatingLabelText={translate(
-                        'pt.create.groups.propertyAddress.mobileNumber'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.propertyAddress.mobileNumber')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
 
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.aadhaarNumber
-                          ? fieldErrors.aadhaarNumber
-                          : ''
-                      }
+                      errorText={fieldErrors.aadhaarNumber ? fieldErrors.aadhaarNumber : ''}
                       floatingLabelFixed={true}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       maxLength={12}
-                      value={
-                        propertyTaxSearch.aadhaarNumber
-                          ? propertyTaxSearch.aadhaarNumber
-                          : ''
-                      }
-                      onChange={e =>
-                        handleChange(e, 'aadhaarNumber', false, /^\d{12}$/g)
-                      }
+                      value={propertyTaxSearch.aadhaarNumber ? propertyTaxSearch.aadhaarNumber : ''}
+                      onChange={e => handleChange(e, 'aadhaarNumber', false, /^\d{12}$/g)}
                       hintText="434345456545"
-                      floatingLabelText={translate(
-                        'pt.create.groups.ownerDetails.fields.aadhaarNumber'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.ownerDetails.fields.aadhaarNumber')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.oldUpicNo ? fieldErrors.oldUpicNo : ''
-                      }
+                      errorText={fieldErrors.oldUpicNo ? fieldErrors.oldUpicNo : ''}
                       floatingLabelFixed={true}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       maxLength={15}
-                      value={
-                        propertyTaxSearch.oldUpicNo
-                          ? propertyTaxSearch.oldUpicNo
-                          : ''
-                      }
-                      onChange={e =>
-                        handleChange(
-                          e,
-                          'oldUpicNo',
-                          false,
-                          /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g
-                        )
-                      }
+                      value={propertyTaxSearch.oldUpicNo ? propertyTaxSearch.oldUpicNo : ''}
+                      onChange={e => handleChange(e, 'oldUpicNo', false, /^[a-zA-Z0-9,/<>!@#\$%\^\&*\)\(+=._-]+$/g)}
                       hintText="1000011122"
-                      floatingLabelText={translate(
-                        'pt.create.groups.propertyDetails.oldAssessmentNumber'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.propertyDetails.oldAssessmentNumber')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
@@ -839,21 +614,13 @@ class PropertyTaxSearch extends Component {
                 <Row>
                   <Col xs={12} md={6}>
                     <TextField
-                      errorText={
-                        fieldErrors.ownerName ? fieldErrors.ownerName : ''
-                      }
+                      errorText={fieldErrors.ownerName ? fieldErrors.ownerName : ''}
                       floatingLabelFixed={true}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
-                      value={
-                        propertyTaxSearch.ownerName
-                          ? propertyTaxSearch.ownerName
-                          : ''
-                      }
+                      value={propertyTaxSearch.ownerName ? propertyTaxSearch.ownerName : ''}
                       onChange={e => handleChange(e, 'ownerName', false, '')}
                       hintText="Joe Doe"
-                      floatingLabelText={translate(
-                        'pt.create.groups.ownerDetails.fields.ownerName'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.ownerDetails.fields.ownerName')}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
                     />
                   </Col>
@@ -864,9 +631,7 @@ class PropertyTaxSearch extends Component {
                       floatingLabelFixed={true}
                       floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                       floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
-                      value={
-                        propertyTaxSearch.usage ? propertyTaxSearch.usage : ''
-                      }
+                      value={propertyTaxSearch.usage ? propertyTaxSearch.usage : ''}
                       onChange={(event, index, value) => {
                         var e = {
                           target: {
@@ -875,9 +640,7 @@ class PropertyTaxSearch extends Component {
                         };
                         handleChange(e, 'usage', false, '');
                       }}
-                      floatingLabelText={translate(
-                        'pt.create.groups.assessmentDetails.fields.usageType'
-                      )}
+                      floatingLabelText={translate('pt.create.groups.assessmentDetails.fields.usageType')}
                       dropDownMenuProps={{
                         animated: false,
                         targetOrigin: {
@@ -905,9 +668,7 @@ class PropertyTaxSearch extends Component {
                           }}
                         >
                           {' '}
-                          {translate(
-                            'pt.search.searchProperty.fields.boundary'
-                          )}{' '}
+                          {translate('pt.search.searchProperty.fields.boundary')}{' '}
                         </span>
                       }
                     />
@@ -916,11 +677,7 @@ class PropertyTaxSearch extends Component {
                         <Row>
                           <Col xs={12} md={6}>
                             <SelectField
-                              errorText={
-                                fieldErrors.revenueZone
-                                  ? fieldErrors.revenueZone
-                                  : ''
-                              }
+                              errorText={fieldErrors.revenueZone ? fieldErrors.revenueZone : ''}
                               dropDownMenuProps={{
                                 animated: false,
                                 targetOrigin: {
@@ -930,14 +687,8 @@ class PropertyTaxSearch extends Component {
                               }}
                               floatingLabelFixed={true}
                               floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
-                              value={
-                                propertyTaxSearch.revenueZone
-                                  ? propertyTaxSearch.revenueZone
-                                  : ''
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              value={propertyTaxSearch.revenueZone ? propertyTaxSearch.revenueZone : ''}
                               onChange={(event, index, value) => {
                                 var e = {
                                   target: {
@@ -946,9 +697,7 @@ class PropertyTaxSearch extends Component {
                                 };
                                 handleChange(e, 'revenueZone', false, '');
                               }}
-                              floatingLabelText={translate(
-                                'wc.create.groups.fields.zone'
-                              )}
+                              floatingLabelText={translate('wc.create.groups.fields.zone')}
                             >
                               <MenuItem value={-1} primaryText="None" />
                               {renderOption(this.state.zone, true)}
@@ -956,11 +705,7 @@ class PropertyTaxSearch extends Component {
                           </Col>
                           <Col xs={12} md={6}>
                             <SelectField
-                              errorText={
-                                fieldErrors.revenueWard
-                                  ? fieldErrors.revenueWard
-                                  : ''
-                              }
+                              errorText={fieldErrors.revenueWard ? fieldErrors.revenueWard : ''}
                               dropDownMenuProps={{
                                 animated: false,
                                 targetOrigin: {
@@ -970,14 +715,8 @@ class PropertyTaxSearch extends Component {
                               }}
                               floatingLabelFixed={true}
                               floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
-                              value={
-                                propertyTaxSearch.revenueWard
-                                  ? propertyTaxSearch.revenueWard
-                                  : ''
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              value={propertyTaxSearch.revenueWard ? propertyTaxSearch.revenueWard : ''}
                               onChange={(event, index, value) => {
                                 var e = {
                                   target: {
@@ -986,9 +725,7 @@ class PropertyTaxSearch extends Component {
                                 };
                                 handleChange(e, 'revenueWard', false, '');
                               }}
-                              floatingLabelText={translate(
-                                'wc.create.groups.fields.ward'
-                              )}
+                              floatingLabelText={translate('wc.create.groups.fields.ward')}
                             >
                               <MenuItem value={-1} primaryText="None" />
                               {renderOption(this.state.ward, true)}
@@ -998,9 +735,7 @@ class PropertyTaxSearch extends Component {
                         <Row>
                           <Col xs={12} md={6}>
                             <SelectField
-                              errorText={
-                                fieldErrors.locality ? fieldErrors.locality : ''
-                              }
+                              errorText={fieldErrors.locality ? fieldErrors.locality : ''}
                               dropDownMenuProps={{
                                 animated: false,
                                 targetOrigin: {
@@ -1010,14 +745,8 @@ class PropertyTaxSearch extends Component {
                               }}
                               floatingLabelFixed={true}
                               floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
-                              value={
-                                propertyTaxSearch.locality
-                                  ? propertyTaxSearch.locality
-                                  : ''
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              value={propertyTaxSearch.locality ? propertyTaxSearch.locality : ''}
                               onChange={(event, index, value) => {
                                 var e = {
                                   target: {
@@ -1026,9 +755,7 @@ class PropertyTaxSearch extends Component {
                                 };
                                 handleChange(e, 'locality', false, '');
                               }}
-                              floatingLabelText={translate(
-                                'pt.search.searchProperty.fields.location'
-                              )}
+                              floatingLabelText={translate('pt.search.searchProperty.fields.location')}
                             >
                               <MenuItem value={-1} primaryText="None" />
                               {renderOption(this.state.location, true)}
@@ -1053,9 +780,7 @@ class PropertyTaxSearch extends Component {
                           }}
                         >
                           {' '}
-                          {translate(
-                            'pt.search.searchProperty.fields.searchByDemand'
-                          )}{' '}
+                          {translate('pt.search.searchProperty.fields.searchByDemand')}{' '}
                         </span>
                       }
                     />
@@ -1064,55 +789,29 @@ class PropertyTaxSearch extends Component {
                         <Row>
                           <Col xs={12} md={6}>
                             <TextField
-                              errorText={
-                                fieldErrors.demandFrom
-                                  ? fieldErrors.demandFrom
-                                  : ''
-                              }
+                              errorText={fieldErrors.demandFrom ? fieldErrors.demandFrom : ''}
                               floatingLabelFixed={true}
                               maxLength={8}
                               floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
-                              value={
-                                propertyTaxSearch.demandFrom
-                                  ? propertyTaxSearch.demandFrom
-                                  : ''
-                              }
-                              onChange={e =>
-                                handleChange(e, 'demandFrom', false, /^\d+$/g)
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              value={propertyTaxSearch.demandFrom ? propertyTaxSearch.demandFrom : ''}
+                              onChange={e => handleChange(e, 'demandFrom', false, /^\d+$/g)}
                               hintText="1000"
-                              floatingLabelText={translate(
-                                'pt.search.searchProperty.fields.demandFrom'
-                              )}
+                              floatingLabelText={translate('pt.search.searchProperty.fields.demandFrom')}
                             />
                           </Col>
 
                           <Col xs={12} md={6}>
                             <TextField
-                              errorText={
-                                fieldErrors.demandTo ? fieldErrors.demandTo : ''
-                              }
+                              errorText={fieldErrors.demandTo ? fieldErrors.demandTo : ''}
                               floatingLabelFixed={true}
                               maxLength={8}
                               floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
-                              floatingLabelFocusStyle={
-                                styles.floatingLabelFocusStyle
-                              }
-                              value={
-                                propertyTaxSearch.demandTo
-                                  ? propertyTaxSearch.demandTo
-                                  : ''
-                              }
-                              onChange={e =>
-                                handleChange(e, 'demandTo', false, /^\d+$/g)
-                              }
+                              floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
+                              value={propertyTaxSearch.demandTo ? propertyTaxSearch.demandTo : ''}
+                              onChange={e => handleChange(e, 'demandTo', false, /^\d+$/g)}
                               hintText="1001"
-                              floatingLabelText={translate(
-                                'pt.search.searchProperty.fields.demandTo'
-                              )}
+                              floatingLabelText={translate('pt.search.searchProperty.fields.demandTo')}
                             />
                           </Col>
                         </Row>
@@ -1131,12 +830,7 @@ class PropertyTaxSearch extends Component {
               textAlign: 'right',
             }}
           >
-            <RaisedButton
-              type={translate('ui.framework.submit')}
-              disabled={!isFormValid || this.hasOwnerName()}
-              primary={true}
-              label={buttonText}
-            />
+            <RaisedButton type={translate('ui.framework.submit')} disabled={!isFormValid || this.hasOwnerName()} primary={true} label={buttonText} />
           </div>
           {isTableShow ? viewTable() : ''}
         </form>
@@ -1164,13 +858,7 @@ const mapDispatchToProps = dispatch => ({
         },
         pattern: {
           current: [],
-          required: [
-            'upicNumber',
-            'oldUpicNo',
-            'mobileNumber',
-            'aadhaarNumber',
-            'houseNoBldgApt',
-          ],
+          required: ['upicNumber', 'oldUpicNo', 'mobileNumber', 'aadhaarNumber', 'houseNoBldgApt'],
         },
       },
     });
@@ -1194,14 +882,7 @@ const mapDispatchToProps = dispatch => ({
       pattern,
     });
   },
-  handleChangeNextTwo: (
-    e,
-    property,
-    propertyOne,
-    propertyTwo,
-    isRequired,
-    pattern
-  ) => {
+  handleChangeNextTwo: (e, property, propertyOne, propertyTwo, isRequired, pattern) => {
     dispatch({
       type: 'HANDLE_CHANGE_NEXT_ONE',
       property,

@@ -17,8 +17,7 @@ var dat = {
             isDisabled: false,
             maxLength: 256,
             patternErrorMsg: 'vehicles.create.field.message.vehicleTypeCode',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code',
           },
           {
             name: 'fuelTypeCode',
@@ -28,8 +27,7 @@ var dat = {
             isDisabled: false,
             maxLength: 256,
             patternErrorMsg: 'vehicles.create.field.message.fuelTypeCode',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code',
           },
           {
             name: 'regNumber',
@@ -83,8 +81,7 @@ var dat = {
             isDisabled: false,
             maxLength: 265,
             patternErrorMsg: 'vehicles.create.field.message.vendorName',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name',
           },
           {
             name: 'purchaseDate',
@@ -117,8 +114,7 @@ var dat = {
             label: 'vehicles.create.insuranceValidityDate',
             type: 'datePicker',
             isDisabled: false,
-            patternErrorMsg:
-              'vehicles.create.field.message.insuranceValidityDate',
+            patternErrorMsg: 'vehicles.create.field.message.insuranceValidityDate',
           },
           {
             name: 'isUnderWarranty',
@@ -242,8 +238,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code',
           },
           {
             name: 'regNumber',
@@ -317,8 +312,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code',
           },
         ],
       },
@@ -345,8 +339,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name',
           },
         ],
       },
@@ -719,8 +712,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=VehicleType|$..code|$..code',
           },
           {
             name: 'regNumber',
@@ -794,8 +786,7 @@ var dat = {
             maxLength: 128,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=FuelType|$..code|$..code',
           },
         ],
       },
@@ -822,8 +813,7 @@ var dat = {
             maxLength: 256,
             minLength: 1,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=SWM&masterName=Vendor|$..name|$..name',
           },
         ],
       },

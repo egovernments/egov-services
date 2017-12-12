@@ -44,15 +44,13 @@ var localization_EN_Data = {
 
   //citizen servers
   'service.requests': 'My Service Requests',
-  'This is computer generated receipt no authorised signature required':
-    'This is computer generated receipt no authorised signature required',
+  'This is computer generated receipt no authorised signature required': 'This is computer generated receipt no authorised signature required',
   'Total (Rs)': 'Amount to Pay (Rs)',
   'noDues.search.citizenServices.title': 'Search - Provide one...',
   'noDues.citizenService.consumerCode': 'Consumer Code',
   'noDues.citizenService.email': 'Email',
   'noDues.citizenService.mobileNumber': 'Mobile Number',
-  'noDues.search.citizenServices.description':
-    'Please provide at least one parameter',
+  'noDues.search.citizenServices.description': 'Please provide at least one parameter',
   'login.error.msg': 'Please check your username and password',
 
   'deshboard.title': 'Dashboard',
@@ -72,8 +70,7 @@ var localization_EN_Data = {
   'reports.common.action': 'Action',
   'wc.create.name': 'Name',
   'wc.create.groups.applicantDetails.title': 'Applicant Details',
-  'wc.create.groups.applicantDetails.propertyIdentifier':
-    'PT Assessment Number',
+  'wc.create.groups.applicantDetails.propertyIdentifier': 'PT Assessment Number',
   'wc.create.groups.applicantDetails.nameOfApplicant': 'Owner Name',
   'wc.create.groups.applicantDetails.mobileNumber': 'Mobile Number',
   'wc.create.groups.applicantDetails.email': 'Email',
@@ -88,10 +85,8 @@ var localization_EN_Data = {
   'wc.create.groups.connectionDetails.propertyType': 'Property Type',
   'wc.create.groups.connectionDetails.categoryType': 'Category Type',
   'wc.create.groups.connectionDetails.usageType': 'Usage Type',
-  'wc.create.groups.connectionDetails.hscPipeSizeType':
-    'Connection Size (Inches)',
-  'wc.create.groups.connectionDetails.fields.sumpCapacity':
-    'Sump Capacity (Litres)',
+  'wc.create.groups.connectionDetails.hscPipeSizeType': 'Connection Size (Inches)',
+  'wc.create.groups.connectionDetails.fields.sumpCapacity': 'Sump Capacity (Litres)',
   'wc.create.groups.connectionDetails.fields.numberOfPersons': 'No.of Persons',
   'wc.create.groups.approvalDetails.title': 'Approval Details',
   'wc.create.groups.approvalDetails.fields.department': 'Approver Department',
@@ -148,14 +143,12 @@ var localization_EN_Data = {
   'wc.create.positiontype': 'Position Type',
   'wc.create.groups.radio': 'Outsourced Post',
   'wc.create.groups.fileDetails.fields.PTaxReciept': 'P. Tax Reciept',
-  'wc.create.groups.fileDetails.fields.DistributionLineLocationMap':
-    'Distribution Line Location Map',
+  'wc.create.groups.fileDetails.fields.DistributionLineLocationMap': 'Distribution Line Location Map',
   'wc.create.groups.fileDetails.fields.WhiteRationCard': 'White Ration Card',
   'wc.create.groups.fileDetails.fields.CourtFeeStamp': ' 20Rs Court Fee Stamp',
   'wc.create.groups.connectionDetails.billingType': 'Connection Type',
   'wc.create.groups.connectionDetails.supplyType': 'Supply Type',
-  'wc.create.groups.applicantDetails.acknowledgementNumber':
-    'Acknowledgement Number',
+  'wc.create.groups.applicantDetails.acknowledgementNumber': 'Acknowledgement Number',
   'wc.create.groups.connectionDetails.supplyType': 'Supply Type',
   'wc.create.groups.connectionDetails.subUsageType': 'Usage Sub Type',
   'reports.pgr.locality.name': 'Locality Name',
@@ -212,13 +205,10 @@ var localization_EN_Data = {
   'wc.search.Donation.title': 'Search Security Deposit',
   'wc.create.DocumentTypeApplicationType.title': 'Create Document Application',
   'wc.create.mandatory': 'Mandatory',
-  'wc.update.DocumentTypeApplicationTypes.title':
-    'Update Document Type Application Types',
-  'wc.search.DocumentTypeApplicationType.title':
-    'Search Document Type Application Type',
+  'wc.update.DocumentTypeApplicationTypes.title': 'Update Document Type Application Types',
+  'wc.search.DocumentTypeApplicationType.title': 'Search Document Type Application Type',
   'wc.create.applicationType': 'Application Type',
-  'wc.view.DocumentTypeApplicationTypes.title':
-    'View Document Type Application Types',
+  'wc.view.DocumentTypeApplicationTypes.title': 'View Document Type Application Types',
   'wc.create.supplyType': 'Supply Type',
   'wc.create.code': 'Code',
   'wc.search.supplyType.title': 'Search Supply Type',
@@ -235,11 +225,9 @@ var localization_EN_Data = {
   'wc.create.pipeSize': 'Connection size',
   'wc.search.PropertyPipeSize.title': 'Search Tariff Category Connection size',
   'wc.view.PropertyTypePipeSize.title': 'View Tariff Category Connection size',
-  'wc.update.PropertyTypePipeSize.title':
-    'Update Tariff Category Connection size',
+  'wc.update.PropertyTypePipeSize.title': 'Update Tariff Category Connection size',
   'wc.create.groups.applicantDetails.consumerNo': 'Old Consumer Number',
-  'wc.create.groups.applicantDetails.connectionDate':
-    ' Physical Connection Date',
+  'wc.create.groups.applicantDetails.connectionDate': ' Physical Connection Date',
   'wc.create.pipeSize.title': 'Create Connection size',
   'wc.search.PipeSize.title': 'Search Connection size',
   'wc.create.sizeInInch': 'Size In Inch',
@@ -249,20 +237,15 @@ var localization_EN_Data = {
   'wc.update.pipesize.title': 'Update Connection size',
   'wc.create.propertyCategory.title': 'Create Tariff Category',
   'wc.create.categoryType': 'Category Type',
-  'wc.search.PropertyTypeCategoryType.title':
-    'Search Tariff Category Category Type',
-  'wc.view.PropertyTypeCategoryTypes.title':
-    'View Tariff Category Category Type',
-  'wc.update.PropertyTypeCategoryType.title':
-    'Update Tariff Category Category Type',
+  'wc.search.PropertyTypeCategoryType.title': 'Search Tariff Category Category Type',
+  'wc.view.PropertyTypeCategoryTypes.title': 'View Tariff Category Category Type',
+  'wc.update.PropertyTypeCategoryType.title': 'Update Tariff Category Category Type',
   'wc.create.supplyType.title': 'Create Supply Type',
   'wc.create.groups.fields.location': 'Location',
   'wc.create.groups.fields.zone': 'Zone',
   'wc.create.groups.fields.ward': 'Ward',
-  'wc.create.groups.fields.storageCapacityofReservoir(in MLD)':
-    'Capacity of plant(in MLD)',
-  'wc.create.groups.fields.storageReservoirName':
-    'Name of the Storage Reservoir',
+  'wc.create.groups.fields.storageCapacityofReservoir(in MLD)': 'Capacity of plant(in MLD)',
+  'wc.create.groups.fields.storageReservoirName': 'Name of the Storage Reservoir',
   'wc.create.groups.fields.treatmentPlantName': 'Water treatment plant',
   'wc.create.groups.fields.plantType': 'Type of plant',
   'wc.create.groups.fields.description': 'Description',
@@ -272,10 +255,8 @@ var localization_EN_Data = {
   'wc.search.groups.treatmentplant.title': 'Search Treatment Plant',
   'wc.create.groups.fields.storageType': 'Storage Reservoir',
   'wc.create.groups.fields.numberOfSubLines': ' No of subLines',
-  'wc.create.groups.fields.numberOfConnectionFromReservoir':
-    ' No of connection from resrvoir',
-  'wc.create.groups.fields.numberOfMainDistributionLine':
-    ' No of main distributionLine',
+  'wc.create.groups.fields.numberOfConnectionFromReservoir': ' No of connection from resrvoir',
+  'wc.create.groups.fields.numberOfMainDistributionLine': ' No of main distributionLine',
   'wc.create.groups.fields.reservoirType': 'Type of the Reservoir',
   'wc.create.storageReservoir.title': 'Create Storage Reservoir',
   'wc.update.storageReservoir.title': 'Update Storage Reservoir',
@@ -313,8 +294,7 @@ var localization_EN_Data = {
   'wc.create.groups.fields.businessCategory': 'Service Category',
   'wc.create.group.fields.businessCode': 'Service Code',
   'wc.create.group.fields.businessName': 'Service Name',
-  'wc.create.group.fields.voucherOnReceiptCreation':
-    'Create voucher on receipt creation',
+  'wc.create.group.fields.voucherOnReceiptCreation': 'Create voucher on receipt creation',
   'wc.Create.financialDetails.title': 'Financial Details',
   'wc.Create.accountDetails.title': 'Account Details',
   'wc.create.groups.fields.Fund': 'Fund',
@@ -358,8 +338,7 @@ var localization_EN_Data = {
   'wc.create.demands.taxHeadMasterCode': 'TaxHeadMaster Code',
   'wc.create.demands.taxAmount': 'Tax Amount',
   'wc.create.demands.collectionAmount': 'Collection Amount',
-  'wc.create.workflow.distributionPipeline':
-    'Existing Distribution Pipeline(in)',
+  'wc.create.workflow.distributionPipeline': 'Existing Distribution Pipeline(in)',
   'wc.create.workflow.homeDistance': 'Pipeline to Home Distance(mtrs)',
   'wc.create.workflow.supervisionCharge': 'Supervision Charges',
   'wc.create.workflow.roadCutCharges': 'Road Cutting Charges',
@@ -379,8 +358,7 @@ var localization_EN_Data = {
   'wc.create.demand.basicDetails': 'Basic Details',
   'wc.create.demand.applicantParticular': 'Applicant Particulars',
   'wc.create.error': 'Collection Amount cannot be greater than Tax Amount.',
-  'wc.create.groups.applicantDetails.manualConsumerNo':
-    'Manual Consumer Number',
+  'wc.create.groups.applicantDetails.manualConsumerNo': 'Manual Consumer Number',
   'wc.create.groups.gapCode1': 'Gap Code 1',
   'wc.create.groups.gapCode2': 'Gap Code 2',
   'wc.create.groups.gapCode3': 'Gap Code 3',
@@ -395,12 +373,9 @@ var localization_EN_Data = {
   'wc.group.numberOfDays1': '1st Month No. of days',
   'wc.group.numberOfDays2': '2nd Month No. of days',
   'wc.group.numberOfDays3': '3rd Month No. of days',
-  'wc.create.groups.connectionDetails.fields.resetFlag1':
-    '1st Month Reset reading',
-  'wc.create.groups.connectionDetails.fields.resetFlag2':
-    '2nd Month Reset reading',
-  'wc.create.groups.connectionDetails.fields.resetFlag3':
-    '3rd Month Reset reading',
+  'wc.create.groups.connectionDetails.fields.resetFlag1': '1st Month Reset reading',
+  'wc.create.groups.connectionDetails.fields.resetFlag2': '2nd Month Reset reading',
+  'wc.create.groups.connectionDetails.fields.resetFlag3': '3rd Month Reset reading',
   'wc.create.capacityOfSource': 'Capacity of Source',
   'wc.create.reservationForUlb': 'Reservation for ULB',
 
@@ -457,15 +432,12 @@ var localization_EN_Data = {
   'reports.lcms.nameOfPlaintiff': 'Name Of Plaintiff',
   'reports.lcms.nameOfDefendant': 'Name Of Defendant',
   'reports.lcms.sectionApplied': 'Section of the act applied',
-  'reports.lcms.dateOfSummon':
-    'Date of service of Summon on the municipal body',
+  'reports.lcms.dateOfSummon': 'Date of service of Summon on the municipal body',
   'reports.lcms.suitFiledCourtName': 'Name of court where suit is been filed',
   'reports.lcms.dateOfJudgment': 'Date of Judgment',
   'reports.lcms.judgmentDetails': 'Particulars of judgment containing  details',
-  'reports.lcms.opinionOfPleader':
-    'Opinion of Pleader or Officer on the result of case',
-  'reports.lcms.furtherProcessDetails':
-    'Particulars of further process of recovery, due date of darkhast',
+  'reports.lcms.opinionOfPleader': 'Opinion of Pleader or Officer on the result of case',
+  'reports.lcms.furtherProcessDetails': 'Particulars of further process of recovery, due date of darkhast',
   'reports.lcms.advocateName': 'Advocate Name',
   'reports.lcms.status': 'Status',
   'reports.lcms.plaintiffName': 'Plaintiff Name',
@@ -479,27 +451,18 @@ var localization_EN_Data = {
   'reports.lcms.petitionName': 'Petition Name',
   'reports.lcms.lcNumber': 'LC Number',
   'reports.lcms.caseTitle': 'CaseTitle',
-  'reports.lcms.amountOfPleadersEngaged':
-    'Particulars of suits containing details regarding amount of the Pleaders engaged',
-  'reports.lcms.dateOfReceiptOfOfficer':
-    'Date of receipt of responsible officer',
-  'reports.lcms.resolutionOfMunicipalDate':
-    'Resolution of municipal body with date',
-  'reports.lcms.particularsOfPleadersFee':
-    'Particulars of Pleaders engaged and fees fixed',
-  'reports.lcms.informationGivenToPleaders':
-    'Due of Information given to the Pleaders',
-  'reports.lcms.dateOfProductionOfVakalatnama':
-    'Date of Instruction of the suit or production of Vakalatnama in the court',
-  'reports.lcms.nameOfResponsibleOfficer':
-    'Name of Responsible officer attending the case on behalf of the municipal body',
-  'reports.lcms.particularsOfActualAmount':
-    'Particulars of actual amount received',
+  'reports.lcms.amountOfPleadersEngaged': 'Particulars of suits containing details regarding amount of the Pleaders engaged',
+  'reports.lcms.dateOfReceiptOfOfficer': 'Date of receipt of responsible officer',
+  'reports.lcms.resolutionOfMunicipalDate': 'Resolution of municipal body with date',
+  'reports.lcms.particularsOfPleadersFee': 'Particulars of Pleaders engaged and fees fixed',
+  'reports.lcms.informationGivenToPleaders': 'Due of Information given to the Pleaders',
+  'reports.lcms.dateOfProductionOfVakalatnama': 'Date of Instruction of the suit or production of Vakalatnama in the court',
+  'reports.lcms.nameOfResponsibleOfficer': 'Name of Responsible officer attending the case on behalf of the municipal body',
+  'reports.lcms.particularsOfActualAmount': 'Particulars of actual amount received',
   'reports.lcms.dateOfCredit': 'Date of credit on Municipal account',
   'reports.lcms.particularsOfPayment': 'Particulars of Payment',
   'reports.lcms.dateOfDebit': 'Date of Debit in Municipal Account/Voucher no.',
-  'reports.lcms.remarksRegardingReferenceToCourt':
-    'Remarks regarding verification with the reference to court records, Adjustment of Advances',
+  'reports.lcms.remarksRegardingReferenceToCourt': 'Remarks regarding verification with the reference to court records, Adjustment of Advances',
   'reports.lcms.remarks': 'Remarks',
 
   /*-----------------------------> MDMS/LCMS Screens Specifications <--------------------------*/
@@ -558,8 +521,7 @@ var localization_EN_Data = {
   'MdmsMetadata.masterData.lcms.Charge.toDate': 'Charge To Date',
   'MdmsMetadata.masterData.lcms.Charge.fromValue': 'Charge From Value',
   'MdmsMetadata.masterData.lcms.Charge.toValue': 'Charge To Value',
-  'MdmsMetadata.masterData.lcms.Charge.chargePercentage':
-    'Charge Charge Percentage',
+  'MdmsMetadata.masterData.lcms.Charge.chargePercentage': 'Charge Charge Percentage',
   'MdmsMetadata.masterData.lcms.Charge.chargeAmount': 'Charge Charge Amount',
   'MdmsMetadata.masterData.lcms.Charge.isFlat': 'Charge IsFlat',
   'MdmsMetadata.masterData.lcms.Charge.court': 'Charge Court',
@@ -577,12 +539,9 @@ var localization_EN_Data = {
   'MdmsMetadata.masterData.lcms.Advocate.lastName': 'Advocate Last Name',
   'MdmsMetadata.masterData.lcms.Advocate.address': 'Advocate Address',
   'MdmsMetadata.masterData.lcms.Advocate.contactNo': 'Advocate Contact No',
-  'MdmsMetadata.masterData.lcms.Advocate.dateOfEmpanelment':
-    'Advocate Date Of Empanelment',
-  'MdmsMetadata.masterData.lcms.Advocate.standingCommitteeDecisionDate':
-    'Advocate Standing Committee DecisionDate',
-  'MdmsMetadata.masterData.lcms.Advocate.empanelmentFromDate':
-    'Advocate Empanelment From Date',
+  'MdmsMetadata.masterData.lcms.Advocate.dateOfEmpanelment': 'Advocate Date Of Empanelment',
+  'MdmsMetadata.masterData.lcms.Advocate.standingCommitteeDecisionDate': 'Advocate Standing Committee DecisionDate',
+  'MdmsMetadata.masterData.lcms.Advocate.empanelmentFromDate': 'Advocate Empanelment From Date',
   'MdmsMetadata.masterData.lcms.Advocate.aadhar': 'Advocate Aadhar',
   'MdmsMetadata.masterData.lcms.Advocate.gender': 'Advocate Gender',
   'MdmsMetadata.masterData.lcms.Advocate.age': 'Advocate Age',
@@ -591,23 +550,18 @@ var localization_EN_Data = {
   'MdmsMetadata.masterData.lcms.Advocate.emailId': 'Advocate Email',
   'MdmsMetadata.masterData.lcms.Advocate.pan': 'Advocate PAN',
   'MdmsMetadata.masterData.lcms.Advocate.vatTinNo': 'Advocate VatTinNumber',
-  'MdmsMetadata.masterData.lcms.Advocate.newsPaperAdvertismentDate':
-    'Advocate NewsPaper Advertisment Date',
-  'MdmsMetadata.masterData.lcms.Advocate.empanelmentToDate':
-    'Advocate Empanelment To Date',
+  'MdmsMetadata.masterData.lcms.Advocate.newsPaperAdvertismentDate': 'Advocate NewsPaper Advertisment Date',
+  'MdmsMetadata.masterData.lcms.Advocate.empanelmentToDate': 'Advocate Empanelment To Date',
   'MdmsMetadata.masterData.lcms.Advocate.bankName': 'Advocate Bankname',
   'MdmsMetadata.masterData.lcms.Advocate.bankBranch': 'Advocate BankBranch',
-  'MdmsMetadata.masterData.lcms.Advocate.bankAccountNo':
-    'Advocate Bank Account No',
+  'MdmsMetadata.masterData.lcms.Advocate.bankAccountNo': 'Advocate Bank Account No',
   'MdmsMetadata.masterData.lcms.Advocate.isfcCode': 'Advocate IFSC Code',
   'MdmsMetadata.masterData.lcms.Advocate.micr': 'Advocate MICR',
   'MdmsMetadata.masterData.lcms.Advocate.isActive': 'Advocate IsActive',
   'MdmsMetadata.masterData.lcms.Advocate.isTerminate': 'Advocate IsTerminate',
   'MdmsMetadata.masterData.lcms.Advocate.inActiveDate': 'Advocate IsActiveDate',
-  'MdmsMetadata.masterData.lcms.Advocate.terminationDate':
-    'Advocate Termination Date',
-  'MdmsMetadata.masterData.lcms.Advocate.reasonOfTermination':
-    'Advocate Reason Of Termination',
+  'MdmsMetadata.masterData.lcms.Advocate.terminationDate': 'Advocate Termination Date',
+  'MdmsMetadata.masterData.lcms.Advocate.reasonOfTermination': 'Advocate Reason Of Termination',
   'MdmsMetadata.masterData.lcms.Advocate.tenantId': 'Advocate TenantId',
   'MdmsMetadata.masterData.lcms.Advocate.agencyCode': 'Advocate AgencyCode',
   'MdmsMetadata.masterData.lcms.Advocate.status': 'Advocate Status',
@@ -627,15 +581,13 @@ var localization_EN_Data = {
   'MdmsMetadata.masterData.swm.WasteSubType.tenantId': 'WasteSubType TenantID',
   'MdmsMetadata.masterData.swm.WasteSubType.name': 'WasteSubType Name',
   'MdmsMetadata.masterData.swm.WasteSubType.code': 'WasteSubType Code',
-  'MdmsMetadata.masterData.swm.WasteSubType.wasteType':
-    'WasteSubType Waste Type',
+  'MdmsMetadata.masterData.swm.WasteSubType.wasteType': 'WasteSubType Waste Type',
 
   'MdmsMetadata.masterData.swm.ShiftType.tenantId': 'ShiftType TenantID',
   'MdmsMetadata.masterData.swm.ShiftType.name': 'ShiftType Name',
   'MdmsMetadata.masterData.swm.ShiftType.code': 'ShiftType Code',
 
-  'MdmsMetadata.masterData.swm.CollectionType.tenantId':
-    'CollectionType TenantID',
+  'MdmsMetadata.masterData.swm.CollectionType.tenantId': 'CollectionType TenantID',
   'MdmsMetadata.masterData.swm.CollectionType.name': 'CollectionType Name',
   'MdmsMetadata.masterData.swm.CollectionType.code': 'CollectionType Code',
 
@@ -644,8 +596,7 @@ var localization_EN_Data = {
   'MdmsMetadata.masterData.swm.Population.code': 'Population Code',
   'MdmsMetadata.masterData.swm.Population.censusYear': 'Population Census Year',
   'MdmsMetadata.masterData.swm.Population.population': 'Population Population',
-  'MdmsMetadata.masterData.swm.Population.garbageToBeCollected':
-    'Population Garbage To Be Collected',
+  'MdmsMetadata.masterData.swm.Population.garbageToBeCollected': 'Population Garbage To Be Collected',
 
   'MdmsMetadata.masterData.swm.Toilet.tenantId': 'Toilet TenantID',
   'MdmsMetadata.masterData.swm.Toilet.name': 'Toilet Name',
@@ -720,18 +671,15 @@ var localization_EN_Data = {
   'pt.create.groups.ownerDetails.fields.guardianRelation': 'Guardian Relation',
   'pt.create.groups.ownerDetails.fields.guardian': 'Guardian',
   'pt.create.groups.ownerDetails.fields.ownerType': 'Owner Type',
-  'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip':
-    'Percentage of ownership',
+  'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip': 'Percentage of ownership',
   'pt.create.groups.ownerDetails.fields.primaryOwner': 'Primary Owner',
   'pt.create.groups.ownerDetails.fields.secondaryOwner': 'Secondary Owner',
   'pt.create.groups.ownerDetails.fields.add': 'Add',
   'pt.create.groups.ownerDetails.fields.save': 'Save',
   'pt.create.groups.ownerDetails.fields.isPrimaryOwner': 'Is Primary Owner',
 
-  'pt.create.groups.propertyAddress.fields.referancePropertyNumber':
-    'Reference Property Number',
-  'pt.create.groups.propertyAddress.fields.appartment':
-    'Apartment/Complex Name',
+  'pt.create.groups.propertyAddress.fields.referancePropertyNumber': 'Reference Property Number',
+  'pt.create.groups.propertyAddress.fields.appartment': 'Apartment/Complex Name',
   'pt.create.groups.propertyAddress.fields.doorNo': 'Door No',
   'pt.create.groups.propertyAddress.fields.locality': 'Locality',
   'pt.create.groups.propertyAddress.fields.electionWard': 'Election Ward',
@@ -742,20 +690,17 @@ var localization_EN_Data = {
   'pt.create.groups.propertyAddress.fields.revenueCircle': 'Revenue Circle',
   'pt.create.groups.propertyAddress.fields.pin': 'Pin',
   'pt.create.groups.propertyAddress.fields.readyReckoner': 'Ready Reckoner',
-  'pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress':
-    'Is correspondence address different from property address?',
+  'pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress': 'Is correspondence address different from property address?',
   'pt.create.groups.propertyAddress.fields.address1': 'Address 1',
 
   'pt.create.groups.ownerDetails': 'Owner Details',
   'pt.create.groups.advanceSearch': 'Advance Search',
 
   'pt.create.groups.assessmentDetails': 'Assessment details',
-  'pt.create.groups.assessmentDetails.fields.creationReason':
-    'Reason For Creation',
+  'pt.create.groups.assessmentDetails.fields.creationReason': 'Reason For Creation',
   'pt.create.groups.assessmentDetails.fields.parentUpicNo': 'Parent UPIC No.',
   'pt.create.groups.assessmentDetails.fields.propertyType': 'Property Type',
-  'pt.create.groups.assessmentDetails.fields.propertySubType':
-    'Property Sub Type',
+  'pt.create.groups.assessmentDetails.fields.propertySubType': 'Property Sub Type',
   'pt.create.groups.assessmentDetails.fields.usageType': 'Usage Type',
   'pt.create.groups.assessmentDetails.fields.usageSubType': 'Usage Sub Type',
   'pt.create.groups.assessmentDetails.fields.department': 'Department',
@@ -773,8 +718,7 @@ var localization_EN_Data = {
   'pt.create.groups.propertyAddress.fields.toilet': 'Toilet',
   'pt.create.groups.propertyAddress.fields.waterTap': 'Water Tap',
   'pt.create.groups.propertyAddress.fields.electricity': 'Electricity',
-  'pt.create.groups.propertyAddress.fields.attachedBathroom':
-    'Attached Bathroom',
+  'pt.create.groups.propertyAddress.fields.attachedBathroom': 'Attached Bathroom',
   'pt.create.groups.propertyAddress.fields.cableConnection': 'Cable Connection',
   'pt.create.groups.propertyAddress.fields.waterHarvesting': 'Water Harvesting',
 
@@ -789,8 +733,7 @@ var localization_EN_Data = {
   'pt.create.groups.floorDetails.fields.isRoomFlat': 'Is Room in Flat?',
   'pt.create.groups.floorDetails.fields.flatNo': 'Flat No',
   'pt.create.groups.floorDetails.fields.unitNumber': 'Unit No',
-  'pt.create.groups.floorDetails.fields.constructionClass':
-    'Construction Class',
+  'pt.create.groups.floorDetails.fields.constructionClass': 'Construction Class',
   'pt.create.groups.floorDetails.fields.occupancy': 'Occupancy',
   'pt.create.groups.floorDetails.fields.firmName': 'Firm Name',
   'pt.create.groups.floorDetails.fields.usageType': 'Usage Type',
@@ -798,24 +741,17 @@ var localization_EN_Data = {
   'pt.create.groups.floorDetails.fields.annualRent': 'Annual Rent',
   'pt.create.groups.floorDetails.fields.manualArv': 'Ratable Value',
   'pt.create.groups.floorDetails.fields.occupantName': 'Occupant Name',
-  'pt.create.groups.floorDetails.fields.constructionStartDate':
-    'Construction Start Date',
-  'pt.create.groups.floorDetails.fields.constructionEndDate':
-    'Construction End Date',
-  'pt.create.groups.floorDetails.fields.effectiveFromDate':
-    'Effective From Date',
+  'pt.create.groups.floorDetails.fields.constructionStartDate': 'Construction Start Date',
+  'pt.create.groups.floorDetails.fields.constructionEndDate': 'Construction End Date',
+  'pt.create.groups.floorDetails.fields.effectiveFromDate': 'Effective From Date',
   'pt.create.groups.floorDetails.fields.unstructuredLand': 'Unstructured Land',
   'pt.create.groups.floorDetails.fields.length': 'Length',
   'pt.create.groups.floorDetails.fields.breadth': 'Breadth',
   'pt.create.groups.floorDetails.fields.plinthArea': 'Builtup Area (sq.ft.)',
-  'pt.create.groups.floorDetails.fields.occupancyCertificateNumber':
-    'Occupancy Certificate Number',
-  'pt.create.groups.floorDetails.fields.buildingPermissionNumber':
-    'Building Permission Number',
-  'pt.create.groups.floorDetails.fields.buildingPermissionDate':
-    'Building Permission Date',
-  'pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan':
-    'Plinth Area In Building Plan',
+  'pt.create.groups.floorDetails.fields.occupancyCertificateNumber': 'Occupancy Certificate Number',
+  'pt.create.groups.floorDetails.fields.buildingPermissionNumber': 'Building Permission Number',
+  'pt.create.groups.floorDetails.fields.buildingPermissionDate': 'Building Permission Date',
+  'pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan': 'Plinth Area In Building Plan',
 
   'pt.create.demands.addDemand': 'Add Demand',
 
@@ -825,14 +761,10 @@ var localization_EN_Data = {
   'pt.create.groups.propertyAddress.fields.marketValue': 'marketValue',
   'pt.create.groups.propertyAddress.fields.capitalValue': 'Capital Value',
   'pt.create.groups.propertyAddress.fields.effectiveDate': 'Effective Date',
-  'pt.create.groups.propertyAddress.fields.vacantLandPlotArea':
-    'Vacant Land Plot Area',
-  'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority':
-    'Layout Approval Authority',
-  'pt.create.groups.propertyAddress.fields.layoutPermitNumber':
-    'Layout Permit Number',
-  'pt.create.groups.propertyAddress.fields.layoutPermitDate':
-    'layoutPermitDate',
+  'pt.create.groups.propertyAddress.fields.vacantLandPlotArea': 'Vacant Land Plot Area',
+  'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority': 'Layout Approval Authority',
+  'pt.create.groups.propertyAddress.fields.layoutPermitNumber': 'Layout Permit Number',
+  'pt.create.groups.propertyAddress.fields.layoutPermitDate': 'layoutPermitDate',
   'pt.create.groups.propertyAddress.fields.upicNumber': 'Old Upic Number',
   'pt.create.groups.propertyAddress.fields.northBoundedBy': 'North',
   'pt.create.groups.propertyAddress.fields.southBoundedBy': 'South',
@@ -855,22 +787,17 @@ var localization_EN_Data = {
 
   'pt.create.groups.propertyAddress.fields.totalArea': 'Total Area',
   'pt.create.groups.propertyAddress.fields.propertyAge': 'Property Age',
-  'pt.create.groups.propertyAddress.fields.currentAssessmentDate':
-    'Current Assessment Date',
-  'pt.create.groups.propertyAddress.fields.firstAssessmentDate':
-    'First Assessment Date',
-  'pt.create.groups.propertyAddress.fields.revisedAssessmentDate':
-    'Revised Assessment Date',
-  'pt.create.groups.propertyAddress.fields.lastAssessmentDate':
-    'Last Assessment Date',
+  'pt.create.groups.propertyAddress.fields.currentAssessmentDate': 'Current Assessment Date',
+  'pt.create.groups.propertyAddress.fields.firstAssessmentDate': 'First Assessment Date',
+  'pt.create.groups.propertyAddress.fields.revisedAssessmentDate': 'Revised Assessment Date',
+  'pt.create.groups.propertyAddress.fields.lastAssessmentDate': 'Last Assessment Date',
 
   //Add Demand
   'pt.create.groups.addDemand.fields.installment': 'Installment',
   'pt.create.groups.addDemand.fields.propertytax': 'Property tax',
   'pt.create.groups.addDemand.fields.penalty': 'Penalty',
   'pt.create.groups.addDemand.fields.educationCess': 'Education Cess',
-  'pt.create.groups.addDemand.fields.employmentGuaranteeCess':
-    'Employment Guarantee Cess',
+  'pt.create.groups.addDemand.fields.employmentGuaranteeCess': 'Employment Guarantee Cess',
   'pt.create.groups.addDemand.fields.treetax': 'Tree Tax',
   'pt.create.groups.addDemand.fields.totalPropertyTax': 'Total Property Tax',
   'pt.create.groups.addDemand.fields.collection': 'Collection',
@@ -878,46 +805,34 @@ var localization_EN_Data = {
 
   //pt construction details
   'pt.create.groups.constructionDetails.fields.orderDate': 'Commencement Date',
-  'pt.create.groups.constructionDetails.fields.certificateNumber':
-    'Certificate Number',
-  'pt.create.groups.constructionDetails.fields.certificateCompletionDate':
-    'Certificate Completion Date',
-  'pt.create.groups.constructionDetails.fields.certificateReceivedDate':
-    'Certificate Received Date',
+  'pt.create.groups.constructionDetails.fields.certificateNumber': 'Certificate Number',
+  'pt.create.groups.constructionDetails.fields.certificateCompletionDate': 'Certificate Completion Date',
+  'pt.create.groups.constructionDetails.fields.certificateReceivedDate': 'Certificate Received Date',
   'pt.create.groups.constructionDetails.fields.agencyName': 'Agency Name',
   'pt.create.groups.constructionDetails.fields.licenseType': 'License Type',
   'pt.create.groups.constructionDetails.fields.licenseNumber': 'License Number',
   'pt.create.groups.propertyAddress.fields.totalFloors': 'Total Floors',
 
   'pt.create.demands.addDemand': 'Add Demand',
-  'pt.create.groups.surroundingBoundaries':
-    'Details of surrounding Boundaries of the property',
+  'pt.create.groups.surroundingBoundaries': 'Details of surrounding Boundaries of the property',
   'pt.create.groups.propertyAddress.vacantLand': 'Vacant Land',
   'pt.create.groups.room': 'Room',
   'pt.create.groups.upicDetails': 'UPIC Details',
   'pt.create.groups.ownerDetails': 'Owner Details',
   'pt.create.groups.propertyDetails': 'Property Details',
-  'pt.create.groups.propertyDetails.oldAssessmentNumber':
-    'Old Assessment Number',
+  'pt.create.groups.propertyDetails.oldAssessmentNumber': 'Old Assessment Number',
   'pt.create.groups.propertyDetails.assessmentNumber': 'Assessment Number',
-  'pt.create.groups.propertyAddress.fields.annualRentalValue':
-    'Annual Rental Value',
-  'pt.create.groups.propertyAddress.fields.registrationDocNo':
-    'Registration Doc No',
-  'pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty':
-    'Assessment number of parent property',
-  'pt.create.groups.propertyAddress.fields.exemptionCategory':
-    'Exemption Category',
-  'pt.create.groups.propertyAddress.fields.propertyDepartment':
-    'Property Department',
-  'pt.create.groups.propertyAddress.fields.registrationDocDate':
-    'Registration Doc Date',
+  'pt.create.groups.propertyAddress.fields.annualRentalValue': 'Annual Rental Value',
+  'pt.create.groups.propertyAddress.fields.registrationDocNo': 'Registration Doc No',
+  'pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty': 'Assessment number of parent property',
+  'pt.create.groups.propertyAddress.fields.exemptionCategory': 'Exemption Category',
+  'pt.create.groups.propertyAddress.fields.propertyDepartment': 'Property Department',
+  'pt.create.groups.propertyAddress.fields.registrationDocDate': 'Registration Doc Date',
   'pt.create.groups.propertyAddress.fields.assessmentDate': 'Assessment Date',
   'pt.create.groups.propertyAddress.fields.addressDetails': 'Address Details',
   'pt.create.groups.propertyAddress.fields.propertyAddress': 'Property Address',
   'pt.create.groups.propertyAddress.fields.ebBlock': 'EB Block',
-  'pt.create.groups.propertyAddress.mobileNumber':
-    'Mobile Number (without +91)',
+  'pt.create.groups.propertyAddress.mobileNumber': 'Mobile Number (without +91)',
   'pt.create.groups.propertyAddress.propertyTax': 'Property Tax',
   'pt.create.groups.propertyAddress.educationCess': 'Education Cess',
   'pt.create.groups.propertyAddress.libraryCess': 'Library Cess',
@@ -927,10 +842,8 @@ var localization_EN_Data = {
   'pt.create.groups.propertyAddress.emailExample': 'example@example.com',
   'pt.create.groups.propertyAddress.updateRoom': 'Update Room',
   'pt.create.groups.propertyAddress.addRoom': 'Add Room',
-  'pt.create.groups.propertyAddress.exemptedAreaError':
-    'Exempted area should not be greater than Carpet area',
-  'pt.create.groups.propertyAddress.totalFloorsError':
-    'Please select total floors in property level',
+  'pt.create.groups.propertyAddress.exemptedAreaError': 'Exempted area should not be greater than Carpet area',
+  'pt.create.groups.propertyAddress.totalFloorsError': 'Please select total floors in property level',
   'pt.search.searchProperty': 'Search Property',
   'pt.search.searchProperty.fields.applicationNumber': 'Application number',
   'pt.search.searchProperty.fields.boundary': 'Boundary',
@@ -946,12 +859,9 @@ var localization_EN_Data = {
 
   'pt.create.groups.acknowledgement.forwarded': 'Forwarded Successfully',
   'pt.create.groups.acknowledgement.approved': 'Approved Successfully',
-  'pt.create.groups.acknowledgement.success':
-    'Your new property application has been submitted',
-  'pt.create.groups.acknowledgement.demandSuccess':
-    'Tax and Collection added/updated Successfully',
-  'pt.create.groups.acknowledgement.dataEntrySuccess':
-    'Property details saved and property number generated as',
+  'pt.create.groups.acknowledgement.success': 'Your new property application has been submitted',
+  'pt.create.groups.acknowledgement.demandSuccess': 'Tax and Collection added/updated Successfully',
+  'pt.create.groups.acknowledgement.dataEntrySuccess': 'Property details saved and property number generated as',
   'pt.create.groups.constructionDetails': 'Construction Details',
   'pt.create.groups.oldPropertyNo': 'Old Property No',
   'pt.create.groups.propertyNo': 'Property No',
@@ -970,8 +880,7 @@ var localization_EN_Data = {
   'pt.create.groups.ownerDetails.fields.Others': 'Others',
   'pt.create.groups.vacantLand.fields.vacantLandDetails': 'Vacant Land Details',
   'pt.create.groups.documentUpload.noFilesToUpload': 'No files to upload',
-  'pt.create.groups.addDemand.demandError':
-    'Collection entered should be equal to or less than the Demand',
+  'pt.create.groups.addDemand.demandError': 'Collection entered should be equal to or less than the Demand',
   'pt.create.groups.addDemand.demand': 'Demand',
   'pt.create.groups.addDemand.collection': 'Collection',
   'pt.create.groups.addDemand.period': 'Period',
@@ -1074,8 +983,7 @@ var localization_EN_Data = {
   'employee.ServiceHistory.fields.serviceInfo': 'Service Info',
   'employee.ServiceHistory.fields.serviceFrom': 'Service From',
   'employee.ServiceHistory.fields.remarks': 'Remarks/Comments',
-  'employee.ServiceHistory.fields.ServiceEntryDescription':
-    'Service Entry Description',
+  'employee.ServiceHistory.fields.ServiceEntryDescription': 'Service Entry Description',
   'employee.ServiceHistory.fields.date': 'Date',
   'employee.ServiceHistory.fields.orderNo': 'Order No',
   'employee.ServiceHistory.fields.documents': 'Documents',
@@ -1126,8 +1034,7 @@ var localization_EN_Data = {
   'employee.Employee.fields.permanentAddress': 'Permanent Address',
   'employee.Employee.fields.correspondenceAddress': 'Correspondence Address',
   'employee.Employee.fields.parmanentPinNumber': 'Permanent Pin Number',
-  'employee.Employee.fields.correspondencePinNumber':
-    'Correspondence Pin Number',
+  'employee.Employee.fields.correspondencePinNumber': 'Correspondence Pin Number',
   'employee.Employee.fields.city': 'City',
   'employee.Employee.fields.EmployeePhoto': 'Employee Photo',
   'employee.Employee.fields.EmployeeSignature': 'Employee Signature',
@@ -1149,8 +1056,7 @@ var localization_EN_Data = {
   'tl.view.trade.title': 'New Trade License Application',
   'tl.ack.trade.title': 'Acknowledgement - New Trade License',
   'tl.license.certificate.title': 'Trade License Certificate',
-  'tl.create.supportDocuments.clear.basedonCategory':
-    'Are you sure want to change the category? If you change, support documents will get cleared',
+  'tl.create.supportDocuments.clear.basedonCategory': 'Are you sure want to change the category? If you change, support documents will get cleared',
   'tl.cancel.confirm.msg': 'Do you want to cancel?',
   'tl.cancel.confirm.yes': 'Yes',
   'tl.cancel.confirm.no': 'No',
@@ -1228,10 +1134,8 @@ var localization_EN_Data = {
   'tl.create.groups.feematrixtype.feetype': 'Fee Type',
   'tl.create.groups.feematrixtype.unitofmeasurement': 'Unit of Measurement',
   'tl.create.groups.feematrixtype.ratetype': 'Rate Type',
-  'tl.create.groups.feematrixtype.effectivefinancialyear':
-    'Effective Financial Year',
-  'tl.create.groups.feematrixtype.effectivefrom':
-    'Effective From eg:dd/mm/yyyy',
+  'tl.create.groups.feematrixtype.effectivefinancialyear': 'Effective Financial Year',
+  'tl.create.groups.feematrixtype.effectivefrom': 'Effective From eg:dd/mm/yyyy',
   'tl.create.groups.feematrixtype.effectiveto': 'Effective To eg:dd/mm/yyyy',
   'tl.create.groups.feeMatrixDetails.uomFrom': 'UOM From',
   'tl.create.groups.feeMatrixDetails.uomTo': 'UOM To',
@@ -1243,8 +1147,7 @@ var localization_EN_Data = {
   'tl.search.groups.feematrixtype.title': 'Search Fee Matrix',
   'tl.search.groups.feematrixtype.licensecategory': 'License Category',
   'tl.search.groups.feematrixtype.subcategory': 'Sub Category',
-  'tl.search.groups.feematrixtype.effectivefinancialyear':
-    'Effective Financial Year',
+  'tl.search.groups.feematrixtype.effectivefinancialyear': 'Effective Financial Year',
   'tl.view.groups.feematrixtype.title': 'View License Fee Matrix',
   'tl.view.groups.feematrixtype.applicationtype': 'Application Type',
   'tl.view.groups.feematrixtype.natureofbusiness': 'Nature Of Business',
@@ -1253,8 +1156,7 @@ var localization_EN_Data = {
   'tl.view.groups.feematrixtype.feetype': 'Fee Type',
   'tl.view.groups.feematrixtype.unitofmeasurement': 'Unit of Measurement',
   'tl.view.groups.feematrixtype.ratetype': 'Rate Type',
-  'tl.view.groups.feematrixtype.effectivefinancialyear':
-    'Effective Financial Year',
+  'tl.view.groups.feematrixtype.effectivefinancialyear': 'Effective Financial Year',
   'tl.view.groups.feematrixtype.effectivefrom': 'Effective From eg:dd/mm/yyyy',
   'tl.view.groups.feematrixtype.effectiveto': 'Effective To eg:dd/mm/yyyy',
   'tl.update.groups.feematrixtype.title': 'Update Fee Matrix',
@@ -1265,16 +1167,13 @@ var localization_EN_Data = {
   'tl.update.groups.feematrixtype.feetype': 'Fee Type',
   'tl.update.groups.feematrixtype.unitofmeasurement': 'Unit of Measurement',
   'tl.update.groups.feematrixtype.ratetype': 'Rate Type',
-  'tl.update.groups.feematrixtype.effectivefinancialyear':
-    'Effective Financial Year',
-  'tl.update.groups.feematrixtype.effectivefrom':
-    'Effective From eg:dd/mm/yyyy',
+  'tl.update.groups.feematrixtype.effectivefinancialyear': 'Effective Financial Year',
+  'tl.update.groups.feematrixtype.effectivefrom': 'Effective From eg:dd/mm/yyyy',
   'tl.update.groups.feematrixtype.effectiveto': 'Effective To eg:dd/mm/yyyy',
   'tl.feeMatrix.table.title.feeDetails': 'Fee Details',
   'tl.create.groups.licensedocumenttype.title': 'Create Document Type',
   'tl.create.licensedocumenttype.groups.TradeDetails.TradeCategory': 'Category',
-  'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory':
-    'Sub Category',
+  'tl.create.licensedocumenttype.groups.TradeDetails.TradeSubCategory': 'Sub Category',
   'tl.create.groups.licensedocumenttype.name': 'Name',
   'tl.create.licenses.groups.TradeDetails.mandatory': 'Mandatory',
   'tl.create.licenses.groups.TradeDetails.enabled': 'Enabled',
@@ -1291,20 +1190,17 @@ var localization_EN_Data = {
   'tl.view.groups.licensedocumenttype.name': 'Name',
   'tl.view.groups.licensedocumenttype.mandatory': 'Mandatory',
   'tl.view.groups.licensedocumenttype.enabled': 'Enabled',
-  'tl.update.groups.licensedocumenttype.title':
-    'Trade license Document type Modify',
+  'tl.update.groups.licensedocumenttype.title': 'Trade license Document type Modify',
   'tl.update.groups.licensedocumenttype.name': 'Name',
   'tl.update.groups.licensedocumenttype.licenseapptype': 'Application Type',
   'tl.update.licensedocumenttype.groups.TradeDetails.TradeCategory': 'Category',
-  'tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory':
-    'Sub Category',
+  'tl.update.licensedocumenttype.groups.TradeDetails.TradeSubCategory': 'Sub Category',
   'tl.update.groups.licensedocumenttype.mandatory': 'Mandatory',
   'tl.update.groups.licensedocumenttype.enabled': 'Enabled',
   'tl.create.licensevalidity.title': 'License Validity',
   'tl.create.groups.licensevalidity.natureofbusiness': 'Nature Of Business',
   'tl.create.groups.licensevalidity.licensecategory': 'License Category',
-  'tl.create.groups.licensevalidity.basedonfinancialyear':
-    'Based on Financial Year',
+  'tl.create.groups.licensevalidity.basedonfinancialyear': 'Based on Financial Year',
   'tl.create.groups.licensevalidity.days': 'Days (max 6)',
   'tl.create.groups.licensevalidity.weeks': 'Weeks (max 3)',
   'tl.create.groups.licensevalidity.months': 'Months (max 11)',
@@ -1315,63 +1211,46 @@ var localization_EN_Data = {
   'tl.view.groups.licensevalidity.title': 'License Validity',
   'tl.view.groups.licensevalidity.natureofbusiness': 'Nature Of Business',
   'tl.view.groups.licensevalidity.licensecategory': 'License Category',
-  'tl.view.groups.licensevalidity.basedonfinancialyear':
-    'Based on Financial Year',
+  'tl.view.groups.licensevalidity.basedonfinancialyear': 'Based on Financial Year',
   'tl.update.groups.licensevalidity.title': 'License Validity',
   'tl.update.groups.licensevalidity.natureofbusiness': 'Nature Of Business',
   'tl.update.groups.licensevalidity.licensecategory': 'License Category',
-  'tl.update.groups.licensedocumenttype.basedonfinancialyear':
-    'Based on Financial Year',
+  'tl.update.groups.licensedocumenttype.basedonfinancialyear': 'Based on Financial Year',
 
   'tl.create.licenses.groups.TradeDetailsTab': 'Trade Details',
   'tl.create.legacyTradeLicense': 'Create Legacy Trade License',
-  'tl.create.licenses.groups.TradeDetails.OldLicenseNumber':
-    'Old License Number',
+  'tl.create.licenses.groups.TradeDetails.OldLicenseNumber': 'Old License Number',
   'tl.create.licenses.groups.TradeOwnerDetails': 'Trade Owner Details',
   'tl.create.licenses.groups.TradeOwnerDetails.AadharNumber': 'Aadhaar Number',
   'tl.create.licenses.groups.TradeOwnerDetails.Mobile Number': 'Mobile Number',
-  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName':
-    'Trade Owner Name',
+  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName': 'Trade Owner Name',
   'tl.create.licenses.groups.TradeOwnerDetails.gender': 'Gender',
 
-  'tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName':
-    'Father/Spouse Name',
+  'tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName': 'Father/Spouse Name',
   'tl.create.licenses.TradeOwnerDetails.groups.EmailID': 'Email ID',
-  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress':
-    'Trade Owner Address',
+  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress': 'Trade Owner Address',
   'tl.create.licenses.groups.TradeLocationDetails': 'Trade Location Details',
-  'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo':
-    'Property Assessment No',
+  'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo': 'Property Assessment No',
   'tl.create.licenses.groups.TradeLocationDetails.Locality': 'Locality',
   'tl.create.licenses.groups.TradeLocationDetails.adminWardId': 'Admin Ward',
-  'tl.create.licenses.groups.TradeLocationDetails.revenueWardId':
-    'Revenue Ward',
+  'tl.create.licenses.groups.TradeLocationDetails.revenueWardId': 'Revenue Ward',
   'tl.create.licenses.groups.TradeLocationDetails.Ward': 'Ward',
-  'tl.create.licenses.groups.TradeLocationDetails.OwnershipType':
-    'Ownership Type',
-  'tl.create.licenses.groups.TradeLocationDetails.TradeAddress':
-    'Trade Address',
+  'tl.create.licenses.groups.TradeLocationDetails.OwnershipType': 'Ownership Type',
+  'tl.create.licenses.groups.TradeLocationDetails.TradeAddress': 'Trade Address',
   'tl.create.licenses.groups.TradeDetails': 'Trade Details',
   'tl.create.licenses.groups.TradeDetails.TradeTitle': 'Trade Title',
   'tl.create.licenses.groups.TradeDetails.TradeType': 'Trade Type',
   'tl.create.licenses.groups.TradeDetails.TradeCategory': 'Trade Category',
-  'tl.create.licenses.groups.TradeDetails.TradeSubCategory':
-    'Trade Sub-Category',
+  'tl.create.licenses.groups.TradeDetails.TradeSubCategory': 'Trade Sub-Category',
   'tl.create.licenses.groups.TradeDetails.UOM': 'UOM',
-  'tl.create.licenses.groups.TradeDetails.tradeValueForUOM':
-    'Trade Value for the UOM',
+  'tl.create.licenses.groups.TradeDetails.tradeValueForUOM': 'Trade Value for the UOM',
   'tl.create.licenses.groups.validity': 'Validity Years',
   'tl.create.licenses.groups.TradeDetails.Remarks': 'Remarks',
-  'tl.create.licenses.groups.TradeDetails.TradeCommencementDate':
-    'Trade Commencement Date',
-  'tl.create.licenses.groups.TradeDetails.licenseValidFromDate':
-    'License Valid From Date',
-  'tl.create.licenses.groups.TradeDetails.TraderOwnerProperty':
-    'Trader is not the owner of the Property',
-  'tl.create.licenses.groups.agreementDetails.agreementDate':
-    'Date of Execution',
-  'tl.create.licenses.groups.agreementDetails.agreementNo':
-    'Registered/Non Registered Document No',
+  'tl.create.licenses.groups.TradeDetails.TradeCommencementDate': 'Trade Commencement Date',
+  'tl.create.licenses.groups.TradeDetails.licenseValidFromDate': 'License Valid From Date',
+  'tl.create.licenses.groups.TradeDetails.TraderOwnerProperty': 'Trader is not the owner of the Property',
+  'tl.create.licenses.groups.agreementDetails.agreementDate': 'Date of Execution',
+  'tl.create.licenses.groups.agreementDetails.agreementNo': 'Registered/Non Registered Document No',
   'tl.create.licenses.groups.agreementDetails': 'Agreement Details',
 
   'tl.create.licenses.groups.FeeDetails': 'Fee Details',
@@ -1403,8 +1282,7 @@ var localization_EN_Data = {
   'tl.search.result.groups.titleOfTrade': 'Title Of Trade',
   'tl.search.result.groups.tradeOwner': 'Trade Owner',
   'tl.search.result.groups.mobileNumber': 'Mobile Number',
-  'tl.search.result.groups.propertyAssessmentNumber':
-    'Property Assessment Number',
+  'tl.search.result.groups.propertyAssessmentNumber': 'Property Assessment Number',
   'tl.search.result.groups.financialYear': 'Financial Year',
   'tl.search.result.groups.applicationStatus': 'Application Status',
   'tl.search.result.groups.licenseActive': 'License Active',
@@ -1424,8 +1302,7 @@ var localization_EN_Data = {
   'tl.licenses.view.groups.revenueWardId': 'Revenue Ward',
   'tl.licenses.view.groups.OwnershipType': 'Ownership Type',
   'tl.licenses.view.groups.TradeAddress': 'Trade Address',
-  'tl.view.licenses.groups.agreementDetails':
-    'Agreement Details (Trader is not the owner of the property)',
+  'tl.view.licenses.groups.agreementDetails': 'Agreement Details (Trader is not the owner of the property)',
   'tl.view.licenses.groups.TradeDetails': 'Trade Details',
   'tl.view.licenses.groups.TradeTitle': 'Trade Title',
   'tl.view.licenses.groups.TradeType': 'Trade Type',
@@ -1458,8 +1335,7 @@ var localization_EN_Data = {
 
   'tl.search.result.groups.tradeOwner': 'Trade Owner',
   'tl.search.result.groups.mobileNumber': 'Mobile Number',
-  'tl.search.result.groups.propertyAssessmentNumber':
-    'Property Assessment Number',
+  'tl.search.result.groups.propertyAssessmentNumber': 'Property Assessment Number',
   'tl.search.result.groups.financialYear': 'Financial Year',
 
   'tl.search.result.groups.licenseActive': 'License Active',
@@ -1487,8 +1363,7 @@ var localization_EN_Data = {
   'tl.view.licenses.groups.validity': 'Validity',
   'tl.view.licenses.groups.Remarks': 'Remarks',
   'tl.view.licenses.groups.TradeCommencementDate': 'Trade Commencement Date',
-  'tl.view.licenses.groups.TradeDetails.licenseValidFromDate':
-    'License Valid From Date',
+  'tl.view.licenses.groups.TradeDetails.licenseValidFromDate': 'License Valid From Date',
   'tl.view.licenses.groups.TradeDetails.expiryDate': 'License Expiry Date',
 
   'tl.search.groups.adminWardName': 'Admin Ward',
@@ -1512,8 +1387,7 @@ var localization_EN_Data = {
   'tl.view.workflow.history.date': 'Date',
   'tl.view.workflow.history.updatedby': 'Updated By',
   'tl.view.workflow.history.status': 'status',
-  'tl.view.workflow.history.currentowner':
-    'Current Owner / Officer Responsible',
+  'tl.view.workflow.history.currentowner': 'Current Owner / Officer Responsible',
   'tl.view.workflow.history.comments': 'Comments',
 
   'tl.view.fieldInspection.title': 'Field Inspection',
@@ -1534,11 +1408,9 @@ var localization_EN_Data = {
   'tl.view.workflow.comments.mandatory': 'Comments is mandatory on ',
   //"":"Please enter only numbers (with optional 2 decimal values)",
 
-  'tl.view.licenses.groups.TradeValuefortheUOM.mandatory':
-    'Trade value for UOM is mandatory',
+  'tl.view.licenses.groups.TradeValuefortheUOM.mandatory': 'Trade value for UOM is mandatory',
   'tl.view.fieldInspection.licensefee.mandatory': 'License Fee is mandatory',
-  'tl.view.fieldInspection.fieldInspectionreport.mandatory':
-    'Field Inspection Report is mandatory',
+  'tl.view.fieldInspection.fieldInspectionreport.mandatory': 'Field Inspection Report is mandatory',
   'tl.view.workflow.department.mandatory': 'Approver Department is mandatory',
   'tl.view.workflow.designation.mandatory': 'Approver Designation is mandatory',
   'tl.view.workflow.approver.mandatory': 'Approver is mandatory',
@@ -1551,11 +1423,9 @@ var localization_EN_Data = {
   'tl.acknowledgement.applicationTime': 'Application Time',
   'tl.acknowledgement.dueDate': 'Due Date',
   'tl.acknowledgement.dueTime': 'Due Time',
-  'tl.acknowledgement.note':
-    'Note : The SLA period starts after the payment of the application Fee.',
+  'tl.acknowledgement.note': 'Note : The SLA period starts after the payment of the application Fee.',
 
-  'error.license.number.decimal':
-    'Please enter only numbers (with optional 2 decimal values)',
+  'error.license.number.decimal': 'Please enter only numbers (with optional 2 decimal values)',
 
   'wc.create.groups.applicationParticular.title': 'Application Particular',
   'wc.create.groups.applicationParticular.title': 'Application Particular',
@@ -1615,20 +1485,13 @@ var localization_EN_Data = {
   'employee.error.message.date': 'From Date should be less than To Date.',
   'employee.error.message.assignmentDate': 'Assignment dates overlapping.',
   'employee.error.message.dupAssignment': 'Duplicate entry not allowed.',
-  'employee.error.message.appDate.retDate':
-    'Appointment Date must be before Retirement Date.',
-  'employee.error.message.appDate.terDate':
-    'Appointment Date must be before Termination Date.',
-  'employee.error.message.appDate.regDate':
-    'Appointment Date must be before Resignation Date.',
-  'employee.error.message.appDate.joinDate':
-    'Joining Date must be after Appointment Date.',
-  'employee.error.message.retDate.joinDate':
-    'Joining Date must be before Retirement Date.',
-  'employee.error.message.joinDate.terDate':
-    'Joining Date must be before Termination Date.',
-  'employee.error.message.joinDate.regDate':
-    'Joining Date must be before Resignation Date.',
+  'employee.error.message.appDate.retDate': 'Appointment Date must be before Retirement Date.',
+  'employee.error.message.appDate.terDate': 'Appointment Date must be before Termination Date.',
+  'employee.error.message.appDate.regDate': 'Appointment Date must be before Resignation Date.',
+  'employee.error.message.appDate.joinDate': 'Joining Date must be after Appointment Date.',
+  'employee.error.message.retDate.joinDate': 'Joining Date must be before Retirement Date.',
+  'employee.error.message.joinDate.terDate': 'Joining Date must be before Termination Date.',
+  'employee.error.message.joinDate.regDate': 'Joining Date must be before Resignation Date.',
   'employee.fields.isUserActive': 'Is User Active',
   'employee.Employee.fields.dateOfBirth': 'Date Of Birth',
   'ui.framework.submit': 'Submit',
@@ -1698,41 +1561,31 @@ var localization_EN_Data = {
   'pgr.0059': ' Grievance Category name already exists',
   'pgr.042': ' Location ID is required',
   'pgr.all.complaints': ' Complaints',
-  'pgr.error.bad.servicerequest':
-    ' service code or jurisdiction id provided were not found.',
-  'pgr.error.complaint.details.characters':
-    ' Description must be at least 10 characters long.',
-  'pgr.error.describe.grievance.details':
-    ' Describe your grievance details briefly!',
+  'pgr.error.bad.servicerequest': ' service code or jurisdiction id provided were not found.',
+  'pgr.error.complaint.details.characters': ' Description must be at least 10 characters long.',
+  'pgr.error.describe.grievance.details': ' Describe your grievance details briefly!',
   'pgr.error.landmark.optional': ' Enter your landmark (if any)!',
   'pgr.error.msg.number.required': ' Grievance number is mandatory',
   'pgr.error.notvalid.srn': ' Not a valid SRN',
   'pgr.error.select.grievance.category': ' Select your grievance category!',
-  'pgr.error.select.grievance.categoryandtype':
-    ' Select your grievance from here or else choose it from below grievance cat',
-  'pgr.error.select.grievancelocation':
-    ' Enter your grievance location or click on the location icon to select your',
+  'pgr.error.select.grievance.categoryandtype': ' Select your grievance from here or else choose it from below grievance cat',
+  'pgr.error.select.grievancelocation': ' Enter your grievance location or click on the location icon to select your',
   'pgr.error.select.grievance.type': ' Select your grievance type!',
-  'pgr.error.servicerequest.notfound':
-    ' service code or jurisdiction id was not provided or General service error.',
-  'pgr.error.upload.photovideo':
-    ' Upload grievance relevated photo / video (Max : 3 files)!',
+  'pgr.error.servicerequest.notfound': ' service code or jurisdiction id was not provided or General service error.',
+  'pgr.error.upload.photovideo': ' Upload grievance relevated photo / video (Max : 3 files)!',
   'pgr.lbl.actions': ' Actions',
   'pgr.lbl.active': ' Active',
   'pgr.lbl.actmobnum': ' Account already exist with mobile number',
   'pgr.lbl.add': ' Add',
   'pgr.lbl.adddata': ' Data Added Successfully',
   'pgr.lbl.addesc': ' Add Escalation Details',
-  'pgr.lbl.alert.router':
-    ' Existing Router Data will be overridden, Are you sure?',
+  'pgr.lbl.alert.router': ' Existing Router Data will be overridden, Are you sure?',
   'pgr.lbl.allrcv': ' All Receiving Center',
-  'pgr.lbl.alphaspace':
-    ' Should contain only alphabets and space. Max: 50 Characters',
+  'pgr.lbl.alphaspace': ' Should contain only alphabets and space. Max: 50 Characters',
   'pgr.lblauditdetails': ' Audit Details',
   'pgr.lbl.boundary': ' Boundary',
   'pgr.lbl.boundarytype': ' Boundary Type',
-  'pgr.lbl.btwncharacter':
-    ' Should contain upper and lower case alphabet, number and special character',
+  'pgr.lbl.btwncharacter': ' Should contain upper and lower case alphabet, number and special character',
   'pgr.lbl.bueg': ' Bulk Escalation Generation',
   'pgr.lbl.change.grievancetype': ' Change Grievance Type',
   'pgr.lbl.change.jurisdiction': ' Change Jurisdiction',
@@ -1758,25 +1611,21 @@ var localization_EN_Data = {
   'pgr.lbl.create.router': ' Create Grievance Router',
   'pgr.lbl.crn': ' CRN',
   'pgr.lbl.crnformat': ' CRN(Complaint Request No.)',
-  'pgr.lbl.crnunderprocess':
-    ' Complaint Request is received and is under process',
+  'pgr.lbl.crnunderprocess': ' Complaint Request is received and is under process',
   'pgr.lbl.currentowner': ' Current Owner/Officer Responsible',
   'pgr.lbl.dataupdated': ' Data Updated Successfully',
-  'pgr.lbl.dategreater':
-    ' To Date should be greater than or equal to From Date',
+  'pgr.lbl.dategreater': ' To Date should be greater than or equal to From Date',
   'pgr.lbl.datelesser': ' From Date should be less than or equal to To Date',
   'pgr.lbl.delete': ' Delete',
   'pgr.lbl.designation': ' Designation',
   'pgr.lbl.edit': ' Edit',
   'pgr.lbl.edit.router': ' Edit Grievance Router',
   'pgr.lbl.escalation': ' Create/Update Escalation',
-  'pgr.lbl.escalationmessage':
-    ' There is no escalation details available for the selected position',
+  'pgr.lbl.escalationmessage': ' There is no escalation details available for the selected position',
   'pgr.lbl.escalations': ' Escalation',
   'pgr.lbl.escalationstime': ' Escalation Time',
   'pgr.lbl.escalationtime': ' Search Escalation Time',
-  'pgr.lbl.escdetail':
-    ' There are no escalation details available for the selected service type.',
+  'pgr.lbl.escdetail': ' There are no escalation details available for the selected service type.',
   'pgr.lbl.externalcrn': ' External CRN',
   'pgr.lbl.fiftychar': ' File name length should not exceed 50 characters',
   'pgr.lbl.file.complaint': ' File a complaint',
@@ -1794,10 +1643,8 @@ var localization_EN_Data = {
   'pgr.lbl.resend.otp': ' Resend OTP',
   'pgr.lbl.proceed': 'Proceed',
   'pgr.lbl.overwrite': 'overwrite',
-  'pgr.lbl.router.overwrite':
-    'Existing record for the selected Grievance Types and Ward',
-  'pgr.lbl.escalation.overwrite':
-    'Existing record for the selected Grievance Types',
+  'pgr.lbl.router.overwrite': 'Existing record for the selected Grievance Types and Ward',
+  'pgr.lbl.escalation.overwrite': 'Existing record for the selected Grievance Types',
   'pgr.lbl.otp.success': 'OTP sent successfully',
   'pgr.lbl.grievance.category': ' Grievance Category',
   'pgr.lbl.grievancecell': ' Register via grievance cell',
@@ -1807,8 +1654,7 @@ var localization_EN_Data = {
   'pgr.lbl.grievancedetails': ' Grievance Details',
   'pgr.lbl.grievance.history': ' Grievance History',
   'pgr.lbl.grievance.location': ' Grievance Location',
-  'pgr.lbl.grievance.location.icon':
-    ' Start typing your Grievance location or select it from location icon',
+  'pgr.lbl.grievance.location.icon': ' Start typing your Grievance location or select it from location icon',
   'pgr.lbl.grievance.redressal': ' Grievance Redressal',
   'pgr.lbl.grievance.type': ' Grievance Type',
   'pgr.lbl.grievance.types': ' Top Grievance Types',
@@ -1841,10 +1687,8 @@ var localization_EN_Data = {
   'pgr.lbl.receivingcenter': ' Receiving Center',
   'pgr.lbl.receivingmode': ' Receiving Mode',
   'pgr.lbl.recoverpswd': ' Recover Password',
-  'pgr.lbl.recoverylink':
-    ' Recovery link or OTP will be sent to your registered email / mobile',
-  'pgr.lbl.registercomplaint.easy':
-    '  We have made connecting with us easier than ever before. Once you raise ticket',
+  'pgr.lbl.recoverylink': ' Recovery link or OTP will be sent to your registered email / mobile',
+  'pgr.lbl.registercomplaint.easy': '  We have made connecting with us easier than ever before. Once you raise ticket',
   'pgr.lbl.registered.date': ' Registered Date',
   'pgr.lbl.register.grievance': ' Register Grievance',
   'pgr.lbl.apply.service': 'Apply For a Service',
@@ -1878,31 +1722,23 @@ var localization_EN_Data = {
   'pgr.lbl.view.router': ' View Grievance Router',
   'pgr.lbl.ward': ' Ward',
   'pgr.list.complaint.history': ' Complaint History',
-  'pgr.location.change.infomessage':
-    ' By default it will show your current location. You can always change the l',
+  'pgr.location.change.infomessage': ' By default it will show your current location. You can always change the l',
   'pgr.msg.complaint.closed': ' Complaint closed successfully.',
-  'pgr.msg.complaint.connectto.official':
-    ' We connect you to the responsible official',
+  'pgr.msg.complaint.connectto.official': ' We connect you to the responsible official',
   'pgr.msg.complaint.filedby': ' Filed By',
-  'pgr.msg.complaint.moredetails':
-    ' Give more details about the complaint to help us solve your issue',
+  'pgr.msg.complaint.moredetails': ' Give more details about the complaint to help us solve your issue',
   'pgr.msg.complaint.resolved': ' Complaint resolved',
-  'pgr.msg.complaintstatus.anytime':
-    ' Know the status of your complaint anytime!',
+  'pgr.msg.complaintstatus.anytime': ' Know the status of your complaint anytime!',
   'pgr.msg.complaintstatus.application': 'Know the status of your application!',
   'pgr.msg.complaintstatus.certificate': 'Certificate Status',
   'pgr.msg.complaint.tellus': ' Have a complaint tell us.',
-  'pgr.msg.createaccount.avail.onlineservices':
-    ' Create an account to avail online services',
-  'pgr.msg.finalgrievance.submit':
-    ' Finally, Click here to submit your grievance!',
+  'pgr.msg.createaccount.avail.onlineservices': ' Create an account to avail online services',
+  'pgr.msg.finalgrievance.submit': ' Finally, Click here to submit your grievance!',
   'pgr.msg.future.reference': ' Please use this for all your future references',
   'pgr.msg.new.mseva': ' New to mSeva ?',
   'pgr.msg.official.resolve.complaint': ' Our official resolves the complaint',
-  'pgr.msg.servicerequest.underprocess':
-    ' Service Request is received and is under process',
-  'pgr.msg.sla.infomessage':
-    ' To ensure timely resolution of your complaint, we have defined "Service Level Agreement"',
+  'pgr.msg.servicerequest.underprocess': ' Service Request is received and is under process',
+  'pgr.msg.sla.infomessage': ' To ensure timely resolution of your complaint, we have defined "Service Level Agreement"',
   'pgr.msg.success.grievanceupdated': ' Grievance updated succesfully',
   'pgr.noof.hours': ' Number of hours',
   'pgr.priority': ' priority',
@@ -2004,224 +1840,127 @@ var localization_EN_Data = {
 
   //Trade License Error Messages
   //#---- Validation Error Messages----
-  'tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE':
-    'Found duplicate SubCategory code, please provide another SubCategory code',
-  'tl.error.duplicatedocumenttype.found':
-    'Found duplicate DocumentType name, please provide another DocumentType Name',
-  'Duplicate Category Detail Found':
-    'Found duplicate SubCategory detail, please provide another SubCategory detail',
-  'tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME':
-    'Found duplicate SubCategory name, please provide another SubCategory Name',
-  'tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_CODE':
-    'Found duplicate UOM code, please provide another UOM code',
-  'tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_NAME':
-    'Found duplicate UOM name, please provide another UOM name',
-  'tl.error.oldlicensenumber.alreadyexists':
-    'Old License Number already Exists, please provide unique oldLicenseNumber',
+  'tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE': 'Found duplicate SubCategory code, please provide another SubCategory code',
+  'tl.error.duplicatedocumenttype.found': 'Found duplicate DocumentType name, please provide another DocumentType Name',
+  'Duplicate Category Detail Found': 'Found duplicate SubCategory detail, please provide another SubCategory detail',
+  'tradelicense.SUBCATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME': 'Found duplicate SubCategory name, please provide another SubCategory Name',
+  'tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_CODE': 'Found duplicate UOM code, please provide another UOM code',
+  'tradelicense.UOM_RECORD_ALREADY_EXISTS_WITH_NAME': 'Found duplicate UOM name, please provide another UOM name',
+  'tl.error.oldlicensenumber.alreadyexists': 'Old License Number already Exists, please provide unique oldLicenseNumber',
 
   'error.license.licenses.notfound': 'licenses is required, but not found',
-  'error.license.licenses.size.not.empty':
-    'at least one license should present for the creation',
-  'error.license.applicationtype':
-    'Application Type is required, Please enter valid Application Type',
-  'error.license.oldLicenseNumber':
-    'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters',
-  'error.license.applicationDate':
-    'applicationDate is required, Please enter valid date as epoch',
-  'error.license.aadhaarnumber':
-    'Aadhaar Number is required , please enter 12 digits Aadhaar Number',
-  'error.license.mobilenumber':
-    'Mobile Number is required , please enter 10 digits Mobile Number',
-  'error.license.ownername':
-    'Owner Name is required , please enter Valid name length between 4-100 characters',
-  'error.license.fatherspousename':
-    'Father Spouse Name is required , please enter Valid name length between 4-100 characters',
-  'error.license.fatherspousename.empty':
-    'FatherSpouseName can not be empty, please enter valid fatherSpouseName with length between 4- 100',
-  'error.license.emailid':
-    'Emailid is required, please enter the valid emailid',
-  'error.license.emailid.empty':
-    'Emailid can not be empty, Please enter valid Emailid',
-  'error.license.emailid.length':
-    'Emailid more than 50 characters not allowed.',
-  'error.license.owneraddress.emptyspaces':
-    'Owner Address can not be empty , please enter Valid Address length between 4-250 characters',
-  'error.license.owneraddress':
-    'Owner Address is required , please enter Valid Address length between 4-250 characters',
-  'error.license.propertyassesmentNo':
-    'Property Assesment No is required ,  please enter Valid Property Assesment No  between 15-20 characters',
-  'error.license.locality':
-    'Locality is required , please enter valid Locality',
-  'error.license.revenueward':
-    'RevenueWard is required , please enter valid RevenueWard',
-  'error.license.adminward':
-    'Admin Ward is required , please enter valid Admin Ward',
-  'error.license.tradeaddress':
-    'Trade Address is required , please enter Valid Address length between 4-250 characters',
-  'error.license.ownerShip':
-    'OwnerShip Type is required, Please enter valid OwnerShip Type',
-  'error.license.tradetitle':
-    'Trade Title is required , please enter Trade Title',
-  'error.license.tradetitle.emptyspaces':
-    'Trade Title can not be empty, please enter Trade Title',
-  'error.license.tradetype':
-    'Trade Type is required , please enter Valid Trade Type',
-  'error.license.ownershiptype':
-    'OwnerShip Type is required , please enter Valid OwnerShip type',
-  'error.license.tradetype.emptyspaces':
-    'Trade Type can not be empty, please enter Trade Type',
-  'error.license.category':
-    'Category is required , please enter Valid Category',
-  'error.license.subcategory':
-    'Sub Category is required , please enter Valid Sub Category',
+  'error.license.licenses.size.not.empty': 'at least one license should present for the creation',
+  'error.license.applicationtype': 'Application Type is required, Please enter valid Application Type',
+  'error.license.oldLicenseNumber': 'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters',
+  'error.license.applicationDate': 'applicationDate is required, Please enter valid date as epoch',
+  'error.license.aadhaarnumber': 'Aadhaar Number is required , please enter 12 digits Aadhaar Number',
+  'error.license.mobilenumber': 'Mobile Number is required , please enter 10 digits Mobile Number',
+  'error.license.ownername': 'Owner Name is required , please enter Valid name length between 4-100 characters',
+  'error.license.fatherspousename': 'Father Spouse Name is required , please enter Valid name length between 4-100 characters',
+  'error.license.fatherspousename.empty': 'FatherSpouseName can not be empty, please enter valid fatherSpouseName with length between 4- 100',
+  'error.license.emailid': 'Emailid is required, please enter the valid emailid',
+  'error.license.emailid.empty': 'Emailid can not be empty, Please enter valid Emailid',
+  'error.license.emailid.length': 'Emailid more than 50 characters not allowed.',
+  'error.license.owneraddress.emptyspaces': 'Owner Address can not be empty , please enter Valid Address length between 4-250 characters',
+  'error.license.owneraddress': 'Owner Address is required , please enter Valid Address length between 4-250 characters',
+  'error.license.propertyassesmentNo': 'Property Assesment No is required ,  please enter Valid Property Assesment No  between 15-20 characters',
+  'error.license.locality': 'Locality is required , please enter valid Locality',
+  'error.license.revenueward': 'RevenueWard is required , please enter valid RevenueWard',
+  'error.license.adminward': 'Admin Ward is required , please enter valid Admin Ward',
+  'error.license.tradeaddress': 'Trade Address is required , please enter Valid Address length between 4-250 characters',
+  'error.license.ownerShip': 'OwnerShip Type is required, Please enter valid OwnerShip Type',
+  'error.license.tradetitle': 'Trade Title is required , please enter Trade Title',
+  'error.license.tradetitle.emptyspaces': 'Trade Title can not be empty, please enter Trade Title',
+  'error.license.tradetype': 'Trade Type is required , please enter Valid Trade Type',
+  'error.license.ownershiptype': 'OwnerShip Type is required , please enter Valid OwnerShip type',
+  'error.license.tradetype.emptyspaces': 'Trade Type can not be empty, please enter Trade Type',
+  'error.license.category': 'Category is required , please enter Valid Category',
+  'error.license.subcategory': 'Sub Category is required , please enter Valid Sub Category',
   'error.license.uom': 'Uom is required , please enter Valid Uom',
   'error.license.uom.length': 'Quantity should not have more than 2 decimals',
-  'error.license.quantity':
-    'Quantity is required , please enter Valid Quantity',
-  'error.license.validityyears':
-    'ValidityYears is required , please enter Valid number between 1-10',
-  'error.license.tradecommencementdate':
-    'tradeCommencementDate is required, Please enter valid date as epoch',
-  'error.license.licensevalidfrom':
-    'LicenseValidFromDate is required, Please enter valid date as epoch',
-  'error.license.agreementdate':
-    'AgreementDate is required, Please enter valid date as epoch',
-  'error.license.agreementno.notfound':
-    'agreement number is required, but not found',
+  'error.license.quantity': 'Quantity is required , please enter Valid Quantity',
+  'error.license.validityyears': 'ValidityYears is required , please enter Valid number between 1-10',
+  'error.license.tradecommencementdate': 'tradeCommencementDate is required, Please enter valid date as epoch',
+  'error.license.licensevalidfrom': 'LicenseValidFromDate is required, Please enter valid date as epoch',
+  'error.license.agreementdate': 'AgreementDate is required, Please enter valid date as epoch',
+  'error.license.agreementno.notfound': 'agreement number is required, but not found',
   'error.license.agreementno': 'Please enter valid agreementNo between 4-128',
-  'error.financialYear.emptyspaces':
-    'FinancialYear can not be empty, Please enter valid financialYear',
-  'error.financialYear.empty':
-    'FinancialYear is required, Please enter valid financialYear',
-  'error.license.financialyear':
-    'FinancialYear is required, Please enter valid financialYear',
+  'error.financialYear.emptyspaces': 'FinancialYear can not be empty, Please enter valid financialYear',
+  'error.financialYear.empty': 'FinancialYear is required, Please enter valid financialYear',
+  'error.license.financialyear': 'FinancialYear is required, Please enter valid financialYear',
   'error.license.amount': 'Amount is required, Please enter valid Amount',
   'error.license.amount.decimal': 'Amount should not have more than 2 decimals',
-  'error.license.legacy':
-    'isLegacy is required, Please enter valid value true/false',
-  'error.license.propertyowner':
-    'isPropertyOwner is required, Please enter valid value true/false',
-  'error.license.ispropertyowner':
-    'isPropertyOwner is required, Please provide value as true/false',
-  'error.license.documenttype':
-    'DocumentType is required, Please enter valid DocumentType',
-  'error.license.filestore':
-    'FileStoreId is required, Please enter valid FileStoreId ',
-  'error.license.tenantId.emptyspaces':
-    'TenantId can not be empty, Please enter valid tenant id with length between 4- 128',
-  'error.license.tenantId.empty':
-    'TenantID is required, please enter valid tenant id with length between 4- 128',
-  'error.oldLicenseNumber.emptyspaces':
-    'OldLicenseNumber can not be empty, Please enter valid oldLicenseNumber length between 4- 20',
-  'error.oldLicenseNumber.empty':
-    'OldLicenseNumber is required, Please enter valid Old License Number between  4-20 characters',
-  'error.Assesment.legnth':
-    'Property Assesment No is required , please enter Valid Property Assesment No  between 4-20 characters',
-  'error.license.active':
-    'Active is required, Please enter valid value true/false',
-  'error.oldLicense.duplicate':
-    'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber',
+  'error.license.legacy': 'isLegacy is required, Please enter valid value true/false',
+  'error.license.propertyowner': 'isPropertyOwner is required, Please enter valid value true/false',
+  'error.license.ispropertyowner': 'isPropertyOwner is required, Please provide value as true/false',
+  'error.license.documenttype': 'DocumentType is required, Please enter valid DocumentType',
+  'error.license.filestore': 'FileStoreId is required, Please enter valid FileStoreId ',
+  'error.license.tenantId.emptyspaces': 'TenantId can not be empty, Please enter valid tenant id with length between 4- 128',
+  'error.license.tenantId.empty': 'TenantID is required, please enter valid tenant id with length between 4- 128',
+  'error.oldLicenseNumber.emptyspaces': 'OldLicenseNumber can not be empty, Please enter valid oldLicenseNumber length between 4- 20',
+  'error.oldLicenseNumber.empty': 'OldLicenseNumber is required, Please enter valid Old License Number between  4-20 characters',
+  'error.Assesment.legnth': 'Property Assesment No is required , please enter Valid Property Assesment No  between 4-20 characters',
+  'error.license.active': 'Active is required, Please enter valid value true/false',
+  'error.oldLicense.duplicate': 'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber',
   //  #--adapter custom messages
   'id.notFound.field': 'id',
-  'oldLicense.id.notFound.customMsg':
-    'please provide valid id for updating trade license',
-  'oldLicense.id.notValid.customMsg':
-    'TradeLicense does not exists for given id',
-  'supporting.document.id.notValid.customMsg':
-    'Support document does not exists for given id',
-  'supporting.document.id.notFound.customMsg':
-    'please provide valid id for updating trade license support document',
-  'feedetail.id.notFound.customMsg':
-    'please provide valid id for updating trade license fee details',
+  'oldLicense.id.notFound.customMsg': 'please provide valid id for updating trade license',
+  'oldLicense.id.notValid.customMsg': 'TradeLicense does not exists for given id',
+  'supporting.document.id.notValid.customMsg': 'Support document does not exists for given id',
+  'supporting.document.id.notFound.customMsg': 'please provide valid id for updating trade license support document',
+  'feedetail.id.notFound.customMsg': 'please provide valid id for updating trade license fee details',
   'feedetail.id.notValid.customMsg': 'Fee Details does not exists for given id',
-  'mandatory.document.notfound.customMsg':
-    'Required support document(s) are not found, please provide all mandatory support documents',
+  'mandatory.document.notfound.customMsg': 'Required support document(s) are not found, please provide all mandatory support documents',
   'nonlegacy.update.customMsg': ' Non Legacy license update not supported',
 
-  'legacy.trade.create.success.status.message':
-    'Legacy tradeLicense(s) created successfully, with License Number(s)',
+  'legacy.trade.create.success.status.message': 'Legacy tradeLicense(s) created successfully, with License Number(s)',
   'error.license.licenses.notfound': 'licenses is required, but not found',
-  'new.trade.create.success.status.message':
-    'Your request for creating new tradeLicense(s) is accepted with Application Number(s)',
-  'error.license.licenses.size.not.empty':
-    'at least one license should present for the creation/updation',
-  'error.license.legacy.feedetails.notfound':
-    'feeDetails are required, please provide valid feeDetails',
-  'error.license.applicationtype':
-    'Application Type is required, Please enter valid Application Type',
-  'error.license.oldLicenseNumber':
-    'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters',
-  'error.oldLicense.duplicate':
-    'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber',
-  'error.license.applicationDate':
-    'applicationDate is required, Please enter valid date as epoch',
-  'error.license.aadhaarnumber':
-    ' Aadhaar Number is required , please enter 12 digits Aadhaar Number',
-  'error.license.mobilenumber ':
-    ' Mobile Number is required , please enter 10 digits Mobile Number',
-  'error.license.ownername':
-    'Owner Name is required , please enter Valid name length between 4-100 characters',
-  'error.license.fatherspousename ':
-    ' Father Spouse Name is required , please enter Valid name length between 4-100 characters',
-  'error.license.owneraddress':
-    'Owner Address is required , please enter Valid Address length between 4-250 characters',
-  'error.license.emailid':
-    'Emailid is required, please enter the valid emailid',
+  'new.trade.create.success.status.message': 'Your request for creating new tradeLicense(s) is accepted with Application Number(s)',
+  'error.license.licenses.size.not.empty': 'at least one license should present for the creation/updation',
+  'error.license.legacy.feedetails.notfound': 'feeDetails are required, please provide valid feeDetails',
+  'error.license.applicationtype': 'Application Type is required, Please enter valid Application Type',
+  'error.license.oldLicenseNumber': 'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters',
+  'error.oldLicense.duplicate': 'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber',
+  'error.license.applicationDate': 'applicationDate is required, Please enter valid date as epoch',
+  'error.license.aadhaarnumber': ' Aadhaar Number is required , please enter 12 digits Aadhaar Number',
+  'error.license.mobilenumber ': ' Mobile Number is required , please enter 10 digits Mobile Number',
+  'error.license.ownername': 'Owner Name is required , please enter Valid name length between 4-100 characters',
+  'error.license.fatherspousename ': ' Father Spouse Name is required , please enter Valid name length between 4-100 characters',
+  'error.license.owneraddress': 'Owner Address is required , please enter Valid Address length between 4-250 characters',
+  'error.license.emailid': 'Emailid is required, please enter the valid emailid',
   'error.license.propertyAssesmentNo.notfound':
     'Property Assesment No  is not found ,  please enter Valid Property Assesment No  between 15-20 characters',
   'error.license.propertyAssesmentNo.notvalid':
     'Property Assesment No  is not valid ,  please enter Valid Property Assesment No  between 15-20 characters',
-  'error.license.locality':
-    'Locality is required , please enter valid Locality',
-  'error.license.revenueward':
-    'RevenueWard is required , please enter valid RevenueWard',
-  'error.license.adminward':
-    'Admin Ward is required , please enter valid Admin Ward',
-  'error.license.tradeaddress':
-    'Trade Address is required , please enter Valid Address length between 4-250 characters',
-  'error.license.tradetitle':
-    'Trade Title is required , please enter Trade Title',
-  'error.license.tradetype':
-    'Trade Type is required , please enter Valid Trade Type',
-  'error.license.category':
-    'Category is required , please enter Valid Category',
-  'error.license.subcategory':
-    'Sub Category is required , please enter Valid Sub Category',
+  'error.license.locality': 'Locality is required , please enter valid Locality',
+  'error.license.revenueward': 'RevenueWard is required , please enter valid RevenueWard',
+  'error.license.adminward': 'Admin Ward is required , please enter valid Admin Ward',
+  'error.license.tradeaddress': 'Trade Address is required , please enter Valid Address length between 4-250 characters',
+  'error.license.tradetitle': 'Trade Title is required , please enter Trade Title',
+  'error.license.tradetype': 'Trade Type is required , please enter Valid Trade Type',
+  'error.license.category': 'Category is required , please enter Valid Category',
+  'error.license.subcategory': 'Sub Category is required , please enter Valid Sub Category',
   'error.license.uom': 'Uom is required , please enter Valid Uom',
-  'error.license.quantity':
-    'Quantity is required , please enter Valid Quantity',
-  'error.license.validityyears':
-    'ValidityYears is required , please enter Valid number between 1-10',
-  'error.license.validityyearsMatch':
-    'ValidityYears is required ,  should match with subacategory validity years',
-  'error.license.tradecommencementdate':
-    'tradeCommencementDate is required, Please enter valid date as epoch',
-  'error.license.licensevalidfrom':
-    'LicenseValidFromDate is required, Please enter valid date as epoch',
-  'error.license.agreementdate':
-    'AgreementDate is required, Please enter valid date as epoch',
-  'error.license.agreementno.notfound':
-    'agreement number is required, but not found',
+  'error.license.quantity': 'Quantity is required , please enter Valid Quantity',
+  'error.license.validityyears': 'ValidityYears is required , please enter Valid number between 1-10',
+  'error.license.validityyearsMatch': 'ValidityYears is required ,  should match with subacategory validity years',
+  'error.license.tradecommencementdate': 'tradeCommencementDate is required, Please enter valid date as epoch',
+  'error.license.licensevalidfrom': 'LicenseValidFromDate is required, Please enter valid date as epoch',
+  'error.license.agreementdate': 'AgreementDate is required, Please enter valid date as epoch',
+  'error.license.agreementno.notfound': 'agreement number is required, but not found',
   'error.license.agreementno': 'Please enter valid agreementNo between 4-128',
-  'error.license.financialyear':
-    'FinancialYear is required, Please enter valid financialYear',
+  'error.license.financialyear': 'FinancialYear is required, Please enter valid financialYear',
   'error.license.amount': 'Amount is required, Please enter valid Amount',
-  'error.license.documenttype':
-    'DocumentType is required, Please enter valid DocumentType',
-  'error.license.filestore':
-    'FileStoreId is required, Please enter valid FileStoreId',
-  'error.license.feedetails':
-    'provided fee details are not valid, please provide valid fee details',
+  'error.license.documenttype': 'DocumentType is required, Please enter valid DocumentType',
+  'error.license.filestore': 'FileStoreId is required, Please enter valid FileStoreId',
+  'error.license.feedetails': 'provided fee details are not valid, please provide valid fee details',
   'error.license.categoryendpoint': 'category end point error',
   'error.license.documentendpoint': ' document end point error',
   'error.license.locationendpoint': ' location end point error',
   'error.license.propertyendpoint ': ' proeprty endpoint error',
-  'error.license.feeDetailYearNotFound ':
-    'Financial Does not exists for Current/Future Year',
-  'tradelicense.CATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME':
-    'Found duplicate Category name, please provide another Category Name',
-  'tradelicense.CATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE':
-    'Found duplicate Category code, please provide another Category Code',
+  'error.license.feeDetailYearNotFound ': 'Financial Does not exists for Current/Future Year',
+  'tradelicense.CATEGORY_RECORD_ALREADY_EXISTS_WITH_NAME': 'Found duplicate Category name, please provide another Category Name',
+  'tradelicense.CATEGORY_RECORD_ALREADY_EXISTS_WITH_CODE': 'Found duplicate Category code, please provide another Category Code',
   'applicantDetails.title': 'Application Details',
   'fn.ApplicationDetails.applicantName': 'Applicant Name',
   'fn.ApplicationDetails.mobileNumber': 'Mobile Number',
@@ -2275,8 +2014,7 @@ var localization_EN_Data = {
   'wc.search.NonMeterWaterRates.title': 'Search NonMeterWaterRates',
   'wc.create.groups.fields.subUsageTypeName': 'SubUsageType',
   'wc.create.groups.connectionDetails.fields.buildingName': 'Building Name',
-  'wc.create.groups.connectionDetails.fields.buildingAddress':
-    'Building Address',
+  'wc.create.groups.connectionDetails.fields.buildingAddress': 'Building Address',
   'wc.create.groups.connectionDetails.fields.roadName': 'Road Name',
   'wc.create.groups.connectionDetails.fields.gISNo': 'GIS Number',
   'wc.search.amount': 'Rate Per Month',
@@ -2335,8 +2073,7 @@ var localization_EN_Data = {
   'ac.create.Date.Of.Acquisition': 'Date of Acquisition',
   'ac.create.Mode.of.Acquisition': 'Mode of Acquisition',
   'ac.create.Land.Asset.ID': 'Land Asset ID',
-  'ac.create.Survey.no.of.land':
-    'Survey No. of Land on Which Structure is Located ',
+  'ac.create.Survey.no.of.land': 'Survey No. of Land on Which Structure is Located ',
   'ac.create.Location.Details': 'Location Details',
   'ac.create.Location': 'Location',
   'ac.create.Longitude': 'Longitude',
@@ -2365,8 +2102,7 @@ var localization_EN_Data = {
   'ac.create.Security.deposit.realized': 'Security Deposit Realized (Rs.)',
   'ac.create.Asset.description': 'Asset Description',
   'ac.create.Asset.account.code': 'Asset Account Code',
-  'ac.create.Accumulated.Depreciation.Account':
-    'Accumulated Depreciation Account',
+  'ac.create.Accumulated.Depreciation.Account': 'Accumulated Depreciation Account',
   'ac.create.Revaluation.Reserve.Account': 'Revaluation Reserve Account',
   'ac.create.Depreciation.Expenses.Account': 'Depreciation Expenses Account ',
   'ac.create.Opening.date': 'Opening WDV Date',
@@ -2397,13 +2133,11 @@ var localization_EN_Data = {
   'ac.search.category': 'Asset Category',
   'ac.search.department': 'Department',
   'ac.search.status': 'Status',
-  'ac.transaction.create.datePurchaseConstruction':
-    'Date of Purchase/Construction/Acquisition',
+  'ac.transaction.create.datePurchaseConstruction': 'Date of Purchase/Construction/Acquisition',
   'ac.transaction.create.order.no': 'Order No.',
   'ac.transaction.create.order.date': 'Order Date',
   'ac.transaction.create.valuation.amount': 'Valuation Amount(Rs.)',
-  'ac.transaction.create.AdditionDeductedAmount':
-    'Addition/Deducted Amount(Rs.)',
+  'ac.transaction.create.AdditionDeductedAmount': 'Addition/Deducted Amount(Rs.)',
   'ac.transaction.TA.title': 'Transfer/Disposal of Asset',
   'ac.transaction.TA.TransferAsset': 'Transfer of Asset',
   'ac.transaction.TA.DisposalAsset': 'Disposal of Asset',
@@ -2418,8 +2152,7 @@ var localization_EN_Data = {
   'ac.update.Header.Details': 'Asset Modify',
   'ac.create.Land.Details': 'Land Details',
   'ac.create.areaOfLand': 'Area of Land(sq.ft.)',
-  'ac.create.areaOfLandWhichConstructed':
-    'Area of Land on Which Constructed(sq.ft.)',
+  'ac.create.areaOfLandWhichConstructed': 'Area of Land on Which Constructed(sq.ft.)',
   'as.assetAttributes': 'Asset Attributes',
   'ac.View.Header.Details': 'View Immovable Assset',
   'ac.Modify.Header.Details': 'Update Immovable Assset',
@@ -2441,20 +2174,16 @@ var localization_EN_Data = {
   'vehiclefuellingdetails.create.transactionDate': 'Transaction Date',
   'vehiclefuellingdetails.create.name': 'Vehicle Type',
   'vehiclefuellingdetails.create.regNumber': 'Vehicle Reg. No',
-  'vehiclefuellingdetails.create.vehicleReadingDuringFuelling':
-    'Vehicle Reading during fuelling',
+  'vehiclefuellingdetails.create.vehicleReadingDuringFuelling': 'Vehicle Reading during fuelling',
   'vehiclefuellingdetails.create.refuellingStation': 'Refuelling Pump Station',
   'vehiclefuellingdetails.create.typeOfFuel': 'Type of fuel',
   'vehiclefuellingdetails.create.fuelFilled': 'Fuel filled (Liters)',
   'vehiclefuellingdetails.create.totalCostIncurred': 'Total cost incurred',
   'vehiclefuellingdetails.create.receiptNo': 'Receipt No',
   'vehiclefuellingdetails.create.receiptDate': 'Receipt date',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails2':
-    'Vehicle Details',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails3':
-    'Vehicle Details',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails1':
-    'Enter Vehicle Fuelling Details',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails2': 'Vehicle Details',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails3': 'Vehicle Details',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails1': 'Enter Vehicle Fuelling Details',
 
   'vehiclefuellingdetails.search.title': 'Vehicle Fuelling Details Search',
   'vehiclefuellingdetails.createoffSet': 'Offset',
@@ -2463,30 +2192,23 @@ var localization_EN_Data = {
   'vehiclefuellingdetails.create.refuellingStation': 'Refuelling Pump Station',
   'vehiclefuellingdetails.create.vehicleType': 'Vehicle Type',
   'vehiclefuellingdetails.create.regNumber': 'Vehicle Registration No',
-  'vehiclefuellingdetails.create.vehicleReadingDuringFuelling':
-    'Vehicle Reading during Fuelling',
+  'vehiclefuellingdetails.create.vehicleReadingDuringFuelling': 'Vehicle Reading during Fuelling',
   'vehiclefuellingdetails.create.typeOfFuel': 'Type of Fuel',
   'vehiclefuellingdetails.create.fuelFilled': 'Fuel filled (Liters)',
   'vehiclefuellingdetails.create.totalCostIncurred': 'Total Cost Incurred',
   'vehiclefuellingdetails.create.receiptNo': 'Receipt No',
   'vehiclefuellingdetails.create.receiptDate': 'Receipt Date',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails2':
-    'Vehicle Details',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails3':
-    'Fuelling Details',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails2': 'Vehicle Details',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails3': 'Fuelling Details',
   'vehiclefuellingdetails.search.result.transactionNo': 'Transaction Number',
   'vehiclefuellingdetails.search.result.transactionDate': 'Transaction Date',
   'vehiclefuellingdetails.search.result.vehicleType': 'Vehicle Type',
-  'vehiclefuellingdetails.search.result.vehicleRegNo':
-    'Vehicle Registration No',
-  'vehiclefuellingdetails.search.result.vehicleReadingDuringFuelling':
-    'Vehicle Reading during Fuelling',
-  'vehiclefuellingdetails.search.result.refuellingStation':
-    'Refuelling Pump Station',
+  'vehiclefuellingdetails.search.result.vehicleRegNo': 'Vehicle Registration No',
+  'vehiclefuellingdetails.search.result.vehicleReadingDuringFuelling': 'Vehicle Reading during Fuelling',
+  'vehiclefuellingdetails.search.result.refuellingStation': 'Refuelling Pump Station',
   'vehiclefuellingdetails.search.result.fuelFilled': 'Fuel filled (Liters)',
   'vehiclefuellingdetails.search.result.typeOfFuel': 'Type of Fuel',
-  'vehiclefuellingdetails.search.result.totalCostIncurred':
-    'Total Cost incurred',
+  'vehiclefuellingdetails.search.result.totalCostIncurred': 'Total Cost incurred',
   'vehiclefuellingdetails.search.result.receiptNo': 'Receipt No',
   'vehiclefuellingdetails.search.result.receiptDate': 'Receipt Date',
 
@@ -2540,8 +2262,7 @@ var localization_EN_Data = {
   'swm.vehicles.create.endOfWarranty': 'End Of Warranty',
   'swm.vehicles.create.group.title.VehicleDetails1': 'Vehicle Details',
   'swm.vehicles.create.group.title.VehicleDetails2': ' ',
-  'swm.vehicles.create.group.title.InsuranceDetails':
-    'Insurance Details for Contracted Vehicle',
+  'swm.vehicles.create.group.title.InsuranceDetails': 'Insurance Details for Contracted Vehicle',
   'swm.vehicles.create.group.title.PurchaseDetails': 'Purchase Details',
   'swm.vehicles.create.group.title.WarrantyDetails': 'Warranty Details',
   'swm.collectionpoints.search.title': 'Search',
@@ -2549,8 +2270,7 @@ var localization_EN_Data = {
   'swm.collectionpoints.create.codes': 'Codes',
   'swm.collectionpoints.create.name': 'Collection Point Name',
   'swm.collectionpoints.create.locationCode': 'Locationcode',
-  'swm.collectionpoints.create.group.title.LocationDetails':
-    'Location Selection',
+  'swm.collectionpoints.create.group.title.LocationDetails': 'Location Selection',
   'swm.collectionpoints.create.offSet': 'Offset',
   'swm.collectionpoints.create.sortBy': 'Sortby',
   'swm.collectionpoints.create.code': 'Code',
@@ -2561,10 +2281,8 @@ var localization_EN_Data = {
   'swm.collectionpoints.create.colony': 'Colony / Society / Complex',
   'swm.collectionpoints.create.title': 'Collection Point Entry Master',
   'swm.collectionpoints.search.title': 'Collection Point Entry Search',
-  'swm.collectionpoints.create.group.title.LocationSelection':
-    'Locationselection',
-  'swm.collectionpoints.create.group.title.CollectionPointDetails':
-    'Collection Type Details',
+  'swm.collectionpoints.create.group.title.LocationSelection': 'Locationselection',
+  'swm.collectionpoints.create.group.title.CollectionPointDetails': 'Collection Type Details',
   'swm.collectionpoints.create.group.title.CollectionType': 'Collection Type',
   'swm.collectionpoints.create.group.title.BinDetails': 'Bin Details',
   'swm.collectionpoints.create.assetOrBinId': 'Asset / Bin ID',
@@ -2601,14 +2319,12 @@ var localization_EN_Data = {
   'swm.create.vehicle.kilometers': 'Kilometers',
   'swm.create.maintenanceUom': 'Days/Kms (Maintenance)',
   'swm.create.downtimeforMaintenanceUom': 'Hrs/Days (Downtime for maintenance)',
-  'swm.create.group.title.VehicleMaintenanceDetails':
-    'Vehicle Maintenance Details',
+  'swm.create.group.title.VehicleMaintenanceDetails': 'Vehicle Maintenance Details',
   'swm.create.page.title.VehicleMaintenanceDetails': 'Vehicle Service Plan',
   'swm.create.maintenanceAfter': 'Maintenance After (Days/Kms)',
   'swm.create.downtimeforMaintenance': 'Downtime for Maintenance (Hrs/Days)',
   'swm.vehiclemaintenance.search.title': 'Vehicle Maintenance Seach',
-  'swm.refillingpumpstations.create.group.title.RefillingPumpName':
-    'Pump Station Details',
+  'swm.refillingpumpstations.create.group.title.RefillingPumpName': 'Pump Station Details',
   'swm.refillingpumpstations.create.name': 'Pump Name',
   'swm.refillingpumpstations.typeOfPump.name': 'Type of Pump',
   'swm.refillingpumpstations.typeOfFuel': 'Fuel Type',
@@ -2616,23 +2332,19 @@ var localization_EN_Data = {
   'swm.refillingpumpstations.create.group.title.FuelDetails': 'Fuel Details',
   'swm.refillingpumpstations.create.title': 'Refilling Pump Station Master',
   'swm.search.refillingPumpStations.title': 'Refilling Pump Station Search',
-  'swm.create.insuranceDetails.insuranceValidityDate':
-    'Insurance Validity Date',
+  'swm.create.insuranceDetails.insuranceValidityDate': 'Insurance Validity Date',
   'swm.create.group.title.Selection': 'Selection',
   'swm.create.vehicle.remarks': 'Remarks',
   'swm.create.actualMaintenanceDate': 'Actual Maintenance Date',
-  'swm.create.vehicleScheduledMaintenanceDate':
-    'Vehicle Scheduled Maintenance Date',
+  'swm.create.vehicleScheduledMaintenanceDate': 'Vehicle Scheduled Maintenance Date',
   'swm.create.costIncurred': 'Cost Incurred',
   'swm.create.vehicleDowntimeActual': 'Vehicle Downtime Actual',
   'swm.create.vehicleDownTimeActualUom': 'Hrs/Days',
   'swm.create.maintenanceType': 'Maintenance Type',
   'swm.search.result.name': 'Name',
-  'swm.create.vehicleReadingDuringMaintenance':
-    'Vehicle Reading during Maintenance (Kms)',
+  'swm.create.vehicleReadingDuringMaintenance': 'Vehicle Reading during Maintenance (Kms)',
   'swm.create.remarks': 'Remarks',
-  'swm.create.group.title.VehicleMaintenanceDetails':
-    'Vehicle Maintenance Details',
+  'swm.create.group.title.VehicleMaintenanceDetails': 'Vehicle Maintenance Details',
   'swm.create.isScheduled': 'Is Scheduled',
   'swm.create.DowntimeDefined': 'Downtime Defined',
   'swm.create.tripStartDate': 'Schedule Date From ',
@@ -2649,8 +2361,7 @@ var localization_EN_Data = {
   'swm.create.group.title.Trip Sheet Details': 'Trip Sheet Details',
   'swm.create.siteDetails.name': 'Ending Dumping Ground Point',
   'swm.create.endingCollectionPoint.name': 'Ending Collection Point',
-  'swm.create.page.title.vehicleTripSheetDetails':
-    'Enter Vehicle Trip Sheet Details',
+  'swm.create.page.title.vehicleTripSheetDetails': 'Enter Vehicle Trip Sheet Details',
   'swm.create.collectionType.name': 'Collection Type',
   'swm.search.vendor.title': 'Vendor Search',
   'vendorcontracts.search.title': 'Vendor Contract Search',
@@ -2693,10 +2404,8 @@ var localization_EN_Data = {
   'vendorcontracts.create.remarks': 'Remarks',
   'vendorcontracts.create.isActive': 'Is Active',
   'vendorcontracts.create.isNotActive': 'Is Not Active',
-  'vendorcontracts.create.group.title.VendorContractDetails':
-    'Vendor Contract Details',
-  'swm.vehiclemaintenancedetails.search.title':
-    'Vehicle Maintenance/Repair Search',
+  'vendorcontracts.create.group.title.VendorContractDetails': 'Vendor Contract Details',
+  'swm.vehiclemaintenancedetails.search.title': 'Vehicle Maintenance/Repair Search',
 
   'swm.sourcesegregation.search.title': 'Source Segregation Search',
   'swm.create.sourceSegregationDate': 'Source Segregation Date',
@@ -2704,16 +2413,12 @@ var localization_EN_Data = {
   'swm.search.result.dumpingGround': 'Dumping Ground',
   'swm.search.result.sourceSegregationDate': 'Source Segregation Date',
   'swm.create.collectionType': 'Collection Type',
-  'swm.create.collectionDetails.wetWasteCollected':
-    'Quantity of wet waste collected (Tons)',
-  'swm.create.collectionDetails.dryWasteCollected':
-    'Quantity of dry waste collected (Tons)',
-  'swm.create.group.title.SourceSegregationDetails':
-    'Source Segregation Details',
+  'swm.create.collectionDetails.wetWasteCollected': 'Quantity of wet waste collected (Tons)',
+  'swm.create.collectionDetails.dryWasteCollected': 'Quantity of dry waste collected (Tons)',
+  'swm.create.group.title.SourceSegregationDetails': 'Source Segregation Details',
   'swm.create.group.title.CollectionTypeDetails': 'Collection Type Details',
 
-  'swm.sanitationstaffschedules.search.title':
-    'Sanitation Staff Schedules Search',
+  'swm.sanitationstaffschedules.search.title': 'Sanitation Staff Schedules Search',
   'swm.create.sanitationstaffschedules.shift': 'Shift',
   'swm.create.sanitationstaffschedules.targetNo': 'Sanitation Staff TaretNo',
   'swm.create.sanitationstaffschedules.targetfrom': 'Target From',
@@ -2732,8 +2437,7 @@ var localization_EN_Data = {
   'pgr.grievanceComments': 'Comments',
   'pgr.lbl.uploadphoto': 'Upload Photo',
 
-  'error.license.feeDetailYearNotFound ':
-    'Financial Does not exists for Current/Future Year',
+  'error.license.feeDetailYearNotFound ': 'Financial Does not exists for Current/Future Year',
 
   'reports.asset.fromDate': 'From Date',
   'reports.asset.toDate': 'To Date',
@@ -2804,12 +2508,9 @@ var localization_EN_Data = {
   'reports.asset.plusrevalsum': 'GROSS BLOCK-Additional during the year',
   'reports.asset.minusrevalsum': 'GROSS BLOCK-Deduction During the year',
   'reports.asset.revaltotal': 'GROSS BLOCK-Total',
-  'reports.asset.accumulateddepreciationaccount':
-    'ACCUMULATED DEPRECIATION-Account Code',
-  'reports.asset.startdepval':
-    'ACCUMULATED DEPRECIATION-Balance as at 01/04/2017',
-  'reports.asset.currdepsum':
-    'ACCUMULATED DEPRECIATION-Depreciation during the year',
+  'reports.asset.accumulateddepreciationaccount': 'ACCUMULATED DEPRECIATION-Account Code',
+  'reports.asset.startdepval': 'ACCUMULATED DEPRECIATION-Balance as at 01/04/2017',
+  'reports.asset.currdepsum': 'ACCUMULATED DEPRECIATION-Depreciation during the year',
   'reports.asset.totaldepsum': 'ACCUMULATED DEPRECIATION-Depreciation Total',
   'reports.asset.endcurrentamount': 'Net Block as at 31/03/2018',
   'reports.asset.previousfynetblock': 'Net Block as at 31/03/2017',
@@ -2864,8 +2565,7 @@ var localization_EN_Data = {
   'advocates.create.email': 'Email',
   'advocates.create.dateOfEmpanelment': 'Date of Empanelment',
   'advocates.create.panNumber': 'PAN Number',
-  'advocates.create.standingCommiteDecisionDate':
-    'Standing Commite Decision Date',
+  'advocates.create.standingCommiteDecisionDate': 'Standing Commite Decision Date',
   'advocates.create.VATTinNumber': 'GST Number',
   'advocates.create.empanelmentFromDate': 'Empanelment From Date',
   'advocates.create.newsPaperAdvertismentDate': 'NewsPaper Advertisment Date',
@@ -2886,14 +2586,12 @@ var localization_EN_Data = {
   'advocates.create.inactive': 'Inactive',
   'advocates.create.terminate': 'Terminate',
   'advocates.create.group.title.action': 'Action',
-  'advocates.create.reasonOfTerminationOrDeactivation':
-    'Reason Of Termination/Inactivation',
+  'advocates.create.reasonOfTerminationOrDeactivation': 'Reason Of Termination/Inactivation',
   'advocates.create.terminationDate': 'Termination Date',
   'advocates.create.inActivationDate': 'InActivation Date',
   'advocates.create.group.title.agencyDetails': 'Agency Owner Details',
 
-  'advocatepayment.create.group.title.AdvocatePaymentDetails':
-    'Advocate Request For Payment',
+  'advocatepayment.create.group.title.AdvocatePaymentDetails': 'Advocate Request For Payment',
   'advocatepayment.create.advocateName': 'Advocate Name',
   'advocatepayment.create.demandDate': 'Demand Date',
   'advocatepayment.create.caseNo': 'Case No.',
@@ -3002,16 +2700,13 @@ var localization_EN_Data = {
 
   'caseRegistration.create.group.title.caseDetails': 'Case Details',
   'caseRegistration.create.referenceCaseNo': 'Reference Case No',
-  'caseRegistration.create.departmentConcernedPerson':
-    'Department Concerned Person',
+  'caseRegistration.create.departmentConcernedPerson': 'Department Concerned Person',
   'caseRegistration.create.caseRegistrationDate': 'Case Registration Date',
 
-  'legal.vakalatnama.create.group.title.generateVakalatnama':
-    'Generate Vakalatnama',
+  'legal.vakalatnama.create.group.title.generateVakalatnama': 'Generate Vakalatnama',
   'legal.vakalatnama.create.caseNumber': 'Case Number',
   'legal.vakalatnama.create.referenceCaseNumber': 'Reference CaseNumber',
-  'legal.vakalatnama.create.summon_WarrantReferenceNumber':
-    'Summon/Warrant Reference Number',
+  'legal.vakalatnama.create.summon_WarrantReferenceNumber': 'Summon/Warrant Reference Number',
   'legal.vakalatnama.create.advocateName': 'Advocate Name',
   'legal.vakalatnama.create.additionalAdvocate': 'Additional Advocate',
   'legal.vakalatnama.create.department': 'Department',
@@ -3030,21 +2725,15 @@ var localization_EN_Data = {
   'legal.create.charge': 'Charge',
   'legal.create.amount': 'Amount',
   'legal.create.modeOfPayment': 'Mode Of Payment',
-  'advocatepayment.create.instrumentNumber_InstrumentDate':
-    'Instrument Number/Instrument Date',
+  'advocatepayment.create.instrumentNumber_InstrumentDate': 'Instrument Number/Instrument Date',
   'legal.create.additionalAdvocate': 'Additional Advocate',
   //parawisecomments
-  'legal.parawisecomments.create.group.title.viewDetails':
-    'View Summon/Warrant Details',
+  'legal.parawisecomments.create.group.title.viewDetails': 'View Summon/Warrant Details',
   'legal.parawisecomments.create.summonWarrantDetails': 'Case Details',
-  'legal.parawisecomments.create.group.title.parawiseComment':
-    'Parawise Comment',
-  'legal.parawisecomments.create.dateOfCommentsAsked':
-    'Date of Parawise Comments asked',
-  'legal.parawisecomments.create.dateOfCommentsReceived':
-    'Date of Parawise Comments Rcvd at Dept',
-  'legal.parawisecomments.create.dateOfInfoProvidedByHod':
-    'Date of Information provided by HOD',
+  'legal.parawisecomments.create.group.title.parawiseComment': 'Parawise Comment',
+  'legal.parawisecomments.create.dateOfCommentsAsked': 'Date of Parawise Comments asked',
+  'legal.parawisecomments.create.dateOfCommentsReceived': 'Date of Parawise Comments Rcvd at Dept',
+  'legal.parawisecomments.create.dateOfInfoProvidedByHod': 'Date of Information provided by HOD',
   'legal.parawisecomments.create.resolutionDate': 'Resolution Date',
   'legal.parawisecomments.create.caseReferenceNo': 'Case Reference No.',
   'legal.parawisecomments.create.parawiseComments': 'Parawise Comments',
@@ -3106,8 +2795,7 @@ var localization_EN_Data = {
   'advocates.search.document.title': 'Search Advocate',
   'advocates.update.document.title': 'Update Advocate',
   'agencies.update.document.title': 'Update Agency',
-  'advocatepayment.create.document.title':
-    'Create Advocate Request for Payment',
+  'advocatepayment.create.document.title': 'Create Advocate Request for Payment',
   'advocatepayment.search.document.title': 'Search Advocate Payment',
   'advocatepayment.update.document.title': 'Update Advocate Payment',
   'assignadvocate.update.document.title': 'Update Assign Advocate',
@@ -3159,34 +2847,28 @@ var localization_EN_Data = {
   'works.create.spilloverEstimate': 'Create Spill Over Estimate',
   'works.create.abstractEstimate': 'Create Abstract Estimate',
   'works.create.searchEstimate': 'Search Abstract Estimate',
-  'works.create.groups.label.estandadminsanction':
-    'Estimate and Administrative Sanction',
-  'works.create.groups.fields.abstractEstimateNumber':
-    'Abstract Estimate Number',
+  'works.create.groups.label.estandadminsanction': 'Estimate and Administrative Sanction',
+  'works.create.groups.fields.abstractEstimateNumber': 'Abstract Estimate Number',
   'works.create.groups.fields.dateOfProposal': 'Date of Proposal',
   'works.create.groups.fields.department': 'Department',
   'works.create.groups.fields.referenceType': 'Reference Type',
-  'works.create.groups.fields.referenceNumber':
-    'Letter Reference / Requirement Number',
+  'works.create.groups.fields.referenceNumber': 'Letter Reference / Requirement Number',
   'works.create.groups.fields.subject': 'Subject',
   'works.create.groups.fields.description': 'Description',
   'works.create.groups.fields.natureOfWork': 'Nature of Work',
-  'works.create.groups.fields.modeOfAllotment':
-    'Recommended Mode of Entrustment',
+  'works.create.groups.fields.modeOfAllotment': 'Recommended Mode of Entrustment',
   'works.create.groups.fields.typeOfWork': 'Type of Work',
   'works.create.groups.fields.subTypeOfWork': 'Sub-Type of Work',
   'works.create.groups.fields.workCategory': 'Work Category',
   'works.create.groups.fields.beneficiary': 'Beneficiary',
   'works.create.groups.fields.locality': 'Locality',
   'works.create.groups.fields.ward': 'Ward',
-  'works.create.groups.fields.workProposedAsPerDP':
-    'Work Proposed is as per DP',
+  'works.create.groups.fields.workProposedAsPerDP': 'Work Proposed is as per DP',
   'works.create.groups.fields.dpRemarks': 'DP Remarks',
   'works.create.groups.fields.pmcRequired': 'Is PMC need to Appoint?',
   'works.create.groups.fields.pmcType': 'If Yes, from Panel or New Appointment',
   'works.create.groups.fields.pmcName': 'PMC Name',
-  'works.create.groups.fields.implementationPeriod':
-    'Approx. Period of implementation',
+  'works.create.groups.fields.implementationPeriod': 'Approx. Period of implementation',
   'works.create.groups.label.assetdetails': 'Asset Details',
   'works.create.groups.fields.assetCode': 'Asset Code',
   'works.create.groups.fields.assetCondition': 'Present Condition of the Asset',
@@ -3199,8 +2881,7 @@ var localization_EN_Data = {
   'works.create.groups.fields.sanctionAuthority': 'Sanction Authority',
   'works.create.groups.label.uploadDocs': 'Upload Documents',
   'works.create.pattern.fields.implementationPeriod': 'Only Numbers Allowed',
-  'works.create.pattern.fields.label.estimateAmount':
-    'Only Numbers with Optional Two Decimal Values Allowed',
+  'works.create.pattern.fields.label.estimateAmount': 'Only Numbers with Optional Two Decimal Values Allowed',
   'works.create.groups.label.asssetsland': 'Required Assets - Land',
   'works.create.groups.fields.landAssetRequired': 'Land Asset Required',
   'works.create.groups.fields.noOfLands': 'No. of Lands',
@@ -3209,24 +2890,19 @@ var localization_EN_Data = {
   'works.create.groups.label.arealand': 'Area of Land',
   'works.create.groups.label.plotno': 'Plot No.',
   'works.create.groups.label.surveyno': 'Survey No.',
-  'works.create.groups.label.landAssetCondition':
-    'Present Condition of the Land',
+  'works.create.groups.label.landAssetCondition': 'Present Condition of the Land',
   'works.create.groups.label.constructionArea': 'Construction Area',
   'works.create.groups.fields.remarks': 'Remarks',
-  'works.create.groups.fields.administrativesanction':
-    'Administrative Sanction Number',
-  'works.create.groups.fields.adminSanctionFromDate':
-    'Admin Sanction From Date',
+  'works.create.groups.fields.administrativesanction': 'Administrative Sanction Number',
+  'works.create.groups.fields.adminSanctionFromDate': 'Admin Sanction From Date',
   'works.create.groups.fields.adminSanctionToDate': 'Admin Sanction To Date',
   'works.create.groups.fields.fundCodes': 'Fund',
   'works.create.groups.fields.functionCodes': 'Function',
   'works.create.groups.fields.budgetHeadCodes': 'Budget Head',
   'works.create.groups.fields.spillOverFlag': 'Spill Over Work',
   'works.create.groups.fields.statuses': 'Status',
-  'works.create.groups.fields.abstractEstimateNumbers':
-    'Abstract Estimate Number',
-  'works.create.groups.fields.workIdentificationNumbers':
-    'Work Identification Number',
+  'works.create.groups.fields.abstractEstimateNumbers': 'Abstract Estimate Number',
+  'works.create.groups.fields.workIdentificationNumbers': 'Work Identification Number',
   'works.create.groups.fields.createdby': 'Created By',
   'works.create.groups.fields.owner': 'Owner',
   'works.create.groups.fields.totalamount': 'Total Amount',
@@ -3236,34 +2912,27 @@ var localization_EN_Data = {
   'works.create.groups.fields.accountCode': 'Account Code',
   'works.create.groups.fields.scheme': 'Scheme',
   'works.create.groups.fields.subScheme': 'Sub Scheme',
-  'works.create.groups.fields.fundSanctioningAuthority':
-    'Fund Sanction Authority',
+  'works.create.groups.fields.fundSanctioningAuthority': 'Fund Sanction Authority',
   'works.create.groups.fields.fundAvailable': 'Is Fund Available?',
   'works.create.groups.fields.adminSanctionNumber': 'Admin Sanction No.',
   'works.create.groups.fields.adminSanctionDate': 'Amin Sanction Date',
-  'works.create.groups.fields.councilResolutionNumber':
-    'Council Resolution No.',
+  'works.create.groups.fields.councilResolutionNumber': 'Council Resolution No.',
   'works.create.groups.fields.councilResolutionDate': 'Council Resolution Date',
-  'works.create.groups.fields.detailedEstimateCreated':
-    'Detailed Estimate Created',
+  'works.create.groups.fields.detailedEstimateCreated': 'Detailed Estimate Created',
   'works.create.groups.fields.workOrderCreated': 'Work Order Created',
   'works.create.groups.fields.billsCreated': 'Bills Created',
-  'works.create.groups.label.workIdentificationNumber':
-    'Work Identification No.',
+  'works.create.groups.label.workIdentificationNumber': 'Work Identification No.',
   'works.create.groups.label.grossAmountBilled': 'Gross Amount Billed So Far',
 
   //Performance Assessment
   'perfManagement.create.KPIs.groups.type': 'Type',
   'perfManagement.create.KPIs.groups.kpiTarget': 'Target',
-  'perfManagement.create.KPIs.groups.kpiInputNumber':
-    'Please enter a valid number',
+  'perfManagement.create.KPIs.groups.kpiInputNumber': 'Please enter a valid number',
   'perfManagement.create.KPIs.groups.kpiInfo': 'KPI Info',
   'perfManagement.create.KPIs.groups.Uploads': 'Upload Doc',
 
-  'perfManagement.create.KPIs.groups.kpiMaster':
-    'Key Performance Indicator Master',
-  'perfManagement.create.KPIs.groups.kpiMasterCreate':
-    'Create Key Performance Indicator Master',
+  'perfManagement.create.KPIs.groups.kpiMaster': 'Key Performance Indicator Master',
+  'perfManagement.create.KPIs.groups.kpiMasterCreate': 'Create Key Performance Indicator Master',
   'perfManagement.create.KPIs.groups.kpiDepartment': 'Department',
   'perfManagement.create.KPIs.groups.kpiDate': 'Financial Year',
   'perfManagement.create.KPIs.groups.kpiName': 'KPI Name',
@@ -3271,22 +2940,18 @@ var localization_EN_Data = {
   'perfManagement.create.KPIs.groups.kpitype': 'KPI Type',
   'perfManagement.create.KPIs.groups.kpitype.value': 'KPI Value Number',
   'perfManagement.create.KPIs.groups.kpitype.text': 'KPI Text',
-  'perfManagement.create.KPIs.groups.kpitype.objective':
-    'KPI Value Objective Type',
+  'perfManagement.create.KPIs.groups.kpitype.objective': 'KPI Value Objective Type',
   'perfManagement.create.KPIs.groups.kpiTargetBlock': 'Target Value',
   'perfManagement.create.KPIs.groups.kpiTargetRadioBlock': 'Target Value',
   'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes': 'Yes',
   'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no': 'No',
-  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress':
-    'InProgress',
-  'perfManagement.create.KPIs.groups.kpiInstruct':
-    'Instruction to Achieve Target',
+  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress': 'InProgress',
+  'perfManagement.create.KPIs.groups.kpiInstruct': 'Instruction to Achieve Target',
   'perfManagement.create.KPIs.groups.kpiDoc': 'Documents Required',
   'perfManagement.create.KPIs.groups.kpidocName': 'Document Name',
   'perfManagement.create.KPIs.groups.kpidocCode': 'Document Code',
   'perfManagement.create.KPIs.groups.kpidocMandatory': 'Document Mandatory',
-  'perfManagement.search.KPIs.groups.kpiSearch':
-    'Search Key Performance Indicator',
+  'perfManagement.search.KPIs.groups.kpiSearch': 'Search Key Performance Indicator',
   'perfManagement.search.KPIs.groups.searchkpiDepartment': 'Department',
   'perfManagement.search.KPIs.groups.searchkpiCode': 'KPI Code',
   'perfManagement.search.KPIs.groups.searchkpiName': 'KPI Name',
@@ -3299,14 +2964,12 @@ var localization_EN_Data = {
   'perfManagement.view.KPIs.groups.viewkpitype': 'KPI Type',
   'perfManagement.view.KPIs.groups.viewkpiTargetBlock': 'Target Value',
   'perfManagement.view.KPIs.groups.viewkpiTargetRadioBlock': 'Target Value',
-  'perfManagement.view.KPIs.groups.viewKpiInstruc':
-    'Instruction to Achieve Target',
+  'perfManagement.view.KPIs.groups.viewKpiInstruc': 'Instruction to Achieve Target',
   'perfManagement.view.KPIs.groups.viewkpiDocuments': 'Documents Required',
   'perfManagement.view.KPIs.groups.viewkpidoc': 'Document Name',
   'perfManagement.view.KPIs.groups.viewkpidocCode': 'Document Code',
   'perfManagement.view.KPIs.groups.viewkpidocMandatory': 'Document Mandatory',
-  'perfManagement.update.KPIs.groups.updateKpiDepartmentBlock':
-    'Update Key Performance Indicator',
+  'perfManagement.update.KPIs.groups.updateKpiDepartmentBlock': 'Update Key Performance Indicator',
   'perfManagement.update.KPIs.groups.updatekpiDepartment': 'Department',
   'perfManagement.update.KPIs.groups.updatekpiDate': 'Financial Year',
   'perfManagement.update.KPIs.groups.updatekpiName': 'KPI Name',
@@ -3314,26 +2977,21 @@ var localization_EN_Data = {
   'perfManagement.update.KPIs.groups.updatekpitype': 'KPI Type',
   'perfManagement.update.KPIs.groups.updatekpitype.text': 'KPI Value Text',
   'perfManagement.update.KPIs.groups.updatekpitype.value': 'KPI Value Number',
-  'perfManagement.update.KPIs.groups.updatekpitype.objective':
-    'KPI Value Objective Type',
+  'perfManagement.update.KPIs.groups.updatekpitype.objective': 'KPI Value Objective Type',
   'perfManagement.update.KPIs.groups.updatekpiTargetTextBlock': 'Target Value',
   'perfManagement.update.KPIs.groups.updatekpiTargetBlock': 'Target Value',
   'perfManagement.update.KPIs.groups.updatekpiTargetRadioBlock': 'Target Value',
   'perfManagement.update.KPIs.groups.updatekpiTargetBlock.yes': 'Yes',
   'perfManagement.update.KPIs.groups.updatekpiTargetBlock.no': 'No',
   'perfManagement.update.KPIs.groups.updatekpiTargetBlock.inprogress': 'WIP',
-  'perfManagement.update.KPIs.groups.updateKpiInstruc':
-    'Instruction to Achieve Target',
+  'perfManagement.update.KPIs.groups.updateKpiInstruc': 'Instruction to Achieve Target',
   'perfManagement.update.KPIs.groups.updatekpiDocuments': 'Document Required',
   'perfManagement.update.KPIs.groups.updatekpidoc': 'Document Name',
-  'perfManagement.update.KPIs.groups.updatekpidocMandatory':
-    'Document Mandatory',
-  'perfManagement.update.KPIs.groups.updatekpivalue':
-    'KPI values submitted successfully',
+  'perfManagement.update.KPIs.groups.updatekpidocMandatory': 'Document Mandatory',
+  'perfManagement.update.KPIs.groups.updatekpivalue': 'KPI values submitted successfully',
 
   'referenceEvidence.update.document.title': 'Reference Evidences',
-  'referenceEvidence.create.group.title.addReferenceEvidences':
-    'Add Reference Evidences',
+  'referenceEvidence.create.group.title.addReferenceEvidences': 'Add Reference Evidences',
   'referenceEvidence.create.typeOfReference': 'Type Of Reference',
   'referenceEvidence.create.referenceDate': 'Reference Date',
   'referenceEvidence.create.referenceCaseNo': 'Reference Case No',
@@ -3474,13 +3132,10 @@ var localization_EN_Data = {
   'inventory.create.approvalStatus': 'Approval Status',
   'inventory.create.approvalRemarks': 'Approval Remarks',
   'inventory.materialissue.note': 'Indent Material Issue Note',
-  'inventory.create.group.title.MaterialIssues1':
-    'Create Indent Material Issue',
-  'inventory.create.group.title.MaterialIssues2':
-    'Material Transfer Indent Details',
+  'inventory.create.group.title.MaterialIssues1': 'Create Indent Material Issue',
+  'inventory.create.group.title.MaterialIssues2': 'Material Transfer Indent Details',
   'inventory.create.group.title.MaterialIssues3': 'Approval Information',
-  'inventory.update.group.title.MaterialIssues1':
-    'Update Indent Material Issue',
+  'inventory.update.group.title.MaterialIssues1': 'Update Indent Material Issue',
   'inventory.view.group.title.MaterialIssues1': 'View Indent Material Issue',
 
   //Inventory Common Lables
@@ -3615,8 +3270,7 @@ var localization_MR_Data = {
   'employee.createPosition.groups.fields.outsourcepost ': 'कंत्राटी पद ',
   'employee.createPosition.groups.fields.outsourcepost.value1 ': ' होय',
   'employee.createPosition.groups.fields.outsourcepost.value2 ': ' नाही',
-  'employee.createHoliday.groups.title ':
-    'दिनदर्शिके मध्ये सुट्ट्यांची नोंदणी करा',
+  'employee.createHoliday.groups.title ': 'दिनदर्शिके मध्ये सुट्ट्यांची नोंदणी करा',
   'employee.createHoliday.groups.fields.calendarYear ': ' कॅलेंडर वर्ष',
   'employee.createHoliday.groups.fields.holidayDate ': ' सुट्टीची तारीख',
   'employee.createHoliday.groups.fields.holidayName ': ' सुट्टीचे नाव',
@@ -3683,8 +3337,7 @@ var localization_MR_Data = {
   'employee.Employee.fields.User.mobileNumber': ' मोबाइल नंबर',
   'employee.Employee.fields.User.aadhaarNumber': ' आधार क्रमांक',
   'employee.Employee.fields.User.active': ' सक्रिय',
-  'employee.Employee.fields.User.pwdExpiryDate':
-    ' पीडब्ल्यूडी कालावधी समाप्ती तारीख',
+  'employee.Employee.fields.User.pwdExpiryDate': ' पीडब्ल्यूडी कालावधी समाप्ती तारीख',
   'employee.Employee.fields.User.locale': ' लोकॅल',
   'employee.Employee.fields.User.type': ' प्रकार',
   'employee.Employee.fields.User.accountLocked': ' खाते लॉक केले',
@@ -3768,12 +3421,9 @@ var localization_MR_Data = {
   'wc.create.groups.connectionDetails.propertyType': 'दर सूची',
   'wc.create.groups.connectionDetails.categoryType': 'वर्ग प्रकार',
   'wc.create.groups.connectionDetails.usageType': 'वापर प्रकार',
-  'wc.create.groups.connectionDetails.hscPipeSizeType':
-    'एच.एस.सी. नाल्जोदानीचा आकार (इंच)',
-  'wc.create.groups.connectionDetails.fields.sumpCapacity':
-    'संधार क्षमता (लिटर)',
-  'wc.create.groups.connectionDetails.fields.numberOfPersons':
-    'व्यक्तींची संख्या',
+  'wc.create.groups.connectionDetails.hscPipeSizeType': 'एच.एस.सी. नाल्जोदानीचा आकार (इंच)',
+  'wc.create.groups.connectionDetails.fields.sumpCapacity': 'संधार क्षमता (लिटर)',
+  'wc.create.groups.connectionDetails.fields.numberOfPersons': 'व्यक्तींची संख्या',
   'wc.create.groups.approvalDetails.title': 'मंजूरी तपशील',
   'wc.create.groups.approvalDetails.fields.department': 'मंजूर विभाग',
   'wc.create.groups.approvalDetails.fields.designation': 'मंजुरी पदनाम',
@@ -3796,11 +3446,9 @@ var localization_MR_Data = {
   'wc.create.positiontype ': ' स्थिती प्रकार',
   'wc.create.groups.radio ': ' आउटसोर्स केलेले पोस्ट',
   'wc.create.groups.fileDetails.fields.PTaxReciept': 'मालमत्ता कराची पावती',
-  'wc.create.groups.fileDetails.fields.DistributionLineLocationMap':
-    'वितरण स्थान नकाशा',
+  'wc.create.groups.fileDetails.fields.DistributionLineLocationMap': 'वितरण स्थान नकाशा',
   'wc.create.groups.fileDetails.fields.WhiteRationCard': 'श्वेत शोधा पत्रिका',
-  'wc.create.groups.fileDetails.fields.CourtFeeStamp':
-    ' 20 आरएस कोर्ट फी स्टॅम्प',
+  'wc.create.groups.fileDetails.fields.CourtFeeStamp': ' 20 आरएस कोर्ट फी स्टॅम्प',
   'wc.create.groups.connectionDetails.billingType': 'कनेक्शन प्रकार',
   'wc.create.groups.connectionDetails.supplyType': 'पुरवठा प्रकार',
   'wc.create.groups.applicantDetails.acknowledgementNumber': 'पोच क्र',
@@ -3858,13 +3506,10 @@ var localization_MR_Data = {
   'wc.search.Donation.title': 'सुरक्षा ठेव शोधा',
   'wc.create.DocumentTypeApplicationType.title': 'दस्तऐवज अनुप्रयोग तयार करा',
   'wc.create.mandatory': 'अनिवार्य',
-  'wc.update.DocumentTypeApplicationTypes.title':
-    'दस्तऐवज प्रकार अर्ज प्रकार अद्यावत करा',
-  'wc.search.DocumentTypeApplicationType.title':
-    'दस्तऐवज प्रकार अर्ज प्रकार शोधा',
+  'wc.update.DocumentTypeApplicationTypes.title': 'दस्तऐवज प्रकार अर्ज प्रकार अद्यावत करा',
+  'wc.search.DocumentTypeApplicationType.title': 'दस्तऐवज प्रकार अर्ज प्रकार शोधा',
   'wc.create.applicationType': 'अनुप्रयोग प्रकार',
-  'wc.view.DocumentTypeApplicationTypes.title':
-    'दस्तऐवज प्रकार अर्ज प्रकार पहा',
+  'wc.view.DocumentTypeApplicationTypes.title': 'दस्तऐवज प्रकार अर्ज प्रकार पहा',
   'wc.create.supplyType': 'पुरवठा प्रकार',
   'wc.create.code': 'कोड',
   'wc.search.supplyType.title': 'पुरवठा प्रकार शोधा',
@@ -3880,8 +3525,7 @@ var localization_MR_Data = {
   'wc.create.pipeSize': 'कनेक्शन आकार',
   'wc.search.PropertyPipeSize.title': 'श्रेणीचा आकार शोधा',
   'wc.view.PropertyTypePipeSize.title': 'टेरिफ श्रेणी कनेक्शन आकार पहा',
-  'wc.update.PropertyTypePipeSize.title':
-    "दर आकार श्रेणी कनेक्शन आकार अद्यावत'करा",
+  'wc.update.PropertyTypePipeSize.title': "दर आकार श्रेणी कनेक्शन आकार अद्यावत'करा",
   'wc.create.groups.applicantDetails.consumerNo': 'ग्राहक क्रमांक',
   'wc.create.groups.applicantDetails.connectionDate': 'कनेक्शन तारीख',
   'wc.create.pipeSize.title': 'कनेक्शन आकार तयार करा',
@@ -3900,8 +3544,7 @@ var localization_MR_Data = {
   'wc.create.groups.fields.location': 'स्थान',
   'wc.create.groups.fields.zone': 'झोन',
   'wc.create.groups.fields.ward': 'प्रभाग',
-  'wc.create.groups.fields.storageCapacityofReservoir(in MLD) ':
-    'वनस्पतीची क्षमता (एमएलडी)',
+  'wc.create.groups.fields.storageCapacityofReservoir(in MLD) ': 'वनस्पतीची क्षमता (एमएलडी)',
   'wc.create.groups.fields.storageReservoirName ': ' संग्रह साठ्यांचे नाव',
   'wc.create.groups.fields.treatmentPlantName ': ' जल उपचार संयंत्र',
   'wc.create.groups.fields.plantType': 'वनस्पतींचा प्रकार',
@@ -3912,10 +3555,8 @@ var localization_MR_Data = {
   'wc.search.groups.treatmentplant.title ': ' शोध यंत्र',
   'wc.create.groups.fields.storageType': 'साठवण ',
   'wc.create.groups.fields.numberOfSubLines': '  उप-नालीकांचीसंख्या',
-  'wc.create.groups.fields.numberOfConnectionFromReservoir':
-    'जलाशयातूनदिलेल्या कनेक्शनची संख्या',
-  'wc.create.groups.fields.numberOfMainDistributionLine':
-    '  मुख्य वितरणाची संख्या नाही',
+  'wc.create.groups.fields.numberOfConnectionFromReservoir': 'जलाशयातूनदिलेल्या कनेक्शनची संख्या',
+  'wc.create.groups.fields.numberOfMainDistributionLine': '  मुख्य वितरणाची संख्या नाही',
   'wc.create.groups.fields.reservoirType': ' जलाशय च्या प्रकार',
   'wc.create.storageReservoir.title': 'स्टोरेज जलाशय तयार करा',
   'wc.update.storageReservoir.title': "स्टोरेज जलाशय अद्यावत' करा",
@@ -3952,8 +3593,7 @@ var localization_MR_Data = {
   'wc.create.groups.fields.businessCategory': ' सेवा वर्ग',
   'wc.create.group.fields.businessCode': 'सेवा कोड',
   'wc.create.group.fields.businessName': ' सेवा नाव',
-  'wc.create.group.fields.voucherOnReceiptCreation':
-    'रसीद निर्मितीवर प्रमाणपत्र पावती तयार करा',
+  'wc.create.group.fields.voucherOnReceiptCreation': 'रसीद निर्मितीवर प्रमाणपत्र पावती तयार करा',
   'wc.Create.financialDetails.title': 'आर्थिक तपशील',
   'wc.Create.accountDetails.title': 'खाते तपशील',
   'wc.create.groups.fields.Fund': 'निधी',
@@ -3974,13 +3614,10 @@ var localization_MR_Data = {
   'pt.create.groups.ownerDetails.fields.guardianRelation': 'पालकाशी नाते ',
   'pt.create.groups.ownerDetails.fields.guardian': 'पालक ',
   'pt.create.groups.ownerDetails.fields.ownerType': 'मालकाचे प्रकार  ',
-  'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip':
-    'मालकी हक्काचे टक्केवारी ',
+  'pt.create.groups.ownerDetails.fields.percentageOfOwnerShip': 'मालकी हक्काचे टक्केवारी ',
   'pt.create.groups.ownerDetails.fields.pan': 'पॅन',
-  'pt.create.groups.propertyAddress.fields.referancePropertyNumber':
-    'संदर्भित मालमत्ता क्रमांक ',
-  'pt.create.groups.propertyAddress.fields.appartment':
-    'अपार्टमेंट / कॉम्प्लेक्स नाव',
+  'pt.create.groups.propertyAddress.fields.referancePropertyNumber': 'संदर्भित मालमत्ता क्रमांक ',
+  'pt.create.groups.propertyAddress.fields.appartment': 'अपार्टमेंट / कॉम्प्लेक्स नाव',
   'pt.create.groups.propertyAddress.fields.doorNo': 'दरवाजा क्रमांक ',
   'pt.create.groups.propertyAddress.fields.locality': 'परिसर',
   'pt.create.groups.propertyAddress.fields.electionWard': ' निवडणूक प्रभाग',
@@ -3990,30 +3627,24 @@ var localization_MR_Data = {
   'pt.create.groups.propertyAddress.fields.street': ' रस्ता',
   'pt.create.groups.propertyAddress.fields.revenueCircle': 'महसूल मंडल',
   'pt.create.groups.propertyAddress.fields.pin': 'पिन ',
-  'pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress':
-    ' पत्रव्यवाहाराचा पता व मालमत्तेचा पत्ता वेगळा आहे का ? ',
+  'pt.create.groups.propertyAddress.fields.isCorrespondanceAddressDifferentFromAddress': ' पत्रव्यवाहाराचा पता व मालमत्तेचा पत्ता वेगळा आहे का ? ',
   'pt.create.groups.propertyAddress.fields.address1': 'पत्ता 1',
   'pt.create.button.viewdcb': 'View DCB',
   'pt.create.button.viewdcb.close': 'Close',
   'pt.create.button.viewdcb.headwisedcb': 'Head wise DCB',
 
-  'pt.create.groups.assessmentDetails.fields.creationReason':
-    ' निर्मितीसाठी कारण',
+  'pt.create.groups.assessmentDetails.fields.creationReason': ' निर्मितीसाठी कारण',
   'pt.create.groups.assessmentDetails.fields.propertyType': 'दर सूची',
   'pt.create.groups.assessmentDetails.fields.department': 'विभाग',
   'pt.create.groups.assessmentDetails.fields.extentOfSite': 'साइटची व्याप्ती',
-  'pt.create.groups.assessmentDetails.fields.propertySubType':
-    'मालमत्ता उप प्रकार',
+  'pt.create.groups.assessmentDetails.fields.propertySubType': 'मालमत्ता उप प्रकार',
 
   //pt construction details
   'pt.create.groups.acknowledgement.forwarded': 'यशस्वीपणे अग्रेषित केले',
   'pt.create.groups.acknowledgement.approved': 'यशस्वीरित्या मंजूर',
-  'pt.create.groups.acknowledgement.success':
-    'आपला नवीन मालमत्तेचा अर्ज आवक केला गेला आहे,',
-  'pt.create.groups.acknowledgement.demandSuccess':
-    'कर आणि संग्रह यशस्वीरित्या जोडले / अद्यतनित केले',
-  'pt.create.groups.acknowledgement.dataEntrySuccess':
-    'मालमत्ता तपशील जतन आणि मालमत्ता क्रमांक ',
+  'pt.create.groups.acknowledgement.success': 'आपला नवीन मालमत्तेचा अर्ज आवक केला गेला आहे,',
+  'pt.create.groups.acknowledgement.demandSuccess': 'कर आणि संग्रह यशस्वीरित्या जोडले / अद्यतनित केले',
+  'pt.create.groups.acknowledgement.dataEntrySuccess': 'मालमत्ता तपशील जतन आणि मालमत्ता क्रमांक ',
   'pt.create.groups.constructionDetails': 'बांधकाम तपशील',
   'pt.create.groups.oldPropertyNo': 'जुने मालमत्ता क्रमांक',
   'pt.create.groups.propertyNo': 'मालमत्ता क्रमांक',
@@ -4031,10 +3662,8 @@ var localization_MR_Data = {
   'pt.create.groups.ownerDetails.fields.female': 'स्त्री',
   'pt.create.groups.ownerDetails.fields.Others': 'इतर',
   'pt.create.groups.vacantLand.fields.vacantLandDetails': 'रिक्त जागा तपशील',
-  'pt.create.groups.documentUpload.noFilesToUpload':
-    'अपलोड करण्यासाठी कोणत्याही फाईल नाहीत',
-  'pt.create.groups.addDemand.demandError':
-    'प्रविष्ट केलेला संग्रह मागणीपेक्षा कमी किंवा कमी असावा',
+  'pt.create.groups.documentUpload.noFilesToUpload': 'अपलोड करण्यासाठी कोणत्याही फाईल नाहीत',
+  'pt.create.groups.addDemand.demandError': 'प्रविष्ट केलेला संग्रह मागणीपेक्षा कमी किंवा कमी असावा',
   'pt.create.groups.addDemand.demand': 'मागणी',
   'pt.create.groups.addDemand.collection': 'संग्रह',
   'pt.create.groups.addDemand.period': 'कालावधी',
@@ -4052,8 +3681,7 @@ var localization_MR_Data = {
   'pt.create.groups.assessmentDetails': 'मूल्यांकन तपशील',
   'wc.crete.Slabs': 'स्लॅब्स',
   'reports.pgr.complaint.crn': 'तक्रार नोंदणी क्रमांक',
-  'pt.create.groups.assessmentDetails.fields.parentUpicNo':
-    'संदर्भित मालमत्ता क्रमांक',
+  'pt.create.groups.assessmentDetails.fields.parentUpicNo': 'संदर्भित मालमत्ता क्रमांक',
   'pt.create.button': 'पुढे पाठवा',
   'pt.create.groups.ownerDetails.fields.isPrimaryOwner': 'प्राथमिक मालक आहे',
   'pt.create.groups.assessmentDetails.fields.usageType': 'वापर प्रकार',
@@ -4067,38 +3695,28 @@ var localization_MR_Data = {
   'pt.create.groups.floorDetails': 'मजला तपशील',
   'pt.create.groups.propertyFactors': 'मालमत्ता फॅक्टर',
   'pt.create.groups.constructionDetails.fields.orderDate': 'वापर परवाना दिनांक',
-  'pt.create.groups.constructionDetails.fields.certificateNumber':
-    'प्रमाणपत्र क्रमांक',
-  'pt.create.groups.constructionDetails.fields.certificateCompletionDate':
-    'प्रमाणपत्र पूर्ण तारीख',
-  'pt.create.groups.constructionDetails.fields.certificateReceivedDate':
-    'प्रमाणपत्र प्राप्त तारीख',
+  'pt.create.groups.constructionDetails.fields.certificateNumber': 'प्रमाणपत्र क्रमांक',
+  'pt.create.groups.constructionDetails.fields.certificateCompletionDate': 'प्रमाणपत्र पूर्ण तारीख',
+  'pt.create.groups.constructionDetails.fields.certificateReceivedDate': 'प्रमाणपत्र प्राप्त तारीख',
   'pt.create.groups.constructionDetails.fields.agencyName': 'एजन्सीचे नाव',
   'pt.create.groups.constructionDetails.fields.licenseType': 'परवाना प्रकार',
   'pt.create.groups.constructionDetails.fields.licenseNumber': 'परवाना नंबर',
   'pt.create.groups.propertyAddress.fields.totalFloors': 'एकूण मजले',
   'pt.create.demands.addDemand': 'मागणी जोडा',
-  'pt.create.groups.surroundingBoundaries':
-    'मालमत्तेच्या आजूबाजूच्या सीमेवरील तपशील',
+  'pt.create.groups.surroundingBoundaries': 'मालमत्तेच्या आजूबाजूच्या सीमेवरील तपशील',
   'pt.create.groups.propertyAddress.vacantLand': 'रिक्त जमीन',
   'pt.create.groups.room': 'खोली',
   'pt.create.groups.upicDetails': 'मालमत्ता तपशील',
   'pt.create.groups.ownerDetails': 'मालक तपशील',
   'pt.create.groups.propertyDetails': 'मालकाचे तपशील',
-  'pt.create.groups.propertyDetails.oldAssessmentNumber':
-    'जुना मालमत्ता क्रमांक',
+  'pt.create.groups.propertyDetails.oldAssessmentNumber': 'जुना मालमत्ता क्रमांक',
   'pt.create.groups.propertyDetails.assessmentNumber': 'मालमत्ता क्रमांक',
-  'pt.create.groups.propertyAddress.fields.annualRentalValue':
-    'वार्षिक करयोग्य मूल्य',
-  'pt.create.groups.propertyAddress.fields.registrationDocNo':
-    'नोंदणी दस्तावेज क्रमांक',
-  'pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty':
-    'संदर्भित मालमत्ता क्रमांक',
+  'pt.create.groups.propertyAddress.fields.annualRentalValue': 'वार्षिक करयोग्य मूल्य',
+  'pt.create.groups.propertyAddress.fields.registrationDocNo': 'नोंदणी दस्तावेज क्रमांक',
+  'pt.create.groups.propertyAddress.fields.AssessmentNumberOfParentProperty': 'संदर्भित मालमत्ता क्रमांक',
   'pt.create.groups.propertyAddress.fields.exemptionCategory': 'सवलत श्रेणी',
-  'pt.create.groups.propertyAddress.fields.propertyDepartment':
-    'करनिर्धारण विभाग',
-  'pt.create.groups.propertyAddress.fields.registrationDocDate':
-    'नोंदणी दस्तावेज दिनांक',
+  'pt.create.groups.propertyAddress.fields.propertyDepartment': 'करनिर्धारण विभाग',
+  'pt.create.groups.propertyAddress.fields.registrationDocDate': 'नोंदणी दस्तावेज दिनांक',
   'pt.create.groups.propertyAddress.fields.assessmentDate': 'मूल्यांकन तारीख',
   'pt.create.groups.propertyAddress.fields.addressDetails': 'पत्ता तपशील',
   'pt.create.groups.propertyAddress.fields.propertyAddress': 'मालमत्ता पत्ता',
@@ -4113,10 +3731,8 @@ var localization_MR_Data = {
   'pt.create.groups.propertyAddress.emailExample': 'उदाहरण@उदाहरण.com',
   'pt.create.groups.propertyAddress.updateRoom': 'अपडेट रूम',
   'pt.create.groups.propertyAddress.addRoom': 'नवीन खोली',
-  'pt.create.groups.propertyAddress.exemptedAreaError':
-    'सवलत क्षेत्र हा चटईक्षेत्र पेक्षा जास्त असू शकत नाही',
-  'pt.create.groups.propertyAddress.totalFloorsError':
-    'मालमत्तेच्या स्तरातील एकूण मजले निवडा',
+  'pt.create.groups.propertyAddress.exemptedAreaError': 'सवलत क्षेत्र हा चटईक्षेत्र पेक्षा जास्त असू शकत नाही',
+  'pt.create.groups.propertyAddress.totalFloorsError': 'मालमत्तेच्या स्तरातील एकूण मजले निवडा',
   'pt.search.searchProperty': 'मालमत्ता शोध',
   'pt.search.searchProperty.fields.applicationNumber': 'अर्ज क्रमांक',
   'pt.search.searchProperty.fields.boundary': 'सीमा',
@@ -4135,8 +3751,7 @@ var localization_MR_Data = {
   'pt.create.groups.propertyAddress.fields.electricity': ' वीज',
   'pt.create.groups.propertyAddress.fields.attachedBathroom': ' संलग्न बाथरूम',
   'pt.create.groups.propertyAddress.fields.cableConnection': ' केबल कनेक्शन',
-  'pt.create.groups.propertyAddress.fields.waterHarvesting':
-    ' वॉटर हार्वेस्टिंग',
+  'pt.create.groups.propertyAddress.fields.waterHarvesting': ' वॉटर हार्वेस्टिंग',
   'pt.create.groups.propertyAddress.fields.floorType': ' मजला प्रकार',
   'pt.create.groups.propertyAddress.fields.roofType': ' छत प्रकार',
   'pt.create.groups.propertyAddress.fields.wallType': ' वॉल प्रकार',
@@ -4150,44 +3765,31 @@ var localization_MR_Data = {
   'pt.create.groups.floorDetails.fields.usageType': 'वापराचे  प्रकार',
   'pt.create.groups.floorDetails.fields.usageSubType': 'वापराचे उप प्रकार',
   'pt.create.groups.floorDetails.fields.annualRent': 'वार्षिक भाडे',
-  'pt.create.groups.floorDetails.fields.manualArv':
-    'मॅन्युअल वार्षिक करयोग्य मुल्य',
+  'pt.create.groups.floorDetails.fields.manualArv': 'मॅन्युअल वार्षिक करयोग्य मुल्य',
   'pt.create.groups.floorDetails.fields.Arv': 'वार्षिक करयोग्य मुल्य',
   'pt.create.groups.floorDetails.fields.occupantName': ' प्रवासी नाव',
-  'pt.create.groups.floorDetails.fields.constructionStartDate':
-    'बांधकाम प्रारंभ तारीख',
-  'pt.create.groups.floorDetails.fields.constructionEndDate':
-    'बांधकाम अंतिम तारीख',
-  'pt.create.groups.floorDetails.fields.effectiveFromDate':
-    'तारखेपासून प्रभावी',
+  'pt.create.groups.floorDetails.fields.constructionStartDate': 'बांधकाम प्रारंभ तारीख',
+  'pt.create.groups.floorDetails.fields.constructionEndDate': 'बांधकाम अंतिम तारीख',
+  'pt.create.groups.floorDetails.fields.effectiveFromDate': 'तारखेपासून प्रभावी',
   'pt.create.groups.floorDetails.fields.unstructuredLand': 'असंरक्षित जमीन',
   'pt.create.groups.floorDetails.fields.length': 'लांबी',
   'pt.create.groups.floorDetails.fields.breadth': ' रुंदी',
   'pt.create.groups.floorDetails.fields.plinthArea': 'बांधकामाचे क्षेत्रफळ',
-  'pt.create.groups.floorDetails.fields.occupancyCertificateNumber':
-    'भोगवटा प्रमाणपत्र क्रमांक',
-  'pt.create.groups.floorDetails.fields.buildingPermissionNumber':
-    ' बांधकाम परवानगी क्रमांक',
-  'pt.create.groups.floorDetails.fields.buildingPermissionDate':
-    ' बांधकाम परवान्याची तारीख',
-  'pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan':
-    ' इमारत प्लॅनमध्ये चौथा क्षेत्र',
+  'pt.create.groups.floorDetails.fields.occupancyCertificateNumber': 'भोगवटा प्रमाणपत्र क्रमांक',
+  'pt.create.groups.floorDetails.fields.buildingPermissionNumber': ' बांधकाम परवानगी क्रमांक',
+  'pt.create.groups.floorDetails.fields.buildingPermissionDate': ' बांधकाम परवान्याची तारीख',
+  'pt.create.groups.floorDetails.fields.plinthAreaInBuildingPlan': ' इमारत प्लॅनमध्ये चौथा क्षेत्र',
 
   'pt.create.groups.propertyAddress.fields.surveyNumber': 'सर्वे नंबर',
   'pt.create.groups.propertyAddress.fields.pattaNumber': 'पट्टा क्रमांक',
-  'pt.create.groups.propertyAddress.fields.vacantLandArea':
-    'रिक्त जमीन क्षेत्र',
+  'pt.create.groups.propertyAddress.fields.vacantLandArea': 'रिक्त जमीन क्षेत्र',
   'pt.create.groups.propertyAddress.fields.marketValue': 'बाजार भाव',
   'pt.create.groups.propertyAddress.fields.capitalValue': 'भांडवली मूल्य',
   'pt.create.groups.propertyAddress.fields.effectiveDate': 'प्रभावी तारीख',
-  'pt.create.groups.propertyAddress.fields.vacantLandPlotArea':
-    'रिक्त जमीन भूखंड क्षेत्र',
-  'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority':
-    'लेआउट मान्यता प्राधिकरण',
-  'pt.create.groups.propertyAddress.fields.layoutPermitNumber':
-    'लेआउट परमिट नंबर',
-  'pt.create.groups.propertyAddress.fields.layoutPermitDate':
-    'लेआउट परमिट दिनांक ',
+  'pt.create.groups.propertyAddress.fields.vacantLandPlotArea': 'रिक्त जमीन भूखंड क्षेत्र',
+  'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority': 'लेआउट मान्यता प्राधिकरण',
+  'pt.create.groups.propertyAddress.fields.layoutPermitNumber': 'लेआउट परमिट नंबर',
+  'pt.create.groups.propertyAddress.fields.layoutPermitDate': 'लेआउट परमिट दिनांक ',
   'pt.create.groups.propertyAddress.fields.upicNumber': 'जुना UPIC क्रमांक',
   'pt.create.groups.propertyAddress.fields.northBoundedBy': ' उत्तर',
   'pt.create.groups.propertyAddress.fields.southBoundedBy': ' दक्षिण',
@@ -4211,23 +3813,17 @@ var localization_MR_Data = {
   'pt.create.groups.propertyAddress.fields.exemptedArea': ' सुटलेला क्षेत्र',
   'pt.create.groups.propertyAddress.fields.buildingCost': ' इमारत मूल्य',
   'pt.create.groups.propertyAddress.fields.landCost': ' जमीन खर्च',
-  'pt.create.groups.propertyAddress.fields.assessableArea':
-    ' मूल्यनिर्धारित क्षेत्र',
+  'pt.create.groups.propertyAddress.fields.assessableArea': ' मूल्यनिर्धारित क्षेत्र',
   'pt.create.groups.propertyAddress.fields.totalArea': ' एकूण क्षेत्र',
   'pt.create.groups.propertyAddress.fields.propertyAge': ' मालमत्ता वय',
-  'pt.create.groups.propertyAddress.fields.currentAssessmentDate':
-    ' वर्तमान मूल्यांकन दिनांक ',
-  'pt.create.groups.propertyAddress.fields.firstAssessmentDate':
-    ' प्रथम मूल्यांकन दिनांक ',
-  'pt.create.groups.propertyAddress.fields.revisedAssessmentDate':
-    ' सुधारित मूल्यांकन दिनांक ',
-  'pt.create.groups.propertyAddress.fields.lastAssessmentDate':
-    ' अंतिम मूल्यांकन दिनांक ',
+  'pt.create.groups.propertyAddress.fields.currentAssessmentDate': ' वर्तमान मूल्यांकन दिनांक ',
+  'pt.create.groups.propertyAddress.fields.firstAssessmentDate': ' प्रथम मूल्यांकन दिनांक ',
+  'pt.create.groups.propertyAddress.fields.revisedAssessmentDate': ' सुधारित मूल्यांकन दिनांक ',
+  'pt.create.groups.propertyAddress.fields.lastAssessmentDate': ' अंतिम मूल्यांकन दिनांक ',
   'pt.create.groups.addDemand.fields.installment': ' हप्ता',
   'pt.create.groups.addDemand.fields.propertytax': ' मालमत्ता कर',
   'pt.create.groups.addDemand.fields.educationCess': ' शैक्षणिक उपकर',
-  'pt.create.groups.addDemand.fields.employmentGuaranteeCess':
-    ' रोजगार हमी उपकर',
+  'pt.create.groups.addDemand.fields.employmentGuaranteeCess': ' रोजगार हमी उपकर',
   'pt.create.groups.addDemand.fields.treetax': ' वृक्ष कर',
   'pt.create.groups.addDemand.fields.totalPropertyTax': ' एकूण मालमत्ता कर',
   'pt.create.groups.addDemand.fields.collection': ' संग्रह',
@@ -4288,15 +3884,13 @@ var localization_MR_Data = {
   'tl.create.groups.feematrixtype.feetype': ' फी चा प्रकार',
   'tl.create.groups.feematrixtype.unitofmeasurement': ' मोजण्याचे एकक',
   'tl.create.groups.feematrixtype.ratetype': ' दर प्रकार',
-  'tl.create.groups.feematrixtype.effectivefinancialyear':
-    ' प्रभावी आर्थिक वर्ष',
+  'tl.create.groups.feematrixtype.effectivefinancialyear': ' प्रभावी आर्थिक वर्ष',
   'tl.create.groups.feematrixtype.effectivefrom': ' पासून प्रभावी',
   'tl.create.groups.feematrixtype.effectiveto': ' पर्यंत प्रभावी ',
   'tl.search.groups.feematrixtype.title': ' शुल्क मॅट्रिक्स शोधा',
   'tl.search.groups.feematrixtype.licensecategory': ' परवाना वर्ग',
   'tl.search.groups.feematrixtype.subcategory': ' उप श्रेणी',
-  'tl.search.groups.feematrixtype.effectivefinancialyear':
-    ' प्रभावी आर्थिक वर्ष',
+  'tl.search.groups.feematrixtype.effectivefinancialyear': ' प्रभावी आर्थिक वर्ष',
   'tl.view.groups.feematrixtype.title': ' परवाना फी मेट्रिक्स पहा',
   'tl.view.groups.feematrixtype.applicationtype': ' अनुप्रयोग प्रकार',
   'tl.view.groups.feematrixtype.natureofbusiness': ' व्यवसायाचा प्रकार',
@@ -4316,35 +3910,29 @@ var localization_MR_Data = {
   'tl.update.groups.feematrixtype.feetype': ' फी प्रकार',
   'tl.update.groups.feematrixtype.unitofmeasurement': ' मोजण्याचे एकक',
   'tl.update.groups.feematrixtype.ratetype': ' दर प्रकार',
-  'tl.update.groups.feematrixtype.effectivefinancialyear':
-    ' प्रभावी आर्थिक वर्ष',
+  'tl.update.groups.feematrixtype.effectivefinancialyear': ' प्रभावी आर्थिक वर्ष',
   'tl.update.groups.feematrixtype.effectivefrom': ' पासून प्रभावी',
   'tl.update.groups.feematrixtype.effectiveto': ' प्रभावी करण्यासाठी',
   'tl.create.groups.licensedocumenttype.title': ' दस्तऐवज प्रकार तयार करा',
   'tl.create.groups.licensedocumenttype.name': ' नाव',
-  'tl.create.groups.licensedocumenttype.licenseapptype':
-    ' परवाना अनुप्रयोग प्रकार',
+  'tl.create.groups.licensedocumenttype.licenseapptype': ' परवाना अनुप्रयोग प्रकार',
   'tl.create.groups.licensedocumenttype.mandatory': ' अनिवार्य',
   'tl.create.groups.licensedocumenttype.enabled': ' सक्षम केले',
   'tl.search.groups.licensedocumenttype.title': ' दस्तऐवज प्रकार शोधा',
   'tl.search.groups.licensedocumenttype.name': ' नाव',
-  'tl.search.groups.licensedocumenttype.licenseapptype':
-    ' परवाना अनुप्रयोग प्रकार',
+  'tl.search.groups.licensedocumenttype.licenseapptype': ' परवाना अनुप्रयोग प्रकार',
   'tl.view.groups.licensedocumenttype.title': ' दस्तऐवज प्रकार',
   'tl.view.groups.licensedocumenttype.name': ' नाव',
-  'tl.view.groups.licensedocumenttype.licenseapptype':
-    ' परवाना अनुप्रयोग प्रकार',
+  'tl.view.groups.licensedocumenttype.licenseapptype': ' परवाना अनुप्रयोग प्रकार',
   'tl.update.groups.licensedocumenttype.title': ' दस्तऐवज प्रकार संपादित करा',
   'tl.update.groups.licensedocumenttype.name': ' नाव',
-  'tl.update.groups.licensedocumenttype.licenseapptype':
-    ' परवाना अनुप्रयोग प्रकार',
+  'tl.update.groups.licensedocumenttype.licenseapptype': ' परवाना अनुप्रयोग प्रकार',
   'tl.update.groups.licensedocumenttype.mandatory': ' अनिवार्य',
   'tl.update.groups.licensedocumenttype.Enabled': ' सक्षम केले',
   'tl.create.licensevalidity.title': ' परवाना वैधता',
   'tl.create.groups.licensevalidity.natureofbusiness': ' व्यवसायाचा प्रकार',
   'tl.create.groups.licensevalidity.licensecategory': ' परवाना वर्ग',
-  'tl.create.groups.licensevalidity.basedonfinancialyear':
-    ' आर्थिक वर्षांच्या आधारावर',
+  'tl.create.groups.licensevalidity.basedonfinancialyear': ' आर्थिक वर्षांच्या आधारावर',
   'tl.create.groups.licensevalidity.days': ' दिवस (कमाल 6)',
   'tl.create.groups.licensevalidity.weeks': ' आठवडे (कमाल 3)',
   'tl.create.groups.licensevalidity.months': ' महिने (कमाल 11)',
@@ -4355,49 +3943,36 @@ var localization_MR_Data = {
   'tl.view.groups.licensevalidity.title': ' परवाना वैधता',
   'tl.view.groups.licensevalidity.natureofbusiness': ' व्यवसायाचा प्रकार',
   'tl.view.groups.licensevalidity.licensecategory': ' परवाना वर्ग',
-  'tl.view.groups.licensevalidity.basedonfinancialyear':
-    ' आर्थिक वर्षांच्या आधारावर',
+  'tl.view.groups.licensevalidity.basedonfinancialyear': ' आर्थिक वर्षांच्या आधारावर',
   'tl.update.groups.licensevalidity.title': ' परवाना वैधता',
   'tl.update.groups.licensevalidity.natureofbusiness': ' व्यवसायाचा प्रकार',
   'tl.update.groups.licensevalidity.licensecategory': ' परवाना वर्ग',
-  'tl.update.groups.licensedocumenttype.basedonfinancialyear':
-    ' आर्थिक वर्षांच्या आधारावर',
+  'tl.update.groups.licensedocumenttype.basedonfinancialyear': ' आर्थिक वर्षांच्या आधारावर',
   'tl.create.licenses.groups.TradeDetailsTab': ' व्यापार तपशील',
-  'tl.create.licenses.groups.TradeDetails.OldLicenseNumber':
-    ' जुना परवाना नंबर',
+  'tl.create.licenses.groups.TradeDetails.OldLicenseNumber': ' जुना परवाना नंबर',
   'tl.create.licenses.groups.TradeOwnerDetails': ' व्यापार मालक तपशील',
   'tl.create.licenses.groups.TradeOwnerDetails.AadharNumber': ' आधार क्रमांक',
   'tl.create.licenses.groups.TradeOwnerDetails.Mobile Number': ' मोबाइल नंबर',
-  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName':
-    ' व्यापार मालक नाव',
-  'tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName':
-    ' वडिलांचे / पतीचे नाव',
+  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerName': ' व्यापार मालक नाव',
+  'tl.create.licenses.groups.TradeOwnerDetails.FatherSpouseName': ' वडिलांचे / पतीचे नाव',
   'tl.create.licenses.TradeOwnerDetails.groups.EmailID': ' ई - मेल आयडी',
-  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress':
-    ' व्यापार मालक पत्ता',
+  'tl.create.licenses.groups.TradeOwnerDetails.TradeOwnerAddress': ' व्यापार मालक पत्ता',
   'tl.create.licenses.groups.TradeLocationDetails': ' व्यापार स्थान तपशील',
-  'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo':
-    ' मालमत्ता मूल्यांकन क्रमांक',
+  'tl.create.licenses.groups.TradeLocationDetails.PropertyAssessmentNo': ' मालमत्ता मूल्यांकन क्रमांक',
   'tl.create.licenses.groups.TradeLocationDetails.Locality': ' परिसर',
   'tl.create.licenses.groups.TradeLocationDetails.Ward': ' प्रभाग',
-  'tl.create.licenses.groups.TradeLocationDetails.OwnershipType':
-    ' मालकीचे प्रकार',
-  'tl.create.licenses.groups.TradeLocationDetails.TradeAddress':
-    ' व्यापाराचा पत्ता',
+  'tl.create.licenses.groups.TradeLocationDetails.OwnershipType': ' मालकीचे प्रकार',
+  'tl.create.licenses.groups.TradeLocationDetails.TradeAddress': ' व्यापाराचा पत्ता',
   'tl.create.licenses.groups.TradeDetails': ' व्यापाराचा तपशील',
   'tl.create.licenses.groups.TradeDetails.TradeTitle': 'व्यापाराचे शीर्षक',
   'tl.create.licenses.groups.TradeDetails.TradeType': ' व्यापारा प्रकार',
   'tl.create.licenses.groups.TradeDetails.TradeCategory': ' व्यापाराची श्रेणी',
-  'tl.create.licenses.groups.TradeDetails.TradeSubCategory':
-    ' व्यापाराची उप-श्रेणी',
+  'tl.create.licenses.groups.TradeDetails.TradeSubCategory': ' व्यापाराची उप-श्रेणी',
 
-  'tl.create.licenses.groups.TradeDetails.TradeAreaPremises':
-    'व्यापाराचा एरिया / परिसराचे वजन (चौ.फुट / टन्स)',
+  'tl.create.licenses.groups.TradeDetails.TradeAreaPremises': 'व्यापाराचा एरिया / परिसराचे वजन (चौ.फुट / टन्स)',
   'tl.create.licenses.groups.TradeDetails.Remarks': ' टीका',
-  'tl.create.licenses.groups.TradeDetails.TradeCommencementDate':
-    ' व्यापार चालू दिनांक',
-  'tl.create.licenses.groups.TradeDetails.TraderOwnerProperty':
-    'व्यापाराचा मालमत्तेचा मालक नाही',
+  'tl.create.licenses.groups.TradeDetails.TradeCommencementDate': ' व्यापार चालू दिनांक',
+  'tl.create.licenses.groups.TradeDetails.TraderOwnerProperty': 'व्यापाराचा मालमत्तेचा मालक नाही',
   'tl.create.licenses.groups.FeeDetails': ' फी तपशील',
   'tl.create.licenses.groups.FeeDetails.FinancialYear': ' आर्थिक वर्ष',
   'tl.create.licenses.groups.FeeDetails.Amount': ' रक्कम',
@@ -4459,12 +4034,9 @@ var localization_MR_Data = {
   'reports.collection.todate': 'तारीख पर्यंत',
   'reports.collection.total.count': 'एकूण गणना',
 
-  'tl.create.licenses.groups.agreementDetails':
-    'करार तपशील (व्यापारी मालमत्ता मालक नाही)',
-  'tl.create.licenses.groups.agreementDetails.agreementDate':
-    ' अंमलबजावणीची तारीख',
-  'tl.create.licenses.groups.agreementDetails.agreementNo':
-    ' नोंदणीकृत / अनोंदणीकृत दस्तऐवज क्रमांक',
+  'tl.create.licenses.groups.agreementDetails': 'करार तपशील (व्यापारी मालमत्ता मालक नाही)',
+  'tl.create.licenses.groups.agreementDetails.agreementDate': ' अंमलबजावणीची तारीख',
+  'tl.create.licenses.groups.agreementDetails.agreementNo': ' नोंदणीकृत / अनोंदणीकृत दस्तऐवज क्रमांक',
   'tl.search.groups.showInactiveLicense': 'सक्रिय परवाना दाखवा',
   'tl.search.result.groups.propertyAssessmentNumber': ' मालमत्ता क्रमांक',
   'tl.search.result.groups.applicationStatus': ' अर्ज स्थिती',
@@ -4515,15 +4087,11 @@ var localization_MR_Data = {
   'tl.licenses.view.groups.TradeLocationDetails': ' व्यापार स्थान तपशील',
   'tl.search.groups.adminWardName': 'प्रशासकीय विभाग',
   'tl.create.legacyTradeLicense': 'मागील व्यापार परवाना तयार करा',
-  'tl.create.licenses.groups.TradeLocationDetails.adminWardId':
-    ' प्रशासकीय विभाग',
-  'tl.create.licenses.groups.TradeLocationDetails.revenueWardId':
-    ' महसूल विभाग',
+  'tl.create.licenses.groups.TradeLocationDetails.adminWardId': ' प्रशासकीय विभाग',
+  'tl.create.licenses.groups.TradeLocationDetails.revenueWardId': ' महसूल विभाग',
   'tl.create.licenses.groups.validity': ' वैधता',
-  'tl.create.licenses.groups.TradeDetails.tradeValueForUOM':
-    'व्यापार मूल्य प्रती युनिट',
-  'tl.create.licenses.groups.TradeDetails.licenseValidFromDate':
-    ' परवान्याद्वारे तारखेपासून वैध',
+  'tl.create.licenses.groups.TradeDetails.tradeValueForUOM': 'व्यापार मूल्य प्रती युनिट',
+  'tl.create.licenses.groups.TradeDetails.licenseValidFromDate': ' परवान्याद्वारे तारखेपासून वैध',
   'tl.create.licenses.groups.TradeDetails.UOM': 'युनिट',
 
   'wc.create.groups.applicationParticular.title': 'अर्जाचे विशेष',
@@ -4618,22 +4186,16 @@ var localization_MR_Data = {
   'reports.lcms.caseCategory': 'Case Category - Marathi',
   'reports.lcms.caseType': 'Case Type - Marathi',
   'reports.lcms.organization': 'Organization - Marathi',
-  'reports.lcms.departmentConcernedPerson':
-    'Department Concerned Person - Marathi',
+  'reports.lcms.departmentConcernedPerson': 'Department Concerned Person - Marathi',
   'reports.lcms.nameOfPlaintiff': 'Name Of Plaintiff - Marathi',
   'reports.lcms.nameOfDefendant': 'Name Of Defendant - Marathi',
   'reports.lcms.sectionApplied': 'Section of the act applied - Marathi',
-  'reports.lcms.dateOfSummon':
-    'Date of service of Summon on the municipal body - Marathi',
-  'reports.lcms.suitFiledCourtName':
-    'Name of court where suit is been filed - Marathi',
+  'reports.lcms.dateOfSummon': 'Date of service of Summon on the municipal body - Marathi',
+  'reports.lcms.suitFiledCourtName': 'Name of court where suit is been filed - Marathi',
   'reports.lcms.dateOfJudgment': 'Date of Judgment - Marathi',
-  'reports.lcms.judgmentDetails':
-    'Particulars of judgment containing  details - Marathi',
-  'reports.lcms.opinionOfPleader':
-    'Opinion of Pleader or Officer on the result of case - Marathi',
-  'reports.lcms.furtherProcessDetails':
-    'Particulars of further process of recovery, due date of darkhast - Marathi',
+  'reports.lcms.judgmentDetails': 'Particulars of judgment containing  details - Marathi',
+  'reports.lcms.opinionOfPleader': 'Opinion of Pleader or Officer on the result of case - Marathi',
+  'reports.lcms.furtherProcessDetails': 'Particulars of further process of recovery, due date of darkhast - Marathi',
   'reports.lcms.advocateName': 'Advocate Name - Marathi',
   'reports.lcms.status': 'Status - Marathi',
   'reports.lcms.plaintiffName': 'Plaintiff Name - Marathi',
@@ -4641,32 +4203,22 @@ var localization_MR_Data = {
   'reports.lcms.departmentPerson': 'Department Concerned Person - Marathi',
   'reports.lcms.courtType': 'Court Type - Marathi',
   'reports.lcms.concernedPersonName': 'Concerned Person Name - Marathi',
-  'reports.lcms.hearingDetailsDateAndTime':
-    'Hearing Details (Date/Day/Time) - Marathi',
+  'reports.lcms.hearingDetailsDateAndTime': 'Hearing Details (Date/Day/Time) - Marathi',
   'reports.lcms.caseDate': 'Case Date - Marathi',
   'reports.lcms.petitionName': 'Petition Name - Marathi',
   'reports.lcms.lcNumber': 'LC Number - Marathi',
   'reports.lcms.caseTitle': 'CaseTitle - Marathi',
-  'reports.lcms.amountOfPleadersEngaged':
-    'Particulars of suits containing details regarding amount of the Pleaders engaged - Marathi',
-  'reports.lcms.dateOfReceiptOfOfficer':
-    'Date of receipt of responsible officer - Marathi',
-  'reports.lcms.resolutionOfMunicipalDate':
-    'Resolution of municipal body with date - Marathi',
-  'reports.lcms.particularsOfPleadersFee':
-    'Particulars of Pleaders engaged and fees fixed - Marathi',
-  'reports.lcms.informationGivenToPleaders':
-    'Due of Information given to the Pleaders - Marathi',
-  'reports.lcms.dateOfProductionOfVakalatnama':
-    'Date of Instruction of the suit or production of Vakalatnama in the court - Marathi',
-  'reports.lcms.nameOfResponsibleOfficer':
-    'Name of Responsible officer attending the case on behalf of the municipal body - Marathi',
-  'reports.lcms.particularsOfActualAmount':
-    'Particulars of actual amount received - Marathi',
+  'reports.lcms.amountOfPleadersEngaged': 'Particulars of suits containing details regarding amount of the Pleaders engaged - Marathi',
+  'reports.lcms.dateOfReceiptOfOfficer': 'Date of receipt of responsible officer - Marathi',
+  'reports.lcms.resolutionOfMunicipalDate': 'Resolution of municipal body with date - Marathi',
+  'reports.lcms.particularsOfPleadersFee': 'Particulars of Pleaders engaged and fees fixed - Marathi',
+  'reports.lcms.informationGivenToPleaders': 'Due of Information given to the Pleaders - Marathi',
+  'reports.lcms.dateOfProductionOfVakalatnama': 'Date of Instruction of the suit or production of Vakalatnama in the court - Marathi',
+  'reports.lcms.nameOfResponsibleOfficer': 'Name of Responsible officer attending the case on behalf of the municipal body - Marathi',
+  'reports.lcms.particularsOfActualAmount': 'Particulars of actual amount received - Marathi',
   'reports.lcms.dateOfCredit': 'Date of credit on Municipal account - Marathi',
   'reports.lcms.particularsOfPayment': 'Particulars of Payment - Marathi',
-  'reports.lcms.dateOfDebit':
-    'Date of Debit in Municipal Account/Voucher no. - Marathi',
+  'reports.lcms.dateOfDebit': 'Date of Debit in Municipal Account/Voucher no. - Marathi',
   'reports.lcms.remarksRegardingReferenceToCourt':
     'Remarks regarding verification with the reference to court records, Adjustment of Advances - Marathi',
   'reports.lcms.remarks': 'Remarks - Marathi',
@@ -4727,27 +4279,18 @@ var localization_MR_Data = {
 
   'employee.jurisdiction.fields.boundaryType': 'सीमा प्रकार ',
   'employee.jurisdiction.fields.boundary': 'सीमा',
-  'employee.ServiceHistory.fields.ServiceEntryDescription':
-    'सेवा प्रविष्टी विवरण',
+  'employee.ServiceHistory.fields.ServiceEntryDescription': 'सेवा प्रविष्टी विवरण',
   'employee.ServiceHistory.fields.date': 'दिनांक',
-  'employee.error.message.date':
-    '"तारखेपासून" तारीखेपर्यंत पेक्षा कमी असले पाहिजे. ',
+  'employee.error.message.date': '"तारखेपासून" तारीखेपर्यंत पेक्षा कमी असले पाहिजे. ',
   'employee.error.message.assignmentDate': 'असाईनमेंट तारीख ओव्हरलॅपिंग.',
   'employee.error.message.dupAssignment': 'दुबार नोंदणीस परवानगी नाही.',
-  'employee.error.message.appDate.retDate':
-    'नियुक्तीची तारीख सेवानिवृत्तीची तारीखपेक्षा आधी असणे आवश्यक आहे',
-  'employee.error.message.appDate.terDate':
-    'नियुक्तीची तारीख संपुष्टात येण्यापूर्वीच असेल.',
-  'employee.error.message.appDate.regDate':
-    'नियुक्ती तारीख राजीनामा तारीख आधी असणे आवश्यक आहे. ',
-  'employee.error.message.appDate.joinDate':
-    'रुजू होण्याची तारीख अपॉईंटमेंट तारीख नंतरची असणे आवश्यक आहे.',
-  'employee.error.message.retDate.joinDate':
-    'रुजू होण्याची तारीख सेवानिवृत्तीची तारीख आधी असणे आवश्यक आहे.',
-  'employee.error.message.joinDate.terDate':
-    'रुजू होण्याची तारीख संपुष्टात येण्याची तारीख आधी असणे आवश्यक आहे. ',
-  'employee.error.message.joinDate.regDate':
-    'रुजू होण्याची तारीख राजीनामा तारीख आधी असणे आवश्यक आहे. ',
+  'employee.error.message.appDate.retDate': 'नियुक्तीची तारीख सेवानिवृत्तीची तारीखपेक्षा आधी असणे आवश्यक आहे',
+  'employee.error.message.appDate.terDate': 'नियुक्तीची तारीख संपुष्टात येण्यापूर्वीच असेल.',
+  'employee.error.message.appDate.regDate': 'नियुक्ती तारीख राजीनामा तारीख आधी असणे आवश्यक आहे. ',
+  'employee.error.message.appDate.joinDate': 'रुजू होण्याची तारीख अपॉईंटमेंट तारीख नंतरची असणे आवश्यक आहे.',
+  'employee.error.message.retDate.joinDate': 'रुजू होण्याची तारीख सेवानिवृत्तीची तारीख आधी असणे आवश्यक आहे.',
+  'employee.error.message.joinDate.terDate': 'रुजू होण्याची तारीख संपुष्टात येण्याची तारीख आधी असणे आवश्यक आहे. ',
+  'employee.error.message.joinDate.regDate': 'रुजू होण्याची तारीख राजीनामा तारीख आधी असणे आवश्यक आहे. ',
   'employee.fields.isUserActive': 'सक्रीय ',
   'employee.Employee.fields.dateOfBirth': 'जन्म तारीख',
   'ui.framework.submit': 'सबमिट',
@@ -4784,8 +4327,7 @@ var localization_MR_Data = {
   'wc.create.groups.connectionDetails.fields.billingNumber': 'क्रम संख्या,',
   'wc.create.groups.connectionDetails.fields.plumberName': 'प्लंबरचे नाव,',
   'wc.create.groups.connectionDetails.fields.noOfTaps': 'तोटीची संख्या,',
-  'wc.create.groups.connectionDetails.fields.outSide':
-    'नगरपालिका हद्दी बाहेरील,',
+  'wc.create.groups.connectionDetails.fields.outSide': 'नगरपालिका हद्दी बाहेरील,',
   'wc.create.groups.connectionDetails.fields.flat': 'फ्लॅटची संख्या,',
   'wc.create.meter.title': 'मीटर',
   'wc.create.primaryConnection': 'प्राथमिक नळजोडणी',
@@ -4861,12 +4403,9 @@ var localization_MR_Data = {
   'wc.group.numberOfDays1': '1st Month No. of days-Marathi',
   'wc.group.numberOfDays2': '2nd Month No. of days-Marathi',
   'wc.group.numberOfDays3': '3rd Month No. of days-Marathi',
-  'wc.create.groups.connectionDetails.fields.resetFlag1':
-    '1st Month Reset reading-Marathi',
-  'wc.create.groups.connectionDetails.fields.resetFlag2':
-    '2nd Month Reset reading-Marathi',
-  'wc.create.groups.connectionDetails.fields.resetFlag3':
-    '3rd Month Reset reading-Marathi',
+  'wc.create.groups.connectionDetails.fields.resetFlag1': '1st Month Reset reading-Marathi',
+  'wc.create.groups.connectionDetails.fields.resetFlag2': '2nd Month Reset reading-Marathi',
+  'wc.create.groups.connectionDetails.fields.resetFlag3': '3rd Month Reset reading-Marathi',
   'wc.create.capacityOfSource': 'Capacity of source-Marathi',
   'wc.create.reservationForUlb': 'Reservation for ULB-Marathi',
 
@@ -4909,8 +4448,7 @@ var localization_MR_Data = {
   'pgr.0038': ' प्राप्त करणारा कोड आवश्यक आहे',
   'pgr.0039': ' प्राप्त करणारा केंद्र कोड आधीपासूनच अस्तित्वात आहे',
   'pgr.0040': ' प्राप्त करणारी केंद्र नाव आधीच अस्तित्वात आहे',
-  'pgr.0041':
-    ' प्राप्तकर्ता मोड मॅन्युअल असताना बाह्य तक्रार क्रमांक आवश्यक आहे',
+  'pgr.0041': ' प्राप्तकर्ता मोड मॅन्युअल असताना बाह्य तक्रार क्रमांक आवश्यक आहे',
   'pgr.0043': ' मंजूरी टिप्पण्या आवश्यक आहे',
   'pgr.0044': ' प्रथम नाव 20 अक्षराच्या खाली असणे आवश्यक आहे',
   'pgr.0045': ' प्राप्त करण्याची पद्धत आवश्यक आहे',
@@ -4927,40 +4465,31 @@ var localization_MR_Data = {
   'pgr.0059': ' तक्रार श्रेणी नाव आधीपासून अस्तित्वात आहे',
   'pgr.042': ' स्थान ID आवश्यक आहे',
   'pgr.all.complaints': ' तक्रारी',
-  'pgr.error.bad.servicerequest':
-    ' प्रदान केलेली सेवा कोड किंवा कार्यक्षेत्र संकेतांक सापडली नाही.',
-  'pgr.error.complaint.details.characters':
-    ' वर्णन किमान 10 वर्ण लांब असणे आवश्यक आहे.',
-  'pgr.error.describe.grievance.details':
-    ' आपल्या तक्रारींचे तपशील थोडक्यात सांगा!',
+  'pgr.error.bad.servicerequest': ' प्रदान केलेली सेवा कोड किंवा कार्यक्षेत्र संकेतांक सापडली नाही.',
+  'pgr.error.complaint.details.characters': ' वर्णन किमान 10 वर्ण लांब असणे आवश्यक आहे.',
+  'pgr.error.describe.grievance.details': ' आपल्या तक्रारींचे तपशील थोडक्यात सांगा!',
   'pgr.error.landmark.optional': ' आपला महत्त्वाचा खूण (असल्यास) प्रविष्ट करा!',
   'pgr.error.msg.number.required': ' तक्रार क्रमांक अनिवार्य आहे',
   'pgr.error.notvalid.srn': ' वैध सेवा विनंती क्रमांक नाही',
   'pgr.error.select.grievance.category': ' आपली तक्रार श्रेणी निवडा!',
-  'pgr.error.select.grievance.categoryandtype':
-    ' आपली तक्रार येथेुन निवडा किंवा अन्यथा ती तक्रार बिल्डीच्या खाली निवडा',
-  'pgr.error.select.grievancelocation':
-    ' आपली तक्रार स्थान प्रविष्ट करा किंवा निवडण्यासाठी स्थान चिन्हावर क्लिक करा',
+  'pgr.error.select.grievance.categoryandtype': ' आपली तक्रार येथेुन निवडा किंवा अन्यथा ती तक्रार बिल्डीच्या खाली निवडा',
+  'pgr.error.select.grievancelocation': ' आपली तक्रार स्थान प्रविष्ट करा किंवा निवडण्यासाठी स्थान चिन्हावर क्लिक करा',
   'pgr.error.select.grievance.type': ' आपली तक्रार प्रकार निवडा!',
-  'pgr.error.servicerequest.notfound':
-    ' सेवा कोड किंवा अधिकारक्षेत्र संकेतांक प्रदान केले नाही किंवा सामान्य सेवा त्रुटी',
-  'pgr.error.upload.photovideo':
-    ' तक्रार दुरुस्त फोटो / व्हिडिओ अपलोड करा (कमाल: 3 फायली)!',
+  'pgr.error.servicerequest.notfound': ' सेवा कोड किंवा अधिकारक्षेत्र संकेतांक प्रदान केले नाही किंवा सामान्य सेवा त्रुटी',
+  'pgr.error.upload.photovideo': ' तक्रार दुरुस्त फोटो / व्हिडिओ अपलोड करा (कमाल: 3 फायली)!',
   'pgr.lbl.actions': ' क्रिया',
   'pgr.lbl.active': ' सक्रिय',
   'pgr.lbl.actmobnum': ' मोबाइल नंबरसह खाते आधीच अस्तित्वात आहे',
   'pgr.lbl.add': ' जोडा',
   'pgr.lbl.adddata': ' डेटा यशस्वीरित्या जोडला',
   'pgr.lbl.addesc': ' वाढीव तपशील जोडा',
-  'pgr.lbl.alert.router':
-    ' विद्यमान राउटर डेटा अधिलिखित होईल, आपल्याला खात्री आहे?',
+  'pgr.lbl.alert.router': ' विद्यमान राउटर डेटा अधिलिखित होईल, आपल्याला खात्री आहे?',
   'pgr.lbl.allrcv': ' सर्व प्राप्त केंद्र',
   'pgr.lbl.alphaspace': ' फक्त वर्ण आणि स्थान असावा. कमाल: 50 वर्ण',
   'pgr.lblauditdetails': ' लेखापरीक्षण तपशील',
   'pgr.lbl.boundary': ' सीमा',
   'pgr.lbl.boundarytype': ' सीमा प्रकार',
-  'pgr.lbl.btwncharacter':
-    ' उच्च आणि लहान केस वर्णमाला, संख्या आणि विशेष वर्ण असावा',
+  'pgr.lbl.btwncharacter': ' उच्च आणि लहान केस वर्णमाला, संख्या आणि विशेष वर्ण असावा',
   'pgr.lbl.bueg': ' मोठ्या प्रमाणात वृद्धी निर्माण',
   'pgr.lbl.change.grievancetype': ' तक्रार प्रकार बदला',
   'pgr.lbl.change.jurisdiction': ' कार्यक्षेत्र बदला',
@@ -4984,25 +4513,21 @@ var localization_MR_Data = {
   'pgr.lbl.create.router': ' तक्रारी राउटर तयार करा',
   'pgr.lbl.crn': 'तक्रार नोंदणी क्रमांक',
   'pgr.lbl.crnformat': 'तक्रार नोंदणी क्रमांक',
-  'pgr.lbl.crnunderprocess':
-    ' तक्रार विनंती प्राप्त झाली आहे आणि प्रक्रिया चालू आहे',
+  'pgr.lbl.crnunderprocess': ' तक्रार विनंती प्राप्त झाली आहे आणि प्रक्रिया चालू आहे',
   'pgr.lbl.currentowner': ' वर्तमान मालक / अधिकारी जबाबदार',
   'pgr.lbl.dataupdated': ' डेटा यशस्वीरित्या अद्यतनित केला',
-  'pgr.lbl.dategreater':
-    ' हि तारीख "तारखेपासून" मोठी किंवा त्यापेक्षा जास्त असली पाहिजे',
+  'pgr.lbl.dategreater': ' हि तारीख "तारखेपासून" मोठी किंवा त्यापेक्षा जास्त असली पाहिजे',
   'pgr.lbl.datelesser': ' तारखेपासून "तारीखापर्यंत" कमी किंवा समान असावे',
   'pgr.lbl.delete': 'काढून टाका',
   'pgr.lbl.designation': ' हुद्दा',
   'pgr.lbl.edit': ' संपादित करा',
   'pgr.lbl.edit.router': ' तक्रार राउटर संपादित करा',
   'pgr.lbl.escalation': ' उन्नतीकरण करा / अद्यतनित करा',
-  'pgr.lbl.escalationmessage':
-    ' निवडलेल्या स्थितीसाठी कोणतेही एस्कलेशन तपशील उपलब्ध नाहीत',
+  'pgr.lbl.escalationmessage': ' निवडलेल्या स्थितीसाठी कोणतेही एस्कलेशन तपशील उपलब्ध नाहीत',
   'pgr.lbl.escalations': ' वृद्धी',
   'pgr.lbl.escalationstime': ' काढण्याची वेळ',
   'pgr.lbl.escalationtime': ' शोध वाढीची वेळ',
-  'pgr.lbl.escdetail':
-    ' निवडलेल्या सेवा प्रकारासाठी कोणतेही एस्कलेशन तपशील उपलब्ध नाहीत.',
+  'pgr.lbl.escdetail': ' निवडलेल्या सेवा प्रकारासाठी कोणतेही एस्कलेशन तपशील उपलब्ध नाहीत.',
   'pgr.lbl.externalcrn': ' बाह्य तक्रार नोंदणी क्रमांक',
   'pgr.lbl.fiftychar': ' फाइल नावाची लांबी 50 वर्णांपेक्षा जास्त नसावी',
   'pgr.lbl.file.complaint': ' तक्रार दाखल करा',
@@ -5025,8 +4550,7 @@ var localization_MR_Data = {
   'pgr.lbl.grievancedetails': ' तक्रार तपशील',
   'pgr.lbl.grievance.history': ' तक्रार इतिहास',
   'pgr.lbl.grievance.location': ' तक्रार स्थान',
-  'pgr.lbl.grievance.location.icon':
-    ' आपला तक्रार स्थान टाइप करणे प्रारंभ करा किंवा त्याला स्थान चिन्हावरून निवडा',
+  'pgr.lbl.grievance.location.icon': ' आपला तक्रार स्थान टाइप करणे प्रारंभ करा किंवा त्याला स्थान चिन्हावरून निवडा',
   'pgr.lbl.grievance.redressal': ' तक्रार निवारण',
   'pgr.lbl.grievance.type': ' तक्रार प्रकार',
   'pgr.lbl.grievance.types': ' टॉप तक्रार प्रकार',
@@ -5059,8 +4583,7 @@ var localization_MR_Data = {
   'pgr.lbl.receivingcenter': ' प्राप्त केंद्र',
   'pgr.lbl.receivingmode': ' प्राप्त मोड',
   'pgr.lbl.recoverpswd': ' पासवर्ड पुनर्प्राप्त करा',
-  'pgr.lbl.recoverylink':
-    ' पुनर्प्राप्ती दुवा किंवा OTP आपल्या नोंदणीकृत ईमेल / मोबाइलवर पाठविला जाईल',
+  'pgr.lbl.recoverylink': ' पुनर्प्राप्ती दुवा किंवा OTP आपल्या नोंदणीकृत ईमेल / मोबाइलवर पाठविला जाईल',
   'pgr.lbl.registercomplaint.easy': 'आपल्या सोबत जोडणे करिता तिकीट नोंदवा',
   'pgr.lbl.registered.date': ' नोंदणीकृत तारीख',
   'pgr.lbl.register.grievance': ' तक्रार नोंदवा',
@@ -5095,34 +4618,25 @@ var localization_MR_Data = {
   'pgr.lbl.view.router': ' तक्रार राउटर पहा',
   'pgr.lbl.ward': ' प्रभाग',
   'pgr.list.complaint.history': ' तक्रार इतिहास',
-  'pgr.location.change.infomessage':
-    ' डिफॉल्ट द्वारे ते आपले वर्तमान स्थान दर्शवेल. आपण नेहमी l बदलू शकता',
+  'pgr.location.change.infomessage': ' डिफॉल्ट द्वारे ते आपले वर्तमान स्थान दर्शवेल. आपण नेहमी l बदलू शकता',
   'pgr.msg.complaint.closed': ' तक्रारी यशस्वीरित्या बंद केल्या.',
-  'pgr.msg.complaint.connectto.official':
-    ' आम्ही आपल्याला जबाबदार अधिका-यांच्याशी जोडतो',
+  'pgr.msg.complaint.connectto.official': ' आम्ही आपल्याला जबाबदार अधिका-यांच्याशी जोडतो',
   'pgr.msg.complaint.filedby': ' द्वारा पोस्ट केलेले',
-  'pgr.msg.complaint.moredetails':
-    ' आपल्या समस्येचे निराकरण करण्यात आम्हाला मदत करण्यासाठी तक्रारीबद्दल अधिक तपशील द्या',
+  'pgr.msg.complaint.moredetails': ' आपल्या समस्येचे निराकरण करण्यात आम्हाला मदत करण्यासाठी तक्रारीबद्दल अधिक तपशील द्या',
   'pgr.msg.complaint.resolved': ' तक्रार निराकरण',
-  'pgr.msg.complaintstatus.anytime':
-    ' कधीही आपल्या तक्रारीची स्थिती जाणून घ्या!',
-  'pgr.msg.complaintstatus.application':
-    ' कधीही आपल्या तक्रारीची स्थिती जाणून घ्या!',
+  'pgr.msg.complaintstatus.anytime': ' कधीही आपल्या तक्रारीची स्थिती जाणून घ्या!',
+  'pgr.msg.complaintstatus.application': ' कधीही आपल्या तक्रारीची स्थिती जाणून घ्या!',
   'pgr.msg.complaintstatus.certificate': 'प्रमाणपत्र स्थिती',
   'core.lbl.varify': 'पडताळा',
   'pgr.lbl.certificateNumber': 'प्रमाणपत्र क्रमांक',
   'pgr.msg.complaint.tellus': ' तक्रार करा आम्हाला सांगा',
-  'pgr.msg.createaccount.avail.onlineservices':
-    ' आमच्या ऑनलाइन सेवांचा लाभ घेण्यासाठी तक्रार करा',
-  'pgr.msg.finalgrievance.submit':
-    ' अखेरीस, आपली तक्रार सबमिट करण्यासाठी येथे क्लिक करा!',
+  'pgr.msg.createaccount.avail.onlineservices': ' आमच्या ऑनलाइन सेवांचा लाभ घेण्यासाठी तक्रार करा',
+  'pgr.msg.finalgrievance.submit': ' अखेरीस, आपली तक्रार सबमिट करण्यासाठी येथे क्लिक करा!',
   'pgr.msg.future.reference': ' आपल्या भविष्यातील सर्व संदर्भांसाठी हे वापरा',
   'pgr.msg.new.mseva': ' एमएसवायला नवीन काय आहे?',
   'pgr.msg.official.resolve.complaint': ' आमचे अधिकारी तक्रारीचे निराकरण करतील',
-  'pgr.msg.servicerequest.underprocess':
-    ' सेवा विनंती प्राप्त झाली आहे आणि प्रक्रिया चालू आहे',
-  'pgr.msg.sla.infomessage':
-    'आपल्या तक्रारीच्या वेळेनुसार निराकरण सुनिश्चित करण्यासाठी, आम्ही "सेवा स्तर करार" ठरविला आहे',
+  'pgr.msg.servicerequest.underprocess': ' सेवा विनंती प्राप्त झाली आहे आणि प्रक्रिया चालू आहे',
+  'pgr.msg.sla.infomessage': 'आपल्या तक्रारीच्या वेळेनुसार निराकरण सुनिश्चित करण्यासाठी, आम्ही "सेवा स्तर करार" ठरविला आहे',
   'pgr.msg.success.grievanceupdated': ' तक्रार यशस्वीपणे अद्यवत केली',
   'pgr.noof.hours': ' तासांची संख्या',
   'pgr.priority': ' प्राधान्य',
@@ -5166,215 +4680,118 @@ var localization_MR_Data = {
 
   //Trade License Error Messages
   //#---- Validation Error Messages----
-  'error.license.licenses.notfound':
-    'licenses is required, but not found-Marathi',
-  'error.license.licenses.size.not.empty':
-    'at least one license should present for the creation-Marathi',
-  'error.license.applicationtype':
-    'Application Type is required, Please enter valid Application Type-Marathi',
-  'error.license.oldLicenseNumber':
-    'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters-Marathi',
-  'error.license.applicationDate':
-    'applicationDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.aadhaarnumber':
-    'Aadhaar Number is required , please enter 12 digits Aadhaar Number-Marathi',
-  'error.license.mobilenumber':
-    'Mobile Number is required , please enter 10 digits Mobile Number-Marathi',
-  'error.license.ownername':
-    'Owner Name is required , please enter Valid name length between 4-100 characters-Marathi',
-  'error.license.fatherspousename':
-    'Father Spouse Name is required , please enter Valid name length between 4-100 characters-Marathi',
-  'error.license.fatherspousename.empty':
-    'FatherSpouseName can not be empty, please enter valid fatherSpouseName with length between 4- 100-Marathi',
-  'error.license.emailid':
-    'Emailid is required, please enter the valid emailid-Marathi',
-  'error.license.emailid.empty':
-    'Emailid can not be empty, Please enter valid Emailid-Marathi',
-  'error.license.emailid.length':
-    'Emailid more than 50 characters not allowed.-Marathi',
-  'error.license.owneraddress.emptyspaces':
-    'Owner Address can not be empty , please enter Valid Address length between 4-250 characters-Marathi',
-  'error.license.owneraddress':
-    'Owner Address is required , please enter Valid Address length between 4-250 characters-Marathi',
+  'error.license.licenses.notfound': 'licenses is required, but not found-Marathi',
+  'error.license.licenses.size.not.empty': 'at least one license should present for the creation-Marathi',
+  'error.license.applicationtype': 'Application Type is required, Please enter valid Application Type-Marathi',
+  'error.license.oldLicenseNumber': 'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters-Marathi',
+  'error.license.applicationDate': 'applicationDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.aadhaarnumber': 'Aadhaar Number is required , please enter 12 digits Aadhaar Number-Marathi',
+  'error.license.mobilenumber': 'Mobile Number is required , please enter 10 digits Mobile Number-Marathi',
+  'error.license.ownername': 'Owner Name is required , please enter Valid name length between 4-100 characters-Marathi',
+  'error.license.fatherspousename': 'Father Spouse Name is required , please enter Valid name length between 4-100 characters-Marathi',
+  'error.license.fatherspousename.empty': 'FatherSpouseName can not be empty, please enter valid fatherSpouseName with length between 4- 100-Marathi',
+  'error.license.emailid': 'Emailid is required, please enter the valid emailid-Marathi',
+  'error.license.emailid.empty': 'Emailid can not be empty, Please enter valid Emailid-Marathi',
+  'error.license.emailid.length': 'Emailid more than 50 characters not allowed.-Marathi',
+  'error.license.owneraddress.emptyspaces': 'Owner Address can not be empty , please enter Valid Address length between 4-250 characters-Marathi',
+  'error.license.owneraddress': 'Owner Address is required , please enter Valid Address length between 4-250 characters-Marathi',
   'error.license.propertyassesmentNo':
     'Property Assesment No is required ,  please enter Valid Property Assesment No  between 15-20 characters-Marathi',
-  'error.license.locality':
-    'Locality is required , please enter valid Locality-Marathi',
-  'error.license.revenueward':
-    'RevenueWard is required , please enter valid RevenueWard-Marathi',
-  'error.license.adminward':
-    'Admin Ward is required , please enter valid Admin Ward-Marathi',
-  'error.license.tradeaddress':
-    'Trade Address is required , please enter Valid Address length between 4-250 characters-Marathi',
-  'error.license.ownerShip':
-    'OwnerShip Type is required, Please enter valid OwnerShip Type-Marathi',
-  'error.license.tradetitle':
-    'Trade Title is required , please enter Trade Title-Marathi',
-  'error.license.tradetitle.emptyspaces':
-    'Trade Title can not be empty, please enter Trade Title-Marathi',
-  'error.license.tradetype':
-    'Trade Type is required , please enter Valid Trade Type-Marathi',
-  'error.license.ownershiptype':
-    'OwnerShip Type is required , please enter Valid OwnerShip type-Marathi',
-  'error.license.tradetype.emptyspaces':
-    'Trade Type can not be empty, please enter Trade Type-Marathi-Marathi',
-  'error.license.category':
-    'Category is required , please enter Valid Category-Marathi',
-  'error.license.subcategory':
-    'Sub Category is required , please enter Valid Sub Category-Marathi',
+  'error.license.locality': 'Locality is required , please enter valid Locality-Marathi',
+  'error.license.revenueward': 'RevenueWard is required , please enter valid RevenueWard-Marathi',
+  'error.license.adminward': 'Admin Ward is required , please enter valid Admin Ward-Marathi',
+  'error.license.tradeaddress': 'Trade Address is required , please enter Valid Address length between 4-250 characters-Marathi',
+  'error.license.ownerShip': 'OwnerShip Type is required, Please enter valid OwnerShip Type-Marathi',
+  'error.license.tradetitle': 'Trade Title is required , please enter Trade Title-Marathi',
+  'error.license.tradetitle.emptyspaces': 'Trade Title can not be empty, please enter Trade Title-Marathi',
+  'error.license.tradetype': 'Trade Type is required , please enter Valid Trade Type-Marathi',
+  'error.license.ownershiptype': 'OwnerShip Type is required , please enter Valid OwnerShip type-Marathi',
+  'error.license.tradetype.emptyspaces': 'Trade Type can not be empty, please enter Trade Type-Marathi-Marathi',
+  'error.license.category': 'Category is required , please enter Valid Category-Marathi',
+  'error.license.subcategory': 'Sub Category is required , please enter Valid Sub Category-Marathi',
   'error.license.uom': 'Uom is required , please enter Valid Uom-Marathi',
-  'error.license.uom.length':
-    'Quantity should not have more than 2 decimals-Marathi',
-  'error.license.quantity':
-    'Quantity is required , please enter Valid Quantity-Marathi-Marathi',
-  'error.license.validityyears':
-    'ValidityYears is required , please enter Valid number between 1-10-Marathi-Marathi-Marathi',
-  'error.license.tradecommencementdate':
-    'tradeCommencementDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.licensevalidfrom':
-    'LicenseValidFromDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.agreementdate':
-    'AgreementDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.agreementno.notfound':
-    'agreement number is required, but not found-Marathi',
-  'error.license.agreementno':
-    'Please enter valid agreementNo between 4-128-Marathi',
-  'error.financialYear.emptyspaces':
-    'FinancialYear can not be empty, Please enter valid financialYear-Marathi',
-  'error.financialYear.empty':
-    'FinancialYear is required, Please enter valid financialYear-Marathi',
-  'error.license.financialyear':
-    'FinancialYear is required, Please enter valid financialYear-Marathi',
-  'error.license.amount':
-    'Amount is required, Please enter valid Amount-Marathi',
-  'error.license.amount.decimal':
-    'Amount should not have more than 2 decimals-Marathi',
-  'error.license.legacy':
-    'isLegacy is required, Please enter valid value true/false-Marathi',
-  'error.license.propertyowner':
-    'isPropertyOwner is required, Please enter valid value true/false-Marathi',
-  'error.license.ispropertyowner':
-    'isPropertyOwner is required, Please provide value as true/false-Marathi',
-  'error.license.documenttype':
-    'DocumentType is required, Please enter valid DocumentType-Marathi',
-  'error.license.filestore':
-    'FileStoreId is required, Please enter valid FileStoreId-Marathi',
-  'error.license.tenantId.emptyspaces':
-    'TenantId can not be empty, Please enter valid tenant id with length between 4- 128-Marathi',
-  'error.license.tenantId.empty':
-    'TenantID is required, please enter valid tenant id with length between 4- 128-Marathi',
-  'error.oldLicenseNumber.emptyspaces':
-    'OldLicenseNumber can not be empty, Please enter valid oldLicenseNumber length between 4- 20-Marathi',
-  'error.oldLicenseNumber.empty':
-    'OldLicenseNumber is required, Please enter valid Old License Number between  4-20 characters-Marathi',
-  'error.Assesment.legnth':
-    'Property Assesment No is required , please enter Valid Property Assesment No  between 4-20 characters-Marathi',
-  'error.license.active':
-    'Active is required, Please enter valid value true/false-Marathi',
-  'error.oldLicense.duplicate':
-    'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber-Marathi',
+  'error.license.uom.length': 'Quantity should not have more than 2 decimals-Marathi',
+  'error.license.quantity': 'Quantity is required , please enter Valid Quantity-Marathi-Marathi',
+  'error.license.validityyears': 'ValidityYears is required , please enter Valid number between 1-10-Marathi-Marathi-Marathi',
+  'error.license.tradecommencementdate': 'tradeCommencementDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.licensevalidfrom': 'LicenseValidFromDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.agreementdate': 'AgreementDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.agreementno.notfound': 'agreement number is required, but not found-Marathi',
+  'error.license.agreementno': 'Please enter valid agreementNo between 4-128-Marathi',
+  'error.financialYear.emptyspaces': 'FinancialYear can not be empty, Please enter valid financialYear-Marathi',
+  'error.financialYear.empty': 'FinancialYear is required, Please enter valid financialYear-Marathi',
+  'error.license.financialyear': 'FinancialYear is required, Please enter valid financialYear-Marathi',
+  'error.license.amount': 'Amount is required, Please enter valid Amount-Marathi',
+  'error.license.amount.decimal': 'Amount should not have more than 2 decimals-Marathi',
+  'error.license.legacy': 'isLegacy is required, Please enter valid value true/false-Marathi',
+  'error.license.propertyowner': 'isPropertyOwner is required, Please enter valid value true/false-Marathi',
+  'error.license.ispropertyowner': 'isPropertyOwner is required, Please provide value as true/false-Marathi',
+  'error.license.documenttype': 'DocumentType is required, Please enter valid DocumentType-Marathi',
+  'error.license.filestore': 'FileStoreId is required, Please enter valid FileStoreId-Marathi',
+  'error.license.tenantId.emptyspaces': 'TenantId can not be empty, Please enter valid tenant id with length between 4- 128-Marathi',
+  'error.license.tenantId.empty': 'TenantID is required, please enter valid tenant id with length between 4- 128-Marathi',
+  'error.oldLicenseNumber.emptyspaces': 'OldLicenseNumber can not be empty, Please enter valid oldLicenseNumber length between 4- 20-Marathi',
+  'error.oldLicenseNumber.empty': 'OldLicenseNumber is required, Please enter valid Old License Number between  4-20 characters-Marathi',
+  'error.Assesment.legnth': 'Property Assesment No is required , please enter Valid Property Assesment No  between 4-20 characters-Marathi',
+  'error.license.active': 'Active is required, Please enter valid value true/false-Marathi',
+  'error.oldLicense.duplicate': 'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber-Marathi',
   //  #--adapter custom messages
   'id.notFound.field': 'id-Marathi',
-  'oldLicense.id.notFound.customMsg':
-    'please provide valid id for updating trade license-Marathi',
-  'oldLicense.id.notValid.customMsg':
-    'TradeLicense does not exists for given id-Marathi',
-  'supporting.document.id.notValid.customMsg':
-    'Support document does not exists for given id-Marathi',
-  'supporting.document.id.notFound.customMsg':
-    'please provide valid id for updating trade license support document-Marathi',
-  'feedetail.id.notFound.customMsg':
-    'please provide valid id for updating trade license fee details-Marathi',
-  'feedetail.id.notValid.customMsg':
-    'Fee Details does not exists for given id-Marathi',
-  'mandatory.document.notfound.customMsg':
-    'Required support document(s) are not found, please provide all mandatory support documents-Marathi',
-  'nonlegacy.update.customMsg':
-    ' Non Legacy license update not supported-Marathi',
+  'oldLicense.id.notFound.customMsg': 'please provide valid id for updating trade license-Marathi',
+  'oldLicense.id.notValid.customMsg': 'TradeLicense does not exists for given id-Marathi',
+  'supporting.document.id.notValid.customMsg': 'Support document does not exists for given id-Marathi',
+  'supporting.document.id.notFound.customMsg': 'please provide valid id for updating trade license support document-Marathi',
+  'feedetail.id.notFound.customMsg': 'please provide valid id for updating trade license fee details-Marathi',
+  'feedetail.id.notValid.customMsg': 'Fee Details does not exists for given id-Marathi',
+  'mandatory.document.notfound.customMsg': 'Required support document(s) are not found, please provide all mandatory support documents-Marathi',
+  'nonlegacy.update.customMsg': ' Non Legacy license update not supported-Marathi',
 
-  'legacy.trade.create.success.status.message':
-    'Legacy tradeLicense(s) created successfully, with License Number(s)-Marathi',
-  'error.license.licenses.notfound':
-    'licenses is required, but not found-Marathi',
-  'new.trade.create.success.status.message':
-    'Your request for creating new tradeLicense(s) is accepted with Application Number(s)-Marathi',
-  'error.license.licenses.size.not.empty':
-    'at least one license should present for the creation/updation-Marathi',
-  'error.license.legacy.feedetails.notfound':
-    'feeDetails are required, please provide valid feeDetails-Marathi',
-  'error.license.applicationtype':
-    'Application Type is required, Please enter valid Application Type-Marathi',
-  'error.license.oldLicenseNumber':
-    'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters-Marathi',
-  'error.oldLicense.duplicate':
-    'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber-Marathi',
-  'error.license.applicationDate':
-    'applicationDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.aadhaarnumber':
-    ' Aadhaar Number is required , please enter 12 digits Aadhaar Number-Marathi',
-  'error.license.mobilenumber ':
-    ' Mobile Number is required , please enter 10 digits Mobile Number-Marathi',
-  'error.license.ownername':
-    'Owner Name is required , please enter Valid name length between 4-100 characters-Marathi',
-  'error.license.fatherspousename ':
-    ' Father Spouse Name is required , please enter Valid name length between 4-100 characters-Marathi',
-  'error.license.owneraddress':
-    'Owner Address is required , please enter Valid Address length between 4-250 characters-Marathi',
-  'error.license.emailid':
-    'Emailid is required, please enter the valid emailid-Marathi',
+  'legacy.trade.create.success.status.message': 'Legacy tradeLicense(s) created successfully, with License Number(s)-Marathi',
+  'error.license.licenses.notfound': 'licenses is required, but not found-Marathi',
+  'new.trade.create.success.status.message': 'Your request for creating new tradeLicense(s) is accepted with Application Number(s)-Marathi',
+  'error.license.licenses.size.not.empty': 'at least one license should present for the creation/updation-Marathi',
+  'error.license.legacy.feedetails.notfound': 'feeDetails are required, please provide valid feeDetails-Marathi',
+  'error.license.applicationtype': 'Application Type is required, Please enter valid Application Type-Marathi',
+  'error.license.oldLicenseNumber': 'oldLicenseNumber is required, Please enter valid Old License Number with 20 characters-Marathi',
+  'error.oldLicense.duplicate': 'oldLicenseNumber alredy Exists, please provide unique oldLicenseNumber-Marathi',
+  'error.license.applicationDate': 'applicationDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.aadhaarnumber': ' Aadhaar Number is required , please enter 12 digits Aadhaar Number-Marathi',
+  'error.license.mobilenumber ': ' Mobile Number is required , please enter 10 digits Mobile Number-Marathi',
+  'error.license.ownername': 'Owner Name is required , please enter Valid name length between 4-100 characters-Marathi',
+  'error.license.fatherspousename ': ' Father Spouse Name is required , please enter Valid name length between 4-100 characters-Marathi',
+  'error.license.owneraddress': 'Owner Address is required , please enter Valid Address length between 4-250 characters-Marathi',
+  'error.license.emailid': 'Emailid is required, please enter the valid emailid-Marathi',
   'error.license.propertyAssesmentNo.notfound':
     'Property Assesment No  is not found ,  please enter Valid Property Assesment No  between 15-20 characters-Marathi',
   'error.license.propertyAssesmentNo.notvalid':
     'Property Assesment No  is not valid ,  please enter Valid Property Assesment No  between 15-20 characters-Marathi',
-  'error.license.locality':
-    'Locality is required , please enter valid Locality-Marathi',
-  'error.license.revenueward':
-    'RevenueWard is required , please enter valid RevenueWard-Marathi',
-  'error.license.adminward':
-    'Admin Ward is required , please enter valid Admin Ward-Marathi',
-  'error.license.tradeaddress':
-    'Trade Address is required , please enter Valid Address length between 4-250 characters-Marathi',
-  'error.license.tradetitle':
-    'Trade Title is required , please enter Trade Title-Marathi',
-  'error.license.tradetype':
-    'Trade Type is required , please enter Valid Trade Type-Marathi',
-  'error.license.category':
-    'Category is required , please enter Valid Category-Marathi',
-  'error.license.subcategory':
-    'Sub Category is required , please enter Valid Sub Category-Marathi',
+  'error.license.locality': 'Locality is required , please enter valid Locality-Marathi',
+  'error.license.revenueward': 'RevenueWard is required , please enter valid RevenueWard-Marathi',
+  'error.license.adminward': 'Admin Ward is required , please enter valid Admin Ward-Marathi',
+  'error.license.tradeaddress': 'Trade Address is required , please enter Valid Address length between 4-250 characters-Marathi',
+  'error.license.tradetitle': 'Trade Title is required , please enter Trade Title-Marathi',
+  'error.license.tradetype': 'Trade Type is required , please enter Valid Trade Type-Marathi',
+  'error.license.category': 'Category is required , please enter Valid Category-Marathi',
+  'error.license.subcategory': 'Sub Category is required , please enter Valid Sub Category-Marathi',
   'error.license.uom': 'Uom is required , please enter Valid Uom-Marathi',
-  'error.license.quantity':
-    'Quantity is required , please enter Valid Quantity-Marathi',
-  'error.license.validityyears':
-    'ValidityYears is required , please enter Valid number between 1-10-Marathi',
-  'error.license.validityyearsMatch':
-    'ValidityYears is required ,  should match with subacategory validity years-Marathi',
-  'error.license.tradecommencementdate':
-    'tradeCommencementDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.licensevalidfrom':
-    'LicenseValidFromDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.agreementdate':
-    'AgreementDate is required, Please enter valid date as epoch-Marathi',
-  'error.license.agreementno.notfound':
-    'agreement number is required, but not found-Marathi',
-  'error.license.agreementno':
-    'Please enter valid agreementNo between 4-128-Marathi',
-  'error.license.financialyear':
-    'FinancialYear is required, Please enter valid financialYear-Marathi',
-  'error.license.amount':
-    'Amount is required, Please enter valid Amount-Marathi',
-  'error.license.documenttype':
-    'DocumentType is required, Please enter valid DocumentType-Marathi',
-  'error.license.filestore':
-    'FileStoreId is required, Please enter valid FileStoreId-Marathi',
-  'error.license.feedetails':
-    'provided fee details are not valid, please provide valid fee details-Marathi',
+  'error.license.quantity': 'Quantity is required , please enter Valid Quantity-Marathi',
+  'error.license.validityyears': 'ValidityYears is required , please enter Valid number between 1-10-Marathi',
+  'error.license.validityyearsMatch': 'ValidityYears is required ,  should match with subacategory validity years-Marathi',
+  'error.license.tradecommencementdate': 'tradeCommencementDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.licensevalidfrom': 'LicenseValidFromDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.agreementdate': 'AgreementDate is required, Please enter valid date as epoch-Marathi',
+  'error.license.agreementno.notfound': 'agreement number is required, but not found-Marathi',
+  'error.license.agreementno': 'Please enter valid agreementNo between 4-128-Marathi',
+  'error.license.financialyear': 'FinancialYear is required, Please enter valid financialYear-Marathi',
+  'error.license.amount': 'Amount is required, Please enter valid Amount-Marathi',
+  'error.license.documenttype': 'DocumentType is required, Please enter valid DocumentType-Marathi',
+  'error.license.filestore': 'FileStoreId is required, Please enter valid FileStoreId-Marathi',
+  'error.license.feedetails': 'provided fee details are not valid, please provide valid fee details-Marathi',
   'error.license.categoryendpoint': 'category end point error-Marathi',
   'error.license.documentendpoint': ' document end point error-Marathi',
   'error.license.locationendpoint': ' location end point error-Marathi',
   'error.license.propertyendpoint ': ' proeprty endpoint error-Marathi',
-  'error.license.feeDetailYearNotFound ':
-    'Financial Does not exists for Current/Future Year-Marathi',
+  'error.license.feeDetailYearNotFound ': 'Financial Does not exists for Current/Future Year-Marathi',
   //legal module
 
   'legal.create.group.title.eventDetails': 'My Events-Marathi',
@@ -5427,12 +4844,10 @@ var localization_MR_Data = {
   'advocates.create.email': 'Email-Marathi',
   'advocates.create.dateOfEmpanelment': 'Date of Empanelment-Marathi',
   'advocates.create.panNumber': 'PAN Number-Marathi',
-  'advocates.create.standingCommiteDecisionDate':
-    'Standing Commite Decision Date-Marathi',
+  'advocates.create.standingCommiteDecisionDate': 'Standing Commite Decision Date-Marathi',
   'advocates.create.VATTinNumber': 'GST Number-Marathi',
   'advocates.create.empanelmentFromDate': 'Empanelment From Date-Marathi',
-  'advocates.create.newsPaperAdvertismentDate':
-    'NewsPaper Advertisment Date-Marathi',
+  'advocates.create.newsPaperAdvertismentDate': 'NewsPaper Advertisment Date-Marathi',
   'advocates.create.empanelementToDate': 'Empanelement To Date-Marathi',
   'advocates.create.group.title.bankDetails': 'Bank Details-Marathi',
   'advocates.create.bankName': 'Bank Name-Marathi',
@@ -5440,8 +4855,7 @@ var localization_MR_Data = {
   'advocates.create.bankAcc': 'Bank Acc-Marathi',
   'advocates.create.IFSCCode': 'IFSC Code-Marathi',
   'advocates.create.MICRCode': 'MICR Code-Marathi',
-  'advocates.create.group.title.empanelmentDetails':
-    'Empanelment Details-marathi',
+  'advocates.create.group.title.empanelmentDetails': 'Empanelment Details-marathi',
   'advocates.create.group.title.advocateSearch': 'Advocate Search-marathi',
   'advocates.create.agencOrganizationName': 'Agency/Organization Name-marathi',
   'advocates.create.advocateName': 'Advocate Name-marathi',
@@ -5451,8 +4865,7 @@ var localization_MR_Data = {
   'advocates.create.inactive': 'Inactive-marathi',
   'advocates.create.terminate': 'Terminate-marathi',
   'advocates.create.group.title.action': 'Action-marathi',
-  'advocates.create.reasonOfTerminationOrDeactivation':
-    'Reason Of Termination/Deactivation-marathi',
+  'advocates.create.reasonOfTerminationOrDeactivation': 'Reason Of Termination/Deactivation-marathi',
   'advocates.create.terminationDate': 'Termination Date-marathi',
   'advocates.create.inActivationDate': 'InActivation Date-marathi',
   'advocates.create.group.title.agencyDetails': 'Agency Owner Details-marathi',
@@ -5463,8 +4876,7 @@ var localization_MR_Data = {
   'opinion.create.opinionOn': 'Opinion On-Marathi',
   'opinion.create.case': 'Case No.-Marathi',
 
-  'advocatepayment.create.group.title.AdvocatePaymentDetails':
-    'Advocate Request for Payment--Marathi',
+  'advocatepayment.create.group.title.AdvocatePaymentDetails': 'Advocate Request for Payment--Marathi',
   'advocatepayment.create.advocateName': 'Advocate Name-Marathi',
   'advocatepayment.create.demandDate': 'Demand Date-Marathi',
   'advocatepayment.create.caseNo': 'Case No.-Marathi',
@@ -5475,8 +4887,7 @@ var localization_MR_Data = {
   'advocatepayment.create.bankBranch': 'Bank Branch-Marathi',
   'advocatepayment.create.amountClaimed': 'Demand Amount-Marathi',
   'advocatepayment.create.bankAccountNo': 'Account No.-Marathi',
-  'advocatepayment.create.amountRecived':
-    'Demand Amount Received So Far-Marathi',
+  'advocatepayment.create.amountRecived': 'Demand Amount Received So Far-Marathi',
   'advocatepayment.create.voucherNumber': 'Voucher Number-Marathi',
   'advocatepayment.create.isPartialPayment': 'Payment-Marathi',
   'advocatepayment.create.PartialPayment': 'Partial Payment-Marathi',
@@ -5509,14 +4920,12 @@ var localization_MR_Data = {
   'legacylegal.create.caseNo': 'Case No-marathi',
   'legacylegal.create.plantiffName': 'Plantiff Name-marathi',
   'legacylegal.create.plantiffAddress': 'Plantiff Address-marathi',
-  'legacylegal.create.pleadersEngagementDetails':
-    'Pleaders Engagement Details-marathi',
+  'legacylegal.create.pleadersEngagementDetails': 'Pleaders Engagement Details-marathi',
   'legacylegal.create.recieptDate': 'Case Receipt Date-marathi',
   'legacylegal.create.summonDate': 'Summon Date-marathi',
   'legacylegal.create.ULBResolution': 'ULB Resolution-marathi',
   'legacylegal.create.ULBResolutionDate': 'ULB Resolution Date-marathi',
-  'legacylegal.create.AdvocateInfoGivenDate':
-    'Advocate Info Given Date-marathi',
+  'legacylegal.create.AdvocateInfoGivenDate': 'Advocate Info Given Date-marathi',
   'legacylegal.create.VakalatnamaDate': 'Vakalatnama Date-marathi',
   'legacylegal.create.responsibleOfficer': 'Responsible Officer-marathi',
   'legacylegal.create.judgementDate': 'Judgement Date-marathi',
@@ -5558,39 +4967,30 @@ var localization_MR_Data = {
   'legal.search.result.referenceNo': 'Reference No-marathi',
   'legal.search.result.advocateName': 'Advocate Name-marathi',
   'legal.search.result.isIndividual': 'Type-marathi',
-  'advocates.create.group.title.additionalOwnerWindow':
-    'Additional Owner-marathi',
-  'advocates.create.group.title.additionalAdvocateWindow':
-    'Add Advocate-marathi',
+  'advocates.create.group.title.additionalOwnerWindow': 'Additional Owner-marathi',
+  'advocates.create.group.title.additionalAdvocateWindow': 'Add Advocate-marathi',
   'legal.create.additionalOwnerName': 'Additional Owner Name-marathi',
 
   'caseRegistration.create.group.title.caseDetails': 'Case Details-marathi',
   'caseRegistration.create.referenceCaseNo': 'Reference Case No-marathi',
-  'caseRegistration.create.departmentConcernedPerson':
-    'Department Concerned Person-marathi',
-  'caseRegistration.create.caseRegistrationDate':
-    'Case Registration Date-marathi',
+  'caseRegistration.create.departmentConcernedPerson': 'Department Concerned Person-marathi',
+  'caseRegistration.create.caseRegistrationDate': 'Case Registration Date-marathi',
 
-  'legal.vakalatnama.create.group.title.generateVakalatnama':
-    'Generate Vakalatnama-marathi',
+  'legal.vakalatnama.create.group.title.generateVakalatnama': 'Generate Vakalatnama-marathi',
   'legal.vakalatnama.create.caseNumber': 'Case Number-marathi',
-  'legal.vakalatnama.create.referenceCaseNumber':
-    'Reference CaseNumber-marathi',
-  'legal.vakalatnama.create.summon_WarrantReferenceNumber':
-    'Summon/Warrant Reference Number-marathi',
+  'legal.vakalatnama.create.referenceCaseNumber': 'Reference CaseNumber-marathi',
+  'legal.vakalatnama.create.summon_WarrantReferenceNumber': 'Summon/Warrant Reference Number-marathi',
   'legal.vakalatnama.create.advocateName': 'Advocate Name-marathi',
   'legal.vakalatnama.create.additionalAdvocate': 'Additional Advocate-marathi',
   'legal.vakalatnama.create.department': 'Department-marathi',
-  'legal.vakalatnama.create.chiefOfficerDetails':
-    'Chief Officer Details-marathi',
+  'legal.vakalatnama.create.chiefOfficerDetails': 'Chief Officer Details-marathi',
   'legal.vakalatnama.create.days': 'Days-marathi',
   'legal.vakalatnama.create.departmentName': 'Department Name-marathi',
   'legal.vakalatnama.create.courtName': 'Court Name-marathi',
   'legal.vakalatnama.create.hearingTime': 'Hearing Time-marathi',
   'legal.vakalatnama.create.witness': 'Witness-marathi',
   'legal.vakalatnama.create.addWitness': 'Add Witness-marathi',
-  'legal.vakalatnama.create.generateVakalatnama':
-    'Generate Vakalatnama-marathi',
+  'legal.vakalatnama.create.generateVakalatnama': 'Generate Vakalatnama-marathi',
   'legal.create.orignatedBYULB': 'Initiated by ULB-marathi',
   'legal.vakalatnama.create.exhibitNumber': 'Exhibit Number-marathi',
   'legal.create.amount': 'Amount-marathi',
@@ -5600,33 +5000,25 @@ var localization_MR_Data = {
   'legal.create.amount': 'Amount-marathi',
   'legal.create.amount': 'Amount-marathi',
   'legal.create.modeOfPayment': 'Mode Of Payment-marathi',
-  'advocatepayment.create.instrumentNumber_InstrumentDate':
-    'Instrument Number/Instrument Date-marathi',
+  'advocatepayment.create.instrumentNumber_InstrumentDate': 'Instrument Number/Instrument Date-marathi',
   'legal.create.additionalAdvocate': 'Additional Advocate-marathi',
 
   //parawisecomments
-  'legal.parawisecomments.create.group.title.viewDetails':
-    'View Summon/Warrant Details-marathi',
+  'legal.parawisecomments.create.group.title.viewDetails': 'View Summon/Warrant Details-marathi',
   'legal.parawisecomments.create.summonWarrantDetails': 'Case Details-marathi',
-  'legal.parawisecomments.create.group.title.parawiseComment':
-    'Parawise Comment-marathi',
-  'legal.parawisecomments.create.dateOfCommentsAsked':
-    'Date of Parawise Comments asked-marathi',
-  'legal.parawisecomments.create.dateOfCommentsReceived':
-    'Date of Parawise Comments Rcvd at Dept-marathi',
-  'legal.parawisecomments.create.dateOfInfoProvidedByHod':
-    'Date of Information provided by HOD-marathi',
+  'legal.parawisecomments.create.group.title.parawiseComment': 'Parawise Comment-marathi',
+  'legal.parawisecomments.create.dateOfCommentsAsked': 'Date of Parawise Comments asked-marathi',
+  'legal.parawisecomments.create.dateOfCommentsReceived': 'Date of Parawise Comments Rcvd at Dept-marathi',
+  'legal.parawisecomments.create.dateOfInfoProvidedByHod': 'Date of Information provided by HOD-marathi',
   'legal.parawisecomments.create.resolutionDate': 'Resolution Date-marathi',
   'legal.parawisecomments.create.caseReferenceNo': 'Case Reference No.-marathi',
   'legal.parawisecomments.create.parawiseComments': 'Parawise Comments-marathi',
-  'legal.parawisecomments.create.group.title.uploadDocument':
-    'Upload Document-marathi',
+  'legal.parawisecomments.create.group.title.uploadDocument': 'Upload Document-marathi',
   'legal.parawisecomments.create.group.title.action': 'Action-marathi',
   'legal.parawisecomments.create.approve': 'Approve-marathi',
   'legal.parawisecomments.create.reject': 'Reject-marathi',
   'legal.parawisecomments.create.forwardTo': 'Forward To-marathi',
-  'legal.parawisecomments.create.group.parawiseComments':
-    'Parawise Comments-marathi',
+  'legal.parawisecomments.create.group.parawiseComments': 'Parawise Comments-marathi',
   'legacylegal.create.paymentDate': 'Payment Date-marathi',
   'legacylegal.create.receiptDate': 'Receipt Date-marathi',
   'legacylegal.create.ULB': 'Initiated by ULB-marathi',
@@ -5676,8 +5068,7 @@ var localization_MR_Data = {
   'advocates.search.document.title': 'Search Advocat-marathi',
   'advocates.update.document.title': 'Update Advocat-marathi',
   'agencies.update.document.title': 'Update Agency-marathi',
-  'advocatepayment.create.document.title':
-    'Create Advocate Request for Payment-marathi ',
+  'advocatepayment.create.document.title': 'Create Advocate Request for Payment-marathi ',
   'advocatepayment.search.document.title': 'Search Advocate Paymen-marathit',
   'advocatepayment.update.document.title': 'Update Advocate Paymen-marathit',
   'assignadvocate.update.document.title': 'Update Assign Advocat-marathie',
@@ -5703,39 +5094,27 @@ var localization_MR_Data = {
   'vehiclefuellingdetails.createoffSet': 'Offset-Marathi',
   'vehiclefuellingdetails.create.transactionNo': 'Transaction Number-Marathi',
   'vehiclefuellingdetails.create.transactionDate': 'Transaction Date-Marathi',
-  'vehiclefuellingdetails.create.refuellingStation':
-    'Refuelling Pump Station-Marathi',
+  'vehiclefuellingdetails.create.refuellingStation': 'Refuelling Pump Station-Marathi',
   'vehiclefuellingdetails.create.vehicleType': 'Vehicle Type-Marathi',
   'vehiclefuellingdetails.create.regNumber': 'Vehicle Registration No-Marathi',
-  'vehiclefuellingdetails.create.vehicleReadingDuringFuelling':
-    'Vehicle Reading during Fuelling-Marathi',
+  'vehiclefuellingdetails.create.vehicleReadingDuringFuelling': 'Vehicle Reading during Fuelling-Marathi',
   'vehiclefuellingdetails.create.typeOfFuel': 'Type of Fuel-Marathi',
   'vehiclefuellingdetails.create.fuelFilled': 'Fuel filled (Liters)-Marathi',
-  'vehiclefuellingdetails.create.totalCostIncurred':
-    'Total Cost Incurred-Marathi',
+  'vehiclefuellingdetails.create.totalCostIncurred': 'Total Cost Incurred-Marathi',
   'vehiclefuellingdetails.create.receiptNo': 'Receipt No-Marathi',
   'vehiclefuellingdetails.create.receiptDate': 'Receipt Date-Marathi',
   'vehiclefuellingdetails.create.group.title.VehicleDetails1': ' -Marathi',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails2':
-    'Vehicle Details-Marathi',
-  'vehiclefuellingdetails.create.group.title.VehicleDetails3':
-    'Fuelling Details-Marathi',
-  'vehiclefuellingdetails.search.result.transactionNo':
-    'Transaction Number-Marathi',
-  'vehiclefuellingdetails.search.result.transactionDate':
-    'Transaction Date-Marathi',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails2': 'Vehicle Details-Marathi',
+  'vehiclefuellingdetails.create.group.title.VehicleDetails3': 'Fuelling Details-Marathi',
+  'vehiclefuellingdetails.search.result.transactionNo': 'Transaction Number-Marathi',
+  'vehiclefuellingdetails.search.result.transactionDate': 'Transaction Date-Marathi',
   'vehiclefuellingdetails.search.result.vehicleType': 'Vehicle Type-Marathi',
-  'vehiclefuellingdetails.search.result.vehicleRegNo':
-    'Vehicle Registration No-Marathi',
-  'vehiclefuellingdetails.search.result.vehicleReadingDuringFuelling':
-    'Vehicle Reading during Fuelling-Marathi',
-  'vehiclefuellingdetails.search.result.refuellingStation':
-    'Refuelling Pump Station-Marathi',
-  'vehiclefuellingdetails.search.result.fuelFilled':
-    'Fuel filled (Liters)-Marathi',
+  'vehiclefuellingdetails.search.result.vehicleRegNo': 'Vehicle Registration No-Marathi',
+  'vehiclefuellingdetails.search.result.vehicleReadingDuringFuelling': 'Vehicle Reading during Fuelling-Marathi',
+  'vehiclefuellingdetails.search.result.refuellingStation': 'Refuelling Pump Station-Marathi',
+  'vehiclefuellingdetails.search.result.fuelFilled': 'Fuel filled (Liters)-Marathi',
   'vehiclefuellingdetails.search.result.typeOfFuel': 'Type of Fuel-Marathi',
-  'vehiclefuellingdetails.search.result.totalCostIncurred':
-    'Total Cost incurred-Marathi',
+  'vehiclefuellingdetails.search.result.totalCostIncurred': 'Total Cost incurred-Marathi',
   'vehiclefuellingdetails.search.result.receiptNo': 'Receipt No-Marathi',
   'vehiclefuellingdetails.search.result.receiptDate': 'Receipt Date-Marathi',
 
@@ -5751,24 +5130,21 @@ var localization_MR_Data = {
   'swm.vehicles.create.purchaseDate': 'Purchase Date-Marathi',
   'swm.vehicles.create.purchaseYear': 'Year Of Purchase -Marathi',
   'swm.vehicles.create.insuranceNumber': 'Insurance Number-Marathi',
-  'swm.vehicles.create.insuranceValidityDate':
-    'Insurance Validity Date-Marathi',
+  'swm.vehicles.create.insuranceValidityDate': 'Insurance Validity Date-Marathi',
   'swm.vehicles.create.insurance.details': 'Upload Insurance Details-Marathi',
   'swm.vehicles.create.isUnderWarranty': 'Is Under Warranty-Marathi',
   'swm.vehicles.search.result.vehicleType': 'Vehicle Type-Marathi',
   'swm.vehicles.search.result.regNumber': 'Registration Number-Marathi',
   'swm.vehicles.search.result.vehicleCapacity': 'Vehicle Capacity-Marathi',
   'swm.vehicles.search.result.engineSrNumber': 'Engine Sr Number-Marathi',
-  'swm.vehicles.search.result.numberOfPersonsReq':
-    'Number Of Persons Required-Marathi',
+  'swm.vehicles.search.result.numberOfPersonsReq': 'Number Of Persons Required-Marathi',
   'swm.vehicles.search.result.chassisSrNumber': 'Chassis Sr Number-Marathi',
   'swm.vehicles.search.result.model': 'Make/Model/Manufacturer-Marathi',
   'swm.vehicles.search.result.fuelType': 'Fuel Type-Marathi',
   'swm.vehicles.search.result.ulbOwnedVehicle': 'ULB Owned Vehicle-Marathi',
   'swm.vehicles.search.result.vendor': 'Vendor Name-Marathi',
   'swm.vehicles.search.result.insuranceNumber': 'Insurance Number-Marathi',
-  'swm.vehicles.search.result.insuranceValidityDate':
-    'Insurance Validity Date-Marathi',
+  'swm.vehicles.search.result.insuranceValidityDate': 'Insurance Validity Date-Marathi',
   'swm.vehicles.search.result.insuranceDocuments': 'Insurance Details-Marathi',
   'swm.vehicles.search.result.purchaseDate': 'Purchase Date-Marathi',
   'swm.vehicles.search.result.yearOfPurchase': 'Year Of Purchase-Marathi',
@@ -5791,11 +5167,9 @@ var localization_MR_Data = {
   'swm.vehicles.create.endOfWarranty': 'End Of Warranty-Marathi',
   'swm.vehicles.create.group.title.VehicleDetails1': 'Vehicle Details-Marathi',
   'swm.vehicles.create.group.title.VehicleDetails2': ' -Marathi',
-  'swm.vehicles.create.group.title.InsuranceDetails':
-    'Insurance Details for Contracted Vehicle-Marathi',
+  'swm.vehicles.create.group.title.InsuranceDetails': 'Insurance Details for Contracted Vehicle-Marathi',
   'swm.vehicles.create.group.title.PurchaseDetails': 'Purchase Details-Marathi',
-  'swm.vehicles.create.group.title.WarrantyDetails':
-    'Warranty Details - Marathi',
+  'swm.vehicles.create.group.title.WarrantyDetails': 'Warranty Details - Marathi',
   'swm.create.vendorNos': 'Vendornos',
   'swm.create.vendorNo': 'Vendorno',
   'swm.create.registrationNo': 'Registrationno',
@@ -5824,36 +5198,30 @@ var localization_MR_Data = {
   'swm.create.vehicle.kilometers': 'Kilometers',
   'swm.create.maintenanceUom': 'Maintenanceuom',
   'swm.create.downtimeforMaintenanceUom': 'Downtimeformaintenanceuom',
-  'swm.create.group.title.VehicleMaintenanceDetails':
-    'Vehiclemaintenancedetails',
+  'swm.create.group.title.VehicleMaintenanceDetails': 'Vehiclemaintenancedetails',
   'swm.create.maintenanceAfter': 'Maintenance After (Days/Kms)',
   'swm.create.downtimeforMaintenance': 'Downtime for Maintenance (Hrs/Days)',
-  'swm.refillingpumpstations.create.group.title.RefillingPumpName':
-    'Pump Station Details',
+  'swm.refillingpumpstations.create.group.title.RefillingPumpName': 'Pump Station Details',
   'swm.refillingpumpstations.create.name': 'Pump Name',
   'swm.refillingpumpstations.typeOfPump.name': 'Type of Pump',
   'swm.refillingpumpstations.typeOfFuel': 'Fuel Type',
   'swm.refillingpumpstations.quantity': 'Quantity (Litres)',
   'swm.refillingpumpstations.create.group.title.FuelDetails': 'Fuel Details',
   'swm.refillingpumpstations.create.title': 'Refilling Pump Station Master',
-  'swm.create.insuranceDetails.insuranceValidityDate':
-    'Insurance Validity Date',
+  'swm.create.insuranceDetails.insuranceValidityDate': 'Insurance Validity Date',
   'swm.create.group.title.Selection': 'Selection',
   'swm.create.vehicle.remarks': 'Remarks',
   'swm.create.actualMaintenanceDate': 'Actual Maintenance Date',
-  'swm.create.vehicleScheduledMaintenanceDate':
-    'Vehicle Scheduled Maintenance Date',
+  'swm.create.vehicleScheduledMaintenanceDate': 'Vehicle Scheduled Maintenance Date',
   'swm.create.costIncurred': 'Cost Incurred',
   'swm.create.vehicleDowntimeActual': 'Vehicle Downtime Actual',
   'swm.create.vehicleDownTimeActualUom': 'Hrs/Days',
   'swm.create.maintenanceType': 'Maintenance Type',
   'swm.search.result.name': 'Name',
-  'swm.create.vehicleReadingDuringMaintenance':
-    'Vehicle Reading during Maintenance (Kms)',
+  'swm.create.vehicleReadingDuringMaintenance': 'Vehicle Reading during Maintenance (Kms)',
   'swm.search.vendor.title': 'Vendor Search',
   'swm.create.remarks': 'Remarks',
-  'swm.create.group.title.VehicleMaintenanceDeatils':
-    'Vehicle Maintenance Deatils',
+  'swm.create.group.title.VehicleMaintenanceDeatils': 'Vehicle Maintenance Deatils',
   'swm.create.tripStartDate': 'Schedule Date From ',
   'swm.create.tripEndDate': 'Schedule End To',
   'swm.create.inTime': 'In Time',
@@ -5868,10 +5236,8 @@ var localization_MR_Data = {
   'swm.create.group.title.Trip Sheet Details': 'Trip Sheet Details',
   'swm.create.siteDetails.name': 'Ending Dumping GroundPoint',
   'swm.create.endingCollectionPoint.name': 'Ending Collection Point',
-  'swm.create.page.title.vehicleTripSheetDetails':
-    'Enter Vehicle Trip Sheet Details',
-  'error.license.feeDetailYearNotFound ':
-    'Financial Does not exists for Current/Future Year-Marathi',
+  'swm.create.page.title.vehicleTripSheetDetails': 'Enter Vehicle Trip Sheet Details',
+  'error.license.feeDetailYearNotFound ': 'Financial Does not exists for Current/Future Year-Marathi',
   'reports.print.details': 'Print Details-Marathi',
   'caseRegistration.create.caseNo': 'Case No-Marathi',
   'opinion.create.opinionFromDate': 'Opinion From Date-Marathi',
@@ -5897,21 +5263,17 @@ var localization_MR_Data = {
   'advocatepayment.create.resolutionRemarks': 'Resolution Remarks-Marathi',
   'legal.create.downloadInvoice': 'Download Invoice - Marathi',
 
-  'advocatepayment.create.group.title.paymentdetails':
-    'Payment Details-Marathi',
+  'advocatepayment.create.group.title.paymentdetails': 'Payment Details-Marathi',
 
   'legal.create.uploadInvoice': 'Upload Invoice-marathi',
-  'framework.date.error.message':
-    'Please enter date in DD/MM/YYYY format-Marathi',
-  'framework.time.error.message':
-    'Please enter time in H:MM AM/PM format-Marathi',
+  'framework.date.error.message': 'Please enter date in DD/MM/YYYY format-Marathi',
+  'framework.time.error.message': 'Please enter time in H:MM AM/PM format-Marathi',
   'legal.create.code': 'Code-Marathi ',
   'legal.create.paymentNote':
     'Note: Total amount shown in window is valid and it is not necessarily same as the amount mentioned in invoice document that is attached-Marathi',
   'advocatepayment.update.document.title': 'Advocate Payment Update-Marathi',
   'legacycase.update.document.title': 'Create Legacy Case-marathi',
-  'legal.create.caseregistration.fromDate':
-    'Case Registration From Date-Marathi',
+  'legal.create.caseregistration.fromDate': 'Case Registration From Date-Marathi',
   'legal.create.caseregistration.toDate': 'Case Registration To Date-Marathi',
 
   'swm.collectionpoints.search.title': 'Search',
@@ -5928,18 +5290,14 @@ var localization_MR_Data = {
   'swm.collectionpoints.create.block': 'Road / Street',
   'swm.collectionpoints.create.colony': 'Colony / Society / Complex',
   'swm.collectionpoints.create.title': 'Collection Point Entry Master',
-  'swm.collectionpoints.create.group.title.LocationSelection':
-    'Locationselection',
-  'swm.collectionpoints.create.group.title.CollectionPointDetails':
-    'Collection Type Details',
-  'swm.collectionpoints.create.group.title.CollectionPoints':
-    'Collectionpoints',
+  'swm.collectionpoints.create.group.title.LocationSelection': 'Locationselection',
+  'swm.collectionpoints.create.group.title.CollectionPointDetails': 'Collection Type Details',
+  'swm.collectionpoints.create.group.title.CollectionPoints': 'Collectionpoints',
   'swm.collectionpoints.create.group.title.BinDetails': 'Bindetails',
   'swm.collectionpoints.create.garbageEstimate': 'Garbage Estimate',
   'swm.collectionpoints.create.description': 'Description',
   'referenceEvidence.update.document.title': 'Reference Evidences-marathi',
-  'referenceEvidence.create.group.title.addReferenceEvidences':
-    'Add Reference Evidences-marathi',
+  'referenceEvidence.create.group.title.addReferenceEvidences': 'Add Reference Evidences-marathi',
   'referenceEvidence.create.typeOfReference': 'Type Of Reference-marathi',
   'referenceEvidence.create.referenceDate': 'Reference Date-marathi',
   'referenceEvidence.create.referenceCaseNo': 'Reference Case No-marathi',
@@ -5947,10 +5305,8 @@ var localization_MR_Data = {
   'referenceEvidence.create.description': 'Description-marathi',
   'legal.vakalatnama.create.primaryAdvocate': 'Primary Advocate-marathi',
   'legal.vakalatnama.create.additionalAdvocate': 'Additional Advocate-marathi',
-  'legal.advocates.create.additionalAdvocateWindow':
-    'Additional Advocate-marathi',
-  'advocates.create.group.title.orgEmpanelmentDetails':
-    'Agency Details-marathi',
+  'legal.advocates.create.additionalAdvocateWindow': 'Additional Advocate-marathi',
+  'advocates.create.group.title.orgEmpanelmentDetails': 'Agency Details-marathi',
   'advocates.create.agencyAddress': 'Agency Address-marathi',
   'legal.search.result.agencyName': 'Agency Name-marathi',
   'advocates.create.group.title.orgBankDetails': 'Bank Details-marathi',
@@ -5963,16 +5319,11 @@ var localization_MR_Data = {
 
 export function translate(locale_text) {
   if (locale_text && localStorage.getItem('lang_response')) {
-    var langresult = JSON.parse(localStorage.getItem('lang_response')).filter(
-      function(obj) {
-        return obj.code == locale_text;
-      }
-    );
+    var langresult = JSON.parse(localStorage.getItem('lang_response')).filter(function(obj) {
+      return obj.code == locale_text;
+    });
     if (langresult[0]) return Object.values(langresult[0])[1];
-    else
-      return localStorage.locale == 'mr_IN'
-        ? localization_MR_Data[locale_text] || locale_text
-        : localization_EN_Data[locale_text] || locale_text;
+    else return localStorage.locale == 'mr_IN' ? localization_MR_Data[locale_text] || locale_text : localization_EN_Data[locale_text] || locale_text;
   }
 }
 
@@ -6021,14 +5372,7 @@ export function format_lat_long(latorlong) {
 
 export function toLocalTime(regDate) {
   var dat = regDate.split(' ')[0];
-  dat =
-    dat.split('-')[1] +
-    '-' +
-    dat.split('-')[0] +
-    '-' +
-    dat.split('-')[2] +
-    ' ' +
-    regDate.split(' ')[1];
+  dat = dat.split('-')[1] + '-' + dat.split('-')[0] + '-' + dat.split('-')[2] + ' ' + regDate.split(' ')[1];
   dat = new Date(dat + ' UTC').toString();
   return dat.substr(0, dat.indexOf('GMT'));
 }
@@ -6049,8 +5393,7 @@ export function epochToTime(t) {
   var date_obj = new Date(Number(t));
   const hrs = date_obj.getHours();
   const mins = date_obj.getMinutes();
-  let time =
-    (hrs < 10 ? '0' + hrs : hrs) + ':' + (mins < 10 ? '0' + mins : mins);
+  let time = (hrs < 10 ? '0' + hrs : hrs) + ':' + (mins < 10 ? '0' + mins : mins);
   return time;
 }
 
@@ -6062,8 +5405,7 @@ export function dateToEpoch(datestring) {
 export function dataURItoBlob(dataURI) {
   // convert base64/URLEncoded data component to raw binary data held in a string
   var byteString;
-  if (dataURI.split(',')[0].indexOf('base64') >= 0)
-    byteString = atob(dataURI.split(',')[1]);
+  if (dataURI.split(',')[0].indexOf('base64') >= 0) byteString = atob(dataURI.split(',')[1]);
   else byteString = unescape(dataURI.split(',')[1]);
 
   // separate out the mime component

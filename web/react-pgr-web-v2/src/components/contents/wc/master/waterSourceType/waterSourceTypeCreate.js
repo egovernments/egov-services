@@ -81,13 +81,7 @@ class WaterSourceTypeCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/sourcetype/_search',
-        { id: this.props.match.params.id },
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/sourcetype/_search', { id: this.props.match.params.id }, body, false, true).then(
         function(response) {
           console.log('response', response);
           console.log('response object', response.waterSourceType[0]);
@@ -125,20 +119,14 @@ class WaterSourceTypeCreate extends Component {
         id: this.props.createWaterSourceType.id,
         name: this.props.createWaterSourceType.name,
         code: this.props.createWaterSourceType.code,
-        active: !this.props.createWaterSourceType.active
-          ? false
-          : this.props.createWaterSourceType.active,
+        active: !this.props.createWaterSourceType.active ? false : this.props.createWaterSourceType.active,
         description: this.props.createWaterSourceType.description,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/wcms/masters/sourcetype/' + body.sourceType.code + '/_update',
-        {},
-        body
-      ).then(
+      Api.commonApiPost('/wcms/masters/sourcetype/' + body.sourceType.code + '/_update', {}, body).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -198,14 +186,7 @@ class WaterSourceTypeCreate extends Component {
           <Card style={styles.marginStyle}>
             <CardHeader
               style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {this.state.id != ''
-                    ? 'Update Water Source Type '
-                    : 'Create Water Source Type'}{' '}
-                </div>
-              }
+              title={<div style={styles.headerStyle}> {this.state.id != '' ? 'Update Water Source Type ' : 'Create Water Source Type'} </div>}
             />
             <CardText style={{ padding: 0 }}>
               <Grid>
@@ -214,11 +195,7 @@ class WaterSourceTypeCreate extends Component {
                     <TextField
                       fullWidth={true}
                       floatingLabelText={'Water Source Type' + '*'}
-                      value={
-                        createWaterSourceType.name
-                          ? createWaterSourceType.name
-                          : ''
-                      }
+                      value={createWaterSourceType.name ? createWaterSourceType.name : ''}
                       errorText={fieldErrors.name ? fieldErrors.name : ''}
                       maxLength={100}
                       onChange={e => {
@@ -233,21 +210,10 @@ class WaterSourceTypeCreate extends Component {
                       fullWidth={true}
                       maxLength={250}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createWaterSourceType.description
-                          ? createWaterSourceType.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createWaterSourceType.description ? createWaterSourceType.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^[a-zA-Z0-9 ]*$/g
-                        );
+                        handleChange(e, 'description', false, /^[a-zA-Z0-9 ]*$/g);
                       }}
                       multiLine={true}
                       id="description"
@@ -259,11 +225,7 @@ class WaterSourceTypeCreate extends Component {
                     <Checkbox
                       label={translate('pgr.lbl.active')}
                       style={styles.checkbox}
-                      defaultChecked={
-                        this.state.id != ''
-                          ? createWaterSourceType.active || false
-                          : createWaterSourceType.active || true
-                      }
+                      defaultChecked={this.state.id != '' ? createWaterSourceType.active || false : createWaterSourceType.active || true}
                       onCheck={(e, i, v) => {
                         console.log(createWaterSourceType.active, i);
 
@@ -287,11 +249,7 @@ class WaterSourceTypeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id != ''
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
@@ -299,27 +257,15 @@ class WaterSourceTypeCreate extends Component {
         <Dialog
           title={
             this.state.id != ''
-              ? 'Water Source Type ' +
-                createWaterSourceType.name +
-                ' Updated Successfully'
-              : 'Water Source Type ' +
-                createWaterSourceType.name +
-                ' Created Successfully'
+              ? 'Water Source Type ' + createWaterSourceType.name + ' Updated Successfully'
+              : 'Water Source Type ' + createWaterSourceType.name + ' Created Successfully'
           }
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         />
       </div>
     );
@@ -406,6 +352,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  WaterSourceTypeCreate
-);
+export default connect(mapStateToProps, mapDispatchToProps)(WaterSourceTypeCreate);

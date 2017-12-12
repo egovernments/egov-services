@@ -216,8 +216,7 @@ var dat = {
             name: 'website',
             jsonPath: 'suppliers[0].website',
             label: 'inventory.supplier.website',
-            pattern:
-              '^(http://www.|https://www.|http://|https://)?[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$',
+            pattern: '^(http://www.|https://www.|http://|https://)?[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -228,8 +227,7 @@ var dat = {
             name: 'email',
             jsonPath: 'suppliers[0].email',
             label: 'inventory.common.email',
-            pattern:
-              '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
+            pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -321,8 +319,7 @@ var dat = {
                 jsonPath: 'suppliers[0].inActiveDate',
                 type: 'textField',
                 isHidden: true,
-                pattern:
-                  "`${!getVal('suppliers[0].active') ? new Date().getTime():undefined}`",
+                pattern: "`${!getVal('suppliers[0].active') ? new Date().getTime():undefined}`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',
@@ -511,8 +508,7 @@ var dat = {
             name: 'website',
             jsonPath: 'suppliers[0].website',
             label: 'inventory.supplier.website',
-            pattern:
-              '^(http://www.|https://www.|http://|https://)?[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$',
+            pattern: '^(http://www.|https://www.|http://|https://)?[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -523,8 +519,7 @@ var dat = {
             name: 'email',
             jsonPath: 'suppliers[0].email',
             label: 'inventory.common.email',
-            pattern:
-              '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
+            pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -793,8 +788,7 @@ var dat = {
             name: 'website',
             jsonPath: 'suppliers[0].website',
             label: 'inventory.supplier.website',
-            pattern:
-              '^(http://www.|https://www.|http://|https://)?[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$',
+            pattern: '^(http://www.|https://www.|http://|https://)?[a-z0-9]+([-.]{1}[a-z0-9]+)*.[a-z]{2,5}(:[0-9]{1,5})?(/.*)?$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -805,8 +799,7 @@ var dat = {
             name: 'email',
             jsonPath: 'suppliers[0].email',
             label: 'inventory.common.email',
-            pattern:
-              '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
+            pattern: '^$|([a-zA-Z0-9_\\-\\.]+)@([a-zA-Z0-9_\\-\\.]+)\\.([a-zA-Z]{2,5})$',
             type: 'text',
             isRequired: false,
             isDisabled: false,
@@ -898,8 +891,7 @@ var dat = {
                 jsonPath: 'suppliers[0].inActiveDate',
                 type: 'textField',
                 isHidden: true,
-                pattern:
-                  "`${!getVal('suppliers[0].active') ? new Date().getTime():undefined}`",
+                pattern: "`${!getVal('suppliers[0].active') ? new Date().getTime():undefined}`",
                 rg: '',
                 isRequired: false,
                 requiredErrMsg: '',

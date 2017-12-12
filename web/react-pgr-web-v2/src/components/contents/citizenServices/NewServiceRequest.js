@@ -101,9 +101,7 @@ class NewServiceRequest extends Component {
                       (field.roles.indexOf(userType) > -1 && field.actions.length ==0));*/
 
     //grouping fields based on order property
-    let fieldsGroupByOrder = _.groupBy(response.attributes, function(
-      attribute
-    ) {
+    let fieldsGroupByOrder = _.groupBy(response.attributes, function(attribute) {
       return attribute.order;
     });
 
@@ -115,19 +113,12 @@ class NewServiceRequest extends Component {
     });
 
     let formFields = fieldsSortedByOrder.filter(
-      field =>
-        field.variable &&
-        field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE &&
-        field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE
+      field => field.variable && field.code != constants.CITIZEN_SERVICES_CHECKLIST_CODE && field.code != constants.CITIZEN_SERVICES_DOCUMENTS_CODE
     );
 
-    let checkLists = fieldsSortedByOrder.filter(
-      field => field.code === constants.CITIZEN_SERVICES_CHECKLIST_CODE
-    );
+    let checkLists = fieldsSortedByOrder.filter(field => field.code === constants.CITIZEN_SERVICES_CHECKLIST_CODE);
 
-    let documents = fieldsSortedByOrder.filter(
-      field => field.code === constants.CITIZEN_SERVICES_DOCUMENTS_CODE
-    );
+    let documents = fieldsSortedByOrder.filter(field => field.code === constants.CITIZEN_SERVICES_DOCUMENTS_CODE);
 
     let formSections = [];
 
@@ -263,16 +254,12 @@ class NewServiceRequest extends Component {
     this.props.setLoadingStatus('loading');
     let _this = this;
     serviceRequest['serviceCode'] = this.props.match.params.serviceCode;
-    serviceRequest['attribValues'] = this.getAttribValuesFromFields(
-      this.props.form
-    );
+    serviceRequest['attribValues'] = this.getAttribValuesFromFields(this.props.form);
 
     console.log('serviceRequest', serviceRequest);
 
     if (userType === constants.ROLE_CITIZEN) {
-      var tenantId = localStorage.getItem('tenantId')
-        ? localStorage.getItem('tenantId')
-        : 'default';
+      var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
       var userRequest = {};
       userRequest['id'] = [localStorage.getItem('id')];
       userRequest['tenantId'] = tenantId;
@@ -289,11 +276,7 @@ class NewServiceRequest extends Component {
           serviceRequest['email'] = user.emailId || '';
 
           if (_this.props.files && _this.props.files.length > 0) {
-            _this.uploadFilesAndRaiseRequest(
-              serviceRequest,
-              _this.props.files,
-              tenantId
-            );
+            _this.uploadFilesAndRaiseRequest(serviceRequest, _this.props.files, tenantId);
           } else {
             console.log('files is not there');
             _this.raiseRequest(serviceRequest);
@@ -328,10 +311,7 @@ class NewServiceRequest extends Component {
             name: file.fileStoreId,
           };
         });
-        serviceRequest['attribValues'] = [
-          ...serviceRequest.attribValues,
-          ...fileAttribValues,
-        ];
+        serviceRequest['attribValues'] = [...serviceRequest.attribValues, ...fileAttribValues];
         _this.raiseRequest(serviceRequest);
       },
       function(err) {
@@ -348,9 +328,7 @@ class NewServiceRequest extends Component {
         _this.props.setLoadingStatus('hide');
         console.log('request submitted succesfully', response);
         var srn = response.serviceRequests[0].serviceRequestId;
-        var ack = `${translate('csv.lbl.underprocess')}. ${translate(
-          'pgr.lbl.srn'
-        )} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
+        var ack = `${translate('csv.lbl.underprocess')}. ${translate('pgr.lbl.srn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
         _this.setState({ ack, openDialog: true });
       },
       function(err) {
@@ -363,13 +341,7 @@ class NewServiceRequest extends Component {
   render() {
     const formSections = this.renderFormSection();
 
-    const actions = [
-      <FlatButton
-        label={translate('core.lbl.ok')}
-        primary={true}
-        onTouchTap={this.handleRefresh}
-      />,
-    ];
+    const actions = [<FlatButton label={translate('core.lbl.ok')} primary={true} onTouchTap={this.handleRefresh} />];
 
     return (
       <Grid fluid={true}>
@@ -387,12 +359,7 @@ class NewServiceRequest extends Component {
             />
           </Col>
         </Row>
-        <Dialog
-          actions={actions}
-          modal={false}
-          open={this.state.openDialog}
-          onRequestClose={this.handleRefresh}
-        >
+        <Dialog actions={actions} modal={false} open={this.state.openDialog} onRequestClose={this.handleRefresh}>
           {this.state.ack}
         </Dialog>
       </Grid>

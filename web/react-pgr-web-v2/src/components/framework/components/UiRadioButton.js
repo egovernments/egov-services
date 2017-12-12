@@ -9,13 +9,7 @@ export default class UiAadharCard extends Component {
 
   renderRadioButtons = item => {
     return item.values.map((v, i) => {
-      return (
-        <RadioButton
-          disabled={item.isDisabled}
-          value={v.value}
-          label={translate(v.label)}
-        />
-      );
+      return <RadioButton disabled={item.isDisabled} value={v.value} label={translate(v.label)} />;
     });
   };
 
@@ -27,10 +21,7 @@ export default class UiAadharCard extends Component {
         return (
           <div style={{ display: item.hide ? 'none' : 'inline-block' }}>
             <label style={{ fontSize: '13px' }}>
-              {item.label}{' '}
-              <span style={{ color: '#FF0000' }}>
-                {item.isRequired ? ' *' : ''}
-              </span>
+              {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </label>
             <RadioButtonGroup
               id={item.jsonPath.split('.').join('-')}

@@ -25,10 +25,7 @@ export default class UiPanCard extends Component {
             fullWidth={true}
             floatingLabelText={
               <span>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             }
             value={this.props.getVal(item.jsonPath)}

@@ -25,31 +25,8 @@ export function int_to_words(int) {
     'eighteen',
     'nineteen',
   ];
-  var TENS = [
-    '',
-    '',
-    'twenty',
-    'thirty',
-    'fourty',
-    'fifty',
-    'sixty',
-    'seventy',
-    'eighty',
-    'ninety',
-  ];
-  var SCALE = [
-    '',
-    'thousand',
-    'million',
-    'billion',
-    'trillion',
-    'quadrillion',
-    'quintillion',
-    'sextillion',
-    'septillion',
-    'octillion',
-    'nonillion',
-  ];
+  var TENS = ['', '', 'twenty', 'thirty', 'fourty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'];
+  var SCALE = ['', 'thousand', 'million', 'billion', 'trillion', 'quadrillion', 'quintillion', 'sextillion', 'septillion', 'octillion', 'nonillion'];
 
   // Return string of first three digits, padded with zeros if needed
   function get_first(str) {
@@ -72,23 +49,12 @@ export function int_to_words(int) {
 
   // Add to words, triplet words with scale word
   function add_to_words(words, triplet_words, scale_word) {
-    return triplet_words
-      ? triplet_words + ((scale_word && ' ' + scale_word) || '') + ' ' + words
-      : words;
+    return triplet_words ? triplet_words + ((scale_word && ' ' + scale_word) || '') + ' ' + words : words;
   }
 
   function iter(words, i, first, rest) {
     if (first == '000' && rest.length === 0) return words;
-    return iter(
-      add_to_words(
-        words,
-        triplet_to_words(first[0], first[1], first[2]),
-        SCALE[i]
-      ),
-      ++i,
-      get_first(rest),
-      get_rest(rest)
-    );
+    return iter(add_to_words(words, triplet_to_words(first[0], first[1], first[2]), SCALE[i]), ++i, get_first(rest), get_rest(rest));
   }
 
   var words = iter('', 0, get_first(String(int)), get_rest(String(int)));
@@ -113,13 +79,7 @@ export function getFullDate(dat, needTime = false) {
       ('0' + _date.getSeconds()).slice(-2)
     );
   } else {
-    return (
-      ('0' + _date.getDate()).slice(-2) +
-      '/' +
-      ('0' + (_date.getMonth() + 1)).slice(-2) +
-      '/' +
-      _date.getFullYear()
-    );
+    return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
   }
 }
 
@@ -151,11 +111,7 @@ export function fileUpload(file, module, cb) {
 export function getInitiatorPosition(cb) {
   if (localStorage.userRequest) {
     var employeeId = JSON.parse(localStorage.userRequest).id;
-    Api.commonApiPost(
-      '/hr-employee/employees/_search',
-      { id: employeeId },
-      {}
-    ).then(
+    Api.commonApiPost('/hr-employee/employees/_search', { id: employeeId }, {}).then(
       function(res) {
         if (
           res &&

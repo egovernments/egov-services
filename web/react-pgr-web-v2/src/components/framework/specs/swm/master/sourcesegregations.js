@@ -24,8 +24,7 @@ var dat = {
             type: 'singleValueList',
             isDisabled: false,
             patternErrorMsg: 'swm.create.field.message.dumpingGroundCode',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=swm&masterName=DumpingGround|$..DumpingGround.*.code|$..DumpingGround.*.name',
           },
         ],
       },
@@ -111,8 +110,7 @@ var dat = {
               key: '$..ulbs.*.code',
               value: '$..ulbs.*.name',
               dependant: {
-                jsonExp:
-                  "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]",
+                jsonExp: "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]",
               },
             },
           },
@@ -126,8 +124,7 @@ var dat = {
         fields: [
           {
             name: 'code',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].collectionType.code',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].collectionType.code',
             label: 'swm.create.collectionType',
             pattern: '',
             type: 'singleValueList',
@@ -148,8 +145,7 @@ var dat = {
           },
           {
             name: 'wetWasteCollected',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].wetWasteCollected',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].wetWasteCollected',
             label: 'swm.create.collectionDetails.wetWasteCollected',
             pattern: '',
             type: 'number',
@@ -160,8 +156,7 @@ var dat = {
           },
           {
             name: 'dryWasteCollected',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].dryWasteCollected',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].dryWasteCollected',
             label: 'swm.create.collectionDetails.dryWasteCollected',
             pattern: '',
             type: 'number',
@@ -232,8 +227,7 @@ var dat = {
         fields: [
           {
             name: 'code',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].collectionType.name',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].collectionType.name',
             label: 'swm.create.collectionType',
             pattern: '',
             type: 'text',
@@ -246,8 +240,7 @@ var dat = {
           },
           {
             name: 'wetWasteCollected',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].wetWasteCollected',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].wetWasteCollected',
             label: 'swm.create.collectionDetails.wetWasteCollected',
             pattern: '',
             type: 'number',
@@ -258,8 +251,7 @@ var dat = {
           },
           {
             name: 'dryWasteCollected',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].dryWasteCollected',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].dryWasteCollected',
             label: 'swm.create.collectionDetails.dryWasteCollected',
             pattern: '',
             type: 'number',
@@ -336,8 +328,7 @@ var dat = {
               key: '$..ulbs.*.code',
               value: '$..ulbs.*.name',
               dependant: {
-                jsonExp:
-                  "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]",
+                jsonExp: "$.swm.DumpingGround[?(@.code=='sourceSegregations[0].dumpingGround.code')]",
               },
             },
           },
@@ -351,8 +342,7 @@ var dat = {
         fields: [
           {
             name: 'code',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].collectionType.code',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].collectionType.code',
             label: 'swm.create.collectionType',
             pattern: '',
             type: 'singleValueList',
@@ -373,8 +363,7 @@ var dat = {
           },
           {
             name: 'wetWasteCollected',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].wetWasteCollected',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].wetWasteCollected',
             label: 'swm.create.collectionDetails.wetWasteCollected',
             pattern: '',
             type: 'number',
@@ -385,8 +374,7 @@ var dat = {
           },
           {
             name: 'dryWasteCollected',
-            jsonPath:
-              'sourceSegregations[0].collectionDetails[0].dryWasteCollected',
+            jsonPath: 'sourceSegregations[0].collectionDetails[0].dryWasteCollected',
             label: 'swm.create.collectionDetails.dryWasteCollected',
             pattern: '',
             type: 'number',

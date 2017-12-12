@@ -15,10 +15,7 @@ import { translate } from '../../../../common/common';
 import Api from '../../../../../api/api';
 import jp from 'jsonpath';
 import UiButton from '../../../../framework/components/UiButton';
-import {
-  fileUpload,
-  getInitiatorPosition,
-} from '../../../../framework/utility/utility';
+import { fileUpload, getInitiatorPosition } from '../../../../framework/utility/utility';
 import $ from 'jquery';
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import ContentAdd from 'material-ui/svg-icons/content/add';
@@ -41,21 +38,12 @@ class createPenaltyRates extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
-          if (
-            configObject.groups[i].fields[j].isRequired &&
-            !configObject.groups[i].fields[j].hide &&
-            !configObject.groups[i].hide
-          )
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
+          if (configObject.groups[i].fields[j].isRequired && !configObject.groups[i].fields[j].hide && !configObject.groups[i].hide)
             reqRequired.push(configObject.groups[i].fields[j].jsonPath);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -73,17 +61,10 @@ class createPenaltyRates extends Component {
           typeof groups[i].fields[j].defaultValue == 'boolean'
         ) {
           //console.log(groups[i].fields[j].name + "--" + groups[i].fields[j].defaultValue);
-          _.set(
-            dat,
-            groups[i].fields[j].jsonPath,
-            groups[i].fields[j].defaultValue
-          );
+          _.set(dat, groups[i].fields[j].jsonPath, groups[i].fields[j].defaultValue);
         }
 
-        if (
-          groups[i].fields[j].children &&
-          groups[i].fields[j].children.length
-        ) {
+        if (groups[i].fields[j].children && groups[i].fields[j].children.length) {
           for (var k = 0; k < groups[i].fields[j].children.length; k++) {
             this.setDefaultValues(groups[i].fields[j].children[k].groups);
           }
@@ -100,32 +81,19 @@ class createPenaltyRates extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -136,24 +104,13 @@ class createPenaltyRates extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -161,28 +118,14 @@ class createPenaltyRates extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = j;
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -190,14 +133,7 @@ class createPenaltyRates extends Component {
   }
 
   displayUI(results) {
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      initForm,
-      setMockData,
-      setFormData,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, initForm, setMockData, setFormData } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
 
@@ -217,46 +153,23 @@ class createPenaltyRates extends Component {
       var query = {
         [specifications[`tl.update`].searchUrl.split('?')[1].split('=')[0]]: id,
       };
-      Api.commonApiPost(
-        url,
-        query,
-        {},
-        false,
-        specifications[`tl.update`].useTimestamp
-      ).then(
+      Api.commonApiPost(url, query, {}, false, specifications[`tl.update`].useTimestamp).then(
         function(res) {
           if (specifications[`tl.update`].isResponseArray) {
             var obj = {};
-            _.set(
-              obj,
-              specifications[`tl.update`].objectName,
-              jp.query(res, '$..[0]')[0]
-            );
+            _.set(obj, specifications[`tl.update`].objectName, jp.query(res, '$..[0]')[0]);
             self.props.setFormData(obj);
-            self.setInitialUpdateData(
-              obj,
-              JSON.parse(JSON.stringify(specifications)),
-              'tl',
-              'update',
-              specifications[`tl.update`].objectName
-            );
+            self.setInitialUpdateData(obj, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
           } else {
             self.props.setFormData(res);
-            self.setInitialUpdateData(
-              res,
-              JSON.parse(JSON.stringify(specifications)),
-              'tl',
-              'update',
-              specifications[`tl.update`].objectName
-            );
+            self.setInitialUpdateData(res, JSON.parse(JSON.stringify(specifications)), 'tl', 'update', specifications[`tl.update`].objectName);
           }
         },
         function(err) {}
       );
     } else {
       var formData = {};
-      if (obj && obj.groups && obj.groups.length)
-        self.setDefaultValues(obj.groups, formData);
+      if (obj && obj.groups && obj.groups.length) self.setDefaultValues(obj.groups, formData);
       setFormData(formData);
       self.calculatefeeMatrixDetails();
     }
@@ -280,8 +193,7 @@ class createPenaltyRates extends Component {
     // } catch(e) {
     //   console.log(e);
     // }
-    specifications = require(`../../../../framework/specs/tl/master/LicensePenaltyRates`)
-      .default;
+    specifications = require(`../../../../framework/specs/tl/master/LicensePenaltyRates`).default;
     self.displayUI(specifications);
     // self.calculatefeeMatrixDetails();
   }
@@ -306,15 +218,7 @@ class createPenaltyRates extends Component {
     var query = {
       [autoObject.autoCompleteUrl.split('?')[1].split('=')[0]]: value,
     };
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
       function(res) {
         var formData = { ...self.props.formData };
         for (var key in autoObject.autoFillFields) {
@@ -332,72 +236,30 @@ class createPenaltyRates extends Component {
     let self = this;
     delete formData.ResponseInfo;
     //return console.log(formData);
-    Api.commonApiPost(
-      url ||
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url,
-      '',
-      formData,
-      '',
-      true
-    ).then(
+    Api.commonApiPost(url || self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url, '', formData, '', true).then(
       function(response) {
         self.props.setLoadingStatus('hide');
         self.initData();
         self.props.toggleSnackbarAndSetText(
           true,
-          translate(
-            self.props.actionName == 'create'
-              ? 'wc.create.message.success'
-              : 'wc.update.message.success'
-          ),
+          translate(self.props.actionName == 'create' ? 'wc.create.message.success' : 'wc.update.message.success'),
           true
         );
         setTimeout(function() {
-          if (
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].idJsonPath
-          ) {
-            if (
-              self.props.metaData[
-                `${self.props.moduleName}.${self.props.actionName}`
-              ].ackUrl
-            ) {
+          if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath) {
+            if (self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl) {
               var hash =
-                self.props.metaData[
-                  `${self.props.moduleName}.${self.props.actionName}`
-                ].ackUrl +
+                self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].ackUrl +
                 '/' +
-                encodeURIComponent(
-                  _.get(
-                    response,
-                    self.props.metaData[
-                      `${self.props.moduleName}.${self.props.actionName}`
-                    ].idJsonPath
-                  )
-                );
+                encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
             } else {
               if (self.props.actionName == 'update') {
-                var hash = window.location.hash.replace(
-                  /(\#\/create\/|\#\/update\/)/,
-                  '/view/'
-                );
+                var hash = window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/');
               } else {
                 var hash =
-                  window.location.hash.replace(
-                    /(\#\/create\/|\#\/update\/)/,
-                    '/view/'
-                  ) +
+                  window.location.hash.replace(/(\#\/create\/|\#\/update\/)/, '/view/') +
                   '/' +
-                  encodeURIComponent(
-                    _.get(
-                      response,
-                      self.props.metaData[
-                        `${self.props.moduleName}.${self.props.actionName}`
-                      ].idJsonPath
-                    )
-                  );
+                  encodeURIComponent(_.get(response, self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].idJsonPath));
               }
             }
 
@@ -416,14 +278,10 @@ class createPenaltyRates extends Component {
   checkCustomFields = (formData, cb) => {
     var self = this;
     if (
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .customFields.initiatorPosition
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields &&
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition
     ) {
-      var jPath =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .customFields.initiatorPosition;
+      var jPath = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].customFields.initiatorPosition;
       getInitiatorPosition(function(err, pos) {
         if (err) {
           self.toggleSnackbarAndSetText(true, err.message);
@@ -447,64 +305,23 @@ class createPenaltyRates extends Component {
       self.props.moduleName &&
       self.props.actionName &&
       self.props.metaData &&
-      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-        .tenantIdRequired
+      self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].tenantIdRequired
     ) {
-      if (
-        !formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]
-      )
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ] = {};
+      if (!formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName])
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName] = {};
 
-      if (
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ].constructor == Array
-      ) {
-        for (
-          var i = 0;
-          i <
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ].length;
-          i++
-        ) {
-          formData[
-            self.props.metaData[
-              `${self.props.moduleName}.${self.props.actionName}`
-            ].objectName
-          ][i]['tenantId'] =
+      if (formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].constructor == Array) {
+        for (var i = 0; i < formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName].length; i++) {
+          formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName][i]['tenantId'] =
             localStorage.getItem('tenantId') || 'default';
         }
       } else
-        formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['tenantId'] =
+        formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['tenantId'] =
           localStorage.getItem('tenantId') || 'default';
     }
 
-    if (
-      /\{.*\}/.test(
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url
-      )
-    ) {
-      _url =
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .url;
+    if (/\{.*\}/.test(self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url)) {
+      _url = self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].url;
       var match = _url.match(/\{.*\}/)[0];
       var jPath = match.replace(/\{|}/g, '');
       _url = _url.replace(match, _.get(formData, jPath));
@@ -514,13 +331,8 @@ class createPenaltyRates extends Component {
     // var PenaltyRateArr = formData.penaltyRates;
     for (var i = 0; i < formData.penaltyRates.length; i++) {
       console.log(formData);
-      if (
-        formData &&
-        formData.hasOwnProperty('penaltyRatesOne') &&
-        formData.penaltyRatesOne.hasOwnProperty('applicationType')
-      ) {
-        formData.penaltyRates[i]['applicationType'] =
-          formData.penaltyRatesOne.applicationType;
+      if (formData && formData.hasOwnProperty('penaltyRatesOne') && formData.penaltyRatesOne.hasOwnProperty('applicationType')) {
+        formData.penaltyRates[i]['applicationType'] = formData.penaltyRatesOne.applicationType;
       }
     }
 
@@ -530,30 +342,15 @@ class createPenaltyRates extends Component {
     console.log(newData);
     //Check if documents, upload and get fileStoreId
     if (
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'] &&
-      formData[
-        self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`]
-          .objectName
-      ]['documents'].length
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] &&
+      formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'].length
     ) {
-      let documents = [
-        ...formData[
-          self.props.metaData[
-            `${self.props.moduleName}.${self.props.actionName}`
-          ].objectName
-        ]['documents'],
-      ];
+      let documents = [...formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents']];
       let _docs = [];
       let counter = documents.length,
         breakOut = 0;
       for (let i = 0; i < documents.length; i++) {
-        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(
-          err,
-          res
-        ) {
+        fileUpload(documents[i].fileStoreId, self.props.moduleName, function(err, res) {
           if (breakOut == 1) return;
           if (err) {
             breakOut = 1;
@@ -566,11 +363,7 @@ class createPenaltyRates extends Component {
             });
             counter--;
             if (counter == 0 && breakOut == 0) {
-              formData[
-                self.props.metaData[
-                  `${self.props.moduleName}.${self.props.actionName}`
-                ].objectName
-              ]['documents'] = _docs;
+              formData[self.props.metaData[`${self.props.moduleName}.${self.props.actionName}`].objectName]['documents'] = _docs;
               self.makeAjaxCall(formData, _url);
             }
           }
@@ -592,63 +385,23 @@ class createPenaltyRates extends Component {
   };
 
   hideField = (_mockData, hideObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? false : true;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? false : true;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
               //Check if required is true, if yes remove from required fields
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                delRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              addRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
             }
 
             break;
@@ -657,65 +410,26 @@ class createPenaltyRates extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? false
-            : true;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? false : true;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             addRequiredFields(_rReq);
           }
@@ -724,85 +438,28 @@ class createPenaltyRates extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? false : true;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? false : true;
                   if (!reset) {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      _.set(
-                        _formData,
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].jsonPath,
-                        ''
-                      );
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      ) {
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
-                        removeFieldErrors(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath, '');
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired) {
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
+                        removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                       }
                     }
                     delRequiredFields(_rReq);
                     setFormData(_formData);
                   } else {
                     var _rReq = [];
-                    for (
-                      let a = 0;
-                      a <
-                      _mockData[moduleName + '.' + actionName].groups[i]
-                        .children[j].groups[k].fields.length;
-                      a++
-                    ) {
-                      if (
-                        _mockData[moduleName + '.' + actionName].groups[i]
-                          .children[j].groups[k].fields[a].isRequired
-                      )
-                        _rReq.push(
-                          _mockData[moduleName + '.' + actionName].groups[i]
-                            .children[j].groups[k].fields[a].jsonPath
-                        );
+                    for (let a = 0; a < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields.length; a++) {
+                      if (_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].isRequired)
+                        _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].fields[a].jsonPath);
                     }
                     addRequiredFields(_rReq);
                   }
@@ -818,62 +475,22 @@ class createPenaltyRates extends Component {
   };
 
   showField = (_mockData, showObject, reset) => {
-    let {
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-      removeFieldErrors,
-      addRequiredFields,
-    } = this.props;
+    let { moduleName, actionName, setFormData, delRequiredFields, removeFieldErrors, addRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            _mockData[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = reset ? true : false;
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            _mockData[moduleName + '.' + actionName].groups[i].fields[j].hide = reset ? true : false;
             if (!reset) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
               setFormData(_formData);
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                addRequiredFields([
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath,
-                ]);
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                addRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
               }
-            } else if (
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .isRequired
-            ) {
-              delRequiredFields([
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-              ]);
-              removeFieldErrors(
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              );
+            } else if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+              delRequiredFields([_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath]);
+              removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
             break;
           }
@@ -881,65 +498,26 @@ class createPenaltyRates extends Component {
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < _mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name ==
-          _mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
-          _mockData[moduleName + '.' + actionName].groups[i].hide = reset
-            ? true
-            : false;
+          _mockData[moduleName + '.' + actionName].groups[i].hide = reset ? true : false;
           if (!reset) {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              _.set(
-                _formData,
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath,
-                ''
-              );
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              )
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired)
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
             }
 
             addRequiredFields(_rReq);
             setFormData(_formData);
           } else {
             var _rReq = [];
-            for (
-              var j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-              j++
-            ) {
-              if (
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .isRequired
-              ) {
-                _rReq.push(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
-                removeFieldErrors(
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .jsonPath
-                );
+            for (var j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+              if (_mockData[moduleName + '.' + actionName].groups[i].fields[j].isRequired) {
+                _rReq.push(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
+                removeFieldErrors(_mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath);
               }
             }
             delRequiredFields(_rReq);
@@ -949,37 +527,12 @@ class createPenaltyRates extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < _mockData[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            _mockData[moduleName + '.' + actionName].groups[i].children &&
-            _mockData[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              _mockData[moduleName + '.' + actionName].groups[i].children
-                .length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  _mockData[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  _mockData[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = reset ? true : false;
+        for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+          if (_mockData[moduleName + '.' + actionName].groups[i].children && _mockData[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  _mockData[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = reset ? true : false;
                   /*if(!reset) {
 
                   } else {
@@ -999,30 +552,12 @@ class createPenaltyRates extends Component {
   enField = (_mockData, enableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          enableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? true : false;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (enableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? true : false;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
           break;
@@ -1036,30 +571,12 @@ class createPenaltyRates extends Component {
   disField = (_mockData, disableStr, reset) => {
     let { moduleName, actionName, setFormData } = this.props;
     let _formData = { ...this.props.formData };
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
-        if (
-          disableStr ==
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j].name
-        ) {
-          _mockData[moduleName + '.' + actionName].groups[i].fields[
-            j
-          ].isDisabled = reset ? false : true;
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+        if (disableStr == _mockData[moduleName + '.' + actionName].groups[i].fields[j].name) {
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].isDisabled = reset ? false : true;
           if (!reset) {
-            _.set(
-              _formData,
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .jsonPath,
-              ''
-            );
+            _.set(_formData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath, '');
             setFormData(_formData);
           }
 
@@ -1074,91 +591,35 @@ class createPenaltyRates extends Component {
   checkIfHasEnDisFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .enableDisableFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .enableDisableFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .enableDisableFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
-                _mockData = this.disField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
+                _mockData = this.disField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
-                _mockData = this.enField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
+                _mockData = this.enField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].disable.length;
-                y++
-              ) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable.length; y++) {
                 _mockData = this.disField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].disable[y],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].disable[y],
                   true
                 );
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .enableDisableFields[k].enable.length;
-                z++
-              ) {
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable.length; z++) {
                 _mockData = this.enField(
                   _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .enableDisableFields[k].enable[z],
+                  _mockData[moduleName + '.' + actionName].groups[i].fields[j].enableDisableFields[k].enable[z],
                   true
                 );
               }
@@ -1174,93 +635,29 @@ class createPenaltyRates extends Component {
   checkIfHasShowHideFields = (jsonPath, val) => {
     let _mockData = { ...this.props.mockData };
     let { moduleName, actionName, setMockData } = this.props;
-    for (
-      let i = 0;
-      i < _mockData[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
-      for (
-        let j = 0;
-        j < _mockData[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+    for (let i = 0; i < _mockData[moduleName + '.' + actionName].groups.length; i++) {
+      for (let j = 0; j < _mockData[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          jsonPath ==
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .jsonPath &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          jsonPath == _mockData[moduleName + '.' + actionName].groups[i].fields[j].jsonPath &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            let k = 0;
-            k <
-            _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
-            if (
-              val ==
-              _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue
-            ) {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y]
-                );
+          for (let k = 0; k < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
+            if (val == _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue) {
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y]);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z]
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z]);
               }
             } else {
-              for (
-                let y = 0;
-                y <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length;
-                y++
-              ) {
-                _mockData = this.hideField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide[y],
-                  true
-                );
+              for (let y = 0; y < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; y++) {
+                _mockData = this.hideField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[y], true);
               }
 
-              for (
-                let z = 0;
-                z <
-                _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length;
-                z++
-              ) {
-                _mockData = this.showField(
-                  _mockData,
-                  _mockData[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show[z],
-                  true
-                );
+              for (let z = 0; z < _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; z++) {
+                _mockData = this.showField(_mockData, _mockData[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[z], true);
               }
             }
           }
@@ -1314,59 +711,32 @@ class createPenaltyRates extends Component {
     if (isAdd) {
       if (currentData.penaltyRates[0].fromRange) {
         if (
-          currentData.penaltyRates[currentData.penaltyRates.length - 1]
-            .toRange &&
+          currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange &&
           currentData.penaltyRates[currentData.penaltyRates.length - 1].rate
         ) {
           if (
-            Number(
-              currentData.penaltyRates[currentData.penaltyRates.length - 1]
-                .toRange
-            ) >
-            Number(
-              currentData.penaltyRates[currentData.penaltyRates.length - 1]
-                .fromRange
-            )
+            Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange) >
+            Number(currentData.penaltyRates[currentData.penaltyRates.length - 1].fromRange)
           ) {
             let penaltyRatesTwo = {
               applicationType: '',
-              fromRange:
-                currentData.penaltyRates[currentData.penaltyRates.length - 1]
-                  .toRange,
+              fromRange: currentData.penaltyRates[currentData.penaltyRates.length - 1].toRange,
               toRange: '',
               rate: '',
               tenantId: localStorage.tenantId,
               disabled: false,
               add: false,
             };
-            self.props.handleChange(
-              { target: { value: penaltyRatesTwo } },
-              'penaltyRates[' + currentData.penaltyRates.length + ']'
-            );
+            self.props.handleChange({ target: { value: penaltyRatesTwo } }, 'penaltyRates[' + currentData.penaltyRates.length + ']');
             console.log(currentData.penaltyRates);
           } else {
-            self.props.toggleSnackbarAndSetText(
-              true,
-              '	To(Days) should be greater than From(Days)',
-              false,
-              true
-            );
+            self.props.toggleSnackbarAndSetText(true, '	To(Days) should be greater than From(Days)', false, true);
           }
         } else {
-          self.props.toggleSnackbarAndSetText(
-            true,
-            'Please enter To(Days) To and Rate(In percentage)',
-            false,
-            true
-          );
+          self.props.toggleSnackbarAndSetText(true, 'Please enter To(Days) To and Rate(In percentage)', false, true);
         }
       } else {
-        self.props.toggleSnackbarAndSetText(
-          true,
-          'Please enter From(Days)',
-          false,
-          true
-        );
+        self.props.toggleSnackbarAndSetText(true, 'Please enter From(Days)', false, true);
       }
     } else if (!self.props.match.params.id) {
       console.log(self.props.formData);
@@ -1380,10 +750,7 @@ class createPenaltyRates extends Component {
         add: false,
       };
 
-      self.props.handleChange(
-        { target: { value: penaltyRatesTwo } },
-        'penaltyRates[0]'
-      );
+      self.props.handleChange({ target: { value: penaltyRatesTwo } }, 'penaltyRates[0]');
     }
 
     //self.props.handleChange({target:{value:FeeMatrixDetails}},"feeMatrices[0].feeMatrixDetails");
@@ -1397,37 +764,17 @@ class createPenaltyRates extends Component {
       if (index == currentData.penaltyRates.length - 1) {
         FeeMatrixDetails = currentData.penaltyRates;
         FeeMatrixDetails.splice(index, 1);
-        self.props.handleChange(
-          { target: { value: FeeMatrixDetails } },
-          'penaltyRates'
-        );
+        self.props.handleChange({ target: { value: FeeMatrixDetails } }, 'penaltyRates');
         console.log(currentData.penaltyRates);
       } else {
-        self.props.toggleSnackbarAndSetText(
-          true,
-          'Try deleting from last row',
-          false,
-          true
-        );
+        self.props.toggleSnackbarAndSetText(true, 'Try deleting from last row', false, true);
       }
     } else {
-      self.props.toggleSnackbarAndSetText(
-        true,
-        'First row can not be deleted',
-        false,
-        true
-      );
+      self.props.toggleSnackbarAndSetText(true, 'First row can not be deleted', false, true);
     }
   };
 
-  handleChange = (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg = 'Required',
-    patternErrMsg = 'Pattern Missmatch'
-  ) => {
+  handleChange = (e, property, isRequired, pattern, requiredErrMsg = 'Required', patternErrMsg = 'Pattern Missmatch') => {
     let { getVal } = this;
     let { handleChange, mockData, setDropDownData, formData } = this.props;
     let hashLocation = window.location.hash;
@@ -1465,20 +812,10 @@ class createPenaltyRates extends Component {
       );
     }
 
-    let depedants = jp.query(
-      obj,
-      `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`
-    );
+    let depedants = jp.query(obj, `$.groups..fields[?(@.jsonPath=="${property}")].depedants.*`);
     this.checkIfHasShowHideFields(property, e.target.value);
     this.checkIfHasEnDisFields(property, e.target.value);
-    handleChange(
-      e,
-      property,
-      isRequired,
-      pattern,
-      requiredErrMsg,
-      patternErrMsg
-    );
+    handleChange(e, property, isRequired, pattern, requiredErrMsg, patternErrMsg);
 
     _.forEach(depedants, function(value, key) {
       if (value.type == 'dropDown') {
@@ -1511,9 +848,7 @@ class createPenaltyRates extends Component {
                   );
                 }
               } else {
-                id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                  i
-                ].split('=')[1];
+                id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
               }
             }
           }
@@ -1564,23 +899,14 @@ class createPenaltyRates extends Component {
             value: eval(eval(value.pattern)),
           },
         };
-        handleChange(
-          object,
-          value.jsonPath,
-          value.isRequired,
-          value.rg,
-          value.requiredErrMsg,
-          value.patternErrMsg
-        );
+        handleChange(object, value.jsonPath, value.isRequired, value.rg, value.requiredErrMsg, value.patternErrMsg);
       }
     });
   };
 
   incrementIndexValue = (group, jsonPath) => {
     let { formData } = this.props;
-    var length = _.get(formData, jsonPath)
-      ? _.get(formData, jsonPath).length
-      : 0;
+    var length = _.get(formData, jsonPath) ? _.get(formData, jsonPath).length : 0;
     var _group = JSON.stringify(group);
     var regexp = new RegExp(jsonPath + '\\[\\d{1}\\]', 'g');
     _group = _group.replace(regexp, jsonPath + '[' + (length + 1) + ']');
@@ -1604,15 +930,7 @@ class createPenaltyRates extends Component {
             if (groups[i].children[j].jsonPath == value) {
               return 'groups[' + i + '].children[' + j + '].groups';
             } else {
-              return (
-                'groups[' +
-                i +
-                '].children[' +
-                j +
-                '][' +
-                getFromGroup(groups[i].children[j].groups) +
-                ']'
-              );
+              return 'groups[' + i + '].children[' + j + '][' + getFromGroup(groups[i].children[j].groups) + ']';
             }
           }
         }
@@ -1624,56 +942,26 @@ class createPenaltyRates extends Component {
 
   addNewCard = (group, jsonPath, groupName) => {
     let self = this;
-    let {
-      setMockData,
-      metaData,
-      moduleName,
-      actionName,
-      setFormData,
-      formData,
-      addRequiredFields,
-    } = this.props;
+    let { setMockData, metaData, moduleName, actionName, setFormData, formData, addRequiredFields } = this.props;
     let mockData = { ...this.props.mockData };
     let reqFields = [];
     if (!jsonPath) {
-      for (
-        var i = 0;
-        i < metaData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          groupName == metaData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (var i = 0; i < metaData[moduleName + '.' + actionName].groups.length; i++) {
+        if (groupName == metaData[moduleName + '.' + actionName].groups[i].name) {
           var _groupToBeInserted = {
             ...metaData[moduleName + '.' + actionName].groups[i],
           };
-          for (
-            var j = mockData[moduleName + '.' + actionName].groups.length - 1;
-            j >= 0;
-            j--
-          ) {
-            if (
-              groupName ==
-              mockData[moduleName + '.' + actionName].groups[j].name
-            ) {
+          for (var j = mockData[moduleName + '.' + actionName].groups.length - 1; j >= 0; j--) {
+            if (groupName == mockData[moduleName + '.' + actionName].groups[j].name) {
               var regexp = new RegExp(
-                mockData[moduleName + '.' + actionName].groups[j].jsonPath
-                  .replace(/\[/g, '\\[')
-                  .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+                mockData[moduleName + '.' + actionName].groups[j].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
                 'g'
               );
               var stringified = JSON.stringify(_groupToBeInserted);
-              var ind =
-                mockData[moduleName + '.' + actionName].groups[j].index || 0;
+              var ind = mockData[moduleName + '.' + actionName].groups[j].index || 0;
               //console.log(ind);
               _groupToBeInserted = JSON.parse(
-                stringified.replace(
-                  regexp,
-                  mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                    '[' +
-                    (ind + 1) +
-                    ']'
-                )
+                stringified.replace(regexp, mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (ind + 1) + ']')
               );
               _groupToBeInserted.index = ind + 1;
 
@@ -1684,18 +972,11 @@ class createPenaltyRates extends Component {
               }
 
               if (reqFields.length) addRequiredFields(reqFields);
-              mockData[moduleName + '.' + actionName].groups.splice(
-                j + 1,
-                0,
-                _groupToBeInserted
-              );
+              mockData[moduleName + '.' + actionName].groups.splice(j + 1, 0, _groupToBeInserted);
               //console.log(mockData[moduleName + "." + actionName].groups);
               setMockData(mockData);
               var temp = { ...formData };
-              self.setDefaultValues(
-                mockData[moduleName + '.' + actionName].groups,
-                temp
-              );
+              self.setDefaultValues(mockData[moduleName + '.' + actionName].groups, temp);
               //console.log(temp);
               setFormData(temp);
               break;
@@ -1707,17 +988,10 @@ class createPenaltyRates extends Component {
     } else {
       group = JSON.parse(JSON.stringify(group));
       //Increment the values of indexes
-      var grp = _.get(
-        metaData[moduleName + '.' + actionName],
-        self.getPath(jsonPath) + '[0]'
-      );
+      var grp = _.get(metaData[moduleName + '.' + actionName], self.getPath(jsonPath) + '[0]');
       group = this.incrementIndexValue(grp, jsonPath);
       //Push to the path
-      var updatedSpecs = this.getNewSpecs(
-        group,
-        JSON.parse(JSON.stringify(mockData)),
-        self.getPath(jsonPath)
-      );
+      var updatedSpecs = this.getNewSpecs(group, JSON.parse(JSON.stringify(mockData)), self.getPath(jsonPath));
       //Create new mock data
       setMockData(updatedSpecs);
     }
@@ -1725,13 +999,7 @@ class createPenaltyRates extends Component {
 
   removeCard = (jsonPath, index, groupName) => {
     //Remove at that index and update upper array values
-    let {
-      setMockData,
-      moduleName,
-      actionName,
-      setFormData,
-      delRequiredFields,
-    } = this.props;
+    let { setMockData, moduleName, actionName, setFormData, delRequiredFields } = this.props;
     let _formData = { ...this.props.formData };
     let self = this;
     let mockData = { ...this.props.mockData };
@@ -1739,103 +1007,48 @@ class createPenaltyRates extends Component {
 
     if (!jsonPath) {
       var ind = 0;
-      for (
-        let i = 0;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          index == i &&
-          groupName == mockData[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (index == i && groupName == mockData[moduleName + '.' + actionName].groups[i].name) {
           mockData[moduleName + '.' + actionName].groups.splice(i, 1);
           ind = i;
-          for (
-            var k = 0;
-            k <
-            mockData[moduleName + '.' + actionName].groups[ind].fields.length;
-            k++
-          ) {
-            if (
-              mockData[moduleName + '.' + actionName].groups[ind].fields[k]
-                .isRequired
-            )
-              notReqFields.push(
-                mockData[moduleName + '.' + actionName].groups[ind].fields[k]
-                  .jsonPath
-              );
+          for (var k = 0; k < mockData[moduleName + '.' + actionName].groups[ind].fields.length; k++) {
+            if (mockData[moduleName + '.' + actionName].groups[ind].fields[k].isRequired)
+              notReqFields.push(mockData[moduleName + '.' + actionName].groups[ind].fields[k].jsonPath);
           }
           delRequiredFields(notReqFields);
           break;
         }
       }
 
-      for (
-        let i = ind;
-        i < mockData[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          mockData[moduleName + '.' + actionName].groups[i].name == groupName
-        ) {
+      for (let i = ind; i < mockData[moduleName + '.' + actionName].groups.length; i++) {
+        if (mockData[moduleName + '.' + actionName].groups[i].name == groupName) {
           var regexp = new RegExp(
-            mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              .replace(/\[/g, '\\[')
-              .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+            mockData[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
             'g'
           );
           //console.log(regexp);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
           //console.log(mockData[moduleName + "." + actionName].groups[i].index);
-          var stringified = JSON.stringify(
-            mockData[moduleName + '.' + actionName].groups[i]
-          );
+          var stringified = JSON.stringify(mockData[moduleName + '.' + actionName].groups[i]);
           mockData[moduleName + '.' + actionName].groups[i] = JSON.parse(
             stringified.replace(
               regexp,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath +
-                '[' +
-                (mockData[moduleName + '.' + actionName].groups[i].index - 1) +
-                ']'
+              mockData[moduleName + '.' + actionName].groups[i].jsonPath + '[' + (mockData[moduleName + '.' + actionName].groups[i].index - 1) + ']'
             )
           );
 
-          if (
-            _.get(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath
-            )
-          ) {
-            var grps = [
-              ..._.get(
-                _formData,
-                mockData[moduleName + '.' + actionName].groups[i].jsonPath
-              ),
-            ];
+          if (_.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)) {
+            var grps = [..._.get(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath)];
             //console.log(mockData[moduleName + "." + actionName].groups[i].index-1);
             //console.log(mockData[moduleName + "." + actionName].groups);
-            grps.splice(
-              mockData[moduleName + '.' + actionName].groups[i].index - 1,
-              1
-            );
-            _.set(
-              _formData,
-              mockData[moduleName + '.' + actionName].groups[i].jsonPath,
-              grps
-            );
+            grps.splice(mockData[moduleName + '.' + actionName].groups[i].index - 1, 1);
+            _.set(_formData, mockData[moduleName + '.' + actionName].groups[i].jsonPath, grps);
             //console.log(_formData);
             setFormData(_formData);
 
             //Reduce index values
-            for (
-              let k = ind;
-              k < mockData[moduleName + '.' + actionName].groups.length;
-              k++
-            ) {
-              if (
-                mockData[moduleName + '.' + actionName].groups[k].name ==
-                groupName
-              ) {
+            for (let k = ind; k < mockData[moduleName + '.' + actionName].groups.length; k++) {
+              if (mockData[moduleName + '.' + actionName].groups[k].name == groupName) {
                 mockData[moduleName + '.' + actionName].groups[k].index -= 1;
               }
             }
@@ -1846,10 +1059,7 @@ class createPenaltyRates extends Component {
       //console.log(mockData[moduleName + "." + actionName].groups);
       setMockData(mockData);
     } else {
-      var _groups = _.get(
-        mockData[moduleName + '.' + actionName],
-        self.getPath(jsonPath)
-      );
+      var _groups = _.get(mockData[moduleName + '.' + actionName], self.getPath(jsonPath));
       _groups.splice(index, 1);
       var regexp = new RegExp('\\[\\d{1}\\]', 'g');
       for (var i = index; i < _groups.length; i++) {
@@ -1864,22 +1074,8 @@ class createPenaltyRates extends Component {
 
   render() {
     let { resultList, rowClickHandler, showDataTable, showHeader } = this.props;
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      isFormValid,
-    } = this.props;
-    let {
-      create,
-      handleChange,
-      getVal,
-      addNewCard,
-      removeCard,
-      autoComHandler,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, isFormValid } = this.props;
+    let { create, handleChange, getVal, addNewCard, removeCard, autoComHandler } = this;
 
     console.log(this.props.formData);
     console.log(formData.hasOwnProperty('feeMatrices'));
@@ -1901,9 +1097,7 @@ class createPenaltyRates extends Component {
                 handler={handleChange}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={addNewCard}
                 removeCard={removeCard}
                 autoComHandler={autoComHandler}
@@ -1935,26 +1129,16 @@ class createPenaltyRates extends Component {
                   </FloatingActionButton>
                 </div>
                 <Table
-                  id={
-                    showDataTable == undefined
-                      ? 'searchTable'
-                      : showDataTable ? 'searchTable' : ''
-                  }
+                  id={showDataTable == undefined ? 'searchTable' : showDataTable ? 'searchTable' : ''}
                   bordered
                   responsive
                   className="table-striped"
                 >
                   <thead>
                     <tr>
-                      <th>
-                        {translate('tl.create.groups.penaltyRates.fromDays')}
-                      </th>
-                      <th>
-                        {translate('tl.create.groups.penaltyRates.toDays')}
-                      </th>
-                      <th>
-                        {translate('tl.create.groups.penaltyRates.range')}
-                      </th>
+                      <th>{translate('tl.create.groups.penaltyRates.fromDays')}</th>
+                      <th>{translate('tl.create.groups.penaltyRates.toDays')}</th>
+                      <th>{translate('tl.create.groups.penaltyRates.range')}</th>
                       <th />
                     </tr>
                   </thead>
@@ -1968,23 +1152,10 @@ class createPenaltyRates extends Component {
                               {index == 0 ? (
                                 <TextField
                                   disabled={formData.penaltyRates[index + 1]}
-                                  value={getVal(
-                                    'penaltyRates[' + index + '].fromRange'
-                                  )}
-                                  errorText={
-                                    fieldErrors[
-                                      'penaltyRates[' + index + '].fromRange'
-                                    ]
-                                  }
+                                  value={getVal('penaltyRates[' + index + '].fromRange')}
+                                  errorText={fieldErrors['penaltyRates[' + index + '].fromRange']}
                                   onChange={e =>
-                                    handleChange(
-                                      e,
-                                      'penaltyRates[' + index + '].fromRange',
-                                      true,
-                                      '^[-0-9]{1,10}?$',
-                                      '',
-                                      'Enter Numbers only'
-                                    )
+                                    handleChange(e, 'penaltyRates[' + index + '].fromRange', true, '^[-0-9]{1,10}?$', '', 'Enter Numbers only')
                                   }
                                 />
                               ) : (
@@ -1994,36 +1165,17 @@ class createPenaltyRates extends Component {
                             <td>
                               <TextField
                                 disabled={formData.penaltyRates[index + 1]}
-                                value={getVal(
-                                  'penaltyRates[' + index + '].toRange'
-                                )}
-                                errorText={
-                                  fieldErrors[
-                                    'penaltyRates[' + index + '].toRange'
-                                  ]
-                                }
+                                value={getVal('penaltyRates[' + index + '].toRange')}
+                                errorText={fieldErrors['penaltyRates[' + index + '].toRange']}
                                 onChange={e =>
-                                  handleChange(
-                                    e,
-                                    'penaltyRates[' + index + '].toRange',
-                                    true,
-                                    '^[-0-9]{1,10}?$',
-                                    '',
-                                    'Enter Numbers only'
-                                  )
+                                  handleChange(e, 'penaltyRates[' + index + '].toRange', true, '^[-0-9]{1,10}?$', '', 'Enter Numbers only')
                                 }
                               />
                             </td>
                             <td>
                               <TextField
-                                value={getVal(
-                                  'penaltyRates[' + index + '].rate'
-                                )}
-                                errorText={
-                                  fieldErrors[
-                                    'penaltyRates[' + index + '].rate'
-                                  ]
-                                }
+                                value={getVal('penaltyRates[' + index + '].rate')}
+                                errorText={fieldErrors['penaltyRates[' + index + '].rate']}
                                 onChange={e =>
                                   handleChange(
                                     e,
@@ -2037,17 +1189,9 @@ class createPenaltyRates extends Component {
                               />
                             </td>
                             <td>
-                              <FloatingActionButton
-                                disabled={
-                                  index == 0 || formData.penaltyRates[index + 1]
-                                }
-                                mini={true}
-                              >
+                              <FloatingActionButton disabled={index == 0 || formData.penaltyRates[index + 1]} mini={true}>
                                 <ContentRemove
-                                  disabled={
-                                    index == 0 ||
-                                    formData.penaltyRates[index + 1]
-                                  }
+                                  disabled={index == 0 || formData.penaltyRates[index + 1]}
                                   onClick={() => {
                                     this.removeRow(index);
                                   }}
@@ -2124,14 +1268,7 @@ const mapDispatchToProps = dispatch => ({
   setActionName: actionName => {
     dispatch({ type: 'SET_ACTION_NAME', actionName });
   },
-  handleChange: (
-    e,
-    property,
-    isRequired,
-    pattern,
-    requiredErrMsg,
-    patternErrMsg
-  ) => {
+  handleChange: (e, property, isRequired, pattern, requiredErrMsg, patternErrMsg) => {
     dispatch({
       type: 'HANDLE_CHANGE_FRAMEWORK',
       property,

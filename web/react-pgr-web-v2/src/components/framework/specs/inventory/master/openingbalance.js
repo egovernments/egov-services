@@ -15,10 +15,7 @@ var dat = {
             label: 'inventory.financialYear',
             type: 'singleValueList',
             isDisabled: false,
-            defaultValue: [
-              { key: null, value: '-- Please Select --' },
-              { key: '2017-2018', value: '2017-2018' },
-            ],
+            defaultValue: [{ key: null, value: '-- Please Select --' }, { key: '2017-2018', value: '2017-2018' }],
             patternErrorMsg: 'inventory.create.field.message.financialYear',
           },
           {
@@ -30,8 +27,7 @@ var dat = {
             isKeyValuePair: true,
             isRequired: false,
             isDisabled: false,
-            url:
-              'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?|$.stores[*].code|$.stores[*].name',
           },
         ],
       },
@@ -51,12 +47,7 @@ var dat = {
           label: 'inventory.status',
         },
       ],
-      values: [
-        'financialYear',
-        'receivingStore.code',
-        'mrnNumber',
-        'mrnStatus',
-      ],
+      values: ['financialYear', 'receivingStore.code', 'mrnNumber', 'mrnStatus'],
       resultPath: 'materialReceipt',
       rowClickUrlUpdate: '/update/inventory/openingbalance/{id}',
       rowClickUrlView: '/view/inventory/openingbalance/{id}',
@@ -81,10 +72,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            defaultValue: [
-              { key: null, value: '-- Please Select --' },
-              { key: '2017-2018', value: '2017-2018' },
-            ],
+            defaultValue: [{ key: null, value: '-- Please Select --' }, { key: '2017-2018', value: '2017-2018' }],
             patternErrorMsg: '',
           },
           {
@@ -99,8 +87,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name',
           },
         ],
       },
@@ -144,10 +131,8 @@ var dat = {
                   name: 'material',
                   pattern: '',
                   type: 'autoCompelete',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.code',
-                  displayJsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.name',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].material.code',
+                  displayJsonPath: 'materialReceipt[0].receiptDetails[0].material.name',
                   isRequired: true,
                   isDisabled: false,
                   url:
@@ -160,8 +145,7 @@ var dat = {
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].material.code', getVal('materialReceipt[0].receiptDetails[*].material.code'), 'others[0]')",
                     },
                     {
-                      jsonPath:
-                        'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
+                      jsonPath: 'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')",
@@ -175,12 +159,10 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
                   depedants: [
                     {
-                      jsonPath:
-                        'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
+                      jsonPath: 'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')",
@@ -211,8 +193,7 @@ var dat = {
                 },
                 {
                   name: 'oldReceiptNumber',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -222,8 +203,7 @@ var dat = {
                 },
                 {
                   name: 'receivedDate',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate',
                   pattern: '',
                   type: 'datePicker',
                   maxDate: 'today',
@@ -234,8 +214,7 @@ var dat = {
                 },
                 {
                   name: 'lotNo',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
                   pattern: '^[a-zA-Z0-9]+$',
                   type: 'text',
                   isRequired: false,
@@ -245,8 +224,7 @@ var dat = {
                 },
                 {
                   name: 'expiryDate',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
                   pattern: '',
                   type: 'datePicker',
                   isRequired: false,
@@ -281,10 +259,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            defaultValue: [
-              { key: null, value: '-- Please Select --' },
-              { key: '2017-2018', value: '2017-2018' },
-            ],
+            defaultValue: [{ key: null, value: '-- Please Select --' }, { key: '2017-2018', value: '2017-2018' }],
             patternErrorMsg: '',
           },
           {
@@ -299,8 +274,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'mrnNumber',
@@ -358,10 +332,8 @@ var dat = {
                   name: 'material',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.code',
-                  displayJsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.name',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].material.code',
+                  displayJsonPath: 'materialReceipt[0].receiptDetails[0].material.name',
                   isRequired: true,
                   isDisabled: true,
                   url:
@@ -374,8 +346,7 @@ var dat = {
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].material.code', getVal('materialReceipt[0].receiptDetails[*].material.code'), 'others[0]')",
                     },
                     {
-                      jsonPath:
-                        'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
+                      jsonPath: 'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')",
@@ -389,12 +360,10 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: true,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
                   depedants: [
                     {
-                      jsonPath:
-                        'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
+                      jsonPath: 'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('receiptDetails[0].receiptDetails[*].uom.code'), 'others[0]')",
@@ -425,8 +394,7 @@ var dat = {
                 },
                 {
                   name: 'receiptNumber',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -437,8 +405,7 @@ var dat = {
                 },
                 {
                   name: 'receivedDate',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate',
                   pattern: '',
                   type: 'datePicker',
                   maxDate: 'today',
@@ -449,8 +416,7 @@ var dat = {
                 },
                 {
                   name: 'lotNo',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
                   pattern: '^[a-zA-Z0-9]+$',
                   type: 'text',
                   isRequired: false,
@@ -460,8 +426,7 @@ var dat = {
                 },
                 {
                   name: 'expiryDate',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
                   pattern: '',
                   type: 'datePicker',
                   isRequired: false,
@@ -511,8 +476,7 @@ var dat = {
             maxLength: 50,
             minLength: 5,
             patternErrorMsg: 'inventory.create.field.message.code',
-            url:
-              'inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name',
+            url: 'inventory-services/stores/_search?&active=true|$.stores[*].code|$.stores[*].name',
           },
           {
             name: 'mrnNumber',
@@ -569,10 +533,8 @@ var dat = {
                   name: 'material',
                   pattern: '',
                   type: 'singleValueList',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.code',
-                  displayJsonPath:
-                    'materialReceipt[0].receiptDetails[0].material.name',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].material.code',
+                  displayJsonPath: 'materialReceipt[0].receiptDetails[0].material.name',
                   isRequired: false,
                   isDisabled: true,
                   url:
@@ -585,8 +547,7 @@ var dat = {
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].material.code', getVal('materialReceipt[0].receiptDetails[*].material.code'), 'others[0]')",
                     },
                     {
-                      jsonPath:
-                        'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
+                      jsonPath: 'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('materialReceipt[0].receiptDetails[*].uom.code'), 'others[0]')",
@@ -600,12 +561,10 @@ var dat = {
                   type: 'singleValueList',
                   isRequired: false,
                   isDisabled: true,
-                  url:
-                    '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
+                  url: '/egov-mdms-service/v1/_get?&moduleName=common-masters&masterName=Uom|$..code|$..description|$..conversionFactor',
                   depedants: [
                     {
-                      jsonPath:
-                        'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
+                      jsonPath: 'materialReceipt[0].receiptDetails[0].uom.conversionFactor',
                       type: 'textField',
                       valExp:
                         "getValFromDropdownData('materialReceipt[0].receiptDetails[*].uom.code', getVal('receiptDetails[0].receiptDetails[*].uom.code'), 'others[0]')",
@@ -634,8 +593,7 @@ var dat = {
                 },
                 {
                   name: 'receiptNumber',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].oldReceiptNumber',
                   pattern: '',
                   type: 'text',
                   isRequired: false,
@@ -646,8 +604,7 @@ var dat = {
                 },
                 {
                   name: 'receivedDate',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].receivedDate',
                   pattern: '',
                   type: 'datePicker',
                   isDisabled: true,
@@ -656,8 +613,7 @@ var dat = {
                 },
                 {
                   name: 'lotNo',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].lotNo',
                   pattern: '^[a-zA-Z0-9]+$',
                   type: 'text',
                   isDisabled: true,
@@ -666,8 +622,7 @@ var dat = {
                 },
                 {
                   name: 'expiryDate',
-                  jsonPath:
-                    'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
+                  jsonPath: 'materialReceipt[0].receiptDetails[0].receiptDetailsAddnInfo[0].expiryDate',
                   pattern: '',
                   type: 'datePicker',
                   isDisabled: true,

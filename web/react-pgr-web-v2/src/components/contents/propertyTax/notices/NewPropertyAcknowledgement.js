@@ -6,11 +6,7 @@ import pdfMake from 'pdfmake/build/pdfmake';
 import pdfFonts from 'pdfmake/build/vfs_fonts';
 import Api from '../../../../api/api';
 import { translate, epochToDate, dataURItoBlob } from '../../../common/common';
-import {
-  fonts,
-  writeMultiLanguageText,
-  getBase64FromImageUrl,
-} from '../../../common/pdf-generation/PdfConfig';
+import { fonts, writeMultiLanguageText, getBase64FromImageUrl } from '../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../common/pdf-generation/PdfViewer';
 import styles from '../../../../styles/material-ui';
 import RaisedButton from 'material-ui/RaisedButton';
@@ -74,24 +70,14 @@ class NewPropertyAcknowledgement extends Component {
     let applicationNumber = property.propertyDetail.applicationNo;
     let applicationDate = epochToDate(new Date().getTime());
 
-    let localityObj = property.address.addressLine1
-      ? localities.find(
-          locality => locality.id == property.address.addressLine1
-        )
-      : '';
+    let localityObj = property.address.addressLine1 ? localities.find(locality => locality.id == property.address.addressLine1) : '';
     let propertyAddress = '';
 
     if (property.address) {
-      propertyAddress = property.address.addressNumber
-        ? property.address.addressNumber + ', '
-        : '';
+      propertyAddress = property.address.addressNumber ? property.address.addressNumber + ', ' : '';
       propertyAddress += localityObj ? localityObj.name + ', ' : '';
-      propertyAddress += property.address.addressLine2
-        ? property.address.addressLine2 + ', '
-        : '';
-      propertyAddress += property.address.landmark
-        ? property.address.landmark + ', '
-        : '';
+      propertyAddress += property.address.addressLine2 ? property.address.addressLine2 + ', ' : '';
+      propertyAddress += property.address.landmark ? property.address.landmark + ', ' : '';
       propertyAddress += property.address.city ? property.address.city : '';
     }
 
@@ -153,9 +139,7 @@ class NewPropertyAcknowledgement extends Component {
 
         //Pdf body
         {
-          text: writeMultiLanguageText(
-            'New Assessment Application Acknowledgement'
-          ),
+          text: writeMultiLanguageText('New Assessment Application Acknowledgement'),
           alignment: 'center',
           style: 'contentTitle',
           margin: [0, 0, 0, 20],
@@ -260,11 +244,7 @@ class NewPropertyAcknowledgement extends Component {
 
       let formData = new FormData();
       var blob = dataURItoBlob(dataUrl);
-      formData.append(
-        'file',
-        blob,
-        `PT_REJECTION_${applicationNumber || '0'}.pdf`
-      );
+      formData.append('file', blob, `PT_REJECTION_${applicationNumber || '0'}.pdf`);
       formData.append('tenantId', localStorage.getItem('tenantId'));
       formData.append('module', constants.PTIS_FILE_TAG);
 
@@ -275,9 +255,7 @@ class NewPropertyAcknowledgement extends Component {
         _this.props.errorCallback(err.message);
       };
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         if (response.files && response.files.length > 0) {
           response.files[0].fileStoreId;
           var noticeDocument = {
@@ -300,8 +278,7 @@ class NewPropertyAcknowledgement extends Component {
             setLoadingStatus('hide');
           }, errorFunction);
         } else setLoadingStatus('hide');
-      },
-      errorFunction);
+      }, errorFunction);
     });
   };
 
@@ -311,14 +288,7 @@ class NewPropertyAcknowledgement extends Component {
     return (
       <PdfViewer pdfData={this.state.pdfData} title="pt.newAck.title">
         <div className="text-center">
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );
@@ -335,9 +305,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const ViewNewPropertyAcknowledgement = connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(NewPropertyAcknowledgement);
+const ViewNewPropertyAcknowledgement = connect(mapStateToProps, mapDispatchToProps)(NewPropertyAcknowledgement);
 
 export default ViewNewPropertyAcknowledgement;

@@ -7,21 +7,13 @@ import $ from 'jquery';
 
 class Report extends Component {
   componentWillReceiveProps(nextProps) {
-    if (
-      nextProps.match.params.reportName !== this.props.match.params.reportName
-    ) {
-      this.initData(
-        nextProps.match.params.moduleName,
-        nextProps.match.params.reportName
-      );
+    if (nextProps.match.params.reportName !== this.props.match.params.reportName) {
+      this.initData(nextProps.match.params.moduleName, nextProps.match.params.reportName);
     }
   }
 
   componentDidMount() {
-    this.initData(
-      this.props.match.params.moduleName,
-      this.props.match.params.reportName
-    );
+    this.initData(this.props.match.params.moduleName, this.props.match.params.reportName);
     this.hasReturnUrl();
   }
 
@@ -33,23 +25,11 @@ class Report extends Component {
 
   initData = (moduleName, reportName) => {
     var _this = this;
-    let {
-      setMetaData,
-      setFlag,
-      showTable,
-      setForm,
-      setReportResult,
-    } = this.props;
+    let { setMetaData, setFlag, showTable, setForm, setReportResult } = this.props;
 
-    var tenantId = localStorage.getItem('tenantId')
-      ? localStorage.getItem('tenantId')
-      : '';
+    var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : '';
 
-    Api.commonApiPost(
-      '/report/' + moduleName + '/metadata/_get',
-      {},
-      { tenantId: tenantId, reportName: reportName }
-    ).then(
+    Api.commonApiPost('/report/' + moduleName + '/metadata/_get', {}, { tenantId: tenantId, reportName: reportName }).then(
       function(response) {
         //console.log(moduleName, reportName);
         setFlag(1);

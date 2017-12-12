@@ -218,11 +218,7 @@ class DefineEscalation extends Component {
     // console.log(data.target.value, this.props.defineEscalation.designation);
 
     if (mode === 'create') {
-      if (data.target.value && this.props.defineEscalation.designation)
-        this.loadPosition(
-          data.target.value,
-          this.props.defineEscalation.designation
-        );
+      if (data.target.value && this.props.defineEscalation.designation) this.loadPosition(data.target.value, this.props.defineEscalation.designation);
     } else if (mode === 'edit') {
     }
 
@@ -248,11 +244,7 @@ class DefineEscalation extends Component {
     // }
 
     if (mode === 'create') {
-      if (this.props.defineEscalation.department && data.target.value)
-        this.loadPosition(
-          this.props.defineEscalation.department,
-          data.target.value
-        );
+      if (this.props.defineEscalation.department && data.target.value) this.loadPosition(this.props.defineEscalation.department, data.target.value);
     } else if (mode === 'edit') {
     }
   };
@@ -278,12 +270,7 @@ class DefineEscalation extends Component {
   };
 
   updateEscalation = () => {
-    let {
-      setLoadingStatus,
-      toggleSnackbarAndSetText,
-      toggleDailogAndSetText,
-      emptyProperty,
-    } = this.props;
+    let { setLoadingStatus, toggleSnackbarAndSetText, toggleDailogAndSetText, emptyProperty } = this.props;
     setLoadingStatus('loading');
 
     var current = this;
@@ -302,9 +289,7 @@ class DefineEscalation extends Component {
 
     Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_update/', {}, body)
       .then(function(response) {
-        let msg = `${translate('pgr.lbl.escalations')} ${translate(
-          'core.lbl.updatedsuccessful'
-        )}`;
+        let msg = `${translate('pgr.lbl.escalations')} ${translate('core.lbl.updatedsuccessful')}`;
         toggleDailogAndSetText(true, msg);
         let query = {
           fromPosition: current.props.defineEscalation.fromPosition,
@@ -313,11 +298,7 @@ class DefineEscalation extends Component {
         emptyProperty('department');
         emptyProperty('designation');
         emptyProperty('toPosition');
-        Api.commonApiPost(
-          '/pgr-master/escalation-hierarchy/v1/_search',
-          query,
-          {}
-        )
+        Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_search', query, {})
           .then(function(response) {
             if (response.escalationHierarchies[0] != null) {
               flag = 1;
@@ -348,12 +329,7 @@ class DefineEscalation extends Component {
   };
 
   addEscalation = () => {
-    let {
-      setLoadingStatus,
-      toggleDailogAndSetText,
-      toggleSnackbarAndSetText,
-      emptyProperty,
-    } = this.props;
+    let { setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText, emptyProperty } = this.props;
     setLoadingStatus('loading');
 
     var current = this;
@@ -372,9 +348,7 @@ class DefineEscalation extends Component {
 
     Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_create', {}, body)
       .then(function(response) {
-        let msg = `${translate('pgr.lbl.escalations')} ${translate(
-          'core.lbl.createdsuccessful'
-        )}`;
+        let msg = `${translate('pgr.lbl.escalations')} ${translate('core.lbl.createdsuccessful')}`;
         toggleDailogAndSetText(true, msg);
         let query = {
           fromPosition: current.props.defineEscalation.fromPosition,
@@ -385,11 +359,7 @@ class DefineEscalation extends Component {
         emptyProperty('designation');
         emptyProperty('toPosition');
 
-        Api.commonApiPost(
-          '/pgr-master/escalation-hierarchy/v1/_search',
-          query,
-          {}
-        )
+        Api.commonApiPost('/pgr-master/escalation-hierarchy/v1/_search', query, {})
           .then(function(response) {
             if (response.escalationHierarchies[0] != null) {
               flag = 1;
@@ -419,10 +389,7 @@ class DefineEscalation extends Component {
   editObject = index => {
     let { setLoadingStatus } = this.props;
     // console.log(this.state.resultList[index]);
-    this.loadPosition(
-      this.state.resultList[index].department,
-      this.state.resultList[index].designation
-    );
+    this.loadPosition(this.state.resultList[index].department, this.state.resultList[index].designation);
     this.props.setForm(this.state.resultList[index]);
 
     // this.handleDepartment(this.state.resultList[index], 'edit');
@@ -452,21 +419,9 @@ class DefineEscalation extends Component {
   render() {
     var current = this;
 
-    let {
-      isFormValid,
-      defineEscalation,
-      fieldErrors,
-      handleChange,
-      handleAutoCompleteKeyUp,
-    } = this.props;
+    let { isFormValid, defineEscalation, fieldErrors, handleChange, handleAutoCompleteKeyUp } = this.props;
 
-    let {
-      submitForm,
-      localHandleChange,
-      addEscalation,
-      updateEscalation,
-      editObject,
-    } = this;
+    let { submitForm, localHandleChange, addEscalation, updateEscalation, editObject } = this;
 
     let { isSearchClicked, resultList, escalationForm, editIndex } = this.state;
 
@@ -475,24 +430,11 @@ class DefineEscalation extends Component {
         return resultList.map(function(val, i) {
           return (
             <tr key={i}>
-              <td>
-                {getNameById(current.state.positionSource, val.fromPosition)}
-              </td>
-              <td>
-                {val.serviceCode
-                  ? getNameByServiceCode(
-                      current.state.grievanceType,
-                      val.serviceCode
-                    )
-                  : ''}
-              </td>
+              <td>{getNameById(current.state.positionSource, val.fromPosition)}</td>
+              <td>{val.serviceCode ? getNameByServiceCode(current.state.grievanceType, val.serviceCode) : ''}</td>
               <td>{getNameById(current.state.departments, val.department)}</td>
-              <td>
-                {getNameById(current.state.localDesignation, val.designation)}
-              </td>
-              <td>
-                {getNameById(current.state.positionSource, val.toPosition)}
-              </td>
+              <td>{getNameById(current.state.localDesignation, val.designation)}</td>
+              <td>{getNameById(current.state.positionSource, val.toPosition)}</td>
               <td>
                 <RaisedButton
                   primary={true}
@@ -522,14 +464,7 @@ class DefineEscalation extends Component {
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
                     floatingLabelText={translate('pgr.lbl.fromposition') + ' *'}
-                    value={
-                      defineEscalation.fromPosition
-                        ? getNameById(
-                            current.state.positionSource,
-                            defineEscalation.fromPosition
-                          )
-                        : ''
-                    }
+                    value={defineEscalation.fromPosition ? getNameById(current.state.positionSource, defineEscalation.fromPosition) : ''}
                     id="name"
                     disabled={true}
                   />
@@ -540,15 +475,9 @@ class DefineEscalation extends Component {
                     hintText="Select"
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
-                    floatingLabelText={
-                      translate('pgr.lbl.grievance.type') + ' *'
-                    }
+                    floatingLabelText={translate('pgr.lbl.grievance.type') + ' *'}
                     fullWidth={true}
-                    value={
-                      defineEscalation.serviceCode
-                        ? defineEscalation.serviceCode
-                        : ''
-                    }
+                    value={defineEscalation.serviceCode ? defineEscalation.serviceCode : ''}
                     disabled={editIndex < 0 ? false : true}
                     onChange={(e, index, value) => {
                       var e = {
@@ -562,13 +491,7 @@ class DefineEscalation extends Component {
                     <MenuItem value="" primaryText="Select" />
                     {current.state.grievanceType &&
                       current.state.grievanceType.map((item, index) => {
-                        return (
-                          <MenuItem
-                            value={item.serviceCode}
-                            key={index}
-                            primaryText={item.serviceName}
-                          />
-                        );
+                        return <MenuItem value={item.serviceCode} key={index} primaryText={item.serviceName} />;
                       })}
                   </SelectField>
                 </Col>
@@ -580,11 +503,7 @@ class DefineEscalation extends Component {
                     floatingLabelFixed={true}
                     floatingLabelText={translate('core.lbl.department') + ' *'}
                     fullWidth={true}
-                    value={
-                      defineEscalation.department
-                        ? defineEscalation.department
-                        : ''
-                    }
+                    value={defineEscalation.department ? defineEscalation.department : ''}
                     onChange={(e, index, value) => {
                       var e = {
                         target: {
@@ -598,13 +517,7 @@ class DefineEscalation extends Component {
                     <MenuItem value="" primaryText="Select" />
                     {current.state.departments &&
                       current.state.departments.map((item, index) => {
-                        return (
-                          <MenuItem
-                            value={item.id}
-                            key={index}
-                            primaryText={item.name}
-                          />
-                        );
+                        return <MenuItem value={item.id} key={index} primaryText={item.name} />;
                       })}
                   </SelectField>
                 </Col>
@@ -616,11 +529,7 @@ class DefineEscalation extends Component {
                     floatingLabelFixed={true}
                     floatingLabelText={translate('pgr.lbl.designation') + ' *'}
                     fullWidth={true}
-                    value={
-                      defineEscalation.designation
-                        ? defineEscalation.designation
-                        : ''
-                    }
+                    value={defineEscalation.designation ? defineEscalation.designation : ''}
                     onChange={(e, index, value) => {
                       var e = {
                         target: {
@@ -634,13 +543,7 @@ class DefineEscalation extends Component {
                     <MenuItem value="" primaryText="Select" />
                     {current.state.designations &&
                       current.state.designations.map((item, index) => {
-                        return (
-                          <MenuItem
-                            value={item.id}
-                            key={index}
-                            primaryText={item.name}
-                          />
-                        );
+                        return <MenuItem value={item.id} key={index} primaryText={item.name} />;
                       })}
                   </SelectField>
                 </Col>
@@ -653,11 +556,7 @@ class DefineEscalation extends Component {
                     floatingLabelText={translate('core.position.to') + ' *'}
                     fullWidth={true}
                     maxHeight={200}
-                    value={
-                      defineEscalation.toPosition
-                        ? defineEscalation.toPosition
-                        : ''
-                    }
+                    value={defineEscalation.toPosition ? defineEscalation.toPosition : ''}
                     onChange={(e, index, value) => {
                       var e = {
                         target: {
@@ -674,14 +573,7 @@ class DefineEscalation extends Component {
                           <MenuItem
                             value={item.id}
                             key={index}
-                            primaryText={
-                              item.name
-                                ? item.name
-                                : getNameById(
-                                    current.state.toPosition,
-                                    defineEscalation.toPosition
-                                  )
-                            }
+                            primaryText={item.name ? item.name : getNameById(current.state.toPosition, defineEscalation.toPosition)}
                           />
                         );
                       })}
@@ -717,13 +609,7 @@ class DefineEscalation extends Component {
               </Row>
             </CardText>
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead>
                   <tr>
                     <th>{translate('pgr.lbl.fromposition')}</th>
@@ -750,15 +636,7 @@ class DefineEscalation extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {translate('pgr.lbl.escalation')}{' '}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.lbl.escalation')} </div>} />
             <CardText>
               <Grid>
                 <Row>
@@ -771,17 +649,11 @@ class DefineEscalation extends Component {
                       fullWidth={true}
                       listStyle={{ maxHeight: 200, overflow: 'auto' }}
                       filter={function filter(searchText, key) {
-                        return key
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase());
+                        return key.toLowerCase().includes(searchText.toLowerCase());
                       }}
                       dataSource={this.state.positionSource}
                       dataSourceConfig={this.state.dataSourceConfig}
-                      value={
-                        defineEscalation.fromPosition
-                          ? defineEscalation.fromPosition
-                          : ''
-                      }
+                      value={defineEscalation.fromPosition ? defineEscalation.fromPosition : ''}
                       ref="fromPosition"
                       onNewRequest={(chosenRequest, index) => {
                         if (index === -1) {
@@ -814,14 +686,7 @@ class DefineEscalation extends Component {
           </div>
           {this.state.noData && (
             <Card className="text-center" style={styles.marginStyle}>
-              <CardHeader
-                title={
-                  <strong style={{ color: '#5a3e1b', paddingLeft: 90 }}>
-                    {' '}
-                    {translate('pgr.lbl.escalationmessage')}{' '}
-                  </strong>
-                }
-              />
+              <CardHeader title={<strong style={{ color: '#5a3e1b', paddingLeft: 90 }}> {translate('pgr.lbl.escalationmessage')} </strong>} />
               <CardText>
                 <RaisedButton
                   primary={true}
@@ -859,13 +724,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: [],
-          required: [
-            'fromPosition',
-            'serviceCode',
-            'department',
-            'designation',
-            'toPosition',
-          ],
+          required: ['fromPosition', 'serviceCode', 'department', 'designation', 'toPosition'],
         },
         pattern: {
           current: [],
@@ -883,20 +742,8 @@ const mapDispatchToProps = dispatch => ({
       fieldErrors: {},
       validationData: {
         required: {
-          current: [
-            'fromPosition',
-            'serviceCode',
-            'department',
-            'designation',
-            'toPosition',
-          ],
-          required: [
-            'fromPosition',
-            'serviceCode',
-            'department',
-            'designation',
-            'toPosition',
-          ],
+          current: ['fromPosition', 'serviceCode', 'department', 'designation', 'toPosition'],
+          required: ['fromPosition', 'serviceCode', 'department', 'designation', 'toPosition'],
         },
         pattern: {
           current: [],
@@ -913,13 +760,7 @@ const mapDispatchToProps = dispatch => ({
       validationData: {
         required: {
           current: ['fromPosition'],
-          required: [
-            'fromPosition',
-            'serviceCode',
-            'department',
-            'designation',
-            'toPosition',
-          ],
+          required: ['fromPosition', 'serviceCode', 'department', 'designation', 'toPosition'],
         },
         pattern: {
           current: [],

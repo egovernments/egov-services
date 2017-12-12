@@ -26,23 +26,14 @@ export default class UiEmailField extends Component {
             maxLength={50}
             floatingLabelText={
               <span>
-                {item.label}{' '}
-                <span style={{ color: '#FF0000' }}>
-                  {item.isRequired ? ' *' : ''}
-                </span>
+                {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
               </span>
             }
             value={this.props.getVal(item.jsonPath)}
             disabled={item.isDisabled}
             errorText={this.props.fieldErrors[item.jsonPath]}
             onChange={e => {
-              if (
-                !e.target.value ||
-                (e.target.value &&
-                  /^[^\!\#\$\%\^\&*\)\(\+\=\-\"\?\>\<\{\} ]*$/.test(
-                    e.target.value
-                  ))
-              )
+              if (!e.target.value || (e.target.value && /^[^\!\#\$\%\^\&*\)\(\+\=\-\"\?\>\<\{\} ]*$/.test(e.target.value)))
                 this.props.handler(
                   e,
                   item.jsonPath,

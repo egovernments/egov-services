@@ -2,14 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link, Route } from 'react-router-dom';
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardMedia,
-  CardTitle,
-  CardText,
-} from 'material-ui/Card';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import { Grid, Row, Col, Table, DropdownButton } from 'react-bootstrap';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
@@ -179,13 +172,7 @@ const styles = {
 
 const getDate = function(val) {
   var _date = new Date(Number(val));
-  return (
-    ('0' + _date.getDate()).slice(-2) +
-    '/' +
-    ('0' + (_date.getMonth() + 1)).slice(-2) +
-    '/' +
-    _date.getFullYear()
-  );
+  return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
 };
 
 const sR = [
@@ -276,30 +263,15 @@ class Dashboard extends Component {
     };
 
     if (currentUser.type === constants.ROLE_CITIZEN) {
-      Api.commonApiPost(
-        '/pgr/seva/v1/_search',
-        { userId: currentUser.id },
-        {}
-      ).then(
+      Api.commonApiPost('/pgr/seva/v1/_search', { userId: currentUser.id }, {}).then(
         function(res1) {
           let inboxResponse = res1;
 
           if (inboxResponse && inboxResponse.serviceRequests) {
             for (var i = 0; i < inboxResponse.serviceRequests.length; i++) {
-              var d1 = inboxResponse.serviceRequests[i].requestedDatetime
-                .split(' ')[0]
-                .split('-');
-              var d11 = inboxResponse.serviceRequests[i].requestedDatetime
-                .split(' ')[1]
-                .split(':');
-              inboxResponse.serviceRequests[i].clientTime = new Date(
-                d1[2],
-                d1[1] - 1,
-                d1[0],
-                d11[0],
-                d11[1],
-                d11[2]
-              ).getTime();
+              var d1 = inboxResponse.serviceRequests[i].requestedDatetime.split(' ')[0].split('-');
+              var d11 = inboxResponse.serviceRequests[i].requestedDatetime.split(' ')[1].split(':');
+              inboxResponse.serviceRequests[i].clientTime = new Date(d1[2], d1[1] - 1, d1[0], d11[0], d11[1], d11[2]).getTime();
             }
 
             inboxResponse.serviceRequests.sort(function(s1, s2) {
@@ -308,51 +280,20 @@ class Dashboard extends Component {
               var d2 = s2.requestedDatetime.split(' ')[0].split('-');
               var d22 = s2.requestedDatetime.split(' ')[1].split(':');
               if (
-                new Date(
-                  d1[2],
-                  d1[1] - 1,
-                  d1[0],
-                  d11[0],
-                  d11[1],
-                  d11[2]
-                ).getTime() <
-                new Date(
-                  d2[2],
-                  d2[1] - 1,
-                  d2[0],
-                  d22[0],
-                  d22[1],
-                  d22[2]
-                ).getTime()
+                new Date(d1[2], d1[1] - 1, d1[0], d11[0], d11[1], d11[2]).getTime() <
+                new Date(d2[2], d2[1] - 1, d2[0], d22[0], d22[1], d22[2]).getTime()
               ) {
                 return 1;
               } else if (
-                new Date(
-                  d1[2],
-                  d1[1] - 1,
-                  d1[0],
-                  d11[0],
-                  d11[1],
-                  d11[2]
-                ).getTime() >
-                new Date(
-                  d2[2],
-                  d2[1] - 1,
-                  d2[0],
-                  d22[0],
-                  d22[1],
-                  d22[2]
-                ).getTime()
+                new Date(d1[2], d1[1] - 1, d1[0], d11[0], d11[1], d11[2]).getTime() >
+                new Date(d2[2], d2[1] - 1, d2[0], d22[0], d22[1], d22[2]).getTime()
               ) {
                 return -1;
               }
               return 0;
             });
 
-            checkCountAndSetState(
-              'serviceRequests',
-              inboxResponse.serviceRequests
-            );
+            checkCountAndSetState('serviceRequests', inboxResponse.serviceRequests);
             checkCountAndSetState('localArray', inboxResponse.serviceRequests);
           } else {
             checkCountAndSetState('serviceRequests', []);
@@ -365,14 +306,9 @@ class Dashboard extends Component {
         }
       );
 
-      Api.commonApiPost(
-        '/pgr-master/serviceGroup/v1/_search',
-        { keywords: constants.CITIZEN_SERVICES_KEYWORD },
-        {}
-      ).then(
+      Api.commonApiPost('/pgr-master/serviceGroup/v1/_search', { keywords: constants.CITIZEN_SERVICES_KEYWORD }, {}).then(
         function(res2) {
-          let citizenServices =
-            res2 && res2.ServiceGroups ? res2.ServiceGroups : [];
+          let citizenServices = res2 && res2.ServiceGroups ? res2.ServiceGroups : [];
           checkCountAndSetState('citizenServices', citizenServices);
         },
         function(err) {
@@ -380,21 +316,13 @@ class Dashboard extends Component {
         }
       );
 
-      Api.commonApiPost(
-        '/citizen-services/v1/requests/_search',
-        { userId: currentUser.id },
-        {},
-        null,
-        true
-      ).then(
+      Api.commonApiPost('/citizen-services/v1/requests/_search', { userId: currentUser.id }, {}, null, true).then(
         function(res3) {
           if (res3 && res3.serviceReq && res3.serviceReq) {
             res3.serviceReq.sort(function(v1, v2) {
               return v1.auditDetails.createdDate > v2.auditDetails.createdDate
                 ? -1
-                : v1.auditDetails.createdDate < v2.auditDetails.createdDate
-                  ? 1
-                  : 0;
+                : v1.auditDetails.createdDate < v2.auditDetails.createdDate ? 1 : 0;
             });
 
             checkCountAndSetState('serviceRequestsTwo', res3.serviceReq);
@@ -480,11 +408,7 @@ class Dashboard extends Component {
          console.log('error', err);
       });*/
     } else {
-      Api.commonApiPost(
-        '/hr-employee/employees/_search',
-        { id: currentUser.id },
-        {}
-      ).then(function(res) {
+      Api.commonApiPost('/hr-employee/employees/_search', { id: currentUser.id }, {}).then(function(res) {
         if (
           res &&
           res.Employee &&
@@ -529,10 +453,7 @@ class Dashboard extends Component {
 
           var positions = '';
           for (var i = 0; i < res.Employee[0].assignments.length; i++) {
-            positions +=
-              i == 0
-                ? res.Employee[0].assignments[i].position
-                : "','" + res.Employee[0].assignments[i].position;
+            positions += i == 0 ? res.Employee[0].assignments[i].position : "','" + res.Employee[0].assignments[i].position;
           }
 
           var bodyReq = {
@@ -545,13 +466,7 @@ class Dashboard extends Component {
               },
             ],
           };
-          Api.commonApiPost(
-            '/report/common/_get',
-            {},
-            bodyReq,
-            null,
-            true
-          ).then(
+          Api.commonApiPost('/report/common/_get', {}, bodyReq, null, true).then(
             function(res) {
               current.setState({
                 workflowResult: res,
@@ -568,10 +483,7 @@ class Dashboard extends Component {
           );
         } else {
           current.props.setLoadingStatus('hide');
-          current.props.toggleSnackbarAndSetText(
-            true,
-            'Something went wrong. Please try again later.'
-          );
+          current.props.toggleSnackbarAndSetText(true, 'Something went wrong. Please try again later.');
         }
       });
     }
@@ -585,17 +497,8 @@ class Dashboard extends Component {
 
   componentDidMount() {
     let self = this;
-    if (
-      localStorage.token &&
-      localStorage.userRequest &&
-      !localStorage.actions
-    ) {
-      this.props.login(
-        false,
-        localStorage.token,
-        JSON.parse(localStorage.userRequest),
-        true
-      );
+    if (localStorage.token && localStorage.userRequest && !localStorage.actions) {
+      this.props.login(false, localStorage.token, JSON.parse(localStorage.userRequest), true);
       let roleCodes = [];
       var UserRequest = JSON.parse(localStorage.userRequest);
       for (var i = 0; i < UserRequest.roles.length; i++) {
@@ -638,11 +541,7 @@ class Dashboard extends Component {
           },
           function(err) {
             //old menu item api access/v1/actions/_get
-            Api.commonApiPost(
-              'access/v1/actions/_get',
-              {},
-              { tenantId: localStorage.tenantId, roleCodes, enabled: true }
-            ).then(
+            Api.commonApiPost('access/v1/actions/_get', {}, { tenantId: localStorage.tenantId, roleCodes, enabled: true }).then(
               function(response) {
                 var actions = response.actions;
                 var roles = JSON.parse(localStorage.userRequest).roles;
@@ -674,28 +573,19 @@ class Dashboard extends Component {
         );
       }
 
-      if (
-        window.location.href.indexOf('?') > -1 &&
-        window.location.href.indexOf('link') > -1
-      ) {
+      if (window.location.href.indexOf('?') > -1 && window.location.href.indexOf('link') > -1) {
         var query = window.location.href.split('?')[1].split('&');
         for (var i = 0; i < query.length; i++) {
           if (query[i].indexOf('link') > -1) {
             switch (query[i].split('=')[1]) {
               case 'waternodue':
-                self.props.setRoute(
-                  '/non-framework-cs/citizenServices/no-dues/search/wc'
-                );
+                self.props.setRoute('/non-framework-cs/citizenServices/no-dues/search/wc');
                 break;
               case 'propertytaxextract':
-                self.props.setRoute(
-                  '/non-framework-cs/citizenServices/no-dues/extract/pt'
-                );
+                self.props.setRoute('/non-framework-cs/citizenServices/no-dues/extract/pt');
                 break;
               case 'propertytaxdue':
-                self.props.setRoute(
-                  '/non-framework-cs/citizenServices/no-dues/search/pt'
-                );
+                self.props.setRoute('/non-framework-cs/citizenServices/no-dues/search/pt');
                 break;
             }
           }
@@ -778,13 +668,7 @@ class Dashboard extends Component {
       this.state.workflowResult.reportHeader[i].type == 'epoch'
     ) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     } else {
       return val;
     }
@@ -813,9 +697,7 @@ class Dashboard extends Component {
       selectedServiceCode: code,
       selectedServiceName: name,
     });
-    var service = this.state.citizenServices.find(
-      service => service.code === code
-    );
+    var service = this.state.citizenServices.find(service => service.code === code);
     if (service && !service.hasOwnProperty('types')) {
       if (name.toLowerCase() !== 'water connection')
         //water connection hardcoded values
@@ -842,74 +724,23 @@ class Dashboard extends Component {
   }
 
   rowClickHandler = item => {
-    if (
-      ['WATER_NEWCONN', 'BPA_FIRE_NOC', 'TL_NEWCONN'].indexOf(
-        item.serviceCode
-      ) > -1 &&
-      item.status == 'PAYMENTFAILED'
-    ) {
+    if (['WATER_NEWCONN', 'BPA_FIRE_NOC', 'TL_NEWCONN'].indexOf(item.serviceCode) > -1 && item.status == 'PAYMENTFAILED') {
     } else if (item.serviceCode == 'WATER_NEWCONN') {
-      this.props.setRoute(
-        '/non-framework/citizenServices/view/update/wc/' +
-          encodeURIComponent(item.serviceRequestId)
-      );
+      this.props.setRoute('/non-framework/citizenServices/view/update/wc/' + encodeURIComponent(item.serviceRequestId));
     } else if (item.serviceCode == 'BPA_FIRE_NOC') {
-      this.props.setRoute(
-        '/non-framework/citizenServices/fireNoc/update/view/' +
-          encodeURIComponent(item.serviceRequestId) +
-          '/success'
-      );
-    } else if (
-      item.serviceCode == 'WC_NODUES' &&
-      item.status == 'No Dues Generated'
-    ) {
-      this.props.setRoute(
-        `/receipt/watercharge/nodues/${encodeURIComponent(
-          item.consumerCode
-        )}/${encodeURIComponent(item.serviceRequestId)}`
-      );
-    } else if (
-      item.serviceCode == 'PT_NODUES' &&
-      item.status == 'No Dues Generated'
-    ) {
-      this.props.setRoute(
-        `/receipt/propertytax/nodues/${encodeURIComponent(
-          item.consumerCode
-        )}/${encodeURIComponent(item.serviceRequestId)}`
-      );
-    } else if (
-      item.serviceCode == 'PT_EXTRACT' &&
-      item.status == 'Extract Generated'
-    ) {
-      this.props.setRoute(
-        `/receipt/extract/nodues/${encodeURIComponent(
-          item.consumerCode
-        )}/${encodeURIComponent(item.serviceRequestId)}`
-      );
-    } else if (
-      item.serviceCode == 'PT_PAYTAX' &&
-      item.status == 'No Dues Generated'
-    ) {
-      this.props.setRoute(
-        `/receipt/propertytax/paytax/${encodeURIComponent(
-          item.consumerCode
-        )}/${encodeURIComponent(item.serviceRequestId)}`
-      );
-    } else if (
-      item.serviceCode == 'WC_PAYTAX' &&
-      item.status == 'No Dues Generated'
-    ) {
-      this.props.setRoute(
-        `/receipt/watercharge/paytax/${encodeURIComponent(
-          item.consumerCode
-        )}/${encodeURIComponent(item.serviceRequestId)}`
-      );
+      this.props.setRoute('/non-framework/citizenServices/fireNoc/update/view/' + encodeURIComponent(item.serviceRequestId) + '/success');
+    } else if (item.serviceCode == 'WC_NODUES' && item.status == 'No Dues Generated') {
+      this.props.setRoute(`/receipt/watercharge/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if (item.serviceCode == 'PT_NODUES' && item.status == 'No Dues Generated') {
+      this.props.setRoute(`/receipt/propertytax/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if (item.serviceCode == 'PT_EXTRACT' && item.status == 'Extract Generated') {
+      this.props.setRoute(`/receipt/extract/nodues/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if (item.serviceCode == 'PT_PAYTAX' && item.status == 'No Dues Generated') {
+      this.props.setRoute(`/receipt/propertytax/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
+    } else if (item.serviceCode == 'WC_PAYTAX' && item.status == 'No Dues Generated') {
+      this.props.setRoute(`/receipt/watercharge/paytax/${encodeURIComponent(item.consumerCode)}/${encodeURIComponent(item.serviceRequestId)}`);
     } else if (item.serviceCode == 'TL_NEWCONN') {
-      this.props.setRoute(
-        '/non-framework/citizenServices/tl/update/view/' +
-          encodeURIComponent(item.serviceRequestId) +
-          '/success'
-      );
+      this.props.setRoute('/non-framework/citizenServices/tl/update/view/' + encodeURIComponent(item.serviceRequestId) + '/success');
     }
   };
 
@@ -921,25 +752,15 @@ class Dashboard extends Component {
 
     if (!this.state.selectedServiceCode)
       servicesMenus = this.state.citizenServices.filter(
-        service =>
-          !this.state.servicesFilter ||
-          service.name
-            .toLowerCase()
-            .indexOf(this.state.servicesFilter.toLowerCase()) > -1
+        service => !this.state.servicesFilter || service.name.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1
       );
     else {
-      var service = this.state.citizenServices.find(
-        service => service.code === this.state.selectedServiceCode
-      );
+      var service = this.state.citizenServices.find(service => service.code === this.state.selectedServiceCode);
       if (service) {
         var types = [];
         if (service.hasOwnProperty('types'))
           types = service.types.filter(
-            type =>
-              !this.state.servicesFilter ||
-              type.serviceName
-                .toLowerCase()
-                .indexOf(this.state.servicesFilter.toLowerCase()) > -1
+            type => !this.state.servicesFilter || type.serviceName.toLowerCase().indexOf(this.state.servicesFilter.toLowerCase()) > -1
           );
         serviceTypeMenus = [...types];
       }
@@ -971,10 +792,7 @@ class Dashboard extends Component {
             key={i}
             style={{ cursor: 'pointer' }}
             onClick={() => {
-              this.handleNavigation(
-                '/pgr/viewGrievance/',
-                encodeURIComponent(e.serviceRequestId)
-              );
+              this.handleNavigation('/pgr/viewGrievance/', encodeURIComponent(e.serviceRequestId));
             }}
           >
             <td>{i + 1}</td>
@@ -999,11 +817,7 @@ class Dashboard extends Component {
             <td>
               {e.attribValues &&
                 e.attribValues.map((item, index) => {
-                  if (item['key'] == 'keyword')
-                    return item['name'] &&
-                      item['name'].toLowerCase() == 'complaint'
-                      ? 'Grievance'
-                      : 'Service';
+                  if (item['key'] == 'keyword') return item['name'] && item['name'].toLowerCase() == 'complaint' ? 'Grievance' : 'Service';
                 })}
             </td>
             <td>
@@ -1060,12 +874,7 @@ class Dashboard extends Component {
                           {serviceRequestsTwo.map((item, key) => {
                             if (
                               item.status != 'CREATED' ||
-                              (item.status == 'CREATED' &&
-                                [
-                                  'BPA_FIRE_NOC',
-                                  'WATER_NEWCONN',
-                                  'TL_NEWCONN',
-                                ].indexOf(item.serviceCode) > -1)
+                              (item.status == 'CREATED' && ['BPA_FIRE_NOC', 'WATER_NEWCONN', 'TL_NEWCONN'].indexOf(item.serviceCode) > -1)
                             ) {
                               return (
                                 <tr
@@ -1075,21 +884,12 @@ class Dashboard extends Component {
                                   }}
                                 >
                                   <td>{item.serviceRequestId}</td>
-                                  <td>
-                                    {nameMap[item.serviceCode] ||
-                                      item.serviceCode}
-                                  </td>
+                                  <td>{nameMap[item.serviceCode] || item.serviceCode}</td>
                                   <td>{nameMap[item.status] || item.status}</td>
-                                  <td>
-                                    {item.auditDetails
-                                      ? getDate(item.auditDetails.createdDate)
-                                      : '-'}
-                                  </td>
+                                  <td>{item.auditDetails ? getDate(item.auditDetails.createdDate) : '-'}</td>
                                   {
                                     <td>
-                                      <i className="material-icons">
-                                        cloud_download
-                                      </i>
+                                      <i className="material-icons">cloud_download</i>
                                     </td>
                                   }
                                 </tr>
@@ -1103,17 +903,9 @@ class Dashboard extends Component {
                   <br />
 
                   <Card>
-                    <CardHeader
-                      title={translate('pgr.lbl.grievance.citizen')}
-                    />
+                    <CardHeader title={translate('pgr.lbl.grievance.citizen')} />
                     <CardText>
-                      <Table
-                        id="searchTable"
-                        style={{ color: 'black', fontWeight: 'normal' }}
-                        bordered
-                        responsive
-                        className="table-striped"
-                      >
+                      <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                         <thead>
                           <tr>
                             <th>#</th>
@@ -1135,30 +927,17 @@ class Dashboard extends Component {
           </div>
         ) : (
           <Card className="uiCard">
-            <CardHeader
-              title={
-                <div style={styles.headerStyle}>
-                  {translate('deshboard.title')}
-                </div>
-              }
-            />
+            <CardHeader title={<div style={styles.headerStyle}>{translate('deshboard.title')}</div>} />
             <CardText>
               <Grid style={{ paddingTop: '0' }}>
                 <Row>
                   <div className="col-md-12">
-                    <Table
-                      id="searchTable"
-                      style={{ color: 'black', fontWeight: 'normal' }}
-                      bordered
-                      responsive
-                      className="table-striped"
-                    >
+                    <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                       <thead>
                         <tr>
                           {workflowResult.hasOwnProperty('reportHeader') &&
                             workflowResult.reportHeader.map((item, i) => {
-                              if (item.name != 'url')
-                                return <th key={i}>{translate(item.label)}</th>;
+                              if (item.name != 'url') return <th key={i}>{translate(item.label)}</th>;
                             })}
                         </tr>
                       </thead>
@@ -1173,10 +952,7 @@ class Dashboard extends Component {
                                 }}
                               >
                                 {item.map((item1, i2) => {
-                                  if (!/_url\?/.test(item1))
-                                    return (
-                                      <td key={i2}>{checkIfDate(item1, i2)}</td>
-                                    );
+                                  if (!/_url\?/.test(item1)) return <td key={i2}>{checkIfDate(item1, i2)}</td>;
                                 })}
                               </tr>
                             );
@@ -1273,11 +1049,7 @@ const ServiceTypeItem = ({ serviceType, onClick }) => {
   return (
     <Col md={4} sm={4} lg={4} xs={12}>
       <div className="service-menu-item disable-selection">
-        <ListItem
-          primaryText={serviceType.serviceName}
-          secondaryText={serviceType.description}
-          onClick={onClick}
-        />
+        <ListItem primaryText={serviceType.serviceName} secondaryText={serviceType.description} onClick={onClick} />
         {/*<RaisedButton fullWidth={true} label={service.serviceName} primary={true} onClick={onClick} /> */}
       </div>
     </Col>

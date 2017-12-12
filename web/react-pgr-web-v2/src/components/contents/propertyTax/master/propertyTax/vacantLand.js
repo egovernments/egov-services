@@ -106,9 +106,7 @@ class VacantLand extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -139,9 +137,7 @@ class VacantLand extends Component {
             style={styles.reducePadding}
             title={
               <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {translate(
-                  'pt.create.groups.vacantLand.fields.vacantLandDetails'
-                )}
+                {translate('pt.create.groups.vacantLand.fields.vacantLandDetails')}
               </div>
             }
           />
@@ -153,31 +149,14 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.surveyNumber'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.surveyNumber')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors.survayNumber ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.survayNumber}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
-                    value={
-                      vacantLand.survayNumber ? vacantLand.survayNumber : ''
-                    }
+                    errorText={fieldErrors.survayNumber ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.survayNumber}</span> : ''}
+                    value={vacantLand.survayNumber ? vacantLand.survayNumber : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'survayNumber',
-                        true,
-                        /^([0-9]|[a-z])+([0-9a-z]+){3}$/i
-                      );
+                      handleChange(e, 'survayNumber', true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     id="survayNumber"
@@ -194,29 +173,14 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.pattaNumber'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.pattaNumber')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors.pattaNumber ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.pattaNumber}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
+                    errorText={fieldErrors.pattaNumber ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.pattaNumber}</span> : ''}
                     value={vacantLand.pattaNumber ? vacantLand.pattaNumber : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'pattaNumber',
-                        true,
-                        /^([0-9]|[a-z])+([0-9a-z]+){3}$/i
-                      );
+                      handleChange(e, 'pattaNumber', true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
@@ -233,24 +197,14 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.vacantLandArea'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.vacantLandArea')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
                     errorText={
-                      fieldErrors.vacantLandArea ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.vacantLandArea}
-                        </span>
-                      ) : (
-                        ''
-                      )
+                      fieldErrors.vacantLandArea ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.vacantLandArea}</span> : ''
                     }
-                    value={
-                      vacantLand.vacantLandArea ? vacantLand.vacantLandArea : ''
-                    }
+                    value={vacantLand.vacantLandArea ? vacantLand.vacantLandArea : ''}
                     onChange={e => {
                       handleChange(e, 'vacantLandArea', true, /^\d{3,64}$/g);
                     }}
@@ -269,29 +223,14 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.marketValue'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.marketValue')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors.marketValue ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.marketValue}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
+                    errorText={fieldErrors.marketValue ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.marketValue}</span> : ''}
                     value={vacantLand.marketValue ? vacantLand.marketValue : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'marketValue',
-                        true,
-                        /^([0-9]|[a-z])+([0-9a-z]+){3}$/i
-                      );
+                      handleChange(e, 'marketValue', true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
@@ -308,31 +247,14 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.capitalValue'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.capitalValue')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
-                    errorText={
-                      fieldErrors.capitalValue ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.capitalValue}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
-                    value={
-                      vacantLand.capitalValue ? vacantLand.capitalValue : ''
-                    }
+                    errorText={fieldErrors.capitalValue ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.capitalValue}</span> : ''}
+                    value={vacantLand.capitalValue ? vacantLand.capitalValue : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'capitalValue',
-                        true,
-                        /^([0-9]|[a-z])+([0-9a-z]+){3}$/i
-                      );
+                      handleChange(e, 'capitalValue', true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
@@ -351,24 +273,14 @@ class VacantLand extends Component {
                     floatingLabelFixed={true}
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.effectiveDate'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.effectiveDate')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
                     errorText={
-                      fieldErrors.occupancyDate ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.occupancyDate}
-                        </span>
-                      ) : (
-                        ''
-                      )
+                      fieldErrors.occupancyDate ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.occupancyDate}</span> : ''
                     }
-                    value={
-                      vacantLand.occupancyDate ? vacantLand.occupancyDate : ''
-                    }
+                    value={vacantLand.occupancyDate ? vacantLand.occupancyDate : ''}
                     onChange={(e, value) => {
                       var val = value;
                       if (value.length == 2 && !value.match('/')) {
@@ -403,26 +315,18 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.vacantLandPlotArea'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.vacantLandPlotArea')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
                     errorText={
                       fieldErrors.vacantLandPlotArea ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.vacantLandPlotArea}
-                        </span>
+                        <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.vacantLandPlotArea}</span>
                       ) : (
                         ''
                       )
                     }
-                    value={
-                      vacantLand.vacantLandPlotArea
-                        ? vacantLand.vacantLandPlotArea
-                        : ''
-                    }
+                    value={vacantLand.vacantLandPlotArea ? vacantLand.vacantLandPlotArea : ''}
                     onChange={e => {
                       handleChange(e, 'vacantLandPlotArea', true, '');
                     }}
@@ -441,26 +345,18 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.layoutApprovalAuthority'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.layoutApprovalAuthority')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
                     errorText={
                       fieldErrors.layoutApprovalAuthority ? (
-                        <span style={{ position: 'absolute', bottom: -41 }}>
-                          {fieldErrors.layoutApprovalAuthority}
-                        </span>
+                        <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.layoutApprovalAuthority}</span>
                       ) : (
                         ''
                       )
                     }
-                    value={
-                      vacantLand.layoutApprovalAuthority
-                        ? vacantLand.layoutApprovalAuthority
-                        : ''
-                    }
+                    value={vacantLand.layoutApprovalAuthority ? vacantLand.layoutApprovalAuthority : ''}
                     dropDownMenuProps={{
                       animated: false,
                       targetOrigin: { horizontal: 'left', vertical: 'bottom' },
@@ -488,33 +384,20 @@ class VacantLand extends Component {
                     hintText=""
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.layoutPermitNumber'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.layoutPermitNumber')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
                     errorText={
                       fieldErrors.layoutPermitNumber ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.layoutPermitNumber}
-                        </span>
+                        <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.layoutPermitNumber}</span>
                       ) : (
                         ''
                       )
                     }
-                    value={
-                      vacantLand.layoutPermitNumber
-                        ? vacantLand.layoutPermitNumber
-                        : ''
-                    }
+                    value={vacantLand.layoutPermitNumber ? vacantLand.layoutPermitNumber : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'layoutPermitNumber',
-                        true,
-                        /^([0-9]|[a-z])+([0-9a-z]+){3}$/i
-                      );
+                      handleChange(e, 'layoutPermitNumber', true, /^([0-9]|[a-z])+([0-9a-z]+){3}$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     id="layoutPermitNumber"
@@ -534,26 +417,14 @@ class VacantLand extends Component {
                     floatingLabelFixed={true}
                     floatingLabelText={
                       <span>
-                        {translate(
-                          'pt.create.groups.propertyAddress.fields.layoutPermitDate'
-                        )}
+                        {translate('pt.create.groups.propertyAddress.fields.layoutPermitDate')}
                         <span style={{ color: '#FF0000' }}> *</span>
                       </span>
                     }
                     errorText={
-                      fieldErrors.layoutPermitDate ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.layoutPermitDate}
-                        </span>
-                      ) : (
-                        ''
-                      )
+                      fieldErrors.layoutPermitDate ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.layoutPermitDate}</span> : ''
                     }
-                    value={
-                      vacantLand.layoutPermitDate
-                        ? vacantLand.layoutPermitDate
-                        : ''
-                    }
+                    value={vacantLand.layoutPermitDate ? vacantLand.layoutPermitDate : ''}
                     onChange={(e, value) => {
                       var val = value;
                       if (value.length == 2 && !value.match('/')) {
@@ -591,11 +462,7 @@ class VacantLand extends Component {
         <Card className="uiCard">
           <CardHeader
             style={styles.reducePadding}
-            title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {translate('pt.create.groups.surroundingBoundaries')}
-              </div>
-            }
+            title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.groups.surroundingBoundaries')}</div>}
           />
           <CardText style={styles.reducePadding}>
             <Grid fluid>
@@ -603,26 +470,11 @@ class VacantLand extends Component {
                 <Col xs={12} md={3} sm={6}>
                   <TextField
                     hintText=""
-                    floatingLabelText={translate(
-                      'pt.create.groups.propertyAddress.fields.northBoundedBy'
-                    )}
-                    errorText={
-                      fieldErrors.north ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.north}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
+                    floatingLabelText={translate('pt.create.groups.propertyAddress.fields.northBoundedBy')}
+                    errorText={fieldErrors.north ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.north}</span> : ''}
                     value={vacantLand.north ? vacantLand.north : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'north',
-                        false,
-                        /^([0-9]|[a-z])+([0-9a-z]+)$/i
-                      );
+                      handleChange(e, 'north', false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     id="north"
@@ -637,26 +489,11 @@ class VacantLand extends Component {
                 <Col xs={12} md={3} sm={6}>
                   <TextField
                     hintText=""
-                    floatingLabelText={translate(
-                      'pt.create.groups.propertyAddress.fields.southBoundedBy'
-                    )}
-                    errorText={
-                      fieldErrors.south ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.south}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
+                    floatingLabelText={translate('pt.create.groups.propertyAddress.fields.southBoundedBy')}
+                    errorText={fieldErrors.south ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.south}</span> : ''}
                     value={vacantLand.south ? vacantLand.south : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'south',
-                        false,
-                        /^([0-9]|[a-z])+([0-9a-z]+)$/i
-                      );
+                      handleChange(e, 'south', false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}
@@ -671,26 +508,11 @@ class VacantLand extends Component {
                 <Col xs={12} md={3} sm={6}>
                   <TextField
                     hintText=""
-                    floatingLabelText={translate(
-                      'pt.create.groups.propertyAddress.fields.eastBoundedBy'
-                    )}
-                    errorText={
-                      fieldErrors.east ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.east}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
+                    floatingLabelText={translate('pt.create.groups.propertyAddress.fields.eastBoundedBy')}
+                    errorText={fieldErrors.east ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.east}</span> : ''}
                     value={vacantLand.east ? vacantLand.east : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'east',
-                        false,
-                        /^([0-9]|[a-z])+([0-9a-z]+)$/i
-                      );
+                      handleChange(e, 'east', false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     id="east"
@@ -705,26 +527,11 @@ class VacantLand extends Component {
                 <Col xs={12} md={3} sm={6}>
                   <TextField
                     hintText=""
-                    floatingLabelText={translate(
-                      'pt.create.groups.propertyAddress.fields.westBoundedBy'
-                    )}
-                    errorText={
-                      fieldErrors.west ? (
-                        <span style={{ position: 'absolute', bottom: -13 }}>
-                          {fieldErrors.west}
-                        </span>
-                      ) : (
-                        ''
-                      )
-                    }
+                    floatingLabelText={translate('pt.create.groups.propertyAddress.fields.westBoundedBy')}
+                    errorText={fieldErrors.west ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.west}</span> : ''}
                     value={vacantLand.west ? vacantLand.west : ''}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'west',
-                        false,
-                        /^([0-9]|[a-z])+([0-9a-z]+)$/i
-                      );
+                      handleChange(e, 'west', false, /^([0-9]|[a-z])+([0-9a-z]+)$/i);
                     }}
                     floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                     underlineStyle={styles.underlineStyle}

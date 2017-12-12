@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Card,
-  CardActions,
-  CardHeader,
-  CardMedia,
-  CardTitle,
-  CardText,
-} from 'material-ui/Card';
+import { Card, CardActions, CardHeader, CardMedia, CardTitle, CardText } from 'material-ui/Card';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import { connect } from 'react-redux';
@@ -32,26 +25,20 @@ class Payment extends Component {
     for (var i = 0; i < splitArray.length; i++) {
       // splitArray[i].split(":")[0]
       // splitArray[i].split(":")[1]
-      paymentGateWayResponse[splitArray[i].split(':')[0]] = splitArray[i].split(
-        ':'
-      )[1];
+      paymentGateWayResponse[splitArray[i].split(':')[0]] = splitArray[i].split(':')[1];
       // this.setState({msg:{
       //   [splitArray[i].split("=")[0]]:[splitArray[i].split("=")[1]]
       // }});
     }
 
     console.log(paymentGateWayResponse);
-    window.localStorage.setItem(
-      'paymentGateWayResponse',
-      JSON.stringify(paymentGateWayResponse)
-    );
+    window.localStorage.setItem('paymentGateWayResponse', JSON.stringify(paymentGateWayResponse));
     if (paymentGateWayResponse['status'] != 'failed') {
       if (
         (window.localStorage.getItem('workflow') == 'create' ||
           window.localStorage.getItem('workflow') == 'fireNoc' ||
           window.localStorage.getItem('workflow') == 'tl') &&
-        (window.localStorage.getItem('ack') == '' ||
-          window.localStorage.getItem('ack') == undefined)
+        (window.localStorage.getItem('ack') == '' || window.localStorage.getItem('ack') == undefined)
       ) {
         setRoute(
           '/non-framework/citizenServices/' +
@@ -94,8 +81,7 @@ class Payment extends Component {
         (window.localStorage.getItem('workflow') == 'create' ||
           window.localStorage.getItem('workflow') == 'fireNoc' ||
           window.localStorage.getItem('workflow') == 'tl') &&
-        (window.localStorage.getItem('ack') == '' ||
-          window.localStorage.getItem('ack') == undefined)
+        (window.localStorage.getItem('ack') == '' || window.localStorage.getItem('ack') == undefined)
       ) {
         let ServiceRequest = JSON.parse(localStorage.response).serviceReq;
         ServiceRequest.backendServiceDetails = null;

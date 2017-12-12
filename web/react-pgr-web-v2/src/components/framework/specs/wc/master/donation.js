@@ -17,8 +17,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -27,8 +26,7 @@ var dat = {
               {
                 jsonPath: 'Donations[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -51,8 +49,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -64,8 +61,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -151,8 +147,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -161,8 +156,7 @@ var dat = {
               {
                 jsonPath: 'Donations[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -185,8 +179,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: false,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -202,14 +195,7 @@ var dat = {
         { label: 'wc.create.donationAmount' },
         { label: 'wc.create.active' },
       ],
-      values: [
-        'usageTypeName',
-        'subUsageTypeName',
-        'minPipeSizeInInch',
-        'maxPipeSizeInInch',
-        'donationAmount',
-        'active',
-      ],
+      values: ['usageTypeName', 'subUsageTypeName', 'minPipeSizeInInch', 'maxPipeSizeInInch', 'donationAmount', 'active'],
       resultPath: 'Donations',
       rowClickUrlUpdate: '/update/wc/donation/{id}',
       rowClickUrlView: '/view/wc/donation/{id}',
@@ -232,8 +218,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -242,8 +227,7 @@ var dat = {
               {
                 jsonPath: 'Donations[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -266,8 +250,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -279,8 +262,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
             convertToString: true,
@@ -368,8 +350,7 @@ var dat = {
             label: 'wc.create.groups.connectionDetails.usageType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
+            url: '/wcms/masters/usagetypes/_search?&active=true|$..code|$..name',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -379,8 +360,7 @@ var dat = {
               {
                 jsonPath: 'Donations[0].subUsageTypeCode',
                 type: 'dropDown',
-                pattern:
-                  '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
+                pattern: '/wcms/masters/usagetypes/_search?&isSubUsageType=true&parent={Donations[0].usageTypeCode}|$..code|$..name',
               },
             ],
           },
@@ -403,8 +383,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
           },
@@ -416,8 +395,7 @@ var dat = {
             type: 'singleValueList',
             isRequired: true,
             isDisabled: false,
-            url:
-              '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
+            url: '/wcms/masters/pipesizes/_search?&active=true|$..sizeInMilimeter|$..sizeInInch',
             requiredErrMsg: '',
             patternErrMsg: '',
           },

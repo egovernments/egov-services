@@ -113,24 +113,12 @@ class ViewEditServiceGroup extends Component {
     return (
       <div className="viewEditServiceGroup">
         <Card style={styles.marginStyle}>
-          <CardHeader
-            style={{ paddingBottom: 0 }}
-            title={
-              <div style={styles.headerStyle}>
-                {translate('pgr.lbl.receivingcenter')}
-              </div>
-            }
-          />
+          <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}>{translate('pgr.lbl.receivingcenter')}</div>} />
           <CardText style={{ padding: 0 }}>
             <Grid>
               <Row>
                 <Col xs={12} md={12}>
-                  <Table
-                    id="searchTable"
-                    bordered
-                    responsive
-                    className="table-striped"
-                  >
+                  <Table id="searchTable" bordered responsive className="table-striped">
                     <thead>
                       <tr>
                         <th>#</th>
@@ -150,13 +138,9 @@ class ViewEditServiceGroup extends Component {
                               key={i}
                               onClick={() => {
                                 if (url == '/pgr/receivingCenter/view') {
-                                  this.props.history.push(
-                                    '/pgr/viewReceivingCenter/' + e.id
-                                  );
+                                  this.props.history.push('/pgr/viewReceivingCenter/' + e.id);
                                 } else {
-                                  this.props.history.push(
-                                    '/pgr/createReceivingCenter/' + e.id
-                                  );
+                                  this.props.history.push('/pgr/createReceivingCenter/' + e.id);
                                 }
                               }}
                             >
@@ -225,6 +209,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  ViewEditServiceGroup
-);
+export default connect(mapStateToProps, mapDispatchToProps)(ViewEditServiceGroup);

@@ -169,13 +169,7 @@ class searchWaterSourceType extends Component {
 
     searchSet.pageSize = 250;
     self.props.setLoadingStatus('loading');
-    Api.commonApiPost(
-      '/wcms/masters/sourcetype/_search',
-      searchSet,
-      {},
-      false,
-      true
-    ).then(
+    Api.commonApiPost('/wcms/masters/sourcetype/_search', searchSet, {}, false, true).then(
       function(response) {
         flag = 1;
         self.setState({
@@ -204,11 +198,7 @@ class searchWaterSourceType extends Component {
 
   render() {
     _this = this;
-    let {
-      waterSourceTypeSearchSet,
-      handleAutoCompleteKeyUp,
-      handleChange,
-    } = this.props;
+    let { waterSourceTypeSearchSet, handleAutoCompleteKeyUp, handleChange } = this.props;
     let { search, handleNavigation } = this;
     let {
       allSourceConfig,
@@ -247,21 +237,9 @@ class searchWaterSourceType extends Component {
       if (isSearchClicked)
         return (
           <Card>
-            <CardHeader
-              title={
-                <strong style={{ color: '#5a3e1b' }}>
-                  {' '}
-                  {translate('pgr.searchresult')}{' '}
-                </strong>
-              }
-            />
+            <CardHeader title={<strong style={{ color: '#5a3e1b' }}> {translate('pgr.searchresult')} </strong>} />
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive>
                 <thead>
                   <tr>
                     <th>{translate('core.lbl.code')}</th>
@@ -286,12 +264,7 @@ class searchWaterSourceType extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}> Search Water Source Type </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> Search Water Source Type </div>} />
             <CardText style={{ padding: 0 }}>
               <Grid>
                 <Row>
@@ -299,11 +272,7 @@ class searchWaterSourceType extends Component {
                     <TextField
                       fullWidth={true}
                       floatingLabelText={'Water Source Type' + '*'}
-                      value={
-                        waterSourceTypeSearchSet.name
-                          ? waterSourceTypeSearchSet.name
-                          : ''
-                      }
+                      value={waterSourceTypeSearchSet.name ? waterSourceTypeSearchSet.name : ''}
                       maxLength={100}
                       onChange={e => {
                         waterSourceTypeSearchSet.active = true;
@@ -334,12 +303,7 @@ class searchWaterSourceType extends Component {
             </CardText>
           </Card>
           <div style={{ textAlign: 'center' }}>
-            <RaisedButton
-              style={{ margin: '15px 5px' }}
-              type="submit"
-              label={translate('core.lbl.search')}
-              primary={true}
-            />
+            <RaisedButton style={{ margin: '15px 5px' }} type="submit" label={translate('core.lbl.search')} primary={true} />
           </div>
         </form>
         {viewTable()}
@@ -394,6 +358,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  searchWaterSourceType
-);
+export default connect(mapStateToProps, mapDispatchToProps)(searchWaterSourceType);

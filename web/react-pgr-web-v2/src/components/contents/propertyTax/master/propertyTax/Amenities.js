@@ -105,9 +105,7 @@ class Amenities extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
@@ -134,14 +132,7 @@ class Amenities extends Component {
 
     return (
       <Card className="uiCard">
-        <CardHeader
-          style={styles.reducePadding}
-          title={
-            <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-              Amenities
-            </div>
-          }
-        />
+        <CardHeader style={styles.reducePadding} title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>Amenities</div>} />
         <CardText style={styles.reducePadding}>
           <Grid fluid>
             <Row>

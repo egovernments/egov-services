@@ -28,8 +28,7 @@ var dat = {
             isRequired: true,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseType|$..code|$..name',
           },
           {
             name: 'caseType',
@@ -39,8 +38,7 @@ var dat = {
             isRequired: true,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseCategory|$..code|$..name',
           },
           {
             name: 'courtName',
@@ -50,8 +48,7 @@ var dat = {
             isRequired: true,
             isDisabled: true,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=court|$..code|$..name',
           },
           {
             name: 'caseDate',
@@ -75,8 +72,7 @@ var dat = {
               {
                 jsonPath: 'cases[0].departmentPerson',
                 type: 'dropDown',
-                pattern:
-                  '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
+                pattern: '/hr-employee/employees/_search?tenantId=default&departmentId={cases[0].summon.departmentName.id}|$..name|$..name',
               },
             ],
           },
@@ -124,8 +120,7 @@ var dat = {
             isRequired: true,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseStatus|$..code|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=lcms&masterName=caseStatus|$..code|$..name',
           },
           {
             name: 'caseFinalDecision',
@@ -220,19 +215,16 @@ var dat = {
                   name: 'mobileNo',
                   pattern: '',
                   type: 'mobileNumber',
-                  jsonPath:
-                    'cases[0].hearingDetails[0].attendees[0].mobileNumber',
+                  jsonPath: 'cases[0].hearingDetails[0].attendees[0].mobileNumber',
                   isRequired: true,
                   isDisabled: false,
-                  patternErrMsg:
-                    'The Phone number structure is as follows: 999XXXX999 ',
+                  patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
                 },
                 {
                   name: 'address',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'cases[0].hearingDetails[0].attendees[0].address.addressLine1',
+                  jsonPath: 'cases[0].hearingDetails[0].attendees[0].address.addressLine1',
                   isRequired: true,
                   isDisabled: false,
                 },
@@ -298,15 +290,13 @@ var dat = {
                   jsonPath: 'cases[0].hearingDetails[0].judges[0].mobileNumber',
                   isRequired: true,
                   isDisabled: false,
-                  patternErrMsg:
-                    'The Phone number structure is as follows: 999XXXX999 ',
+                  patternErrMsg: 'The Phone number structure is as follows: 999XXXX999 ',
                 },
                 {
                   name: 'address',
                   pattern: '',
                   type: 'text',
-                  jsonPath:
-                    'cases[0].hearingDetails[0].judges[0].address.addressLine1',
+                  jsonPath: 'cases[0].hearingDetails[0].judges[0].address.addressLine1',
                   isRequired: true,
                   isDisabled: false,
                 },

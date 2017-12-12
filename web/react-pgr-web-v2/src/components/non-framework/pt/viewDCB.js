@@ -30,15 +30,10 @@ class ViewDCB extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -55,31 +50,19 @@ class ViewDCB extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -88,37 +71,18 @@ class ViewDCB extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -126,36 +90,12 @@ class ViewDCB extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -168,37 +108,18 @@ class ViewDCB extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -206,36 +127,12 @@ class ViewDCB extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -250,24 +147,13 @@ class ViewDCB extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -275,90 +161,37 @@ class ViewDCB extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
         }
       }
 
-      for (
-        var j = 0;
-        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            var k = 0;
-            k <
-            specs[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
+          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue ==
-              _.get(
-                form,
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
+              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide.length;
-                  a++
-                ) {
-                  this.hideField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].hide[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                  this.hideField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show.length;
-                  a++
-                ) {
-                  this.showField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].show[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                  this.showField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }
@@ -366,14 +199,8 @@ class ViewDCB extends Component {
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -402,13 +229,7 @@ class ViewDCB extends Component {
     };
 
     console.log(query);
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[`dcb.view`].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`dcb.view`].useTimestamp).then(
       function(res) {
         self.props.setFormData(res);
         // console.log("api" + JSON.stringify(res));
@@ -422,18 +243,10 @@ class ViewDCB extends Component {
     this.initData();
 
     var getDemands = {
-      consumerCode:
-        decodeURIComponent(this.props.match.params.searchParam) +
-        '&businessService=PT&receiptRequired=true',
+      consumerCode: decodeURIComponent(this.props.match.params.searchParam) + '&businessService=PT&receiptRequired=true',
     };
 
-    Api.commonApiPost(
-      '/billing-service/demand/_search',
-      getDemands,
-      {},
-      false,
-      true
-    )
+    Api.commonApiPost('/billing-service/demand/_search', getDemands, {}, false, true)
       .then(res => {
         this.setState({
           dcbTableData: res.Demands,
@@ -448,26 +261,12 @@ class ViewDCB extends Component {
   getVal = (path, isDate) => {
     var val = _.get(this.props.formData, path);
 
-    if (
-      isDate &&
-      val &&
-      ((val + '').length == 13 || (val + '').length == 12) &&
-      new Date(Number(val)).getTime() > 0
-    ) {
+    if (isDate && val && ((val + '').length == 13 || (val + '').length == 12) && new Date(Number(val)).getTime() > 0) {
       var _date = new Date(Number(val));
-      return (
-        ('0' + _date.getDate()).slice(-2) +
-        '/' +
-        ('0' + (_date.getMonth() + 1)).slice(-2) +
-        '/' +
-        _date.getFullYear()
-      );
+      return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
     }
     console.log(val);
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean')
       ? val === true ? 'Yes' : val === false ? 'No' : val + ''
       : '';
   };
@@ -515,20 +314,12 @@ class ViewDCB extends Component {
   calculateBalance = (balanceType, item) => {
     var balance = 0;
     if (balanceType == 'tax') {
-      balance =
-        this.calculateTax('taxAmount', item) -
-        this.calculateTax('collectionAmount', item);
+      balance = this.calculateTax('taxAmount', item) - this.calculateTax('collectionAmount', item);
     } else return 0;
     return balance;
   };
   render() {
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-    } = this.props;
+    let { mockData, moduleName, actionName, formData, fieldErrors } = this.props;
     let { handleChange, getVal, addNewCard, removeCard, printer } = this;
     var cthis = this;
     var demandsData = this.state.dcbTableData;
@@ -555,19 +346,9 @@ class ViewDCB extends Component {
           <br />
         </form>
         <div>
-          <div style={{ color: '#354f57', fontSize: 14, marginLeft: '40%' }}>
-            Note: Here Installment is one financial year.
-          </div>
+          <div style={{ color: '#354f57', fontSize: 14, marginLeft: '40%' }}>Note: Here Installment is one financial year.</div>
           <Card className="uiCard">
-            <CardTitle
-              title={
-                <div
-                  style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}
-                >
-                  {translate('pt.create.button.viewdcb')}
-                </div>
-              }
-            />
+            <CardTitle title={<div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('pt.create.button.viewdcb')}</div>} />
             <CardText>
               <Grid fluid>
                 {demandsData && demandsData.length ? (
@@ -584,67 +365,35 @@ class ViewDCB extends Component {
                   >
                     <thead>
                       <tr>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate(
-                            'pt.create.groups.addDemand.fields.installment'
-                          )}
-                        </th>
+                        <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.installment')}</th>
                         <th colSpan="2" style={{ textAlign: 'center' }}>
                           {translate('pt.create.groups.addDemand.demand')}
                         </th>
                         <th colSpan="2" style={{ textAlign: 'center' }}>
-                          {translate(
-                            'pt.create.groups.addDemand.fields.collection'
-                          )}
+                          {translate('pt.create.groups.addDemand.fields.collection')}
                         </th>
                         <th colSpan="2" style={{ textAlign: 'center' }}>
-                          {translate(
-                            'pt.create.groups.addDemand.fields.balance'
-                          )}
+                          {translate('pt.create.groups.addDemand.fields.balance')}
                         </th>
                       </tr>
                       <tr>
                         <th />
-                        <th style={{ textAlign: 'center' }}>
-                          {translate('wc.create.demand.tax')}
-                        </th>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate(
-                            'pt.create.groups.addDemand.fields.penalty'
-                          )}
-                        </th>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate('wc.create.demand.tax')}
-                        </th>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate(
-                            'pt.create.groups.addDemand.fields.penalty'
-                          )}
-                        </th>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate('wc.create.demand.tax')}
-                        </th>
-                        <th style={{ textAlign: 'center' }}>
-                          {translate(
-                            'pt.create.groups.addDemand.fields.penalty'
-                          )}
-                        </th>
+                        <th style={{ textAlign: 'center' }}>{translate('wc.create.demand.tax')}</th>
+                        <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.penalty')}</th>
+                        <th style={{ textAlign: 'center' }}>{translate('wc.create.demand.tax')}</th>
+                        <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.penalty')}</th>
+                        <th style={{ textAlign: 'center' }}>{translate('wc.create.demand.tax')}</th>
+                        <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.penalty')}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {demandsData.map(item => {
                         return (
                           <tr>
-                            <td>
-                              {new Date(item.taxPeriodFrom).getFullYear() +
-                                ' - ' +
-                                new Date(item.taxPeriodTo).getFullYear()}
-                            </td>
+                            <td>{new Date(item.taxPeriodFrom).getFullYear() + ' - ' + new Date(item.taxPeriodTo).getFullYear()}</td>
                             <td>{this.calculateTax('taxAmount', item)}</td>
                             <td>{this.calculateTax('penalty', item)}</td>
-                            <td>
-                              {this.calculateTax('collectionAmount', item)}
-                            </td>
+                            <td>{this.calculateTax('collectionAmount', item)}</td>
                             <td>{this.calculateTax('penalty', item)}</td>
                             <td>{this.calculateBalance('tax', item)}</td>
                             <td>{this.calculateBalance('penalty', item)}</td>
@@ -750,24 +499,12 @@ class HeadwiseDCB extends Component {
                       >
                         <thead>
                           <tr>
-                            <th style={{ textAlign: 'center' }}>
-                              {translate(
-                                'pt.create.groups.addDemand.fields.installment'
-                              )}
-                            </th>
-                            <th
-                              colSpan={demandsData[0].demandDetails.length}
-                              style={{ textAlign: 'center' }}
-                            >
+                            <th style={{ textAlign: 'center' }}>{translate('pt.create.groups.addDemand.fields.installment')}</th>
+                            <th colSpan={demandsData[0].demandDetails.length} style={{ textAlign: 'center' }}>
                               {translate('pt.create.groups.addDemand.demand')}
                             </th>
-                            <th
-                              colSpan={demandsData[0].demandDetails.length}
-                              style={{ textAlign: 'center' }}
-                            >
-                              {translate(
-                                'pt.create.groups.addDemand.fields.collection'
-                              )}
+                            <th colSpan={demandsData[0].demandDetails.length} style={{ textAlign: 'center' }}>
+                              {translate('pt.create.groups.addDemand.fields.collection')}
                             </th>
                           </tr>
                           <tr>
@@ -785,11 +522,7 @@ class HeadwiseDCB extends Component {
                           {demandsData.map(item => {
                             return (
                               <tr>
-                                <td>
-                                  {new Date(item.taxPeriodFrom).getFullYear() +
-                                    ' - ' +
-                                    new Date(item.taxPeriodTo).getFullYear()}
-                                </td>
+                                <td>{new Date(item.taxPeriodFrom).getFullYear() + ' - ' + new Date(item.taxPeriodTo).getFullYear()}</td>
                                 {item.demandDetails.map(obj => {
                                   return <td>{obj.taxAmount}</td>;
                                 })}
@@ -840,9 +573,7 @@ class ReceiptTable extends Component {
         <Card className="uiCard">
           <CardTitle
             title={
-              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>
-                {translate('collection.search.categorytype.collectedReceipts')}
-              </div>
+              <div style={{ color: '#354f57', fontSize: 18, margin: '8px 0' }}>{translate('collection.search.categorytype.collectedReceipts')}</div>
             }
           />
           <CardText>

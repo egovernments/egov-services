@@ -31,8 +31,7 @@ var dat = {
             isRequired: true,
             pattern: '',
             type: 'singleValueList',
-            url:
-              'egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
+            url: 'egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
             isDisabled: false,
             requiredErrMsg: '',
           },
@@ -110,8 +109,7 @@ var dat = {
             isRequired: false,
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=PM&masterName=KpiCategory|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=PM&masterName=KpiCategory|$..id|$..name',
             isDisabled: false,
             requiredErrMsg: '',
           },
@@ -437,8 +435,7 @@ var dat = {
           {
             name: 'updatekpiDepartment',
             jsonPath: 'KPIs[0].department.id',
-            url:
-              '/egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
             label: 'perfManagement.update.KPIs.groups.updateKpiDepartmentBlock',
             pattern: '',
             type: 'singleValueList',
@@ -507,8 +504,7 @@ var dat = {
                 value: 'VALUE',
               },
               {
-                label:
-                  'perfManagement.update.KPIs.groups.updatekpitype.objective',
+                label: 'perfManagement.update.KPIs.groups.updatekpitype.objective',
                 value: 'OBJECTIVE',
               },
             ],
@@ -521,8 +517,7 @@ var dat = {
             isRequired: false,
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/egov-mdms-service/v1/_get?&moduleName=PM&masterName=KpiCategory|$..id|$..name',
+            url: '/egov-mdms-service/v1/_get?&moduleName=PM&masterName=KpiCategory|$..id|$..name',
             isDisabled: false,
             requiredErrMsg: '',
           },

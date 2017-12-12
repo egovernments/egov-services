@@ -13,10 +13,7 @@ export default class UiTextArea extends Component {
           floatingLabelFixed: true,
           floatingLabelText: (
             <span>
-              {item.label}{' '}
-              <span style={{ color: '#FF0000' }}>
-                {item.isRequired ? ' *' : ''}
-              </span>
+              {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </span>
           ),
           floatingLabelStyle: {
@@ -44,11 +41,7 @@ export default class UiTextArea extends Component {
             onChange={e => {
               if (e.target.value) {
                 e.target.value = e.target.value.replace(/^\s*/, '');
-                if (
-                  e.target.value[e.target.value.length - 1] == ' ' &&
-                  e.target.value[e.target.value.length - 2] == ' '
-                )
-                  return;
+                if (e.target.value[e.target.value.length - 1] == ' ' && e.target.value[e.target.value.length - 2] == ' ') return;
               }
               this.props.handler(
                 e,

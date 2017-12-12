@@ -150,10 +150,7 @@ class DefineEscalationTime extends Component {
 
     Api.commonApiPost('workflow/escalation-hours/v1/_search', query, {})
       .then(function(response) {
-        if (
-          response.EscalationTimeType[0] != null &&
-          response.EscalationTimeType[0].id != null
-        ) {
+        if (response.EscalationTimeType[0] != null && response.EscalationTimeType[0].id != null) {
           flag = 1;
           current.setState({
             resultList: response.EscalationTimeType,
@@ -180,12 +177,7 @@ class DefineEscalationTime extends Component {
   };
 
   addEscalation = () => {
-    let {
-      setLoadingStatus,
-      toggleDailogAndSetText,
-      toggleSnackbarAndSetText,
-      emptyProperty,
-    } = this.props;
+    let { setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText, emptyProperty } = this.props;
     setLoadingStatus('loading');
 
     var current = this;
@@ -196,17 +188,13 @@ class DefineEscalationTime extends Component {
         },
         noOfHours: this.props.defineEscalationTime.noOfHours,
         designation: this.props.defineEscalationTime.designation,
-        tenantId: localStorage.getItem('tenantId')
-          ? localStorage.getItem('tenantId')
-          : 'default',
+        tenantId: localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default',
       },
     };
 
     Api.commonApiPost('workflow/escalation-hours/v1/_create', {}, body)
       .then(function(response) {
-        let msg = `${translate('pgr.lbl.escalationstime')} ${translate(
-          'core.lbl.createdsuccessful'
-        )}`;
+        let msg = `${translate('pgr.lbl.escalationstime')} ${translate('core.lbl.createdsuccessful')}`;
         toggleDailogAndSetText(true, msg);
         emptyProperty('noOfHours');
         emptyProperty('designation');
@@ -214,11 +202,7 @@ class DefineEscalationTime extends Component {
           id: current.props.defineEscalationTime.grievanceType.id,
         };
 
-        Api.commonApiPost(
-          'workflow/escalation-hours/v1/_search',
-          searchquery,
-          {}
-        )
+        Api.commonApiPost('workflow/escalation-hours/v1/_search', searchquery, {})
           .then(function(response) {
             if (response.EscalationTimeType[0] != null) {
               flag = 1;
@@ -246,12 +230,7 @@ class DefineEscalationTime extends Component {
   };
 
   updateEscalation = () => {
-    let {
-      setLoadingStatus,
-      toggleDailogAndSetText,
-      toggleSnackbarAndSetText,
-      emptyProperty,
-    } = this.props;
+    let { setLoadingStatus, toggleDailogAndSetText, toggleSnackbarAndSetText, emptyProperty } = this.props;
     setLoadingStatus('loading');
 
     var current = this;
@@ -263,9 +242,7 @@ class DefineEscalationTime extends Component {
         },
         noOfHours: this.props.defineEscalationTime.noOfHours,
         designation: this.props.defineEscalationTime.designation,
-        tenantId: localStorage.getItem('tenantId')
-          ? localStorage.getItem('tenantId')
-          : 'default',
+        tenantId: localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default',
       },
     };
 
@@ -274,18 +251,12 @@ class DefineEscalationTime extends Component {
         let searchquery = {
           id: current.props.defineEscalationTime.grievanceType.id,
         };
-        let msg = `${translate('pgr.lbl.escalationstime')} ${translate(
-          'core.lbl.updatedsuccessful'
-        )}`;
+        let msg = `${translate('pgr.lbl.escalationstime')} ${translate('core.lbl.updatedsuccessful')}`;
         toggleDailogAndSetText(true, msg);
         emptyProperty('noOfHours');
         emptyProperty('designation');
 
-        Api.commonApiPost(
-          'workflow/escalation-hours/v1/_search',
-          searchquery,
-          {}
-        )
+        Api.commonApiPost('workflow/escalation-hours/v1/_search', searchquery, {})
           .then(function(response) {
             if (response.EscalationTimeType[0] != null) {
               flag = 1;
@@ -322,40 +293,18 @@ class DefineEscalationTime extends Component {
 
   deleteObject = index => {
     this.setState({
-      resultList: [
-        ...this.state.resultList.slice(0, index),
-        ...this.state.resultList.slice(index + 1),
-      ],
+      resultList: [...this.state.resultList.slice(0, index), ...this.state.resultList.slice(index + 1)],
     });
   };
 
   render() {
     var current = this;
 
-    let {
-      isFormValid,
-      defineEscalationTime,
-      fieldErrors,
-      handleChange,
-      handleAutoCompleteKeyUp,
-    } = this.props;
+    let { isFormValid, defineEscalationTime, fieldErrors, handleChange, handleAutoCompleteKeyUp } = this.props;
 
-    let {
-      submitForm,
-      localHandleChange,
-      addEscalation,
-      deleteObject,
-      editObject,
-      updateEscalation,
-    } = this;
+    let { submitForm, localHandleChange, addEscalation, deleteObject, editObject, updateEscalation } = this;
 
-    let {
-      isSearchClicked,
-      resultList,
-      escalationForm,
-      designation,
-      editIndex,
-    } = this.state;
+    let { isSearchClicked, resultList, escalationForm, designation, editIndex } = this.state;
 
     const renderBody = function() {
       if (resultList && resultList.length)
@@ -406,11 +355,7 @@ class DefineEscalationTime extends Component {
                     floatingLabelFixed={true}
                     floatingLabelText={translate('pgr.lbl.designation')}
                     fullWidth={true}
-                    value={
-                      defineEscalationTime.designation
-                        ? defineEscalationTime.designation
-                        : ''
-                    }
+                    value={defineEscalationTime.designation ? defineEscalationTime.designation : ''}
                     onChange={(e, index, value) => {
                       var e = {
                         target: {
@@ -423,9 +368,7 @@ class DefineEscalationTime extends Component {
                     <MenuItem value="" primaryText="Select" />
                     {current.state.designation &&
                       current.state.designation.map((e, i) => {
-                        return (
-                          <MenuItem key={i} value={e.id} primaryText={e.name} />
-                        );
+                        return <MenuItem key={i} value={e.id} primaryText={e.name} />;
                       })}
                   </SelectField>
                 </Col>
@@ -436,23 +379,11 @@ class DefineEscalationTime extends Component {
                     floatingLabelStyle={styles.floatingLabelStyle}
                     floatingLabelFixed={true}
                     floatingLabelText={translate('pgr.noof.hours')}
-                    value={
-                      defineEscalationTime.noOfHours
-                        ? defineEscalationTime.noOfHours
-                        : ''
-                    }
-                    errorText={
-                      fieldErrors.noOfHours ? fieldErrors.noOfHours : ''
-                    }
+                    value={defineEscalationTime.noOfHours ? defineEscalationTime.noOfHours : ''}
+                    errorText={fieldErrors.noOfHours ? fieldErrors.noOfHours : ''}
                     maxLength={4}
                     onChange={e => {
-                      handleChange(
-                        e,
-                        'noOfHours',
-                        true,
-                        /^\d{0,4}$/g,
-                        'Please use only numbers'
-                      );
+                      handleChange(e, 'noOfHours', true, /^\d{0,4}$/g, 'Please use only numbers');
                     }}
                     id="noOfHours"
                   />
@@ -484,13 +415,7 @@ class DefineEscalationTime extends Component {
               </div>
             </CardText>
             <CardText>
-              <Table
-                id="searchTable"
-                style={{ color: 'black', fontWeight: 'normal' }}
-                bordered
-                responsive
-                className="table-striped"
-              >
+              <Table id="searchTable" style={{ color: 'black', fontWeight: 'normal' }} bordered responsive className="table-striped">
                 <thead>
                   <tr>
                     <th>No.</th>
@@ -520,8 +445,7 @@ class DefineEscalationTime extends Component {
               title={
                 <div style={styles.headerStyle}>
                   {' '}
-                  {translate('pgr.lbl.create')} / {translate('pgr.lbl.update')}{' '}
-                  {translate('pgr.lbl.escalationstime')}
+                  {translate('pgr.lbl.create')} / {translate('pgr.lbl.update')} {translate('pgr.lbl.escalationstime')}
                 </div>
               }
             />
@@ -536,23 +460,13 @@ class DefineEscalationTime extends Component {
                       floatingLabelText={translate('pgr.lbl.grievance.type')}
                       fullWidth={true}
                       filter={function filter(searchText, key) {
-                        return key
-                          .toLowerCase()
-                          .includes(searchText.toLowerCase());
+                        return key.toLowerCase().includes(searchText.toLowerCase());
                       }}
                       dataSource={this.state.grievanceTypeSource}
                       dataSourceConfig={this.state.dataSourceConfig}
                       onKeyUp={handleAutoCompleteKeyUp}
-                      errorText={
-                        fieldErrors.grievanceType
-                          ? fieldErrors.grievanceType
-                          : ''
-                      }
-                      value={
-                        defineEscalationTime.grievanceType
-                          ? defineEscalationTime.grievanceType
-                          : ''
-                      }
+                      errorText={fieldErrors.grievanceType ? fieldErrors.grievanceType : ''}
+                      value={defineEscalationTime.grievanceType ? defineEscalationTime.grievanceType : ''}
                       ref="grievanceType"
                       onNewRequest={(chosenRequest, index) => {
                         if (index === -1) {
@@ -585,13 +499,7 @@ class DefineEscalationTime extends Component {
           </div>
           {this.state.noData && (
             <Card className="text-center" style={styles.marginStyle}>
-              <CardHeader
-                title={
-                  <strong style={{ color: '#5a3e1b', paddingLeft: 90 }}>
-                    {translate('pgr.lbl.escdetail')}
-                  </strong>
-                }
-              />
+              <CardHeader title={<strong style={{ color: '#5a3e1b', paddingLeft: 90 }}>{translate('pgr.lbl.escdetail')}</strong>} />
               <CardText>
                 <RaisedButton
                   style={{ margin: '10px 0' }}
@@ -707,6 +615,4 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(
-  DefineEscalationTime
-);
+export default connect(mapStateToProps, mapDispatchToProps)(DefineEscalationTime);

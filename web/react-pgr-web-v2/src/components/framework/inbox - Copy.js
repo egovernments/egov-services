@@ -187,15 +187,10 @@ class Inbox extends Component {
       for (var i = 0; configObject && i < configObject.groups.length; i++) {
         configObject.groups[i].label = translate(configObject.groups[i].label);
         for (var j = 0; j < configObject.groups[i].fields.length; j++) {
-          configObject.groups[i].fields[j].label = translate(
-            configObject.groups[i].fields[j].label
-          );
+          configObject.groups[i].fields[j].label = translate(configObject.groups[i].fields[j].label);
         }
 
-        if (
-          configObject.groups[i].children &&
-          configObject.groups[i].children.length
-        ) {
+        if (configObject.groups[i].children && configObject.groups[i].children.length) {
           for (var k = 0; k < configObject.groups[i].children.length; k++) {
             this.setLabelAndReturnRequired(configObject.groups[i].children[k]);
           }
@@ -211,22 +206,14 @@ class Inbox extends Component {
 
     let hasData = false;
 
-    if (
-      type == 'department' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDesignation
-    ) {
+    if (type == 'department' && e.target.value != '' && this.props.workflow.workflowDesignation) {
       console.log(type);
       query = {
         departmentId: e.target.value,
         designationId: this.props.workflow.workflowDesignation,
       };
       hasData = true;
-    } else if (
-      type == 'designation' &&
-      e.target.value != '' &&
-      this.props.workflow.workflowDepartment
-    ) {
+    } else if (type == 'designation' && e.target.value != '' && this.props.workflow.workflowDepartment) {
       console.log(type);
       query = {
         departmentId: this.props.workflow.workflowDepartment,
@@ -259,31 +246,19 @@ class Inbox extends Component {
           var arr = _.get(_form, children[i].groups[j].jsonPath);
           var ind = j;
           var _stringifiedGroup = JSON.stringify(children[i].groups[j]);
-          var regex = new RegExp(
-            children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') +
-              '\\[\\d{1}\\]',
-            'g'
-          );
+          var regex = new RegExp(children[i].groups[j].jsonPath.replace('[', '[').replace(']', ']') + '\\[\\d{1}\\]', 'g');
           for (var k = 1; k < arr.length; k++) {
             j++;
             children[i].groups[j].groups.splice(
               ind + 1,
               0,
-              JSON.parse(
-                _stringifiedGroup.replace(
-                  regex,
-                  children[i].groups[ind].jsonPath + '[' + k + ']'
-                )
-              )
+              JSON.parse(_stringifiedGroup.replace(regex, children[i].groups[ind].jsonPath + '[' + k + ']'))
             );
             children[i].groups[j].groups[ind + 1].index = ind + 1;
           }
         }
 
-        if (
-          children[i].groups[j].children &&
-          children[i].groups[j].children.length
-        ) {
+        if (children[i].groups[j].children && children[i].groups[j].children.length) {
           this.setInitialUpdateChildData(form, children[i].groups[j].children);
         }
       }
@@ -292,37 +267,18 @@ class Inbox extends Component {
 
   hideField(specs, moduleName, actionName, hideObject) {
     if (hideObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            hideObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = true;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = true;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          hideObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = true;
           break;
@@ -330,36 +286,12 @@ class Inbox extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  hideObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = true;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (hideObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = true;
                   break;
                 }
               }
@@ -372,37 +304,18 @@ class Inbox extends Component {
 
   showField(specs, moduleName, actionName, showObject) {
     if (showObject.isField) {
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        for (
-          let j = 0;
-          j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-          j++
-        ) {
-          if (
-            showObject.name ==
-            specs[moduleName + '.' + actionName].groups[i].fields[j].name
-          ) {
-            specs[moduleName + '.' + actionName].groups[i].fields[
-              j
-            ].hide = false;
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
+          if (showObject.name == specs[moduleName + '.' + actionName].groups[i].fields[j].name) {
+            specs[moduleName + '.' + actionName].groups[i].fields[j].hide = false;
             break;
           }
         }
       }
     } else {
       let flag = 0;
-      for (
-        let i = 0;
-        i < specs[moduleName + '.' + actionName].groups.length;
-        i++
-      ) {
-        if (
-          showObject.name == specs[moduleName + '.' + actionName].groups[i].name
-        ) {
+      for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+        if (showObject.name == specs[moduleName + '.' + actionName].groups[i].name) {
           flag = 1;
           specs[moduleName + '.' + actionName].groups[i].hide = false;
           break;
@@ -410,36 +323,12 @@ class Inbox extends Component {
       }
 
       if (flag == 0) {
-        for (
-          let i = 0;
-          i < specs[moduleName + '.' + actionName].groups.length;
-          i++
-        ) {
-          if (
-            specs[moduleName + '.' + actionName].groups[i].children &&
-            specs[moduleName + '.' + actionName].groups[i].children.length
-          ) {
-            for (
-              let j = 0;
-              j <
-              specs[moduleName + '.' + actionName].groups[i].children.length;
-              j++
-            ) {
-              for (
-                let k = 0;
-                k <
-                specs[moduleName + '.' + actionName].groups[i].children[j]
-                  .groups.length;
-                k++
-              ) {
-                if (
-                  showObject.name ==
-                  specs[moduleName + '.' + actionName].groups[i].children[j]
-                    .groups[k].name
-                ) {
-                  specs[moduleName + '.' + actionName].groups[i].children[
-                    j
-                  ].groups[k].hide = false;
+        for (let i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
+          if (specs[moduleName + '.' + actionName].groups[i].children && specs[moduleName + '.' + actionName].groups[i].children.length) {
+            for (let j = 0; j < specs[moduleName + '.' + actionName].groups[i].children.length; j++) {
+              for (let k = 0; k < specs[moduleName + '.' + actionName].groups[i].children[j].groups.length; k++) {
+                if (showObject.name == specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].name) {
+                  specs[moduleName + '.' + actionName].groups[i].children[j].groups[k].hide = false;
                   break;
                 }
               }
@@ -454,24 +343,13 @@ class Inbox extends Component {
     let { setMockData } = this.props;
     let _form = JSON.parse(JSON.stringify(form));
     var ind;
-    for (
-      var i = 0;
-      i < specs[moduleName + '.' + actionName].groups.length;
-      i++
-    ) {
+    for (var i = 0; i < specs[moduleName + '.' + actionName].groups.length; i++) {
       if (specs[moduleName + '.' + actionName].groups[i].multiple) {
-        var arr = _.get(
-          _form,
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-        );
+        var arr = _.get(_form, specs[moduleName + '.' + actionName].groups[i].jsonPath);
         ind = i;
-        var _stringifiedGroup = JSON.stringify(
-          specs[moduleName + '.' + actionName].groups[i]
-        );
+        var _stringifiedGroup = JSON.stringify(specs[moduleName + '.' + actionName].groups[i]);
         var regex = new RegExp(
-          specs[moduleName + '.' + actionName].groups[i].jsonPath
-            .replace(/\[/g, '\\[')
-            .replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
+          specs[moduleName + '.' + actionName].groups[i].jsonPath.replace(/\[/g, '\\[').replace(/\]/g, '\\]') + '\\[\\d{1}\\]',
           'g'
         );
         for (var j = 1; j < arr.length; j++) {
@@ -479,90 +357,37 @@ class Inbox extends Component {
           specs[moduleName + '.' + actionName].groups.splice(
             ind + 1,
             0,
-            JSON.parse(
-              _stringifiedGroup.replace(
-                regex,
-                specs[moduleName + '.' + actionName].groups[ind].jsonPath +
-                  '[' +
-                  j +
-                  ']'
-              )
-            )
+            JSON.parse(_stringifiedGroup.replace(regex, specs[moduleName + '.' + actionName].groups[ind].jsonPath + '[' + j + ']'))
           );
           specs[moduleName + '.' + actionName].groups[ind + 1].index = ind + 1;
         }
       }
 
-      for (
-        var j = 0;
-        j < specs[moduleName + '.' + actionName].groups[i].fields.length;
-        j++
-      ) {
+      for (var j = 0; j < specs[moduleName + '.' + actionName].groups[i].fields.length; j++) {
         if (
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields &&
-          specs[moduleName + '.' + actionName].groups[i].fields[j]
-            .showHideFields.length
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields &&
+          specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length
         ) {
-          for (
-            var k = 0;
-            k <
-            specs[moduleName + '.' + actionName].groups[i].fields[j]
-              .showHideFields.length;
-            k++
-          ) {
+          for (var k = 0; k < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields.length; k++) {
             if (
-              specs[moduleName + '.' + actionName].groups[i].fields[j]
-                .showHideFields[k].ifValue ==
-              _.get(
-                form,
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .jsonPath
-              )
+              specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].ifValue ==
+              _.get(form, specs[moduleName + '.' + actionName].groups[i].fields[j].jsonPath)
             ) {
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].hide.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].hide.length;
-                  a++
-                ) {
-                  this.hideField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].hide[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide.length; a++) {
+                  this.hideField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].hide[a]);
                 }
               }
 
               if (
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show &&
-                specs[moduleName + '.' + actionName].groups[i].fields[j]
-                  .showHideFields[k].show.length
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show &&
+                specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length
               ) {
-                for (
-                  var a = 0;
-                  a <
-                  specs[moduleName + '.' + actionName].groups[i].fields[j]
-                    .showHideFields[k].show.length;
-                  a++
-                ) {
-                  this.showField(
-                    specs,
-                    moduleName,
-                    actionName,
-                    specs[moduleName + '.' + actionName].groups[i].fields[j]
-                      .showHideFields[k].show[a]
-                  );
+                for (var a = 0; a < specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show.length; a++) {
+                  this.showField(specs, moduleName, actionName, specs[moduleName + '.' + actionName].groups[i].fields[j].showHideFields[k].show[a]);
                 }
               }
             }
@@ -570,14 +395,8 @@ class Inbox extends Component {
         }
       }
 
-      if (
-        specs[moduleName + '.' + actionName].groups[ind || i].children &&
-        specs[moduleName + '.' + actionName].groups[ind || i].children.length
-      ) {
-        this.setInitialUpdateChildData(
-          form,
-          specs[moduleName + '.' + actionName].groups[ind || i].children
-        );
+      if (specs[moduleName + '.' + actionName].groups[ind || i].children && specs[moduleName + '.' + actionName].groups[ind || i].children.length) {
+        this.setInitialUpdateChildData(form, specs[moduleName + '.' + actionName].groups[ind || i].children);
       }
     }
 
@@ -592,52 +411,28 @@ class Inbox extends Component {
       if (hash.length == 4) {
         specifications = require(`./specs/${hash[2]}/${hash[2]}`).default;
       } else {
-        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`)
-          .default;
+        specifications = require(`./specs/${hash[2]}/master/${hash[3]}`).default;
       }
     } catch (e) {}
 
-    let {
-      setMetaData,
-      setModuleName,
-      setActionName,
-      setMockData,
-      workflow,
-    } = this.props;
+    let { setMetaData, setModuleName, setActionName, setMockData, workflow } = this.props;
     let hashLocation = window.location.hash;
     let self = this;
-    let obj =
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ];
+    let obj = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`];
     self.setLabelAndReturnRequired(obj);
     setMetaData(specifications);
     setMockData(JSON.parse(JSON.stringify(specifications)));
     setModuleName(hashLocation.split('/')[2]);
     setActionName(hashLocation.split('/')[1]);
     //Get view form data
-    var url = specifications[
-      `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-    ].url.split('?')[0];
+    var url = specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].url.split('?')[0];
     var hash = window.location.hash.split('/');
     var value = hash.length == 4 ? hash[3] : hash[4];
     var query = {
-      [specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].url
-        .split('?')[1]
-        .split('=')[0]]: value,
+      [specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].url.split('?')[1].split('=')[0]]: value,
     };
 
-    Api.commonApiPost(
-      url,
-      query,
-      {},
-      false,
-      specifications[
-        `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-      ].useTimestamp
-    ).then(
+    Api.commonApiPost(url, query, {}, false, specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].useTimestamp).then(
       function(res) {
         current.setState({
           searchResult: res.properties,
@@ -648,21 +443,14 @@ class Inbox extends Component {
           workflow.workflowDepartment = workflowDetails.department || null;
           workflow.workflowDesignation = workflowDetails.designation || null;
           workflow.approver = workflowDetails.assignee || null;
-          workflow.initiatorPosition =
-            workflowDetails.initiatorPosition || null;
+          workflow.initiatorPosition = workflowDetails.initiatorPosition || null;
         }
 
         var query = {
           id: res.properties[0].propertyDetail.stateId,
         };
 
-        Api.commonApiPost(
-          'egov-common-workflows/process/_search',
-          query,
-          {},
-          false,
-          true
-        )
+        Api.commonApiPost('egov-common-workflows/process/_search', query, {}, false, true)
           .then(res => {
             console.log(res);
 
@@ -689,10 +477,7 @@ class Inbox extends Component {
                       response.Designation.unshift({ id: -1, name: 'None' });
                       current.setState({
                         ...current.state,
-                        designation: [
-                          ...current.state.designation,
-                          ...response.Designation,
-                        ],
+                        designation: [...current.state.designation, ...response.Designation],
                       });
                     })
                     .catch(err => {
@@ -733,9 +518,7 @@ class Inbox extends Component {
           JSON.parse(JSON.stringify(specifications)),
           hashLocation.split('/')[2],
           hashLocation.split('/')[1],
-          specifications[
-            `${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`
-          ].objectName
+          specifications[`${hashLocation.split('/')[2]}.${hashLocation.split('/')[1]}`].objectName
         );
       },
       function(err) {}
@@ -748,10 +531,10 @@ class Inbox extends Component {
 
     var current = this;
 
-    Api.commonApiPost(
-      'egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName',
-      { boundaryTypeName: 'LOCALITY', hierarchyTypeName: 'LOCATION' }
-    )
+    Api.commonApiPost('egov-location/boundarys/boundariesByBndryTypeNameAndHierarchyTypeName', {
+      boundaryTypeName: 'LOCALITY',
+      hierarchyTypeName: 'LOCATION',
+    })
       .then(res => {
         current.setState({ locality: res.Boundary });
       })
@@ -804,15 +587,12 @@ class Inbox extends Component {
     };
 
     if (actionName == 'Forward') {
-      workFlowDetails.assignee =
-        getPosition(this.state.approver, workflow.approver) || null;
-      workFlowDetails.initiatorPosition =
-        this.state.process.initiatorPosition || null;
+      workFlowDetails.assignee = getPosition(this.state.approver, workflow.approver) || null;
+      workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
       localStorage.setItem('inboxStatus', 'Forwarded');
     } else if (actionName == 'Approve') {
       workFlowDetails.assignee = this.state.process.initiatorPosition || null;
-      workFlowDetails.initiatorPosition =
-        this.state.process.initiatorPosition || null;
+      workFlowDetails.initiatorPosition = this.state.process.initiatorPosition || null;
       localStorage.setItem('inboxStatus', 'Approved');
     } else if (actionName == 'Reject') {
       workFlowDetails.assignee = this.state.process.initiatorPosition || null;
@@ -820,18 +600,10 @@ class Inbox extends Component {
     } else if (actionName == 'Print Notice') {
       var body = {
         upicNo: data[0].upicNumber,
-        tenantId: localStorage.getItem('tenantId')
-          ? localStorage.getItem('tenantId')
-          : 'default',
+        tenantId: localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default',
       };
 
-      Api.commonApiPost(
-        'pt-property/properties/specialnotice/_generate',
-        {},
-        body,
-        false,
-        true
-      )
+      Api.commonApiPost('pt-property/properties/specialnotice/_generate', {}, body, false, true)
         .then(res => {
           currentThis.setState({
             specialNotice: res.notice,
@@ -840,10 +612,7 @@ class Inbox extends Component {
 
           var taxHeadsArray = [];
 
-          if (
-            res.notice.hasOwnProperty('taxDetails') &&
-            res.notice.taxDetails.hasOwnProperty('headWiseTaxes')
-          ) {
+          if (res.notice.hasOwnProperty('taxDetails') && res.notice.taxDetails.hasOwnProperty('headWiseTaxes')) {
             res.notice.taxDetails.headWiseTaxes.map((item, index) => {
               taxHeadsArray.push(item.taxName);
             });
@@ -858,13 +627,7 @@ class Inbox extends Component {
             code: taxHeadsArray,
           };
 
-          Api.commonApiPost(
-            '/billing-service/taxheads/_search',
-            query,
-            {},
-            false,
-            true
-          )
+          Api.commonApiPost('/billing-service/taxheads/_search', query, {}, false, true)
             .then(res => {
               currentThis.setState({
                 taxHeads: res.TaxHeadMasters,
@@ -920,12 +683,7 @@ class Inbox extends Component {
 
   getVal = path => {
     var val = _.get(this.props.formData, path);
-    return typeof val != 'undefined' &&
-      (typeof val == 'string' ||
-        typeof val == 'number' ||
-        typeof val == 'boolean')
-      ? val + ''
-      : '';
+    return typeof val != 'undefined' && (typeof val == 'string' || typeof val == 'number' || typeof val == 'boolean') ? val + '' : '';
   };
 
   generatePDF = () => {
@@ -965,39 +723,20 @@ class Inbox extends Component {
     const renderOption = function(list, listName = '') {
       if (list) {
         return list.map(item => {
-          return (
-            <MenuItem key={item.id} value={item.id} primaryText={item.name} />
-          );
+          return <MenuItem key={item.id} value={item.id} primaryText={item.name} />;
         });
       }
     };
 
     var current = this;
 
-    let {
-      mockData,
-      moduleName,
-      actionName,
-      formData,
-      fieldErrors,
-      workflow,
-      handleChange,
-    } = this.props;
-    let {
-      getVal,
-      addNewCard,
-      removeCard,
-      printer,
-      handleWorkFlowChange,
-    } = this;
+    let { mockData, moduleName, actionName, formData, fieldErrors, workflow, handleChange } = this.props;
+    let { getVal, addNewCard, removeCard, printer, handleWorkFlowChange } = this;
 
     const renderTable = function() {
       if (moduleName && actionName && formData && formData[objectName]) {
         var objectName = mockData[`${moduleName}.${actionName}`].objectName;
-        if (
-          formData[objectName].documents &&
-          formData[objectName].documents.length
-        ) {
+        if (formData[objectName].documents && formData[objectName].documents.length) {
           var dataList = {
             resultHeader: ['#', 'Name', 'File'],
             resultValues: [],
@@ -1034,9 +773,7 @@ class Inbox extends Component {
                 handler={''}
                 getVal={getVal}
                 fieldErrors={fieldErrors}
-                useTimestamp={
-                  mockData[`${moduleName}.${actionName}`].useTimestamp || false
-                }
+                useTimestamp={mockData[`${moduleName}.${actionName}`].useTimestamp || false}
                 addNewCard={''}
                 removeCard={''}
                 screen="view"
@@ -1070,28 +807,18 @@ class Inbox extends Component {
                           className="fullWidth selectOption"
                           floatingLabelText={
                             <span>
-                              {translate(
-                                'pt.create.groups.workflow.departmentName'
-                              )}
+                              {translate('pt.create.groups.workflow.departmentName')}
                               <span style={{ color: '#FF0000' }}> *</span>
                             </span>
                           }
                           errorText={
                             fieldErrors.workflowDepartment ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.workflowDepartment}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.workflowDepartment}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            workflow.workflowDepartment
-                              ? workflow.workflowDepartment
-                              : ''
-                          }
+                          value={workflow.workflowDepartment ? workflow.workflowDepartment : ''}
                           onChange={(event, index, value) => {
                             value == -1 ? (value = '') : '';
                             var e = {
@@ -1102,9 +829,7 @@ class Inbox extends Component {
                             handleWorkFlowChange(e, 'department');
                             handleChange(e, 'workflowDepartment', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
@@ -1117,28 +842,18 @@ class Inbox extends Component {
                           className="fullWidth selectOption"
                           floatingLabelText={
                             <span>
-                              {translate(
-                                'pt.create.groups.workflow.designationName'
-                              )}
+                              {translate('pt.create.groups.workflow.designationName')}
                               <span style={{ color: '#FF0000' }}> *</span>
                             </span>
                           }
                           errorText={
                             fieldErrors.workflowDesignation ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.workflowDesignation}
-                              </span>
+                              <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.workflowDesignation}</span>
                             ) : (
                               ''
                             )
                           }
-                          value={
-                            workflow.workflowDesignation
-                              ? workflow.workflowDesignation
-                              : ''
-                          }
+                          value={workflow.workflowDesignation ? workflow.workflowDesignation : ''}
                           onChange={(event, index, value) => {
                             value == -1 ? (value = '') : '';
                             var e = {
@@ -1149,9 +864,7 @@ class Inbox extends Component {
                             handleWorkFlowChange(e, 'designation');
                             handleChange(e, 'workflowDesignation', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
@@ -1164,23 +877,11 @@ class Inbox extends Component {
                           className="fullWidth selectOption"
                           floatingLabelText={
                             <span>
-                              {translate(
-                                'pt.create.groups.workflow.approverName'
-                              )}
+                              {translate('pt.create.groups.workflow.approverName')}
                               <span style={{ color: '#FF0000' }}> *</span>
                             </span>
                           }
-                          errorText={
-                            fieldErrors.approver ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -41 }}
-                              >
-                                {fieldErrors.approver}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          errorText={fieldErrors.approver ? <span style={{ position: 'absolute', bottom: -41 }}>{fieldErrors.approver}</span> : ''}
                           value={workflow.approver ? workflow.approver : ''}
                           onChange={(event, index, value) => {
                             value == -1 ? (value = '') : '';
@@ -1191,9 +892,7 @@ class Inbox extends Component {
                             };
                             handleChange(e, 'approver', true, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
@@ -1204,27 +903,13 @@ class Inbox extends Component {
                       <Col xs={12} md={3} sm={6}>
                         <TextField
                           className="fullWidth"
-                          floatingLabelText={translate(
-                            'pt.create.groups.workflow.comment'
-                          )}
-                          errorText={
-                            fieldErrors.comments ? (
-                              <span
-                                style={{ position: 'absolute', bottom: -13 }}
-                              >
-                                {fieldErrors.comments}
-                              </span>
-                            ) : (
-                              ''
-                            )
-                          }
+                          floatingLabelText={translate('pt.create.groups.workflow.comment')}
+                          errorText={fieldErrors.comments ? <span style={{ position: 'absolute', bottom: -13 }}>{fieldErrors.comments}</span> : ''}
                           value={workflow.comments ? workflow.comments : ''}
                           onChange={e => {
                             handleChange(e, 'comments', false, '');
                           }}
-                          floatingLabelFocusStyle={
-                            styles.floatingLabelFocusStyle
-                          }
+                          floatingLabelFocusStyle={styles.floatingLabelFocusStyle}
                           underlineStyle={styles.underlineStyle}
                           underlineFocusStyle={styles.underlineFocusStyle}
                           floatingLabelStyle={{ color: 'rgba(0,0,0,0.5)' }}
@@ -1241,11 +926,7 @@ class Inbox extends Component {
           {true && (
             <Card className="uiCard" id="specialNotice">
               <CardText>
-                <Table
-                  responsive
-                  style={{ fontSize: 'bold', width: '100%' }}
-                  condensed
-                >
+                <Table responsive style={{ fontSize: 'bold', width: '100%' }} condensed>
                   <tbody>
                     <tr>
                       <td style={{ textAlign: 'left' }}>ULB Logo</td>
@@ -1258,23 +939,14 @@ class Inbox extends Component {
                     <tr>
                       <td style={{ textAlign: 'center' }} colSpan={3}>
                         <b>Special Notice</b>
-                        <p>
-                          (मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे
-                          अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )
-                        </p>
+                        <p>(मुवंई प्रांतिक महानगरपालिका अधिनियम 1949 चे अनुसूचीतील प्रकरण 8 अधिनियम 44, 45 व 46 अन्वये )</p>
                       </td>
                     </tr>
                     <tr>
                       <td style={{ textAlign: 'right' }} colSpan={3}>
-                        Date / दिनांक:{' '}
-                        {this.state.specialNotice.hasOwnProperty(
-                          'noticeDate'
-                        ) && this.state.specialNotice.noticeDate}
+                        Date / दिनांक: {this.state.specialNotice.hasOwnProperty('noticeDate') && this.state.specialNotice.noticeDate}
                         <br />
-                        Notice No. / नोटीस क्रं :{' '}
-                        {this.state.specialNotice.hasOwnProperty(
-                          'noticeNumber'
-                        ) && this.state.specialNotice.noticeNumber}
+                        Notice No. / नोटीस क्रं : {this.state.specialNotice.hasOwnProperty('noticeNumber') && this.state.specialNotice.noticeNumber}
                       </td>
                     </tr>
                     <tr>
@@ -1285,17 +957,13 @@ class Inbox extends Component {
                     <tr>
                       <td style={{ textAlign: 'left' }} colSpan={3}>
                         {this.state.specialNotice.hasOwnProperty('owners') &&
-                          this.state.specialNotice.owners.map(
-                            (owner, index) => {
-                              return <span key={index}>{owner.name}</span>;
-                            }
-                          )}
+                          this.state.specialNotice.owners.map((owner, index) => {
+                            return <span key={index}>{owner.name}</span>;
+                          })}
                         <br />
                         {this.state.specialNotice.hasOwnProperty('address') ? (
                           this.state.specialNotice.address.addressNumber ? (
-                            <span>
-                              {this.state.specialNotice.address.addressNumber}
-                            </span>
+                            <span>{this.state.specialNotice.address.addressNumber}</span>
                           ) : (
                             ''
                           )
@@ -1304,13 +972,7 @@ class Inbox extends Component {
                         )}
                         {this.state.specialNotice.hasOwnProperty('address') ? (
                           this.state.specialNotice.address.addressLine1 ? (
-                            <span>
-                              ,{' '}
-                              {getNameById(
-                                this.state.locality,
-                                this.state.specialNotice.address.addressLine1
-                              )}
-                            </span>
+                            <span>, {getNameById(this.state.locality, this.state.specialNotice.address.addressLine1)}</span>
                           ) : (
                             ''
                           )
@@ -1319,9 +981,7 @@ class Inbox extends Component {
                         )}
                         {this.state.specialNotice.hasOwnProperty('address') ? (
                           this.state.specialNotice.address.addressLine2 ? (
-                            <span>
-                              , {this.state.specialNotice.address.addressLine2}
-                            </span>
+                            <span>, {this.state.specialNotice.address.addressLine2}</span>
                           ) : (
                             ''
                           )
@@ -1330,9 +990,7 @@ class Inbox extends Component {
                         )}
                         {this.state.specialNotice.hasOwnProperty('address') ? (
                           this.state.specialNotice.address.landmark ? (
-                            <span>
-                              , {this.state.specialNotice.address.landmark}
-                            </span>
+                            <span>, {this.state.specialNotice.address.landmark}</span>
                           ) : (
                             ''
                           )
@@ -1341,9 +999,7 @@ class Inbox extends Component {
                         )}
                         {this.state.specialNotice.hasOwnProperty('address') ? (
                           this.state.specialNotice.address.city ? (
-                            <span>
-                              , {this.state.specialNotice.address.city}
-                            </span>
+                            <span>, {this.state.specialNotice.address.city}</span>
                           ) : (
                             ''
                           )
@@ -1354,44 +1010,27 @@ class Inbox extends Component {
                     </tr>
                     <tr>
                       <td colSpan={3} style={{ textAlign: 'center' }}>
-                        Subject /विषय : Special Notice – New Assessment /
-                        Special Notice – <br />Reassessment Reference / संदर्भ :
-                        आपला अर्ज क्रमांक{' '}
-                        {this.state.specialNotice.hasOwnProperty(
-                          'applicationNo'
-                        ) && this.state.specialNotice.applicationNo}{' '}
-                        दिनांक{' '}
-                        {this.state.specialNotice.hasOwnProperty(
-                          'applicationDate'
-                        ) && this.state.specialNotice.applicationDate}
+                        Subject /विषय : Special Notice – New Assessment / Special Notice – <br />Reassessment Reference / संदर्भ : आपला अर्ज क्रमांक{' '}
+                        {this.state.specialNotice.hasOwnProperty('applicationNo') && this.state.specialNotice.applicationNo} दिनांक{' '}
+                        {this.state.specialNotice.hasOwnProperty('applicationDate') && this.state.specialNotice.applicationDate}
                       </td>
                     </tr>
                     <tr>
                       <td colSpan={3}>
                         महोद्य / महोद्या ,<br />
-                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय
-                        विषयांन्वये कळविण्यात येते की, आपल्या मालमत्तेची नवीन /
-                        सुधारीत कर आकारणी करण्यात आलेली आहे. मालमत्ता क्रमांक{' '}
-                        {this.state.specialNotice.hasOwnProperty('upicNo') &&
-                          this.state.specialNotice.upicNo},{' '}
+                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;संदर्भिय विषयांन्वये
+                        कळविण्यात येते की, आपल्या मालमत्तेची नवीन / सुधारीत कर आकारणी करण्यात आलेली आहे. मालमत्ता क्रमांक{' '}
+                        {this.state.specialNotice.hasOwnProperty('upicNo') && this.state.specialNotice.upicNo},{' '}
                         {this.state.specialNotice.hasOwnProperty('owners') &&
-                          this.state.specialNotice.owners.map(
-                            (owner, index) => {
-                              return <span key={index}>{owner.name}</span>;
-                            }
-                          )}{' '}
-                        यांच्या नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील
-                        खालीलप्रमाणे आहे.
+                          this.state.specialNotice.owners.map((owner, index) => {
+                            return <span key={index}>{owner.name}</span>;
+                          })}{' '}
+                        यांच्या नावे नोंद असून, मालमत्ता कर आकारणीचा तपशील खालीलप्रमाणे आहे.
                       </td>
                     </tr>
                     <tr>
                       <td colSpan={3}>
-                        <Table
-                          responsive
-                          style={{ fontSize: 'bold', width: '100%' }}
-                          bordered
-                          condensed
-                        >
+                        <Table responsive style={{ fontSize: 'bold', width: '100%' }} bordered condensed>
                           <thead>
                             <tr>
                               <th>Floor</th>
@@ -1404,32 +1043,18 @@ class Inbox extends Component {
                             </tr>
                           </thead>
                           <tbody>
-                            {this.state.specialNotice.hasOwnProperty(
-                              'floors'
-                            ) &&
-                              this.state.specialNotice.floors.map(
-                                (item, index) => (
-                                  <tr key={index}>
-                                    <td>{item.floorNo || ''}</td>
-                                    <td>{item.unitDetails || ''}</td>
-                                    <td>
-                                      {getNameByCode(
-                                        this.state.usages,
-                                        item.usage
-                                      ) || ''}
-                                    </td>
-                                    <td>
-                                      {getNameByCode(
-                                        this.state.structureclasses,
-                                        item.construction
-                                      ) || ''}
-                                    </td>
-                                    <td>{item.assessableArea || ''}</td>
-                                    <td>{item.alv || ''}</td>
-                                    <td>{item.rv || ''}</td>
-                                  </tr>
-                                )
-                              )}
+                            {this.state.specialNotice.hasOwnProperty('floors') &&
+                              this.state.specialNotice.floors.map((item, index) => (
+                                <tr key={index}>
+                                  <td>{item.floorNo || ''}</td>
+                                  <td>{item.unitDetails || ''}</td>
+                                  <td>{getNameByCode(this.state.usages, item.usage) || ''}</td>
+                                  <td>{getNameByCode(this.state.structureclasses, item.construction) || ''}</td>
+                                  <td>{item.assessableArea || ''}</td>
+                                  <td>{item.alv || ''}</td>
+                                  <td>{item.rv || ''}</td>
+                                </tr>
+                              ))}
                           </tbody>
                         </Table>
                       </td>
@@ -1441,12 +1066,7 @@ class Inbox extends Component {
                     </tr>
                     <tr>
                       <td colSpan={3}>
-                        <Table
-                          responsive
-                          style={{ fontSize: 'bold', width: '50%' }}
-                          bordered
-                          condensed
-                        >
+                        <Table responsive style={{ fontSize: 'bold', width: '50%' }} bordered condensed>
                           <thead>
                             <tr>
                               <th>Tax Description</th>
@@ -1454,44 +1074,35 @@ class Inbox extends Component {
                             </tr>
                           </thead>
                           <tbody>
-                            {this.state.specialNotice.taxDetails.hasOwnProperty(
-                              'headWiseTaxes'
-                            ) &&
-                              this.state.specialNotice.taxDetails.headWiseTaxes.map(
-                                (item, index) => {
-                                  return (
-                                    <tr key={index}>
-                                      <td>
-                                        {this.state.taxHeads.length != 0 &&
-                                          this.state.taxHeads.map((e, i) => {
-                                            if (e.code == item.taxName) {
-                                              return (
-                                                <span
-                                                  key={i}
-                                                  style={{ fontWeight: 500 }}
-                                                >
-                                                  {e.name ? e.name : 'NA'}
-                                                </span>
-                                              );
-                                            }
-                                          })}
-                                      </td>
-                                      <td>{item.taxValue}</td>
-                                    </tr>
-                                  );
-                                }
-                              )}
+                            {this.state.specialNotice.taxDetails.hasOwnProperty('headWiseTaxes') &&
+                              this.state.specialNotice.taxDetails.headWiseTaxes.map((item, index) => {
+                                return (
+                                  <tr key={index}>
+                                    <td>
+                                      {this.state.taxHeads.length != 0 &&
+                                        this.state.taxHeads.map((e, i) => {
+                                          if (e.code == item.taxName) {
+                                            return (
+                                              <span key={i} style={{ fontWeight: 500 }}>
+                                                {e.name ? e.name : 'NA'}
+                                              </span>
+                                            );
+                                          }
+                                        })}
+                                    </td>
+                                    <td>{item.taxValue}</td>
+                                  </tr>
+                                );
+                              })}
                           </tbody>
                         </Table>
                       </td>
                     </tr>
                     <tr>
                       <td colSpan={3}>
-                        सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या
-                        पासून 1 महिन्याचे मुदतीचे आत मुख्यधिकारी यांचकडे फेर
-                        तपासणी करता अर्ज करावा. जर 1 महिन्याचे आत सदरहून आकारणी
-                        विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या
-                        प्रमाणे आकारणी कायम करण्यात येईल, याची नोंद घ्यावी.
+                        सदर आकारणी जर तुम्हाला मान्य नसेल तर ही नोटीस मिळाल्या पासून 1 महिन्याचे मुदतीचे आत मुख्यधिकारी यांचकडे फेर तपासणी करता अर्ज
+                        करावा. जर 1 महिन्याचे आत सदरहून आकारणी विरुध्द तक्रार अर्ज प्राप्त झाला नाही तर वर नमुद केल्या प्रमाणे आकारणी कायम करण्यात
+                        येईल, याची नोंद घ्यावी.
                       </td>
                     </tr>
                     <tr>
@@ -1507,22 +1118,20 @@ class Inbox extends Component {
           )}
           {this.state.buttons.hasOwnProperty('attributes') &&
             this.state.buttons.attributes.validActions.values.length > 0 &&
-            this.state.buttons.attributes.validActions.values.map(
-              (item, index) => {
-                return (
-                  <RaisedButton
-                    key={index}
-                    type="button"
-                    primary={true}
-                    label={item.name}
-                    style={{ margin: '0 5px' }}
-                    onClick={() => {
-                      this.updateInbox(item.name, current.state.buttons.status);
-                    }}
-                  />
-                );
-              }
-            )}
+            this.state.buttons.attributes.validActions.values.map((item, index) => {
+              return (
+                <RaisedButton
+                  key={index}
+                  type="button"
+                  primary={true}
+                  label={item.name}
+                  style={{ margin: '0 5px' }}
+                  onClick={() => {
+                    this.updateInbox(item.name, current.state.buttons.status);
+                  }}
+                />
+              );
+            })}
         </div>
       </div>
     );

@@ -35,16 +35,10 @@ class ShowForm extends Component {
     }
 
     // console.log(metaData);
-    if (
-      metaData.hasOwnProperty('reportDetails') &&
-      metaData.reportDetails.searchParams.length > 0
-    ) {
+    if (metaData.hasOwnProperty('reportDetails') && metaData.reportDetails.searchParams.length > 0) {
       if (!e.target.value) {
         for (var l = 0; l < metaData.reportDetails.searchParams.length; l++) {
-          if (
-            metaData.reportDetails.searchParams[l].type == 'url' &&
-            metaData.reportDetails.searchParams[l].pattern.search(property) > -1
-          ) {
+          if (metaData.reportDetails.searchParams[l].type == 'url' && metaData.reportDetails.searchParams[l].pattern.search(property) > -1) {
             metaData.reportDetails.searchParams[l].defaultValue = {};
           }
         }
@@ -54,30 +48,16 @@ class ShowForm extends Component {
       for (var i = 0; i < metaData.reportDetails.searchParams.length; i++) {
         if (
           metaData.reportDetails.searchParams[i].type == 'url' &&
-          (typeof metaData.reportDetails.searchParams[i].defaultValue !=
-            'object' ||
-            metaData.reportDetails.searchParams[i].hasOwnProperty('pattern'))
+          (typeof metaData.reportDetails.searchParams[i].defaultValue != 'object' || metaData.reportDetails.searchParams[i].hasOwnProperty('pattern'))
         ) {
-          if (
-            !metaData.reportDetails.searchParams[i].hasOwnProperty('pattern')
-          ) {
-            metaData.reportDetails.searchParams[i]['pattern'] =
-              metaData.reportDetails.searchParams[i].defaultValue;
+          if (!metaData.reportDetails.searchParams[i].hasOwnProperty('pattern')) {
+            metaData.reportDetails.searchParams[i]['pattern'] = metaData.reportDetails.searchParams[i].defaultValue;
           }
 
-          if (
-            metaData.reportDetails.searchParams[i].pattern.indexOf(
-              '{' + property + '}'
-            ) == -1
-          )
-            continue;
+          if (metaData.reportDetails.searchParams[i].pattern.indexOf('{' + property + '}') == -1) continue;
 
-          if (
-            metaData.reportDetails.searchParams[i].pattern.search(property) > -1
-          ) {
-            let splitArray = metaData.reportDetails.searchParams[
-              i
-            ].pattern.split('?');
+          if (metaData.reportDetails.searchParams[i].pattern.search(property) > -1) {
+            let splitArray = metaData.reportDetails.searchParams[i].pattern.split('?');
             let url = splitArray[0];
             let queryString = splitArray[1].split('|')[0].split('&');
             let queryJSON = {};
@@ -102,20 +82,9 @@ class ShowForm extends Component {
                 for (var k = 0; k < keys.length; k++) {
                   defaultValue[keys[k]] = values[k];
                 }
-                for (
-                  var l = 0;
-                  l < metaData.reportDetails.searchParams.length;
-                  l++
-                ) {
-                  if (
-                    metaData.reportDetails.searchParams[l].type == 'url' &&
-                    metaData.reportDetails.searchParams[l].pattern.search(
-                      property
-                    ) > -1
-                  ) {
-                    metaData.reportDetails.searchParams[
-                      l
-                    ].defaultValue = defaultValue;
+                for (var l = 0; l < metaData.reportDetails.searchParams.length; l++) {
+                  if (metaData.reportDetails.searchParams[l].type == 'url' && metaData.reportDetails.searchParams[l].pattern.search(property) > -1) {
+                    metaData.reportDetails.searchParams[l].defaultValue = defaultValue;
                   }
                 }
                 setMetaData(metaData);
@@ -173,10 +142,7 @@ class ShowForm extends Component {
         this.props.handleChange(e, field, required, '');
         this.setState({ datefield: field });
         this.setState({
-          dateError:
-            field === 'toDate'
-              ? translate('pgr.lbl.dategreater')
-              : translate('pgr.lbl.datelesser'),
+          dateError: field === 'toDate' ? translate('pgr.lbl.dategreater') : translate('pgr.lbl.datelesser'),
         });
       }
     }
@@ -186,12 +152,7 @@ class ShowForm extends Component {
     let { currentThis } = this;
     let { metaData, searchForm } = this.props;
     // console.log(metaData);
-    if (
-      !_.isEmpty(metaData) &&
-      metaData.reportDetails &&
-      metaData.reportDetails.searchParams &&
-      metaData.reportDetails.searchParams.length > 0
-    ) {
+    if (!_.isEmpty(metaData) && metaData.reportDetails && metaData.reportDetails.searchParams && metaData.reportDetails.searchParams.length > 0) {
       return metaData.reportDetails.searchParams.map((item, index) => {
         item['value'] = _.isEmpty(searchForm) ? '' : searchForm[item.name];
         return (
@@ -210,19 +171,14 @@ class ShowForm extends Component {
 
   componentWillReceiveProps(nextProps) {
     let { changeButtonText, clearReportHistory } = this.props;
-    if (
-      nextProps.metaData.reportDetails &&
-      nextProps.metaData.reportDetails !== this.props.metaData.reportDetails
-    ) {
+    if (nextProps.metaData.reportDetails && nextProps.metaData.reportDetails !== this.props.metaData.reportDetails) {
       changeButtonText('Generate Report');
       this.setState({
         reportName: nextProps.metaData.reportDetails.reportName,
       });
       this.setState({ moduleName: this.props.match.params.moduleName });
       let { initForm, setForm } = this.props;
-      let { searchParams } = !_.isEmpty(nextProps.metaData)
-        ? nextProps.metaData.reportDetails
-        : { searchParams: [] };
+      let { searchParams } = !_.isEmpty(nextProps.metaData) ? nextProps.metaData.reportDetails : { searchParams: [] };
       let required = [];
       for (var i = 0; i < searchParams.length; i++) {
         if (searchParams[i].isMandatory) {
@@ -235,17 +191,9 @@ class ShowForm extends Component {
   }
 
   componentDidMount() {
-    let {
-      initForm,
-      metaData,
-      setForm,
-      changeButtonText,
-      clearReportHistory,
-    } = this.props;
+    let { initForm, metaData, setForm, changeButtonText, clearReportHistory } = this.props;
     changeButtonText('Generate Report');
-    let searchParams = !_.isEmpty(metaData)
-      ? metaData.reportDetails
-      : { searchParams: [] };
+    let searchParams = !_.isEmpty(metaData) ? metaData.reportDetails : { searchParams: [] };
     let required = [];
     this.setState({ reportName: this.props.match.params.reportName });
     this.setState({ moduleName: this.props.match.params.moduleName });
@@ -279,9 +227,7 @@ class ShowForm extends Component {
       decreaseReportIndex,
     } = this.props;
     let searchParams = [];
-    var tenantId = localStorage.getItem('tenantId')
-      ? localStorage.getItem('tenantId')
-      : '';
+    var tenantId = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : '';
     let self = this;
 
     if (!isDrilldown) {
@@ -303,25 +249,17 @@ class ShowForm extends Component {
             input =
               searchForm[variable].getFullYear() +
               '-' +
-              (searchForm[variable].getMonth() > 8
-                ? searchForm[variable].getMonth() + 1
-                : '0' + parseInt(searchForm[variable].getMonth() + 1)) +
+              (searchForm[variable].getMonth() > 8 ? searchForm[variable].getMonth() + 1 : '0' + parseInt(searchForm[variable].getMonth() + 1)) +
               '-' +
-              (searchForm[variable].getDate() > 9
-                ? searchForm[variable].getDate()
-                : '0' + searchForm[variable].getDate()) +
+              (searchForm[variable].getDate() > 9 ? searchForm[variable].getDate() : '0' + searchForm[variable].getDate()) +
               ' 00:00:00';
           } else if (variable == 'toDate') {
             input =
               searchForm[variable].getFullYear() +
               '-' +
-              (searchForm[variable].getMonth() > 8
-                ? searchForm[variable].getMonth() + 1
-                : '0' + parseInt(searchForm[variable].getMonth() + 1)) +
+              (searchForm[variable].getMonth() > 8 ? searchForm[variable].getMonth() + 1 : '0' + parseInt(searchForm[variable].getMonth() + 1)) +
               '-' +
-              (searchForm[variable].getDate() > 9
-                ? searchForm[variable].getDate()
-                : '0' + searchForm[variable].getDate()) +
+              (searchForm[variable].getDate() > 9 ? searchForm[variable].getDate() : '0' + searchForm[variable].getDate()) +
               ' 23:59:59';
           } else {
             input = searchForm[variable];
@@ -382,11 +320,7 @@ class ShowForm extends Component {
       );
     } else {
       let reportData = reportHistory[reportIndex - 1 - 1];
-      let response = Api.commonApiPost(
-        '/report/' + this.state.moduleName + '/_get',
-        {},
-        { ...reportData }
-      ).then(
+      let response = Api.commonApiPost('/report/' + this.state.moduleName + '/_get', {}, { ...reportData }).then(
         function(response) {
           // console.log(response)
           decreaseReportIndex();
@@ -437,14 +371,7 @@ class ShowForm extends Component {
           }}
         >
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                !_.isEmpty(metaData) && metaData.reportDetails
-                  ? metaData.reportDetails.summary
-                  : ''
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={!_.isEmpty(metaData) && metaData.reportDetails ? metaData.reportDetails.summary : ''} />
             <CardText style={{ padding: 0 }}>
               <Grid>
                 <Row>{this.handleFormFields()}</Row>
@@ -453,12 +380,7 @@ class ShowForm extends Component {
           </Card>
           <div style={{ textAlign: 'center' }}>
             <br />
-            <RaisedButton
-              type="submit"
-              disabled={!isFormValid}
-              primary={true}
-              label={buttonText}
-            />
+            <RaisedButton type="submit" disabled={!isFormValid} primary={true} label={buttonText} />
             <br />
             <br />
           </div>
@@ -555,14 +477,7 @@ const mapDispatchToProps = dispatch => ({
       pattern,
     });
   },
-  handleChangeNextTwo: (
-    e,
-    property,
-    propertyOne,
-    propertyTwo,
-    isRequired,
-    pattern
-  ) => {
+  handleChangeNextTwo: (e, property, propertyOne, propertyTwo, isRequired, pattern) => {
     dispatch({
       type: 'HANDLE_CHANGE_NEXT_ONE',
       property,

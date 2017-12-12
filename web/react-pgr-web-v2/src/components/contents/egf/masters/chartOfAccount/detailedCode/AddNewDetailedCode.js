@@ -71,23 +71,11 @@ class AddNewDetailedCode extends Component {
   };
 
   render() {
-    let {
-      AddNewDetailedCode,
-      handleChange,
-      isFormValid,
-      fieldErrors,
-      buttonText,
-    } = this.props;
+    let { AddNewDetailedCode, handleChange, isFormValid, fieldErrors, buttonText } = this.props;
     return (
       <div className="AddNewDetailedCode">
         <Card>
-          <CardHeader
-            title={
-              <strong style={{ color: brown500 }}>
-                Add Detailed Chart Of Accounts
-              </strong>
-            }
-          />
+          <CardHeader title={<strong style={{ color: brown500 }}>Add Detailed Chart Of Accounts</strong>} />
           <CardText>
             <Card>
               <CardText>
@@ -96,9 +84,7 @@ class AddNewDetailedCode extends Component {
                     <Col xs={12} md={6}>
                       <TextField
                         errorText={fieldErrors.name ? fieldErrors.name : ''}
-                        value={
-                          AddNewDetailedCode.name ? AddNewDetailedCode.name : ''
-                        }
+                        value={AddNewDetailedCode.name ? AddNewDetailedCode.name : ''}
                         onChange={e => handleChange(e, 'name', false, '')}
                         hintText="Parent Account Code"
                         floatingLabelText="Parent Account Code"
@@ -107,9 +93,7 @@ class AddNewDetailedCode extends Component {
                     <Col xs={12} md={6}>
                       <TextField
                         errorText={fieldErrors.code ? fieldErrors.code : ''}
-                        value={
-                          AddNewDetailedCode.code ? AddNewDetailedCode.code : ''
-                        }
+                        value={AddNewDetailedCode.code ? AddNewDetailedCode.code : ''}
                         onChange={e => handleChange(e, 'code', false, '')}
                         hintText="Account Code "
                         floatingLabelText="Account Code"
@@ -120,9 +104,7 @@ class AddNewDetailedCode extends Component {
                     <Col xs={12} md={6}>
                       <TextField
                         errorText={fieldErrors.name ? fieldErrors.name : ''}
-                        value={
-                          AddNewDetailedCode.name ? AddNewDetailedCode.name : ''
-                        }
+                        value={AddNewDetailedCode.name ? AddNewDetailedCode.name : ''}
                         onChange={e => handleChange(e, 'name', false, '')}
                         hintText="Name"
                         floatingLabelText="Name"
@@ -130,17 +112,9 @@ class AddNewDetailedCode extends Component {
                     </Col>
                     <Col xs={12} md={6}>
                       <TextField
-                        errorText={
-                          fieldErrors.description ? fieldErrors.description : ''
-                        }
-                        value={
-                          AddNewDetailedCode.description
-                            ? AddNewDetailedCode.description
-                            : ''
-                        }
-                        onChange={e =>
-                          handleChange(e, 'description', false, '')
-                        }
+                        errorText={fieldErrors.description ? fieldErrors.description : ''}
+                        value={AddNewDetailedCode.description ? AddNewDetailedCode.description : ''}
+                        onChange={e => handleChange(e, 'description', false, '')}
                         hintText="Description "
                         floatingLabelText="Description"
                       />
@@ -149,14 +123,8 @@ class AddNewDetailedCode extends Component {
                   <Row>
                     <Col xs={12} md={6}>
                       <SelectField
-                        errorText={
-                          fieldErrors.purpose ? fieldErrors.purpose : ''
-                        }
-                        value={
-                          AddNewDetailedCode.purpose
-                            ? AddNewDetailedCode.purpose
-                            : ''
-                        }
+                        errorText={fieldErrors.purpose ? fieldErrors.purpose : ''}
+                        value={AddNewDetailedCode.purpose ? AddNewDetailedCode.purpose : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -167,30 +135,18 @@ class AddNewDetailedCode extends Component {
                         }}
                         floatingLabelText="Purpose "
                       >
-                        <MenuItem
-                          value={1}
-                          primaryText="Accumulated Depreciation"
-                        />
+                        <MenuItem value={1} primaryText="Accumulated Depreciation" />
                         <MenuItem value={2} primaryText="Bank Account Codes" />
                         <MenuItem value={3} primaryText="Bank Charges" />
-                        <MenuItem
-                          value={4}
-                          primaryText="BPA Deposit CWIP Account Code"
-                        />
+                        <MenuItem value={4} primaryText="BPA Deposit CWIP Account Code" />
                         <MenuItem value={5} primaryText="Cash In Hand" />
                       </SelectField>
                     </Col>
                     <Col xs={12} md={6}>
                       <SelectField
                         multiple={true}
-                        errorText={
-                          fieldErrors.purpose ? fieldErrors.purpose : ''
-                        }
-                        value={
-                          AddNewDetailedCode.purpose
-                            ? AddNewDetailedCode.purpose
-                            : ''
-                        }
+                        errorText={fieldErrors.purpose ? fieldErrors.purpose : ''}
+                        value={AddNewDetailedCode.purpose ? AddNewDetailedCode.purpose : ''}
                         onChange={(event, index, value) => {
                           var e = {
                             target: {
@@ -201,16 +157,10 @@ class AddNewDetailedCode extends Component {
                         }}
                         floatingLabelText="Purpose "
                       >
-                        <MenuItem
-                          value={1}
-                          primaryText="Accumulated Depreciation"
-                        />
+                        <MenuItem value={1} primaryText="Accumulated Depreciation" />
                         <MenuItem value={2} primaryText="Bank Account Codes" />
                         <MenuItem value={3} primaryText="Bank Charges" />
-                        <MenuItem
-                          value={4}
-                          primaryText="BPA Deposit CWIP Account Code"
-                        />
+                        <MenuItem value={4} primaryText="BPA Deposit CWIP Account Code" />
                         <MenuItem value={5} primaryText="Cash In Hand" />
                       </SelectField>
                     </Col>
@@ -231,12 +181,7 @@ class AddNewDetailedCode extends Component {
             </Card>
 
             <div style={{ float: 'center' }}>
-              <RaisedButton
-                type="submit"
-                label="Search and View"
-                backgroundColor={brown500}
-                labelColor={white}
-              />
+              <RaisedButton type="submit" label="Search and View" backgroundColor={brown500} labelColor={white} />
               <RaisedButton label="Close" />
             </div>
           </CardText>

@@ -86,11 +86,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'wc.search.result.businessName' },
-        { label: 'wc.search.result.businessCode' },
-        { label: 'wc.search.result.active' },
-      ],
+      header: [{ label: 'wc.search.result.businessName' }, { label: 'wc.search.result.businessCode' }, { label: 'wc.search.result.active' }],
       values: ['name', 'code', 'active'],
       resultPath: 'BusinessCategoryInfo',
       rowClickUrlUpdate: '/update/collection/businessCategory/{id}',
@@ -150,8 +146,7 @@ var dat = {
   'collection.update': {
     numCols: 12 / 3,
     searchUrl: '/egov-common-masters/businessCategory/_search?ids={id}',
-    url:
-      '/egov-common-masters/businessCategory/{BusinessCategoryInfo[0].id}/_update',
+    url: '/egov-common-masters/businessCategory/{BusinessCategoryInfo[0].id}/_update',
     tenantIdRequired: true,
     useTimestamp: true,
     objectName: 'BusinessCategoryInfo',

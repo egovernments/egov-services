@@ -7,11 +7,7 @@ import styles from '../../../../styles/material-ui';
 import Api from '../../../../api/api';
 import { translate, epochToDate, dataURItoBlob } from '../../../common/common';
 import { Card, CardHeader, CardTitle, CardText } from 'material-ui/Card';
-import {
-  fonts,
-  writeMultiLanguageText,
-  getBase64FromImageUrl,
-} from '../../../common/pdf-generation/PdfConfig';
+import { fonts, writeMultiLanguageText, getBase64FromImageUrl } from '../../../common/pdf-generation/PdfConfig';
 import PdfViewer from '../../../common/pdf-generation/PdfViewer';
 import RaisedButton from 'material-ui/RaisedButton';
 const constants = require('../../../common/constants');
@@ -42,13 +38,7 @@ class RejectionLetter extends Component {
     Promise.all([
       ulbLogoPromise,
       stateLogoPromise,
-      Api.commonApiPost(
-        '/tl-services/configurations/v1/_search',
-        {},
-        { tenantId: this.getTenantId(), pageSize: '500' },
-        false,
-        true
-      ),
+      Api.commonApiPost('/tl-services/configurations/v1/_search', {}, { tenantId: this.getTenantId(), pageSize: '500' }, false, true),
       Api.commonApiGet(
         'https://raw.githubusercontent.com/abhiegov/test/master/tenantDetails.json',
         { timestamp: new Date().getTime() },
@@ -59,12 +49,7 @@ class RejectionLetter extends Component {
     ])
       .then(response => {
         var cityName = response[3]['details'][this.getTenantId()]['name'];
-        _this.generatePdf(
-          response[0].image,
-          response[1].image,
-          response[2].TLConfiguration,
-          cityName
-        );
+        _this.generatePdf(response[0].image, response[1].image, response[2].TLConfiguration, cityName);
       })
       .catch(function(err) {
         _this.props.setLoadingStatus('hide');
@@ -102,10 +87,7 @@ class RejectionLetter extends Component {
               // star-sized columns fill the remaining space
               // if there's more than one star-column, available width is divided equally
               width: '*',
-              text: [
-                { text: `${ulbName}\n`, style: 'title' },
-                { text: departmentName, style: 'subTitle' },
-              ],
+              text: [{ text: `${ulbName}\n`, style: 'title' }, { text: departmentName, style: 'subTitle' }],
               margin: [0, 12, 0, 0],
               alignment: 'center',
             },
@@ -184,9 +166,7 @@ class RejectionLetter extends Component {
         },
 
         {
-          text: writeMultiLanguageText(
-            `Subject : ${license.applications[0].applicationType} TRADE LICENSE`
-          ),
+          text: writeMultiLanguageText(`Subject : ${license.applications[0].applicationType} TRADE LICENSE`),
           margin: [0, 0, 0, 2],
         },
 
@@ -209,8 +189,7 @@ class RejectionLetter extends Component {
         },
 
         {
-          text:
-            'License requested to ULB has been Rejected due to following reason',
+          text: 'License requested to ULB has been Rejected due to following reason',
           margin: [0, 0, 0, 2],
         },
 
@@ -269,17 +248,11 @@ class RejectionLetter extends Component {
 
       let formData = new FormData();
       var blob = dataURItoBlob(dataUrl);
-      formData.append(
-        'file',
-        blob,
-        `${license.applicationNumber || 0}_Rejection_Letter.pdf`
-      );
+      formData.append('file', blob, `${license.applicationNumber || 0}_Rejection_Letter.pdf`);
       formData.append('tenantId', _this.getTenantId());
       formData.append('module', constants.TRADE_LICENSE_FILE_TAG);
 
-      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(
-        response
-      ) {
+      Api.commonApiPost('/filestore/v1/files', {}, formData).then(function(response) {
         if (response.files && response.files.length > 0) {
           var noticeDocument = [
             {
@@ -303,8 +276,7 @@ class RejectionLetter extends Component {
             setLoadingStatus('hide');
           }, errorFunction);
         } else setLoadingStatus('hide');
-      },
-      errorFunction);
+      }, errorFunction);
     });
   };
 
@@ -312,14 +284,7 @@ class RejectionLetter extends Component {
     return (
       <PdfViewer pdfData={this.state.pdfData} title="tl.rejection.letter.title">
         <div className="text-center">
-          <RaisedButton
-            style={styles.marginStyle}
-            href={this.state.pdfData}
-            download
-            label={translate('tl.download')}
-            download
-            primary={true}
-          />
+          <RaisedButton style={styles.marginStyle} href={this.state.pdfData} download label={translate('tl.download')} download primary={true} />
         </div>
       </PdfViewer>
     );
@@ -336,8 +301,6 @@ const mapDispatchToProps = dispatch => ({
   },
 });
 
-const ViewRejectionLetter = connect(mapStateToProps, mapDispatchToProps)(
-  RejectionLetter
-);
+const ViewRejectionLetter = connect(mapStateToProps, mapDispatchToProps)(RejectionLetter);
 
 export default ViewRejectionLetter;

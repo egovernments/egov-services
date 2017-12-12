@@ -126,10 +126,7 @@ class CustomUiTable extends Component {
 
   componentDidMount() {
     let self = this;
-    if (
-      this.props.resultList.resultHeader &&
-      this.props.resultList.resultHeader.length
-    ) {
+    if (this.props.resultList.resultHeader && this.props.resultList.resultHeader.length) {
       for (let m = 0; m < this.props.resultList.resultHeader.length; m++) {
         if (this.props.resultList.resultHeader[m].url) {
           let splitArray = this.props.resultList.resultHeader[m].url.split('?');
@@ -146,18 +143,10 @@ class CustomUiTable extends Component {
           let queryStringObject = splitArray[1].split('|')[0].split('&');
           for (var i = 0; i < queryStringObject.length; i++) {
             if (i) {
-              id[queryStringObject[i].split('=')[0]] = queryStringObject[
-                i
-              ].split('=')[1];
+              id[queryStringObject[i].split('=')[0]] = queryStringObject[i].split('=')[1];
             }
           }
-          Api.commonApiPost(
-            context,
-            id,
-            {},
-            '',
-            self.props.useTimestamp || false
-          ).then(
+          Api.commonApiPost(context, id, {}, '', self.props.useTimestamp || false).then(
             function(response) {
               let keys = jp.query(response, splitArray[1].split('|')[1]);
               let values = jp.query(response, splitArray[1].split('|')[2]);
@@ -182,39 +171,19 @@ class CustomUiTable extends Component {
   }
 
   render() {
-    let {
-      resultList,
-      rowClickHandler,
-      showDataTable,
-      showHeader,
-      tableSelectionData,
-    } = this.props;
+    let { resultList, rowClickHandler, showDataTable, showHeader, tableSelectionData } = this.props;
     let self = this;
 
     const getNameById = function(item2, i2) {
       if (resultList.resultHeader[i2].url) {
-        return self.state[resultList.resultHeader[i2].label]
-          ? self.state[resultList.resultHeader[i2].label][item2]
-          : item2 + '';
+        return self.state[resultList.resultHeader[i2].label] ? self.state[resultList.resultHeader[i2].label][item2] : item2 + '';
       } else if (resultList.resultHeader[i2].isDate) {
         var _date = new Date(Number(item2));
-        return (
-          ('0' + _date.getDate()).slice(-2) +
-          '/' +
-          ('0' + (_date.getMonth() + 1)).slice(-2) +
-          '/' +
-          _date.getFullYear()
-        );
+        return ('0' + _date.getDate()).slice(-2) + '/' + ('0' + (_date.getMonth() + 1)).slice(-2) + '/' + _date.getFullYear();
       } else {
         return item2 === true
-          ? translate(
-              'employee.createPosition.groups.fields.outsourcepost.value1'
-            )
-          : item2 === false
-            ? translate(
-                'employee.createPosition.groups.fields.outsourcepost.value2'
-              )
-            : item2 === null ? '' : item2 + '';
+          ? translate('employee.createPosition.groups.fields.outsourcepost.value1')
+          : item2 === false ? translate('employee.createPosition.groups.fields.outsourcepost.value2') : item2 === null ? '' : item2 + '';
       }
     };
 
@@ -228,8 +197,7 @@ class CustomUiTable extends Component {
       let idx = tableSelectionData.indexOf(code);
       if (idx > -1) tableSelectionData.splice(idx, 1);
       else {
-        if (this.props.resultList.isMultipleSelection)
-          tableSelectionData.push(code);
+        if (this.props.resultList.isMultipleSelection) tableSelectionData.push(code);
         else tableSelectionData[0] = code;
       }
       this.props.setTableSelectionData(tableSelectionData);
@@ -239,25 +207,14 @@ class CustomUiTable extends Component {
       return (
         <Card className="uiCard">
           <CardHeader
-            title={
-              <strong>
-                {' '}
-                {showHeader == undefined
-                  ? translate('ui.table.title')
-                  : showHeader ? translate('ui.table.title') : ''}{' '}
-              </strong>
-            }
+            title={<strong> {showHeader == undefined ? translate('ui.table.title') : showHeader ? translate('ui.table.title') : ''} </strong>}
           />
           <CardText>
             <Table
               className="table table-striped table-bordered"
               cellSpacing="0"
               width="100%"
-              id={
-                showDataTable == undefined
-                  ? 'searchTable'
-                  : showDataTable ? 'searchTable' : ''
-              }
+              id={showDataTable == undefined ? 'searchTable' : showDataTable ? 'searchTable' : ''}
               responsive
             >
               <thead>
@@ -280,15 +237,7 @@ class CustomUiTable extends Component {
                             if (resultList.isMultipleSelection)
                               return (
                                 <td key={i2}>
-                                  <Checkbox
-                                    checked={
-                                      tableSelectionData.indexOf(item2) > -1
-                                    }
-                                    onCheck={onChangeSelectionCheckbox.bind(
-                                      this,
-                                      item2
-                                    )}
-                                  />
+                                  <Checkbox checked={tableSelectionData.indexOf(item2) > -1} onCheck={onChangeSelectionCheckbox.bind(this, item2)} />
                                 </td>
                               );
                             else
@@ -298,13 +247,8 @@ class CustomUiTable extends Component {
 																		 onCheck={onChangeSelectionCheckbox.bind(this, item2)}/> */}
                                   <RadioButtonGroup
                                     name={i2}
-                                    onChange={onChangeSelectionCheckbox.bind(
-                                      this,
-                                      item2
-                                    )}
-                                    valueSelected={
-                                      tableSelectionData[0] || undefined
-                                    }
+                                    onChange={onChangeSelectionCheckbox.bind(this, item2)}
+                                    valueSelected={tableSelectionData[0] || undefined}
                                   >
                                     <RadioButton value={`${item2}`} />
                                   </RadioButtonGroup>
@@ -313,20 +257,12 @@ class CustomUiTable extends Component {
                           } else if (typeof item2 === 'object') {
                             return (
                               <td key={i2}>
-                                <Checkbox
-                                  checked={(item2 && item2.value) || ''}
-                                />
+                                <Checkbox checked={(item2 && item2.value) || ''} />
                               </td>
                             );
                           }
 
-                          return (
-                            <td key={i2}>
-                              {typeof item2 != 'undefined'
-                                ? getNameById(item2, i2)
-                                : ''}
-                            </td>
-                          );
+                          return <td key={i2}>{typeof item2 != 'undefined' ? getNameById(item2, i2) : ''}</td>;
                         })}
                       </tr>
                     );

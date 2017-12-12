@@ -18,11 +18,7 @@ import FlatButton from 'material-ui/FlatButton';
 import Fields from '../../common/Fields';
 import Api from '../../../api/api';
 import styles from '../../../styles/material-ui';
-import {
-  translate,
-  validate_fileupload,
-  format_lat_long,
-} from '../../common/common';
+import { translate, validate_fileupload, format_lat_long } from '../../common/common';
 var axios = require('axios');
 
 var _this;
@@ -79,9 +75,7 @@ class grievanceCreate extends Component {
     let { initForm, setRoute } = this.props;
     initForm(localStorage.getItem('type'));
     this.setState({ open: false });
-    setRoute(
-      '/pgr/viewGrievance/' + encodeURIComponent(this.state.serviceRequestId)
-    );
+    setRoute('/pgr/viewGrievance/' + encodeURIComponent(this.state.serviceRequestId));
   };
 
   validateOTP = () => {
@@ -91,9 +85,7 @@ class grievanceCreate extends Component {
     }
     this.props.setLoadingStatus('loading');
     let mob = this.props.grievanceCreate.phone;
-    let tenant = localStorage.getItem('tenantId')
-      ? localStorage.getItem('tenantId')
-      : 'default';
+    let tenant = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
     var rqst = {
       tenantId: tenant,
       otp: this.state.otpValue,
@@ -149,33 +141,17 @@ class grievanceCreate extends Component {
           floatingLabelStyle={styles.floatingLabelStyle}
           floatingLabelFixed={true}
           floatingLabelText={translate('pgr.lbl.receivingcenter') + ' *'}
-          value={
-            this.props.grievanceCreate.receivingCenter
-              ? this.props.grievanceCreate.receivingCenter
-              : ''
-          }
+          value={this.props.grievanceCreate.receivingCenter ? this.props.grievanceCreate.receivingCenter : ''}
           onChange={(event, key, value) => {
             this.loadCRN(value);
             this.props.handleChange(value, name, true, '');
           }}
-          errorText={
-            this.props.fieldErrors.receivingCenter
-              ? this.props.fieldErrors.receivingCenter
-              : ''
-          }
+          errorText={this.props.fieldErrors.receivingCenter ? this.props.fieldErrors.receivingCenter : ''}
         >
           <MenuItem value="" primaryText="Select" />
           {this.state.receivingCenter.map(
             (receivingcenter, index) =>
-              receivingcenter.active ? (
-                <MenuItem
-                  value={receivingcenter.id}
-                  key={index}
-                  primaryText={receivingcenter.name}
-                />
-              ) : (
-                ''
-              )
+              receivingcenter.active ? <MenuItem value={receivingcenter.id} key={index} primaryText={receivingcenter.name} /> : ''
           )}
         </SelectField>
       </Col>
@@ -255,8 +231,7 @@ class grievanceCreate extends Component {
         //console.log(JSON.stringify(response))
         var topComplaint = [];
         for (var j = 0; j < response.complaintTypes.length; j++) {
-          if (response.complaintTypes[j].keywords.indexOf('complaint') > -1)
-            topComplaint.push(response.complaintTypes[j]);
+          if (response.complaintTypes[j].keywords.indexOf('complaint') > -1) topComplaint.push(response.complaintTypes[j]);
         }
         _this.setState({ topComplaintTypes: topComplaint });
         _this.grievanceCategory();
@@ -276,8 +251,7 @@ class grievanceCreate extends Component {
       function(response) {
         _this.setState({ grievanceCategory: response.ServiceGroups });
         if (localStorage.getItem('type') === null) _this.OTP();
-        else if (localStorage.getItem('type') === 'EMPLOYEE')
-          _this.receivingMode();
+        else if (localStorage.getItem('type') === 'EMPLOYEE') _this.receivingMode();
         else _this.props.setLoadingStatus('hide');
       },
       function(err) {
@@ -336,21 +310,14 @@ class grievanceCreate extends Component {
   loadSD = () => {
     if (this.state.attributes.length > 0) {
       return this.state.attributes.map((item, index) => {
-        if (
-          item.roles.indexOf(localStorage.getItem('type')) > -1 &&
-          item.actions.indexOf('REGISTERED') > -1
-        ) {
+        if (item.roles.indexOf(localStorage.getItem('type')) > -1 && item.actions.indexOf('REGISTERED') > -1) {
           if (item.required) this.props.ADD_MANDATORY(item.code);
           return (
             <Fields
               key={index}
               error={this.props.fieldErrors[item.code]}
               obj={item}
-              value={
-                this.props.grievanceCreate[item.code]
-                  ? this.props.grievanceCreate[item.code]
-                  : ''
-              }
+              value={this.props.grievanceCreate[item.code] ? this.props.grievanceCreate[item.code] : ''}
               handler={_this.props.handleChange}
             />
           );
@@ -361,12 +328,7 @@ class grievanceCreate extends Component {
 
   search = () => {
     // e.preventDefault();
-    if (
-      !(
-        (this.props.grievanceCreate.lat && this.props.grievanceCreate.lat) ||
-        this.props.grievanceCreate.addressId
-      )
-    ) {
+    if (!((this.props.grievanceCreate.lat && this.props.grievanceCreate.lat) || this.props.grievanceCreate.addressId)) {
       this.handleError('Grievance location is mandatory!');
       return false;
     }
@@ -408,14 +370,8 @@ class grievanceCreate extends Component {
         userRequest = {};
       userArray.push(localStorage.getItem('id'));
       userRequest['id'] = userArray;
-      userRequest['tenantId'] = localStorage.getItem('tenantId')
-        ? localStorage.getItem('tenantId')
-        : 'default';
-      let userInfo = Api.commonApiPost(
-        '/user/v1/_search',
-        {},
-        userRequest
-      ).then(
+      userRequest['tenantId'] = localStorage.getItem('tenantId') ? localStorage.getItem('tenantId') : 'default';
+      let userInfo = Api.commonApiPost('/user/v1/_search', {}, userRequest).then(
         function(userResponse) {
           var userName = userResponse.user[0].name;
           var userMobile = userResponse.user[0].mobileNumber;
@@ -440,26 +396,14 @@ class grievanceCreate extends Component {
     var finobj = {};
     data['serviceCode'] = this.props.grievanceCreate.serviceCode;
     data['description'] = this.props.grievanceCreate.description;
-    data['addressId'] = this.props.grievanceCreate.addressId
-      ? this.props.grievanceCreate.addressId.id
-      : '';
-    data['lat'] = this.props.grievanceCreate.addressId
-      ? ''
-      : this.props.grievanceCreate.lat;
-    data['lng'] = this.props.grievanceCreate.addressId
-      ? ''
-      : this.props.grievanceCreate.lng;
+    data['addressId'] = this.props.grievanceCreate.addressId ? this.props.grievanceCreate.addressId.id : '';
+    data['lat'] = this.props.grievanceCreate.addressId ? '' : this.props.grievanceCreate.lat;
+    data['lng'] = this.props.grievanceCreate.addressId ? '' : this.props.grievanceCreate.lng;
     data['address'] = this.props.grievanceCreate.address;
     data['serviceRequestId'] = '';
-    data['firstName'] = this.props.grievanceCreate.firstName
-      ? this.props.grievanceCreate.firstName
-      : userName;
-    data['phone'] = this.props.grievanceCreate.phone
-      ? this.props.grievanceCreate.phone
-      : userMobile;
-    data['email'] = this.props.grievanceCreate.email
-      ? this.props.grievanceCreate.email
-      : userEmail;
+    data['firstName'] = this.props.grievanceCreate.firstName ? this.props.grievanceCreate.firstName : userName;
+    data['phone'] = this.props.grievanceCreate.phone ? this.props.grievanceCreate.phone : userMobile;
+    data['email'] = this.props.grievanceCreate.email ? this.props.grievanceCreate.email : userEmail;
     data['status'] = true;
     data['serviceName'] = '';
     data['requestedDatetime'] = '';
@@ -470,9 +414,7 @@ class grievanceCreate extends Component {
 
     finobj = {
       key: 'systemReceivingMode',
-      name: this.props.grievanceCreate.receivingMode
-        ? this.props.grievanceCreate.receivingMode
-        : 'Website',
+      name: this.props.grievanceCreate.receivingMode ? this.props.grievanceCreate.receivingMode : 'Website',
     };
     data['attribValues'].push(finobj);
 
@@ -501,9 +443,7 @@ class grievanceCreate extends Component {
     if (this.props.grievanceCreate.requesterAddress) {
       finobj = {
         key: 'systemRequesterAddress',
-        name: this.props.grievanceCreate.requesterAddress
-          ? this.props.grievanceCreate.requesterAddress
-          : '',
+        name: this.props.grievanceCreate.requesterAddress ? this.props.grievanceCreate.requesterAddress : '',
       };
       data['attribValues'].push(finobj);
     }
@@ -540,20 +480,14 @@ class grievanceCreate extends Component {
     if (!mob) {
       return false;
     }
-    Api.commonApiPost(
-      '/pgr/v1/otp/_send',
-      {},
-      { mobileNumber: mob, tenantId: tenant }
-    ).then(
+    Api.commonApiPost('/pgr/v1/otp/_send', {}, { mobileNumber: mob, tenantId: tenant }).then(
       function(response) {
         //validate OTP
         currentThis.props.setLoadingStatus('hide');
         if (response.isSuccessful) {
           {
             currentThis.handleOTPOpen();
-            status === 'resend'
-              ? currentThis.setState({ otpResend: true, otpValue: '' })
-              : '';
+            status === 'resend' ? currentThis.setState({ otpResend: true, otpValue: '' }) : '';
           }
         } else {
           currentThis.handleError(translate('core.error.opt.generation'));
@@ -572,9 +506,7 @@ class grievanceCreate extends Component {
       function(createresponse) {
         var srn = createresponse.serviceRequests[0].serviceRequestId;
         currentThis.setState({ serviceRequestId: srn });
-        var ack = `${translate('pgr.lbl.crnunderprocess')}. ${translate(
-          'pgr.lbl.crn'
-        )} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
+        var ack = `${translate('pgr.lbl.crnunderprocess')}. ${translate('pgr.lbl.crn')} is ${srn}. ${translate('pgr.msg.future.reference')}.`;
         currentThis.setState({
           srn: translate('pgr.lbl.crnformat') + ':' + srn,
         });
@@ -594,10 +526,7 @@ class grievanceCreate extends Component {
               let formData = new FormData();
               formData.append('tenantId', localStorage.getItem('tenantId'));
               formData.append('module', 'PGR');
-              formData.append(
-                'tag',
-                createresponse.serviceRequests[0].serviceRequestId
-              );
+              formData.append('tag', createresponse.serviceRequests[0].serviceRequestId);
               formData.append('file', currentThis.props.files[i]);
               Api.commonApiPost('/filestore/v1/files', {}, formData).then(
                 function(response) {
@@ -677,20 +606,10 @@ class grievanceCreate extends Component {
             var formatted_long = format_lat_long(imagelongt.toString());
             if (formatted_lat && formatted_long) {
               axios
-                .post(
-                  'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
-                    formatted_lat +
-                    ',' +
-                    formatted_long +
-                    '&sensor=true'
-                )
+                .post('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + formatted_lat + ',' + formatted_long + '&sensor=true')
                 .then(function(response) {
                   //console.log(response.data.results[0].formatted_address);
-                  _this.props.handleMap(
-                    formatted_lat,
-                    formatted_long,
-                    'address'
-                  );
+                  _this.props.handleMap(formatted_lat, formatted_long, 'address');
                 });
             }
           }
@@ -701,35 +620,17 @@ class grievanceCreate extends Component {
   };
 
   getAddress = (lat, lng) => {
-    axios
-      .post(
-        'https://maps.googleapis.com/maps/api/geocode/json?latlng=' +
-          lat +
-          ',' +
-          lng +
-          '&sensor=true'
-      )
-      .then(function(response) {
-        let address = response.data.results[0]
-          ? response.data.results[0].formatted_address
-          : '';
-        _this.setState({
-          customAddress: address,
-        });
+    axios.post('https://maps.googleapis.com/maps/api/geocode/json?latlng=' + lat + ',' + lng + '&sensor=true').then(function(response) {
+      let address = response.data.results[0] ? response.data.results[0].formatted_address : '';
+      _this.setState({
+        customAddress: address,
       });
+    });
   };
 
   renderImagePreview = files => {
     return files.map((file, index) => {
-      return (
-        <ImagePreview
-          file={file}
-          idx={index}
-          key={index}
-          preview={this.preview}
-          handler={this.props.handleFileRemoval}
-        />
-      );
+      return <ImagePreview file={file} idx={index} key={index} preview={this.preview} handler={this.props.handleFileRemoval} />;
     });
   };
 
@@ -743,24 +644,10 @@ class grievanceCreate extends Component {
   render() {
     //console.log(this.state.customAddress);
     //console.log(this.props.grievanceCreate.addressId);
-    const actions = [
-      <FlatButton
-        label={translate('pgr.lbl.view')}
-        primary={true}
-        onTouchTap={this.handleView}
-      />,
-    ];
+    const actions = [<FlatButton label={translate('pgr.lbl.view')} primary={true} onTouchTap={this.handleView} />];
     const otpActions = [
-      <FlatButton
-        label={translate('pgr.lbl.resend.otp')}
-        primary={true}
-        onClick={e => this.otpCreate('resend')}
-      />,
-      <FlatButton
-        label={translate('pgr.lbl.proceed')}
-        primary={true}
-        onTouchTap={this.validateOTP}
-      />,
+      <FlatButton label={translate('pgr.lbl.resend.otp')} primary={true} onClick={e => this.otpCreate('resend')} />,
+      <FlatButton label={translate('pgr.lbl.proceed')} primary={true} onTouchTap={this.validateOTP} />,
     ];
     _this = this;
     let {
@@ -775,32 +662,15 @@ class grievanceCreate extends Component {
       handleAutoCompleteKeyUp,
       buttonText,
     } = this.props;
-    let {
-      search,
-      processCreate,
-      isMapsEnabled,
-      loadCRN,
-      handleUploadValidation,
-      getAddress,
-    } = this;
+    let { search, processCreate, isMapsEnabled, loadCRN, handleUploadValidation, getAddress } = this;
 
     return (
       <div className="grievanceCreate">
-        <h2 className="application-title">
-          {translate('pgr.lbl.register.grievance')}
-        </h2>
+        <h2 className="application-title">{translate('pgr.lbl.register.grievance')}</h2>
         <form autoComplete="off">
           {this.state.type === 'EMPLOYEE' || this.state.type === null ? (
             <Card style={styles.marginStyle}>
-              <CardHeader
-                style={{ paddingBottom: 0 }}
-                title={
-                  <div style={styles.headerStyle}>
-                    {' '}
-                    {translate('core.lbl.contact.information')}
-                  </div>
-                }
-              />
+              <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('core.lbl.contact.information')}</div>} />
               <CardText style={{ paddingTop: 0 }}>
                 <Grid>
                   <Row>
@@ -813,37 +683,19 @@ class grievanceCreate extends Component {
                           fullWidth={true}
                           floatingLabelStyle={styles.floatingLabelStyle}
                           floatingLabelFixed={true}
-                          floatingLabelText={
-                            translate('pgr.lbl.receivingmode') + ' *'
-                          }
-                          value={
-                            grievanceCreate.receivingMode
-                              ? grievanceCreate.receivingMode
-                              : ''
-                          }
+                          floatingLabelText={translate('pgr.lbl.receivingmode') + ' *'}
+                          value={grievanceCreate.receivingMode ? grievanceCreate.receivingMode : ''}
                           onChange={(event, key, value) => {
                             this.loadReceivingCenter(value);
                             handleChange(value, 'receivingMode', true, '');
                           }}
-                          errorText={
-                            fieldErrors.receivingMode
-                              ? fieldErrors.receivingMode
-                              : ''
-                          }
+                          errorText={fieldErrors.receivingMode ? fieldErrors.receivingMode : ''}
                         >
                           <MenuItem value="" primaryText="Select" />
                           {this.state.receivingModes !== undefined
                             ? this.state.receivingModes.map(
                                 (receivingmode, index) =>
-                                  receivingmode.active ? (
-                                    <MenuItem
-                                      value={receivingmode.code}
-                                      key={index}
-                                      primaryText={receivingmode.name}
-                                    />
-                                  ) : (
-                                    ''
-                                  )
+                                  receivingmode.active ? <MenuItem value={receivingmode.code} key={index} primaryText={receivingmode.name} /> : ''
                               )
                             : ''}
                         </SelectField>
@@ -851,9 +703,7 @@ class grievanceCreate extends Component {
                     ) : (
                       ''
                     )}
-                    {grievanceCreate.receivingMode === 'MANUAL'
-                      ? this.loadReceivingCenterDD('receivingCenter')
-                      : ''}
+                    {grievanceCreate.receivingMode === 'MANUAL' ? this.loadReceivingCenterDD('receivingCenter') : ''}
                     {this.state.isReceivingCenterReq ? (
                       <Col xs={12} sm={4} md={3} lg={3}>
                         <TextField
@@ -862,25 +712,10 @@ class grievanceCreate extends Component {
                           floatingLabelFixed={true}
                           floatingLabelText={translate('CRN') + ' *'}
                           multiLine={true}
-                          errorText={
-                            this.props.fieldErrors.externalCRN
-                              ? this.props.fieldErrors.externalCRN
-                              : ''
-                          }
-                          value={
-                            this.props.grievanceCreate.externalCRN
-                              ? this.props.grievanceCreate.externalCRN
-                              : ''
-                          }
+                          errorText={this.props.fieldErrors.externalCRN ? this.props.fieldErrors.externalCRN : ''}
+                          value={this.props.grievanceCreate.externalCRN ? this.props.grievanceCreate.externalCRN : ''}
                           maxLength="20"
-                          onChange={(event, value) =>
-                            this.props.handleChange(
-                              value,
-                              'externalCRN',
-                              true,
-                              ''
-                            )
-                          }
+                          onChange={(event, value) => this.props.handleChange(value, 'externalCRN', true, '')}
                         />
                       </Col>
                     ) : (
@@ -894,27 +729,11 @@ class grievanceCreate extends Component {
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={
-                          translate('core.lbl.add.name') + ' *'
-                        }
-                        value={
-                          grievanceCreate.firstName
-                            ? grievanceCreate.firstName
-                            : ''
-                        }
-                        errorText={
-                          fieldErrors.firstName ? fieldErrors.firstName : ''
-                        }
+                        floatingLabelText={translate('core.lbl.add.name') + ' *'}
+                        value={grievanceCreate.firstName ? grievanceCreate.firstName : ''}
+                        errorText={fieldErrors.firstName ? fieldErrors.firstName : ''}
                         maxLength="100"
-                        onChange={(event, value) =>
-                          handleChange(
-                            value,
-                            'firstName',
-                            true,
-                            /^[a-zA-Z ]{1,100}$/,
-                            translate('pgr.lbl.alphaspace')
-                          )
-                        }
+                        onChange={(event, value) => handleChange(value, 'firstName', true, /^[a-zA-Z ]{1,100}$/, translate('pgr.lbl.alphaspace'))}
                       />
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
@@ -923,23 +742,11 @@ class grievanceCreate extends Component {
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={
-                          translate('core.lbl.mobilenumber') + ' *'
-                        }
+                        floatingLabelText={translate('core.lbl.mobilenumber') + ' *'}
                         errorText={fieldErrors.phone ? fieldErrors.phone : ''}
-                        value={
-                          grievanceCreate.phone ? grievanceCreate.phone : ''
-                        }
+                        value={grievanceCreate.phone ? grievanceCreate.phone : ''}
                         maxLength="10"
-                        onChange={(event, value) =>
-                          handleChange(
-                            value,
-                            'phone',
-                            true,
-                            /^\d{10}$/g,
-                            translate('core.lbl.enter.mobilenumber')
-                          )
-                        }
+                        onChange={(event, value) => handleChange(value, 'phone', true, /^\d{10}$/g, translate('core.lbl.enter.mobilenumber'))}
                       />
                     </Col>
                     <Col xs={12} sm={4} md={3} lg={3}>
@@ -948,13 +755,9 @@ class grievanceCreate extends Component {
                         fullWidth={true}
                         floatingLabelStyle={styles.floatingLabelStyle}
                         floatingLabelFixed={true}
-                        floatingLabelText={translate(
-                          'core.lbl.email.compulsory'
-                        )}
+                        floatingLabelText={translate('core.lbl.email.compulsory')}
                         errorText={fieldErrors.email ? fieldErrors.email : ''}
-                        value={
-                          grievanceCreate.email ? grievanceCreate.email : ''
-                        }
+                        value={grievanceCreate.email ? grievanceCreate.email : ''}
                         maxLength="50"
                         onChange={(event, value) =>
                           handleChange(
@@ -975,16 +778,8 @@ class grievanceCreate extends Component {
                         floatingLabelFixed={true}
                         floatingLabelText={translate('core.lbl.address')}
                         multiLine={true}
-                        errorText={
-                          fieldErrors.requesterAddress
-                            ? fieldErrors.requesterAddress
-                            : ''
-                        }
-                        value={
-                          grievanceCreate.requesterAddress
-                            ? grievanceCreate.requesterAddress
-                            : ''
-                        }
+                        errorText={fieldErrors.requesterAddress ? fieldErrors.requesterAddress : ''}
+                        value={grievanceCreate.requesterAddress ? grievanceCreate.requesterAddress : ''}
                         maxLength="250"
                         onChange={(event, value) =>
                           handleChange(
@@ -992,9 +787,7 @@ class grievanceCreate extends Component {
                             'requesterAddress',
                             false,
                             /^.[^]{0,250}$/,
-                            translate('pgr.lbl.max') +
-                              ' 250 ' +
-                              translate('pgr.lbl.characters')
+                            translate('pgr.lbl.max') + ' 250 ' + translate('pgr.lbl.characters')
                           )
                         }
                       />
@@ -1007,53 +800,33 @@ class grievanceCreate extends Component {
             ''
           )}
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {translate('pgr.lbl.grievance.category')}{' '}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.lbl.grievance.category')} </div>} />
             <CardText style={{ paddingTop: 0 }}>
               <Grid>
                 <Row>
                   <Col xs={12} sm={12} md={12} lg={12}>
                     <div>
-                      {this.state.topComplaintTypes.map(
-                        (topComplaint, index) => (
-                          <RaisedButton
-                            label={topComplaint.serviceName}
-                            key={index}
-                            style={{ margin: '15px 5px' }}
-                            onTouchTap={event => {
-                              this.serviceDefinition(topComplaint.serviceCode);
-                              setCategoryandType({
-                                serviceCode: topComplaint.serviceCode,
-                                groupId: topComplaint.groupId,
-                              });
-                            }}
-                          />
-                        )
-                      )}
+                      {this.state.topComplaintTypes.map((topComplaint, index) => (
+                        <RaisedButton
+                          label={topComplaint.serviceName}
+                          key={index}
+                          style={{ margin: '15px 5px' }}
+                          onTouchTap={event => {
+                            this.serviceDefinition(topComplaint.serviceCode);
+                            setCategoryandType({
+                              serviceCode: topComplaint.serviceCode,
+                              groupId: topComplaint.groupId,
+                            });
+                          }}
+                        />
+                      ))}
                     </div>
                   </Col>
                 </Row>
                 {this.state.topComplaintTypes.length > 0 ? (
                   <Row>
-                    <Col
-                      xs={12}
-                      sm={4}
-                      md={3}
-                      lg={3}
-                      style={{ textAlign: 'center' }}
-                    >
-                      <FlatButton
-                        primary={true}
-                        label={translate('core.lbl.or')}
-                        disabled={true}
-                      />
+                    <Col xs={12} sm={4} md={3} lg={3} style={{ textAlign: 'center' }}>
+                      <FlatButton primary={true} label={translate('core.lbl.or')} disabled={true} />
                     </Col>
                   </Row>
                 ) : (
@@ -1067,36 +840,19 @@ class grievanceCreate extends Component {
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievance.category') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievance.category') + ' *'}
                       maxHeight={200}
-                      value={
-                        grievanceCreate.serviceCategory
-                          ? grievanceCreate.serviceCategory
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.serviceCategory
-                          ? fieldErrors.serviceCategory
-                          : ''
-                      }
+                      value={grievanceCreate.serviceCategory ? grievanceCreate.serviceCategory : ''}
+                      errorText={fieldErrors.serviceCategory ? fieldErrors.serviceCategory : ''}
                       onChange={(event, key, value) => {
-                        this.loadGrievanceType(value),
-                          handleChange(value, 'serviceCategory', true, '');
+                        this.loadGrievanceType(value), handleChange(value, 'serviceCategory', true, '');
                       }}
                     >
                       <MenuItem value="" primaryText="Select" />
                       {this.state.grievanceCategory !== undefined
-                        ? this.state.grievanceCategory.map(
-                            (grievanceCategory, index) => (
-                              <MenuItem
-                                value={grievanceCategory.id}
-                                key={index}
-                                primaryText={grievanceCategory.name}
-                              />
-                            )
-                          )
+                        ? this.state.grievanceCategory.map((grievanceCategory, index) => (
+                            <MenuItem value={grievanceCategory.id} key={index} primaryText={grievanceCategory.name} />
+                          ))
                         : ''}
                     </SelectField>
                   </Col>
@@ -1107,18 +863,10 @@ class grievanceCreate extends Component {
                       fullWidth={true}
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievance.type') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievance.type') + ' *'}
                       maxHeight={200}
-                      value={
-                        grievanceCreate.serviceCode
-                          ? grievanceCreate.serviceCode
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.serviceCode ? fieldErrors.serviceCode : ''
-                      }
+                      value={grievanceCreate.serviceCode ? grievanceCreate.serviceCode : ''}
+                      errorText={fieldErrors.serviceCode ? fieldErrors.serviceCode : ''}
                       onChange={(event, key, value) => {
                         value ? this.serviceDefinition(value) : '';
                         handleChange(value, 'serviceCode', true, '');
@@ -1126,11 +874,7 @@ class grievanceCreate extends Component {
                     >
                       <MenuItem value="" primaryText="Select" />
                       {this.state.grievanceType.map((grievanceType, index) => (
-                        <MenuItem
-                          value={grievanceType.serviceCode}
-                          key={index}
-                          primaryText={grievanceType.serviceName}
-                        />
+                        <MenuItem value={grievanceType.serviceCode} key={index} primaryText={grievanceType.serviceName} />
                       ))}
                     </SelectField>
                   </Col>
@@ -1139,15 +883,7 @@ class grievanceCreate extends Component {
             </CardText>
           </Card>
           <Card style={styles.marginStyle}>
-            <CardHeader
-              style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {translate('pgr.lbl.grievancedetails')}{' '}
-                </div>
-              }
-            />
+            <CardHeader style={{ paddingBottom: 0 }} title={<div style={styles.headerStyle}> {translate('pgr.lbl.grievancedetails')} </div>} />
             <CardText style={{ paddingTop: 0 }}>
               <Grid>
                 {this.state.attributes ? this.loadSD() : ''}
@@ -1159,18 +895,10 @@ class grievanceCreate extends Component {
                       hintText={translate('pgr.lbl.tencharacter')}
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievancedetails') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievancedetails') + ' *'}
                       multiLine={true}
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
-                      value={
-                        grievanceCreate.description
-                          ? grievanceCreate.description
-                          : ''
-                      }
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
+                      value={grievanceCreate.description ? grievanceCreate.description : ''}
                       maxLength="1000"
                       onChange={(event, value) =>
                         handleChange(
@@ -1198,20 +926,10 @@ class grievanceCreate extends Component {
                       floatingLabelText={translate('core.lbl.landmark')}
                       multiLine={true}
                       errorText={fieldErrors.address ? fieldErrors.address : ''}
-                      value={
-                        grievanceCreate.address ? grievanceCreate.address : ''
-                      }
+                      value={grievanceCreate.address ? grievanceCreate.address : ''}
                       maxLength="100"
                       onChange={(event, value) =>
-                        handleChange(
-                          value,
-                          'address',
-                          false,
-                          /^.[^]{0,100}$/,
-                          translate('pgr.lbl.max') +
-                            ' 100 ' +
-                            translate('pgr.lbl.characters')
-                        )
+                        handleChange(value, 'address', false, /^.[^]{0,100}$/, translate('pgr.lbl.max') + ' 100 ' + translate('pgr.lbl.characters'))
                       }
                     />
                   </Col>
@@ -1222,9 +940,7 @@ class grievanceCreate extends Component {
                       ref="autocomplete"
                       floatingLabelStyle={styles.floatingLabelStyle}
                       floatingLabelFixed={true}
-                      floatingLabelText={
-                        translate('pgr.lbl.grievance.location') + ' *'
-                      }
+                      floatingLabelText={translate('pgr.lbl.grievance.location') + ' *'}
                       filter={AutoComplete.noFilter}
                       fullWidth={true}
                       dataSource={this.state.boundarySource}
@@ -1256,30 +972,19 @@ class grievanceCreate extends Component {
                         type="file"
                         accept="image/*"
                         style={{ display: 'none' }}
-                        onChange={e =>
-                          handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)
-                        }
+                        onChange={e => handleUploadValidation(e, ['jpg', 'jpeg', 'png'], 3)}
                       />
                     </RaisedButton>
                   </Col>
                   {this.renderImagePreview(files)}
                 </Row>
-                {this.state.isMapsEnabled &&
-                (this.state.citylat && this.state.citylng) ? (
+                {this.state.isMapsEnabled && (this.state.citylat && this.state.citylng) ? (
                   <Row>
                     <Col xs={12} sm={12} md={12} lg={12}>
                       <div style={{ width: '100%', height: 400 }}>
                         <SimpleMap
-                          lat={
-                            this.props.grievanceCreate.lat
-                              ? this.props.grievanceCreate.lat
-                              : this.state.citylat
-                          }
-                          lng={
-                            this.props.grievanceCreate.lng
-                              ? this.props.grievanceCreate.lng
-                              : this.state.citylng
-                          }
+                          lat={this.props.grievanceCreate.lat ? this.props.grievanceCreate.lat : this.state.citylat}
+                          lng={this.props.grievanceCreate.lng ? this.props.grievanceCreate.lng : this.state.citylng}
                           markers={[]}
                           handler={(lat, lng) => {
                             getAddress(lat, lng);
@@ -1308,37 +1013,19 @@ class grievanceCreate extends Component {
           </div>
         </form>
         <div>
-          <Dialog
-            title={this.state.srn}
-            open={this.state.openPreview}
-            onRequestClose={this.handlePreviewClose}
-          >
+          <Dialog title={this.state.srn} open={this.state.openPreview} onRequestClose={this.handlePreviewClose}>
             <img src={this.state.iframe_src} style={{ width: '100%' }} alt="" />
           </Dialog>
-          <Dialog
-            title={this.state.srn}
-            actions={actions}
-            modal={true}
-            open={this.state.open}
-          >
+          <Dialog title={this.state.srn} actions={actions} modal={true} open={this.state.open}>
             {this.state.acknowledgement}
           </Dialog>
-          <Dialog
-            title={translate('core.msg.enter.otp')}
-            actions={otpActions}
-            modal={true}
-            open={this.state.openOTP}
-          >
+          <Dialog title={translate('core.msg.enter.otp')} actions={otpActions} modal={true} open={this.state.openOTP}>
             <TextField
               className="custom-form-control-for-textfield"
               value={this.state.otpValue || ''}
               fullWidth={true}
-              errorText={
-                this.state.otpResend ? translate('pgr.lbl.otp.success') : ''
-              }
-              onChange={(event, newString) =>
-                this.setState({ otpValue: newString })
-              }
+              errorText={this.state.otpResend ? translate('pgr.lbl.otp.success') : ''}
+              onChange={(event, newString) => this.setState({ otpValue: newString })}
             />
           </Dialog>
         </div>
@@ -1363,31 +1050,11 @@ const mapDispatchToProps = dispatch => ({
   initForm: type => {
     var requiredArray = [];
     if (type === 'CITIZEN') {
-      requiredArray = [
-        'serviceCategory',
-        'serviceCode',
-        'description',
-        'addressId',
-      ];
+      requiredArray = ['serviceCategory', 'serviceCode', 'description', 'addressId'];
     } else if (type === 'EMPLOYEE') {
-      requiredArray = [
-        'receivingMode',
-        'firstName',
-        'phone',
-        'serviceCategory',
-        'serviceCode',
-        'description',
-        'addressId',
-      ];
+      requiredArray = ['receivingMode', 'firstName', 'phone', 'serviceCategory', 'serviceCode', 'description', 'addressId'];
     } else {
-      requiredArray = [
-        'firstName',
-        'phone',
-        'serviceCategory',
-        'serviceCode',
-        'description',
-        'addressId',
-      ];
+      requiredArray = ['firstName', 'phone', 'serviceCategory', 'serviceCode', 'description', 'addressId'];
     }
 
     dispatch({

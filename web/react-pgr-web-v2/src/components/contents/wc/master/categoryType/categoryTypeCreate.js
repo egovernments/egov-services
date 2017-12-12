@@ -81,13 +81,7 @@ class CategoryTypeCreate extends Component {
       let current = this;
       let { setForm } = this.props;
 
-      Api.commonApiPost(
-        '/wcms/masters/categorytype/_search',
-        { id: this.props.match.params.id },
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/categorytype/_search', { id: this.props.match.params.id }, body, false, true).then(
         function(response) {
           console.log('response', response);
           console.log('response object', response.categoryTypes[0]);
@@ -125,22 +119,14 @@ class CategoryTypeCreate extends Component {
         id: this.props.createCategoryType.id,
         name: this.props.createCategoryType.name,
         code: this.props.createCategoryType.code,
-        active: !this.props.createCategoryType.active
-          ? false
-          : this.props.createCategoryType.active,
+        active: !this.props.createCategoryType.active ? false : this.props.createCategoryType.active,
         description: this.props.createCategoryType.description,
         tenantId: 'default',
       },
     };
 
     if (this.props.match.params.id) {
-      Api.commonApiPost(
-        '/wcms/masters/categorytype/' + body.CategoryType.code + '/_update',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/categorytype/' + body.CategoryType.code + '/_update', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -153,13 +139,7 @@ class CategoryTypeCreate extends Component {
         }
       );
     } else {
-      Api.commonApiPost(
-        '/wcms/masters/categorytype/_create',
-        {},
-        body,
-        false,
-        true
-      ).then(
+      Api.commonApiPost('/wcms/masters/categorytype/_create', {}, body, false, true).then(
         function(response) {
           console.log(response);
           current.setState({
@@ -207,14 +187,7 @@ class CategoryTypeCreate extends Component {
           <Card style={styles.marginStyle}>
             <CardHeader
               style={{ paddingBottom: 0 }}
-              title={
-                <div style={styles.headerStyle}>
-                  {' '}
-                  {this.state.id != ''
-                    ? 'Update Category Type'
-                    : 'Create Category Type'}{' '}
-                </div>
-              }
+              title={<div style={styles.headerStyle}> {this.state.id != '' ? 'Update Category Type' : 'Create Category Type'} </div>}
             />
             <CardText style={{ padding: 0 }}>
               <Grid>
@@ -223,9 +196,7 @@ class CategoryTypeCreate extends Component {
                     <TextField
                       fullWidth={true}
                       floatingLabelText={'Category Type' + '*'}
-                      value={
-                        createCategoryType.name ? createCategoryType.name : ''
-                      }
+                      value={createCategoryType.name ? createCategoryType.name : ''}
                       errorText={fieldErrors.name ? fieldErrors.name : ''}
                       maxLength={100}
                       onChange={e => {
@@ -240,21 +211,10 @@ class CategoryTypeCreate extends Component {
                       fullWidth={true}
                       maxLength={250}
                       floatingLabelText={translate('core.lbl.description')}
-                      value={
-                        createCategoryType.description
-                          ? createCategoryType.description
-                          : ''
-                      }
-                      errorText={
-                        fieldErrors.description ? fieldErrors.description : ''
-                      }
+                      value={createCategoryType.description ? createCategoryType.description : ''}
+                      errorText={fieldErrors.description ? fieldErrors.description : ''}
                       onChange={e => {
-                        handleChange(
-                          e,
-                          'description',
-                          false,
-                          /^[a-zA-Z0-9 ]*$/g
-                        );
+                        handleChange(e, 'description', false, /^[a-zA-Z0-9 ]*$/g);
                       }}
                       multiLine={true}
                       id="description"
@@ -266,11 +226,7 @@ class CategoryTypeCreate extends Component {
                     <Checkbox
                       label={translate('pgr.lbl.active')}
                       style={styles.checkbox}
-                      defaultChecked={
-                        this.state.id != ''
-                          ? createCategoryType.active || false
-                          : createCategoryType.active || true
-                      }
+                      defaultChecked={this.state.id != '' ? createCategoryType.active || false : createCategoryType.active || true}
                       onCheck={(e, i, v) => {
                         console.log(createCategoryType.active, i);
 
@@ -294,11 +250,7 @@ class CategoryTypeCreate extends Component {
               style={{ margin: '15px 5px' }}
               type="submit"
               disabled={!isFormValid}
-              label={
-                this.state.id != ''
-                  ? translate('pgr.lbl.update')
-                  : translate('pgr.lbl.create')
-              }
+              label={this.state.id != '' ? translate('pgr.lbl.update') : translate('pgr.lbl.create')}
             />
           </div>
         </form>
@@ -306,27 +258,15 @@ class CategoryTypeCreate extends Component {
         <Dialog
           title={
             this.state.id != ''
-              ? 'Category Type ' +
-                createCategoryType.name +
-                ' Updated Successfully'
-              : 'Category Type ' +
-                createCategoryType.name +
-                ' Created Successfully'
+              ? 'Category Type ' + createCategoryType.name + ' Updated Successfully'
+              : 'Category Type ' + createCategoryType.name + ' Created Successfully'
           }
           actions={
-            <FlatButton
-              label={translate('core.lbl.close')}
-              primary={true}
-              onTouchTap={
-                this.state.id != '' ? this.handleClose : handleOpenNClose
-              }
-            />
+            <FlatButton label={translate('core.lbl.close')} primary={true} onTouchTap={this.state.id != '' ? this.handleClose : handleOpenNClose} />
           }
           modal={false}
           open={this.state.open}
-          onRequestClose={
-            this.state.id != '' ? this.handleClose : handleOpenNClose
-          }
+          onRequestClose={this.state.id != '' ? this.handleClose : handleOpenNClose}
         />
       </div>
     );

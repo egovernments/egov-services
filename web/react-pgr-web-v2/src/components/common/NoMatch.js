@@ -14,10 +14,7 @@ class NoMatch extends Component {
             label="Go back to home"
             primary={true}
             onClick={() => {
-              window.location.href =
-                window.location.href.split('#/')[0] +
-                  '#/' +
-                  localStorage.getItem('tenantId') || 'default';
+              window.location.href = window.location.href.split('#/')[0] + '#/' + localStorage.getItem('tenantId') || 'default';
             }}
           />
           <br />

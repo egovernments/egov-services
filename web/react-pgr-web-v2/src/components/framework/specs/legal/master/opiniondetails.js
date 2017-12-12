@@ -40,8 +40,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
+            url: '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
           },
           {
             name: 'opinionOn',
@@ -191,8 +190,7 @@ var dat = {
             isRequired: false,
             isDisabled: false,
             patternErrorMsg: '',
-            url:
-              '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
+            url: '/lcms-services/legalcase/caseno/_search?|$..summonReferenceNo|$..caseNo',
           },
           {
             name: 'opinionOn',

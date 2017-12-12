@@ -86,11 +86,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'wc.create.meterStatus' },
-        { label: 'wc.search.result.description' },
-        { label: 'wc.search.result.active' },
-      ],
+      header: [{ label: 'wc.create.meterStatus' }, { label: 'wc.search.result.description' }, { label: 'wc.search.result.active' }],
       values: ['meterStatus', 'description', 'active'],
       resultPath: 'MeterStatus',
       rowClickUrlUpdate: '/update/wc/meterStatus/{id}',

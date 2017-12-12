@@ -29,8 +29,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter',
+            url: '/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter',
             isRequired: true,
             isDisabled: false,
             requiredErrMsg: '',
@@ -69,8 +68,7 @@ var dat = {
             label: 'wc.create.propertyType',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
+            url: '/pt-property/property/propertytypes/_search?&active=true|$..name|$..name',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -82,8 +80,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter',
+            url: '/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',
@@ -104,11 +101,7 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'wc.create.propertyType' },
-        { label: 'wc.create.pipeSize' },
-        { label: 'wc.create.active' },
-      ],
+      header: [{ label: 'wc.create.propertyType' }, { label: 'wc.create.pipeSize' }, { label: 'wc.create.active' }],
       values: ['propertyTypeName', 'pipeSize', 'active'],
       resultPath: 'PropertyTypePipeSizes',
       rowClickUrlUpdate: '/update/wc/propertyPipeSize/{id}',
@@ -193,8 +186,7 @@ var dat = {
             label: 'wc.create.pipeSize',
             pattern: '',
             type: 'singleValueList',
-            url:
-              '/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter',
+            url: '/wcms/masters/pipesize/_search?&active=true|$..sizeInMilimeter|$..sizeInMilimeter',
             isRequired: false,
             isDisabled: false,
             requiredErrMsg: '',

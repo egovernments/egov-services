@@ -36,22 +36,16 @@ export default class SupportingDocuments extends Component {
     if (!files) return;
 
     //validate file input
-    let validationResult = validate_fileupload(
-      files,
-      constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED
-    );
+    let validationResult = validate_fileupload(files, constants.TRADE_LICENSE_FILE_FORMATS_ALLOWED);
 
     // console.log('validationResult', validationResult);
 
     if (typeof validationResult === 'string' || !validationResult) {
-      if (this.props.dialogOpener)
-        this.props.dialogOpener(true, validationResult);
+      if (this.props.dialogOpener) this.props.dialogOpener(true, validationResult);
       return;
     }
 
-    var existingFile = this.props.files
-      ? this.props.files.find(file => file.code == doc.id)
-      : undefined;
+    var existingFile = this.props.files ? this.props.files.find(file => file.code == doc.id) : undefined;
     if (existingFile && existingFile.files && existingFile.files.length > 0) {
       this.props.removeFile({
         isRequired: doc.mandatory,
@@ -72,10 +66,7 @@ export default class SupportingDocuments extends Component {
 
     return (
       <Card>
-        <CardTitle
-          style={customStyles.cardTitle}
-          title={translate(props.title)}
-        />
+        <CardTitle style={customStyles.cardTitle} title={translate(props.title)} />
         <CardText>
           <Grid fluid={true}>
             <Row>
@@ -84,33 +75,23 @@ export default class SupportingDocuments extends Component {
                   <thead>
                     <tr>
                       <th style={customStyles.th}>#</th>
-                      <th style={customStyles.th}>
-                        {translate('tl.create.license.table.documentTypeName')}
-                      </th>
-                      <th style={customStyles.th}>
-                        {translate('tl.create.license.table.attachDocument')}
-                      </th>
-                      <th style={customStyles.th}>
-                        {translate('tl.create.license.table.comments')}
-                      </th>
+                      <th style={customStyles.th}>{translate('tl.create.license.table.documentTypeName')}</th>
+                      <th style={customStyles.th}>{translate('tl.create.license.table.attachDocument')}</th>
+                      <th style={customStyles.th}>{translate('tl.create.license.table.comments')}</th>
                     </tr>
                   </thead>
                   <tbody>
                     {props.docs &&
                       props.docs.map((doc, index) => {
                         if (doc.enabled) {
-                          var file =
-                            this.props.files &&
-                            this.props.files.find(file => file.code === doc.id);
+                          var file = this.props.files && this.props.files.find(file => file.code === doc.id);
                           return (
                             <tr key={index}>
                               <td>{index + 1}</td>
                               <td>
                                 <span>
                                   {translate(doc.name)}
-                                  <span style={{ color: '#FF0000' }}>
-                                    {doc.mandatory ? ' *' : ''}
-                                  </span>
+                                  <span style={{ color: '#FF0000' }}>{doc.mandatory ? ' *' : ''}</span>
                                 </span>
                               </td>
                               <td>
@@ -125,14 +106,10 @@ export default class SupportingDocuments extends Component {
                               <td>
                                 <TextField
                                   id={`file_${index}_comments`}
-                                  hintText={translate(
-                                    'tl.create.license.table.comments'
-                                  )}
+                                  hintText={translate('tl.create.license.table.comments')}
                                   multiLine={true}
                                   fullWidth={true}
-                                  value={
-                                    this.props.comments[`${doc.id}_comments`]
-                                  }
+                                  value={this.props.comments[`${doc.id}_comments`]}
                                   onChange={(e, newValue) => {
                                     this.props.fileSectionChange(newValue, doc);
                                   }}

@@ -16,8 +16,7 @@ var dat = {
             isRequired: true,
             pattern: '',
             type: 'singleValueList',
-            url:
-              'egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
+            url: 'egov-mdms-service/v1/_get?tenantId=default&moduleName=common-masters&masterName=Department|$..id|$..name',
             isDisabled: false,
             requiredErrMsg: '',
           },
@@ -28,8 +27,7 @@ var dat = {
             isRequired: true,
             pattern: '',
             type: 'singleValueList',
-            url:
-              'egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange',
+            url: 'egf-master/financialyears/_search?tenantId=default|$.financialYears.*.finYearRange|$.financialYears.*.finYearRange',
             isDisabled: false,
             requiredErrMsg: '',
           },
@@ -60,31 +58,16 @@ var dat = {
       },
     ],
     result: {
-      header: [
-        { label: 'Department' },
-        { label: 'Financial Year' },
-        { label: 'KPI Name' },
-        { label: 'Instructions' },
-        { label: 'Target Value' },
-      ],
-      values: [
-        'kpi.department',
-        'kpi.financialYear',
-        'kpi.name',
-        'kpi.instructions',
-        'kpi.targetDescription',
-      ],
+      header: [{ label: 'Department' }, { label: 'Financial Year' }, { label: 'KPI Name' }, { label: 'Instructions' }, { label: 'Target Value' }],
+      values: ['kpi.department', 'kpi.financialYear', 'kpi.name', 'kpi.instructions', 'kpi.targetDescription'],
       resultPath: 'kpiValues',
-      rowClickUrlUpdate:
-        '/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}',
-      rowClickUrlView:
-        '/view/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}',
+      rowClickUrlUpdate: '/update/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}',
+      rowClickUrlView: '/view/perfManagement/actualKpiUpdate/{kpi.code}?finYear={kpi.financialYear}',
     },
   },
   'perfManagement.update': {
     numCols: 12 / 2,
-    searchUrl:
-      '/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}',
+    searchUrl: '/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}',
     url: 'perfmanagement/v1/kpivalue/_update',
     tenantIdRequired: true,
     useTimestamp: true,
@@ -289,8 +272,7 @@ var dat = {
       {
         label: 'Target Value',
         name: 'kpiTargetTextBlock',
-        hide:
-          "`${this.props.getVal('kpiValues[0].kpi.targetType')!='TEXT'?true:false}`",
+        hide: "`${this.props.getVal('kpiValues[0].kpi.targetType')!='TEXT'?true:false}`",
         multiple: false,
         fields: [
           {
@@ -307,8 +289,7 @@ var dat = {
       {
         label: 'perfManagement.create.KPIs.groups.kpiTargetBlock',
         name: 'kpiTargetBlock',
-        hide:
-          "`${this.props.getVal('kpiValues[0].kpi.targetType')!='VALUE'?true:false}`",
+        hide: "`${this.props.getVal('kpiValues[0].kpi.targetType')!='VALUE'?true:false}`",
         multiple: false,
         fields: [
           {
@@ -328,8 +309,7 @@ var dat = {
       {
         label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock',
         name: 'kpiTargetRadioBlock',
-        hide:
-          "`${this.props.getVal('kpiValues[0].kpi.targetType')!='OBJECTIVE'?true:false}`",
+        hide: "`${this.props.getVal('kpiValues[0].kpi.targetType')!='OBJECTIVE'?true:false}`",
         multiple: false,
         fields: [
           {
@@ -345,18 +325,15 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
                 value: 1,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
                 value: 2,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
                 value: 3,
               },
             ],
@@ -383,8 +360,7 @@ var dat = {
       {
         label: 'Actual Value',
         name: 'kpiActualTextBlock',
-        hide:
-          "`${this.props.getVal('kpiValues[0].kpi.targetType')!='TEXT'?true:false}`",
+        hide: "`${this.props.getVal('kpiValues[0].kpi.targetType')!='TEXT'?true:false}`",
         multiple: false,
         fields: [
           {
@@ -401,8 +377,7 @@ var dat = {
       {
         label: 'perfManagement.create.KPIs.groups.kpiTargetBlock',
         name: 'kpiActualBlock',
-        hide:
-          "`${this.props.getVal('kpiValues[0].kpi.targetType')!='VALUE'?true:false}`",
+        hide: "`${this.props.getVal('kpiValues[0].kpi.targetType')!='VALUE'?true:false}`",
         multiple: false,
         fields: [
           {
@@ -422,8 +397,7 @@ var dat = {
       {
         label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock',
         name: 'kpiActualRadioBlock',
-        hide:
-          "`${this.props.getVal('kpiValues[0].kpi.targetType')!='OBJECTIVE'?true:false}`",
+        hide: "`${this.props.getVal('kpiValues[0].kpi.targetType')!='OBJECTIVE'?true:false}`",
         multiple: false,
         fields: [
           {
@@ -439,18 +413,15 @@ var dat = {
             patternErrMsg: '',
             values: [
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.yes',
                 value: 1,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.no',
                 value: 2,
               },
               {
-                label:
-                  'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
+                label: 'perfManagement.create.KPIs.groups.kpiTargetRadioBlock.inprogress',
                 value: 3,
               },
             ],
@@ -472,8 +443,7 @@ var dat = {
             // "pathToArray": "kpiValues[0].documents",
             // "displayNameJsonPath": "documents",
             //"url": "/tl-masters/documenttype/v2/_search?|$..code|$..code",
-            url:
-              '/perfmanagement/v1/kpimaster/_getDocumentForKpi?kpiCode=CODEEGOV',
+            url: '/perfmanagement/v1/kpimaster/_getDocumentForKpi?kpiCode=CODEEGOV',
             //$.kpiValues.*.kpi.code
             //"url": "/perfmanagement/v1/kpimaster/_getDocumentForKpi?|$.kpiValues.*.kpi.code|$.kpiValues.*.kpi.code"
             autoFillFields: [
@@ -490,8 +460,7 @@ var dat = {
 
   'perfManagement.view': {
     numCols: 12 / 2,
-    url:
-      '/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}',
+    url: '/perfmanagement/v1/kpivalue/_search?kpiCodes={code}&finYear={kpi.financialYear}',
     useTimestamp: true,
     objectName: 'KPIs',
     groups: [

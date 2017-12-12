@@ -22,10 +22,7 @@ const CashOrMops = () => {
           floatingLabelText="Amount:"
         />
         <br />
-        <TextField
-          floatingLabelStyle={{ color: '#696969', fontSize: '20px' }}
-          floatingLabelText="Paid By:"
-        />
+        <TextField floatingLabelStyle={{ color: '#696969', fontSize: '20px' }} floatingLabelText="Paid By:" />
       </Col>
     </div>
   );
@@ -80,10 +77,7 @@ const ChequeOrDD = () => {
           floatingLabelText="Amount:"
         />
         <br />
-        <TextField
-          floatingLabelStyle={{ color: '#696969', fontSize: '20px' }}
-          floatingLabelText="Paid By:"
-        />
+        <TextField floatingLabelStyle={{ color: '#696969', fontSize: '20px' }} floatingLabelText="Paid By:" />
       </Col>
     </div>
   );
@@ -212,10 +206,7 @@ const DirectBank = props => {
           floatingLabelText="Amount:"
         />
         <br />
-        <TextField
-          floatingLabelStyle={{ color: '#696969', fontSize: '20px' }}
-          floatingLabelText="Paid By:"
-        />
+        <TextField floatingLabelStyle={{ color: '#696969', fontSize: '20px' }} floatingLabelText="Paid By:" />
       </Col>
     </div>
   );
@@ -282,12 +273,7 @@ class CollectionsNew extends Component {
           {this.state.dropDown.modeOfPayment == 2 && <ChequeOrDD />}
           {this.state.dropDown.modeOfPayment == 3 && <ChequeOrDD />}
           {this.state.dropDown.modeOfPayment == 4 && <CreditOrDebitCard />}
-          {this.state.dropDown.modeOfPayment == 5 && (
-            <DirectBank
-              value={this.state.dropdown}
-              handleChange={this.state.handleChange}
-            />
-          )}
+          {this.state.dropDown.modeOfPayment == 5 && <DirectBank value={this.state.dropdown} handleChange={this.state.handleChange} />}
           {this.state.dropDown.modeOfPayment == 6 && <CashOrMops />}
 
           <Col xs={12} md={12}>

@@ -132,7 +132,7 @@ var dat ={
           ]
         },
         {
-          "name": "collectionPointDetails",
+          "name": "collectionTypeDetails",
           "multiple":true,
           "jsonPath": "collectionPoints[0].collectionPointDetails",
           "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
@@ -283,7 +283,7 @@ var dat ={
         ]
       },
       {
-        "name": "collectionPointDetails",
+        "name": "collectionTypeDetails",
         "multiple":true,
         "jsonPath": "collectionPoints[0].collectionPointDetails",
         "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
@@ -469,7 +469,6 @@ var dat ={
       {  
         "name":"CollectionPointDetails",
         "label":"",
-        "children":[collectionPointDetails],
         "fields":[  
           {  
               "name":"name",
@@ -481,6 +480,46 @@ var dat ={
               "maxLength":128,
               "minLength":1,
               "patternErrorMsg":""
+          }
+        ]
+      },
+      {
+        "name": "collectionTypeDetails",
+        "multiple":true,
+        "jsonPath": "collectionPoints[0].collectionPointDetails",
+        "label":"swm.collectionpoints.create.group.title.CollectionPointDetails",
+        "fields": [
+          {  
+            "name":"name",
+            "jsonPath":"collectionPoints[0].collectionPointDetails[0].collectionType.code",
+            "label":"swm.collectionpoints.create.group.title.CollectionType",
+            "type":"singleValueList",
+            "isRequired":true,
+            "isDisabled":false,
+            "maxLength":128,
+            "minLength":1,
+            "patternErrorMsg":"",
+            "url":"/egov-mdms-service/v1/_get?&moduleName=swm&masterName=CollectionType|$..code|$..name"
+          },
+          {  
+            "name":"garbageEstimate",
+            "jsonPath":"collectionPoints[0].collectionPointDetails[0].garbageEstimate",
+            "label":"swm.collectionpoints.create.garbageEstimate",
+            "type":"number",
+            "isRequired":true,
+            "isDisabled":false,
+            "patternErrorMsg":""
+          },
+          {  
+            "name":"description",
+            "jsonPath":"collectionPoints[0].collectionPointDetails[0].description",
+            "label":"swm.collectionpoints.create.description",
+            "type":"textarea",
+            "isRequired":false,
+            "isDisabled":false,
+            "maxLength":300,
+            "minLength":15,
+            "patternErrorMsg":""
           }
         ]
       },

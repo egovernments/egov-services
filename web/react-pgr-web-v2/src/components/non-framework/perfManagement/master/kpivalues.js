@@ -55,6 +55,7 @@ class kpivalues  extends Component{
             filelist:[],
             allowedMax:1,            
             search:false,
+            currentFileList:[],
             headerList : [{4:'April'},{5:'May'},{6:'June'},{7:'July'},{8:'August'},{9:'September'},{10:'October'},{11:'November'},{12:'December'},{1:'January'},{2:'February'},{3:'March'}],
             errorInput:'No record found'
      };
@@ -77,6 +78,7 @@ class kpivalues  extends Component{
      this.nextSection = this.nextSection.bind(this);
      this.prevSection = this.prevSection.bind(this);
      this.clearSearch = this.clearSearch.bind(this);
+     this.uploadFile = this.uploadFile.bind(this);
      
 
    }
@@ -259,7 +261,10 @@ renderFileObject = (item, i) => {
       return (
         <div>
         {(this.state.documents[item.valueid] && this.state.documents[item.valueid][item.period]) 
-          && <span><label>{this.state.documents[item.valueid][item.period].name}</label><br/></span>}
+          && <span><label>{this.state.documents[item.valueid][item.period].name}</label>&nbsp;&nbsp;
+
+          <UiButton item={{"label": "Upload","uiType":"button", "primary": true}} ui="google" handler={(e) => this.uploadFile(item.valueid,item.period)} />&nbsp;&nbsp;
+          <br/></span>}
         
         <label class="btn btn-primary" for={"file_"+item.valueid+item.period} style={{"color":"orange"}}>
             <input id={"file_"+item.valueid+item.period} type="file" style={{"display":"none"}}  onChange={e => this.handleFile(e,item.valueid,item.period)}/>
@@ -270,6 +275,8 @@ renderFileObject = (item, i) => {
       )
     }
   }
+
+
 
 prepareUploadPanel(itemValue)
 {
@@ -283,7 +290,7 @@ prepareUploadPanel(itemValue)
           marginTop: 5,
           padding: 10,
           backgroundColor:'white',
-          width:270,
+          width:350,
           zIndex:1
         }}
       >
@@ -291,9 +298,26 @@ prepareUploadPanel(itemValue)
           {
 
              (itemValue.documents) && itemValue.documents.map((fileStoreId,index) => {
-              return (<span><a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId['fileStoreId']} target="_blank">{this.state.filelist[fileStoreId['fileStoreId']] && this.state.filelist[fileStoreId['fileStoreId']] /*translate("wc.craete.file.Download")*/}</a><br/></span>)
+              return (
+            <li>
+                {this.state.filelist[fileStoreId['fileStoreId']] &&
+            <a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId['fileStoreId']} target="_blank">{this.state.filelist[fileStoreId['fileStoreId']] /*translate("wc.craete.file.Download")*/}</a>
+            
+          }
+          {(!this.state.filelist[fileStoreId['fileStoreId']] && this.state.currentFileList[itemValue.valueid] && this.state.currentFileList[itemValue.valueid][itemValue.period]) && 
+
+            <span>
+            <a href={window.location.origin + "/filestore/v1/files/id?tenantId=" + localStorage.tenantId + "&fileStoreId=" + fileStoreId['fileStoreId']} target="_blank">{this.state.currentFileList[itemValue.valueid][itemValue.period][fileStoreId['fileStoreId']] /*translate("wc.craete.file.Download")*/}</a>
+              <br/>
+              <div style={{backgroundColor: '#4CAF50',color: 'white',opacity: 2,width:192,marginLeft:56}}>{"Please Submit KPI Values to save."}</div>
+            </span>
+
+          }
+          </li>)
             })
           }
+          
+
         </ul>
         <br/>
         {this.renderFileObject(itemValue)}
@@ -304,6 +328,7 @@ prepareUploadPanel(itemValue)
 setFileName(item,self,e) {
     if (item.documents) {
       let filelistClone =  self.state.filelist.slice();
+      console.log(item.documents);
       item.documents.map(filedetails => {
           console.log('file api call');
           let result = new Promise(function(resolve, reject) {
@@ -352,37 +377,7 @@ setFileName(item,self,e) {
     }
   }
 
-getFileDetails(filestoreID,self)
-{
-    let {setLoadingStatus} = self.props;
-    let url = "/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + filestoreID;
-      
-   let filelistClone =  self.state.filelist.slice();
 
-   var oReq = new XMLHttpRequest();
-    oReq.open("GET", url, true);
-    oReq.responseType = "arraybuffer";
-    oReq.onload = function(oEvent) {
-      var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
-      var url = URL.createObjectURL(blob);
-
-      let disposition = oReq.getResponseHeader('content-disposition');
-      let filename = '';
-      if (disposition && disposition.indexOf('attachment') !== -1) {
-          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
-          var matches = filenameRegex.exec(disposition);
-          if (matches != null && matches[1]) {
-
-            filename = matches[1].replace(/['"]/g, '');            
-            filelistClone[filestoreID] = filename;
-            self.setState({filelist:filelistClone});
-            //console.log(filelistClone);
-            //console.log(self.state.filelist);
-          }
-      }
-    }
-    oReq.send();
-}
 
 
 
@@ -571,6 +566,121 @@ prepareBodyobject(response)
      }
   
 
+
+  uploadFile(valueid,period,e)
+  {
+    let {actionName, moduleName } = this.props;
+    let fileList = this.state.documents;
+    let self = this;
+
+    console.log(fileList,'file list');
+    console.log(valueid,period,'field values :');
+
+    console.log(fileList[valueid][period]); 
+
+
+    fileUpload(fileList[valueid][period], moduleName, function(err, res) {
+            
+            if(err) {
+              self.props.setLoadingStatus('hide');
+              self.props.toggleSnackbarAndSetText(true, err, false, true);
+            } else {
+
+
+              let resultClone = self.state.KPIResult.slice();
+              resultClone.map(kpi => {
+                kpi.kpiValue.valueList.map(kpiValue => {
+                  
+                  if (kpiValue.valueid == valueid && kpiValue.period == period) {
+                    kpiValue.documents.push({"fileStoreId":res.files[0].fileStoreId})
+                    
+                    self.getFileDetails(res.files[0].fileStoreId,valueid,period,self)
+
+                  }
+
+                });
+              });
+
+              
+
+              //this.state.documents[valueid][period]
+
+              let uploadedFiles = self.state.currentFileList.slice(); 
+
+              //uploadedFiles[valueid] = undefined;
+
+              self.setState({documents:uploadedFiles});
+
+              self.setState({KPIResult:resultClone});
+
+              
+
+            }
+        });
+
+
+
+    
+  }
+
+
+getFileDetails(filestoreID,valueid,period,self)
+{
+   // let {setLoadingStatus} = self.props;
+    let url = "/filestore/v1/files/id?tenantId=" + localStorage.getItem("tenantId") + "&fileStoreId=" + filestoreID;
+      
+   let filelistClone =  self.state.currentFileList.slice();
+   console.log(filelistClone);
+   console.log(valueid,period);
+
+
+   var oReq = new XMLHttpRequest();
+    oReq.open("GET", url, true);
+    oReq.responseType = "arraybuffer";
+    oReq.onload = function(oEvent) {
+      var blob = new Blob([oReq.response], {type: oReq.getResponseHeader('content-type')});
+      var url = URL.createObjectURL(blob);
+
+      let disposition = oReq.getResponseHeader('content-disposition');
+      let filename = '';
+      if (disposition && disposition.indexOf('attachment') !== -1) {
+          var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+          var matches = filenameRegex.exec(disposition);
+          if (matches != null && matches[1]) {
+
+            filename = matches[1].replace(/['"]/g, '');            
+            //filelistClone[filestoreID] = filename;
+
+            if(filelistClone[valueid]) {
+              if((filelistClone[valueid][period]))
+              {
+                filelistClone[valueid][period][filestoreID] = filename;
+              }
+              else{
+                filelistClone[valueid][period] = [];
+                filelistClone[valueid][period][filestoreID] = filename;
+              }
+
+            }
+            else
+            {
+              filelistClone[valueid] = [];
+              filelistClone[valueid][period] = [];
+              filelistClone[valueid][period][filestoreID] = filename;
+            }
+            self.setState({currentFileList:filelistClone});
+            //console.log(filelistClone);
+            console.log(self.state.currentFileList);
+          }
+      }
+    }
+    oReq.send();
+}
+
+
+
+
+
   handleFile(event,valueid,period)
   {
     let files = this.state.documents.slice();
@@ -598,8 +708,13 @@ prepareBodyobject(response)
        console.log(fileList,'fileslist');
        console.log(fileList.length,'counter');
        let breakOut = 0;
-       this.props.setLoadingStatus('loading');
-       if (counter) {
+       //this.props.setLoadingStatus('loading');
+
+       //self.props.setLoadingStatus('hide');
+      let body = {'kpiValues' : this.state.KPIResult};
+      self.makeAjaxCall(body,url);
+
+      /* if (counter) {
 
          for(let key in fileList) {
         let kpiFiles = fileList[key];
@@ -660,7 +775,7 @@ prepareBodyobject(response)
           self.props.setLoadingStatus('hide');
           let body = {'kpiValues' : this.state.KPIResult};
           self.makeAjaxCall(body,url);
-       }
+       }*/
        
    }
 

@@ -180,7 +180,6 @@ public void setCode(String code) {
    * Name of the KPI
    * @return name
   **/
- @Pattern(regexp="^[a-zA-Z0-9 '()-:;&/]+$")
   public String getName() {
     return name;
   }
@@ -217,7 +216,6 @@ public void setCode(String code) {
    * @return instructions
   **/
 
- @Pattern(regexp="^[a-zA-Z0-9 -:;'()&/]+$")
   public String getInstructions() {
     return instructions;
   }

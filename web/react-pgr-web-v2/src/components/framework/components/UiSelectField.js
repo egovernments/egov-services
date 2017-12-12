@@ -100,9 +100,19 @@ class UiSelectField extends Component {
               return s1.value < s2.value ? -1 : s1.value > s2.value ? 1 : 0;
             });
 
-            dropDownData.unshift({ key: null, value: '-- Please Select --' });
+            dropDownData.unshift({ key: '', value: '-- Please Select --' });
             setDropDownData(item.jsonPath, dropDownData);
             setDropDownOriginalData(item.jsonPath, response);
+            // props.handler(
+            //   { target: { value: '' } },
+            //   item.jsonPath,
+            //   item.isRequired ? true : false,
+            //   '',
+            //   item.requiredErrMsg,
+            //   item.patternErrMsg,
+            //   item.expression,
+            //   item.expressionMsg
+            // );
           }
         },
         function(err) {
@@ -158,7 +168,7 @@ class UiSelectField extends Component {
               {item.label} <span style={{ color: '#FF0000' }}>{item.isRequired ? ' *' : ''}</span>
             </span>
           ),
-          hintText: 'Please Select',
+          hintText: '-- Please Select --',
         };
         return (
           <SelectField

@@ -78,7 +78,7 @@ class UiMultiFieldTable extends Component {
     var valuesArray = [];
     let { isintialLoad } = this.state;
     var numberOfRowsArray = _.get(props.formData, props.item.jsonPath);
-    console.log(numberOfRowsArray, props.item.jsonPath, isintialLoad);
+    // console.log(numberOfRowsArray, props.item.jsonPath, isintialLoad);
     // console.log(this.state.values, numberOfRowsArray, props.item.tableList.values);
     var listValues = _.cloneDeep(props.item.tableList.values);
     // console.log(listValues);

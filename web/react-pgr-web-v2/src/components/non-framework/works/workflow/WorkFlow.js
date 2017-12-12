@@ -166,6 +166,7 @@ class WorkFlow extends Component {
                 floatingLabelStyle={styles.floatingLabelStyle}
                 floatingLabelFixed={true}
                 maxHeight={200}
+                hintText="Select"
                 floatingLabelText={
                   <span>
                     {translate('tl.view.workflow.department')} <span style={{ color: '#FF0000' }}> *</span>
@@ -192,6 +193,7 @@ class WorkFlow extends Component {
             <Col xs={12} sm={6} md={4} lg={4}>
               <SelectField
                 fullWidth={true}
+                hintText="Select"
                 floatingLabelStyle={styles.floatingLabelStyle}
                 floatingLabelFixed={true}
                 maxHeight={200}
@@ -221,6 +223,7 @@ class WorkFlow extends Component {
             <Col xs={12} sm={6} md={4} lg={4}>
               <SelectField
                 fullWidth={true}
+                hintText="Select"
                 floatingLabelStyle={styles.floatingLabelStyle}
                 floatingLabelFixed={true}
                 maxHeight={200}

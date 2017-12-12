@@ -117,7 +117,7 @@ export default class TableCard extends Component {
   processOnClickKPIDataRepresentation = () => {
     this.props.toggleDataViewFormat('tableview');
   };
-
+  
   render() {
     return <div>{this.renderKPIData()}</div>;
   }
@@ -131,7 +131,6 @@ export default class TableCard extends Component {
       return this.renderTable();
     }
   };
-
   /**
    * render
    * presents same data in tabular format
@@ -150,22 +149,13 @@ export default class TableCard extends Component {
     }
     let title = `KPI representation for ${this.props.kpis}`;
     let headers = Object.keys(this.state.data[0]);
-    const style = {
-      marginTop: '15px',
-      marginLeft: '90%',
-    };
 
     return (
       <div>
         <br />
         <br />
         <Card className="uiCard" style={{ textAlign: 'center' }}>
-          <RaisedButton
-            style={style}
-            label={'Charts'}
-            primary={true}
-            type="button"
-            disabled={false}
+          <RaisedButton style={{ marginTop: '15px', marginLeft: '90%'}} label={'Charts'} primary={true} type="button" disabled={false}
             onClick={this.processOnClickKPIDataRepresentation}
           />
           <CardHeader style={{ paddingBottom: 0 }} title={<div style={{ fontSize: 16, marginBottom: '20px' }}> {title} </div>} />
